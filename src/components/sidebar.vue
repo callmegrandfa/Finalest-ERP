@@ -1,0 +1,196 @@
+<template>
+   <ul class="slidUl menu" :class="{menuActive : $store.state.show}">
+        <li class="one" v-for="item in items" :menuid="item.menuid">
+            <a href="javascript:;">{{item.name}}</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in item.secondLevel" :menuid="i.menuid">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo" :menuid="it.menuid"><a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</template>
+<script>
+
+export default {
+  name: 'appsiderbar',
+  data(){
+    return{
+        items:
+        [
+            {
+                name:'系统管理',
+                menuid:'1',
+                tobarString:'',
+                secondLevel:[
+                    {
+                    name:'公共基础资料',
+                    menuid:'11',
+                    tobarString:'',
+                    thirdInfo:[
+                        {name:'详情',address:'detail',menuid:'1101',tobarString:''},
+                        {name:'数据资料短',address:'shotData',menuid:'1102',tobarString:''},
+                        {name:'数据资料长',address:'longData',menuid:'1103',tobarString:''},
+                        {name:'数据资料中',address:'midData',menuid:'1104',tobarString:''},   
+                        {name:'x',address:'1',menuid:'1105',tobarString:''},
+                        {name:'q',address:'2',menuid:'1106',tobarString:''},
+                        {name:'w',address:'3',menuid:'1107',tobarString:''},
+                        {name:'e',address:'4',menuid:'1108',tobarString:''},   
+                        {name:'r',address:'5',menuid:'1109',tobarString:''},
+                        {name:'t',address:'6',menuid:'1110',tobarString:''},
+                        {name:'y',address:'7',menuid:'1111',tobarString:''},
+                        {name:'u',address:'8',menuid:'1112',tobarString:''}, 
+                        {name:'i',address:'9',menuid:'1113',tobarString:''},
+                        {name:'o',address:'10',menuid:'1114',tobarString:''},
+                        {name:'p',address:'11',menuid:'1115',tobarString:''},
+                        {name:'a',address:'12',menuid:'1116',tobarString:''},   
+                        {name:'s',address:'13',menuid:'1117',tobarString:''},
+                        {name:'d',address:'14',menuid:'1118',tobarString:''},
+                        {name:'f',address:'15',menuid:'1119',tobarString:''},
+                        {name:'g',address:'16',menuid:'1120',tobarString:''},   
+                        {name:'h',address:'17',menuid:'1121',tobarString:''},
+                        {name:'j',address:'18',menuid:'1122',tobarString:''},
+                        {name:'k',address:'19',menuid:'1123',tobarString:''},
+                        {name:'l',address:'20',menuid:'1124',tobarString:''}      
+                    ]
+                }]
+            }, {
+                name:'系统管理',
+                menuid:'1',
+                tobarString:'',
+                secondLevel:[
+                    {
+                    name:'公共基础资料',
+                    menuid:'11',
+                    tobarString:'',
+                    thirdInfo:[
+                        {name:'详情',address:'detail',menuid:'111',tobarString:''},
+                        {name:'数据资料短',address:'shotData',menuid:'112',tobarString:''},
+                        {name:'数据资料长',address:'longData',menuid:'113',tobarString:''},
+                        {name:'数据资料中',address:'midData',menuid:'114',tobarString:''}       
+                    ]
+                }]
+            }]
+        }
+    },
+    methods:{
+        switch(){
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        hasClass:function(obj, cls){
+            var obj_class = obj.className,//获取 class 内容.
+            obj_class_lst = obj_class.split(/\s+/);//通过split空字符将cls转换成数组.
+            var x = 0;
+            for(x in obj_class_lst) {
+                if(obj_class_lst[x] == cls) {//循环数组, 判断是否包含cls
+                return true;
+                }
+            }
+            return false;
+        },
+        storageData(e){
+            var flag=false;
+            var slidbarData=this.$store.state.slidbarData;//储存页签数组
+            var name=e.target.getAttribute("menuname");
+            var menuUrl=e.target.getAttribute("menuurl");
+        
+            if(slidbarData.length==0){//slidbarData为空
+                flag=true;
+            }else{//slidbarData不为空
+                for(var i=0;i<slidbarData.length;i++){
+                    if(slidbarData[i].name==name){//相同页签
+                        flag=false;
+                        break;
+                    }else{
+                      flag=true;
+                    }
+                }
+            }
+            
+            var pushItem={'name':name,'url':menuUrl};
+            this.$store.state.url='/'+menuUrl;//储存当前url
+            if(flag){
+                 slidbarData.push(pushItem);
+                 this.switch();
+            }
+            if(slidbarData.length>=15){
+                var r=confirm("您选择打开的窗口已达到15个，如需继续添加新的窗口，默认关闭第一个窗口");
+                if (r==true)
+                {
+                    slidbarData.shift();
+                }
+            }
+            
+            
+        }
+    }
+}
+</script>
+
+<style  scoped>
+
+.slidUl{
+    width: 200px;
+    height: auto;
+    background-color: rgba(38, 52, 75, 1);
+    display: none;  
+    position: absolute;
+    left: 200px;
+    top:0px;
+}
+.menu{
+    display: block;
+    width: 200px;
+    top: 73px;
+    z-index:2;
+    left: 0;
+    float: left;
+    transition: left 0.5s;
+    -moz-transition: left 0.5s;
+    -webkit-transition: left 0.5s;
+    -o-transition: left 0.5s; 
+}
+.menuActive{
+    left:-200px!important;
+}
+.menu li{
+    list-style: none; 
+    width: 200px;
+    height: 46px;
+    text-align: left;
+    line-height: 46px;
+    position: relative;
+}
+.menu li:hover{
+    background: #212d41;
+    color: #e4e9f2;
+}
+.menu li a{
+    display: block;
+    height: 100%;
+    width:calc(100% - 20px);
+    padding-left: 20px;
+    font-size: 12px;
+    color: #c3cee0;
+    text-decoration: none;
+}
+.menu li:hover{
+    text-decoration: none;
+}
+  
+.menu li.one:hover .slid1{
+    display: block;
+}
+.menu li.two:hover .slid2{
+    display: block;
+}
+.slid2{
+    cursor: pointer;
+}
+
+
+
+</style>
