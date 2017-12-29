@@ -114,7 +114,6 @@ export default {
             this.$store.state.url='/'+menuUrl;//储存当前url
             if(flag){
                  slidbarData.push(pushItem);
-                 this.switch();
             }
             if(slidbarData.length>=15){
                 var r=confirm("您选择打开的窗口已达到15个，如需继续添加新的窗口，默认关闭第一个窗口");
@@ -123,7 +122,7 @@ export default {
                     slidbarData.shift();
                 }
             }
-            
+            this.switch();
             
         }
     }
