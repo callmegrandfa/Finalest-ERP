@@ -110,7 +110,7 @@
                         <el-checkbox v-model="isCheckCompany">公司</el-checkbox>
                         
                 
-                        <el-checkbox v-model="isCheckFinance">财务</el-checkbox>
+                        <el-checkbox v-model="isCheckFinance" @change="checkValue">财务</el-checkbox>
                     
                 
                         <el-checkbox v-model="isCheckBusiness">业务</el-checkbox>
@@ -303,6 +303,11 @@ export default({
          handleClick(tab, event) {
             console.log(tab, event);
         },
+        checkValue:function(e){
+            if(e){
+                this.isCheckCompany=true;
+            }
+        }
     }        
 
         //   methods:{//调用ajax,获取数据使用this.data,如下应为self.data

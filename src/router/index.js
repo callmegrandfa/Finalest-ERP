@@ -8,8 +8,8 @@ Vue.use(Router)
 
 const routes = [
   { path: '/', redirect: '/home' },
-  { path: '/home', component: home,name:'home' },
-  { path: '/detail', component: detail,name:'detail' },
+  { path: '/home', component: home,name:'home'},
+  { path: '/detail', component: detail,name:'detail'},
   { path: '/shotData', component: shotData,name:'shotData' }
 ]
 export default new Router({
