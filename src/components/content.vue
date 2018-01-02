@@ -10,14 +10,17 @@
                     <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
                 </li>
             </ul>
+<<<<<<< HEAD
             <keep-alive>
             <router-view></router-view>
             </keep-alive>
+=======
+           <router-view></router-view>
+>>>>>>> f398f06a809a644ffea82791becd7fb301606c0a
         </div>
     </div>
 </template>
 <script>
-
 export default {
   name: 'appcontent',
   computed: {
