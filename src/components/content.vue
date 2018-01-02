@@ -9,9 +9,10 @@
                     <router-link :to="'/'+i.url">{{i.name}}</router-link>
                     <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
                 </li>
-                
             </ul>
-           <router-view></router-view>
+            <keep-alive>
+            <router-view></router-view>
+            </keep-alive>
         </div>
     </div>
 </template>
