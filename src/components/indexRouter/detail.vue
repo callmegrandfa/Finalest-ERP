@@ -1,153 +1,185 @@
 <template>
- <div class="detailForm col-md-12">
-    <div class="row operationBtn">
-        <button class="btn btn-info">保存</button> 
-        <button class="btn btn-info">保存并新增</button>
-        <button class="btn btn-info">保存并审核</button>
-        <button class="btn btn-info">取消</button>                  
-    </div>                  
-    <div class="row">                                  
-        <!--公司信息  -->
-        <div class="col-md-1"><h4>公司信息</h4></div>
-        <div class="col-md-10">   
-            <div class="col-md-3"><div class="bgcolor col-md-12"><label>编码</label><input type="text" class="formComponent" :value="companyInformation.node" disabled></div></div>
-                <div class="col-md-3"><div class="bgcolor col-md-12"><label>名称</label><input type="text" class="formComponent" placeholder="请录入手工单号" :value="companyInformation.handNum"></div></div>
-                <div class="col-md-3"><div class="bgcolor col-md-12"><label>全称</label><input type="text" class="formComponent" placeholder="请选择仓库" :value="companyInformation.warehouse"></div></div>
-                <div class="col-md-3">
-                    <div class="bgcolor col-md-12">
+ <div class="detailForm">
+     <el-row>
+         <el-col :span="24"> 
+             <div class="operationBtn">
+                <el-button type="primary">保存</el-button>
+                <el-button type="primary">保存并新增</el-button>
+                <el-button type="primary">保存并审核</el-button>
+                <el-button type="primary">取消</el-button>               
+            </div>  
+        </el-col>
+    </el-row>
+ <el-row>
+            <!--公司信息  -->
+            <el-col :span="2">     
+                <div><h4>公司信息</h4></div>
+            </el-col> 
+            <el-col :span="20"> 
+                <div>    
+                <el-col :span="6">
+                    <div class="bgcolor">
+                        <label>编码</label>
+                        <el-input v-model="companyInformation.node" :disabled="true"></el-input>
+                    </div> 
+                </el-col>
+                <el-col :span="6">
+                    <div class="bgcolor">
+                         <label>名称</label>
+                        <el-input v-model="companyInformation.handNum" placeholder="请录入手工单号"></el-input>
+                    </div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="bgcolor">
+                        <label>全称</label>
+                        <el-input v-model="companyInformation.warehouse" placeholder="请选择仓库"></el-input>
+                    </div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="bgcolor">
                         <label>上级业务单元</label>
-                        <template>
-                            <el-select v-model="valueHigherUnit">
-                                <el-option v-for="item in higherUnit" :key="item.valueHigherUnit" :label="item.label" :value="item.valueHigherUnit">
+                        <el-select v-model="valueHigherUnit">
+                            <el-option v-for="item in higherUnit" :key="item.valueHigherUnit" :label="item.label" :value="item.valueHigherUnit">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </el-col>
+                </div> 
+                <el-collapse-transition>   
+                    <div v-show="showCompany">
+                        <el-col :span="6">
+                            <div class="bgcolor">
+                            <label>启用月份</label>
+                            <el-select v-model="valueMonth">
+                                <el-option v-for="item in month" :key="item.valueMonth" :label="item.label" :value="item.valueMonth">
                                 </el-option>
                             </el-select>
-                        </template>
-                    </div>
-                </div>
-                <el-collapse-transition>
-                    <div v-show="showCompany" class="col-md-12 noPadding">
-                        <div class="col-md-3">
-                            <div class="bgcolor col-md-12">
-                                <label>启用月份</label>
-                                <template>
-                                    <el-select v-model="valueMonth">
-                                        <el-option v-for="item in month" :key="item.valueMonth" :label="item.label" :value="item.valueMonth">
-                                        </el-option>
-                                    </el-select>
-                                </template>
                             </div>
-                        </div>
-                        <div class="col-md-3"><div class="bgcolor col-md-12"><label>本位币种</label><template>
-                                <el-select v-model="valueMoney">
-                                    <el-option v-for="item in money" :key="item.valueMoney" :label="item.label" :value="item.valueMoney">
-                                    </el-option>
-                                </el-select>
-                            </template></div></div>
-                        <div class="col-md-3"><div class="bgcolor col-md-12"><label>所属公司</label><template>
+                            
+                        </el-col>
+                        <el-col :span="6">
+                            <div class="bgcolor">
+                            <label>本位币种</label>
+                            <el-select v-model="valueMoney">
+                                <el-option v-for="item in money" :key="item.valueMoney" :label="item.label" :value="item.valueMoney">
+                                </el-option>
+                            </el-select>
+                            </div>
+                        
+                        </el-col>   
+                        <el-col :span="6">
+                            <div class="bgcolor">
+                                <label>所属公司</label>
                                 <el-select v-model="valueCompany">
                                     <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
                                     </el-option>
                                 </el-select>
-                            </template></div></div>
-                        <div class="col-md-3"><div class="bgcolor col-md-12"><label>联系人</label><input type="text" class="formComponent" :value="companyInformation.contacts" placeholder="请填入联系人"></div></div>
-                        <div class="col-md-3"><div class="bgcolor col-md-12"><label>电话</label><input type="text" class="formComponent" :value="companyInformation.phone" placeholder="请填入电话"></div></div>
-                        <div class="col-md-3"><div class="bgcolor col-md-12"><label>地址</label><input type="text" class="formComponent" :value="companyInformation.address" placeholder="请填入地址"></div></div>
-                        <div class="col-md-3"><div class="bgcolor col-md-12"><label>备注</label><input type="text" class="formComponent" :value="companyInformation.remarks" placeholder="备注"></div></div>
-                        <div class="col-md-3"><div class="bgcolor col-md-12"><label>启用状态</label><template>
+                            </div>
+                            
+                        </el-col>   
+                        <el-col :span="6"><div class="bgcolor"><label>联系人</label><el-input v-model="companyInformation.contacts" placeholder="请填入联系人"></el-input></div></el-col>
+                        <el-col :span="6"><div class="bgcolor"><label>电话</label><el-input v-model="companyInformation.phone" placeholder="请填入电话"></el-input></div></el-col>
+                        <el-col :span="6"><div class="bgcolor"><label>地址</label><el-input v-model="companyInformation.address" placeholder="请填入地址"></el-input></div></el-col>
+                        <el-col :span="6"><div class="bgcolor"><label>备注</label><el-input v-model="companyInformation.remarks" placeholder="备注"></el-input></div></el-col>
+                        <el-col :span="6">
+                            <div class="bgcolor">
+                                <label>启用状态</label>
                                 <el-select v-model="valueState">
                                     <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
                                     </el-option>
                                 </el-select>
-                            </template></div></div>  
+                            </div>
+                        </el-col>
                     </div>
                 </el-collapse-transition>  
-        </div> 
-        <div class="col-md-1">
-            <a class="upBtn" @click="showCompany = !showCompany">
-                收起<span class="el-icon-arrow-down"></span>
-            </a>
-        </div>                                                                          
-    </div> 
+        </el-col>
+    <el-col :span="2">   
+        <a class="upBtn" @click="showCompany = !showCompany">
+            收起<span class="el-icon-arrow-down"></span>
+        </a>
+    </el-col>                                                                            
+</el-row>
+    
     <!--组织类型  -->
-    <div class="row">
-        <div class="col-md-1"><h4>组织类型</h4></div>
-        <div class="col-md-10">
-            <div class="col-md-3">
-                <div class=" chooseType"> <!-- isCheckBusiness,isCheckFinance -->
-                    <template>
+    <el-row>
+        <el-col :span="2"> <h4>组织类型</h4></el-col>
+        <el-col :span="20"> 
+            <el-col :span="6"> 
+       
+                   
                         <el-checkbox v-model="isCheckCompany">公司</el-checkbox>
                         
                 
-                        <el-checkbox v-model="isCheckFinance">财务</el-checkbox>
+                        <el-checkbox v-model="isCheckFinance" @change="checkValue">财务</el-checkbox>
                     
                 
                         <el-checkbox v-model="isCheckBusiness">业务</el-checkbox>
-                    </template>                              
-                </div>
-            </div>              
-        </div>            
-    </div> 
+                                                
+           
+            </el-col>              
+        </el-col>           
+ </el-row> 
     <!--基础信息  -->  
-    <div class="row">
-        <div class="col-md-1"><h4>基础信息</h4></div>
-        <div class="col-md-10">
-            <div class="col-md-3"><div class="bgcolor col-md-12"><label>版本号</label><input type="text" class="formComponent" disabled  :value="basicInformation.version"></div></div>
-            <div class="col-md-3"><div class="bgcolor col-md-12"><label>版本开始日期</label><input type="text" class="formComponent" placeholder="请录入开始日期" :value="basicInformation.start"></div></div>
-            <div class="col-md-3"><div class="bgcolor col-md-12"><label>版本结束日期</label><input type="text" class="formComponent" placeholder="请录入结束日期" :value="basicInformation.finish"></div></div>            
-        </div> 
-    </div>  
+    <el-row> 
+        <el-col :span="2"><h4>基础信息</h4></el-col>
+       <el-col :span="20">
+            <el-col :span="6"><div class="bgcolor"><label>版本号</label><el-input v-model="basicInformation.version" placeholder="备注" :disabled="true"></el-input></div></el-col>
+            <el-col :span="6"><div class="bgcolor"><label>版本开始日期</label><el-input v-model="basicInformation.start" placeholder="请录入开始日期"></el-input></div></el-col>
+            <el-col :span="6"><div class="bgcolor"><label>版本结束日期</label><el-input v-model="basicInformation.finish" placeholder="请录入结束日期"></el-input></div></el-col>
+       </el-col> 
+   </el-row>  
     <!-- 公司业务财务bootTab标签页 -->
-    <div class="row tabZoo">
-        <ul class="getPadding nav nav-tabs col-md-12" role="tablist">
-            <li role="presentation" class="active"><a href="#company" aria-controls="company" role="tab" data-toggle="tab">公司</a></li>
-            <li role="presentation"><a href="#business" aria-controls="business" role="tab" data-toggle="tab">业务</a></li>
-            <li role="presentation"><a href="#finance" aria-controls="finance" role="tab" data-toggle="tab">财务</a></li>
-        </ul>
-        <div class="tab-content noPadding col-md-12">
-            <div role="tabpanel" class="tab-pane active" id="company">
-                <div class="getPadding"> 
-                    <div class="noPadding col-md-12">
-                        <div class="noPadding col-md-2">
-                            <template>
+    <el-row>
+         
+    <div class="tabZoo">
+        <el-col :span="24">
+            <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="公司" name="company">
+                     <el-col :span="24">
+                          <div class="companyInfo">
+                            <el-col :span="24">
+                                <el-col :span="4">
+                                
                                     <el-checkbox v-model="group">集团公司</el-checkbox>
-                                  
+                                    
                             
                                     <el-checkbox v-model="isUse">是否启用</el-checkbox>
-                            </template>         
-                        </div>     
-                    </div>
-                    <div class="noPadding col-md-11">
-                        <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>上级公司</label><input type="text" class="formComponent" placeholder="请选择上级公司" :value="company.higher"></div></div>
-                        <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>法人代表</label><input type="text" class="formComponent" placeholder="请输入法人代表" :value="company.representative"></div></div>
-                    </div>
-                    </div>
-                  <div class="getPadding col-md-11">
-                        <h4>审计信息</h4>
-                          <el-collapse-transition>
-                            <div v-show="showInformation">
-                                <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>创建人</label><input type="text" class="formComponent" :value="auditInformation.createName" disabled></div></div>
-                                <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>创建时间</label><input type="text" class="formComponent" :value="auditInformation.createTime" disabled></div></div>
-                                <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>修改人</label><input type="text" class="formComponent" :value="auditInformation.modifyName" disabled></div></div>                 
-                                <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>修改时间</label><input type="text" class="formComponent" :value="auditInformation.modifyTime" disabled></div></div>
-                                <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>启用日期</label><input type="text" class="formComponent" :value="auditInformation.startTime" disabled></div></div>
-                                <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>封存日期</label><input type="text" class="formComponent" :value="auditInformation.finishTime" disabled></div></div>                           
-                                <div class="noPadding col-md-2 getMargin"><div class="bgcolor col-md-12"><label>封存人</label><input type="text" class="formComponent" :value="auditInformation.finishName" disabled></div></div>                                   
-                            </div>
-                        </el-collapse-transition>
-                    </div>
-                <!-- 控制展开收起  -->
-                <div class="getPadding col-md-1">
-                    <a class="upBtn" @click="showInformation = !showInformation">
-                        收起<span class="el-icon-arrow-down"></span>
-                    </a>
-                </div>   
-            </div>
-        
-            <div role="tabpanel" class="tab-pane" id="business">业务</div>
-            <div role="tabpanel" class="tab-pane" id="finance">财务</div>
-        </div>
-    
-    </div>                                                                
+                                        
+                                </el-col> 
+                            </el-col>
+                            <el-col :span="22">
+                                <el-col :span="4"><div class="bgcolor"><label>上级公司</label><el-input v-model="company.higher" placeholder="请选择上级公司"></el-input></div></el-col>
+                                <el-col :span="4"><div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="请输入法人代表"></el-input></div></el-col>
+                            </el-col>
+                            <el-col :span="22">
+                                <h4>审计信息</h4>
+                                <el-collapse-transition>
+                                    <div v-show="showInformation">
+                                        <el-col :span="4"><div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" :disabled="true"></el-input></div></el-col>
+                                        <el-col :span="4"><div class="bgcolor"><label>创建时间</label><el-input v-model="auditInformation.createTime" :disabled="true"></el-input></div></el-col>
+                                        <el-col :span="4"><div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" :disabled="true"></el-input></div></el-col>
+                                        <el-col :span="4"><div class="bgcolor"><label>修改时间</label><el-input v-model="auditInformation.modifyTime" :disabled="true"></el-input></div></el-col>
+                                        <el-col :span="4"><div class="bgcolor"><label>启用日期</label><el-input v-model="auditInformation.startTime" :disabled="true"></el-input></div></el-col>
+                                        <el-col :span="4"><div class="bgcolor"><label>封存日期</label><el-input v-model="auditInformation.finishTime" :disabled="true"></el-input></div></el-col>
+                                        <el-col :span="4"><div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" :disabled="true"></el-input></div></el-col>                                  
+                                    </div>
+                                </el-collapse-transition>
+                        </el-col>
+                    
+                         <el-col :span="2">
+                            <a class="upBtn" @click="showInformation = !showInformation">
+                                收起<span class="el-icon-arrow-down"></span>
+                            </a>
+                         </el-col>  
+                         </div>
+                     </el-col>   
+                </el-tab-pane>
+                <el-tab-pane label="业务" name="business">业务</el-tab-pane>
+                <el-tab-pane label="财务" name="finance">财务</el-tab-pane>
+            </el-tabs>
+        </el-col>
+    </div>
+    </el-row>                                                                
 </div>
 </template>
 
@@ -155,7 +187,7 @@
 export default({
     data() {
         return {
-            
+            activeName: 'company',//tabs标签页初始激活显示name
             basicInformation:{//基础信息
                 version:'sts11s',
                 start:'2017.11.11',
@@ -266,8 +298,18 @@ export default({
     },
     created:function(){//.detailForm实例被创建之后调用ajaxGet函数
           this.stss='123'//初始化页面数据
-            
-          },
+            },
+    methods:{
+         handleClick(tab, event) {
+            console.log(tab, event);
+        },
+        checkValue:function(e){
+            if(e){
+                this.isCheckCompany=true;
+            }
+        }
+    }        
+
         //   methods:{//调用ajax,获取数据使用this.data,如下应为self.data
         //       ajaxGet:function(){
         //         let self=this;  
@@ -297,93 +339,52 @@ export default({
   </script>
 
   <style>
-  div {
-    overflow: hidden; }
-
-  body {
-    background-color: #eef1f5;
-    /* 收起按钮 */ }
-    body .noPadding {
-      padding: 0; }
-    body .getPadding {
-      padding: 10px 0 10px 15px; }
-    body .upBtn {
-      color: #BCBCBC;
-      cursor: pointer;
+  div {overflow: hidden;}
+  .bgcolor{
+      background-color: #fff;
       font-size: 12px;
-      text-decoration: none;
-      line-height: 40px; }
-      body .upBtn .el-icon-arrow-down {
-        margin-left: 10px; }
-    body .detailForm {
-      margin-top: 25px; }
-      body .detailForm .bgcolor {
-        background-color: #fff;
-        border-radius: 2px;
-        padding: 0;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        height: 34px;
-        /* element ui */ }
-        body .detailForm .bgcolor .el-select {
-          display: block;
-          width: 70%;
-          height: 34px;
-          float: left;
-          border: none;
-          z-index: 1; }
-          body .detailForm .bgcolor .el-select .el-input {
-            height: 100%; }
-            body .detailForm .bgcolor .el-select .el-input input {
-              border: none;
-              border-radius: 0;
-              height: 100%; }
-        body .detailForm .bgcolor label {
-          line-height: 35px;
-          display: block;
-          padding-left: 5px;
-          width: 30%;
-          height: 100%;
-          float: left;
-          color: #BCBCBC;
-          font-weight: normal;
-          z-index: 2; }
-        body .detailForm .bgcolor .formComponent {
-          display: block;
-          width: 70%;
-          height: 34px;
-          float: left;
-          border: none;
-          z-index: 1;
-          padding-left: 15px; }
-        body .detailForm .bgcolor .formComponent:focus {
-          outline: none; }
-        body .detailForm .bgcolor .formComponent[disabled] {
-          color: #BCBCBC;
-          background-color: #fff; }
-      body .detailForm .row {
-        margin-bottom: 15px; }
-        body .detailForm .row .chooseType {
-          margin-top: 9px; }
-      body .detailForm .tabZoo {
-        background-color: #fff; }
-        body .detailForm .tabZoo .nav-tabs li {
-          margin-bottom: 0; }
-          body .detailForm .tabZoo .nav-tabs li a {
-            color: #BCBCBC; }
-          body .detailForm .tabZoo .nav-tabs li a:hover {
-            border-radius: 0; }
-        body .detailForm .tabZoo .nav-tabs li.active a {
-          border: none;
-          color: #EA7587;
-          border-bottom: 2px solid #EA7587; }
-        body .detailForm .tabZoo .tab-content .getMargin {
-          margin-right: 15px; }
-        body .detailForm .tabZoo .tab-content .bgcolor {
-          border: 1px solid #BCBCBC; }
-      body .detailForm .operationBtn .btn-info {
-        margin-right: 10px;
-        background-color: #82AAFC; }
+      margin-right: 20px;
+      margin-bottom: 15px;
+  }
+  .el-row{
+      margin-bottom: 15px;
+  }
+  .bgcolor label{
+      padding-left: 5%;
+      line-height:40px;
+      display: block;
+      width: 25%;
+      height: 100%;
+      float: left;
+  }
+  .detailForm .bgcolor .el-select,.detailForm .bgcolor .el-input{
+      display: block;
+      width: 70%;
+      height: 100%;
+      float: left;
+  }
+ 
+  .detailForm .bgcolor .el-input input{
+      border: none;
+  }
+  .detailForm .bgcolor .el-input input[disabled]{
+      background-color: #fff;
+  }
+  .detailForm .bgcolor .el-select .el-input {
+      width: 100%;
+  }
+  .detailForm .companyInfo>.el-col:first-child,
+  .detailForm .companyInfo .el-col h4{
+      margin-bottom: 15px;
+  }
+  .upBtn{
+      font-size: 12px;
+      cursor: pointer;
+  }
+ 
+
+ 
+   
 
   /* 输入框 placeholder字体颜色*/
   ::-webkit-input-placeholder {
