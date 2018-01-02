@@ -107,13 +107,13 @@
             <el-col :span="6"> 
        
                    
-                        <el-checkbox v-model="isCheckCompany">公司</el-checkbox>
+                        <el-checkbox v-model="count.isCheckCompany" @change="checkCompany">公司</el-checkbox>
                         
                 
-                        <el-checkbox v-model="isCheckFinance" @change="checkValue">财务</el-checkbox>
+                        <el-checkbox v-model="count.isCheckFinance" @change="checkFinance">财务</el-checkbox>
                     
                 
-                        <el-checkbox v-model="isCheckBusiness">业务</el-checkbox>
+                        <el-checkbox v-model="count.isCheckBusiness" @change="checkBusiness">业务</el-checkbox>
                                                 
            
             </el-col>              
@@ -134,7 +134,7 @@
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="公司" name="company">
+                <el-tab-pane label="公司" name="company" v-if="count.isCheckCompany" >
                      <el-col :span="24">
                           <div class="companyInfo">
                             <el-col :span="24">
@@ -174,8 +174,9 @@
                          </div>
                      </el-col>   
                 </el-tab-pane>
-                <el-tab-pane label="业务" name="business">业务</el-tab-pane>
-                <el-tab-pane label="财务" name="finance">财务</el-tab-pane>
+                <el-tab-pane label="财务" name="finance" v-if="count.isCheckFinance">财务</el-tab-pane>
+                <el-tab-pane label="业务" name="business" v-if="count.isCheckBusiness">业务</el-tab-pane>
+    
             </el-tabs>
         </el-col>
     </div>
@@ -186,8 +187,8 @@
 <script>
 export default({
     data() {
-        return {
-            activeName: 'company',//tabs标签页初始激活显示name
+        return{
+            activeName: 'company',
             basicInformation:{//基础信息
                 version:'sts11s',
                 start:'2017.11.11',
@@ -215,9 +216,11 @@ export default({
                 higher:"恒康",
                 representative:"lioman",    
             },  
-            isCheckCompany:true,//公司复选框初始选种状态
-            isCheckFinance:false,//财务复选框初始选种状态
-            isCheckBusiness:false,//业务复选框初始选种状态 
+            ischeck:{isCheckCompany:true,//公司复选框初始选种状态
+                    isCheckFinance:false,//财务复选框初始选种状态
+                    isCheckBusiness:false}//业务复选框初始选种状态 
+            ,
+            
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
 
@@ -299,15 +302,58 @@ export default({
     created:function(){//.detailForm实例被创建之后调用ajaxGet函数
           this.stss='123'//初始化页面数据
             },
+    watch:{
+        ischeck: {
+        handler: function (val, oldVal) { 
+            var x=val.isCheckCompany || val.isCheckFinance
+            if(val.isCheckCompany || val.isCheckFinance || val.isCheckBusiness){}else{
+                this.ischeck.isCheckCompany=true;
+                this.activeName='company';
+            } },
+        deep: true,
+        immediate: true
+        },
+    }, 
+    computed:{
+        count () {
+            return this.ischeck;
+            }
+    },       
     methods:{
          handleClick(tab, event) {
             console.log(tab, event);
         },
-        checkValue:function(e){
-            if(e){
-                this.isCheckCompany=true;
+        checkFinance:function(e){
+            
+            if(e){//选中财务
+                this.count.isCheckCompany=true;
+                this.activeName='finance';
+            }else{
+                this.activeName='company';
+            }
+        },
+        checkCompany:function(e){
+            if(e){//选中公司
+                this.activeName='company';
+            }else{
+                this.activeName='business';
+                if(this.count.isCheckFinance){
+                     this.count.isCheckFinance=false;
+                }
+            }
+        },
+        checkBusiness:function(e){ 
+            if(e){//选中业务
+                this.activeName='business';
+            }else{
+                if(this.count.isCheckFinance){
+                    this.activeName='finance';
+                }else if(!this.count.isCheckFinance&&this.count.isCheckCompany){
+                    this.activeName='company';
+                }
             }
         }
+
     }        
 
         //   methods:{//调用ajax,获取数据使用this.data,如下应为self.data
