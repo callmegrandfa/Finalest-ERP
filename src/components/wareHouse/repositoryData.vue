@@ -19,18 +19,14 @@
                       <span>所属组织</span>
                   </el-col>
                   <el-col :span="10">
-                      <el-dropdown>
-                            <span class="el-dropdown-link ft12">
-                                下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>黄金糕</el-dropdown-item>
-                                <el-dropdown-item>狮子头</el-dropdown-item>
-                                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                                <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                                <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                            </el-dropdown-menu>
-                       </el-dropdown>
+                       <el-select v-model="value" placeholder="广州总部">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                       </el-select>
                   </el-col>
               </el-row>
           </el-col>
@@ -67,6 +63,16 @@
                   </el-col>
               </el-row>
           </el-col>
+
+          <el-col :span="2" :offset="1" class="toggle-btn">
+              <span>收起</span>
+              <i class="el-icon-arrow-up"></i>
+          </el-col>
+
+          <!-- <el-col :span="2" :offset="1" class="toggle-btn">
+              <span>展开</span>
+              <i class="el-icon-arrow-up"></i>
+          </el-col> -->
       </el-row>
 
       <el-row class="ft12 pt10 pl10 pr10">
@@ -87,18 +93,14 @@
                       <span>仓库</span>
                   </el-col>
                   <el-col :span="10">
-                      <el-dropdown>
-                            <span class="el-dropdown-link ft12">
-                                请录入仓库类型<i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>仓库1</el-dropdown-item>
-                                <el-dropdown-item>仓库2</el-dropdown-item>
-                                <el-dropdown-item>仓库3</el-dropdown-item>
-                                <el-dropdown-item disabled>仓库4</el-dropdown-item>
-                                <el-dropdown-item divided>仓库5</el-dropdown-item>
-                            </el-dropdown-menu>
-                       </el-dropdown>
+                      <el-select v-model="value" placeholder="广州总部">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                       </el-select>
                   </el-col>
               </el-row>
           </el-col>
@@ -133,18 +135,14 @@
                       <span>行政地区</span>
                   </el-col>
                   <el-col :span="10">
-                      <el-dropdown>
-                            <span class="el-dropdown-link ft12">
-                                广州总部<i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>四川总部</el-dropdown-item>
-                                <el-dropdown-item>上海总部</el-dropdown-item>
-                                <el-dropdown-item>北京总部</el-dropdown-item>
-                                <el-dropdown-item>深圳总部</el-dropdown-item>
-                                <el-dropdown-item>联合国总部</el-dropdown-item>
-                            </el-dropdown-menu>
-                       </el-dropdown>
+                      <el-select v-model="value" placeholder="广州总部">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                       </el-select>
                   </el-col>
               </el-row>
           </el-col>
@@ -307,6 +305,25 @@
         name:'repositoryData',
         data(){
             return {
+                options: [{
+                    value: '选项1',
+                    label: '黄金糕'
+                    }, {
+                    value: '选项2',
+                    label: '双皮奶'
+                    }, {
+                    value: '选项3',
+                    label: '蚵仔煎'
+                    }, {
+                    value: '选项4',
+                    label: '龙须面'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }],
+
+                value: '',
+
                 tableData: [{
 				contacts: '1',
 				phone: 'A001',
@@ -468,5 +485,78 @@
 .b1{
     border: 1px solid #cccccc;
 }
+.toggle-btn{
+    cursor: pointer;
+}
 </style>
+<style>
+.el-input input{
+    border:none;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 0;
+}
+/* 重写checkbox */
+.el-checkbox__inner{
+    width: 24px;
+    height: 24px;
+    border-radius:50% !important; 
+}
+.el-checkbox__inner::after{
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    content: "";
+    border: 3px solid #fff;
+    border-left: 0;
+    border-top: 0;
+    height: 11px;
+    left: 6px;
+    position: absolute;
+    top: 1px;
+    -webkit-transform: rotate(45deg) scaleY(0);
+    transform: rotate(45deg) scaleY(0);
+    width: 6px;
+    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+}
+
+/* 重写el-table样式 */
+.el-table th {
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+    text-align: left;
+    padding: 5px 0;
+    text-align: center;
+    background-color: #ececec;
+}
+.el-table td{
+    padding: 3px 0;
+}
+.el-table__body{
+    text-align: center;
+}
+/* 重写el-pagination样式 */
+.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+    border-radius: 50%;
+}
+
+.text-right{
+    text-align: right;
+}
+.mt-10{
+    margin-top: 10px;
+}
+.el-date-editor.el-input, .el-date-editor.el-input__inner{
+    width: 130px;
+}
+.el-input--suffix .el-input__inner{
+    padding-right: 0;
+} 
+</style>
+
 
