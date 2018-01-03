@@ -387,7 +387,10 @@ export default({
   </script>
 
   <style>
-
+    .el-button--primary{
+        background-color: #82AAFC;
+        border: none;
+    }
   .bgcolor{
       background-color: #fff;
       width: 238px;
