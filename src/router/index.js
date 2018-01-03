@@ -7,6 +7,7 @@ import repositoryList from '../components/wareHouse/repositoryList'
 import repositoryData from '../components/wareHouse/repositoryData'
 import goodsData from '../components/goodsData/goodsData'
 import storeData from '../components/storeInformation/storeData'
+import basicInfor from '../components/storeInformation/basicInfor'
 Vue.use(Router)
 
 
@@ -19,6 +20,7 @@ const routes = [
   { path: '/repositoryData', component: repositoryData,name:'repositoryData' },
   { path: '/goodsData', component: goodsData,name:'goodsData' },
   { path: '/storeData', component: storeData,name:'storeData' },
+  { path: '/basicInfor', component: basicInfor,name:'basicInfor' },
 ]
 export default new Router({
   linkActiveClass: 'active',

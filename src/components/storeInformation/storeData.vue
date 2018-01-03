@@ -70,102 +70,51 @@
                 <span class="btn">查询</span>
             </el-col>
 
-            <el-col :span="1" class="h30" :offset="3" style='cursor:pointer' >
-                <span @click='ifShow = !ifShow'>收起</span>
-                <i class="el-icon-arrow-down"  @click='ifShow = !ifShow'></i>
+            <el-col :span="1" class="h30" :offset="3" style='cursor:pointer'>
+                <span>收起</span>
+                <i class="el-icon-arrow-down"></i>
             </el-col>
         </el-row>
 
-        <el-collapse-transition>
-            <div v-show='ifShow'>
+        <el-row>
+            <el-col :span='4' class="bg-white ml10 h30 pl10 mt10">
                 <el-row>
-                    <el-col :span='4' class="bg-white ml10 h30 pl10 mt10">
-                        <el-row>
-                            <el-col :span="8">
-                                <span class="fs14">编码</span>
-                            </el-col>
-                            <el-col :span="12">
-                                <input class="input-need" type="text" placeholder="PO-959894848"/>
-                            </el-col>
-                        </el-row>                    
+                    <el-col :span="8">
+                        <span class="fs14">编码</span>
                     </el-col>
-
-                    <el-col :span='4' class="bg-white ml10 h30 pl10 mt10">
-                        <el-row>
-                            <el-col :span="8">
-                                <span class="fs14">名称</span>
-                            </el-col>
-                            <el-col :span="12">
-                                <input class="input-need" type="text" placeholder="请录入手工单号"/>
-                            </el-col>
-                        </el-row>                    
+                    <el-col :span="12">
+                        <input class="input-need" type="text" placeholder="PO-959894848"/>
                     </el-col>
+                </el-row>                    
+            </el-col>
 
-                    <el-col :span='4' class="bg-white ml10 h30 pl10 mt10">
-                        <el-row>
-                            <el-col :span="8">
-                                <span class="fs14">客户性质</span>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-select v-model="value" placeholder="请选择客户性质">
-                                    <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </el-col>
-                        </el-row>                    
+            <el-col :span='4' class="bg-white ml10 h30 pl10 mt10">
+                <el-row>
+                    <el-col :span="8">
+                        <span class="fs14">名称</span>
                     </el-col>
-                </el-row>
-            </div>
-        </el-collapse-transition>
-
-        <el-row class="mt20 bg-white pt10 ml10 bb1 pb10">
-            <el-col :span='2' class="ml10">
-                <span class="btn">新增</span>
+                    <el-col :span="12">
+                        <input class="input-need" type="text" placeholder="请录入手工单号"/>
+                    </el-col>
+                </el-row>                    
             </el-col>
 
-            <el-col :span='2' class="ml10">
-                <span class="btn">修改</span>
-            </el-col>
-
-            <el-col :span='2' class="ml10">
-                <span class="btn">删除</span>
-            </el-col>
-
-            <el-col :span='2' class="ml10">
-                <span class="btn">辅助功能</span>
-            </el-col>
-
-            <el-col :span='2' :offset="11">
-                <span class="rbtn">打印</span>
-            </el-col>
-
-            <el-col :span='2' class="ml10">
-                <span class="rbtn">Excel</span>
-            </el-col>
-        </el-row>
-
-        <el-row class="bg-white pl10 pt10 pr10 pb10 ml10">
-            <el-col :span="24">
-                <el-table :data="tableData" border style="width: 100%" stripe>
-                    <el-table-column prop="organization" label="所属组织" ></el-table-column>
-                    <el-table-column prop="customerCode" label="客户编码" ></el-table-column>
-                    <el-table-column prop="customerName" label="客户名称"></el-table-column>
-                    <el-table-column prop="customerCall" label="客户简称"></el-table-column>
-                    <el-table-column prop="customerClass" label="客户分类"></el-table-column>
-                    <el-table-column prop="customerNature" label="客户性质"></el-table-column>
-                    <el-table-column prop="customerType" label="客户类型"></el-table-column>
-                    <el-table-column prop="supply" label="供应"></el-table-column>     
-                    <el-table-column prop="money" label="对应财务组织"></el-table-column>
-                    <el-table-column prop="ifAllow" label="允许使用">
-                        <template scope="scope">
-                            <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
-                        </template>
-                    </el-table-column>
-              </el-table> 
+            <el-col :span='4' class="bg-white ml10 h30 pl10 mt10">
+                <el-row>
+                    <el-col :span="8">
+                        <span class="fs14">客户性质</span>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-select v-model="value" placeholder="请选择客户性质">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-row>                    
             </el-col>
         </el-row>
     </div>
@@ -176,7 +125,7 @@ export default{
     name:'storeData',
     data(){
         return {
-            ifShow:true,
+
         }
     },
 }    
@@ -240,86 +189,4 @@ export default{
     border-radius: 3px;
     cursor: pointer;
 }
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.bb1{
-    border-bottom: 1px solid #cccccc;
-}
-</style>
-<style>
-.el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
-/* 重写checkbox */
-.el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
-
-/* 重写el-table样式 */
-.el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.el-table td{
-    padding: 3px 0;
-}
-.el-table__body{
-    text-align: center;
-}
-/* 重写el-pagination样式 */
-.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
-
-.text-right{
-    text-align: right;
-}
-.mt-10{
-    margin-top: 10px;
-}
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-}
-.el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
 </style>

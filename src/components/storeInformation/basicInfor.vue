@@ -1,0 +1,406 @@
+<template>
+ <div class="basicForm">
+     <el-row>
+         <el-col :span="24"> 
+             <div class="operationBtn">
+                <el-button type="primary">新增</el-button>
+                <el-button type="primary">修改</el-button>
+                <el-button type="primary">保存</el-button>
+                <el-button type="primary">取消</el-button>        
+                <el-button type="primary">查询</el-button>
+                <el-button type="primary">打印</el-button>
+                <el-button type="primary">启用/停用</el-button>
+                <el-button type="primary">辅助功能</el-button>            
+            </div>  
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="22" :class="{slidup : showCompany}" class="down"> 
+            <el-col :span="5" class="bgcolor">
+                <label>所属组织</label>
+                <el-select v-model="valueOrganization">
+                    <el-option v-for="item in organization" :key="item.valueMonth" :label="item.label" :value="item.valueOrganization"></el-option>
+                </el-select>
+            </el-col> 
+
+
+            <el-col :span="5" class="bgcolor">
+                <label>编码</label>
+                <el-input v-model="data.code" placeholder="请录入编码"></el-input>
+            </el-col>
+
+
+            <el-col :span="5" class="bgcolor">
+                <label>名称</label>
+                <el-input v-model="data.name" placeholder="请录入名称"></el-input>
+            </el-col>
+
+
+            <el-col :span="5" class="bgcolor">
+                <label>简称</label>
+                <el-select v-model="valueAbbreviation">
+                    <el-option v-for="item in abbreviation" :key="item.valueAbbreviation" :label="item.label" :value="item.valueAbbreviation"></el-option>
+                </el-select>
+            </el-col>
+
+            <el-col :span="5" class="bgcolor">
+                <label>助记码</label>
+                <el-input v-model="data.mnemonicCode" placeholder="请录入助记码"></el-input>
+            </el-col>
+                
+
+
+            <el-col :span="5" class="bgcolor">
+                <label>店铺类型</label>
+                <el-select v-model="valueShopType">
+                    <el-option v-for="item in shopType" :key="item.valueShopType" :label="item.label" :value="item.valueShopType"></el-option>
+                </el-select>
+            </el-col>
+            
+            
+            
+            <el-col :span="5" class="bgcolor">
+                <label>店铺性质</label>
+                <el-select v-model="valueNature">
+                    <el-option v-for="item in nature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="5" class="bgcolor">
+                <label>店铺等级</label>
+                <el-select v-model="valueGrade">
+                    <el-option v-for="item in grade" :key="item.valueGrade" :label="item.label" :value="item.valueGrade"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="5" class="bgcolor">
+                <label>对应仓库</label>
+                <el-select v-model="valueWarehouse">
+                    <el-option v-for="item in warehouse" :key="item.valueWarehouse" :label="item.label" :value="item.valueWarehouse"></el-option>
+                </el-select>
+            </el-col>   
+            <el-col :span="5" class="bgcolor">
+                <label>业务地区</label>
+                <el-select v-model="valueAreaBusiness">
+                    <el-option v-for="item in areaBusiness" :key="item.valueAreaBusiness" :label="item.label" :value="item.valueAreaBusiness"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="5" class="bgcolor">
+                <label>行政地区</label>
+                <el-select v-model="valueAreaAdministrative">
+                    <el-option v-for="item in areaAdministrative" :key="item.valueAreaAdministrative" :label="item.label" :value="item.valueAreaAdministrative"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="5" class="bgcolor">
+                <label>开店日期</label>
+                <el-select v-model="valueOpenData">
+                    <el-option v-for="item in openData" :key="item.valueOpenData" :label="item.label" :value="item.valueOpenData">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="5" class="bgcolor">
+                <label>主营品牌</label>
+                <el-select v-model="valueBrand">
+                    <el-option v-for="item in brand" :key="item.valueBrand" :label="item.label" :value="item.valueBrand">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="5" class="bgcolor"><label>负责人</label><el-input v-model="data.chargePerson" placeholder="请填写负责人"></el-input></el-col>
+            <el-col :span="5" class="bgcolor"><label>电话</label><el-input v-model="data.telephone" placeholder="请填写电话"></el-input></el-col> 
+            <el-col :span="5" class="bgcolor">
+            <label>商圈</label>
+                <el-select v-model="valueTradingArea">
+                    <el-option v-for="item in tradingArea" :key="item.valueTradingArea" :label="item.label" :value="item.valueTradingArea">
+                    </el-option>
+                </el-select>
+            </el-col> 
+            <el-col :span="5" class="bgcolor"><label>店铺地址</label><el-input v-model="data.address" placeholder="请填入商铺地址"></el-input></el-col>
+            <el-col :span="5" class="bgcolor"><label>经度</label><el-input v-model="data.longitude" placeholder="经度"></el-input></el-col> 
+            <el-col :span="10" class="bgcolor moreWidth"><label>纬度</label><el-input v-model="data.latitude" placeholder="纬度"></el-input></el-col>  
+            <el-col :span="10" class="bgcolor noColor moreWidth"><el-checkbox v-model="isUse">允许使用</el-checkbox></el-col>   
+            <el-col :span="10" class="bgcolor moreWidth"><label>备注</label><el-input v-model="data.remarks" placeholder="备注"></el-input></el-col>   
+        </el-col>
+        <el-col :span="2">   
+            <a class="upBtn" @click="showCompany = !showCompany">
+                收起<span class="el-icon-arrow-down"></span>
+            </a>
+        </el-col>                                                                            
+</el-row>
+    
+
+    <!-- 公司业务财务bootTab标签页 -->
+    <el-row>
+         
+        <div class="tabZoo">
+            <el-col :span="24">
+                <el-tabs v-model="activeName">
+                    <el-tab-pane label="经营品牌" name="brand">
+                      
+                    </el-tab-pane>
+                    <el-tab-pane label="联系人" name="contacts">联系人</el-tab-pane>
+                    <el-tab-pane label="网店" name="shop">网店</el-tab-pane>
+        
+                </el-tabs>
+            </el-col>
+        </div>
+    </el-row>                                                                
+</div>
+</template>
+
+<script>
+export default({
+    data() {
+        return{
+            data:{
+                code:'',//编码
+                name:'',//名称
+                mnemonicCode:'PO1711060111111',//助记码
+                chargePerson:'',//负责人
+                telephone:'',//电话
+                address:'',//店铺地址
+                longitude:'',//经度
+                latitude:'',//纬度
+                remarks:'',//备注
+            },
+             organization: [{//所属组织
+                valueOrganization:'选项1',
+                label: '恒康'
+            }, {
+                valueOrganization:'选项2',
+                label: '恒大'
+            }, {
+                valueOrganization:'选项3',
+                label: '361度'
+            }],
+            abbreviation: [{//简称
+                valueAbbreviation:'选项1',
+                label: '1'
+            }, {
+                valueAbbreviation:'选项2',
+                label: '2'
+            }, {
+                valueAbbreviation:'选项3',
+                label: '3'
+            }],
+            shopType:[{//店铺类型
+                valueShopType:'选项1',
+                label: '1'
+            }, {
+                valueShopType:'选项2',
+                label: '2'
+            }, {
+                valueShopType:'选项3',
+                label: '3'
+            }],
+            nature:[{//店铺性质
+                valueNature:'选项1',
+                label: '1'
+            }, {
+                valueNature:'选项2',
+                label: '2'
+            }, {
+                valueNature:'选项3',
+                label: '3'
+            }],
+            grade:[{//店铺等级
+                valueGrade:'选项1',
+                label: '1'
+            }, {
+                valueGrade:'选项2',
+                label: '2'
+            }, {
+                valueGrade:'选项3',
+                label: '3'
+            }],
+            warehouse:[{//对应仓库
+                valueWarehouse:'选项1',
+                label: '1'
+            }, {
+                valueWarehouse:'选项2',
+                label: '2'
+            }, {
+                valueWarehouse:'选项3',
+                label: '3'
+            }],
+            areaBusiness :[{//业务地区
+                valueAreaBusiness:'选项1',
+                label: '1'
+            }, {
+                valueAreaBusiness:'选项2',
+                label: '2'
+            }, {
+                valueAreaBusiness:'选项3',
+                label: '3'
+            }],
+            areaAdministrative :[{//行政地区
+                valueAreaAdministrative:'选项1',
+                label: '1'
+            }, {
+                valueAreaAdministrative:'选项2',
+                label: '2'
+            }, {
+                valueAreaAdministrative:'选项3',
+                label: '3'
+            }],
+            openData:[{//开店日期
+                valueOpenData:'选项1',
+                label: '1'
+            }, {
+                valueOpenData:'选项2',
+                label: '2'
+            }, {
+                valueOpenData:'选项3',
+                label: '3'
+            }],
+            brand:[{//主营品牌
+                valueBrand:'选项1',
+                label: '1'
+            }, {
+                valueBrand:'选项2',
+                label: '2'
+            }, {
+                valueBrand:'选项3',
+                label: '3'
+            }],
+            tradingArea:[{//商圈
+                valueTradingArea:'选项1',
+                label: '1'
+            }, {
+                valueTradingArea:'选项2',
+                label: '2'
+            }, {
+                valueTradingArea:'选项3',
+                label: '3'
+            }],
+            activeName: 'brand',//tabs标签页默认激活name
+            
+
+            
+            isUse:true,//是否允许使用
+
+            showCompany:false,//初始默认公司计信息状态展开  
+            valueOrganization: '请选择组织',//所属组织
+            valueAbbreviation:'请选择简称',//简称
+            valueShopType:'请选择店铺类型',//店铺类型
+            valueNature:'请选择店铺性质',//店铺性质
+            valueGrade:'请选择店铺等级',//店铺等级 
+            valueWarehouse:'请选择对应仓库',//对应仓库 
+            valueAreaBusiness:'请选择业务地区',//业务地区 
+            valueAreaAdministrative:'请选择行政地区',//行政地区 
+            valueOpenData:'请选择开店日期',//开店日期 
+            valueBrand:'请选择主营品牌',//主营品牌 
+            valueTradingArea:'请选择商圈',//商圈   
+        }
+    },
+       
+
+    })
+  </script>
+
+  <style>
+  .basicForm .down{
+    overflow: hidden;
+    transition: max-height 0.5s;
+    -moz-transition: max-height 0.5s;
+    -webkit-transition: max-height 0.5s;
+    -o-transition: max-height 0.5s; 
+    max-height:  900px;
+  }
+  .basicForm .slidup{
+       max-height: 90px;
+  }
+  .basicForm .slidUp{
+      max-height: 45px;
+  }
+
+    .basicForm .el-button--primary{
+        background-color: #82AAFC;
+        border: none;
+    }
+  .basicForm .bgcolor{
+      background-color: #fff;
+      height: 35px;
+      font-size: 12px;
+      margin-right: 15px;
+      margin-bottom: 15px;
+      float: left;
+      overflow: hidden;
+  }
+  .basicForm .noColor{
+      background-color:transparent;
+  }
+  .basicForm .moreWidth{
+      width: calc(41.667% + 15px)
+  }
+  
+  .basicForm .el-row{
+      margin-bottom: 15px;
+  }
+  .basicForm .bgcolor label{
+      padding-left: 10px;
+      line-height:35px;
+      display: block;
+      width: calc(30% - 10px);
+      height: 100%;
+      float: left;
+      color: #BCBCBC;
+  }
+  .basicForm .bgcolor .el-select,.basicForm .bgcolor .el-input{
+      display: block;
+      width: 70%;
+      height: 35px;
+      float: left;
+  }
+ 
+  .basicForm .bgcolor .el-input input{
+      border: none;
+      height: 100%;
+  }
+  .basicForm .bgcolor .el-input input[disabled]{
+      background-color: #fff;
+  }
+  .basicForm .bgcolor .el-select .el-input {
+      width: 100%;
+  }
+  .basicForm .companyInfo>.el-col:first-child,
+  .basicForm .companyInfo .el-col h4{
+      margin-bottom: 15px;
+  }
+  .basicForm .upBtn{
+      font-size: 12px;
+      color: #BCBCBC;
+      cursor: pointer;
+  }
+  .basicForm .upBtn .el-icon-arrow-down{
+      margin-left: 5px;
+  }
+.basicForm .tabZoo{
+     overflow: hidden;
+     background-color: #fff;
+ }
+ .basicForm .tabZoo .bgcolor{
+     border: 1px solid #BCBCBC;
+     border-radius: 4px;
+ }
+ .basicForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
+     padding-left: 20px;
+ }
+
+
+ 
+   
+
+  /* 输入框 placeholder字体颜色*/
+  ::-webkit-input-placeholder {
+    color: #BCBCBC; }
+
+  :-moz-placeholder {
+    color: #BCBCBC; }
+
+  ::-moz-placeholder {
+    color: #BCBCBC; }
+
+  :-ms-input-placeholder {
+    color: #BCBCBC; }
+
+
+  </style>
+  
