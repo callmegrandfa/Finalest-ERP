@@ -9,6 +9,7 @@ import goodsData from '../components/goodsData/goodsData'
 import storeData from '../components/storeInformation/storeData'
 import basicInfor from '../components/storeInformation/basicInfor'
 import customerBasicInfor from '../components/customerInfor/basicInfor'
+import customerInfor from '../components/customerInfor/customerInfor'
 Vue.use(Router)
 
 
@@ -23,6 +24,7 @@ const routes = [
   { path: '/storeData', component: storeData,name:'storeData' },
   { path: '/basicInfor', component: basicInfor,name:'basicInfor' },
   { path: '/customerBasicInfor', component: customerBasicInfor,name:'customerBasicInfor' },
+  { path: '/customerInfor', component: customerInfor,name:'customerInfor' },
 ]
 export default new Router({
   linkActiveClass: 'active',
