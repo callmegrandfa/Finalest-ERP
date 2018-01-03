@@ -6,7 +6,7 @@ import home from '../components/indexRouter/home'
 import repositoryList from '../components/wareHouse/repositoryList'
 import repositoryData from '../components/wareHouse/repositoryData'
 import goodsData from '../components/goodsData/goodsData'
-import storeData from '../components/storeImformation/storeData'
+import storeData from '../components/storeInformation/storeData'
 import basicInfor from '../components/storeInformation/basicInfor'
 Vue.use(Router)
 
