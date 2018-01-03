@@ -451,6 +451,20 @@ export default({
      margin-bottom: 15px;
  }
 
+.basicForm .btn{
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    background:rgba(130, 170, 252, 1);
+    border-radius: 3px;
+    color: white;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+.basicForm .ml10{
+   margin-left: 10px;
+}
 
  
    
