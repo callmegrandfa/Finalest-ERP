@@ -65,14 +65,10 @@
           </el-col>
 
           <el-col :span="2" :offset="1" class="toggle-btn">
-              <span>收起</span>
+              <span @click='ifShow = !ifShow'>收起</span>
               <i class="el-icon-arrow-up"></i>
           </el-col>
 
-          <!-- <el-col :span="2" :offset="1" class="toggle-btn">
-              <span>展开</span>
-              <i class="el-icon-arrow-up"></i>
-          </el-col> -->
       </el-row>
 
       <el-row class="ft12 pt10 pl10 pr10">
@@ -128,106 +124,110 @@
           </el-col>
       </el-row>
 
-      <el-row class="ft12 pt10 pl10 pr10">
-          <el-col :span="5" class="bg-white br3 h30">
-              <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>行政地区</span>
-                  </el-col>
-                  <el-col :span="10">
-                      <el-select v-model="value" placeholder="广州总部">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                       </el-select>
-                  </el-col>
-              </el-row>
-          </el-col>
+      <el-collapse-transition>
+            <div v-show="ifShow">
+                <el-row class="ft12 pt10 pl10 pr10">
+                    <el-col :span="5" class="bg-white br3 h30">
+                        <el-row>
+                            <el-col :span="8" class="pl10">
+                                <span>行政地区</span>
+                            </el-col>
+                            <el-col :span="10">
+                                <el-select v-model="value" placeholder="广州总部">
+                                        <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                </el-select>
+                            </el-col>
+                        </el-row>
+                    </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
-              <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>负责人</span>
-                  </el-col>
-                  <el-col :span="10">
-                      <input class="input-need" type="text" placeholder="请录入手工单号">
-                  </el-col>
-              </el-row>
-          </el-col>
+                    <el-col :span="5" class="bg-white br3 h30 ml10">
+                        <el-row>
+                            <el-col :span="8" class="pl10">
+                                <span>负责人</span>
+                            </el-col>
+                            <el-col :span="10">
+                                <input class="input-need" type="text" placeholder="请录入手工单号">
+                            </el-col>
+                        </el-row>
+                    </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
-              <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>电话</span>
-                  </el-col>
-                  <el-col :span="10">
-                      <input class="input-need" type="text" placeholder="请选择仓库">
-                  </el-col>
-              </el-row>
-          </el-col>
+                    <el-col :span="5" class="bg-white br3 h30 ml10">
+                        <el-row>
+                            <el-col :span="8" class="pl10">
+                                <span>电话</span>
+                            </el-col>
+                            <el-col :span="10">
+                                <input class="input-need" type="text" placeholder="请选择仓库">
+                            </el-col>
+                        </el-row>
+                    </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
-              <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>Email</span>
-                  </el-col>
-                  <el-col :span="10">
-                      <input class="input-need" type="text" placeholder="无">
-                  </el-col>
-              </el-row>
-          </el-col>
-      </el-row>
+                    <el-col :span="5" class="bg-white br3 h30 ml10">
+                        <el-row>
+                            <el-col :span="8" class="pl10">
+                                <span>Email</span>
+                            </el-col>
+                            <el-col :span="10">
+                                <input class="input-need" type="text" placeholder="无">
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                </el-row>
 
-      <el-row class="ft12 pt10 pl10 pr10">
-          <el-col :span="5" class="bg-white br3 h30">
-              <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>传真</span>
-                  </el-col>
-                  <el-col :span="10">
-                      <input class="input-need" type="text" placeholder="PO1235656">
-                  </el-col>
-              </el-row>
-          </el-col>
+                <el-row class="ft12 pt10 pl10 pr10">
+                    <el-col :span="5" class="bg-white br3 h30">
+                        <el-row>
+                            <el-col :span="8" class="pl10">
+                                <span>传真</span>
+                            </el-col>
+                            <el-col :span="10">
+                                <input class="input-need" type="text" placeholder="PO1235656">
+                            </el-col>
+                        </el-row>
+                    </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
-              <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>地址</span>
-                  </el-col>
-                  <el-col :span="10">
-                      <input class="input-need" type="text" placeholder="请录入手工单号">
-                  </el-col>
-              </el-row>
-          </el-col>
+                    <el-col :span="5" class="bg-white br3 h30 ml10">
+                        <el-row>
+                            <el-col :span="8" class="pl10">
+                                <span>地址</span>
+                            </el-col>
+                            <el-col :span="10">
+                                <input class="input-need" type="text" placeholder="请录入手工单号">
+                            </el-col>
+                        </el-row>
+                    </el-col>
 
-          <el-col :span="10" class="bg-white br3 h30 ml10">
-              <el-row>
-                  <el-col :span="4" class="pl10">
-                      <span>备注</span>
-                  </el-col>
-                  <el-col :span="18">
-                      <input class="input-need" type="text" placeholder="请录入备注">
-                  </el-col>
-              </el-row>
-          </el-col>
-      </el-row>
-
+                    <el-col :span="10" class="bg-white br3 h30 ml10">
+                        <el-row>
+                            <el-col :span="4" class="pl10">
+                                <span>备注</span>
+                            </el-col>
+                            <el-col :span="18">
+                                <input class="input-need" type="text" placeholder="请录入备注">
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                </el-row>
+            </div>
+      </el-collapse-transition>
+    
       <el-row class="ft12 pl10 pr10 pt10 br3">
           <el-col :span='24' class="bg-white pt10 pl10 pb10 bb1">
               <span class="header-title">送货信息</span>
           </el-col>
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
               <el-table :data="tableData" border style="width: 100%" stripe>
-                    <el-table-column prop="organization" label="联系人" ></el-table-column>
-                    <el-table-column prop="houseCode" label="手机" ></el-table-column>
-                    <el-table-column prop="houseName" label="电话"></el-table-column>
-                    <el-table-column prop="houseCall" label="送货地址"></el-table-column>
-                    <el-table-column prop="houseType" label="运输方式"></el-table-column>
-                    <el-table-column prop="businessArea" label="物流公司"></el-table-column>
+                    <el-table-column prop="contacts" label="联系人" ></el-table-column>
+                    <el-table-column prop="phone" label="手机" ></el-table-column>
+                    <el-table-column prop="phoneNum" label="电话"></el-table-column>
+                    <el-table-column prop="address" label="送货地址"></el-table-column>
+                    <el-table-column prop="sendType" label="运输方式"></el-table-column>
+                    <el-table-column prop="company" label="物流公司"></el-table-column>
                     <el-table-column prop="ifAllow" label="默认">
                         <template scope="scope">
                             <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
@@ -305,18 +305,19 @@
         name:'repositoryData',
         data(){
             return {
+                ifShow:true,
                 options: [{
                     value: '选项1',
-                    label: '黄金糕'
+                    label: '仓库'
                     }, {
                     value: '选项2',
-                    label: '双皮奶'
+                    label: '地址'
                     }, {
                     value: '选项3',
-                    label: '蚵仔煎'
+                    label: '总部'
                     }, {
                     value: '选项4',
-                    label: '龙须面'
+                    label: '总部2'
                     }, {
                     value: '选项5',
                     label: '北京烤鸭'

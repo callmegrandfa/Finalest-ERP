@@ -5,8 +5,9 @@ import shortData from '../components/dataTemplate/shortData'
 import home from '../components/indexRouter/home'
 import repositoryList from '../components/wareHouse/repositoryList'
 import repositoryData from '../components/wareHouse/repositoryData'
+import goodsData from '../components/goodsData/goodsData'
+import storeData from '../components/storeImformation/storeData'
 import basicInfor from '../components/storeInformation/basicInfor'
-import dataList from '../components/storeInformation/dataList'
 Vue.use(Router)
 
 
@@ -17,8 +18,9 @@ const routes = [
   { path: '/shortData', component: shortData,name:'shortData' },
   { path: '/repositoryList', component: repositoryList,name:'repositoryList' },
   { path: '/repositoryData', component: repositoryData,name:'repositoryData' },
+  { path: '/goodsData', component: goodsData,name:'goodsData' },
+  { path: '/storeData', component: storeData,name:'storeData' },
   { path: '/basicInfor', component: basicInfor,name:'basicInfor' },
-  { path: '/dataList', component: dataList,name:'dataList' }
 ]
 export default new Router({
   linkActiveClass: 'active',
