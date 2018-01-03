@@ -12,13 +12,13 @@
           </el-col>
       </el-row>
 
-      <el-row class="ft12 pt10 pl10 pr10">
+      <el-row class="ft12 pt10 pr10">
           <el-col :span="5" class="bg-white br3 h30">
               <el-row>
                   <el-col :span="8" class="pl10">
                       <span>所属组织</span>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="15">
                        <el-select v-model="value" placeholder="广州总部">
                             <el-option
                                 v-for="item in options"
@@ -36,7 +36,7 @@
                   <el-col :span="8" class="pl10">
                       <span>编码</span>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="15">
                       <input class="input-need" type="text" placeholder="请录入编码">
                   </el-col>
               </el-row>
@@ -47,7 +47,7 @@
                   <el-col :span="8" class="pl10">
                       <span>名称</span>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="15">
                       <input class="input-need" type="text" placeholder="请录入名称">
                   </el-col>
               </el-row>
@@ -58,7 +58,7 @@
                   <el-col :span="8" class="pl10">
                       <span>简称</span>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="15">
                       <input class="input-need" type="text" placeholder="无">
                   </el-col>
               </el-row>
@@ -71,13 +71,13 @@
 
       </el-row>
 
-      <el-row class="ft12 pt10 pl10 pr10">
+      <el-row class="ft12 pt10 pr10">
           <el-col :span="5" class="bg-white br3 h30">
               <el-row>
                   <el-col :span="8" class="pl10">
                       <span>助记码</span>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="15">
                       <input class="input-need" type="text" placeholder="PO123456789">
                   </el-col>
               </el-row>
@@ -88,7 +88,7 @@
                   <el-col :span="8" class="pl10">
                       <span>仓库</span>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="15">
                       <el-select v-model="value" placeholder="广州总部">
                             <el-option
                                 v-for="item in options"
@@ -106,7 +106,7 @@
                   <el-col :span="8" class="pl10">
                       <span>库存分类</span>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="15">
                       <input class="input-need" type="text" placeholder="请录入库存分类">
                   </el-col>
               </el-row>
@@ -117,7 +117,7 @@
                   <el-col :span="8" class="pl10">
                       <span>业务地区</span>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="15">
                       <input class="input-need" type="text" placeholder="无">
                   </el-col>
               </el-row>
@@ -126,13 +126,13 @@
 
       <el-collapse-transition>
             <div v-show="ifShow">
-                <el-row class="ft12 pt10 pl10 pr10">
+                <el-row class="ft12 pt10 pr10">
                     <el-col :span="5" class="bg-white br3 h30">
                         <el-row>
                             <el-col :span="8" class="pl10">
                                 <span>行政地区</span>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="15">
                                 <el-select v-model="value" placeholder="广州总部">
                                         <el-option
                                             v-for="item in options"
@@ -150,7 +150,7 @@
                             <el-col :span="8" class="pl10">
                                 <span>负责人</span>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="请录入手工单号">
                             </el-col>
                         </el-row>
@@ -161,7 +161,7 @@
                             <el-col :span="8" class="pl10">
                                 <span>电话</span>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="请选择仓库">
                             </el-col>
                         </el-row>
@@ -172,20 +172,20 @@
                             <el-col :span="8" class="pl10">
                                 <span>Email</span>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="无">
                             </el-col>
                         </el-row>
                     </el-col>
                 </el-row>
 
-                <el-row class="ft12 pt10 pl10 pr10">
+                <el-row class="ft12 pt10 pr10">
                     <el-col :span="5" class="bg-white br3 h30">
                         <el-row>
                             <el-col :span="8" class="pl10">
                                 <span>传真</span>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="PO1235656">
                             </el-col>
                         </el-row>
@@ -196,7 +196,7 @@
                             <el-col :span="8" class="pl10">
                                 <span>地址</span>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="请录入手工单号">
                             </el-col>
                         </el-row>
@@ -216,7 +216,7 @@
             </div>
       </el-collapse-transition>
     
-      <el-row class="ft12 pl10 pr10 pt10 br3">
+      <el-row class="ft12 pr10 pt10 br3">
           <el-col :span='24' class="bg-white pt10 pl10 pb10 bb1">
               <span class="header-title">送货信息</span>
           </el-col>
@@ -238,7 +238,7 @@
           </el-col>
       </el-row>
 
-      <el-row class="ft12 pl10 pr10 pt10 br3">
+      <el-row class="ft12 pr10 pt10 br3">
           <el-col :span='24' class="bg-white pl10 pt10 pb10">
               <span style="color:black;font-size:16px;font-weight:bolder;">审计信息</span>
           </el-col>

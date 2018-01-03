@@ -1,52 +1,52 @@
 <template>
   <div class="data-list-container">
       <el-row>
-          <el-col :span="4" class="list-header-block bg-white">
+          <el-col :span="5" class="bg-white">
               <el-row class="height35">
                   <el-col :span='4'>
                       <span>编码</span>
                   </el-col>
                   <el-col :span='20'>
-                      <input type="text" placeholder="请录入编码" class="header-input">
+                      <input type="text" placeholder="请录入编码" class="input-need">
                   </el-col>
               </el-row>
           </el-col>
-          <el-col :span="4" class="list-header-block bg-white">
+          <el-col :span="5" class="ml10 bg-white">
               <el-row  class="height35">
                   <el-col :span='4'>
                       <span>名称</span>
                   </el-col>
                   <el-col :span='20'>
-                      <input type="text" placeholder="请录入名称" class="header-input">
+                      <input type="text" placeholder="请录入名称" class="input-need">
                   </el-col>
               </el-row>
           </el-col>
-          <el-col :span="4" class="list-header-block bg-white">
+          <el-col :span="5" class="ml10 bg-white">
               <el-row  class="height35">
                   <el-col :span='6'>
                       <span>业务地区</span>
                   </el-col>
                   <el-col :span='18'>
-                      <input type="text" placeholder="请录入编码" class="header-input">
+                      <input type="text" placeholder="请录入编码" class="input-need">
                   </el-col>
               </el-row>
           </el-col>
-          <el-col :span="4" class="list-header-block bg-white">
+          <el-col :span="5" class="ml10 bg-white">
               <el-row  class="height35">
                   <el-col :span='6'>
                       <span>仓库类型</span>
                   </el-col>
                   <el-col :span='18'>
-                      <input type="text" placeholder="请录入编码" class="header-input">
+                      <input type="text" placeholder="请录入编码" class="input-need">
                   </el-col>
               </el-row>
           </el-col>
-          <el-col :span="2" class="list-header-block">
+          <el-col :span="2" class="ml10">
               <span class="search-btn">查询</span>
           </el-col>
       </el-row>
 
-      <div class="bg-white ml10 mr10 mt10 pt10">
+      <div class="bg-white mr10 mt10 pt10">
           <el-row>
               <el-col :span='2' class="ml10 ">
                   <span class="btn">新增</span>
@@ -207,9 +207,6 @@
     background:#EEF1F5;
     padding-top: 15px;
 }
-.list-header-block{
-    margin-left: 10px;
-}
 .search-btn{
     display: inline-block;
     height: 30px;
@@ -230,11 +227,6 @@
     line-height: 35px;
     color: rgba(0, 0, 0, 0.349019607843137);
     padding-left:10px;
-}
-.header-input{
-    border:none;
-    outline: none;
-    margin-left: 25px;
 }
 .ml10{
     margin-left: 10px;
@@ -268,6 +260,11 @@
     width: 100%;
     text-align: center;
     cursor: pointer;
+}
+.input-need{
+    outline: none;
+    border:none;
+    width: 100%;
 }
 </style>
 <style>
