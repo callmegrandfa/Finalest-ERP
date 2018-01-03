@@ -3,10 +3,10 @@
      <el-row>
          <el-col :span="24"> 
              <div class="operationBtn">
-                <el-button type="primary">保存</el-button>
-                <el-button type="primary">保存并新增</el-button>
-                <el-button type="primary">保存并审核</el-button>
-                <el-button type="primary">取消</el-button>               
+                <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">保存并新增</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">保存并审核</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>          
             </div>  
         </el-col>
     </el-row>
@@ -397,7 +397,7 @@ export default({
     }
   .detailForm .bgcolor{
       background-color: #fff;
-      height: 35px;
+      height: 30px;
       font-size: 12px;
       margin-right: 15px;
       margin-bottom: 15px;
@@ -409,17 +409,17 @@ export default({
   }
   .detailForm .bgcolor label{
       padding-left: 10px;
-      line-height:35px;
+      line-height:30px;
       display: block;
-      width: calc(30% - 10px);
+      width: 83px;
       height: 100%;
       float: left;
       color: #BCBCBC;
   }
   .detailForm .bgcolor .el-select,.detailForm .bgcolor .el-input{
       display: block;
-      width: 70%;
-      height: 35px;
+      width: calc(100% - 93px);
+      height: 30px;
       float: left;
   }
  
@@ -454,7 +454,7 @@ export default({
      border-radius: 4px;
  }
  .detailForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
-     padding-left: 20px;
+     padding: 0 20px;
  }
  .detailForm .tabZoo .el-tabs__active-bar{
      width: 28px!important;

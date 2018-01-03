@@ -3,14 +3,14 @@
      <el-row>
          <el-col :span="24"> 
              <div class="operationBtn">
-                <el-button type="primary">新增</el-button>
-                <el-button type="primary">修改</el-button>
-                <el-button type="primary">保存</el-button>
-                <el-button type="primary">取消</el-button>        
-                <el-button type="primary">查询</el-button>
-                <el-button type="primary">打印</el-button>
-                <el-button type="primary">启用/停用</el-button>
-                <el-button type="primary">辅助功能</el-button>            
+                <el-col :span='2' class="ml10"><span class="btn">新增</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">修改</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">查询</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">打印</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">启用/停用</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>          
             </div>  
         </el-col>
     </el-row>
@@ -127,17 +127,36 @@
     
 
     <!-- 公司业务财务bootTab标签页 -->
-    <el-row>
-         
+    <el-row> 
         <div class="tabZoo">
             <el-col :span="24">
                 <el-tabs v-model="activeName">
-                    <el-tab-pane label="经营品牌" name="brand">
-                      
+                    <el-tab-pane label="经营品牌" name="brand" class="getPadding">
+                        <el-table :data="tableData" stripe border style="width: 100%">
+                            <el-table-column prop="businessBrand" label="经营品牌" width="180"></el-table-column>
+                            <el-table-column prop="shopGrade" label="品牌店铺等级" width="180"></el-table-column>
+                            <el-table-column prop="salesLevel" label="品牌销售等级" width="180"></el-table-column>
+                            <el-table-column prop="newGrade" label="品牌新品等级" width="180"></el-table-column>
+                            <el-table-column prop="remarks" label="备注" width="180"></el-table-column>
+                            <el-table-column prop="creationTime" label="创建时间" width="180"></el-table-column>
+                            <el-table-column prop="founder" label="创建人" width="180"></el-table-column>
+                            <el-table-column ></el-table-column>
+                        </el-table>
+                        <el-col :span="22" class="auditInformation">
+                            <h4>审计信息</h4>
+                            <div>
+                                <el-col :span="5" class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" :disabled="true"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>创建时间</label><el-input v-model="auditInformation.createTime" :disabled="true"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" :disabled="true"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>修改时间</label><el-input v-model="auditInformation.modifyTime" :disabled="true"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>启用日期</label><el-input v-model="auditInformation.startTime" :disabled="true"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>封存日期</label><el-input v-model="auditInformation.finishTime" :disabled="true"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" :disabled="true"></el-input></el-col>    
+                            </div>                                  
+                        </el-col>
                     </el-tab-pane>
                     <el-tab-pane label="联系人" name="contacts">联系人</el-tab-pane>
                     <el-tab-pane label="网店" name="shop">网店</el-tab-pane>
-        
                 </el-tabs>
             </el-col>
         </div>
@@ -149,6 +168,48 @@
 export default({
     data() {
         return{
+            tableData: [{//表格
+                businessBrand: '三叶',
+                shopGrade: '4',
+                salesLevel: '4',
+                newGrade:'5',
+                remarks:'销量好',
+                creationTime:'',
+                founder:'李四'
+                }, {
+                businessBrand: '三叶',
+                shopGrade: '4',
+                salesLevel: '4',
+                newGrade:'5',
+                remarks:'销量好',
+                creationTime:'',
+                founder:'李四'
+                },{
+                businessBrand: '三叶',
+                shopGrade: '4',
+                salesLevel: '4',
+                newGrade:'5',
+                remarks:'销量好',
+                creationTime:'',
+                founder:'李四'
+                },{
+                businessBrand: '三叶',
+                shopGrade: '4',
+                salesLevel: '4',
+                newGrade:'5',
+                remarks:'销量好',
+                creationTime:'',
+                founder:'李四'
+                },],
+            auditInformation:{//审计信息
+                createName:"张三",
+                createTime:"2001.12.12",
+                modifyName:"李四",
+                modifyTime:"2001.12.12",
+                startTime:"2001.12.12",
+                finishTime:"2001.12.12",
+                finishName:"李",
+            },
             data:{
                 code:'',//编码
                 name:'',//名称
@@ -317,7 +378,7 @@ export default({
     }
   .basicForm .bgcolor{
       background-color: #fff;
-      height: 35px;
+      height: 30px;
       font-size: 12px;
       margin-right: 15px;
       margin-bottom: 15px;
@@ -336,17 +397,17 @@ export default({
   }
   .basicForm .bgcolor label{
       padding-left: 10px;
-      line-height:35px;
+      line-height:30px;
       display: block;
-      width: calc(30% - 10px);
+      width:83px;
       height: 100%;
       float: left;
       color: #BCBCBC;
   }
   .basicForm .bgcolor .el-select,.basicForm .bgcolor .el-input{
       display: block;
-      width: 70%;
-      height: 35px;
+      width: calc(100% - 93px);
+      height: 30px;
       float: left;
   }
  
@@ -381,7 +442,13 @@ export default({
      border-radius: 4px;
  }
  .basicForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
-     padding-left: 20px;
+     padding: 0 20px;
+ }
+ .basicForm .tabZoo .auditInformation{
+     margin-top: 15px;
+ }
+ .basicForm .tabZoo .auditInformation h4{
+     margin-bottom: 15px;
  }
 
 
