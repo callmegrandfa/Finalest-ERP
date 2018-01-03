@@ -132,8 +132,17 @@
         <div class="tabZoo">
             <el-col :span="24">
                 <el-tabs v-model="activeName">
-                    <el-tab-pane label="经营品牌" name="brand">
-                      
+                    <el-tab-pane label="经营品牌" name="brand" class="getPadding">
+                        <el-table :data="tableData" stripe border style="width: 100%">
+                            <el-table-column prop="businessBrand" label="经营品牌" width="180"></el-table-column>
+                            <el-table-column prop="shopGrade" label="品牌店铺等级" width="180"></el-table-column>
+                            <el-table-column prop="salesLevel" label="品牌销售等级" width="180"></el-table-column>
+                            <el-table-column prop="newGrade" label="品牌新品等级" width="180"></el-table-column>
+                            <el-table-column prop="remarks" label="备注" width="180"></el-table-column>
+                            <el-table-column prop="creationTime" label="创建时间" width="180"></el-table-column>
+                            <el-table-column prop="founder" label="创建人" width="180"></el-table-column>
+                            <el-table-column ></el-table-column>
+                        </el-table>
                     </el-tab-pane>
                     <el-tab-pane label="联系人" name="contacts">联系人</el-tab-pane>
                     <el-tab-pane label="网店" name="shop">网店</el-tab-pane>
@@ -149,6 +158,40 @@
 export default({
     data() {
         return{
+            tableData: [{
+                businessBrand: '三叶',
+                shopGrade: '4',
+                salesLevel: '4',
+                newGrade:'5',
+                remarks:'销量好',
+                creationTime:'',
+                founder:'李四'
+                }, {
+                businessBrand: '三叶',
+                shopGrade: '4',
+                salesLevel: '4',
+                newGrade:'5',
+                remarks:'销量好',
+                creationTime:'',
+                founder:'李四'
+                },{
+                businessBrand: '三叶',
+                shopGrade: '4',
+                salesLevel: '4',
+                newGrade:'5',
+                remarks:'销量好',
+                creationTime:'',
+                founder:'李四'
+                },{
+                businessBrand: '三叶',
+                shopGrade: '4',
+                salesLevel: '4',
+                newGrade:'5',
+                remarks:'销量好',
+                creationTime:'',
+                founder:'李四'
+                },],
+            
             data:{
                 code:'',//编码
                 name:'',//名称
@@ -338,14 +381,14 @@ export default({
       padding-left: 10px;
       line-height:35px;
       display: block;
-      width: calc(30% - 10px);
+      width:83px;
       height: 100%;
       float: left;
       color: #BCBCBC;
   }
   .basicForm .bgcolor .el-select,.basicForm .bgcolor .el-input{
       display: block;
-      width: 70%;
+      width: calc(100% - 93px);
       height: 35px;
       float: left;
   }
@@ -381,7 +424,7 @@ export default({
      border-radius: 4px;
  }
  .basicForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
-     padding-left: 20px;
+     padding: 0 20px;
  }
 
 

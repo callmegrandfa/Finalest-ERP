@@ -411,14 +411,14 @@ export default({
       padding-left: 10px;
       line-height:35px;
       display: block;
-      width: calc(30% - 10px);
+      width: 83px;
       height: 100%;
       float: left;
       color: #BCBCBC;
   }
   .detailForm .bgcolor .el-select,.detailForm .bgcolor .el-input{
       display: block;
-      width: 70%;
+      width: calc(100% - 93px);
       height: 35px;
       float: left;
   }
@@ -454,7 +454,7 @@ export default({
      border-radius: 4px;
  }
  .detailForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
-     padding-left: 20px;
+     padding: 0 20px;
  }
  .detailForm .tabZoo .el-tabs__active-bar{
      width: 28px!important;
