@@ -406,12 +406,13 @@ export default({
   .detailForm .bgcolor .el-select,.detailForm .bgcolor .el-input{
       display: block;
       width: 70%;
-      height: 100%;
+      height: 40px;
       float: left;
   }
  
   .detailForm .bgcolor .el-input input{
       border: none;
+      height: 100%;
   }
   .detailForm .bgcolor .el-input input[disabled]{
       background-color: #fff;
