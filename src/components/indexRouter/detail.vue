@@ -394,44 +394,12 @@ export default({
         background-color: #82AAFC;
         border: none;
     }
-  .detailForm .bgcolor{
-      background-color: #fff;
-      height: 30px;
-      font-size: 12px;
-      margin-right: 15px;
-      margin-bottom: 15px;
-      float: left;
-      overflow: hidden;
-  }
+
   .detailForm .el-row{
       margin-bottom: 15px;
   }
-  .detailForm .bgcolor label{
-      padding-left: 10px;
-      line-height:30px;
-      display: block;
-      width: 83px;
-      height: 100%;
-      float: left;
-      color: #BCBCBC;
-  }
-  .detailForm .bgcolor .el-select,.detailForm .bgcolor .el-input{
-      display: block;
-      width: calc(100% - 93px);
-      height: 30px;
-      float: left;
-  }
- 
-  .detailForm .bgcolor .el-input input{
-      border: none;
-      height: 100%;
-  }
-  .detailForm .bgcolor .el-input input[disabled]{
-      background-color: #fff;
-  }
-  .detailForm .bgcolor .el-select .el-input {
-      width: 100%;
-  }
+
+
   .detailForm .companyInfo>.el-col:first-child,
   .detailForm .companyInfo .el-col h4{
       margin-bottom: 15px;
@@ -473,21 +441,5 @@ export default({
    margin-left: 10px;
 }
  
-   
-
-  /* 输入框 placeholder字体颜色*/
-  ::-webkit-input-placeholder {
-    color: #BCBCBC; }
-
-  :-moz-placeholder {
-    color: #BCBCBC; }
-
-  ::-moz-placeholder {
-    color: #BCBCBC; }
-
-  :-ms-input-placeholder {
-    color: #BCBCBC; }
-
-
   </style>
   

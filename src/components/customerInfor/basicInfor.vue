@@ -358,51 +358,14 @@ export default({
         background-color: #82AAFC;
         border: none;
     }
-  .customerBasicForm .bgcolor{
-      background-color: #fff;
-      height: 30px;
-      font-size: 12px;
-      margin-right: 15px;
-      margin-bottom: 15px;
-      float: left;
-      overflow: hidden;
-  }
+
   .customerBasicForm .noColor{
       background-color:transparent;
   }
-  .customerBasicForm .moreWidth{
-      width: calc(41.667% + 15px)
-  }
-  
   .customerBasicForm .el-row{
       margin-bottom: 15px;
   }
-  .customerBasicForm .bgcolor label{
-      padding-left: 10px;
-      line-height:30px;
-      display: block;
-      width:83px;
-      height: 100%;
-      float: left;
-      color: #BCBCBC;
-  }
-  .customerBasicForm .bgcolor .el-select,.customerBasicForm .bgcolor .el-input{
-      display: block;
-      width: calc(100% - 93px);
-      height: 30px;
-      float: left;
-  }
- 
-  .customerBasicForm .bgcolor .el-input input{
-      border: none;
-      height: 100%;
-  }
-  .customerBasicForm .bgcolor .el-input input[disabled]{
-      background-color: #fff;
-  }
-  .customerBasicForm .bgcolor .el-select .el-input {
-      width: 100%;
-  }
+
   .customerBasicForm .companyInfo>.el-col:first-child,
   .customerBasicForm .companyInfo .el-col h4{
       margin-bottom: 15px;
@@ -446,32 +409,6 @@ export default({
 .customerBasicForm .ml10{
    margin-left: 10px;
 }
-/* 日期控件 */
- .customerBasicForm .el-input__prefix{
-     right: 0;
-     left: auto;
- }
- .customerBasicForm .el-input__prefix i{
-     line-height: 30px;
- }
- .customerBasicForm .el-date-editor input{
-      padding: 0 15px;
-  }
-   
-
-  /* 输入框 placeholder字体颜色*/
-  ::-webkit-input-placeholder {
-    color: #BCBCBC; }
-
-  :-moz-placeholder {
-    color: #BCBCBC; }
-
-  ::-moz-placeholder {
-    color: #BCBCBC; }
-
-  :-ms-input-placeholder {
-    color: #BCBCBC; }
-
 
   </style>
   

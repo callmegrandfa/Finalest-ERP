@@ -401,54 +401,15 @@
     background-color: #82AAFC;
     border: none;
 }
-.orderDetail .bgcolor{
-    background-color: #fff;
-    height: 30px;
-    font-size: 12px;
-    margin-right: 15px;
-    margin-bottom: 15px;
-    float: left;
-    overflow: hidden;
-}
+
 .orderDetail .noColor{
     background-color:transparent;
 }
-.orderDetail .moreWidth{
-    width: calc(41.667% + 15px)
-}
-  
 .orderDetail .el-row{
     margin-bottom: 15px;
 }
-.orderDetail .bgcolor label{
-    padding-left: 10px;
-    line-height:30px;
-    display: block;
-    width:83px;
-    height: 100%;
-    float: left;
-    color: #BCBCBC;
-}
-.orderDetail .bgcolor label small{
-    color: #FF669B;
-    margin-right: 2px;
-}
-.orderDetail .bgcolor .el-select,.orderDetail .bgcolor .el-input{
-    display: block;
-    width: calc(100% - 93px);
-    height: 30px;
-    float: left;
-}
-.orderDetail .bgcolor .el-input input{
-    border: none;
-    height: 30px;
-}
-.orderDetail .bgcolor .el-input input[disabled]{
-    background-color: #fff;
-}
-.orderDetail .bgcolor .el-select .el-input {
-    width: 100%;
-}
+
+
 .orderDetail .noColor .el-input input[disabled]{
     background-color: transparent;
 }
@@ -499,17 +460,7 @@
 .orderDetail .ml10{
    margin-left: 10px;
 }
-/* 日期控件 */
- .orderDetail .el-input__prefix{
-     right: 0;
-     left: auto;
- }
- .orderDetail .el-input__prefix i{
-     line-height: 30px;
- }
- .orderDetail .el-date-editor input{
-      padding: 0 15px;
-  }
+
   /* 搜索框 */
 .orderDetail .search-input{
     border: 1px solid #cccccc;
@@ -549,23 +500,6 @@
  .orderDetail .pagination{
      float: right;
  }
- .orderDetail .pagination .btn-next, 
- .orderDetail .pagination .btn-prev, 
- .orderDetail .pagination .el-pager li{
-     border-radius: 50%;
- }
-  /* 输入框 placeholder字体颜色*/
-  ::-webkit-input-placeholder {
-    color: #BCBCBC; }
-
-  :-moz-placeholder {
-    color: #BCBCBC; }
-
-  ::-moz-placeholder {
-    color: #BCBCBC; }
-
-  :-ms-input-placeholder {
-    color: #BCBCBC; }
 
 </style>
 
