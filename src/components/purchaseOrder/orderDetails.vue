@@ -2,7 +2,18 @@
     <div class="orderDetail">
         <el-row>
             <el-col :span="24" class="orderHead">
-                <el-col :span="19" class="orderTittle"><h4>现货采购订单-订单详情</h4></el-col>
+                <el-col :span="18" class="orderTittle">
+                    <h4>现货采购订单-订单详情</h4>
+                    <div class="seal">
+                        <div class="seal1">
+                            <div class="seal2">
+                                <div class="seal3">
+                                    <span>已生效</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </el-col>
                 <el-col :span="4">
                     <el-steps :active="2">
                         <el-step title="Step1" description="新增报表信息"></el-step>
@@ -14,16 +25,14 @@
         </el-row>
 
         <el-row>
-            <el-col :span="24"> 
-                <div class="operationBtn">
-                    <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">保存并新增</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">保存并修改</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">打印</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">导出</span></el-col>        
-                </div>  
+            <el-col :span="24">
+                <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">保存并新增</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">保存并修改</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">打印</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">导出</span></el-col>
             </el-col>
         </el-row>
 
@@ -153,25 +162,23 @@
                 </a>
             </el-col>  
         </el-row>
-        <el-row>
-            <el-col :span="24">
-                <div class="operationBtn">
-                    <el-col :span='2' class="ml10"><span class="btn">扫码新增</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">输入新增</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">导入</span></el-col>
-                    <el-col :span='2' class="ml10"><span class="btn">导出</span></el-col>
-                    <el-col :span='5' class="search-input">
-                        <input type="text" class="form-control" placeholder="编码/名称..."/>
-                    </el-col>
-                    <el-col :span='2' class="search-btn">
-                        <span>搜索</span>
-                    </el-col>
-                    <el-col :span='2' :offset="6">
-                        <i class="fa fa-bars" aria-hidden="true"></i>
-                        <i class="fa fa-bars rotate" aria-hidden="true"></i>
-                        <span>全屏</span>
-                    </el-col>   
-                </div>  
+        <el-row class="tabZoo">
+            <el-col :span="24" class="operationBtn">
+                <el-col :span='2' class="ml10"><span class="btn">扫码新增</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">输入新增</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">导入</span></el-col>
+                <el-col :span='2' class="ml10"><span class="btn">导出</span></el-col>
+                <el-col :span='5' class="search-input">
+                    <input type="text" class="form-control" placeholder="编码/名称..."/>
+                </el-col>
+                <el-col :span='2' class="search-btn">
+                    <span>搜索</span>
+                </el-col>
+                <el-col :span='2' :offset="6">
+                    <i class="fa fa-bars upBtn" aria-hidden="true"></i>
+                    <i class="fa fa-bars rotate upBtn" aria-hidden="true"></i>
+                    <span class="upBtn">全屏</span>
+                </el-col>   
             </el-col>
             <el-table :data="tableData" stripe border style="width: 100%">
                 <el-table-column prop="code" label="货号" width="200"></el-table-column>
@@ -187,6 +194,16 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="100"
+            layout="total, prev, pager, next"
+            :total="10000"
+            class="pagination">
+            </el-pagination>
         </el-row>
     </div>
 </template>
@@ -194,6 +211,7 @@
     export default({
         data(){
             return{
+                currentPage:4,//分页当前页
                 showBasicInfo:false,
                 showOtherInfo:false,
                 tableData: [{//表格
@@ -277,14 +295,93 @@
             handleClick(row) {
                 console.log(row);
             },
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+            }
         },
     })
 </script>
 <style>
 .orderDetail .orderHead{
     background-color: #fff;
+    padding: 5px 0;
 }
+.orderDetail .orderHead .orderTittle h4{
+    padding-left: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 36px;
+}
+/* 已生效 */
 
+.orderDetail .orderHead .orderTittle .seal,
+.orderDetail .orderHead .orderTittle .seal1,
+.orderDetail .orderHead .orderTittle .seal2,
+.orderDetail .orderHead .orderTittle .seal3{
+    position: absolute;
+    background-repeat:no-repeat;
+    background-position:center;
+    top:0;
+    left: 0;
+    width: 55px;
+    height: 55px;
+}
+.orderDetail .orderHead .orderTittle .seal{
+    transform: rotate(-34deg);
+    -ms-transform: rotate(-34deg);
+    -webkit-transform: rotate(-34deg);
+    -o-transform: rotate(-34deg);
+    -moz-transform: rotate(-34deg);	
+    top: -3px;
+    left: 210px;
+    background-image: url(../../../static/image/u1.png);
+}
+.orderDetail .orderHead .orderTittle .seal1{
+    background-image: url(../../../static/image/u2.png);
+}
+.orderDetail .orderHead .orderTittle .seal2{
+    background-image: url(../../../static/image/u3.png);
+}
+.orderDetail .orderHead .orderTittle .seal3{
+    background-image: url(../../../static/image/u4.png);
+}
+.orderDetail .orderHead .orderTittle .seal3 span{
+    font-weight: bold;
+    position: absolute;
+    font-size: 12px;
+    color: #FF669B;
+    top: 20px;
+    left: 9px;
+    transform: rotate(87deg);
+    -ms-transform: rotate(87deg);
+    -webkit-transform: rotate(87deg);
+    -o-transform: rotate(87deg);
+    -moz-transform: rotate(87deg);	
+}
+/* steps */
+.orderDetail .el-steps .el-step__line{
+    /* 水平线 */
+    display: none;
+}
+.orderDetail .el-steps .el-step__main{
+    position: absolute;
+    top: 0px;
+    left: 42px;
+}
+.orderDetail .el-steps .el-step__title{
+    font-size: 12px;
+    line-height: 20px;
+}
+.orderDetail .el-steps .el-step__description{
+    padding-right: 0;
+}
+.orderDetail .el-steps .el-step__icon{
+    width: 36px;
+    height: 36px;
+}
 .orderDetail .down{
     overflow: hidden;
     transition: max-height 0.5s;
@@ -364,6 +461,9 @@
     color: #BCBCBC;
     cursor: pointer;
 }
+.orderDetail .upBtn:hover{
+    color: #3cc;
+}
 .orderDetail .upBtn .el-icon-arrow-down{
     margin-left: 5px;
 }
@@ -441,6 +541,18 @@
     -webkit-transform: rotate(90deg);
     -o-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
+ }
+ .orderDetail .operationBtn{
+     padding: 15px 0;
+ }
+ /* 分页 */
+ .orderDetail .pagination{
+     float: right;
+ }
+ .orderDetail .pagination .el-pagination.is-background .btn-next, 
+ .orderDetail .pagination .el-pagination.is-background .btn-prev, 
+ .orderDetail .pagination .el-pagination.is-background .el-pager li{
+     border-radius: 50%;
  }
   /* 输入框 placeholder字体颜色*/
   ::-webkit-input-placeholder {

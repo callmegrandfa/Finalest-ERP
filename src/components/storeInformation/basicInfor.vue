@@ -1,17 +1,15 @@
 <template>
  <div class="basicForm">
      <el-row>
-         <el-col :span="24"> 
-             <div class="operationBtn">
-                <el-col :span='2' class="ml10"><span class="btn">新增</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">修改</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">查询</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">打印</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">启用/停用</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>          
-            </div>  
+         <el-col :span="24">
+            <el-col :span='2' class="ml10"><span class="btn">新增</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">修改</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">查询</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">打印</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">启用/停用</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>
         </el-col>
     </el-row>
     <el-row>
