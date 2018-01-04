@@ -229,7 +229,7 @@
                     <el-table-column prop="sendType" label="运输方式"></el-table-column>
                     <el-table-column prop="company" label="物流公司"></el-table-column>
                     <el-table-column prop="ifAllow" label="默认">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                         </template>
                     </el-table-column>
