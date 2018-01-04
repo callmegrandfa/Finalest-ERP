@@ -412,7 +412,7 @@
     }
 </script>
 
-<style>
+<style scoped>
 .data-wrapper{
     background: #EEF1F5;
     height: auto;
@@ -491,19 +491,19 @@
 }
 </style>
 <style>
-.el-input input{
+.data-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
 }
 /* 重写checkbox */
-.el-checkbox__inner{
+.data-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.el-checkbox__inner::after{
+.data-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -526,7 +526,7 @@
 }
 
 /* 重写el-table样式 */
-.el-table th {
+.data-wrapper .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -535,10 +535,10 @@
     text-align: center;
     background-color: #ececec;
 }
-.el-table td{
+.data-wrapper .el-table td{
     padding: 3px 0;
 }
-.el-table__body{
+.data-wrapper .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
@@ -546,18 +546,19 @@
     border-radius: 50%;
 }
 
-.text-right{
+.data-wrapper .text-right{
     text-align: right;
 }
 .mt-10{
     margin-top: 10px;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
+.data-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
 }
-.el-input--suffix .el-input__inner{
+.data-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
+
 </style>
 
 

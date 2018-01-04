@@ -269,12 +269,12 @@
 </style>
 <style>
 /* 重写checkbox */
-.el-checkbox__inner{
+.data-list-container .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.el-checkbox__inner::after{
+.data-list-container .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -297,7 +297,7 @@
 }
 
 /* 重写el-table样式 */
-.el-table th {
+.data-list-container .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -306,10 +306,10 @@
     text-align: center;
     background-color: #ececec;
 }
-.el-table td{
+.data-list-container .el-table td{
     padding: 3px 0;
 }
-.el-table__body{
+.data-list-container .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
@@ -317,16 +317,16 @@
     border-radius: 50%;
 }
 
-.text-right{
+.data-list-container .text-right{
     text-align: right;
 }
 .mt-10{
     margin-top: 10px;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
+.data-list-container .el-date-editor.el-input,.data-list-container .el-date-editor.el-input__inner{
     width: 130px;
 }
-.el-input--suffix .el-input__inner{
+.data-list-container .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
 </style>
