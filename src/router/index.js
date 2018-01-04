@@ -10,7 +10,7 @@ import storeData from '../components/storeInformation/storeData'
 import basicInfor from '../components/storeInformation/basicInfor'
 import customerBasicInfor from '../components/customerInfor/basicInfor'
 import customerInfor from '../components/customerInfor/customerInfor'
-import orderDetail from '../components/purchaseOrder/orderDetail'
+import orderDetail from '../components/purchaseOrder/orderDetails'
 import orderList from '../components/purchaseOrder/orderList'
 Vue.use(Router)
 
@@ -27,7 +27,7 @@ const routes = [
   { path: '/basicInfor', component: basicInfor,name:'basicInfor' },
   { path: '/customerBasicInfor', component: customerBasicInfor,name:'customerBasicInfor' },
   { path: '/customerInfor', component: customerInfor,name:'customerInfor' },
-  { path: '/orderDetail', component: orderDetail,name:'orderDetail' },
+  { path: '/orderDetail', component: orderDetail,name:'orderDetails' },
   { path: '/orderList', component: orderList,name:'orderList' },
 ]
 export default new Router({
