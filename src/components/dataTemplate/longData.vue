@@ -347,7 +347,7 @@
 <script>
 
 export default {
-  name: 'shortdata',
+  name: 'longdata',
   data(){
       return{
             highSearchShow:false,//控制高级搜索显示
