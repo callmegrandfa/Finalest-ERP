@@ -11,7 +11,7 @@
                             <el-col :span="8">
                                 <span class="fs14">客户分类</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="PO959894848"/>
                             </el-col>
                         </el-row>                    
@@ -22,7 +22,7 @@
                             <el-col :span="8">
                                 <span class="fs14">所属组织</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="请录入所属组织"/>
                             </el-col>
                         </el-row>                    
@@ -33,7 +33,7 @@
                             <el-col :span="8">
                                 <span class="fs14">行政地区</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <el-select v-model="value" placeholder="请选择行政地区">
                                     <el-option
                                         v-for="item in options"
@@ -51,7 +51,7 @@
                             <el-col :span="8">
                                 <span class="fs14">业务地区</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <el-select v-model="value" placeholder="无">
                                     <el-option
                                         v-for="item in options"
@@ -71,7 +71,7 @@
                             <el-col :span="8">
                                 <span class="fs14">编码</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="PO-959894848"/>
                             </el-col>
                         </el-row>                    
@@ -82,7 +82,7 @@
                             <el-col :span="8">
                                 <span class="fs14">名称</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="请录入手工单号"/>
                             </el-col>
                         </el-row>                    
@@ -93,7 +93,7 @@
                             <el-col :span="8">
                                 <span class="fs14">客户性质</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <el-select v-model="value" placeholder="请选择客户性质">
                                     <el-option
                                         v-for="item in options"

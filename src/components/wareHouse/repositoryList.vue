@@ -42,7 +42,7 @@
               </el-row>
           </el-col>
           <el-col :span="2" class="ml10">
-              <span class="search-btn">查询</span>
+              <span class="search-btn" style="cursor:pointer;">查询</span>
           </el-col>
       </el-row>
 
@@ -205,7 +205,6 @@
     width: 100%;
     height: 100%;
     background:#EEF1F5;
-    padding-top: 15px;
 }
 .search-btn{
     display: inline-block;

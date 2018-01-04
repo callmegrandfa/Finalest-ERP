@@ -215,7 +215,15 @@
                 </el-row>
             </div>
       </el-collapse-transition>
-    
+
+      <el-row class="mt20 mb10">
+          <el-col :span="2">
+                <template>
+                    <el-checkbox v-model="ifCan">允许使用</el-checkbox>
+                </template>
+          </el-col>
+      </el-row>
+
       <el-row class="ft12 pr10 pt10 br3">
           <el-col :span='24' class="bg-white pt10 pl10 pb10 bb1">
               <span class="header-title">送货信息</span>
@@ -305,7 +313,8 @@
         name:'repositoryData',
         data(){
             return {
-                ifShow:true,
+                ifShow:true,//控制折叠页面
+                ifCan:true,//控制允许使用
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -432,6 +441,12 @@
 }
 .mt10{
     margin-top: 10px;
+}
+.mt20{
+    margin-top: 20px;
+}
+.mb10{
+    margin-bottom: 10px;
 }
 .pt10{
     padding-top: 10px;

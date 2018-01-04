@@ -1,6 +1,6 @@
 <template>
     <div class="store-data-wrapper">
-        <el-row class="pt20 fs14">
+        <el-row class="fs14">
             <el-col :span='4' class="bg-white h30 pl10">
                 <el-row>
                     <el-col :span="8">
