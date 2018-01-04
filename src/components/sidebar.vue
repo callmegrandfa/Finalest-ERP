@@ -41,7 +41,7 @@ export default {
                         {name:'店铺数据列表',address:'storeData',menuid:'1108',tobarString:''},   
                         {name:'店铺资料-基本信息',address:'basicInfor',menuid:'1109',tobarString:''},
                         {name:'客户资料-基本信息',address:'customerBasicInfor',menuid:'1110',tobarString:''},
-                        {name:'y',address:'7',menuid:'1111',tobarString:''},
+                        {name:'客户资料',address:'customerInfor',menuid:'1111',tobarString:''},
                         {name:'u',address:'8',menuid:'1112',tobarString:''}, 
                         {name:'i',address:'9',menuid:'1113',tobarString:''},
                         {name:'o',address:'10',menuid:'1114',tobarString:''},
