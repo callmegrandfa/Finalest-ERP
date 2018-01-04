@@ -142,11 +142,11 @@
                             <h4>审计信息</h4>
                             <div>
                                 <el-col :span="5" class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="请录入创建人"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>创建时间</label><el-input v-model="auditInformation.createTime" placeholder="请录入创建时间"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="选择创建时间"></el-date-picker></el-col>
                                 <el-col :span="5" class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>修改时间</label><el-input v-model="auditInformation.modifyTime" placeholder="请录入修改时间"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>启用日期</label><el-input v-model="auditInformation.startTime" placeholder="请录入启用日期"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>封存日期</label><el-input v-model="auditInformation.finishTime" placeholder="请录入封存日期"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="选择修改时间"></el-date-picker></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></el-col>
+                                <el-col :span="5" class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></el-col>
                                 <el-col :span="5" class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></el-col>    
                             </div>                                  
                         </el-col>
@@ -448,8 +448,17 @@ export default({
 .basicForm .ml10{
    margin-left: 10px;
 }
-
- 
+/* 日期控件 */
+ .basicForm .el-input__prefix{
+     right: 0;
+     left: auto;
+ }
+ .basicForm .el-input__prefix i{
+     line-height: 30px;
+ }
+ .basicForm .el-date-editor input{
+      padding: 0 15px;
+  }
    
 
   /* 输入框 placeholder字体颜色*/

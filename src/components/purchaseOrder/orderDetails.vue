@@ -47,7 +47,7 @@
                 </el-col>
                 <el-col :span="5" class="bgcolor">
                     <label><small>*</small>交货日期</label>
-                    <el-input v-model="data.deliveryData" placeholder="请录入交货日期"></el-input>
+                    <el-date-picker v-model="data.deliveryData" type="date" placeholder="选择日期"></el-date-picker>
                 </el-col>
                 <el-col :span="5" class="bgcolor">
                     <label><small>*</small>供应商</label>
@@ -65,7 +65,7 @@
                 </el-col>
                 <el-col :span="5" class="bgcolor">
                     <label>年份</label>
-                    <el-input v-model="data.year" placeholder="请录入年份"></el-input>
+                    <el-date-picker v-model="data.year" type="year" placeholder="请选择年份"></el-date-picker>
                 </el-col>
                 <el-col :span="5" class="bgcolor">
                     <label><small>*</small>季节</label>
@@ -152,7 +152,42 @@
                     收起<span class="el-icon-arrow-down"></span>
                 </a>
             </el-col>  
-        </el-row>    
+        </el-row>
+        <el-row>
+            <el-col :span="24">
+                <div class="operationBtn">
+                    <el-col :span='2' class="ml10"><span class="btn">扫码新增</span></el-col>
+                    <el-col :span='2' class="ml10"><span class="btn">输入新增</span></el-col>
+                    <el-col :span='2' class="ml10"><span class="btn">导入</span></el-col>
+                    <el-col :span='2' class="ml10"><span class="btn">导出</span></el-col>
+                    <el-col :span='5' class="search-input">
+                        <input type="text" class="form-control" placeholder="编码/名称..."/>
+                    </el-col>
+                    <el-col :span='2' class="search-btn">
+                        <span>搜索</span>
+                    </el-col>
+                    <el-col :span='2' :offset="6">
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                        <i class="fa fa-bars rotate" aria-hidden="true"></i>
+                        <span>全屏</span>
+                    </el-col>   
+                </div>  
+            </el-col>
+            <el-table :data="tableData" stripe border style="width: 100%">
+                <el-table-column prop="code" label="货号" width="200"></el-table-column>
+                <el-table-column prop="size" label="规格" width="180"></el-table-column>
+                <el-table-column prop="num" label="数量" width="180"></el-table-column>
+                <el-table-column prop="money" label="零售价" width="180"></el-table-column>
+                <el-table-column prop="volume" label="体积" width="180"></el-table-column>
+                 <el-table-column fixed="right" label="操作">
+                     <template slot-scope="scope">
+                        <el-button @click="handleClick(scope.row)" type="text" size="small">插入</el-button>
+                        <el-button type="text" size="small">卡片展示</el-button>
+                        <el-button type="text" size="small">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-row>
     </div>
 </template>
 <script>
@@ -161,6 +196,31 @@
             return{
                 showBasicInfo:false,
                 showOtherInfo:false,
+                tableData: [{//表格
+                    code: 'A001',
+                    size: '红',
+                    num: '1',
+                    money:'1',
+                    volume:'1',
+                    },{//表格
+                    code: 'A001',
+                    size: '红',
+                    num: '1',
+                    money:'1',
+                    volume:'1',
+                    },{//表格
+                    code: 'A004005006',
+                    size: '红',
+                    num: '1',
+                    money:'1',
+                    volume:'1',
+                    },{//表格
+                    code: 'A004005006',
+                    size: '红',
+                    num: '1',
+                    money:'1',
+                    volume:'1',
+                }, ],
                 data:{
                     num:'PO1711063111111-002',//单号
                     handmade:'1',//手工单号 
@@ -212,7 +272,12 @@
                 valueSupplier:'NiKE',
                 valueSeason:'夏',
             }
-        }
+        },
+        methods:{
+            handleClick(row) {
+                console.log(row);
+            },
+        },
     })
 </script>
 <style>
@@ -334,10 +399,49 @@
 .orderDetail .ml10{
    margin-left: 10px;
 }
-
- 
-   
-
+/* 日期控件 */
+ .orderDetail .el-input__prefix{
+     right: 0;
+     left: auto;
+ }
+ .orderDetail .el-input__prefix i{
+     line-height: 30px;
+ }
+ .orderDetail .el-date-editor input{
+      padding: 0 15px;
+  }
+  /* 搜索框 */
+.orderDetail .search-input{
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    border-right: none;
+    margin-left: 10px;
+}
+.orderDetail .search-input .form-control{
+    width:100%;
+    height:27px;
+    outline: none;
+    padding-left: 5px;
+    border:none;
+    border-radius:3px 0 0 3px;
+}
+.orderDetail .search-btn{
+    background:#82AAFC;
+    height:30px;
+    text-align:center;
+    line-height:30px;
+    border-radius:0 4px 4px 0;
+    cursor: pointer;
+    margin-left: -1px;
+    color: #fff;
+}
+.orderDetail .rotate{
+     transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+ }
   /* 输入框 placeholder字体颜色*/
   ::-webkit-input-placeholder {
     color: #BCBCBC; }
