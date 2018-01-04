@@ -1,17 +1,15 @@
 <template>
  <div class="basicForm">
      <el-row>
-         <el-col :span="24"> 
-             <div class="operationBtn">
-                <el-col :span='2' class="ml10"><span class="btn">新增</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">修改</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">查询</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">打印</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">启用/停用</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>          
-            </div>  
+         <el-col :span="24">
+            <el-col :span='2' class="ml10"><span class="btn">新增</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">修改</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">查询</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">打印</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">启用/停用</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>
         </el-col>
     </el-row>
     <el-row>
@@ -369,55 +367,16 @@ export default({
   .basicForm .slidUp{
       max-height: 45px;
   }
-
-    .basicForm .el-button--primary{
+.basicForm .el-button--primary{
         background-color: #82AAFC;
         border: none;
     }
-  .basicForm .bgcolor{
-      background-color: #fff;
-      height: 30px;
-      font-size: 12px;
-      margin-right: 15px;
-      margin-bottom: 15px;
-      float: left;
-      overflow: hidden;
-  }
+
   .basicForm .noColor{
       background-color:transparent;
   }
-  .basicForm .moreWidth{
-      width: calc(41.667% + 15px)
-  }
-  
   .basicForm .el-row{
       margin-bottom: 15px;
-  }
-  .basicForm .bgcolor label{
-      padding-left: 10px;
-      line-height:30px;
-      display: block;
-      width:83px;
-      height: 100%;
-      float: left;
-      color: #BCBCBC;
-  }
-  .basicForm .bgcolor .el-select,.basicForm .bgcolor .el-input{
-      display: block;
-      width: calc(100% - 93px);
-      height: 30px;
-      float: left;
-  }
- 
-  .basicForm .bgcolor .el-input input{
-      border: none;
-      height: 100%;
-  }
-  .basicForm .bgcolor .el-input input[disabled]{
-      background-color: #fff;
-  }
-  .basicForm .bgcolor .el-select .el-input {
-      width: 100%;
   }
   .basicForm .companyInfo>.el-col:first-child,
   .basicForm .companyInfo .el-col h4{
@@ -448,7 +407,6 @@ export default({
  .basicForm .tabZoo .auditInformation h4{
      margin-bottom: 15px;
  }
-
 .basicForm .btn{
     display: inline-block;
     height: 30px;
@@ -463,33 +421,5 @@ export default({
 .basicForm .ml10{
    margin-left: 10px;
 }
-/* 日期控件 */
- .basicForm .el-input__prefix{
-     right: 0;
-     left: auto;
- }
- .basicForm .el-input__prefix i{
-     line-height: 30px;
- }
-  .basicForm .el-date-editor input{
-      padding: 0 15px;
-  }
- 
-   
-
-  /* 输入框 placeholder字体颜色*/
-  ::-webkit-input-placeholder {
-    color: #BCBCBC; }
-
-  :-moz-placeholder {
-    color: #BCBCBC; }
-
-  ::-moz-placeholder {
-    color: #BCBCBC; }
-
-  :-ms-input-placeholder {
-    color: #BCBCBC; }
-
-
   </style>
   

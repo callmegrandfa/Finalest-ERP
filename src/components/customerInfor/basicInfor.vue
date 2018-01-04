@@ -1,12 +1,10 @@
 <template>
- <div class="basicForm">
+ <div class="customerBasicForm">
      <el-row>
-         <el-col :span="24"> 
-             <div class="operationBtn">
-                <el-col :span='2' class="ml10"><span class="btn">保存新增</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>          
-            </div>  
+         <el-col :span="24">
+            <el-col :span='2' class="ml10"><span class="btn">保存新增</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col> 
         </el-col>
     </el-row>
     <el-row>
@@ -341,7 +339,7 @@ export default({
   </script>
 
   <style>
-  .basicForm .down{
+  .customerBasicForm .down{
     overflow: hidden;
     transition: max-height 0.5s;
     -moz-transition: max-height 0.5s;
@@ -349,92 +347,55 @@ export default({
     -o-transition: max-height 0.5s; 
     max-height:  900px;
   }
-  .basicForm .slidup{
+  .customerBasicForm .slidup{
        max-height: 90px;
   }
-  .basicForm .slidUp{
+  .customerBasicForm .slidUp{
       max-height: 45px;
   }
 
-    .basicForm .el-button--primary{
+    .customerBasicForm .el-button--primary{
         background-color: #82AAFC;
         border: none;
     }
-  .basicForm .bgcolor{
-      background-color: #fff;
-      height: 30px;
-      font-size: 12px;
-      margin-right: 15px;
-      margin-bottom: 15px;
-      float: left;
-      overflow: hidden;
-  }
-  .basicForm .noColor{
+
+  .customerBasicForm .noColor{
       background-color:transparent;
   }
-  .basicForm .moreWidth{
-      width: calc(41.667% + 15px)
-  }
-  
-  .basicForm .el-row{
+  .customerBasicForm .el-row{
       margin-bottom: 15px;
   }
-  .basicForm .bgcolor label{
-      padding-left: 10px;
-      line-height:30px;
-      display: block;
-      width:83px;
-      height: 100%;
-      float: left;
-      color: #BCBCBC;
-  }
-  .basicForm .bgcolor .el-select,.basicForm .bgcolor .el-input{
-      display: block;
-      width: calc(100% - 93px);
-      height: 30px;
-      float: left;
-  }
- 
-  .basicForm .bgcolor .el-input input{
-      border: none;
-      height: 100%;
-  }
-  .basicForm .bgcolor .el-input input[disabled]{
-      background-color: #fff;
-  }
-  .basicForm .bgcolor .el-select .el-input {
-      width: 100%;
-  }
-  .basicForm .companyInfo>.el-col:first-child,
-  .basicForm .companyInfo .el-col h4{
+
+  .customerBasicForm .companyInfo>.el-col:first-child,
+  .customerBasicForm .companyInfo .el-col h4{
       margin-bottom: 15px;
   }
-  .basicForm .upBtn{
+  .customerBasicForm .upBtn{
       font-size: 12px;
       color: #BCBCBC;
       cursor: pointer;
   }
-  .basicForm .upBtn .el-icon-arrow-down{
+  .customerBasicForm .upBtn .el-icon-arrow-down{
       margin-left: 5px;
   }
-.basicForm .tabZoo{
+.customerBasicForm .tabZoo{
      overflow: hidden;
      background-color: #fff;
  }
- .basicForm .tabZoo .bgcolor{
+ .customerBasicForm .tabZoo .bgcolor{
      border: 1px solid #BCBCBC;
      border-radius: 4px;
  }
- .basicForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
+ .customerBasicForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 20px;
  }
- .basicForm .tabZoo .auditInformation{
+ .customerBasicForm .tabZoo .auditInformation{
      margin-top: 15px;
  }
- .basicForm .tabZoo .auditInformation h4{
+ .customerBasicForm .tabZoo .auditInformation h4{
      margin-bottom: 15px;
  }
-.basicForm .btn{
+.customerBasicForm .btn{
     display: inline-block;
     height: 30px;
     line-height: 30px;
@@ -445,35 +406,9 @@ export default({
     text-align: center;
     cursor: pointer;
 }
-.basicForm .ml10{
+.customerBasicForm .ml10{
    margin-left: 10px;
 }
-/* 日期控件 */
- .basicForm .el-input__prefix{
-     right: 0;
-     left: auto;
- }
- .basicForm .el-input__prefix i{
-     line-height: 30px;
- }
- .basicForm .el-date-editor input{
-      padding: 0 15px;
-  }
-   
-
-  /* 输入框 placeholder字体颜色*/
-  ::-webkit-input-placeholder {
-    color: #BCBCBC; }
-
-  :-moz-placeholder {
-    color: #BCBCBC; }
-
-  ::-moz-placeholder {
-    color: #BCBCBC; }
-
-  :-ms-input-placeholder {
-    color: #BCBCBC; }
-
 
   </style>
   
