@@ -1,5 +1,5 @@
 <template>
-    <header>
+    <header class="header">
         <div class="page-logo">
             <a href="">
                 <big>HKERP</big><br>
@@ -7,13 +7,14 @@
             </a> 
             <div class="menuBtn" @click="$store.commit('go')"></div>
         </div>
-        <div class="search">
-              <i class="fa fa-search"></i>  
-              <input type="text" placeholder="请输入" v-model="filterText"> 
-              <ul class="searchData" v-show="show">
-                  <li @click="getValue" v-for="(i,index) in data" :key="index" :data="i">{{i}}</li>
-              </ul>
-        </div>
+        <!-- 搜索框 -->
+        <el-autocomplete class="search" popper-class="my-autocomplete" v-model="state3" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
+            <i class="el-icon-search el-input__icon" slot="prefix" @click="handleIconClick"> </i>
+            <template slot-scope="restaurants">
+                <div class="name">{{ restaurants.item.value }}</div>
+                <span class="addr">{{ restaurants.item.address }}</span>
+            </template>
+        </el-autocomplete>
         <ul class="userInfo">
             <li class="icon">
                 <a href="javascript:;"><i class="fa fa-question-circle"></i></a>
@@ -42,7 +43,9 @@ export default {
       return{
         filterText: '',
         show:false,
-        data:['系统管理','数据管理','人资管理','财务管理']
+        data:['系统管理','数据管理','人资管理','财务管理'],
+        restaurants: [],
+        state3: ''
       }
   },
   watch:{
@@ -63,6 +66,35 @@ export default {
         sendAjax:function(){
             console.log(11)
         },
+        querySearch(queryString, cb) {
+        var restaurants = this.restaurants;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      loadAll() {
+        return [
+          { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
+          { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
+          { "value": "新旺角茶餐厅", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
+          { "value": "泷千家(天山西路店)", "address": "天山西路438号" },
+          { "value": "胖仙女纸杯蛋糕（上海凌空店）", "address": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
+          { "value": "贡茶", "address": "上海市长宁区金钟路633号" },
+          { "value": "豪大大香鸡排超级奶爸", "address": "上海市嘉定区曹安公路曹安路1685号" }
+       
+        ];
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
+      handleIconClick(ev) {
+        console.log(ev);
+      }
         // ajaxGet:function(){
         // let self=this;  
         // self.axios.get('/user', {
@@ -78,26 +110,29 @@ export default {
         //     console.log(error);
         // });
         // },
-   }
+   },
+   mounted() {
+      this.restaurants = this.loadAll();
+    }
   }
 </script>
-<style scoped>
+<style >
 @import"//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
-header{
+.header{
     position: fixed;
     width: 100%;
     height: 73px;
     background-color: #fff;
     z-index: 3;
 }
-header .page-logo{
+.header .page-logo{
     float: left;
     background-color: #33CCCC;
     width: 200px;
     height: 100%;
     position: relative;
 }
-header .page-logo a{
+.header .page-logo a{
     width: 112px;
     cursor: pointer;
     height: 100%;
@@ -107,10 +142,10 @@ header .page-logo a{
     text-decoration: none;  
     font-family: 'Arial Negreta', 'Arial Normal', 'Arial';    
 }
-header .page-logo a:hover,header .page-logo a:focus{
+.header .page-logo a:hover,.header .page-logo a:focus{
     text-decoration: none;
 }
-header .page-logo a big{
+.header .page-logo a big{
     top: 16px;
     left: 20px;
     position: absolute;
@@ -118,7 +153,7 @@ header .page-logo a big{
     font-size: 32px;
     display: block;
 }
-header .page-logo a small{
+.header .page-logo a small{
     top: 52px;
     left: 20px;
     position: absolute;
@@ -158,39 +193,11 @@ header .page-logo a small{
     overflow: visible;
     position: relative;
 }
-.search>i{
-    margin-left: 15px;
-    cursor: pointer;
+.search .el-input__inner{
+    border-radius: 20px;
+    background: #f2f2f2;
 }
-.search>input{
-    height: 38px;
-    border: none;
-    background-color: #f2f2f2;
-    outline: none;
-    width: calc(100% - 60px)
-}
-.search .searchData{
-    position: absolute;
-    width: calc(100% - 60px);
-    top: 40px;
-    left: 30px;
-}
-.search .searchData li{
-    line-height: 40px;
-    padding-left: 10px;
-    width: (100% - 10px);
-    list-style: none;
-    height: 40px;
-    background-color: #fff;
-    border-top: 1px solid #80808021;
-}
-.search .searchData li:first-child{
-    border-top:none;
-}
-.search .searchData li:hover{
-    background-color: #f2f2f2;
-    border-top:none;
-}
+
 /*  */
 .userInfo{
 float: right;
