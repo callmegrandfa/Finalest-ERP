@@ -1,3 +1,3 @@
 <template>
-  <p>shotData</p>
+  <p>orderList</p>
 </template>
