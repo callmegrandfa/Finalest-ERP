@@ -294,7 +294,7 @@
     }
 </script>
 
-<style>
+<style scoped>
 .store-data-wrapper{
     width: 100%;
     height: auto;
@@ -363,19 +363,19 @@
 }
 </style>
 <style>
-.el-input input{
+.customer-infor-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
 }
 /* 重写checkbox */
-.el-checkbox__inner{
+.customer-infor-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.el-checkbox__inner::after{
+.customer-infor-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -398,7 +398,7 @@
 }
 
 /* 重写el-table样式 */
-.el-table th {
+.customer-infor-wrapper .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -407,20 +407,20 @@
     text-align: center;
     background-color: #ececec;
 }
-.el-table td{
+.customer-infor-wrapper .el-table td{
     padding: 3px 0;
 }
-.el-table__body{
+.customer-infor-wrapper .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+.customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
+.customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
 }
-.el-input--suffix .el-input__inner{
+.customer-infor-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
 </style>

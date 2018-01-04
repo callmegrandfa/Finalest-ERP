@@ -48,7 +48,7 @@
                         <el-table-column prop="planName" label="处分份数"></el-table-column>
                         <el-table-column prop="remark" label="备注">
                             <template scope="scope">
-                                <input  type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                                <input class="input-need" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
                             </template>
                         </el-table-column>
                         <el-table-column prop="updateDate" label="修改时间"></el-table-column>
@@ -553,6 +553,11 @@ export default {
     background: white;
     border: 1px solid #cccccc;
 }
+.input-need{
+    outline: none;
+    border:none;
+    width: 100%;
+}
 /* 搜索框部分開始 */
 .search-component{
     background: white;
@@ -840,12 +845,12 @@ export default {
 
 <style>
 /* 重写checkbox */
-.el-checkbox__inner{
+.short-basic-data .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.el-checkbox__inner::after{
+.short-basic-data .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -868,7 +873,7 @@ export default {
 }
 
 /* 重写el-table样式 */
-.el-table th {
+.short-basic-data .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -877,14 +882,14 @@ export default {
     text-align: center;
     background-color: #ececec;
 }
-.el-table td{
+.short-basic-data .el-table td{
     padding: 3px 0;
 }
-.el-table__body{
+.short-basic-data .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+.short-basic-data .el-pagination.is-background .btn-next,.short-basic-data .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
 }
 
@@ -894,10 +899,10 @@ export default {
 .mt-10{
     margin-top: 10px;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
+.short-basic-data .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
 }
-.el-input--suffix .el-input__inner{
+.short-basic-data .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
 </style>
