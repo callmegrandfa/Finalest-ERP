@@ -112,6 +112,57 @@
                 </el-row>                    
             </el-col>
         </el-row>
+
+        <el-row class="mt20 bg-white pt10 pb10 bb1">
+            <el-col :span='2' class="ml10">
+                <span class="btn">新增</span>
+            </el-col>
+
+            <el-col :span='2' class="ml10">
+                <span class="btn">修改</span>
+            </el-col>
+
+            <el-col :span='2' class="ml10">
+                <span class="btn">辅助功能</span>
+            </el-col>
+
+            <el-col :span='2' :offset="13">
+                <span class="rbtn">打印</span>
+            </el-col>
+
+            <el-col :span='2' class="ml10">
+                <span class="rbtn">Excel</span>
+            </el-col>
+        </el-row>
+
+        <el-row class="bg-white pl10 pt10 pr10 pb10">
+            <el-col :span="24">
+                <el-table :data="tableData" border style="width: 100%" stripe>
+                    <el-table-column prop="ifAction" label="操作">
+                        <template scope="scope">
+                            <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="organization" label="所属组织" ></el-table-column>
+                    <el-table-column prop="cusCode" label="客户编码"></el-table-column>
+                    <el-table-column prop="cusName" label="客户名称"></el-table-column>
+                    <el-table-column prop="cusCall" label="客户简称"></el-table-column>
+                    <el-table-column prop="cusType" label="客户分类"></el-table-column>
+                    <el-table-column prop="cusNature" label="客户性质"></el-table-column>
+                    <el-table-column prop="ifSupply" label="供应">
+                        <template scope="scope">
+                            <el-checkbox v-model="tableData[scope.$index].ifSupply" ></el-checkbox>
+                        </template>
+                    </el-table-column>   
+                    <el-table-column prop="wareHouse" label="对应财务组织"></el-table-column>
+                    <el-table-column prop="ifAllow" label="允许使用">
+                        <template scope="scope">
+                            <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
+                        </template>
+                    </el-table-column>
+              </el-table> 
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -120,7 +171,124 @@
         name:'customerInfor',
         data(){
             return {
+                options: [{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }],
 
+                value: '',
+                tableData: [{
+                    ifAction:true,
+                    organization: '组织',
+                    cusCode: '客户编码',
+                    cusName: '客户名称',
+                    cusCall: '客户简称',
+                    cusType:'客户分类',
+                    cusNature:'客户性质',
+                    ifSupply:true,
+                     wareHouse:'对应财务组织',
+                    ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }],
             }
         },
     }
