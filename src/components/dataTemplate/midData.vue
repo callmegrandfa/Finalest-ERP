@@ -42,16 +42,13 @@
                 <el-col :span='20'>
                     <el-table :data="tableData" border style="width: 100%" stripe>
                         <el-table-column prop="sequence" label="序号" ></el-table-column>
-                        <el-table-column prop="planCode" label="结算方式代码" ></el-table-column>
-                        <el-table-column prop="planName" label="结算方式名称"></el-table-column>
+                        <el-table-column prop="planCode" label="处分类型代码" ></el-table-column>
+                        <el-table-column prop="planName" label="处分类型名称"></el-table-column>
+                        <el-table-column prop="planName" label="处分金额"></el-table-column>
+                        <el-table-column prop="planName" label="处分份数"></el-table-column>
                         <el-table-column prop="remark" label="备注">
-                            <template slot-scope="scope">
+                            <template scope="scope">
                                 <input  type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="ifAllow" label="允许使用">
-                            <template slot-scope="scope">
-                                <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column prop="updateDate" label="修改时间"></el-table-column>
@@ -347,7 +344,7 @@
 <script>
 
 export default {
-  name: 'shortdata',
+  name: 'middata',
   data(){
       return{
             highSearchShow:false,//控制高级搜索显示
@@ -444,6 +441,27 @@ export default {
 				}, {
 				    sequence: '6',
 				    planCode: 'A006',
+				    planName: '哈哈',
+				    remark:'fasdg',
+				    ifAllow:true,
+				    updateDate:'2017.12.20'
+				}, {
+				    sequence: '7',
+				    planCode: 'A007',
+				    planName: '哈哈',
+				    remark:'fasdg',
+				    ifAllow:true,
+				    updateDate:'2017.12.20'
+				}, {
+				    sequence: '8',
+				    planCode: 'A008',
+				    planName: '哈哈',
+				    remark:'fasdg',
+				    ifAllow:true,
+				    updateDate:'2017.12.20'
+				}, {
+				    sequence: '9',
+				    planCode: 'A009',
 				    planName: '哈哈',
 				    remark:'fasdg',
 				    ifAllow:true,
