@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="24" class="orderHead">
                 <el-col :span="18" class="orderTittle">
-                    <h4>现货采购订单-订单详情</h4>
+                    <h4>现货采购订单-详细资料</h4>
                     <div class="seal">
                         <div class="seal1">
                             <div class="seal2">
@@ -549,9 +549,9 @@
  .orderDetail .pagination{
      float: right;
  }
- .orderDetail .pagination .el-pagination.is-background .btn-next, 
- .orderDetail .pagination .el-pagination.is-background .btn-prev, 
- .orderDetail .pagination .el-pagination.is-background .el-pager li{
+ .orderDetail .pagination .btn-next, 
+ .orderDetail .pagination .btn-prev, 
+ .orderDetail .pagination .el-pager li{
      border-radius: 50%;
  }
   /* 输入框 placeholder字体颜色*/
