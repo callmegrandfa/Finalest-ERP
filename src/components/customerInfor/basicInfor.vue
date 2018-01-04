@@ -117,39 +117,43 @@
             </a>
         </el-col>                                                                            
 </el-row>
-    
+    <el-row>
+      <el-col :span="2" class="bgcolor noColor "><el-checkbox v-model="supplier">同为供应商</el-checkbox></el-col>
+      <el-col :span="2" class="bgcolor noColor "><el-checkbox v-model="credit">信用管理</el-checkbox></el-col>   
+    </el-row>
 
     <!-- 公司业务财务bootTab标签页 -->
     <el-row> 
         <div class="tabZoo">
             <el-col :span="24">
                 <el-tabs v-model="activeName">
-                    <el-tab-pane label="经营品牌" name="brand" class="getPadding">
+                    <el-tab-pane label="银行信息" name="bank" class="getPadding">
                         <el-table :data="tableData" stripe border style="width: 100%">
-                            <el-table-column prop="businessBrand" label="经营品牌" width="180"></el-table-column>
-                            <el-table-column prop="shopGrade" label="品牌店铺等级" width="180"></el-table-column>
-                            <el-table-column prop="salesLevel" label="品牌销售等级" width="180"></el-table-column>
-                            <el-table-column prop="newGrade" label="品牌新品等级" width="180"></el-table-column>
-                            <el-table-column prop="remarks" label="备注" width="180"></el-table-column>
-                            <el-table-column prop="creationTime" label="创建时间" width="180"></el-table-column>
-                            <el-table-column prop="founder" label="创建人" width="180"></el-table-column>
+                            <el-table-column prop="clearInfor" label="结算信息" width="180"></el-table-column>
+                            <el-table-column prop="bankNum" label="银行账号" width="180"></el-table-column>
+                            <el-table-column prop="bankAccount" label="银行账户" width="180"></el-table-column>
+                            <el-table-column prop="openBank" label="开户银行" width="180"></el-table-column>
+                            <el-table-column prop="contact" label="联系人" width="180"></el-table-column>
+                            <el-table-column prop="phone" label="联系电话" width="180"></el-table-column>
+                            <el-table-column prop="defaults" label="默认" width="180"></el-table-column>
                             <el-table-column ></el-table-column>
                         </el-table>
                         <el-col :span="22" class="auditInformation">
                             <h4>审计信息</h4>
                             <div>
-                                <el-col :span="5" class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>创建时间</label><el-input v-model="auditInformation.createTime" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>修改时间</label><el-input v-model="auditInformation.modifyTime" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>启用日期</label><el-input v-model="auditInformation.startTime" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>封存日期</label><el-input v-model="auditInformation.finishTime" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" :disabled="true"></el-input></el-col>    
+                                <el-col :span="5" class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="请录入创建人"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>创建时间</label><el-input v-model="auditInformation.createTime" placeholder="请录入创建时间"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>修改时间</label><el-input v-model="auditInformation.modifyTime" placeholder="请录入修改时间"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>启用日期</label><el-input v-model="auditInformation.startTime" placeholder="请录入启用日期"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>封存日期</label><el-input v-model="auditInformation.finishTime" placeholder="请录入封存日期"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></el-col>    
                             </div>                                  
                         </el-col>
                     </el-tab-pane>
-                    <el-tab-pane label="联系人" name="contacts">联系人</el-tab-pane>
-                    <el-tab-pane label="网店" name="shop">网店</el-tab-pane>
+                    <el-tab-pane label="送货地址" name="address">送货地址</el-tab-pane>
+                    <el-tab-pane label="使用组织" name="organization">使用组织</el-tab-pane>
+                    <el-tab-pane label="信用信息" name="creditInfor">信用信息</el-tab-pane>
                 </el-tabs>
             </el-col>
         </div>
@@ -162,46 +166,46 @@ export default({
     data() {
         return{
             tableData: [{//表格
-                businessBrand: '三叶',
-                shopGrade: '4',
-                salesLevel: '4',
-                newGrade:'5',
-                remarks:'销量好',
-                creationTime:'',
-                founder:'李四'
-                }, {
-                businessBrand: '三叶',
-                shopGrade: '4',
-                salesLevel: '4',
-                newGrade:'5',
-                remarks:'销量好',
-                creationTime:'',
-                founder:'李四'
-                },{
-                businessBrand: '三叶',
-                shopGrade: '4',
-                salesLevel: '4',
-                newGrade:'5',
-                remarks:'销量好',
-                creationTime:'',
-                founder:'李四'
-                },{
-                businessBrand: '三叶',
-                shopGrade: '4',
-                salesLevel: '4',
-                newGrade:'5',
-                remarks:'销量好',
-                creationTime:'',
-                founder:'李四'
-                },],
+                clearInfor: '',
+                bankNum: '',
+                bankAccount: '',
+                openBank:'农业银行',
+                contact:'',
+                phone:'',
+                defaults:''
+                },{//表格
+                clearInfor: '',
+                bankNum: '',
+                bankAccount: '',
+                openBank:'工商银行',
+                contact:'',
+                phone:'',
+                defaults:''
+                },{//表格
+                clearInfor: '',
+                bankNum: '',
+                bankAccount: '',
+                openBank:'建设银行',
+                contact:'',
+                phone:'',
+                defaults:''
+                },{//表格
+                clearInfor: '',
+                bankNum: '',
+                bankAccount: '',
+                openBank:'中国银行',
+                contact:'',
+                phone:'',
+                defaults:''
+                }, ],
             auditInformation:{//审计信息
-                createName:"张三",
-                createTime:"2001.12.12",
-                modifyName:"李四",
-                modifyTime:"2001.12.12",
-                startTime:"2001.12.12",
-                finishTime:"2001.12.12",
-                finishName:"李",
+                createName:"",
+                createTime:"",
+                modifyName:"",
+                modifyTime:"",
+                startTime:"",
+                finishTime:"",
+                finishName:"",
             },
             data:{
                 code:'',//编码
@@ -307,11 +311,12 @@ export default({
                 valueAreaAdministrative:'选项3',
                 label: '3'
             }],
-            activeName: 'brand',//tabs标签页默认激活name
+            activeName: 'bank',//tabs标签页默认激活name
             
 
             
-            isUse:true,//是否允许使用
+            supplier:true,//同为供应商
+            credit :true,//信用管理
 
             showCompany:false,//初始默认公司计信息状态展开  
             valueOrganization: '请选择组织',//所属组织

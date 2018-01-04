@@ -45,12 +45,12 @@
                         <el-table-column prop="planCode" label="结算方式代码" ></el-table-column>
                         <el-table-column prop="planName" label="结算方式名称"></el-table-column>
                         <el-table-column prop="remark" label="备注">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <input  type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
                             </template>
                         </el-table-column>
                         <el-table-column prop="ifAllow" label="允许使用">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                             </template>
                         </el-table-column>

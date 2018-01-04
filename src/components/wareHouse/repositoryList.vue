@@ -77,7 +77,7 @@
                     <el-table-column prop="address" label="地址"></el-table-column>
                     <el-table-column prop="people" label="负责人"></el-table-column>
                     <el-table-column prop="ifAllow" label="允许使用">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                         </template>
                     </el-table-column>

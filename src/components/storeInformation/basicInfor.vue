@@ -145,14 +145,14 @@
                         <el-col :span="22" class="auditInformation">
                             <h4>审计信息</h4>
                             <div>
-                                <el-col :span="5" class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>创建时间</label><el-input v-model="auditInformation.createTime" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>修改时间</label><el-input v-model="auditInformation.modifyTime" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>启用日期</label><el-input v-model="auditInformation.startTime" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>封存日期</label><el-input v-model="auditInformation.finishTime" :disabled="true"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" :disabled="true"></el-input></el-col>    
-                            </div>                                  
+                                <el-col :span="5" class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="请录入创建人"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>创建时间</label><el-input v-model="auditInformation.createTime" placeholder="请录入创建时间"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>修改时间</label><el-input v-model="auditInformation.modifyTime" placeholder="请录入修改时间"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>启用日期</label><el-input v-model="auditInformation.startTime" placeholder="请录入启用日期"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>封存日期</label><el-input v-model="auditInformation.finishTime" placeholder="请录入封存日期"></el-input></el-col>
+                                <el-col :span="5" class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></el-col>    
+                            </div>                                 
                         </el-col>
                     </el-tab-pane>
                     <el-tab-pane label="联系人" name="contacts">联系人</el-tab-pane>
