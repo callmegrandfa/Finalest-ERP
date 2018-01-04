@@ -328,7 +328,11 @@ export default({
             valueAreaAdministrative:'请选择行政地区',//行政地区 
             valueOpenData:'请选择开店日期',//开店日期 
             valueBrand:'请选择主营品牌',//主营品牌 
-            valueTradingArea:'请选择商圈',//商圈   
+            valueTradingArea:'请选择商圈',//商圈  
+            valueCountry:'中国',//国家地区 
+            valueFinance:'亚投行',//财务组织 
+            valueSort:'学生',//客户类型 
+            valueCustomerType:'中国人',//客户分类 
         }
     },
        
