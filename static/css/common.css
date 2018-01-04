@@ -2,7 +2,7 @@
 .el-pagination .btn-next, 
 .el-pagination .btn-prev, 
 .el-pagination .el-pager li{
-    border-radius: 50%;
+    border-radius: 50%!important;
 }
 /* elementUI表单控件 */
 /* input输入框 */
