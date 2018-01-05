@@ -243,7 +243,7 @@
                     </el-main>
                 </el-tab-pane>
                 <el-tab-pane label="结算货币">
-                    <el-main>
+                    <el-main class="Settlement-panle">
                         <el-row>
                             <el-button class="fl" size="small" type="primary">添加</el-button>
                             <el-col class="fr" :xs="10" :sm="8" :md="6" :lg="5" >
@@ -322,6 +322,9 @@ export default {
         isEdit:-1,
     }
    },
+   created (){
+       console.log(this.$route.query.params) 
+   },
    methods:{
        handleEdit:function(index){
            this.isEdit=index;
@@ -353,20 +356,29 @@ export default {
 .user-panle{
     padding: 0 20px;
 }
-.el-tabs__item {
+.supplier-tab .el-input__inner{
+    border: 1px solid #dcdfe6;
+    border-left: none;
+    border-radius: 0px;
+}
+.supplierEdit .el-tabs__item {
     text-align: center;
 }
-.el-tabs__item.is-active {
+.supplierEdit .el-tabs__item.is-active {
     background: #409EFF;
     color: #fff;
 }
-.el-tabs__nav-scroll{
+.supplierEdit .el-tabs__nav-scroll{
     overflow: hidden;
     padding-right: 50px;
 }
 .user-panle .el-input-group__prepend {
     border-right: 0;
     background: #fff;
+}
+/* 结算货币 分块*/
+.Settlement-panle .el-input__inner{
+    border-left:1px solid #dcdfe6;
 }
 /* 分页样式 */
 .el-pagination.is-background .btn-next, 

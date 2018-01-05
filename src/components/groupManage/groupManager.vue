@@ -36,7 +36,7 @@
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :lg="5">
             <div class="el-input el-input--medium el-input-group el-input-group--prepend">
-              <label class="label-title">启用会计月份</label>
+              <label class="label-title">启用会计月份	&nbsp&nbsp</label>
               <el-select v-model="value" placeholder="请选择">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -44,7 +44,7 @@
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :lg="5">
             <div class="el-input el-input--medium el-input-group el-input-group--prepend">
-              <label class="label-title">本位币种&nbsp&nbsp&nbsp&nbsp</label>
+              <label class="label-title">本位币种&nbsp&nbsp&nbsp&nbsp&nbsp</label>
               <el-select v-model="value" placeholder="请选择">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -236,9 +236,15 @@ body{
   height: 800px;
   background: #eef1f5;
 }
+/* 头部无边框输入框 */
 .header-input .el-input-group__prepend,.header-input .el-input__inner{
   background: #fff;
   border:none;
+}
+/* 输入框无圆角 */
+.header-input .el-input__inner{
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
 }
 .groupManager .el-header,.groupManager .el-footer{
   height: auto!important;
@@ -294,6 +300,7 @@ body{
 .bg-white{
   background: #fff;
 }
+/* 侧边树结构 */
 .groupManager .el-submenu__title{
   height: 40px;
   line-height: 40px;
@@ -304,6 +311,13 @@ body{
 }
 .footer-input .el-input-group__prepend{
   background: #fff;
+}
+/* 底部有边框输入框 */
+.footer-input .el-input__inner{
+    border: 1px solid #dcdfe6;
+    border-left: none;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
 }
 .el-collapse-item__header{
   font-size: 16px;

@@ -45,8 +45,7 @@ export default {
                         {name:'现货采购订单-订单列表',address:'orderList',menuid:'1112',tobarString:''}, 
                         {name:'现货采购订单-订单详情',address:'orderDetail',menuid:'1113',tobarString:''},
                         {name:'集团管理',address:'groupManage',menuid:'1114',tobarString:''},
-                        {name:'供应商资料',address:'supplierEdit',menuid:'1115',tobarString:''},
-                        {name:'a',address:'12',menuid:'1116',tobarString:''},   
+                        {name:'供应商列表',address:'supplierList',menuid:'1116',tobarString:''},   
                         {name:'s',address:'13',menuid:'1117',tobarString:''},
                         {name:'d',address:'14',menuid:'1118',tobarString:''},
                         {name:'f',address:'15',menuid:'1119',tobarString:''},
@@ -68,8 +67,8 @@ export default {
                     tobarString:'',
                     thirdInfo:[
                         {name:'详情',address:'detail',menuid:'111',tobarString:''},
-                        {name:'现货采购订单-订单列表',address:'orderList',menuid:'112',tobarString:''},
-                        {name:'现货采购订单-订单详情',address:'orderDetail',menuid:'113',tobarString:''},
+                        {name:'数据资料短',address:'shotData',menuid:'112',tobarString:''},
+                        {name:'数据资料长',address:'longData',menuid:'113',tobarString:''},
                         {name:'数据资料中',address:'midData',menuid:'114',tobarString:''}       
                     ]
                 }]
@@ -93,52 +92,36 @@ export default {
         },
         storageData(e){
             var flag=false;
-            var isSame=false;
             var slidbarData=this.$store.state.slidbarData;//储存页签数组
             var name=e.target.getAttribute("menuname");
             var menuUrl=e.target.getAttribute("menuurl");
-
+        
             if(slidbarData.length==0){//slidbarData为空
                 flag=true;
             }else{//slidbarData不为空
                 for(var i=0;i<slidbarData.length;i++){
                     if(slidbarData[i].name==name){//相同页签
                         flag=false;
-                        isSame=false;
                         break;
                     }else{
                       flag=true;
-                      isSame=true;
                     }
                 }
             }
             
-            var pushItem={'name':name,'url':menuUrl};
-            this.$store.state.url='/'+menuUrl;//储存当前url
-            var isSwitch=true;
-            if(slidbarData.length>=10){
-                if(isSame){
-                    var r=confirm("您选择打开的窗口已达到10个，如需继续添加新的窗口，默认关闭第一个窗口");
-                    if (r==true)
-                    {
-                        slidbarData.shift();
-                        flag=true;
-                    }else{
-                        flag=false;
-                        isSwitch=false;
-                    }
-                }else{
-                    
-                }
-                
-            }
-             if(flag){
+            var pushItem={'name':name,'url':menuUrl,'params':'default'};
+            this.$store.state.url='/'+menuUrl+'/'+params;//储存当前url
+            if(flag){
                  slidbarData.push(pushItem);
             }
-            if(isSwitch){
-                this.switch();
+            if(slidbarData.length>=15){
+                var r=confirm("您选择打开的窗口已达到15个，如需继续添加新的窗口，默认关闭第一个窗口");
+                if (r==true)
+                {
+                    slidbarData.shift();
+                }
             }
-            
+            this.switch();
             
         }
     }
