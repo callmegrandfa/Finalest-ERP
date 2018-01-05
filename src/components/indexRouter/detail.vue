@@ -290,7 +290,13 @@ export default({
         }
     },
     created:function(){//.detailForm实例被创建之后调用ajaxGet函数
-          this.stss='123'//初始化页面数据
+          this.$axios.ajaxgets().then(function (res) {
+                //成功之后处理逻辑
+                console.log(res)
+                },function (res) {
+                //失败之后处理逻辑
+                console.log(res)
+                })
             },
     watch:{
         ischeck: {
