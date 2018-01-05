@@ -14,6 +14,7 @@ import customerBasicInfor from '../components/customerInfor/basicInfor'
 import customerInfor from '../components/customerInfor/customerInfor'
 import orderDetail from '../components/purchaseOrder/orderDetails'
 import orderList from '../components/purchaseOrder/orderList'
+import supplierList from '../components/supplierData/supplierList'
 Vue.use(Router)
 
 
@@ -24,7 +25,7 @@ const routes = [
   { path: '/shortData', component: shortData,name:'shortData' },
   { path: '/repositoryList', component: repositoryList,name:'repositoryList' },
   { path: '/repositoryData', component: repositoryData,name:'repositoryData' },
-  { path: '/supplierEdit', component: supplierEdit,name:'supplierEdit'},
+  { path: '/supplierEdit/:params', component: supplierEdit,name:'supplierEdit'},
   { path: '/groupManage', component: groupManage,name:'groupManage'},
   { path: '/goodsData', component: goodsData,name:'goodsData' },
   { path: '/storeData', component: storeData,name:'storeData' },
@@ -33,6 +34,7 @@ const routes = [
   { path: '/customerInfor', component: customerInfor,name:'customerInfor' },
   { path: '/orderDetail', component: orderDetail,name:'orderDetails' },
   { path: '/orderList', component: orderList,name:'orderList' },
+  { path: '/supplierList/default', component: supplierList,name:'supplierList' },
 ]
 export default new Router({
   linkActiveClass: 'active',

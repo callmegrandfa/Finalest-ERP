@@ -161,7 +161,7 @@
                     <el-table-column prop="area" label="业务地区"></el-table-column>     
                     <el-table-column prop="wareHouse" label="对应仓库"></el-table-column>
                     <el-table-column prop="ifAllow" label="允许使用">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                         </template>
                     </el-table-column>
