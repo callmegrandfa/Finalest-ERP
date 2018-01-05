@@ -26,46 +26,33 @@ axios.interceptors.request.use((config) => {
     //404等问题可以在这里处理
     return Promise.reject(error);
   });
-//公共方法：
-  export function posts(url, params) {
-    return new Promise((resolve, reject) => {
-      axios.post(url, params)
-        .then(response => {
-          resolve(response.data);
-        }, err => {
-          reject(err);
-        })
-        .catch((error) => {
-          reject(error)
-        })
-    })
-  }
-  export function gets(url) {
-    return new Promise((resolve, reject) => {
-      axios.get(url)
-        .then(response => {
-          resolve(response.data);
-        }, err => {
-          reject(err);
-        })
-        .catch((error) => {
-          reject(error)
-        })
-    })
-  }
+
 //业务方法
   export default {
-    ajaxgets() {
-      return gets('/api/services/app/DeptManagement/GetAllByOuId')
+    posts(url, params) {
+      return new Promise((resolve, reject) => {
+        axios.post(url, params)
+          .then(response => {
+            resolve(response.data);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    gets(url) {
+      return new Promise((resolve, reject) => {
+        axios.get(url)
+          .then(response => {
+            resolve(response.data);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     }
   }
-//.vue文件里面调用
-//   submitForm () {        
-//     this.$axios.ajaxgets().then(function (res) {
-//   //成功之后处理逻辑
-//       console.log(res)
-//     },function (res) {
-//       //失败之后处理逻辑
-//       console.log("error:"+res)
-//     })
-//   }

@@ -290,14 +290,88 @@ export default({
         }
     },
     created:function(){//.detailForm实例被创建之后调用ajaxGet函数
-          this.$axios.ajaxgets().then(function (res) {
+    var url1='/api/services/app/DeptManagement/GetAllByOuId';
+    var url2='/api/services/app/DeptManagement/GetAllData';
+    var url3='/api/services/app/DeptManagement/Get';
+    var url4='/api/services/app/DeptManagement/GetAll';
+    var url5='/api/services/app/GroupManagement/GetAllData';
+    var url6='/api/services/app/GroupManagement/Get';
+    var url7='/api/services/app/GroupManagement/GetAll';
+        //  this.$axios.gets(url1).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('1'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('1'+res)
+        //         });
+
+        // this.$axios.gets(url2).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('2'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('2'+res)
+        //         });
+        //  this.$axios.gets(url3).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('3'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('3'+res)
+        //         });  
+        //   this.$axios.gets(url4).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('4'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('4'+res)
+        //         });   
+        //    this.$axios.gets(url5).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('5'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('5'+res)
+        //         });   
+        //     this.$axios.gets(url6).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('6'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('6'+res)
+        //         });    
+        //     this.$axios.gets(url7).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('7'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('7'+res)
+        //         });                           
+           this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{
+               "ouId": 0,
+                "stockCode": "string",
+                "stockName": "string",
+                "stockFullName": "string",
+                "opAreaId": 0,
+                "adAreaId": 0,
+                "stockTypeId": 0,
+                "invTypeId": 0,
+                "fax": "string",
+                "email": "string",
+                "status": 0,
+                "manager": "string",
+                "phone": "string",
+                "remark": "string",
+                "id": 0
+           }).then(function (res) {
                 //成功之后处理逻辑
                 console.log(res)
                 },function (res) {
                 //失败之后处理逻辑
                 console.log(res)
-                })
-            },
+                });
+        },
+
     watch:{
         ischeck: {
         handler: function (val, oldVal) { 
