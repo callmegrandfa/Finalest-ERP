@@ -350,7 +350,7 @@ export default {
 .bg-white{
   background: #fff;
 }
-.el-col{
+.supplierEdit .el-col{
    margin-bottom: 20px;
 }
 .user-panle{

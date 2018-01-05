@@ -11,7 +11,7 @@
                             <el-col :span="8">
                                 <span class="fs14">客户分类</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="PO959894848"/>
                             </el-col>
                         </el-row>                    
@@ -22,7 +22,7 @@
                             <el-col :span="8">
                                 <span class="fs14">所属组织</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="请录入所属组织"/>
                             </el-col>
                         </el-row>                    
@@ -33,7 +33,7 @@
                             <el-col :span="8">
                                 <span class="fs14">行政地区</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <el-select v-model="value" placeholder="请选择行政地区">
                                     <el-option
                                         v-for="item in options"
@@ -51,7 +51,7 @@
                             <el-col :span="8">
                                 <span class="fs14">业务地区</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <el-select v-model="value" placeholder="无">
                                     <el-option
                                         v-for="item in options"
@@ -71,7 +71,7 @@
                             <el-col :span="8">
                                 <span class="fs14">编码</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="PO-959894848"/>
                             </el-col>
                         </el-row>                    
@@ -82,7 +82,7 @@
                             <el-col :span="8">
                                 <span class="fs14">名称</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <input class="input-need" type="text" placeholder="请录入手工单号"/>
                             </el-col>
                         </el-row>                    
@@ -93,7 +93,7 @@
                             <el-col :span="8">
                                 <span class="fs14">客户性质</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="15">
                                 <el-select v-model="value" placeholder="请选择客户性质">
                                     <el-option
                                         v-for="item in options"
@@ -183,6 +183,7 @@
 				customerName: '客户名称',
                 customerCall:'客户简称',
                 customerClass:'客户分类',
+                customerNature:'客户性质',
                 customerType:'客户类型',
                 supply:'供应',
                 money:'对应财务组织',
@@ -193,6 +194,7 @@
                     customerName: '客户名称',
                     customerCall:'客户简称',
                     customerClass:'客户分类',
+                    customerNature:'客户性质',
                     customerType:'客户类型',
                     supply:'供应',
                     money:'对应财务组织',
@@ -203,6 +205,7 @@
                     customerName: '客户名称',
                     customerCall:'客户简称',
                     customerClass:'客户分类',
+                    customerNature:'客户性质',
                     customerType:'客户类型',
                     supply:'供应',
                     money:'对应财务组织',
@@ -213,6 +216,7 @@
                     customerName: '客户名称',
                     customerCall:'客户简称',
                     customerClass:'客户分类',
+                    customerNature:'客户性质',
                     customerType:'客户类型',
                     supply:'供应',
                     money:'对应财务组织',
@@ -223,6 +227,7 @@
                     customerName: '客户名称',
                     customerCall:'客户简称',
                     customerClass:'客户分类',
+                    customerNature:'客户性质',
                     customerType:'客户类型',
                     supply:'供应',
                     money:'对应财务组织',
@@ -233,6 +238,7 @@
                     customerName: '客户名称',
                     customerCall:'客户简称',
                     customerClass:'客户分类',
+                    customerNature:'客户性质',
                     customerType:'客户类型',
                     supply:'供应',
                     money:'对应财务组织',
@@ -243,6 +249,7 @@
                     customerName: '客户名称',
                     customerCall:'客户简称',
                     customerClass:'客户分类',
+                    customerNature:'客户性质',
                     customerType:'客户类型',
                     supply:'供应',
                     money:'对应财务组织',
@@ -253,6 +260,7 @@
                     customerName: '客户名称',
                     customerCall:'客户简称',
                     customerClass:'客户分类',
+                    customerNature:'客户性质',
                     customerType:'客户类型',
                     supply:'供应',
                     money:'对应财务组织',
@@ -263,6 +271,7 @@
                     customerName: '客户名称',
                     customerCall:'客户简称',
                     customerClass:'客户分类',
+                    customerNature:'客户性质',
                     customerType:'客户类型',
                     supply:'供应',
                     money:'对应财务组织',
@@ -274,7 +283,7 @@
     }
 </script>
 
-<style>
+<style scoped>
 .goods-data-wrapper{
     width: 100%;
     height: auto;
@@ -287,6 +296,7 @@
 .input-need{
     outline: none;
     border:none;
+    width: 100%;
 }
 .mt10{
     margin-top: 10px;
@@ -331,19 +341,19 @@
 </style>
 
 <style>
-.el-input input{
+.goods-data-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
 }
 /* 重写checkbox */
-.el-checkbox__inner{
+.goods-data-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.el-checkbox__inner::after{
+.goods-data-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -366,7 +376,7 @@
 }
 
 /* 重写el-table样式 */
-.el-table th {
+.goods-data-wrapper .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -375,14 +385,14 @@
     text-align: center;
     background-color: #ececec;
 }
-.el-table td{
+.goods-data-wrapper .el-table td{
     padding: 3px 0;
 }
-.el-table__body{
+.goods-data-wrapper .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+.goods-data-wrapper .el-pagination.is-background .btn-next,.goods-data-wrapper .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
 }
 
@@ -392,10 +402,10 @@
 .mt-10{
     margin-top: 10px;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
+.goods-data-wrapper .el-date-editor.el-input,.goods-data-wrapper .el-date-editor.el-input__inner{
     width: 130px;
 }
-.el-input--suffix .el-input__inner{
+.goods-data-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
 </style>

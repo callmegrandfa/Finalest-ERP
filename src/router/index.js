@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import detail from '../components/indexRouter/detail'
 import shortData from '../components/dataTemplate/shortData'
+import midData from '../components/dataTemplate/midData'
+import longData from '../components/dataTemplate/longData'
 import home from '../components/indexRouter/home'
 import repositoryList from '../components/wareHouse/repositoryList'
 import repositoryData from '../components/wareHouse/repositoryData'
@@ -23,6 +25,8 @@ const routes = [
   { path: '/home', component: home,name:'home' },
   { path: '/detail', component: detail,name:'detail' },
   { path: '/shortData', component: shortData,name:'shortData' },
+  { path: '/midData', component: midData,name:'midData' },
+  { path: '/longData', component: longData,name:'longData' },
   { path: '/repositoryList', component: repositoryList,name:'repositoryList' },
   { path: '/repositoryData', component: repositoryData,name:'repositoryData' },
   { path: '/supplierEdit/:params', component: supplierEdit,name:'supplierEdit'},

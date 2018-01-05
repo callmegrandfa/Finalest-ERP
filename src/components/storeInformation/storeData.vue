@@ -1,6 +1,6 @@
 <template>
     <div class="store-data-wrapper">
-        <el-row class="pt20 fs14">
+        <el-row class="fs14">
             <el-col :span='4' class="bg-white h30 pl10">
                 <el-row>
                     <el-col :span="8">
@@ -72,7 +72,7 @@
 
             <el-col :span="1" class="h30" :offset="3" style='cursor:pointer'>
                 <span @click="ifShow = !ifShow">收起</span>
-                <i class="el-icon-arrow-down"></i>
+                <i class="el-icon-arrow-down" @click="ifShow = !ifShow"></i>
             </el-col>
         </el-row>
 
@@ -373,19 +373,18 @@ export default{
 }
 </style>
 <style>
-.el-input input{
+.store-data-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
 }
 /* 重写checkbox */
-.el-checkbox__inner{
+.store-data-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
-    border-radius:50% !important; 
 }
-.el-checkbox__inner::after{
+.store-data-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -408,7 +407,7 @@ export default{
 }
 
 /* 重写el-table样式 */
-.el-table th {
+.store-data-wrapper .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -417,20 +416,20 @@ export default{
     text-align: center;
     background-color: #ececec;
 }
-.el-table td{
+.store-data-wrapper .el-table td{
     padding: 3px 0;
 }
-.el-table__body{
+.store-data-wrapper .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
 .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
+.store-data-wrapper .el-date-editor.el-input,.store-data-wrapper .el-date-editor.el-input__inner{
     width: 130px;
 }
-.el-input--suffix .el-input__inner{
+.store-data-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
 </style>
