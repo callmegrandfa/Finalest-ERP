@@ -117,8 +117,6 @@ export default {
   }
 </script>
 <style >
-@import"//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
-@import"../../static/css/common.css";
 .header{
     position: fixed;
     width: 100%;
@@ -182,7 +180,7 @@ export default {
 }
 
 /* 搜索框 */
-.search{
+.header .search{
     width: 340px;
     margin-left: 30px;
     height: 40px;
@@ -194,9 +192,11 @@ export default {
     overflow: visible;
     position: relative;
 }
-.search .el-input__inner{
+.header .search .el-input__inner{
+    height: 40px;
     border-radius: 20px;
     background: #f2f2f2;
+    border: 0;
 }
 
 /*  */

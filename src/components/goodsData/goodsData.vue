@@ -144,7 +144,7 @@
                     <el-table-column prop="supply" label="供应"></el-table-column>     
                     <el-table-column prop="money" label="对应财务组织"></el-table-column>
                     <el-table-column prop="ifAllow" label="允许使用">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                         </template>
                     </el-table-column>
