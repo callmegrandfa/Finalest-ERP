@@ -1,0 +1,86 @@
+/* elementUI分页 */
+.el-pagination .btn-next, 
+.el-pagination .btn-prev, 
+.el-pagination .el-pager li{
+    border-radius: 50%!important;
+}
+/* elementUI表单控件 */
+/* input输入框 */
+/* <el-col :span="5" class="bgcolor"><label>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></el-col>  */
+.bgcolor{
+    background-color: #fff;
+    height: 30px;
+    font-size: 12px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    float: left;
+    overflow: hidden;
+}
+.bgcolor label{
+    padding-left: 10px;
+    line-height:30px;
+    display: block;
+    width:83px;
+    height: 100%;
+    float: left;
+    color: #BCBCBC;
+}
+.bgcolor label small{
+    color: #FF669B;
+    margin-right: 2px;
+}
+.bgcolor .el-input{
+    display: block;
+    width: calc(100% - 93px);
+    height: 30px;
+    float: left;
+}
+.bgcolor .el-input input{
+    border: none;
+    height: 30px;
+}
+.bgcolor .el-input input[disabled]{
+    background-color: #fff;
+}
+
+/* datePicker日期控件 */
+/* <el-col :span="5" class="bgcolor"><label><small>*</small>交货日期</label><el-date-picker v-model="" type="date" placeholder=""></el-date-picker></el-col> */
+.bgcolor .el-input__prefix{
+    right: 0;
+    left: auto;
+}
+.bgcolor .el-input__prefix i{
+    line-height: 30px;
+}
+.bgcolor .el-date-editor input{
+     padding: 0 15px;
+ }
+/* select选择框 */
+/* <el-col :span="5" class="bgcolor"><label><small>*</small>供应商</label><el-select v-model=""><el-option></el-option></el-select></el-col> */
+.bgcolor .el-select .el-input {
+    width: 100%;
+}
+.bgcolor .el-select{
+    display: block;
+    width: calc(100% - 93px);
+    height: 30px;
+    float: left;
+}
+/* 备注 */
+/* <el-col :span="10" class="bgcolor moreWidth"><label>备注</label><el-input v-model="" placeholder="备注"></el-input></el-col>  */
+.bgcolor.moreWidth{
+    width: calc(41.667% + 15px);
+}
+
+/* 输入框 placeholder字体颜色*/
+::-webkit-input-placeholder {
+    color: #BCBCBC; }
+
+  :-moz-placeholder {
+    color: #BCBCBC; }
+
+  ::-moz-placeholder {
+    color: #BCBCBC; }
+
+  :-ms-input-placeholder {
+    color: #BCBCBC; }

@@ -1,6 +1,6 @@
 <template>
     <div class="customer-infor-wrapper">
-        <el-row class="pt20 fs14">
+        <el-row class="fs14">
             <el-col :span='4' class="bg-white h30 pl10">
                 <el-row>
                     <el-col :span="8">
@@ -112,6 +112,57 @@
                 </el-row>                    
             </el-col>
         </el-row>
+
+        <el-row class="mt20 bg-white pt10 pb10 bb1">
+            <el-col :span='2' class="ml10">
+                <span class="btn">新增</span>
+            </el-col>
+
+            <el-col :span='2' class="ml10">
+                <span class="btn">修改</span>
+            </el-col>
+
+            <el-col :span='2' class="ml10">
+                <span class="btn">辅助功能</span>
+            </el-col>
+
+            <el-col :span='2' :offset="13">
+                <span class="rbtn">打印</span>
+            </el-col>
+
+            <el-col :span='2' class="ml10">
+                <span class="rbtn">Excel</span>
+            </el-col>
+        </el-row>
+
+        <el-row class="bg-white pl10 pt10 pr10 pb10">
+            <el-col :span="24">
+                <el-table :data="tableData" border style="width: 100%" stripe>
+                    <el-table-column prop="ifAction" label="操作">
+                        <template scope="scope">
+                            <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="organization" label="所属组织" ></el-table-column>
+                    <el-table-column prop="cusCode" label="客户编码"></el-table-column>
+                    <el-table-column prop="cusName" label="客户名称"></el-table-column>
+                    <el-table-column prop="cusCall" label="客户简称"></el-table-column>
+                    <el-table-column prop="cusType" label="客户分类"></el-table-column>
+                    <el-table-column prop="cusNature" label="客户性质"></el-table-column>
+                    <el-table-column prop="ifSupply" label="供应">
+                        <template scope="scope">
+                            <el-checkbox v-model="tableData[scope.$index].ifSupply" ></el-checkbox>
+                        </template>
+                    </el-table-column>   
+                    <el-table-column prop="wareHouse" label="对应财务组织"></el-table-column>
+                    <el-table-column prop="ifAllow" label="允许使用">
+                        <template scope="scope">
+                            <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
+                        </template>
+                    </el-table-column>
+              </el-table> 
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -120,13 +171,130 @@
         name:'customerInfor',
         data(){
             return {
+                options: [{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }],
 
+                value: '',
+                tableData: [{
+                    ifAction:true,
+                    organization: '组织',
+                    cusCode: '客户编码',
+                    cusName: '客户名称',
+                    cusCall: '客户简称',
+                    cusType:'客户分类',
+                    cusNature:'客户性质',
+                    ifSupply:true,
+                     wareHouse:'对应财务组织',
+                    ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }, {
+                        ifAction:true,
+                        organization: '组织',
+                        cusCode: '客户编码',
+                        cusName: '客户名称',
+                        cusCall: '客户简称',
+                        cusType:'客户分类',
+                        cusNature:'客户性质',
+                        ifSupply:true,
+                        wareHouse:'对应财务组织',
+                        ifAllow:true,
+                    }],
             }
         },
     }
 </script>
 
-<style>
+<style scoped>
 .store-data-wrapper{
     width: 100%;
     height: auto;
@@ -195,19 +363,19 @@
 }
 </style>
 <style>
-.el-input input{
+.customer-infor-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
 }
 /* 重写checkbox */
-.el-checkbox__inner{
+.customer-infor-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.el-checkbox__inner::after{
+.customer-infor-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -230,7 +398,7 @@
 }
 
 /* 重写el-table样式 */
-.el-table th {
+.customer-infor-wrapper .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -239,20 +407,20 @@
     text-align: center;
     background-color: #ececec;
 }
-.el-table td{
+.customer-infor-wrapper .el-table td{
     padding: 3px 0;
 }
-.el-table__body{
+.customer-infor-wrapper .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+.customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
+.customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
 }
-.el-input--suffix .el-input__inner{
+.customer-infor-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
 </style>

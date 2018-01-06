@@ -215,7 +215,15 @@
                 </el-row>
             </div>
       </el-collapse-transition>
-    
+
+      <el-row class="mt20 mb10">
+          <el-col :span="2">
+                <template>
+                    <el-checkbox v-model="ifCan">允许使用</el-checkbox>
+                </template>
+          </el-col>
+      </el-row>
+
       <el-row class="ft12 pr10 pt10 br3">
           <el-col :span='24' class="bg-white pt10 pl10 pb10 bb1">
               <span class="header-title">送货信息</span>
@@ -305,7 +313,8 @@
         name:'repositoryData',
         data(){
             return {
-                ifShow:true,
+                ifShow:true,//控制折叠页面
+                ifCan:true,//控制允许使用
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -412,7 +421,7 @@
     }
 </script>
 
-<style>
+<style scoped>
 .data-wrapper{
     background: #EEF1F5;
     height: auto;
@@ -432,6 +441,12 @@
 }
 .mt10{
     margin-top: 10px;
+}
+.mt20{
+    margin-top: 20px;
+}
+.mb10{
+    margin-bottom: 10px;
 }
 .pt10{
     padding-top: 10px;
@@ -491,19 +506,19 @@
 }
 </style>
 <style>
-.el-input input{
+.data-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
 }
 /* 重写checkbox */
-.el-checkbox__inner{
+.data-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.el-checkbox__inner::after{
+.data-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -526,7 +541,7 @@
 }
 
 /* 重写el-table样式 */
-.el-table th {
+.data-wrapper .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -535,10 +550,10 @@
     text-align: center;
     background-color: #ececec;
 }
-.el-table td{
+.data-wrapper .el-table td{
     padding: 3px 0;
 }
-.el-table__body{
+.data-wrapper .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
@@ -546,18 +561,19 @@
     border-radius: 50%;
 }
 
-.text-right{
+.data-wrapper .text-right{
     text-align: right;
 }
 .mt-10{
     margin-top: 10px;
 }
-.el-date-editor.el-input, .el-date-editor.el-input__inner{
+.data-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
 }
-.el-input--suffix .el-input__inner{
+.data-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
+
 </style>
 
 

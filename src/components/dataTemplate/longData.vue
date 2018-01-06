@@ -42,15 +42,15 @@
                 <el-col :span='20'>
                     <el-table :data="tableData" border style="width: 100%" stripe>
                         <el-table-column prop="sequence" label="序号" ></el-table-column>
-                        <el-table-column prop="planCode" label="结算方式代码" ></el-table-column>
-                        <el-table-column prop="planName" label="结算方式名称"></el-table-column>
+                        <el-table-column prop="planCode" label="班次方案代码" ></el-table-column>
+                        <el-table-column prop="planName" label="班次方案名称"></el-table-column>
                         <el-table-column prop="remark" label="备注">
-                            <template slot-scope="scope">
+                            <template scope="scope">
                                 <input class="input-need" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
                             </template>
                         </el-table-column>
                         <el-table-column prop="ifAllow" label="允许使用">
-                            <template slot-scope="scope">
+                            <template scope="scope">
                                 <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                             </template>
                         </el-table-column>
@@ -347,7 +347,7 @@
 <script>
 
 export default {
-  name: 'shortdata',
+  name: 'longdata',
   data(){
       return{
             highSearchShow:false,//控制高级搜索显示
@@ -448,6 +448,27 @@ export default {
 				    remark:'fasdg',
 				    ifAllow:true,
 				    updateDate:'2017.12.20'
+				}, {
+				    sequence: '7',
+				    planCode: 'A007',
+				    planName: '哈哈',
+				    remark:'fasdg',
+				    ifAllow:true,
+				    updateDate:'2017.12.20'
+				}, {
+				    sequence: '8',
+				    planCode: 'A008',
+				    planName: '哈哈',
+				    remark:'fasdg',
+				    ifAllow:true,
+				    updateDate:'2017.12.20'
+				}, {
+				    sequence: '9',
+				    planCode: 'A009',
+				    planName: '哈哈',
+				    remark:'fasdg',
+				    ifAllow:true,
+				    updateDate:'2017.12.20'
 				}],
 			isEdit:-1,//表格中input编辑
 			ifUpdate:-1,//编辑按钮（是否可见）
@@ -535,6 +556,11 @@ export default {
     background: white;
     border: 1px solid #cccccc;
 }
+.input-need{
+    outline: none;
+    border:none;
+    width: 100%;
+}
 /* 搜索框部分開始 */
 .search-component{
     background: white;
@@ -605,11 +631,6 @@ export default {
     background-color:rgba(242,242,242,1);
     text-align: center;
     cursor: pointer;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
 }
 /* 搜索框部分結束 */
 
@@ -871,11 +892,11 @@ export default {
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.short-basic-data .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+.short-basic-data .el-pagination.is-background .btn-next,.short-basic-data .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
 }
 
-.text-right{
+.short-basic-data .text-right{
     text-align: right;
 }
 .mt-10{

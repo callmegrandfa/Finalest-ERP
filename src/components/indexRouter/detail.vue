@@ -2,88 +2,86 @@
 <!-- 集团管理-组织单元 -->
  <div class="detailForm">
      <el-row>
-         <el-col :span="24"> 
-             <div class="operationBtn">
-                <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">保存并新增</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">保存并审核</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>          
-            </div>  
+         <el-col :span="24">
+            <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">保存并新增</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">保存并审核</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
         </el-col>
-    </el-row>
- <el-row>
+     </el-row>
+     <el-row>
             <!--公司信息  -->
-            <el-col :span="2">     
-                <h4>公司信息</h4>
-            </el-col> 
-            <el-col :span="20" :class="{slidup : showCompany}" class="down"> 
-                 
-                
-                    <el-col :span="5" class="bgcolor">
-                        <label>编码</label>
-                        <el-input v-model="companyInformation.node" :disabled="true"></el-input>
-                    </el-col> 
-                
-                
-                    <el-col :span="5" class="bgcolor">
-                         <label>名称</label>
-                        <el-input v-model="companyInformation.handNum" placeholder="请录入手工单号"></el-input>
-                    </el-col>
-             
-                
-                    <el-col :span="5" class="bgcolor">
-                        <label>全称</label>
-                        <el-input v-model="companyInformation.warehouse" placeholder="请选择仓库"></el-input>
-                    </el-col>
-              
-                
-                    <el-col :span="5" class="bgcolor">
-                        <label>上级业务单元</label>
-                        <el-select v-model="valueHigherUnit">
-                            <el-option v-for="item in higherUnit" :key="item.valueHigherUnit" :label="item.label" :value="item.valueHigherUnit">
-                            </el-option>
-                        </el-select>
-                    </el-col>
+        <el-col :span="2">     
+            <h4>公司信息</h4>
+        </el-col> 
+        <el-col :span="20" :class="{slidup : showCompany}" class="down"> 
+        
+    
+        <el-col :span="5" class="bgcolor">
+            <label>编码</label>
+            <el-input v-model="companyInformation.node" :disabled="true"></el-input>
+        </el-col> 
+    
+    
+        <el-col :span="5" class="bgcolor">
+                <label>名称</label>
+            <el-input v-model="companyInformation.handNum" placeholder="请录入手工单号"></el-input>
+        </el-col>
+    
+    
+        <el-col :span="5" class="bgcolor">
+            <label>全称</label>
+            <el-input v-model="companyInformation.warehouse" placeholder="请选择仓库"></el-input>
+        </el-col>
+    
+    
+        <el-col :span="5" class="bgcolor">
+            <label>上级业务单元</label>
+            <el-select v-model="valueHigherUnit">
+                <el-option v-for="item in higherUnit" :key="item.valueHigherUnit" :label="item.label" :value="item.valueHigherUnit">
+                </el-option>
+            </el-select>
+        </el-col>
 
-                    <el-col :span="5" class="bgcolor">
-                            <label>启用月份</label>
-                            <el-select v-model="valueMonth">
-                                <el-option v-for="item in month" :key="item.valueMonth" :label="item.label" :value="item.valueMonth">
-                                </el-option>
-                            </el-select>
-                    </el-col>
-                            
-               
-               
-                    <el-col :span="5" class="bgcolor">
-                        <label>本位币种</label>
-                        <el-select v-model="valueMoney">
-                            <el-option v-for="item in money" :key="item.valueMoney" :label="item.label" :value="item.valueMoney">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                        
-                        
-                        
-                    <el-col :span="5" class="bgcolor">
-                        <label>所属公司</label>
-                        <el-select v-model="valueCompany">
-                            <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                        <el-col :span="5" class="bgcolor"><label>联系人</label><el-input v-model="companyInformation.contacts" placeholder="请填入联系人"></el-input></el-col>
-                        <el-col :span="5" class="bgcolor"><label>电话</label><el-input v-model="companyInformation.phone" placeholder="请填入电话"></el-input></el-col>
-                        <el-col :span="5" class="bgcolor"><label>地址</label><el-input v-model="companyInformation.address" placeholder="请填入地址"></el-input></el-col>
-                        <el-col :span="5" class="bgcolor"><label>备注</label><el-input v-model="companyInformation.remarks" placeholder="备注"></el-input></el-col>
-                        
-                            <el-col :span="5" class="bgcolor">
-                                <label>启用状态</label>
-                                <el-select v-model="valueState">
-                                    <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
-                                    </el-option>
-                                </el-select>
-                            </el-col>
+        <el-col :span="5" class="bgcolor">
+                <label>启用月份</label>
+                <el-select v-model="valueMonth">
+                    <el-option v-for="item in month" :key="item.valueMonth" :label="item.label" :value="item.valueMonth">
+                    </el-option>
+                </el-select>
+        </el-col>
+                
+    
+    
+        <el-col :span="5" class="bgcolor">
+            <label>本位币种</label>
+            <el-select v-model="valueMoney">
+                <el-option v-for="item in money" :key="item.valueMoney" :label="item.label" :value="item.valueMoney">
+                </el-option>
+            </el-select>
+        </el-col>
+            
+            
+            
+        <el-col :span="5" class="bgcolor">
+            <label>所属公司</label>
+            <el-select v-model="valueCompany">
+                <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
+                </el-option>
+            </el-select>
+        </el-col>
+        <el-col :span="5" class="bgcolor"><label>联系人</label><el-input v-model="companyInformation.contacts" placeholder="请填入联系人"></el-input></el-col>
+        <el-col :span="5" class="bgcolor"><label>电话</label><el-input v-model="companyInformation.phone" placeholder="请填入电话"></el-input></el-col>
+        <el-col :span="5" class="bgcolor"><label>地址</label><el-input v-model="companyInformation.address" placeholder="请填入地址"></el-input></el-col>
+        <el-col :span="5" class="bgcolor"><label>备注</label><el-input v-model="companyInformation.remarks" placeholder="备注"></el-input></el-col>
+            
+        <el-col :span="5" class="bgcolor">
+            <label>启用状态</label>
+            <el-select v-model="valueState">
+                <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
+                </el-option>
+            </el-select>
+        </el-col>
                         
                
         </el-col>
@@ -292,8 +290,88 @@ export default({
         }
     },
     created:function(){//.detailForm实例被创建之后调用ajaxGet函数
-          this.stss='123'//初始化页面数据
-            },
+    var url1='/api/services/app/DeptManagement/GetAllByOuId';
+    var url2='/api/services/app/DeptManagement/GetAllData';
+    var url3='/api/services/app/DeptManagement/Get';
+    var url4='/api/services/app/DeptManagement/GetAll';
+    var url5='/api/services/app/GroupManagement/GetAllData';
+    var url6='/api/services/app/GroupManagement/Get';
+    var url7='/api/services/app/GroupManagement/GetAll';
+        //  this.$axios.gets(url1).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('1'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('1'+res)
+        //         });
+
+        // this.$axios.gets(url2).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('2'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('2'+res)
+        //         });
+        //  this.$axios.gets(url3).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('3'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('3'+res)
+        //         });  
+        //   this.$axios.gets(url4).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('4'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('4'+res)
+        //         });   
+        //    this.$axios.gets(url5).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('5'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('5'+res)
+        //         });   
+        //     this.$axios.gets(url6).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('6'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('6'+res)
+        //         });    
+        //     this.$axios.gets(url7).then(function (res) {
+        //         //成功之后处理逻辑
+        //         console.log('7'+res)
+        //         },function (res) {
+        //         //失败之后处理逻辑
+        //         console.log('7'+res)
+        //         });                           
+           this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{
+               "ouId": 0,
+                "stockCode": "string",
+                "stockName": "string",
+                "stockFullName": "string",
+                "opAreaId": 0,
+                "adAreaId": 0,
+                "stockTypeId": 0,
+                "invTypeId": 0,
+                "fax": "string",
+                "email": "string",
+                "status": 0,
+                "manager": "string",
+                "phone": "string",
+                "remark": "string",
+                "id": 0
+           }).then(function (res) {
+                //成功之后处理逻辑
+                console.log(res)
+                },function (res) {
+                //失败之后处理逻辑
+                console.log(res)
+                });
+        },
+
     watch:{
         ischeck: {
         handler: function (val, oldVal) { 
@@ -396,44 +474,12 @@ export default({
         background-color: #82AAFC;
         border: none;
     }
-  .detailForm .bgcolor{
-      background-color: #fff;
-      height: 30px;
-      font-size: 12px;
-      margin-right: 15px;
-      margin-bottom: 15px;
-      float: left;
-      overflow: hidden;
-  }
+
   .detailForm .el-row{
       margin-bottom: 15px;
   }
-  .detailForm .bgcolor label{
-      padding-left: 10px;
-      line-height:30px;
-      display: block;
-      width: 83px;
-      height: 100%;
-      float: left;
-      color: #BCBCBC;
-  }
-  .detailForm .bgcolor .el-select,.detailForm .bgcolor .el-input{
-      display: block;
-      width: calc(100% - 93px);
-      height: 30px;
-      float: left;
-  }
- 
-  .detailForm .bgcolor .el-input input{
-      border: none;
-      height: 100%;
-  }
-  .detailForm .bgcolor .el-input input[disabled]{
-      background-color: #fff;
-  }
-  .detailForm .bgcolor .el-select .el-input {
-      width: 100%;
-  }
+
+
   .detailForm .companyInfo>.el-col:first-child,
   .detailForm .companyInfo .el-col h4{
       margin-bottom: 15px;
@@ -475,21 +521,5 @@ export default({
    margin-left: 10px;
 }
  
-   
-
-  /* 输入框 placeholder字体颜色*/
-  ::-webkit-input-placeholder {
-    color: #BCBCBC; }
-
-  :-moz-placeholder {
-    color: #BCBCBC; }
-
-  ::-moz-placeholder {
-    color: #BCBCBC; }
-
-  :-ms-input-placeholder {
-    color: #BCBCBC; }
-
-
   </style>
   

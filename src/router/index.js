@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import detail from '../components/indexRouter/detail'
 import shortData from '../components/dataTemplate/shortData'
+import midData from '../components/dataTemplate/midData'
+import longData from '../components/dataTemplate/longData'
 import home from '../components/indexRouter/home'
 import repositoryList from '../components/wareHouse/repositoryList'
 import repositoryData from '../components/wareHouse/repositoryData'
@@ -37,6 +39,7 @@ const routes = [
   { path: '/orderList/:id', component: orderList,name:'orderList' },
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/organization/:id', component: organization,name:'organization' },
+
 ]
 export default new Router({
   linkActiveClass: 'active',

@@ -83,6 +83,7 @@ export default {
     background-color:#eef1f5; 
     min-height:1000px ;
     width: 100%;
+    margin-bottom: -15px;
 }
 .content .routerBox{
     background-color: #eef1f5;
