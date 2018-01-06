@@ -4,7 +4,7 @@ Vue.use(vuex);
 
 export default new vuex.Store({
     state:{
-
+        accessToken:'',//login成功存储token
         show:false,//控制slidebar显示隐藏
         slidbarData:[],//页签数组
         url:'/',
