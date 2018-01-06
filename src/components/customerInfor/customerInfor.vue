@@ -69,6 +69,10 @@
             <el-col :span='2' class="h30 ml10">
                 <span class="btn">查询</span>
             </el-col>
+
+            <el-col :span='2' class="h30 ml10">
+                <span class="btn" @click='test'>测试接口</span>
+            </el-col>
         </el-row>
         
         <el-row>
@@ -171,6 +175,18 @@
         name:'customerInfor',
         data(){
             return {
+                try:[{
+                    "userName": "string",
+                    "name": "string",
+                    "surname": "string",
+                    "emailAddress": "string",
+                    "isActive": true,
+                    "roleNames": [
+                        "string"
+                    ],
+                    "password": "string"
+                    }],
+
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -291,6 +307,18 @@
                     }],
             }
         },
+        created:function(){
+            this.$axios.gets('/api/services/app/User/GetAll').then(function(res){
+                console.log(res)
+            })
+        },
+        methods:{
+            test:function(){
+                this.$axios.posts('/api/services/app/User/Create',this.try).then(function(res){
+                console.log(res)
+            })
+            }
+        }
     }
 </script>
 

@@ -93,10 +93,10 @@
                     </el-col>
                     <el-col :span='4'>
                         <el-row>
-                            <el-col :span='12'>
+                            <el-col :span='13'>
                                 <span>全部</span>
                             </el-col>
-                            <el-col :span='12'>
+                            <el-col :span='11'>
                                 <img src="../../assets/down.png" alt="">
                             </el-col>
                         </el-row>
@@ -132,7 +132,7 @@
                 </ul>
 
                 <el-row>
-                    <el-col :span='20' offset='1'>
+                    <el-col :span='20' :offset='1'>
                         <span>查询条件</span>
                     </el-col>
             
@@ -142,7 +142,7 @@
                 </el-row>
 
                 <el-row class="search-num">
-                    <el-col :span='18' offset='1' 
+                    <el-col :span='18' :offset='1' 
                             style="border:1px solid #cccccc;padding-left:10px;">
                         <input type="text" 
                                 class="form-control" 
@@ -369,6 +369,11 @@ export default {
 
 			businessStatus:[{name:'已生成',status:true},
 							{name:'未生成',status:true}],	
+
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+                },
 
 			componyTree: [{
                 label: '一级 1',
