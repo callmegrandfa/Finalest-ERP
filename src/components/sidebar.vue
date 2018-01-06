@@ -46,7 +46,7 @@ export default {
                         {name:'现货采购订单-订单详情',address:'orderDetail',menuid:'1113',tobarString:''},
                         {name:'集团管理',address:'groupManage',menuid:'1114',tobarString:''},
                         {name:'供应商列表',address:'supplierList',menuid:'1116',tobarString:''},   
-                        {name:'s',address:'13',menuid:'1117',tobarString:''},
+                        {name:'组织单元',address:'organization',menuid:'1117',tobarString:''},
                         {name:'d',address:'14',menuid:'1118',tobarString:''},
                         {name:'f',address:'15',menuid:'1119',tobarString:''},
                         {name:'g',address:'16',menuid:'1120',tobarString:''},   
@@ -110,7 +110,7 @@ export default {
             }
             
             var pushItem={'name':name,'url':menuUrl,'params':'default'};
-            this.$store.state.url='/'+menuUrl+'/'+params;//储存当前url
+            this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
             if(flag){
                  slidbarData.push(pushItem);
             }
