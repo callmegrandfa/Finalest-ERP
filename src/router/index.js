@@ -19,7 +19,7 @@ import storeData from '../components/storeInformation/storeData'
 import basicInfor from '../components/storeInformation/basicInfor'
 import customerBasicInfor from '../components/customerInfor/basicInfor'
 import customerInfor from '../components/customerInfor/customerInfor'
-import orderDetail from '../components/purchaseOrder/orderDetails'
+import orderDetails from '../components/purchaseOrder/orderDetails'
 import orderList from '../components/purchaseOrder/orderList'
 import supplierList from '../components/supplierData/supplierList'
 import organization from '../components/groupManage/organization'
@@ -50,6 +50,8 @@ children:[
   { path: '/home', component: home,name:'home' },
   { path: '/detail/:id', component: detail,name:'detail' },
   { path: '/shortData/:id', component: shortData,name:'shortData' },
+  { path: '/longData/:id', component: longData,name:'longData' },
+  { path: '/midData/:id', component: midData,name:'midData' },
   { path: '/repositoryList/:id', component: repositoryList,name:'repositoryList' },
   { path: '/repositoryData/:id', component: repositoryData,name:'repositoryData' },
   { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
@@ -59,7 +61,7 @@ children:[
   { path: '/basicInfor/:id', component: basicInfor,name:'basicInfor' },
   { path: '/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
   { path: '/customerInfor/:id', component: customerInfor,name:'customerInfor' },
-  { path: '/orderDetail/:id', component: orderDetail,name:'orderDetails' },
+  { path: '/orderDetails/:id', component: orderDetails,name:'orderDetails' },
   { path: '/orderList/:id', component: orderList,name:'orderList' },
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/organization/:id', component: organization,name:'organization' },

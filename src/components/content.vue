@@ -6,12 +6,8 @@
                     <router-link to="/home">首页</router-link>
                 </li>
                 <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
-<<<<<<< HEAD
                     <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
                     <!-- <router-link :to="'/'+i.url+'/'+i.params">{{i.name}}</router-link> -->
-=======
-                    <router-link :to="'/'+i.url">{{i.name}}</router-link>
->>>>>>> upstream/master
                     <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
                 </li>
             </ul>
