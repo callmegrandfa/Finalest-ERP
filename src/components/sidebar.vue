@@ -39,7 +39,7 @@ export default {
                         {name:'仓库资料',address:'repositoryData',menuid:'1106',tobarString:''},
                         {name:'商品资料',address:'goodsData',menuid:'1107',tobarString:''},
                         {name:'店铺数据列表',address:'storeData',menuid:'1108',tobarString:''},   
-                        {name:'店铺资料-基本信息',address:'basicInfor',menuid:'1109',tobarString:''},
+                        {name:'店铺资料-基本信息',address:'storeBasicInfor',menuid:'1109',tobarString:''},
                         {name:'客户资料-基本信息',address:'customerBasicInfor',menuid:'1110',tobarString:''},
                         {name:'客户资料',address:'customerInfor',menuid:'1111',tobarString:''},
                         {name:'现货采购订单-订单列表',address:'orderList',menuid:'1112',tobarString:''}, 

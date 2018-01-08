@@ -1,28 +1,28 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
-import index from '../components/index'
-import login from '../components/login'
-import register from '../components/register'
-import page404 from '../components/page404'
-import detail from '../components/indexRouter/detail'
-import shortData from '../components/dataTemplate/shortData'
-import midData from '../components/dataTemplate/midData'
-import longData from '../components/dataTemplate/longData'
-import home from '../components/indexRouter/home'
-import repositoryList from '../components/wareHouse/repositoryList'
-import repositoryData from '../components/wareHouse/repositoryData'
-import supplierEdit from '../components/supplierData/supplierEdit'
-import groupManage from '../components/groupManage/groupManager'
-import goodsData from '../components/goodsData/goodsData'
-import storeData from '../components/storeInformation/storeData'
-import basicInfor from '../components/storeInformation/basicInfor'
-import customerBasicInfor from '../components/customerInfor/basicInfor'
-import customerInfor from '../components/customerInfor/customerInfor'
-import orderDetails from '../components/purchaseOrder/orderDetails'
-import orderList from '../components/purchaseOrder/orderList'
-import supplierList from '../components/supplierData/supplierList'
-import organization from '../components/groupManage/organization'
+const index = () =>import(/* webpackChunkName: "group-index" */'../components/index')
+const login = () =>import('../components/login')
+const register = () =>import('../components/register')
+const page404 = () =>import('../components/page404')
+const detail = () =>import('../components/indexRouter/detail')
+const shortData = () =>import('../components/dataTemplate/shortData')
+const midData = () =>import('../components/dataTemplate/midData')
+const longData = () =>import('../components/dataTemplate/longData')
+const home = () =>import(/* webpackChunkName: "group-index" */'../components/indexRouter/home')
+const repositoryList = () =>import('../components/wareHouse/repositoryList')
+const repositoryData = () =>import('../components/wareHouse/repositoryData')
+const supplierEdit = () =>import('../components/supplierData/supplierEdit')
+const groupManager = () =>import('../components/groupManage/groupManager')
+const goodsData = () =>import('../components/goodsData/goodsData')
+const storeData = () =>import('../components/storeInformation/storeData')
+const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
+const customerBasicInfor = () =>import('../components/customerInfor/customerBasicInfor')
+const customerInfor = () =>import('../components/customerInfor/customerInfor')
+const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
+const orderList = () =>import('../components/purchaseOrder/orderList')
+const supplierList = () =>import('../components/supplierData/supplierList')
+const organization = () =>import('../components/groupManage/organization')
 Vue.use(Router)
 
 const routes = [
@@ -32,7 +32,7 @@ const routes = [
   { path: '/register', component: register,name:'register' },
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
-    console.log(store.state.accessToken)
+    //console.log(store.state.accessToken)
     if (store.state.accessToken==''){ 
       alert('请先登录')
       next('/login')
@@ -49,10 +49,10 @@ children:[
   { path: '/repositoryList/:id', component: repositoryList,name:'repositoryList' },
   { path: '/repositoryData/:id', component: repositoryData,name:'repositoryData' },
   { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
-  { path: '/groupManage/:id', component: groupManage,name:'groupManage'},
+  { path: '/groupManager/:id', component: groupManager,name:'groupManager'},
   { path: '/goodsData/:id', component: goodsData,name:'goodsData' },
   { path: '/storeData/:id', component: storeData,name:'storeData' },
-  { path: '/basicInfor/:id', component: basicInfor,name:'basicInfor' },
+  { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
   { path: '/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
   { path: '/customerInfor/:id', component: customerInfor,name:'customerInfor' },
   { path: '/orderDetails/:id', component: orderDetails,name:'orderDetails' },

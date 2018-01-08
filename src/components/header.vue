@@ -48,24 +48,7 @@ export default {
         state3: ''
       }
   },
-  watch:{
-      filterText:function(val,oldval){
-          
-         this.show=true
-        //   if(checkValue){//检测val值
-        //       this.sendAjax();//发送ajax
-        //       this.appendData=ajaxData;//ajax获取数据
-        //   }
-      }
-  },
    methods: {
-        getValue:function(e){
-            this.filterText=e.target.getAttribute("data");
-            this.show=false;
-        },
-        sendAjax:function(){
-            console.log(11)
-        },
         querySearch(queryString, cb) {
         var restaurants = this.restaurants;
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
@@ -95,21 +78,6 @@ export default {
       handleIconClick(ev) {
         console.log(ev);
       }
-        // ajaxGet:function(){
-        // let self=this;  
-        // self.axios.get('/user', {
-        //     params: {
-               
-        //     }
-        // })
-        // .then(function (response) {//响应成功
-        //     //this.restaurants=response.data;
-        //     console.log(response);
-        // })
-        // .catch(function (error) {//响应失败
-        //     console.log(error);
-        // });
-        // },
    },
    mounted() {
       this.restaurants = this.loadAll();
