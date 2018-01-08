@@ -1,29 +1,18 @@
 <template>
   <div id="app">
-    <app-header></app-header>
-    <div class="wrapper">
-      <app-sidebar></app-sidebar>
-      <app-content></app-content>
-    </div>
-    
+      <keep-alive>
+      <router-view></router-view>
+      </keep-alive>
   </div>
 </template>
-
 <script>
-import header from './components/header'
-import sidebar from './components/sidebar'
-import content from './components/content'
-
 export default {
-  name: 'app',
-  components: {
-    'app-header':header,
-    'app-sidebar':sidebar,
-    'app-content':content,
-  }
+ 
 }
 </script>
-<style scoped>
+<style>
+@import"//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+@import"../static/css/common.css";
 .wrapper{
   background-color: rgba(38, 52, 75, 1);
   padding-top: 73px;

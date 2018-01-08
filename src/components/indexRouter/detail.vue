@@ -43,16 +43,8 @@
             </el-select>
         </el-col>
 
-        <el-col :span="5" class="bgcolor">
-                <label>启用月份</label>
-                <el-select v-model="valueMonth">
-                    <el-option v-for="item in month" :key="item.valueMonth" :label="item.label" :value="item.valueMonth">
-                    </el-option>
-                </el-select>
-        </el-col>
-                
-    
-    
+        <el-col :span="5" class="bgcolor"><label><small>*</small>启用月份</label><el-date-picker v-model="companyInformation.month" type="month" placeholder="请选择月份"></el-date-picker></el-col>
+          
         <el-col :span="5" class="bgcolor">
             <label>本位币种</label>
             <el-select v-model="valueMoney">
@@ -116,8 +108,8 @@
         <el-col :span="2"><h4>基础信息</h4></el-col>
        <el-col :span="20">
             <el-col :span="5" class="bgcolor"><label>版本号</label><el-input v-model="basicInformation.version" placeholder="备注" :disabled="true"></el-input></el-col>
-            <el-col :span="5" class="bgcolor"><label>版本开始日期</label><el-input v-model="basicInformation.start" placeholder="请录入开始日期"></el-input></el-col>
-            <el-col :span="5" class="bgcolor"><label>版本结束日期</label><el-input v-model="basicInformation.finish" placeholder="请录入结束日期"></el-input></el-col>
+            <el-col :span="5" class="bgcolor"><label><small>*</small>版本开始日期</label><el-date-picker v-model="basicInformation.start" type="date" placeholder="请录入开始日期"></el-date-picker></el-col>
+            <el-col :span="5" class="bgcolor"><label><small>*</small>版本结束日期</label><el-date-picker v-model="basicInformation.finish" type="date" placeholder="请录入结束日期"></el-date-picker></el-col>
        </el-col> 
    </el-row>  
     <!-- 公司业务财务bootTab标签页 -->
@@ -186,6 +178,7 @@ export default({
             },
             companyInformation:{//公司信息
                 node:"PO1711060111111-002",
+                month:'',
                 handNum:'',
                 warehouse:'',
                 contacts:"",
@@ -217,7 +210,6 @@ export default({
             showInformation:false,//初始默认审计信息状态展开
             showCompany:false,//初始默认公司计信息状态展开  
             valueHigherUnit: '无',//初始上级单元
-            valueMonth:'请选择月份',//初始月份
             valueMoney:'请选择本位币种',//初始本位币种
             valueCompany:'请选择所属公司',//初始所属公司
             valueState:'启用',//初始启用状态 
@@ -231,16 +223,6 @@ export default({
             }, {
                 valueHigherUnit: '选项3',
                 label: '红旗连锁'
-            }],
-            month: [{//月份
-                valueMonth:'选项1',
-                label: '1月'
-            }, {
-                valueMonth:'选项2',
-                label: '2月'
-            }, {
-                valueMonth:'选项3',
-                label: '3月'
             }],
             money: [{//本位币种
                 valueMoney:'选项1',

@@ -69,6 +69,14 @@
             <el-col :span='2' class="h30 ml10">
                 <span class="btn">查询</span>
             </el-col>
+
+            <el-col :span='2' class="h30 ml10">
+                <span class="btn" @click='test'>测试接口post</span>
+            </el-col>
+
+            <el-col :span='2' class="h30 ml10">
+                <span class="btn" @click='test1'>测试接口get</span>
+            </el-col>
         </el-row>
         
         <el-row>
@@ -171,6 +179,33 @@
         name:'customerInfor',
         data(){
             return {
+                try:[{
+                "parentId": 0,
+                "name": "string",
+                "displayName": "string",
+                "url": "string",
+                "isEnabled": true,
+                "isVisible": true,
+                "order": 0,
+                "icon": "string",
+                "requiresAuthentication": "string",
+                "target": "string",
+                "customData": "string",
+                "permissionDependency": "string",
+                "featureDependency": "string",
+                "items": [
+                    {}
+                ],
+                "isDeleted": true,
+                "deleterUserId": 0,
+                "deletionTime": "2018-01-06T05:23:41.191Z",
+                "lastModificationTime": "2018-01-06T05:23:41.191Z",
+                "lastModifierUserId": 0,
+                "creationTime": "2018-01-06T05:23:41.191Z",
+                "creatorUserId": 0,
+                "id": 0
+                }],
+
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -290,6 +325,24 @@
                         ifAllow:true,
                     }],
             }
+        },
+        created:function(){
+            
+            
+        },
+        methods:{
+            test:function(){
+                this.$axios.posts('/api/services/app/OuManagement/Create',this.try).then(function(res){
+                console.log(res);
+            })
+            },
+
+            test1:function(){
+                this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){
+                console.log(res);
+            })
+            },
+
         },
     }
 </script>

@@ -117,8 +117,6 @@ export default {
   }
 </script>
 <style >
-@import"//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
-@import"../../static/css/common.css";
 .header{
     position: fixed;
     width: 100%;

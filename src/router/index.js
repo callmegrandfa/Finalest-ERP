@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import index from '../components/index'
+import login from '../components/login'
+import register from '../components/register'
 import detail from '../components/indexRouter/detail'
 import shortData from '../components/dataTemplate/shortData'
 import midData from '../components/dataTemplate/midData'
@@ -22,7 +25,11 @@ Vue.use(Router)
 
 
 const routes = [
-  { path: '/', redirect: '/home' },
+  { path: '/', redirect: '/login' },
+  { path: '/login', component: login,name:'login' },
+  { path: '/register', component: register,name:'register' },
+  { path: '/index', component: index,name:'index',
+children:[
   { path: '/home', component: home,name:'home' },
   { path: '/detail/:id', component: detail,name:'detail' },
   { path: '/shortData/:id', component: shortData,name:'shortData' },
@@ -40,6 +47,7 @@ const routes = [
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/organization/:id', component: organization,name:'organization' },
 
+]}
 ]
 export default new Router({
   linkActiveClass: 'active',

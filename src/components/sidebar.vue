@@ -92,6 +92,7 @@ export default {
         },
         storageData(e){
             var flag=false;
+            var isSame=false;
             var slidbarData=this.$store.state.slidbarData;//储存页签数组
             var name=e.target.getAttribute("menuname");
             var menuUrl=e.target.getAttribute("menuurl");
@@ -102,26 +103,45 @@ export default {
                 for(var i=0;i<slidbarData.length;i++){
                     if(slidbarData[i].name==name){//相同页签
                         flag=false;
+                        isSame=false;
                         break;
                     }else{
                       flag=true;
+                      isSame=true; 
                     }
                 }
             }
             
+<<<<<<< HEAD
             var pushItem={'name':name,'url':menuUrl,'params':'default'};
             this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
+=======
+            var pushItem={'name':name,'url':menuUrl};
+            this.$store.state.url='/'+menuUrl//储存当前url
+            var isSwitch=true;
+             if(slidbarData.length>=10){
+                if(isSame){
+                    var r=confirm("您选择打开的窗口已达到10个，如需继续添加新的窗口，默认关闭第一个窗口");
+                    if (r==true)
+                    {
+                        slidbarData.shift();
+                        flag=true;
+                    }else{
+                        flag=false;
+                        isSwitch=false;
+                    }
+                }else{
+                    
+                }
+                
+            }
+>>>>>>> upstream/master
             if(flag){
                  slidbarData.push(pushItem);
             }
-            if(slidbarData.length>=15){
-                var r=confirm("您选择打开的窗口已达到15个，如需继续添加新的窗口，默认关闭第一个窗口");
-                if (r==true)
-                {
-                    slidbarData.shift();
-                }
+            if(isSwitch){
+                this.switch();
             }
-            this.switch();
             
         }
     }
