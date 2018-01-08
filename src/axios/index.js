@@ -57,10 +57,6 @@ axios.interceptors.request.use((config) => {
 //   }
 //业务方法
   export default {
-    setAuth(auth){
-      axios.defaults.headers.common['token']=auth;
-      console.log(axios.defaults.headers.common['token']);
-    },
     posts(url, params) {
       return new Promise((resolve, reject) => {
         axios.post(url, params)

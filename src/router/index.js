@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
 import index from '../components/index'
 import login from '../components/login'
 import register from '../components/register'
+import page404 from '../components/page404'
 import detail from '../components/indexRouter/detail'
 import shortData from '../components/dataTemplate/shortData'
 import midData from '../components/dataTemplate/midData'
@@ -22,12 +24,27 @@ import orderList from '../components/purchaseOrder/orderList'
 import supplierList from '../components/supplierData/supplierList'
 Vue.use(Router)
 
-
 const routes = [
+  { path: '*', component: page404},
   { path: '/', redirect: '/login' },
   { path: '/login', component: login,name:'login' },
   { path: '/register', component: register,name:'register' },
   { path: '/index', component: index,name:'index',
+  beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
+    if (document.cookie.length>0){ 
+      if (document.cookie.indexOf(store.state.username + "=")!=-1)
+          { //已登录
+            next();
+          }else{
+            //cookie名为username不存在
+            next('/login');
+            alert('请您先登录')
+          } 
+    }else{
+        next('/login');
+        alert('请您先登录')
+    }
+  },
 children:[
   { path: '/home', component: home,name:'home' },
   { path: '/detail', component: detail,name:'detail' },
@@ -47,7 +64,21 @@ children:[
   { path: '/orderList', component: orderList,name:'orderList' },
   { path: '/supplierList', component: supplierList,name:'supplierList' }],
   }]
-export default new Router({
-  linkActiveClass: 'active',
-  routes
-})
+
+  const router=new Router({
+    mode: 'history',
+    linkActiveClass: 'active',
+    routes,
+  })
+ 
+  // router.beforeResolve((to, from, next) => {
+  //   var isLogin= router.app.$options.store.state.accessToken
+  //  console.log(router.app.$children)
+  //   if(isLogin==''){
+  //     next({ path: '/login' })
+  //     //next()
+  //   }else{
+  //     next()
+  //   }
+  // })
+export default  router

@@ -67,7 +67,7 @@ export default {
                     tobarString:'',
                     thirdInfo:[
                         {name:'详情',address:'detail',menuid:'111',tobarString:''},
-                        {name:'数据资料短',address:'shotData',menuid:'112',tobarString:''},
+                        {name:'数据资料短',address:'shortData',menuid:'112',tobarString:''},
                         {name:'数据资料长',address:'longData',menuid:'113',tobarString:''},
                         {name:'数据资料中',address:'midData',menuid:'114',tobarString:''}       
                     ]

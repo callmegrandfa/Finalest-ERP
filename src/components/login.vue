@@ -19,8 +19,14 @@ export default {
       }
   },
   methods:{
+      setCookie(c_name,value,expiredays){
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate()+expiredays);
+        document.cookie=c_name+ "=" +escape(value)+
+        ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+        },
       switch(url){
-            this.$router.push({path:url})//点击切换路由
+            this.$router.push({path:url});//点击切换路由
         },
       loginAjax:function(){
           var _this=this;
@@ -28,16 +34,19 @@ export default {
           this.$axios.posts('/api/TokenAuth/Authenticate',this.login)
           .then(function (res) {
                 //成功之后处理逻辑
-                _this.$store.state.accessToken='Bearer '+res.result.accessToken//vuex,store里面存入token
-                //_this.$axios.setAuth(_this.$store.state.accessToken)
-                _this.switch('/index')
+                console.log(res);
+                _this.$store.state.username=_this.login.userNameOrEmailAddress;//vuex,store里面存入userNameOrEmailAddress
+                _this.$store.state.accessToken='Bearer '+res.result.accessToken;//vuex,store里面存入token
+                _this.setCookie(_this.$store.state.username,_this.$store.state.accessToken,'30');//设置cookie过期时间30天
+                _this.switch('/home');
                 },function (res) {
                 //失败之后处理逻辑
-                console.log("error:"+res)
+                // alert('用户名或密码错误')
+                console.log(res);
             }) 
       },
       goRegister:function(){
-          this.switch('/register')
+          this.switch('/register');
       }
    },
 }
