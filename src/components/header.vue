@@ -198,7 +198,22 @@ export default {
     background: #f2f2f2;
     border: 0;
 }
+.my-autocomplete li {
+    line-height: normal;
+    padding: 7px;
+}
+.my-autocomplete .name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.my-autocomplete .addr {
+    font-size: 12px;
+    color: #b4b4b4;
+}
 
+.highlighted .addr {
+    color: #ddd;
+}
 /*  */
 .userInfo{
 float: right;

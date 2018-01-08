@@ -127,7 +127,6 @@ export default {
             }
             //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
             var pushItem={'name':name,'url':menuUrl,'params':idparam}
-            console.log(pushItem);
             this.$store.state.url='/'+menuUrl+'/'+idparam;//储存当前url
             if(flag){
                  slidbarData.push(pushItem);

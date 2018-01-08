@@ -22,6 +22,7 @@ import customerInfor from '../components/customerInfor/customerInfor'
 import orderDetail from '../components/purchaseOrder/orderDetails'
 import orderList from '../components/purchaseOrder/orderList'
 import supplierList from '../components/supplierData/supplierList'
+import organization from '../components/groupManage/organization'
 Vue.use(Router)
 
 const routes = [
@@ -47,38 +48,26 @@ const routes = [
   },
 children:[
   { path: '/home', component: home,name:'home' },
-  { path: '/detail', component: detail,name:'detail' },
-  { path: '/shortData', component: shortData,name:'shortData' },
-  { path: '/midData', component: midData,name:'midData' },
-  { path: '/longData', component: longData,name:'longData' },
-  { path: '/repositoryList', component: repositoryList,name:'repositoryList' },
-  { path: '/repositoryData', component: repositoryData,name:'repositoryData' },
-  { path: '/supplierEdit/:params', component: supplierEdit,name:'supplierEdit'},
-  { path: '/groupManage', component: groupManage,name:'groupManage'},
-  { path: '/goodsData', component: goodsData,name:'goodsData' },
-  { path: '/storeData', component: storeData,name:'storeData' },
-  { path: '/basicInfor', component: basicInfor,name:'basicInfor' },
-  { path: '/customerBasicInfor', component: customerBasicInfor,name:'customerBasicInfor' },
-  { path: '/customerInfor', component: customerInfor,name:'customerInfor' },
-  { path: '/orderDetail', component: orderDetail,name:'orderDetails' },
-  { path: '/orderList', component: orderList,name:'orderList' },
-  { path: '/supplierList', component: supplierList,name:'supplierList' }],
-  }]
+  { path: '/detail/:id', component: detail,name:'detail' },
+  { path: '/shortData/:id', component: shortData,name:'shortData' },
+  { path: '/repositoryList/:id', component: repositoryList,name:'repositoryList' },
+  { path: '/repositoryData/:id', component: repositoryData,name:'repositoryData' },
+  { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
+  { path: '/groupManage/:id', component: groupManage,name:'groupManage'},
+  { path: '/goodsData/:id', component: goodsData,name:'goodsData' },
+  { path: '/storeData/:id', component: storeData,name:'storeData' },
+  { path: '/basicInfor/:id', component: basicInfor,name:'basicInfor' },
+  { path: '/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
+  { path: '/customerInfor/:id', component: customerInfor,name:'customerInfor' },
+  { path: '/orderDetail/:id', component: orderDetail,name:'orderDetails' },
+  { path: '/orderList/:id', component: orderList,name:'orderList' },
+  { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
+  { path: '/organization/:id', component: organization,name:'organization' },
 
-  const router=new Router({
-    mode: 'history',
-    linkActiveClass: 'active',
-    routes,
-  })
- 
-  // router.beforeResolve((to, from, next) => {
-  //   var isLogin= router.app.$options.store.state.accessToken
-  //  console.log(router.app.$children)
-  //   if(isLogin==''){
-  //     next({ path: '/login' })
-  //     //next()
-  //   }else{
-  //     next()
-  //   }
-  // })
-export default  router
+]}
+]
+export default new Router({
+  mode: 'history',
+  linkActiveClass: 'active',
+  routes
+})
