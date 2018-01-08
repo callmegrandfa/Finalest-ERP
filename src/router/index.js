@@ -32,18 +32,12 @@ const routes = [
   { path: '/register', component: register,name:'register' },
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
-    if (document.cookie.length>0){ 
-      if (document.cookie.indexOf(store.state.username + "=")!=-1)
-          { //已登录
-            next();
-          }else{
-            //cookie名为username不存在
-            next('/login');
-            alert('请您先登录')
-          } 
+    console.log(store.state.accessToken)
+    if (store.state.accessToken==''){ 
+      alert('请先登录')
+      next('/login')
     }else{
-        next('/login');
-        alert('请您先登录')
+      next()
     }
   },
 children:[
