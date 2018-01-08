@@ -44,7 +44,7 @@ export default {
                         {name:'客户资料',address:'customerInfor',menuid:'1111',tobarString:''},
                         {name:'现货采购订单-订单列表',address:'orderList',menuid:'1112',tobarString:''}, 
                         {name:'现货采购订单-订单详情',address:'orderDetails',menuid:'1113',tobarString:''},
-                        {name:'集团管理',address:'groupManage',menuid:'1114',tobarString:''},
+                        {name:'集团管理',address:'groupManager',menuid:'1114',tobarString:''},
                         {name:'供应商列表',address:'supplierList',menuid:'1116',tobarString:''},   
                         {name:'组织单元',address:'organization',menuid:'1117',tobarString:''},
                         {name:'d',address:'14',menuid:'1118',tobarString:''},
