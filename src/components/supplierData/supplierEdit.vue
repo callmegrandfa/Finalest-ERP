@@ -322,12 +322,11 @@ export default {
         isEdit:-1,
     }
    },
-   created (){
-       console.log(this.$route.query.params) 
-   },
    methods:{
        handleEdit:function(index){
            this.isEdit=index;
+           let id = this.$route.params.id;
+           console.log(id);
        },
        finishEdit:function(index){
            this.isEdit=-1;
