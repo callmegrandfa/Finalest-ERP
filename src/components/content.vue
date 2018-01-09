@@ -42,7 +42,7 @@ export default {
          }
         
          if(previousIndex>=0&&this.hasClass(elA[index],'active')){//判断前一个路由按钮index是否存在，判断当前路由按钮是否激活
-                 var url='/'+elClose[previousIndex].getAttribute('menuurl');
+                 var url='/'+elClose[previousIndex].getAttribute('menuurl')+'/default';
                  this.$router.push({path:url})
          }else if(previousIndex==-1&&this.hasClass(elA[0],'active')){
              this.$router.push({path:'/home'})

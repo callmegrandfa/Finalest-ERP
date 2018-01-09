@@ -31,10 +31,10 @@ export default {
       loginAjax:function(){
           var _this=this;
           //if(表单验证通过)发送ajax
-          this.$axios.posts('/api/TokenAuth/Authenticate',this.login)
+          _this.$axios.posts('/api/TokenAuth/Authenticate',this.login)
           .then(function (res) {
                 //成功之后处理逻辑
-                console.log(res);
+                //console.log(res);
                 _this.$store.state.username=_this.login.userNameOrEmailAddress;//vuex,store里面存入userNameOrEmailAddress
                 _this.$store.state.accessToken='Bearer '+res.result.accessToken;//vuex,store里面存入token
                 _this.setCookie(_this.$store.state.username,_this.$store.state.accessToken,'30');//设置cookie过期时间30天

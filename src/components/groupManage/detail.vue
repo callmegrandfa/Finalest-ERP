@@ -3,9 +3,7 @@
  <div class="detailForm">
      <el-row>
          <el-col :span="24">
-            <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
-            <el-col :span='2' class="ml10"><span class="btn">保存并新增</span></el-col>
-            <el-col :span='2' class="ml10"><span class="btn">保存并审核</span></el-col>
+            <el-col :span='2' class="ml10"><span class="btn" @click="saveAjax">保存</span></el-col>
             <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
         </el-col>
      </el-row>
@@ -348,36 +346,38 @@ export default({
                     this.activeName='company';
                 }
             }
+        },
+        saveAjax:function(){
+            let _this=this;
+            _this.$axios.posts('/api/services/app/GroupManagement/Create',{
+              
+  "groupCode": "1",
+  "groupName": "2",
+  "groupFullname": "123",
+  "mnemonic": "r",
+  "areaId": 0,
+  "accountPeriodId": 0,
+  "currencyID": "123",
+  "industry": "12",
+  "phone": "123",
+  "fax": "stri123g",
+  "address": "123",
+  "remark": "1",
+  "status": 0
+
+           }).then(function (res) {
+                //成功之后处理逻辑
+                console.log(res)
+                },function (res) {
+                //失败之后处理逻辑
+                console.log(res)
+                });
+        },
+
         }
 
-    }        
-
-        //   methods:{//调用ajax,获取数据使用this.data,如下应为self.data
-        //       ajaxGet:function(){
-        //         let self=this;  
-        //         self.axios.get('/user', {
-        //             params: {
-        //                 Company:self.isCheckCompany,
-        //                 Finance:self.isCheckFinance,
-        //                 Business:self.isCheckBusiness,
-        //                 group:self.group,
-        //                 Use:self.isUse,
-        //                 HigherUnit:self.valueHigherUnit,
-        //                 Month:self.valueMonth,
-        //                 Money:self.valueMoney,
-        //                 valueCompany:self.valueCompany,
-        //                 valueState:self.valueState
-        //             }
-        //         })
-        //         .then(function (response) {//响应成功
-        //             console.log(response);
-        //         })
-        //         .catch(function (error) {//响应失败
-        //             console.log(error);
-        //         });
-        //       }
-        //   }
-    })
+    })        
+    
   </script>
 
   <style>
