@@ -81,9 +81,8 @@ export default {
 .content{
     padding: 0 15px;
     background-color:#eef1f5; 
-    min-height:1000px ;
+    min-height:901px ;
     width: 100%;
-    margin-bottom: -15px;
 }
 .content .routerBox{
     background-color: #eef1f5;

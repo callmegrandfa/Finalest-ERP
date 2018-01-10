@@ -1,10 +1,11 @@
 <template>
-    <el-row>
-        <el-col :span="5" class="bgcolor"><label>用户名</label><el-input placeholder="Admin" v-model="login.userNameOrEmailAddress"></el-input></el-col>
+    <el-row class="loginWrapper">
+        <el-col :span="11" :offset="13">1</el-col>
+        <!-- <el-col :span="5" class="bgcolor"><label>用户名</label><el-input placeholder="Admin" v-model="login.userNameOrEmailAddress"></el-input></el-col>
         <el-col :span="5" class="bgcolor"><label>密码</label><el-input placeholder="123qwe" v-model="login.password"></el-input></el-col>
         <el-checkbox v-model="login.rememberClient">记住我</el-checkbox>
         <button @click="loginAjax">登录</button> 
-        <button @click="goRegister">注册</button> 
+        <button @click="goRegister">注册</button>  -->
     </el-row>
 </template>
 <script>
@@ -51,4 +52,10 @@ export default {
    },
 }
 </script>
+<style scoped>
+    .loginWrapper{
+        width: 100%;
+        height: 974px;
+    }
+</style>
 

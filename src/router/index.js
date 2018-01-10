@@ -34,8 +34,9 @@ const routes = [
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
     //console.log(store.state.accessToken)
     if (store.state.accessToken==''){ 
-      alert('请先登录')
-      next('/login')
+      // alert('请先登录')
+      // next('/login')
+      next()
     }else{
       next()
     }
