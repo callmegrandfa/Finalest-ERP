@@ -199,11 +199,35 @@ export default {
 }
 .menu li.two:hover .slid2{
     display: block;
+    max-height: 460px;
+    overflow-y: scroll;
+    overflow-x:hidden;
 }
+
 .slid2{
     cursor: pointer;
 }
-
-
-
+.slid2::-webkit-scrollbar {
+    width:10px;
+    height:10px;
+}
+.slid2::-webkit-scrollbar-button    {
+    background-color:#26344b;
+}
+.slid2::-webkit-scrollbar-track     {
+    background:#26344b;
+}
+.slid2::-webkit-scrollbar-track-piece {
+    background:url(http://www.lyblog.net/wp/wp-content/themes/mine/img/stripes_tiny_08.png);
+}
+.slid2::-webkit-scrollbar-thumb{
+    background:#000;
+    border-radius:4px;
+}
+.slid2::-webkit-scrollbar-corner {
+    background:#26344b;
+}
+.slid2::-webkit-scrollbar-resizer  {
+    background:#26344b;
+}
 </style>

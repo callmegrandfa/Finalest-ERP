@@ -37,7 +37,7 @@
                    <el-col :span="12" class="remember">
                         <i class="fa fa-check-circle" aria-hidden="true" :class="{check : ischecked}" @click="ischecked = !ischecked"></i>
                         <span @click="ischecked = !ischecked">记住密码</span></el-col>
-                   <el-col :span="12" class="forget"><span>忘记密码</span></el-col>
+                   <el-col :span="12" class="forget"><span @click="goRegister">忘记密码</span></el-col>
                 </el-col>
                 <el-col :span="10" :offset="7" class="formInput thirdParty">
                      <el-col :span="2" :offset="3">
@@ -60,16 +60,8 @@
                 <el-col :span="24" class="copyright">
                     <p>版权制作 广州恒康信息科技有限公司</p>
                 </el-col>
-                
-         <!-- <button @click="goRegister">注册</button> -->
             </el-col>
         </el-col>
-        
-        <!-- <el-col :span="5" class="bgcolor"><label>用户名</label><el-input placeholder="Admin" v-model="login.userNameOrEmailAddress"></el-input></el-col>
-        <el-col :span="5" class="bgcolor"><label>密码</label><el-input placeholder="123qwe" v-model="login.password"></el-input></el-col>
-        <el-checkbox v-model="login.rememberClient">记住我</el-checkbox>
-        <button @click="loginAjax">登录</button> 
-        <button @click="goRegister">注册</button>  -->
     </el-row>
 </template>
 <script>
@@ -131,7 +123,6 @@ export default {
     .loginWrapper .loginForm{
         width: 872.2px;
         height: 100%;
-       /* background-image: url(../../static/image/login/QRcode.png); */
         background-repeat: no-repeat;
         background-position: right bottom;
         background-color: #0000006e;
