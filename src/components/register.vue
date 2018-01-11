@@ -11,10 +11,16 @@ export default {
           //this.switch('/login');
           var _this=this;
           //if(表单验证通过)发送ajax
-          _this.$axios.posts('/api/services/app/User/ChangeLanguage',{
-        
- 
-  languageName: "英语"
+          _this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{
+    
+                    OuId:'1',
+                    Draw:'1',
+                    Start:'2',
+                    Length:'5',
+                    Order:'',
+                    MaxResultCount:'3',
+                    SkipCount:'3',
+                    Sorting:'2'
 
           })
           .then(function (res) {
