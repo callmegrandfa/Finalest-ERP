@@ -70,9 +70,9 @@ axios.interceptors.request.use((config) => {
           })
       })
     },
-    gets(url,auth) { 
+    gets(url,params) { 
       return new Promise((resolve, reject) => {
-        axios.get(url)
+        axios.get(url,params)
           .then(response => {
             resolve(response.data);
           }, err => {

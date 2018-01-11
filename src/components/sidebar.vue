@@ -217,9 +217,6 @@ export default {
 .slid2::-webkit-scrollbar-track     {
     background:#26344b;
 }
-.slid2::-webkit-scrollbar-track-piece {
-    background:url(http://www.lyblog.net/wp/wp-content/themes/mine/img/stripes_tiny_08.png);
-}
 .slid2::-webkit-scrollbar-thumb{
     background:#000;
     border-radius:4px;
