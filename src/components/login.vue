@@ -12,7 +12,11 @@
             </el-col>
         </el-col>
         <el-col class="loginForm">
-            <img class="code" src="../../static/image/login/QRcode.png">
+           
+            <div class="code">
+                 <img src="../../static/image/login/QRcode.png">
+            </div>
+            
             <el-col :span="3" :offset="15" class="choose">
                <img src="../../static/image/login/language.png" alt="语言"><span>语言</span>
             </el-col>
@@ -138,10 +142,21 @@ export default {
         position: relative;
     }
     .loginWrapper .code{
+        overflow: hidden;
         position: absolute;
         right: 0;
         bottom: 0;
-        z-index: 100;
+        width: 94px;
+        height: 95px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: right bottom;
+        background-image: url(../../static/image/login/code.png)
+    }
+    .loginWrapper .code img{
+        position: relative;
+        right: 0;
+        bottom: 0;
     }
     .loginWrapper .loginForm .choose{
         cursor: pointer;
@@ -217,7 +232,6 @@ export default {
         color: #fff;
     }
     .loginWrapper .remember i{
-        margin-right: 5px;
         vertical-align: middle;
         font-size: 20px;
         cursor: pointer;
@@ -231,6 +245,7 @@ export default {
         text-align: right;
     }
     .loginWrapper .check{
+       
         color: #20e4e4;
     }
     .loginWrapper .thirdParty{
