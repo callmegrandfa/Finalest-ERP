@@ -1,53 +1,70 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import index from '../components/index'
-import login from '../components/login'
-import register from '../components/register'
-import detail from '../components/indexRouter/detail'
-import shortData from '../components/dataTemplate/shortData'
-import midData from '../components/dataTemplate/midData'
-import longData from '../components/dataTemplate/longData'
-import home from '../components/indexRouter/home'
-import repositoryList from '../components/wareHouse/repositoryList'
-import repositoryData from '../components/wareHouse/repositoryData'
-import supplierEdit from '../components/supplierData/supplierEdit'
-import groupManage from '../components/groupManage/groupManager'
-import goodsData from '../components/goodsData/goodsData'
-import storeData from '../components/storeInformation/storeData'
-import basicInfor from '../components/storeInformation/basicInfor'
-import customerBasicInfor from '../components/customerInfor/basicInfor'
-import customerInfor from '../components/customerInfor/customerInfor'
-import orderDetail from '../components/purchaseOrder/orderDetails'
-import orderList from '../components/purchaseOrder/orderList'
-import supplierList from '../components/supplierData/supplierList'
+import store from '../store'
+const index = () =>import(/* webpackChunkName: "group-index" */'../components/index')
+const login = () =>import('../components/login')
+const register = () =>import('../components/register')
+const page404 = () =>import('../components/page404')
+const detail = () =>import('../components/groupManage/detail')
+const shortData = () =>import('../components/dataTemplate/shortData')
+const midData = () =>import('../components/dataTemplate/midData')
+const longData = () =>import('../components/dataTemplate/longData')
+const home = () =>import(/* webpackChunkName: "group-index" */'../components/home/home')
+const repositoryList = () =>import('../components/wareHouse/repositoryList')
+const repositoryData = () =>import('../components/wareHouse/repositoryData')
+const supplierEdit = () =>import('../components/supplierData/supplierEdit')
+const groupManager = () =>import('../components/groupManage/groupManager')
+const goodsData = () =>import('../components/goodsData/goodsData')
+const storeData = () =>import('../components/storeInformation/storeData')
+const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
+const customerBasicInfor = () =>import('../components/customerInfor/customerBasicInfor')
+const customerInfor = () =>import('../components/customerInfor/customerInfor')
+const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
+const orderList = () =>import('../components/purchaseOrder/orderList')
+const supplierList = () =>import('../components/supplierData/supplierList')
+const organization = () =>import('../components/groupManage/organization')
 Vue.use(Router)
 
-
 const routes = [
+  { path: '*', component: page404},
   { path: '/', redirect: '/login' },
   { path: '/login', component: login,name:'login' },
   { path: '/register', component: register,name:'register' },
   { path: '/index', component: index,name:'index',
+  beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
+    //console.log(store.state.accessToken)
+    if (store.state.accessToken==''){ 
+      // alert('请先登录')
+      // next('/login')
+      next()
+    }else{
+      next()
+    }
+  },
 children:[
   { path: '/home', component: home,name:'home' },
-  { path: '/detail', component: detail,name:'detail' },
-  { path: '/shortData', component: shortData,name:'shortData' },
-  { path: '/midData', component: midData,name:'midData' },
-  { path: '/longData', component: longData,name:'longData' },
-  { path: '/repositoryList', component: repositoryList,name:'repositoryList' },
-  { path: '/repositoryData', component: repositoryData,name:'repositoryData' },
-  { path: '/supplierEdit/:params', component: supplierEdit,name:'supplierEdit'},
-  { path: '/groupManage', component: groupManage,name:'groupManage'},
-  { path: '/goodsData', component: goodsData,name:'goodsData' },
-  { path: '/storeData', component: storeData,name:'storeData' },
-  { path: '/basicInfor', component: basicInfor,name:'basicInfor' },
-  { path: '/customerBasicInfor', component: customerBasicInfor,name:'customerBasicInfor' },
-  { path: '/customerInfor', component: customerInfor,name:'customerInfor' },
-  { path: '/orderDetail', component: orderDetail,name:'orderDetails' },
-  { path: '/orderList', component: orderList,name:'orderList' },
-  { path: '/supplierList', component: supplierList,name:'supplierList' }],
-  }]
+  { path: '/detail/:id', component: detail,name:'detail' },
+  { path: '/shortData/:id', component: shortData,name:'shortData' },
+  { path: '/longData/:id', component: longData,name:'longData' },
+  { path: '/midData/:id', component: midData,name:'midData' },
+  { path: '/repositoryList/:id', component: repositoryList,name:'repositoryList' },
+  { path: '/repositoryData/:id', component: repositoryData,name:'repositoryData' },
+  { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
+  { path: '/groupManager/:id', component: groupManager,name:'groupManager'},
+  { path: '/goodsData/:id', component: goodsData,name:'goodsData' },
+  { path: '/storeData/:id', component: storeData,name:'storeData' },
+  { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
+  { path: '/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
+  { path: '/customerInfor/:id', component: customerInfor,name:'customerInfor' },
+  { path: '/orderDetails/:id', component: orderDetails,name:'orderDetails' },
+  { path: '/orderList/:id', component: orderList,name:'orderList' },
+  { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
+  { path: '/organization/:id', component: organization,name:'organization' },
+
+]}
+]
 export default new Router({
+  mode: 'history',
   linkActiveClass: 'active',
   routes
 })

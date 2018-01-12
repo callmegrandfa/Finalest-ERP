@@ -365,6 +365,9 @@ export default({
   .customerBasicForm .el-row{
       margin-bottom: 15px;
   }
+  .customerBasicForm .el-row:last-child{
+      margin-bottom: 0;
+  }
 
   .customerBasicForm .companyInfo>.el-col:first-child,
   .customerBasicForm .companyInfo .el-col h4{

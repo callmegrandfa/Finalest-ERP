@@ -1,15 +1,20 @@
 <template>
     <div class="content-wrapper" :class="{contentActive : $store.state.show}">
+         <div class="routerContain">
+            <button class="goLeft"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+            <div class="homePage"> <router-link to="/home">首页</router-link></div>
+            <div class="window">
+                <ul class="routerBox">
+                    <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
+                        <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
+                        <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
+                    </li>
+                </ul>
+            </div>
+            <button class="goRight"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></button>
+            <div class="goClose"><span>关闭操作<i class="fa fa-angle-up" aria-hidden="true"></i></span></div>
+        </div>    
         <div class="content">
-            <ul class="routerBox">
-                <li class="routerBtn">
-                    <router-link to="/home">首页</router-link>
-                </li>
-                <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
-                    <router-link :to="'/'+i.url">{{i.name}}</router-link>
-                    <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
-                </li>
-            </ul>
             <keep-alive>
             <router-view></router-view>
             </keep-alive>
@@ -41,7 +46,7 @@ export default {
          }
         
          if(previousIndex>=0&&this.hasClass(elA[index],'active')){//判断前一个路由按钮index是否存在，判断当前路由按钮是否激活
-                 var url='/'+elClose[previousIndex].getAttribute('menuurl');
+                 var url='/'+elClose[previousIndex].getAttribute('menuurl')+'/default';
                  this.$router.push({path:url})
          }else if(previousIndex==-1&&this.hasClass(elA[0],'active')){
              this.$router.push({path:'/home'})
@@ -63,61 +68,123 @@ export default {
 }
 </script>
 <style  scoped>
-    
+.goLeft,.goRight{
+     width: 50px;
+     height: 43px;
+     border: none;
+     outline: none;
+     background-color: #C9D1D1;
+     color: #797979;
+     font-size: 25px;
+     cursor: pointer;
+}
+.goRight{
+    margin-right: 1px;
+}  
+.homePage{
+    height: 100%;
+    background-color: #C9D1D1;
+}
+.homePage a{
+    display: block;
+    width: 50px;
+    text-decoration: none;
+    height: 100%;
+    font-size: 12px;
+    text-align: center;
+    line-height: 43px;
+    color: #333333;
+}
+.goClose{
+    width: 86px;
+    height: 43px;
+    font-size: 12px;
+    color: #333333;
+    text-align: center;
+    line-height: 43px;
+    background-color: #C9D1D1;
+    cursor: pointer;
+}
+.goLeft,
+.homePage,
+.window,
+.goRight,
+.goClose{
+    float: left;
+}
 .content-wrapper{
     transition: width 0.5s,padding-left 0.5s;
     -moz-transition: width 0.5s,padding-left 0.5s;
     -webkit-transition: width 0.5s,padding-left 0.5s;
     -o-transition: width 0.5s,padding-left 0.5s; 
+    background-color: #414e61;
     float: left;  
     width: calc(100% - 200px);
-    padding-left: 200px;
+    padding-left: 235px;
 }
 .contentActive{
     width: 100%;
-    padding-left: 0;
+    padding-left:50px;
 }
 .content{
-    padding: 0 15px;
+    padding: 15px;
     background-color:#eef1f5; 
-    min-height:1000px ;
+    min-height:851px ;
     width: 100%;
-    margin-bottom: -15px;
 }
-.content .routerBox{
-    background-color: #eef1f5;
-    width: 100%;
-    overflow: hidden;
-    padding: 28.5px 0;
-}
-.content .routerBox .routerBtn{
+.routerContain{
     position: relative;
-    float: left;
+    height: 43px;
+    background-color: #eef1f5;
+}
+.window{
+    overflow: hidden;
+    width: calc(100% - 277px);
+    height: 100%;
+    background-color: #C9D1D1;
+    margin-left: 1px;
+}
+.window .routerBox{
+    height: 100%;
+}
+
+.window .routerBox .routerBtn{
+    height: 100%;
+    position: relative;
+    display: inline-block;
     list-style: none;
 }
-.content .routerBox .routerBtn .close{
+
+
+.window .routerBox .routerBtn .close{
     display: block;
     position: absolute;
-    top: -6px;
-    right: 12px;
-    color: #fff;
+    top: 5px;
+    right: 0;
+    color: #000;;
     font-size: 12px;
-    background-color: #E4E4E4;
-    border-radius: 50%;
     cursor: pointer;
 }
-.content .routerBox .routerBtn a{
-    border-radius: 5px;
-    padding: 8px 12px;
-    margin-right: 20px;
+.window .routerBox .routerBtn a{
+    margin-top: 3px;
+    height: 40px;
+    padding: 0 15px;
+    line-height: 40px;
+    margin-right: 0;
     display: block;
-    background-color: #fff;
+    background-color: #C9D1D1;
     color: #333333;
     font-size: 12px;
     text-decoration: none;
 }
-.content .routerBox .routerBtn a.active{
+
+.window .routerBox .routerBtn a.active{
     color: #33CCCC;
+    background-color: #eef1f5;
+}
+.homePage a.active{
+     color: #33CCCC;
+    background-color: #eef1f5;
 }
 
 </style>

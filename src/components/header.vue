@@ -1,11 +1,11 @@
 <template>
     <header class="header">
+        <div class="menuBtn" @click="$store.commit('go')"></div>
         <div class="page-logo">
             <a href="">
-                <big>HKERP</big><br>
-                <small>v2.0</small>
+               <img src="../../static/image/login/ERP.png" alt="HKERP">
+               <span>恒康智能云</span>
             </a> 
-            <div class="menuBtn" @click="$store.commit('go')"></div>
         </div>
         <!-- 搜索框 -->
         <el-autocomplete class="search" popper-class="my-autocomplete" v-model="state3" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
@@ -48,24 +48,7 @@ export default {
         state3: ''
       }
   },
-  watch:{
-      filterText:function(val,oldval){
-          
-         this.show=true
-        //   if(checkValue){//检测val值
-        //       this.sendAjax();//发送ajax
-        //       this.appendData=ajaxData;//ajax获取数据
-        //   }
-      }
-  },
    methods: {
-        getValue:function(e){
-            this.filterText=e.target.getAttribute("data");
-            this.show=false;
-        },
-        sendAjax:function(){
-            console.log(11)
-        },
         querySearch(queryString, cb) {
         var restaurants = this.restaurants;
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
@@ -95,21 +78,6 @@ export default {
       handleIconClick(ev) {
         console.log(ev);
       }
-        // ajaxGet:function(){
-        // let self=this;  
-        // self.axios.get('/user', {
-        //     params: {
-               
-        //     }
-        // })
-        // .then(function (response) {//响应成功
-        //     //this.restaurants=response.data;
-        //     console.log(response);
-        // })
-        // .catch(function (error) {//响应失败
-        //     console.log(error);
-        // });
-        // },
    },
    mounted() {
       this.restaurants = this.loadAll();
@@ -120,61 +88,61 @@ export default {
 .header{
     position: fixed;
     width: 100%;
-    height: 73px;
-    background-color: #fff;
+    height: 50px;
+    background-color: rgba(53, 64, 82, 1);
     z-index: 3;
 }
 .header .page-logo{
     float: left;
-    background-color: #33CCCC;
-    width: 200px;
+    width: 193px;
     height: 100%;
     position: relative;
+   
 }
 .header .page-logo a{
-    width: 112px;
+    position: relative;
+    width: 70px;
     cursor: pointer;
-    height: 100%;
+    height: 31px;
+    padding-top: 10px;
+    padding-left: 15px;
     display: block;
     color: #fff;
     text-align: center;
     text-decoration: none;  
     font-family: 'Arial Negreta', 'Arial Normal', 'Arial';    
 }
+.header .page-logo a img{
+    width: 100%;
+    height: 100%;
+}
+.header .page-logo a span{
+    font-size: 12px;
+    position: absolute;
+    right: -43px;
+    bottom: -2px;
+}
 .header .page-logo a:hover,.header .page-logo a:focus{
     text-decoration: none;
-}
-.header .page-logo a big{
-    top: 16px;
-    left: 20px;
-    position: absolute;
-    font-weight: 700;
-    font-size: 32px;
-    display: block;
-}
-.header .page-logo a small{
-    top: 52px;
-    left: 20px;
-    position: absolute;
-    font-weight: 400;
-    font-size: 12px;
-    display: block;
-}
-            
-.page-logo .menuBtn{
+}        
+.menuBtn{
     cursor: pointer;
-    width: 20px;
-    height: 20px;
-    top: 23px;
-    right: 23px;
-    position: absolute;
+    width: 50px;
+    height: 100%;
+    float: left;
+    background-color: rgba(65, 78, 97, 1);
     background-image: url(../assets/sidebar-toggler.png);
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0.7;
     filter: alpha(opacity=70);
+    transition: box-shadow .5s;
+    -moz-transition: box-shadow .5s;
+    -webkit-transition: box-shadow .5s;
+    -o-transition: box-shadow .5s;
 }
-.page-logo .menuBtn:hover{
+.menuBtn:hover{
+    box-shadow: 1px 1px 1px black;
     opacity: 1;
     filter: alpha(opacity=100);
 }
@@ -182,27 +150,40 @@ export default {
 /* 搜索框 */
 .header .search{
     width: 340px;
-    margin-left: 30px;
     height: 40px;
     float: left;
-    margin-top: 15px;
-    background-color: #f2f2f2;
-    /* border: 1px solid #f2f2f2; */
+    margin-top: 5px;
     border-radius: 40px;
     overflow: visible;
     position: relative;
 }
+
 .header .search .el-input__inner{
     height: 40px;
     border-radius: 20px;
-    background: #f2f2f2;
+    background: #26344b;
     border: 0;
 }
+.my-autocomplete li {
+    line-height: normal;
+    padding: 7px;
+}
+.my-autocomplete .name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.my-autocomplete .addr {
+    font-size: 12px;
+    color: #b4b4b4;
+}
 
+.highlighted .addr {
+    color: #ddd;
+}
 /*  */
 .userInfo{
 float: right;
-width: 300px;
+width: 360px;
 height: 100%;
 }
 .userInfo>li{
@@ -212,15 +193,19 @@ height: 100%;
     height: 100%;
     position: relative;
 }
+
+.userInfo>li.icon i{
+    color: #fff;
+}
 .userInfo>li.user .username:hover .box{
     display: block;
 }
 .userInfo>li.user .username .box{
-   width: 100px;
+   width: 200px;
    position: absolute;
    list-style: none;
    right: 0;
-   top: 73px; 
+   top: 50px; 
    display: none;
 }
 .userInfo>li.user .username .box li a{
@@ -241,7 +226,7 @@ height: 100%;
 }
 .userInfo>li.user{
     width: 120px;
-    margin-left: 10px;
+    margin-left: 50px;
 }
 .userInfo>li.user .username{
     position: relative;
@@ -253,7 +238,12 @@ height: 100%;
     overflow: visible;
 }
 .userInfo>li.user .username span{
-    line-height: 61px;
+    line-height: 50px;
+    font-size: 13px;
+    color: #fff;
+}
+.userInfo>li.user .username span i{
+    font-size: 14px;
 }
 .userInfo>li.user .username span i{
     margin-left: 10px;
@@ -263,12 +253,14 @@ height: 100%;
     float: left;
     width: 44px;
     height: 44px;
-    border-radius: 50%;
-    margin-top: 12px;
+    border-radius: 100%;
+    overflow: hidden;
+    background-color: #fff;
+    margin-top: 3px;
 }
 .userInfo>li.user .imgWrap img{
-    width: 44px;
-    height: 44px;
+    width: 100%;
+    height: 100%;
 }
 .userInfo>li>a{
     display: block;
@@ -277,7 +269,7 @@ height: 100%;
     color: #000;
     text-decoration: none;
     text-align: center;
-    line-height: 70px;
+    line-height: 50px;
     font-size: 25px;
     
 }
@@ -288,7 +280,7 @@ height: 100%;
     height: 20px;
     font-size: 12px;
     line-height: 20px;
-    top: 15px;
+    top: 5px;
     right:0 ;
     color: #fff;
     border-radius: 50%;

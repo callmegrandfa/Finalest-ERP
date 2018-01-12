@@ -116,3 +116,236 @@
         transform-origin: center;
     }
  
+    /* 按钮 应用请更改图片相对路径 详情参考register.vue*/
+    /* <button class="erp_bt bt_add"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+    <button class="erp_bt bt_out"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+    <button class="erp_bt bt_in"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
+    <button class="erp_bt bt_del"><div class="btImg"><img src="../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+    <button class="erp_bt bt_modify"><div class="btImg"><img src="../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
+    <button class="erp_bt bt_version"><div class="btImg"><img src="../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
+    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+    <button class="erp_bt bt_look"><div class="btImg"><img src="../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
+    <button class="erp_bt bt_circulation"><div class="btImg"><img src="../../static/image/common/bt_circulation.png"></div><span class="btDetail">流转</span></button>
+    <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
+    <button class="erp_bt bt_end"><div class="btImg"><img src="../../static/image/common/bt_end.png"></div><span class="btDetail">终止</span></button>
+    <button class="erp_bt bt_codeNew"><div class="btImg"><img src="../../static/image/common/bt_codeNew.png"></div><span class="btDetail">扫码新增</span></button>
+    <button class="erp_bt bt_back"><div class="btImg"><img src="../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+    <button class="erp_bt bt_excel"><div class="btImg"><img src="../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
+    <button class="erp_bt bt_start"><div class="btImg"><img src="../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
+    <button class="erp_bt bt_stop"><div class="btImg"><img src="../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>
+    <button class="erp_bt bt_save"><div class="btImg"><img src="../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+    <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+    <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+    <button class="erp_bt bt_print"><div class="btImg"><img src="../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button> */
+
+
+    /* 小的圆按钮 */
+    /* <div class="smallBt bt_add"><img src="../../static/image/common/bt_add.png"></div>
+  <div class="smallBt bt_out"><img src="../../static/image/common/bt_inOut.png"></div>
+  <div class="smallBt bt_in"><img src="../../static/image/common/bt_inOut.png"></div>
+  <div class="smallBt bt_del"><img src="../../static/image/common/bt_del.png"></div>
+  <div class="smallBt bt_modify"><img src="../../static/image/common/bt_modify.png"></div>
+  <div class="smallBt bt_version"><img src="../../static/image/common/bt_version.png"></div>
+  <div class="smallBt bt_auxiliary"><img src="../../static/image/common/bt_auxiliary.png"></div>
+  <div class="smallBt bt_look"><img src="../../static/image/common/bt_look.png"></div>
+  <div class="smallBt bt_circulation"><img src="../../static/image/common/bt_circulation.png"></div>
+  <div class="smallBt bt_inputNew"><img src="../../static/image/common/bt_add.png"></div>
+  <div class="smallBt bt_end"><img src="../../static/image/common/bt_end.png"></div>
+  <div class="smallBt bt_codeNew"><img src="../../static/image/common/bt_codeNew.png"></div>
+  <div class="smallBt bt_back"><img src="../../static/image/common/bt_back.png"></div>
+  <div class="smallBt bt_excel"><img src="../../static/image/common/bt_excel.png"></div>
+  <div class="smallBt bt_start"><img src="../../static/image/common/bt_start.png"></div>
+  <div class="smallBt bt_stop"><img src="../../static/image/common/bt_stop.png"></div>
+  <div class="smallBt bt_save"><img src="../../static/image/common/bt_save.png"></div>
+  <div class="smallBt bt_saveAdd"><img src="../../static/image/common/bt_saveAdd.png"></div>
+  <div class="smallBt bt_cancel"><img src="../../static/image/common/bt_cancel.png"></div>
+  <div class="smallBt bt_print"><img src="../../static/image/common/bt_print.png"></div> */
+    .erp_bt{
+        height: 36px;
+        padding: 0 10px;
+        border: none;
+        position: relative;
+        cursor: pointer;
+      }
+      .erp_bt:focus{
+        outline: none;
+      }
+      .erp_bt .btImg{
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        top:10px;
+      }
+      .erp_bt.bt_cancel .btImg{
+        margin-top: -2.5px;
+      }
+      .erp_bt .btImg img{
+        max-width: 100%;
+        max-height: 100%;
+      }
+      .bt_del .btImg{
+      transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      -o-transform: rotate(45deg);
+      -moz-transform: rotate(45deg);	
+      }
+      .bt_out .btImg{
+        transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);	
+        }
+      .erp_bt .btDetail{
+        font-size: 12px;
+        color: #fff;
+        display: block;
+        height: 100%;
+        width: 100;
+        line-height: 36px;
+        padding-left: 20px;
+      }
+    .bt_add{
+      background-color: #3cc;
+    }
+    .bt_out{
+      background-color: #c6c;
+    }
+    .bt_in{
+      background-color: #82aafc;
+    }
+    .bt_del{
+      background-color: #f55e6e;
+    }
+    .bt_modify{
+      background-color: #415c84;
+    }
+    .bt_version{
+      background-color: #3c6;
+    }
+    .bt_auxiliary{
+      background-color: #f93;
+    }
+    .bt_look{
+      background-color: #f93;
+    }
+    .bt_circulation{
+      background-color: #82aafc;
+    }
+    .bt_inputNew{
+      background-color: #82aafc;
+    }
+    .bt_end{
+      background-color: #82aafc;
+    }
+    .bt_codeNew{
+      background-color: #3cc;
+    }
+    .bt_back{
+      background-color: #8291a8;
+    }
+    .bt_excel{
+      background-color: #82aafc;
+    }
+    .bt_start{
+      background-color: #3c6;
+    }
+    .bt_stop{
+      background-color: #f93;
+    }
+    .bt_save{
+      background-color: #0cf;
+    }
+    .bt_saveAdd{
+      background-color: #169bd5;
+    }
+    .bt_cancel{
+      background-color: #f93;
+    }
+    .bt_print{
+      background-color:#99f;
+    }
+
+/* 小圆按钮 */
+    .smallBt{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .smallBt img{
+        height: 12px;
+        width: 12px;
+        position: relative;
+        left: 4px;
+        top: 1px;
+      }
+      .smallBt.bt_cancel img{
+        height:4px;
+        top:-2.5px;
+      }
+      .smallBt.bt_back img{
+        width: 7px;
+        left: 5px;
+      }
+      .smallBt.bt_del img{
+          transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+          -o-transform: rotate(45deg);
+          -moz-transform: rotate(45deg);
+          left: 5px;	
+        }
+
+    .smallBt.bt_out img{
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);	
+    }
+    /* 搜索 新增 确定 按钮 */
+  /* <button class="formBt greenColor">
+    <span class="words">搜索</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button>
+  <button class="formBt redColor">
+    <span class="words">新增</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button>
+  <button class="formBt blueColor">
+    <span class="words">确定</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button> */
+  .formBt{
+    width: 93px;
+    height: 30px;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .formBt:focus{
+    outline: none;
+  }
+  .formBt .words{
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    line-height: 30px;
+  }
+  .formBt .hidding{
+    display: none;
+  }
+  .formBt.redColor{
+    background-color: rgba(245, 94, 110, 1);
+  }
+  .formBt.blueColor{
+    background-color: rgba(130, 170, 252, 1);
+  }
+  .formBt.greenColor{
+    background-color: rgba(75, 207, 131, 1);
+  }

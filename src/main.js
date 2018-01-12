@@ -11,6 +11,7 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.prototype.$axios = axios;
 
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -19,5 +20,5 @@ new Vue({
   axios,
   render: h => h(App),
   template: '<App/>',
-  components: { App }
+  components: { App },
 })
