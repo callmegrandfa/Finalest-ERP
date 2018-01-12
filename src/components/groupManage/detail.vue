@@ -404,7 +404,9 @@ export default({
   .detailForm .el-row{
       margin-bottom: 15px;
   }
-
+.detailForm .el-row:last-child{
+      margin-bottom: 0;
+  }
 
   .detailForm .companyInfo>.el-col:first-child,
   .detailForm .companyInfo .el-col h4{

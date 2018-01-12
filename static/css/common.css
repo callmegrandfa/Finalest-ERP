@@ -116,7 +116,7 @@
         transform-origin: center;
     }
  
-    /* 按钮 应用请更改图片相对路径*/
+    /* 按钮 应用请更改图片相对路径 详情参考register.vue*/
     /* <button class="erp_bt bt_add"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
     <button class="erp_bt bt_out"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
     <button class="erp_bt bt_in"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
@@ -165,6 +165,10 @@
         padding: 0 10px;
         border: none;
         position: relative;
+        cursor: pointer;
+      }
+      .erp_bt:focus{
+        outline: none;
       }
       .erp_bt .btImg{
         position: absolute;
@@ -186,6 +190,13 @@
       -o-transform: rotate(45deg);
       -moz-transform: rotate(45deg);	
       }
+      .bt_out .btImg{
+        transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);	
+        }
       .erp_bt .btDetail{
         font-size: 12px;
         color: #fff;
@@ -285,4 +296,56 @@
           -o-transform: rotate(45deg);
           -moz-transform: rotate(45deg);
           left: 5px;	
-          }
+        }
+
+    .smallBt.bt_out img{
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);	
+    }
+    /* 搜索 新增 确定 按钮 */
+  /* <button class="formBt greenColor">
+    <span class="words">搜索</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button>
+  <button class="formBt redColor">
+    <span class="words">新增</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button>
+  <button class="formBt blueColor">
+    <span class="words">确定</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button> */
+  .formBt{
+    width: 93px;
+    height: 30px;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .formBt:focus{
+    outline: none;
+  }
+  .formBt .words{
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    line-height: 30px;
+  }
+  .formBt .hidding{
+    display: none;
+  }
+  .formBt.redColor{
+    background-color: rgba(245, 94, 110, 1);
+  }
+  .formBt.blueColor{
+    background-color: rgba(130, 170, 252, 1);
+  }
+  .formBt.greenColor{
+    background-color: rgba(75, 207, 131, 1);
+  }

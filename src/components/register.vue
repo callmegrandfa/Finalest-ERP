@@ -41,6 +41,18 @@
   <div class="smallBt bt_saveAdd"><img src="../../static/image/common/bt_saveAdd.png"></div>
   <div class="smallBt bt_cancel"><img src="../../static/image/common/bt_cancel.png"></div>
   <div class="smallBt bt_print"><img src="../../static/image/common/bt_print.png"></div>
+  <button class="formBt greenColor">
+    <span class="words">搜索</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button>
+  <button class="formBt redColor">
+    <span class="words">新增</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button>
+  <button class="formBt blueColor">
+    <span class="words">确定</span>
+    <span class="words hidding"><i class="el-icon-loading"></i></span>
+  </button>
 </div>
   
 </template>
@@ -81,6 +93,5 @@ export default {
 }
 </script>
 <style scoped>
-  
-
+    
 </style>
