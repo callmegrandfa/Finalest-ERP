@@ -179,32 +179,18 @@
         name:'customerInfor',
         data(){
             return {
-                try:[{
-                "parentId": 0,
-                "name": "string",
-                "displayName": "string",
-                "url": "string",
-                "isEnabled": true,
-                "isVisible": true,
-                "order": 0,
-                "icon": "string",
-                "requiresAuthentication": "string",
-                "target": "string",
-                "customData": "string",
-                "permissionDependency": "string",
-                "featureDependency": "string",
-                "items": [
-                    {}
-                ],
-                "isDeleted": true,
-                "deleterUserId": 0,
-                "deletionTime": "2018-01-06T05:23:41.191Z",
-                "lastModificationTime": "2018-01-06T05:23:41.191Z",
-                "lastModifierUserId": 0,
-                "creationTime": "2018-01-06T05:23:41.191Z",
-                "creatorUserId": 0,
-                "id": 0
-                }],
+                try:{
+                "groupId": 2,
+                "stockId": 1,
+                "addressId": 8,
+                "completeAddress": "str33ing",
+                "transportMethodId": 1,
+                "contactPerson": "stri55ng",
+                "phone": "18200326666",
+                "logisticsCompany": "str55ing",
+                "isDefault": true,
+                "remark": "st54ring"
+                },
 
                 options: [{
                     value: '选项1',
@@ -332,8 +318,12 @@
         },
         methods:{
             test:function(){
-                this.$axios.posts('/api/services/app/OuManagement/Create',this.try).then(function(res){
+                // console.log(this.try)
+                this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
+                .then(function(res){
                 console.log(res);
+            },function(res){
+                console.log('err:'+res)
             })
             },
 

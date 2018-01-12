@@ -49,7 +49,7 @@
       <div class="bg-white mr10 mt10 pt10">
           <el-row>
               <el-col :span='2' class="ml10 ">
-                  <span class="btn">新增</span>
+                  <span class="btn" @click="getAllList">新增</span>
               </el-col>
               <el-col :span='2' class="ml10">
                   <span class="btn">修改</span>
@@ -67,18 +67,18 @@
 
           <el-row class="pt10">
               <el-col :span="24">
-                  <el-table :data="tableData" border style="width: 100%" stripe>
-                    <el-table-column prop="organization" label="业务组织" ></el-table-column>
-                    <el-table-column prop="houseCode" label="仓库编码" ></el-table-column>
-                    <el-table-column prop="houseName" label="仓库名称"></el-table-column>
-                    <el-table-column prop="houseCall" label="仓库简称"></el-table-column>
-                    <el-table-column prop="houseType" label="仓库类型"></el-table-column>
-                    <el-table-column prop="businessArea" label="业务地区"></el-table-column>
+                  <el-table :data="allList" border style="width: 100%" stripe>
+                    <el-table-column prop="ouId" label="业务组织" ></el-table-column>
+                    <el-table-column prop="stockCode" label="仓库编码" ></el-table-column>
+                    <el-table-column prop="stockFullName" label="仓库名称"></el-table-column>
+                    <el-table-column prop="stockName" label="仓库简称"></el-table-column>
+                    <el-table-column prop="stockTypeId" label="仓库类型"></el-table-column>
+                    <el-table-column prop="opAreaId" label="业务地区"></el-table-column>
                     <el-table-column prop="address" label="地址"></el-table-column>
-                    <el-table-column prop="people" label="负责人"></el-table-column>
+                    <el-table-column prop="manager" label="负责人"></el-table-column>
                     <el-table-column prop="ifAllow" label="允许使用">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
+                            <el-checkbox v-model="allList[scope.$index].ifAllow" ></el-checkbox>
                         </template>
                     </el-table-column>
                     <el-table-column prop="updateDate" label="   "></el-table-column>
@@ -92,109 +92,46 @@
 <script>
     export default{
         name:'repositoryList',
+        
+        created:function(){
+            this.getAllList();
+            this.searchListById();
+            
+        },
+
+        methods:{
+            getAllList:function(){//获取所有仓库列表
+                let self = this;
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList?OuId=1&Draw=1&Start=0&Length=5&MaxResultCount=5&SkipCount=0').then(function(res){
+                    // console.log(res);
+                    self.allList = res.data;
+                },function(res){
+
+                    console.log('err'+res)
+                })
+            },
+            searchListById:function(){//根据Id获取列表
+                let self = this;
+                this.$axios.gets('/api/services/app/StockAddressManagement/Get',{params:{Id:1}}).then(function(res){
+                console.log(res);
+
+                self.listById = res.result;
+              })
+
+            },
+           
+        },
         data(){
-            return{
-                tableData: [{
-				organization: '1',
-				a:'序号',
-				houseCode: 'A001',
-				houseName: '哈哈',
-                houseCall:'12',
-                houseType:'type',
-                businessArea:'业务地区',
-                address:'地址',
-                people:'负责人',
-                ifAllow:true,
-				updateDate:'2017.12.20'
-				}, {
-				    organization: '2',
-				    houseCode: 'A002',
-				    houseName: '哈哈',
-				    houseCall:'faf',
-                    houseType:'type',
-                    businessArea:'业务地区',
-                    address:'地址',
-                    people:'负责人',
-				    ifAllow:false,
-				    updateDate:'2017.12.20'
-				}, {
-				    organization: '3',
-				    houseCode: 'A003',
-				    houseName: '哈哈',
-                    houseCall:'faf',
-                    houseType:'type',
-                    businessArea:'业务地区',
-                    address:'地址',
-                    people:'负责人',
-				    ifAllow:false,
-				    updateDate:'2017.12.20'
-				}, {
-				    organization: '4',
-				    houseCode: 'A004',
-				    houseName: '哈哈',
-                    houseCall:'fasdg',
-                    houseType:'type',
-                    businessArea:'业务地区',
-                    address:'地址',
-                    people:'负责人',
-				    ifAllow:true,
-				    updateDate:'2017.12.20'
-				}, {
-				    organization: '5',
-				    houseCode: 'A005',
-				    houseName: '哈哈',
-                    houseCall:'fasdg',
-                    houseType:'type',
-                    businessArea:'业务地区',
-                    address:'地址',
-                    people:'负责人',
-				    ifAllow:true,
-				    updateDate:'2017.12.20'
-				}, {
-				    organization: '6',
-				    houseCode: 'A006',
-				    houseName: '哈哈',
-                    houseCall:'fasdg',
-                    houseType:'type',
-                    businessArea:'业务地区',
-                    address:'地址',
-                    people:'负责人',
-				    ifAllow:true,
-				    updateDate:'2017.12.20'
-				}, {
-				    organization: '7',
-				    houseCode: 'A007',
-				    houseName: '哈哈',
-                    houseCall:'fasdg',
-                    houseType:'type',
-                    businessArea:'业务地区',
-                    address:'地址',
-                    people:'负责人',
-				    ifAllow:true,
-				    updateDate:'2017.12.20'
-				}, {
-				    organization: '8',
-				    houseCode: 'A008',
-				    houseName: '哈哈',
-                    houseCall:'fasdg',
-                    houseType:'type',
-                    businessArea:'业务地区',
-                    address:'地址',
-                    people:'负责人',
-				    ifAllow:true,
-				    updateDate:'2017.12.20'
-				}, {
-				    organization: '9',
-				    houseCode: 'A009',
-				    houseName: '哈哈',
-                    houseCall:'fasdg',
-                    houseType:'type',
-                    businessArea:'业务地区',
-                    address:'地址',
-                    people:'负责人',
-				    ifAllow:true,
-				    updateDate:'2017.12.20'
-				}],
+            return{ 
+
+                allList:'',//获取所有的列表数据
+                listById:'',//根据id获取的list
+
+                code:'',
+                name:'',
+                ouAddress:'',
+                stockType:'',
+                
             }
         },
     }

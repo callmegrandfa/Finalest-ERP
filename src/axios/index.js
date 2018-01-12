@@ -57,10 +57,10 @@ axios.interceptors.request.use((config) => {
 //   }
 //业务方法
   export default {
-    setAuth(auth){
-      axios.defaults.headers.common['token']=auth;
-      console.log(axios.defaults.headers.common['token']);
-    },
+    // setAuth(auth){
+    //   axios.defaults.headers.common['token']=auth;
+    //   console.log(axios.defaults.headers.common['token']);
+    // },
     posts(url, params) {
       return new Promise((resolve, reject) => {
         axios.post(url, params)
@@ -74,7 +74,7 @@ axios.interceptors.request.use((config) => {
           })
       })
     },
-    gets(url,auth) { 
+    gets(url) { 
       return new Promise((resolve, reject) => {
         axios.get(url)
           .then(response => {
