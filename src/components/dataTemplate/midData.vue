@@ -285,11 +285,15 @@
                     </el-col>
                     <el-col :span="15" :offset="2" class="search-date-after">
                         <el-date-picker
-                            v-model="billingDate"
-                            type="daterange"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            default-value="2010-10-01">
+                            v-model="value1"
+                            type="date"
+                            placeholder="选择开始日期">
+                            </el-date-picker>
+                        
+                        <el-date-picker
+                            v-model="value1"
+                            type="date"
+                            placeholder="选择结束日期">
                             </el-date-picker>
                     </el-col>
                 </el-row>
@@ -300,11 +304,15 @@
                     </el-col>
                     <el-col :span="15" :offset="2" class="search-date-after">
                         <el-date-picker
-                            v-model="workDate"
-                            type="daterange"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            default-value="2010-10-01">
+                            v-model="value1"
+                            type="date"
+                            placeholder="选择开始日期">
+                            </el-date-picker>
+                        
+                        <el-date-picker
+                            v-model="value1"
+                            type="date"
+                            placeholder="选择结束日期">
                             </el-date-picker>
                     </el-col>
                 </el-row>
@@ -315,11 +323,15 @@
                     </el-col>
                     <el-col :span="15" :offset="2" class="search-date-after">
                         <el-date-picker
-                            v-model="dealDate"
-                            type="daterange"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            default-value="2010-10-01">
+                            v-model="value1"
+                            type="date"
+                            placeholder="选择开始日期">
+                            </el-date-picker>
+                        
+                        <el-date-picker
+                            v-model="value1"
+                            type="date"
+                            placeholder="选择结束日期">
                             </el-date-picker>
                     </el-col>
                 </el-row>
