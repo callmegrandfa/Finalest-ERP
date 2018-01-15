@@ -261,7 +261,7 @@ export default {
 .bg-white{
   background: #fff;
 }
-.el-col{
+.organization .el-col{
    margin-bottom: 20px;
    overflow: hidden;
 }
