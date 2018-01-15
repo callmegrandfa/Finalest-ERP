@@ -141,7 +141,7 @@
                     }
                 }
                 //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
-                var pushItem={'name':'仓库资料','url':'repositoryData','params':'1'}
+                var pushItem={'name':'仓库资料','url':'repositoryData','params':'default'}
                 this.$store.state.url='/repositoryData/default';//储存当前url
                 if(flag){
                     slidbarData.push(pushItem);
