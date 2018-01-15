@@ -3,8 +3,11 @@
  <div class="detailForm">
      <el-row>
          <el-col :span="24">
-            <el-col :span='2' class="ml10"><span class="btn" @click="saveAjax">保存</span></el-col>
-            <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
+            <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+            <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+            <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+            <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
         </el-col>
      </el-row>
      <el-row>
@@ -434,20 +437,6 @@ export default({
  .detailForm .tabZoo .el-tabs__active-bar{
      width: 28px!important;
  }
-.detailForm .btn{
-    display: inline-block;
-    height: 30px;
-    line-height: 30px;
-    background:rgba(130, 170, 252, 1);
-    border-radius: 3px;
-    color: white;
-    width: 100%;
-    text-align: center;
-    cursor: pointer;
-}
-.detailForm .ml10{
-   margin-left: 10px;
-}
- 
+
   </style>
   

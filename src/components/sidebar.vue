@@ -20,13 +20,9 @@
                 </li>
             </ul>
         </li>
-        <li class="nowTime">
-
-        </li>     
     </ul>
 </template>
 <script>
-
 export default {
   name: 'appsiderbar',
   data(){
@@ -197,22 +193,23 @@ export default {
             var pushItem={'name':name,'url':menuUrl,'params':'default'};
             this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
             var isSwitch=true;
-             if(slidbarData.length>=10){
-                if(isSame){
-                    var r=confirm("您选择打开的窗口已达到10个，如需继续添加新的窗口，默认关闭第一个窗口");
-                    if (r==true)
-                    {
-                        slidbarData.shift();
-                        flag=true;
-                    }else{
-                        flag=false;
-                        isSwitch=false;
-                    }
-                }else{
+            //  if(slidbarData.length>=10){
+            //     if(isSame){
+            //         var r=confirm("您选择打开的窗口已达到10个，如需继续添加新的窗口，默认关闭第一个窗口");
+            //         if (r==true)
+            //         {
+            //             slidbarData.shift();
+            //             flag=true;
+            //         }else{
+            //             flag=false;
+            //             isSwitch=false;
+            //         }
+            //     }else{
                     
-                }
+            //     }
                 
-            }
+            // }
+
             if(flag){
                  slidbarData.push(pushItem);
             }

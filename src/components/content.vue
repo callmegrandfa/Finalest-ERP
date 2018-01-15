@@ -1,17 +1,20 @@
 <template>
     <div class="content-wrapper" :class="{contentActive : $store.state.show}">
          <div class="routerContain">
-            <button class="goLeft"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+            <button class="goLeft" @click="left"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
             <div class="homePage"> <router-link to="/home">首页</router-link></div>
-            <div class="window">
-                <ul class="routerBox">
-                    <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
-                        <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
-                        <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
-                    </li>
-                </ul>
+            <div id="window">
+                <div id="longWidth">
+                    <ul id="routerBox">
+                        <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
+                            <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
+                            <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
+                        </li>
+                    </ul>
+                </div>
+                
             </div>
-            <button class="goRight"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></button>
+            <button class="goRight" @click="right"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></button>
             <div class="goClose"><span>关闭操作<i class="fa fa-angle-up" aria-hidden="true"></i></span></div>
         </div>    
         <div class="content">
@@ -29,7 +32,36 @@ export default {
       return this.$store.state.slidbarData;//获取最新的页签数组
     }
   },
+  data(){
+      return{
+          x:0,
+          go:0,
+      }
+  },
+  mounted:function(){
+    this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
+  },
   methods:{
+      right:function(){
+        var left=parseInt(document.getElementById('longWidth').style.left);  
+        var width=document.getElementById('routerBox').offsetWidth;
+        if(left-this.go+width<0 || left!='NAN'){
+            // alert('已到尽头')
+        }else{
+            this.x-=this.go;
+            document.getElementById('longWidth').style.left= this.x+'px';
+        }
+      },
+      left:function(){
+        var left=parseInt(document.getElementById('longWidth').style.left)
+        if(left<0){
+            this.x+=this.go;
+            document.getElementById('longWidth').style.left=this.x+'px';
+        }else{
+            //alert('已到尽头')
+        }
+        
+      },
       close:function(e){
           var nowIndex=e.target.getAttribute('index');//close元素上面绑定的index
           var elClose=document.getElementsByClassName('close');
@@ -78,6 +110,9 @@ export default {
      font-size: 25px;
      cursor: pointer;
 }
+.goLeft:hover,.goRight:hover{
+    color: #33CCCC;
+}
 .goRight{
     margin-right: 1px;
 }  
@@ -107,7 +142,7 @@ export default {
 }
 .goLeft,
 .homePage,
-.window,
+#window,
 .goRight,
 .goClose{
     float: left;
@@ -137,18 +172,31 @@ export default {
     height: 43px;
     background-color: #eef1f5;
 }
-.window{
+#window{
     overflow: hidden;
+    position: relative;
     width: calc(100% - 277px);
     height: 100%;
     background-color: #C9D1D1;
     margin-left: 1px;
 }
-.window .routerBox{
+#window #longWidth{
+    width: 10000px;
+    position: relative;
+    transition: left 0.5s;
+    -moz-transition: left 0.5s;
+    -webkit-transition: left 0.5s;
+    -o-transition: left 0.5s; 
+    left: 0;
+}
+#window #routerBox{
+    left: 0;
+    position: absolute;
     height: 100%;
+    width: auto;
 }
 
-.window .routerBox .routerBtn{
+#window #routerBox .routerBtn{
     height: 100%;
     position: relative;
     display: inline-block;
@@ -156,7 +204,7 @@ export default {
 }
 
 
-.window .routerBox .routerBtn .close{
+#window #routerBox .routerBtn .close{
     display: block;
     position: absolute;
     top: 5px;
@@ -165,7 +213,7 @@ export default {
     font-size: 12px;
     cursor: pointer;
 }
-.window .routerBox .routerBtn a{
+#window #routerBox .routerBtn a{
     margin-top: 3px;
     height: 40px;
     padding: 0 15px;
@@ -178,7 +226,7 @@ export default {
     text-decoration: none;
 }
 
-.window .routerBox .routerBtn a.active{
+#window #routerBox .routerBtn a.active{
     color: #33CCCC;
     background-color: #eef1f5;
 }
