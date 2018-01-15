@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="24" class="orderHead">
                 <el-col :span="18" class="orderTittle">
-                    <h4>现货采购订单-详细资料</h4>
+                    <h4>采购订单-详细资料</h4>
                     <div class="seal">
                         <div class="seal1">
                             <div class="seal2">
@@ -26,13 +26,11 @@
 
         <el-row>
             <el-col :span="24">
-                <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">保存并新增</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">保存并修改</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">取消</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">打印</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">导出</span></el-col>
+                <button class="headBtn">返回</button>
+                <button class="headBtn">保存</button>
+                <button class="headBtn">保存并新增</button>
+                <button class="headBtn">保存并审核</button>
+                <button class="headBtn">审核</button>
             </el-col>
         </el-row>
 
@@ -164,10 +162,10 @@
         </el-row>
         <el-row class="tabZoo">
             <el-col :span="24" class="operationBtn">
-                <el-col :span='2' class="ml10"><span class="btn">扫码新增</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">输入新增</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">导入</span></el-col>
-                <el-col :span='2' class="ml10"><span class="btn">导出</span></el-col>
+                <button class="erp_bt bt_codeNew"><div class="btImg"><img src="../../../static/image/common/bt_codeNew.png"></div><span class="btDetail">扫码新增</span></button>
+                <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
+                <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
+                 <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
                 <el-col :span='5' class="search-input">
                     <input type="text" class="form-control" placeholder="编码/名称..."/>
                 </el-col>
@@ -305,6 +303,7 @@
     })
 </script>
 <style>
+
 .orderDetail .orderHead{
     background-color: #fff;
     padding: 5px 0;
@@ -446,20 +445,6 @@
      margin-bottom: 15px;
  }
 
-.orderDetail .btn{
-    display: inline-block;
-    height: 30px;
-    line-height: 30px;
-    background:rgba(130, 170, 252, 1);
-    border-radius: 3px;
-    color: white;
-    width: 100%;
-    text-align: center;
-    cursor: pointer;
-}
-.orderDetail .ml10{
-   margin-left: 10px;
-}
 
   /* 搜索框 */
 .orderDetail .search-input{
