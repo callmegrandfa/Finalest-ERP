@@ -63,8 +63,13 @@ children:[
 
 ]}
 ]
-export default new Router({
+let router=new Router({
   mode: 'history',
   linkActiveClass: 'active',
   routes
 })
+router.beforeEach((to, from, next) => {
+  document.title = to.name
+   next()
+})
+export default router

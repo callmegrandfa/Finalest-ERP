@@ -6,24 +6,25 @@
 }
 /* elementUI表单控件 */
 /* input输入框 */
-/* <el-col :span="5" class="bgcolor"><label>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></el-col>  */
+/* <el-col :span="4" class="bgcolor"><label>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></el-col>  */
 .bgcolor{
-    background-color: #fff;
-    height: 30px;
+    height: 35px;
     font-size: 12px;
-    margin-right: 15px;
     margin-bottom: 15px;
+    width: 250px;
     float: left;
     overflow: hidden;
+    margin-right: 5px;
 }
 .bgcolor label{
-    padding-left: 10px;
-    line-height:30px;
+    margin-right: 10px; 
+    text-align: right;
+    line-height:35px;
     display: block;
-    width:83px;
+    width:72px;
     height: 100%;
     float: left;
-    color: #BCBCBC;
+    color: #333333;
 }
 .bgcolor label small{
     color: #FF669B;
@@ -31,26 +32,32 @@
 }
 .bgcolor .el-input{
     display: block;
-    width: calc(100% - 93px);
-    height: 30px;
+    width: 168px;
+    height: 35px;
     float: left;
+    font-size: 12px;
 }
 .bgcolor .el-input input{
-    border: none;
-    height: 30px;
+    border: 1px solid rgb(194, 202, 216);
+    height: 35px;
+}
+
+.bgcolor .el-input input:focus{
+  border-color: #33CCCC;
 }
 .bgcolor .el-input input[disabled]{
+    border-color:#c0c4cc;
     background-color: #fff;
 }
 
 /* datePicker日期控件 */
 /* <el-col :span="5" class="bgcolor"><label><small>*</small>交货日期</label><el-date-picker v-model="" type="date" placeholder=""></el-date-picker></el-col> */
 .bgcolor .el-input__prefix{
-    right: 0;
+    right: 5px;
     left: auto;
 }
 .bgcolor .el-input__prefix i{
-    line-height: 30px;
+    line-height: 35px;
 }
 .bgcolor .el-date-editor input{
      padding: 0 15px;
@@ -60,10 +67,13 @@
 .bgcolor .el-select .el-input {
     width: 100%;
 }
+.el-select .el-input.is-focus .el-input__inner{
+  border-color: #33CCCC;
+}
 .bgcolor .el-select{
     display: block;
-    width: calc(100% - 93px);
-    height: 30px;
+    width: 168px;
+    height: 35px;
     float: left;
 }
 /* 备注 */
@@ -74,16 +84,16 @@
 
 /* 输入框 placeholder字体颜色*/
 ::-webkit-input-placeholder {
-    color: #BCBCBC; }
+    color: #333333; }
 
   :-moz-placeholder {
-    color: #BCBCBC; }
+    color: #333333; }
 
   ::-moz-placeholder {
-    color: #BCBCBC; }
+    color: #333333; }
 
   :-ms-input-placeholder {
-    color: #BCBCBC; }
+    color: #333333; }
 
 
 /* checkbox */
@@ -166,6 +176,11 @@
         border: none;
         position: relative;
         cursor: pointer;
+        float: left;
+        margin-right: 2px;
+      }
+      .erp_bt:first-child{
+        margin-left: 10px;
       }
       button:focus{
         outline: none;
@@ -359,8 +374,22 @@
     border: 1px solid rgb(161, 161, 161);
     cursor: pointer;
     font-size: 12px;
+    margin-right: 15px;
+    float: left;
+  }
+  .erp_bt:first-child{
+    margin-left: 10px;
   }
   .headBtn:hover{
      background-color: rgb(161, 161, 161);
      color: #fff;
   }
+
+/* h4 <h4 class='h4'>组织类型</h4> */
+  h4.h4{
+    font-family: 'Arial Normal', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 16px;
+    padding-bottom: 15px;
+}

@@ -40,7 +40,7 @@ export default {
                     menuid:'11',
                     tobarString:'',
                     thirdInfo:[
-                        {name:'详情',address:'detail',menuid:'1101',tobarString:''},
+                        {name:'业务组织(精简版)-详细',address:'detail',menuid:'1101',tobarString:''},
                         {name:'数据资料短',address:'shortData',menuid:'1102',tobarString:''},
                         {name:'数据资料长',address:'longData',menuid:'1103',tobarString:''},
                         {name:'数据资料中',address:'midData',menuid:'1104',tobarString:''},   

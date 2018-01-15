@@ -391,10 +391,7 @@ export default({
      overflow: hidden;
      background-color: #fff;
  }
- .customerBasicForm .tabZoo .bgcolor{
-     border: 1px solid #BCBCBC;
-     border-radius: 4px;
- }
+
  .customerBasicForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 20px;
  }

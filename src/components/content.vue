@@ -18,9 +18,11 @@
             <div class="goClose"><span>关闭操作<i class="fa fa-angle-up" aria-hidden="true"></i></span></div>
         </div>    
         <div class="content">
-            <keep-alive>
-            <router-view></router-view>
-            </keep-alive>
+            <div class="whiteBg">
+                <keep-alive>
+                <router-view></router-view>
+                </keep-alive>
+            </div>   
         </div>
     </div>
 </template>
@@ -43,9 +45,13 @@ export default {
   },
   methods:{
       right:function(){
+
         var left=parseInt(document.getElementById('longWidth').style.left);  
+        if(left='NaN'){
+            left=0;
+        }
         var width=document.getElementById('routerBox').offsetWidth;
-        if(left-this.go+width<0 || left!='NAN'){
+        if(left-this.go+width<0 || left!=0){
             // alert('已到尽头')
         }else{
             this.x-=this.go;
@@ -154,7 +160,7 @@ export default {
     -o-transition: width 0.5s,padding-left 0.5s; 
     background-color: #414e61;
     float: left;  
-    width: calc(100% - 200px);
+    width: calc(100% - 235px);
     padding-left: 235px;
 }
 .contentActive{
@@ -162,10 +168,15 @@ export default {
     padding-left:50px;
 }
 .content{
-    padding: 15px;
+    padding: 15px 0;
     background-color:#eef1f5; 
     min-height:851px ;
     width: 100%;
+}
+.whiteBg{
+    background-color: #fff;
+    width:calc(100% - 30px);
+    margin-left: 15px;
 }
 .routerContain{
     position: relative;
@@ -175,7 +186,7 @@ export default {
 #window{
     overflow: hidden;
     position: relative;
-    width: calc(100% - 277px);
+    width: calc(100% - 238px);
     height: 100%;
     background-color: #C9D1D1;
     margin-left: 1px;
