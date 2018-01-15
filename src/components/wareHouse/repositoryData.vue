@@ -2,7 +2,7 @@
   <div class="data-wrapper">
       <el-row class="bg-white pl10 pt10 pb10">
           <el-col :span="2">
-              <span class="btn">保存新增</span>
+              <span class="btn" @click='getOuManagement()'>保存新增</span>
           </el-col>
           <el-col :span="2" class="ml15">
               <span class="btn">保存</span>
@@ -37,7 +37,10 @@
                       <span>编码</span>
                   </el-col>
                   <el-col :span="15">
-                      <input class="input-need" type="text" placeholder="请录入编码">
+                      <input v-model="queryResult.stockCode" 
+                                class="input-need" 
+                                type="text" 
+                                placeholder="请录入编码">
                   </el-col>
               </el-row>
           </el-col>
@@ -48,7 +51,10 @@
                       <span>名称</span>
                   </el-col>
                   <el-col :span="15">
-                      <input class="input-need" type="text" placeholder="请录入名称">
+                      <input v-model="queryResult.stockFullName" 
+                            class="input-need" 
+                            type="text" 
+                            placeholder="请录入名称">
                   </el-col>
               </el-row>
           </el-col>
@@ -59,7 +65,7 @@
                       <span>简称</span>
                   </el-col>
                   <el-col :span="15">
-                      <input class="input-need" type="text" placeholder="无">
+                      <input v-model="queryResult.stockName" class="input-need" type="text" placeholder="无">
                   </el-col>
               </el-row>
           </el-col>
@@ -78,7 +84,10 @@
                       <span>助记码</span>
                   </el-col>
                   <el-col :span="15">
-                      <input class="input-need" type="text" placeholder="PO123456789">
+                      <input v-model="ouGet.mnemonic" 
+                                class="input-need" 
+                                type="text" 
+                                placeholder="PO123456789">
                   </el-col>
               </el-row>
           </el-col>
@@ -86,7 +95,7 @@
           <el-col :span="5" class="bg-white br3 h30 ml10">
               <el-row>
                   <el-col :span="8" class="pl10">
-                      <span>仓库</span>
+                      <span>仓库类型</span>
                   </el-col>
                   <el-col :span="15">
                       <el-select v-model="value" placeholder="广州总部">
@@ -118,7 +127,14 @@
                       <span>业务地区</span>
                   </el-col>
                   <el-col :span="15">
-                      <input class="input-need" type="text" placeholder="无">
+                      <el-select v-model="value" placeholder="广州">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                       </el-select>
                   </el-col>
               </el-row>
           </el-col>
@@ -151,7 +167,7 @@
                                 <span>负责人</span>
                             </el-col>
                             <el-col :span="15">
-                                <input class="input-need" type="text" placeholder="请录入手工单号">
+                                <input class="input-need" v-model="queryResult.manager" type="text" placeholder="请录入手工单号">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -162,7 +178,10 @@
                                 <span>电话</span>
                             </el-col>
                             <el-col :span="15">
-                                <input class="input-need" type="text" placeholder="请选择仓库">
+                                <input v-model="queryResult.phone" 
+                                        class="input-need" 
+                                        type="text" 
+                                        placeholder="请选择仓库">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -173,7 +192,10 @@
                                 <span>Email</span>
                             </el-col>
                             <el-col :span="15">
-                                <input class="input-need" type="text" placeholder="无">
+                                <input v-model="queryResult.email" 
+                                        class="input-need" 
+                                        type="text" 
+                                        placeholder="无">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -186,7 +208,10 @@
                                 <span>传真</span>
                             </el-col>
                             <el-col :span="15">
-                                <input class="input-need" type="text" placeholder="PO1235656">
+                                <input class="input-need" 
+                                        v-model="queryResult.fax" 
+                                        type="text" 
+                                        placeholder="PO1235656">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -208,7 +233,10 @@
                                 <span>备注</span>
                             </el-col>
                             <el-col :span="18">
-                                <input class="input-need" type="text" placeholder="请录入备注">
+                                <input v-model='queryResult.remark' 
+                                        class="input-need" 
+                                        type="text" 
+                                        placeholder="请录入备注">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -230,15 +258,15 @@
           </el-col>
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
               <el-table :data="tableData" border style="width: 100%" stripe>
-                    <el-table-column prop="contacts" label="联系人" ></el-table-column>
+                    <el-table-column prop="contactPerson" label="联系人" ></el-table-column>
                     <el-table-column prop="phone" label="手机" ></el-table-column>
                     <el-table-column prop="phoneNum" label="电话"></el-table-column>
-                    <el-table-column prop="address" label="送货地址"></el-table-column>
-                    <el-table-column prop="sendType" label="运输方式"></el-table-column>
-                    <el-table-column prop="company" label="物流公司"></el-table-column>
-                    <el-table-column prop="ifAllow" label="默认">
+                    <el-table-column prop="completeAddress" label="送货地址"></el-table-column>
+                    <el-table-column prop="transportMethodId" label="运输方式"></el-table-column>
+                    <el-table-column prop="logisticsCompany" label="物流公司"></el-table-column>
+                    <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
+                            <el-checkbox v-model="tableData[scope.$index].isDefault" ></el-checkbox>
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" label="备注"></el-table-column>
@@ -259,7 +287,7 @@
                             <span>创建人</span>
                         </el-col>
 
-                        <el-col :span="10">
+                        <el-col :span="15">
                             <input class="input-need" type="text" placeholder="请录入创建人">
                         </el-col>
                     </el-row>
@@ -271,7 +299,7 @@
                             <span>创建时间</span>
                         </el-col>
 
-                        <el-col :span="10">
+                        <el-col :span="15">
                             <input class="input-need" type="text" placeholder="请录入创建时间">
                         </el-col>
                     </el-row>
@@ -283,7 +311,7 @@
                             <span>修改人</span>
                         </el-col>
 
-                        <el-col :span="10">
+                        <el-col :span="15">
                             <input class="input-need" type="text" placeholder="请录入修改人">
                         </el-col>
                     </el-row>
@@ -295,7 +323,7 @@
                             <span>修改时间</span>
                         </el-col>
 
-                        <el-col :span="10">
+                        <el-col :span="15">
                             <input class="input-need" type="text" placeholder="请录入修改时间">
                         </el-col>
                     </el-row>
@@ -311,10 +339,58 @@
 <script>
     export default{
         name:'repositoryData',
+        created:function(){
+            this.getAllList();
+            this.queryRepositoryDetail();
+            this.getOuManagement();
+        },
+
+        methods:{
+            getAllList:function(){
+                // console.log(123);
+                let self = this;
+                this.$axios.gets('/api/services/app/StockAddressManagement/GetAll').then(function(res){
+                // console.log(res);
+                self.allList = res.result;
+                self.tableData = self.allList.items;
+              })
+            },
+
+            queryRepositoryDetail:function(){
+                let self= this;
+                this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',this.queryId)
+                .then(function(res){
+                    // console.log(res);
+                    self.queryResult = res.result;
+                },function(res){
+                    console.log('err:'+res)
+                })
+            },
+
+            getOuManagement:function(){
+                let self = this;
+                this.$axios.gets('/api/services/app/OuManagement/Get?id=1').then(function(res){
+                    console.log(res);
+                    self.ouGet = res.result;
+              })
+            },
+        },
+
         data(){
             return {
+                allList:'',//页面数据获取
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制允许使用
+
+                queryId:{//搜索的ID
+                    id:'16'
+                    },  
+                queryResult:'', //搜索结果
+                queryOuId:{//ouManagement的搜索Id
+                    id:'2'
+                },
+                ouGet:'',
+
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -333,89 +409,8 @@
                     }],
 
                 value: '',
-
-                tableData: [{
-				contacts: '1',
-				phone: 'A001',
-				phoneNum: '哈哈',
-                sendType:'空运',
-                company:'顺丰',
-                address:'地址',
-                ifAllow:true,
-				remark:'备注'
-				}, {
-				    contacts: '1',
-                    phone: 'A001',
-                    phoneNum: '哈哈',
-                    sendType:'空运',
-                    company:'顺丰',
-                    address:'地址',
-                    ifAllow:true,
-                    remark:'备注'
-				}, {
-				    contacts: '1',
-                    phone: 'A001',
-                    phoneNum: '哈哈',
-                    sendType:'空运',
-                    company:'顺丰',
-                    address:'地址',
-                    ifAllow:true,
-                    remark:'备注'
-				}, {
-				    contacts: '1',
-                    phone: 'A001',
-                    phoneNum: '哈哈',
-                    sendType:'空运',
-                    company:'顺丰',
-                    address:'地址',
-                    ifAllow:true,
-                    remark:'备注'
-				}, {
-				    contacts: '1',
-                    phone: 'A001',
-                    phoneNum: '哈哈',
-                    sendType:'空运',
-                    company:'顺丰',
-                    address:'地址',
-                    ifAllow:true,
-                    remark:'备注'
-				}, {
-				    contacts: '1',
-                    phone: 'A001',
-                    phoneNum: '哈哈',
-                    sendType:'空运',
-                    company:'顺丰',
-                    address:'地址',
-                    ifAllow:true,
-                    remark:'备注'
-				}, {
-				    contacts: '1',
-                    phone: 'A001',
-                    phoneNum: '哈哈',
-                    sendType:'空运',
-                    company:'顺丰',
-                    address:'地址',
-                    ifAllow:true,
-                    remark:'备注'
-				}, {
-				    contacts: '1',
-                    phone: 'A001',
-                    phoneNum: '哈哈',
-                    sendType:'空运',
-                    company:'顺丰',
-                    address:'地址',
-                    ifAllow:true,
-                    remark:'备注'
-				}, {
-				    contacts: '1',
-				phone: 'A001',
-				phoneNum: '哈哈',
-                sendType:'空运',
-                company:'顺丰',
-                address:'地址',
-                ifAllow:true,
-				remark:'备注'
-				}],
+                tableData:[],
+                
             }
         },
     }
@@ -486,6 +481,7 @@
 .input-need{
     border:none;
     outline: none;
+    width: 100%;
 }
 .header-title{
     color: #F55E6E;

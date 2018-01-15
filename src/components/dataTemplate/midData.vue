@@ -47,7 +47,7 @@
                         <el-table-column prop="planName" label="处分金额"></el-table-column>
                         <el-table-column prop="planName" label="处分份数"></el-table-column>
                         <el-table-column prop="remark" label="备注">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <input class="input-need" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
                             </template>
                         </el-table-column>

@@ -229,7 +229,7 @@ body{
 .text-right{
   text-align: right;
 }
-.el-col{
+.groupManager .el-col{
    margin-bottom: 20px;
 }
 .groupManager{
