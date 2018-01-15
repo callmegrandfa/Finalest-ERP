@@ -57,13 +57,6 @@ axios.interceptors.request.use((config) => {
 //   }
 //业务方法
   export default {
-<<<<<<< HEAD
-    // setAuth(auth){
-    //   axios.defaults.headers.common['token']=auth;
-    //   console.log(axios.defaults.headers.common['token']);
-    // },
-=======
->>>>>>> 1191a991d28c675ad5f1ef517b11a7c1d2fd1f22
     posts(url, params) {
       return new Promise((resolve, reject) => {
         axios.post(url, params)
@@ -77,11 +70,7 @@ axios.interceptors.request.use((config) => {
           })
       })
     },
-<<<<<<< HEAD
-    gets(url) { 
-=======
     gets(url,params) { 
->>>>>>> 1191a991d28c675ad5f1ef517b11a7c1d2fd1f22
       return new Promise((resolve, reject) => {
         axios.get(url,params)
           .then(response => {
