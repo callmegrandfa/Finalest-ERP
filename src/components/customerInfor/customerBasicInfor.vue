@@ -9,7 +9,7 @@
         </el-col>
     </el-row>
     <el-row>
-        <el-col :span="22" :class="{slidup : showCompany}" class="down"> 
+        <el-col :span="24" :class="{slidup : showCompany}" class="down getPadding"> 
             <el-col :span="5" class="bgcolor">
                 <label>所属组织</label>
                 <el-select v-model="valueOrganization">
@@ -110,15 +110,15 @@
             
             <el-col :span="10" class="bgcolor moreWidth"><label>备注</label><el-input v-model="data.remarks" placeholder="备注"></el-input></el-col>   
         </el-col>
-        <el-col :span="2">   
+        <!-- <el-col :span="2">   
             <a class="upBtn" @click="showCompany = !showCompany">
                 收起<span class="el-icon-arrow-down"></span>
             </a>
-        </el-col>                                                                            
+        </el-col>                                                                             -->
 </el-row>
     <el-row>
-      <el-col :span="2" class="bgcolor noColor "><el-checkbox v-model="supplier">同为供应商</el-checkbox></el-col>
-      <el-col :span="2" class="bgcolor noColor "><el-checkbox v-model="credit">信用管理</el-checkbox></el-col>   
+      <el-col :span="2" class="bgcolor noColor getPadding"><el-checkbox v-model="supplier">同为供应商</el-checkbox></el-col>
+      <el-col :span="2" class="bgcolor noColor"><el-checkbox v-model="credit">信用管理</el-checkbox></el-col>   
     </el-row>
 
     <!-- 公司业务财务bootTab标签页 -->
@@ -142,18 +142,6 @@
                             <el-table-column prop="defaults" label="默认" width="180"></el-table-column>
                             <el-table-column ></el-table-column>
                         </el-table>
-                        <el-col :span="22" class="auditInformation">
-                            <h4>审计信息</h4>
-                            <div>
-                                <el-col :span="5" class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="请录入创建人"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="选择创建时间"></el-date-picker></el-col>
-                                <el-col :span="5" class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="选择修改时间"></el-date-picker></el-input></el-col>
-                                <el-col :span="5" class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></el-col>
-                                <el-col :span="5" class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></el-col>
-                                <el-col :span="5" class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></el-col>    
-                            </div>                                  
-                        </el-col>
                     </el-tab-pane>
                     <el-tab-pane label="送货地址" name="address">送货地址</el-tab-pane>
                     <el-tab-pane label="使用组织" name="organization">使用组织</el-tab-pane>
@@ -161,7 +149,21 @@
                 </el-tabs>
             </el-col>
         </div>
-    </el-row>                                                                
+    </el-row>    
+ <el-row>
+    <el-col :span="22" class="auditInformation getPadding">
+        <h4 class="h4">审计信息</h4>
+        <div>
+            <el-col :span="5" class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="请录入创建人"></el-input></el-col>
+            <el-col :span="5" class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="选择创建时间"></el-date-picker></el-col>
+            <el-col :span="5" class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></el-col>
+            <el-col :span="5" class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="选择修改时间"></el-date-picker></el-input></el-col>
+            <el-col :span="5" class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></el-col>
+            <el-col :span="5" class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></el-col>
+            <el-col :span="5" class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></el-col>    
+        </div>                                  
+    </el-col>
+</el-row>                                                                       
 </div>
 </template>
 
@@ -369,16 +371,14 @@ export default({
       background-color:transparent;
   }
   .customerBasicForm .el-row{
-      margin-bottom: 15px;
+     padding:15px 0;
+     border-bottom: 1px solid #e4e4e4;
+     background-color: #fff;
   }
   .customerBasicForm .el-row:last-child{
-      margin-bottom: 0;
+      border-bottom:none;
   }
 
-  .customerBasicForm .companyInfo>.el-col:first-child,
-  .customerBasicForm .companyInfo .el-col h4{
-      margin-bottom: 15px;
-  }
   .customerBasicForm .upBtn{
       font-size: 12px;
       color: #BCBCBC;
@@ -392,18 +392,18 @@ export default({
      background-color: #fff;
  }
 
- .customerBasicForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
+ .customerBasicForm  .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 20px;
  }
  .customerBasicForm .tabZoo .auditInformation{
      margin-top: 15px;
  }
- .customerBasicForm .tabZoo .auditInformation h4{
-     margin-bottom: 15px;
- }
+
  .customerBasicForm .erp_bt{
      margin-bottom: 15px;
  }
-
+.customerBasicForm .tabZoo .erp_bt:first-child{
+    margin-left: 0;
+}
   </style>
   

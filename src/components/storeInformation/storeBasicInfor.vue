@@ -13,7 +13,7 @@
         </el-col>
     </el-row>
     <el-row>
-        <el-col :span="22" :class="{slidup : showCompany}" class="down"> 
+        <el-col :span="24" :class="{slidup : showCompany}" class="down getPadding"> 
             <div class="bgcolor">
                 <label>所属组织</label>
                 <el-select v-model="valueOrganization">
@@ -113,11 +113,11 @@
             <div class="bgcolor noColor moreWidth"><el-checkbox v-model="isUse">允许使用</el-checkbox></div>   
             <div class="bgcolor moreWidth"><label>备注</label><el-input v-model="data.remarks" placeholder="备注"></el-input></div>   
         </el-col>
-        <el-col :span="2">   
+        <!-- <el-col :span="2">   
             <a class="upBtn" @click="showCompany = !showCompany">
                 收起<span class="el-icon-arrow-down"></span>
             </a>
-        </el-col>                                                                            
+        </el-col>                                                                             -->
 </el-row>
     
 
@@ -137,25 +137,27 @@
                             <el-table-column prop="founder" label="创建人" width="180"></el-table-column>
                             <el-table-column ></el-table-column>
                         </el-table>
-                        <el-col :span="22" class="auditInformation">
-                            <h4>审计信息</h4>
-                            <div>
-                                <el-col class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="请录入创建人"></el-input></el-col>
-                                <el-col class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="选择创建时间"></el-date-picker></el-col>
-                                <el-col class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></el-col>
-                                <el-col class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="选择修改时间"></el-date-picker></el-input></el-col>
-                                <el-col class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></el-col>
-                                <el-col class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></el-col>
-                                <el-col class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></el-col>    
-                            </div>                                 
-                        </el-col>
                     </el-tab-pane>
                     <el-tab-pane label="联系人" name="contacts">联系人</el-tab-pane>
                     <el-tab-pane label="网店" name="shop">网店</el-tab-pane>
                 </el-tabs>
             </el-col>
         </div>
-    </el-row>                                                                
+    </el-row>     
+<el-row>
+    <el-col :span="22" class="auditInformation getPadding">
+        <h4 class="h4">审计信息</h4>
+        <div>
+            <el-col class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="请录入创建人"></el-input></el-col>
+            <el-col class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="选择创建时间"></el-date-picker></el-col>
+            <el-col class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></el-col>
+            <el-col class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="选择修改时间"></el-date-picker></el-input></el-col>
+            <el-col class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></el-col>
+            <el-col class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></el-col>
+            <el-col class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></el-col>    
+        </div>                                 
+    </el-col>
+</el-row>                                                                   
 </div>
 </template>
 
@@ -376,12 +378,14 @@ export default({
       background-color:transparent;
   }
   .basicForm .el-row{
-      margin-bottom: 15px;
+    padding:15px 0;
+    border-bottom: 1px solid #e4e4e4;
+    background-color: #fff;
   }
-  .basicForm .companyInfo>.el-col:first-child,
-  .basicForm .companyInfo .el-col h4{
-      margin-bottom: 15px;
+  .basicForm .el-row:last-child{
+      border-bottom:none;
   }
+  
   .basicForm .upBtn{
       font-size: 12px;
       color: #BCBCBC;
@@ -395,14 +399,11 @@ export default({
      background-color: #fff;
  }
 
- .basicForm .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
+ .basicForm  .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 20px;
  }
  .basicForm .tabZoo .auditInformation{
      margin-top: 15px;
- }
- .basicForm .tabZoo .auditInformation h4{
-     margin-bottom: 15px;
  }
 
   </style>
