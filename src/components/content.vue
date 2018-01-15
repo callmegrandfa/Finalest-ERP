@@ -45,13 +45,15 @@ export default {
   },
   methods:{
       right:function(){
-
-        var left=parseInt(document.getElementById('longWidth').style.left);  
-        if(left='NaN'){
-            left=0;
-        }
+          let left;
+          if(document.getElementById('longWidth').style.left!=''){
+              left=parseInt(document.getElementById('longWidth').style.left);
+          }else{
+              left=0
+          }
         var width=document.getElementById('routerBox').offsetWidth;
-        if(left-this.go+width<0 || left!=0){
+        console.log(left-this.go+'~~'+width)
+        if(left-this.go+width<0){
             // alert('已到尽头')
         }else{
             this.x-=this.go;
@@ -59,7 +61,7 @@ export default {
         }
       },
       left:function(){
-        var left=parseInt(document.getElementById('longWidth').style.left)
+        var left=parseInt(document.getElementById('longWidth').style.left);
         if(left<0){
             this.x+=this.go;
             document.getElementById('longWidth').style.left=this.x+'px';
@@ -174,7 +176,6 @@ export default {
     width: 100%;
 }
 .whiteBg{
-    background-color: #fff;
     width:calc(100% - 30px);
     margin-left: 15px;
 }
