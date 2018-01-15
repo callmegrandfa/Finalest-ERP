@@ -42,7 +42,7 @@
               </el-row>
           </el-col>
           <el-col :span="2" class="ml10">
-              <span class="search-btn" style="cursor:pointer;">查询</span>
+              <span class="search-btn" style="cursor:pointer;" @click="searchListById()">查询</span>
           </el-col>
       </el-row>
 
@@ -95,15 +95,14 @@
         
         created:function(){
             this.getAllList();
-            this.searchListById();
             
         },
 
         methods:{
             getAllList:function(){//获取所有仓库列表
                 let self = this;
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList?OuId=1&Draw=1&Start=0&Length=5&MaxResultCount=5&SkipCount=0').then(function(res){
-                    // console.log(res);
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList?OuId=1&Draw=1&Start=0&Length=10').then(function(res){
+                    console.log(res);
                     self.allList = res.data;
                 },function(res){
 
@@ -113,12 +112,14 @@
             searchListById:function(){//根据Id获取列表
                 let self = this;
                 this.$axios.gets('/api/services/app/StockAddressManagement/Get',{params:{Id:1}}).then(function(res){
-                console.log(res);
+                // console.log(res);
 
                 self.listById = res.result;
               })
 
             },
+
+            
            
         },
         data(){
