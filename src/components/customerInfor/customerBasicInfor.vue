@@ -2,9 +2,10 @@
  <div class="customerBasicForm">
      <el-row>
          <el-col :span="24">
-            <el-col :span='2' class="ml10"><span class="btn">保存新增</span></el-col>
-            <el-col :span='2' class="ml10"><span class="btn">保存</span></el-col>
-            <el-col :span='2' class="ml10"><span class="btn">辅助功能</span></el-col> 
+            <button class="headBtn">返回</button>
+            <button class="headBtn">保存</button>
+            <button class="headBtn">保存并新增</button>
+            <button class="headBtn">删除</button>
         </el-col>
     </el-row>
     <el-row>
@@ -124,8 +125,13 @@
     <el-row> 
         <div class="tabZoo">
             <el-col :span="24">
-                <el-tabs v-model="activeName">
+               <el-tabs v-model="activeName">
                     <el-tab-pane label="银行信息" name="bank" class="getPadding">
+                        <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                        <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+                        <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
+                
                         <el-table :data="tableData" stripe border style="width: 100%">
                             <el-table-column prop="clearInfor" label="结算信息" width="180"></el-table-column>
                             <el-table-column prop="bankNum" label="银行账号" width="180"></el-table-column>
@@ -398,20 +404,9 @@ export default({
  .customerBasicForm .tabZoo .auditInformation h4{
      margin-bottom: 15px;
  }
-.customerBasicForm .btn{
-    display: inline-block;
-    height: 30px;
-    line-height: 30px;
-    background:rgba(130, 170, 252, 1);
-    border-radius: 3px;
-    color: white;
-    width: 100%;
-    text-align: center;
-    cursor: pointer;
-}
-.customerBasicForm .ml10{
-   margin-left: 10px;
-}
+ .customerBasicForm .erp_bt{
+     margin-bottom: 15px;
+ }
 
   </style>
   

@@ -1,6 +1,7 @@
 <template>
 <div>
   <button @click="goLogin">注册</button>
+  <!-- 按钮 应用请更改图片相对路径 详情参考 -->
   <button class="erp_bt bt_add"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
   <button class="erp_bt bt_out"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
   <button class="erp_bt bt_in"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
@@ -21,6 +22,8 @@
   <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
   <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
   <button class="erp_bt bt_print"><div class="btImg"><img src="../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+
+  <!-- 小的圆按钮 -->
   <div class="smallBt bt_add"><img src="../../static/image/common/bt_add.png"></div>
   <div class="smallBt bt_out"><img src="../../static/image/common/bt_inOut.png"></div>
   <div class="smallBt bt_in"><img src="../../static/image/common/bt_inOut.png"></div>
@@ -41,6 +44,8 @@
   <div class="smallBt bt_saveAdd"><img src="../../static/image/common/bt_saveAdd.png"></div>
   <div class="smallBt bt_cancel"><img src="../../static/image/common/bt_cancel.png"></div>
   <div class="smallBt bt_print"><img src="../../static/image/common/bt_print.png"></div>
+
+  <!-- 搜索 新增 确定 按钮 -->
   <button class="formBt greenColor">
     <span class="words">搜索</span>
     <span class="words hidding"><i class="el-icon-loading"></i></span>
@@ -53,6 +58,9 @@
     <span class="words">确定</span>
     <span class="words hidding"><i class="el-icon-loading"></i></span>
   </button>
+
+<!-- 背景透明 按钮  -->
+  <button class="headBtn">保存</button>
 </div>
   
 </template>
@@ -93,5 +101,16 @@ export default {
 }
 </script>
 <style scoped>
-    
+    .headBtn{
+      width: 93px;
+      height: 28px;
+      border-radius: 3px;
+      background-color: transparent;
+      border: 1px solid rgb(161, 161, 161);
+      cursor: pointer;
+    }
+    .headBtn:hover{
+       background-color: rgb(161, 161, 161);
+       color: #fff;
+    }
 </style>
