@@ -42,14 +42,14 @@
               </el-row>
           </el-col>
           <el-col :span="2" class="ml10">
-              <span class="search-btn" style="cursor:pointer;" @click="searchListById()">查询</span>
+              <span class="search-btn" style="cursor:pointer;" @click="storageData()">查询</span>
           </el-col>
       </el-row>
 
       <div class="bg-white mr10 mt10 pt10">
           <el-row>
               <el-col :span='2' class="ml10 ">
-                  <span class="btn" @click="getAllList">新增</span>
+                  <span class="btn" @click="storageData">新增</span>
               </el-col>
               <el-col :span='2' class="ml10">
                   <span class="btn">修改</span>
@@ -105,10 +105,10 @@
                     console.log(res);
                     self.allList = res.data;
                 },function(res){
-
                     console.log('err'+res)
                 })
             },
+
             searchListById:function(){//根据Id获取列表
                 let self = this;
                 this.$axios.gets('/api/services/app/StockAddressManagement/Get',{params:{Id:1}}).then(function(res){
@@ -119,20 +119,53 @@
 
             },
 
+            switch(){
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+
+            storageData(e){//点击新增跳转
+                var flag=false;
+                var slidbarData=this.$store.state.slidbarData;//储存页签数组
+                let name = '仓库资料';
+                console.log(slidbarData)
+                if(slidbarData.length==0){//slidbarData为空
+                    flag=true;
+                }else{//slidbarData不为空
+                    for(var i=0;i<slidbarData.length;i++){
+                        if(slidbarData[i].name==name){//相同页签
+                            flag=false;
+                            break;
+                        }else{
+                        flag=true;
+                        }
+                    }
+                }
+                //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
+                var pushItem={'name':'仓库资料','url':'repositoryData','params':'1'}
+                this.$store.state.url='/repositoryData/default';//储存当前url
+                if(flag){
+                    slidbarData.push(pushItem);
+                }
+                if(slidbarData.length>=15){
+                    var r=confirm("您选择打开的窗口已达到15个，如需继续添加新的窗口，默认关闭第一个窗口");
+                    if (r==true)
+                    {
+                        slidbarData.shift();
+                    }
+                }
+                this.switch();
+                
+            },
             
            
         },
         data(){
             return{ 
 
-                allList:'',//获取所有的列表数据
+                allList:[],//获取所有的列表数据
                 listById:'',//根据id获取的list
 
-                code:'',
-                name:'',
-                ouAddress:'',
-                stockType:'',
-                
+               
             }
         },
     }
