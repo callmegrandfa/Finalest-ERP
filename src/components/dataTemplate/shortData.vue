@@ -1,72 +1,100 @@
 <template>
         <!-- 基础资料-短开始 -->
         <div class="short-basic-data container-fluid">
-            <!-- 搜索框部分开始 -->
-            <el-row class="search-component">
-                <el-col :span='2' class="add-btn green-btn">
-                    <span>新增</span>
-                </el-col>
+            <!-- 非高级搜索开始 -->
+            <div style="display:inline-block;" class="width100" :class="{width75:highSearchShow}">
+                <!-- 搜索框部分开始 -->
+                <el-row class="search-component">
+                    <el-col :span='1.5'>
+                        <button class="erp_bt bt_add">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_add.png">
+                            </div>
+                            <span class="btDetail">新增</span>
+                        </button>
+                    </el-col>
 
-                <el-col :span='2' class="import-btn green-btn">
-                    <span>导入</span>
-                </el-col>
+                    <el-col :span='1.5'>
+                        <button class="erp_bt bt_in">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_inOut.png">
+                            </div>
+                            <span class="btDetail">导入</span>
+                        </button>
+                    </el-col>
 
-                <el-col :span='5' class="search-input">
-                    <input type="text" class="form-control" placeholder="编码/名称..."/>
-                </el-col>
+                    <el-col :span='1.5'>
+                        <button class="erp_bt bt_out">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_inOut.png">
+                            </div>
+                            <span class="btDetail">导出</span>
+                        </button>
+                    </el-col>
 
-                <el-col :span='2' class="search-btn" >
-                    <span>搜索</span>
-                </el-col>
+                    <el-col :span="1.5">
+                        <button class="erp_bt bt_print">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_print.png">
+                            </div>
+                            <span class="btDetail">打印</span>
+                        </button>
+                    </el-col>
 
-                <el-col :span='2' class="high-search">
-                    <span @click='searchShow'>高级搜索</span>
-                </el-col>
+                    <el-col :span='5' :offset="8" class="search-input">
+                        <input type="text" class="form-control" placeholder="编码/名称..."/>
+                    </el-col>
 
-                <el-col :span='2' class="gray-btn">
-                    <span>导出</span>
-                </el-col>
+                    <el-col :span='2' class="search-btn">
+                        <span>搜索</span>
+                    </el-col>
+
+                    <el-col :span='2' class="high-search">
+                        <span @click='searchShow'>高级搜索</span>
+                    </el-col>
+                </el-row>
+                <!-- 搜索框部分结束 -->
+
+                <!-- 基础资料表单开始 -->
+                <el-row class="basic-table">
+                    <el-col :span='4' class="tree-container">
+                        <el-tree :data="componyTree" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                    </el-col>
+
+                    <el-col :span='20'>
+                        <el-table :data="tableData" border style="width: 100%" stripe>
+                            <el-table-column prop="sequence" label="序号" ></el-table-column>
+                            <el-table-column prop="planCode" label="结算方式代码" ></el-table-column>
+                            <el-table-column prop="planName" label="结算方式名称"></el-table-column>
+                            <el-table-column prop="remark" label="备注">
+                                <template slot-scope="scope">
+                                    <input class="input-need" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="ifAllow" label="允许使用">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="updateDate" label="修改时间"></el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button>
+                                    <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
+                                    <el-button v-on:click="handleDelete(scope.$index)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table> 
+                        <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>   
+                    </el-col>
+                </el-row>
+                <!-- 基础资料表单结束 -->
+
+            </div>    
+            <!-- 非高级搜索结束 -->
             
-                <el-col :span='2' class="gray-btn">
-                    <span>打印</span>
-                </el-col>
-            </el-row>
-            <!-- 搜索框部分结束 -->
 
-            <!-- 基础资料表单开始 -->
-            <el-row class="basic-table">
-                <el-col :span='4' class="tree-container">
-                    <el-tree :data="componyTree" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-                </el-col>
-
-                <el-col :span='20'>
-                    <el-table :data="tableData" border style="width: 100%" stripe>
-                        <el-table-column prop="sequence" label="序号" ></el-table-column>
-                        <el-table-column prop="planCode" label="结算方式代码" ></el-table-column>
-                        <el-table-column prop="planName" label="结算方式名称"></el-table-column>
-                        <el-table-column prop="remark" label="备注">
-                            <template slot-scope="scope">
-                                <input class="input-need" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="ifAllow" label="允许使用">
-                            <template slot-scope="scope">
-                                <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="updateDate" label="修改时间"></el-table-column>
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button>
-                                <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
-                                <el-button v-on:click="handleDelete(scope.$index)" type="text" size="small">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table> 
-                    <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>   
-                </el-col>
-            </el-row>
-            <!-- 基础资料表单结束 -->
+            
 
             <!-- 高級搜索開始 -->
             <div class="high-search-container" :class='{aab : highSearchShow}'>
@@ -78,13 +106,14 @@
                     <el-col :span='6'>
                        <span class="super-search"> 超级搜索</span>
                     </el-col>
-                    <el-col :span='3' :offset="8" style="padding-top:10px;">
-                        <img src="../../assets/close.png" style="cursor:pointer;" @click="closeHighSearch">
+                    <el-col :span='3' :offset="8">
+                        <!-- <img src="../../assets/close.png" style="cursor:pointer;" @click="closeHighSearch"> -->
+                        <i class="el-icon-circle-close" style="cursor:pointer;" @click="closeHighSearch"></i>
                     </el-col>
                 </el-row>
 
-                <el-row>
-                    <el-col :span='5' :offset="1" class="search-plan">
+                <el-row class="mt10">
+                    <el-col :span='5' :offset="1">
                         <span>查询方案</span>
                     </el-col>
                     <el-col :span='4' :offset='10' class="search-edit">
@@ -131,7 +160,7 @@
                     </li>
                 </ul>
 
-                <el-row>
+                <el-row class="mt10">
                     <el-col :span='20' :offset='1'>
                         <span>查询条件</span>
                     </el-col>
@@ -152,10 +181,10 @@
                 </el-row>
 
                 <el-row class="data-status">
-                    <el-col :span='3' :offset='1' style="padding-top:5px">
+                    <el-col :span='4' :offset='1' style="padding-top:5px">
                         <span>单据状态</span>
                     </el-col>
-                    <el-col :span='18' :offset="2">
+                    <el-col :span='18' :offset="1">
                         <ul  class="data-ul">
                             <li v-for='item in alreadyDo'>
                                 <el-checkbox v-model="item.status" ></el-checkbox>
@@ -169,11 +198,11 @@
                 </el-row>
 
                 <el-row class="data-status">
-                    <el-col :span='3' :offset='1' style="padding-top:5px">
+                    <el-col :span='4' :offset='1' style="padding-top:5px">
                         <span>业务状态</span>
                     </el-col>
 
-                    <el-col :span="18" :offset="2">
+                    <el-col :span="18" :offset="1">
                          <ul  class="data-ul">
                             <li v-for='item in businessStatus'>
                                 <el-checkbox v-model="item.status" ></el-checkbox>
@@ -186,7 +215,7 @@
                     </el-col>
                 </el-row>
 
-                <el-row class="search-depend">
+                <el-row class="search-depend mt10">
                     <el-col :span="3" :offset="1">
                         <span>货号</span>
                     </el-col>
@@ -202,7 +231,7 @@
                     </el-col>
                 </el-row>
 
-                <el-row class="search-depend">
+                <el-row class="search-depend mt10">
                     <el-col :span="3" :offset="1">
                         <span>供应商</span>
                     </el-col>
@@ -218,7 +247,7 @@
                     </el-col>
                 </el-row>
 
-                <el-row class="search-depend">
+                <el-row class="search-depend mt10">
                     <el-col :span="3" :offset="1">
                         <span>仓库</span>
                     </el-col>
@@ -234,7 +263,7 @@
                     </el-col>
                 </el-row>
 
-                 <el-row class="search-depend">
+                 <el-row class="search-depend mt10">
                     <el-col :span="3" :offset="1">
                         <span>PO单号</span>
                     </el-col>
@@ -250,7 +279,7 @@
                     </el-col>
                 </el-row>
 
-                 <el-row class="search-depend">
+                 <el-row class="search-depend mt10">
                     <el-col :span="3" :offset="1">
                         <span>PO类型</span>
                     </el-col>
@@ -266,7 +295,7 @@
                     </el-col>
                 </el-row>
 
-                 <el-row class="search-depend">
+                 <el-row class="search-depend mt10">
                     <el-col :span="3" :offset="1">
                         <span>品牌</span>
                     </el-col>
@@ -283,63 +312,81 @@
                 </el-row>
                 
                 <el-row class="search-date">
-                    <el-col :span="3" :offset="1">
+                    <el-col :span="4" :offset="1">
                         <span>开单日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2" class="search-date-after">
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择开始日期">
-                            </el-date-picker>
-                        
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择结束日期">
-                            </el-date-picker>
+                    <el-col :span="15" :offset="3">
+                        <el-row>
+                            <el-col :span="11">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择开始日期">
+                                    </el-date-picker>
+                            </el-col>
+
+                            <el-col :span="11" :offset="1">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择结束日期">
+                                    </el-date-picker>
+                            </el-col>
+                        </el-row>
                     </el-col>
                 </el-row>
 
                 <el-row class="search-date">
-                    <el-col :span="3" :offset="1">
+                    <el-col :span="4" :offset="1">
                         <span>生效日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2" class="search-date-after">
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择开始日期">
-                            </el-date-picker>
-                        
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择结束日期">
-                            </el-date-picker>
+                    <el-col :span="15" :offset="3">
+                        <el-row>
+                            <el-col :span="11">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择开始日期">
+                                    </el-date-picker>
+                            </el-col>
+
+                            <el-col :span="11" :offset="1">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择结束日期">
+                                    </el-date-picker>
+                            </el-col>
+                        </el-row>
                     </el-col>
                 </el-row>
 
                 <el-row class="search-date">
-                    <el-col :span="3" :offset="1">
+                    <el-col :span="4" :offset="1">
                         <span>交货日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2" class="search-date-after">
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择开始日期">
-                            </el-date-picker>
-                        
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择结束日期">
-                            </el-date-picker>
+                    <el-col :span="15" :offset="3">
+                        <el-row>
+                            <el-col :span="11">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择开始日期">
+                                    </el-date-picker>
+                            </el-col>
+
+                            <el-col :span="11" :offset="1">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择结束日期">
+                                    </el-date-picker>
+                            </el-col>
+                        </el-row>
                     </el-col>
                 </el-row>
 
-                <el-row  class="last-btn">
+                <el-row  class="last-btn mt10">
                     <el-col :span="3" :offset="3">
                         <span class="s-btn">查询</span>
                     </el-col>
@@ -559,25 +606,11 @@ export default {
     padding-top:15px;
     padding: 15px;
 }
-.green-btn{
-    height: 30px;
-    line-height: 30px;
-    background-color:rgba(75,207,131,1);
-    text-align: center;
-    border-radius: 4px;
-    margin-right:12px;
-    cursor: pointer;
-}
-.green-btn span{
-    color: white;
-    font-size: 14px;
-}
 .search-input{
     border: 1px solid #cccccc;
     border-radius: 3px;
     padding-left: 5px;
     border-right: none;
-    margin-left: 10px;
 }
 .search-input .form-control{
     width:100%;
@@ -587,13 +620,14 @@ export default {
     border-radius:3px 0 0 3px;
 }
 .search-btn{
-    background:#82AAFC;
+    background:#4A6997;
     height:30px;
     text-align:center;
     line-height:30px;
     border-radius:0 4px 4px 0;
     cursor: pointer;
     margin-left: -1px;
+    font-size: 12px
 }
 .search-btn span{
     color:white;
@@ -603,29 +637,23 @@ export default {
 }
 .high-search span{
     color: white;
-    background: #82AAFC;
+    background: #4A6997;
     height: 30px;
     line-height: 30px;
     text-align: center;
     border-radius: 3px;
     cursor: pointer;
     display: inline-block;
+    font-size: 12px;
     width: 100%;
-}
-.gray-btn{
-    float: right;
-    height: 30px;
-    line-height: 30px;
-    margin-left: 10px;
-    border-radius: 3px;
-    background-color:rgba(242,242,242,1);
-    text-align: center;
-    cursor: pointer;
 }
 .input-need{
     outline: none;
     border:none;
     width: 100%;
+}
+.mt10{
+    margin-top: 10px;
 }
 /* 搜索框部分結束 */
 
@@ -644,25 +672,33 @@ export default {
 .high-search-container{
     position: fixed;
     right: -26%;
-    top: 0;
-    z-index: 1000;
-    width: 25%;
+    display: inline-block;
+    width: 22%;
     background: white;
     border-left: 3px solid rgba(50, 50, 50, .2);
-    height: 100%;
-    transition:right 2s;
-    -webkit-transition: right 2s;
+    
+    transition:right 1s;
+    -webkit-transition: right 1s;
+    
 }
 .aab{ 
-    right: 0;
+   right: 0px;
+}
+.width100{
+    width: 100%;
+    transition:width 1s;
+    -webkit-transition: width 1s;
+}
+.width75{
+    width: 74%;
 }
 /* @keyframes show{
     from {right: -25%;}
     to {right: 0;}
 } */
 .high-search-header{
-    height: 73px;
-    line-height: 73px;
+    height: 60px;
+    line-height: 60px;
     border-bottom: 1px solid #cccccc;
 }
 .high-search-header .el-col{
@@ -686,7 +722,7 @@ export default {
     padding: 0;
     list-style: none;
     border-bottom: 6px solid #cccccc;
-    padding-top:10px;  
+    padding-top:5px;  
 }
 .this-week li{
     width: 89px;
@@ -696,7 +732,7 @@ export default {
     border-radius: 3px;
     text-align: center;
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     margin-left: 15px;
     position: relative
 }
@@ -800,9 +836,6 @@ export default {
 
 .el-date-editor.el-input[data-v-48e3e0c4], .el-date-editor.el-input__inner[data-v-48e3e0c4]{
     width: 100%;
-}
-.search-date-after{
-    margin-left: 30px;
 }
 .last-btn{
     margin-top: 10px;

@@ -283,7 +283,7 @@
                     <el-col :span="3" :offset="1">
                         <span>开单日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2" class="search-date-after">
+                    <el-col :span="15" :offset="2">
                         <el-date-picker
                             v-model="value1"
                             type="date"
@@ -302,7 +302,7 @@
                     <el-col :span="3" :offset="1">
                         <span>生效日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2" class="search-date-after">
+                    <el-col :span="15" :offset="2">
                         <el-date-picker
                             v-model="value1"
                             type="date"
@@ -321,7 +321,7 @@
                     <el-col :span="3" :offset="1">
                         <span>交货日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2" class="search-date-after">
+                    <el-col :span="15" :offset="2">
                         <el-date-picker
                             v-model="value1"
                             type="date"
@@ -819,9 +819,6 @@ export default {
 
 .el-date-editor.el-input[data-v-48e3e0c4], .el-date-editor.el-input__inner[data-v-48e3e0c4]{
     width: 100%;
-}
-.search-date-after{
-    margin-left: 30px;
 }
 .last-btn{
     margin-top: 10px;
