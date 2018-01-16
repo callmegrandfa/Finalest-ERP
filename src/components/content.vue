@@ -156,17 +156,17 @@ export default {
     float: left;
 }
 .content-wrapper{
-    transition: width 0.5s,padding-left 0.5s;
-    -moz-transition: width 0.5s,padding-left 0.5s;
-    -webkit-transition: width 0.5s,padding-left 0.5s;
-    -o-transition: width 0.5s,padding-left 0.5s; 
+    transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
     background-color: #414e61;
     float: left;  
     width: calc(100% - 235px);
     padding-left: 235px;
 }
 .contentActive{
-    width: 100%;
+    width: calc(100% - 50px);
     padding-left:50px;
 }
 .content{
@@ -195,10 +195,10 @@ export default {
 #window #longWidth{
     width: 10000px;
     position: relative;
-    transition: left 0.5s;
-    -moz-transition: left 0.5s;
-    -webkit-transition: left 0.5s;
-    -o-transition: left 0.5s; 
+    transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s; 
     left: 0;
 }
 #window #routerBox{

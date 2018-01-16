@@ -1,8 +1,9 @@
 <template>
 <div>
   <button @click="goLogin">注册</button>
+  <div style="overflow:hidden">
   <!-- 按钮 应用请更改图片相对路径 详情参考 -->
-  <button class="erp_bt bt_add"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+  <button  plain @click="open8" class="erp_bt bt_add"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
   <button class="erp_bt bt_out"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
   <button class="erp_bt bt_in"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
   <button class="erp_bt bt_del"><div class="btImg"><img src="../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -58,15 +59,30 @@
     <span class="words">确定</span>
     <span class="words hidding"><i class="el-icon-loading"></i></span>
   </button>
-
 <!-- 背景透明 按钮  -->
   <button class="headBtn">保存</button>
+  </div>
+  <!-- 表单提示信息 -->
+  <div class="errorTips">
+      <p class="msgDetail">错误提示：名称不能为特殊字符</p>
+      <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
+  </div>
 </div>
   
 </template>
 <script>
 export default {
   methods:{
+    open8() {
+        this.$notify({
+          title: '自定义位置',
+          position: 'bottom-right',
+          iconClass:'fa fa-check',
+          title: 'Info',
+          showClose: true,
+          duration: 0,
+        });
+      },
        switch(url){
             this.$router.push({path:url})//点击切换路由
         },

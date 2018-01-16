@@ -393,3 +393,91 @@
     font-size: 16px;
     padding-bottom: 15px;
 }
+
+/*表单提示信息 */
+/* <div class="errorTips">
+  <p class="msgDetail">错误提示：名称不能为特殊字符</p>
+  <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
+</div> */
+.errorTips{
+  width: 100%;
+  position: relative;
+  border: 1px solid #f66;
+  background-color: #ffdfdf;
+  height: 24px;
+}
+.errorTips .closeMsg{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #333333;
+  color: #fff;
+  text-align: center;
+  line-height: 15px;
+  font-size: 12px;
+  position: absolute;
+  right: 5px;
+  top: 4.5px;
+  cursor: pointer;
+}
+.errorTips .msgDetail{
+  line-height: 24px;
+  font-size: 12px;
+  color: #f66;
+  padding-left: 15px;
+}
+
+
+/* 保存成功 */
+.el-notification{
+  width: 300px;
+  height: 100px;
+  border-radius: 5px;
+  background-color: #0c3;
+  padding: 0;
+  border: none;
+}
+.el-notification .el-notification__icon{
+  color: #fff;
+  font-size: 65px;
+  width: 59px;
+  height: 59px;
+  line-height: 59px;
+  margin: 18px 40px 0 40px;
+}
+.el-notification__title{
+  display: block;
+  height: 100px;
+  float: left;
+  font-family: 'Arial Negreta', 'Arial';
+  font-weight: 700;
+  font-style: normal;
+  color: #FFFFFF;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+  line-height: 100px;
+}
+
+/* tab标签页 */
+.tabZoo .el-tabs__item{
+  font-family: 'microsoft yahei';
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  color: #AEAEAE;
+}
+.tabZoo .el-tabs__item.is-active{
+    color: #354052;
+}
+.tabZoo .el-tabs__active-bar{
+  background-color:rgb(51, 204, 204);
+}
+.tabZoo .el-tabs__item:hover{
+  color:rgb(51, 204, 204);
+}
+.tabZoo .el-tabs__nav-wrap::after{
+  height: 0;
+}
+.tabZoo .el-tabs__nav-scroll{
+  background-color: #f9f9f9;
+}

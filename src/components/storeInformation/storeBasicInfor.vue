@@ -10,117 +10,119 @@
             <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
             <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>
             <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+            <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
     </el-row>
-    <el-row>
-        <el-col :span="24" :class="{slidup : showCompany}" class="down getPadding"> 
-            <div class="bgcolor">
-                <label>所属组织</label>
-                <el-select v-model="valueOrganization">
-                    <el-option v-for="item in organization" :key="item.valueMonth" :label="item.label" :value="item.valueOrganization"></el-option>
-                </el-select>
-            </div> 
+ <el-collapse-transition>
+     <div v-show="ifShow">   
+        <el-row>
+            <el-col :span="24" class="getPadding"> 
+                <div class="errorTips">
+                    <p class="msgDetail">错误提示：名称不能为特殊字符</p>
+                    <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
+                </div>
+                <div class="bgcolor">
+                    <label>所属组织</label>
+                    <el-select v-model="valueOrganization">
+                        <el-option v-for="item in organization" :key="item.valueMonth" :label="item.label" :value="item.valueOrganization"></el-option>
+                    </el-select>
+                </div> 
 
 
-            <div class="bgcolor">
-                <label>编码</label>
-                <el-input v-model="data.code" placeholder="请录入编码"></el-input>
-            </div>
+                <div class="bgcolor">
+                    <label>编码</label>
+                    <el-input v-model="data.code" placeholder="请录入编码"></el-input>
+                </div>
 
 
-            <div class="bgcolor">
-                <label>名称</label>
-                <el-input v-model="data.name" placeholder="请录入名称"></el-input>
-            </div>
+                <div class="bgcolor">
+                    <label>名称</label>
+                    <el-input v-model="data.name" placeholder="请录入名称"></el-input>
+                </div>
 
 
-            <div class="bgcolor">
-                <label>简称</label>
-                <el-select v-model="valueAbbreviation">
-                    <el-option v-for="item in abbreviation" :key="item.valueAbbreviation" :label="item.label" :value="item.valueAbbreviation"></el-option>
-                </el-select>
-            </div>
+                <div class="bgcolor">
+                    <label>简称</label>
+                    <el-select v-model="valueAbbreviation">
+                        <el-option v-for="item in abbreviation" :key="item.valueAbbreviation" :label="item.label" :value="item.valueAbbreviation"></el-option>
+                    </el-select>
+                </div>
 
-            <div class="bgcolor">
-                <label>助记码</label>
-                <el-input v-model="data.mnemonicCode" placeholder="请录入助记码"></el-input>
-            </div>
+                <div class="bgcolor">
+                    <label>助记码</label>
+                    <el-input v-model="data.mnemonicCode" placeholder="请录入助记码"></el-input>
+                </div>
+                    
+
+
+                <div class="bgcolor">
+                    <label>店铺类型</label>
+                    <el-select v-model="valueShopType">
+                        <el-option v-for="item in shopType" :key="item.valueShopType" :label="item.label" :value="item.valueShopType"></el-option>
+                    </el-select>
+                </div>
                 
-
-
-            <div class="bgcolor">
-                <label>店铺类型</label>
-                <el-select v-model="valueShopType">
-                    <el-option v-for="item in shopType" :key="item.valueShopType" :label="item.label" :value="item.valueShopType"></el-option>
-                </el-select>
-            </div>
-            
-            
-            
-            <div class="bgcolor">
-                <label>店铺性质</label>
-                <el-select v-model="valueNature">
-                    <el-option v-for="item in nature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor">
-                <label>店铺等级</label>
-                <el-select v-model="valueGrade">
-                    <el-option v-for="item in grade" :key="item.valueGrade" :label="item.label" :value="item.valueGrade"></el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor">
-                <label>对应仓库</label>
-                <el-select v-model="valueWarehouse">
-                    <el-option v-for="item in warehouse" :key="item.valueWarehouse" :label="item.label" :value="item.valueWarehouse"></el-option>
-                </el-select>
-            </div>   
-            <div class="bgcolor">
-                <label>业务地区</label>
-                <el-select v-model="valueAreaBusiness">
-                    <el-option v-for="item in areaBusiness" :key="item.valueAreaBusiness" :label="item.label" :value="item.valueAreaBusiness"></el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor">
-                <label>行政地区</label>
-                <el-select v-model="valueAreaAdministrative">
-                    <el-option v-for="item in areaAdministrative" :key="item.valueAreaAdministrative" :label="item.label" :value="item.valueAreaAdministrative"></el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor">
-                <label>开店日期</label>
-                <el-date-picker v-model="data.openData" type="date" placeholder="选择日期"></el-date-picker>
-            </div>
-            <div class="bgcolor">
-                <label>主营品牌</label>
-                <el-select v-model="valueBrand">
-                    <el-option v-for="item in brand" :key="item.valueBrand" :label="item.label" :value="item.valueBrand">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor"><label>负责人</label><el-input v-model="data.chargePerson" placeholder="请填写负责人"></el-input></div>
-            <div class="bgcolor"><label>电话</label><el-input v-model="data.telephone" placeholder="请填写电话"></el-input></div> 
-            <div class="bgcolor">
-            <label>商圈</label>
-                <el-select v-model="valueTradingArea">
-                    <el-option v-for="item in tradingArea" :key="item.valueTradingArea" :label="item.label" :value="item.valueTradingArea">
-                    </el-option>
-                </el-select>
-            </div> 
-            <div class="bgcolor"><label>店铺地址</label><el-input v-model="data.address" placeholder="请填入商铺地址"></el-input></div>
-            <div class="bgcolor"><label>经度</label><el-input v-model="data.longitude" placeholder="经度"></el-input></div> 
-            <div class="bgcolor moreWidth"><label>纬度</label><el-input v-model="data.latitude" placeholder="纬度"></el-input></div>  
-            <div class="bgcolor noColor moreWidth"><el-checkbox v-model="isUse">允许使用</el-checkbox></div>   
-            <div class="bgcolor moreWidth"><label>备注</label><el-input v-model="data.remarks" placeholder="备注"></el-input></div>   
-        </el-col>
-        <!-- <el-col :span="2">   
-            <a class="upBtn" @click="showCompany = !showCompany">
-                收起<span class="el-icon-arrow-down"></span>
-            </a>
-        </el-col>                                                                             -->
-</el-row>
-    
-
+                
+                
+                <div class="bgcolor">
+                    <label>店铺性质</label>
+                    <el-select v-model="valueNature">
+                        <el-option v-for="item in nature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor">
+                    <label>店铺等级</label>
+                    <el-select v-model="valueGrade">
+                        <el-option v-for="item in grade" :key="item.valueGrade" :label="item.label" :value="item.valueGrade"></el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor">
+                    <label>对应仓库</label>
+                    <el-select v-model="valueWarehouse">
+                        <el-option v-for="item in warehouse" :key="item.valueWarehouse" :label="item.label" :value="item.valueWarehouse"></el-option>
+                    </el-select>
+                </div>   
+                <div class="bgcolor">
+                    <label>业务地区</label>
+                    <el-select v-model="valueAreaBusiness">
+                        <el-option v-for="item in areaBusiness" :key="item.valueAreaBusiness" :label="item.label" :value="item.valueAreaBusiness"></el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor">
+                    <label>行政地区</label>
+                    <el-select v-model="valueAreaAdministrative">
+                        <el-option v-for="item in areaAdministrative" :key="item.valueAreaAdministrative" :label="item.label" :value="item.valueAreaAdministrative"></el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor">
+                    <label>开店日期</label>
+                    <el-date-picker v-model="data.openData" type="date" placeholder="选择日期"></el-date-picker>
+                </div>
+                <div class="bgcolor">
+                    <label>主营品牌</label>
+                    <el-select v-model="valueBrand">
+                        <el-option v-for="item in brand" :key="item.valueBrand" :label="item.label" :value="item.valueBrand">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor"><label>负责人</label><el-input v-model="data.chargePerson" placeholder="请填写负责人"></el-input></div>
+                <div class="bgcolor"><label>电话</label><el-input v-model="data.telephone" placeholder="请填写电话"></el-input></div> 
+                <div class="bgcolor">
+                <label>商圈</label>
+                    <el-select v-model="valueTradingArea">
+                        <el-option v-for="item in tradingArea" :key="item.valueTradingArea" :label="item.label" :value="item.valueTradingArea">
+                        </el-option>
+                    </el-select>
+                </div> 
+                <div class="bgcolor"><label>店铺地址</label><el-input v-model="data.address" placeholder="请填入商铺地址"></el-input></div>
+                <div class="bgcolor"><label>经度</label><el-input v-model="data.longitude" placeholder="经度"></el-input></div> 
+                <div class="bgcolor"><label>纬度</label><el-input v-model="data.latitude" placeholder="纬度"></el-input></div>
+                <div class="bgcolor"><label>备注</label><el-input v-model="data.remarks" placeholder="备注"></el-input></div>   
+                <div class="bgcolor"><el-checkbox v-model="isUse">允许使用</el-checkbox></div>
+            </el-col>
+        </el-row>
+     </div>
+ </el-collapse-transition>
     <!-- 公司业务财务bootTab标签页 -->
     <el-row> 
         <div class="tabZoo">
@@ -165,6 +167,7 @@
 export default({
     data() {
         return{
+             ifShow:true,
             tableData: [{//表格
                 businessBrand: '三叶',
                 shopGrade: '4',
@@ -334,8 +337,6 @@ export default({
 
             
             isUse:true,//是否允许使用
-
-            showCompany:false,//初始默认公司计信息状态展开  
             valueOrganization: '请选择组织',//所属组织
             valueAbbreviation:'请选择简称',//简称
             valueShopType:'请选择店铺类型',//店铺类型
@@ -355,28 +356,34 @@ export default({
   </script>
 
   <style>
-  .basicForm .down{
-    overflow: hidden;
-    transition: max-height 0.5s;
-    -moz-transition: max-height 0.5s;
-    -webkit-transition: max-height 0.5s;
-    -o-transition: max-height 0.5s; 
-    max-height:  900px;
-  }
-  .basicForm .slidup{
-       max-height: 90px;
-  }
-  .basicForm .slidUp{
-      max-height: 45px;
-  }
-.basicForm .el-button--primary{
-        background-color: #82AAFC;
-        border: none;
-    }
+    /*收起*/
+ .basicForm .upBt{
+     font-size: 12px;
+     float: right;
+     margin-right: 10px;
+     margin-top: 10px;
+     cursor: pointer;
+ }
+ .basicForm .upBt i{
+    transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s; 
+    color:#cacaca;
+    margin-left: 5px;
+ }
+ .basicForm .upBt i.rotate{
+     transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);	
+ }
 
-  .basicForm .noColor{
-      background-color:transparent;
-  }
+ .basicForm  .errorTips{
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
   .basicForm .el-row{
     padding:15px 0;
     border-bottom: 1px solid #e4e4e4;
@@ -385,22 +392,11 @@ export default({
   .basicForm .el-row:last-child{
       border-bottom:none;
   }
-  
-  .basicForm .upBtn{
-      font-size: 12px;
-      color: #BCBCBC;
-      cursor: pointer;
-  }
   .basicForm .upBtn .el-icon-arrow-down{
       margin-left: 5px;
   }
-.basicForm .tabZoo{
-     overflow: hidden;
-     background-color: #fff;
- }
-
  .basicForm  .getPadding,.tabZoo .el-tabs__nav-scroll{
-     padding: 0 20px;
+     padding: 0 10px;
  }
  .basicForm .tabZoo .auditInformation{
      margin-top: 15px;
