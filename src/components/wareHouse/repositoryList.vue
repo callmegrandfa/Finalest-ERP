@@ -128,7 +128,7 @@
                 var flag=false;
                 var slidbarData=this.$store.state.slidbarData;//储存页签数组
                 let name = '仓库资料';
-                console.log(slidbarData)
+                //console.log(slidbarData)
                 if(slidbarData.length==0){//slidbarData为空
                     flag=true;
                 }else{//slidbarData不为空
@@ -147,13 +147,13 @@
                 if(flag){
                     slidbarData.push(pushItem);
                 }
-                if(slidbarData.length>=15){
-                    var r=confirm("您选择打开的窗口已达到15个，如需继续添加新的窗口，默认关闭第一个窗口");
-                    if (r==true)
-                    {
-                        slidbarData.shift();
-                    }
-                }
+                // if(slidbarData.length>=15){
+                //     var r=confirm("您选择打开的窗口已达到15个，如需继续添加新的窗口，默认关闭第一个窗口");
+                //     if (r==true)
+                //     {
+                //         slidbarData.shift();
+                //     }
+                // }
                 this.switch();
                 
             },

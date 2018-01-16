@@ -5,15 +5,15 @@
             <a class="oneA" href="javascript:;">版本动态</a>
             <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
         </li>
-        <li class="one" v-for="item in items" :menuid="item.menuid">
+        <li class="one" v-for="item in items">
             <span class="menuIcon"><img :src="item.src" alt="item.name"></span>
             <a class="oneA" href="javascript:;">{{item.name}}</a>
             <ul class="slidUl slid1">
-                <li class="two" v-for="i in item.secondLevel" :menuid="i.menuid">
+                <li class="two" v-for="i in item.secondLevel">
                     <a href="javascript:;">{{i.name}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo" :menuid="it.menuid">
+                        <li class="three" v-for="it in i.thirdInfo">
                             <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
                         </li>
                     </ul>
@@ -32,124 +32,70 @@ export default {
             {
                 name:'常用功能',
                 src:'../../static/image/siderbar/常用功能.png',
-                menuid:'1',
-                tobarString:'',
                 secondLevel:[
                     {
                     name:'公共基础资料',
-                    menuid:'11',
-                    tobarString:'',
                     thirdInfo:[
-                        {name:'业务组织(精简版)-详细',address:'detail',menuid:'1101',tobarString:''},
-                        {name:'数据资料短',address:'shortData',menuid:'1102',tobarString:''},
-                        {name:'数据资料长',address:'longData',menuid:'1103',tobarString:''},
-                        {name:'数据资料中',address:'midData',menuid:'1104',tobarString:''},   
-                        {name:'仓库数据列表',address:'repositoryList',menuid:'1105',tobarString:''},
-                        {name:'仓库资料',address:'repositoryData',menuid:'1106',tobarString:''},
-                        {name:'商品资料',address:'goodsData',menuid:'1107',tobarString:''},
-                        {name:'店铺数据列表',address:'storeData',menuid:'1108',tobarString:''},   
-                        {name:'店铺资料-基本信息',address:'storeBasicInfor',menuid:'1109',tobarString:''},
-                        {name:'客户资料-基本信息',address:'customerBasicInfor',menuid:'1110',tobarString:''},
-                        {name:'客户资料',address:'customerInfor',menuid:'1111',tobarString:''},
-                        {name:'现货采购订单-订单列表',address:'orderList',menuid:'1112',tobarString:''}, 
-                        {name:'现货采购订单-订单详情',address:'orderDetails',menuid:'1113',tobarString:''},
-                        {name:'集团管理',address:'groupManager',menuid:'1114',tobarString:''},
-                        {name:'供应商列表',address:'supplierList',menuid:'1116',tobarString:''},   
-                        {name:'组织单元',address:'organization',menuid:'1117',tobarString:''},
-                        {name:'d',address:'14',menuid:'1118',tobarString:''},
-                        {name:'f',address:'15',menuid:'1119',tobarString:''},
-                        {name:'g',address:'16',menuid:'1120',tobarString:''},   
-                        {name:'h',address:'17',menuid:'1121',tobarString:''},
-                        {name:'j',address:'18',menuid:'1122',tobarString:''},
-                        {name:'k',address:'19',menuid:'1123',tobarString:''},
-                        {name:'l',address:'20',menuid:'1124',tobarString:''}      
+                        {name:'业务组织(精简版)-详细',address:'detail'},
+                        {name:'数据资料短',address:'shortData'},
+                        {name:'数据资料长',address:'longData'},
+                        {name:'数据资料中',address:'midData'},   
+                        {name:'仓库数据列表',address:'repositoryList'},
+                        {name:'仓库资料',address:'repositoryData'},
+                        {name:'商品资料',address:'goodsData'},
+                        {name:'店铺数据列表',address:'storeData'},   
+                        {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+                        {name:'客户资料-基本信息',address:'customerBasicInfor'},
+                        {name:'客户资料',address:'customerInfor'},
+                        {name:'现货采购订单-订单列表',address:'orderList'}, 
+                        {name:'现货采购订单-订单详情',address:'orderDetails'},
+                        {name:'集团管理',address:'groupManager'},
+                        {name:'供应商列表',address:'supplierList'},   
+                        {name:'组织单元',address:'organization'},    
                     ]
                 },{
                     name:'公共基础资料',
-                    menuid:'11',
-                    tobarString:''
                 },{
                     name:'公共基础资料',
-                    menuid:'11',
-                    tobarString:''
+                },{
+                    name:'公共基础资料',
                 }
                 ,{
                     name:'公共基础资料',
-                    menuid:'11',
-                    tobarString:''
-                }
-                ,{
-                    name:'公共基础资料',
-                    menuid:'11',
-                    tobarString:''
                 }]
             }, {
                 name:'系统管理',
                 src:'../../static/image/siderbar/系统管理.png',
-                menuid:'1',
-                tobarString:'',
                 secondLevel:[
                     {
                     name:'公共基础资料',
-                    menuid:'11',
-                    tobarString:'',
-                    thirdInfo:[
-                        {name:'详情',address:'detail',menuid:'111',tobarString:''},
-                        {name:'数据资料短',address:'shortData',menuid:'112',tobarString:''},
-                        {name:'数据资料长',address:'longData',menuid:'113',tobarString:''},
-                        {name:'数据资料中',address:'midData',menuid:'114',tobarString:''}       
-                    ]
                 }, {
                     name:'公共基础资料',
-                    menuid:'11',
-                    tobarString:'',
-                    thirdInfo:[
-                        {name:'详情',address:'detail',menuid:'111',tobarString:''},
-                        {name:'数据资料短',address:'shortData',menuid:'112',tobarString:''},
-                        {name:'数据资料长',address:'longData',menuid:'113',tobarString:''},
-                        {name:'数据资料中',address:'midData',menuid:'114',tobarString:''}       
-                    ]
                 }]
             }, {
                 name:'基础资料',
                 src:'../../static/image/siderbar/基础资料.png',
-                menuid:'1',
-                tobarString:'',
             }, {
                 name:'采购管理',
                 src:'../../static/image/siderbar/采购管理.png',
-                menuid:'1',
-                tobarString:'',
             }, {
                 name:'批发管理',
                 src:'../../static/image/siderbar/批发管理.png',
-                menuid:'1',
-                tobarString:'',
             }, {
                 name:'零售管理',
                 src:'../../static/image/siderbar/零售管理.png',
-                menuid:'1',
-                tobarString:'',
             }, {
                 name:'库存管理',
                 src:'../../static/image/siderbar/库存管理.png',
-                menuid:'1',
-                tobarString:'',
             }, {
                 name:'会员管理',
                 src:'../../static/image/siderbar/会员管理.png',
-                menuid:'1',
-                tobarString:'',
             }, {
                 name:'电商管理',
                 src:'../../static/image/siderbar/电商管理.png',
-                menuid:'1',
-                tobarString:'',
             }, {
                 name:'应收应付',
                 src:'../../static/image/siderbar/应收应付.png',
-                menuid:'1',
-                tobarString:'',
             }]
         }
     },
@@ -221,10 +167,10 @@ export default {
     position: absolute;
     left: 235px;
     top:0px;
-    transition: left 0.5s;
-    -moz-transition: left 0.5s;
-    -webkit-transition: left 0.5s;
-    -o-transition: left 0.5s; 
+    transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s; 
 }
 .menuIcon{
     display: block;
@@ -248,10 +194,10 @@ export default {
     z-index:2;
     left: 0;
     float: left;
-    transition: width 0.5s;
-    -moz-transition: width 0.5s;
-    -webkit-transition: width 0.5s;
-    -o-transition: width 0.5s; 
+    transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s; 
 }
 .menuActive{
     width: 50px;
@@ -298,10 +244,10 @@ export default {
     left: 150px;
     overflow: hidden;
     cursor: pointer;
-     transition: width 0.5s,left 0.5s;
-    -moz-transition: width 0.5s,left 0.5s;
-    -webkit-transition: width 0.5s,left 0.5s;
-    -o-transition: width 0.5s,left 0.5s; 
+     transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s,;
 }
 
 .infoActive{
