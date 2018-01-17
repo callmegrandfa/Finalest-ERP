@@ -50,6 +50,7 @@
           <el-row>
               <el-col :span='2' class="ml10 ">
                   <span class="btn" @click="storageData">新增</span>
+                  <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
               </el-col>
               <el-col :span='2' class="ml10">
                   <span class="btn">修改</span>
