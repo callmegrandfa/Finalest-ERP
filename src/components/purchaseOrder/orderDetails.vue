@@ -66,10 +66,10 @@
                     <label><small>*</small>佣金</label>
                     <el-input v-model="data.commission" placeholder="请录入佣金"></el-input>
                 </el-col>
-                <el-col :span="5" class="bgcolor">
+                <!-- <el-col :span="5" class="bgcolor">
                     <label>年份</label>
                     <el-date-picker v-model="data.year" type="year" placeholder="请选择年份"></el-date-picker>
-                </el-col>
+                </el-col> -->
                 <el-col :span="5" class="bgcolor">
                     <label><small>*</small>季节</label>
                     <el-select v-model="valueSeason">
@@ -100,10 +100,10 @@
                     <label>PO类型</label>
                     <el-input v-model="data.POType" placeholder="请录入PO类型"></el-input>
                 </el-col>
-                <el-col :span="5" class="bgcolor">
+                <!-- <el-col :span="5" class="bgcolor">
                     <label>税率</label>
                     <el-input v-model="data.taxRate" placeholder="请录入税率"></el-input>
-                </el-col>
+                </el-col> -->
                 <el-col :span="5" class="bgcolor">
                     <label>付款条件</label>
                     <el-input v-model="data.payment" placeholder="请录入付款条件"></el-input>
@@ -117,34 +117,69 @@
         </el-row>
 
         <el-row class="noPadding">
-            <el-col :span="24" class="getPadding greyClr">     
-                <h4 class="h4">其他信息</h4>
+            <el-col :span="24" class="greyClr">     
+                <h4 class="h4 getPadding">其他信息</h4>
             </el-col> 
 
-            <el-col :span="24" class="getPadding nomargin">
+            <el-col :span="24" class="formData">
                 <el-col :span="5" class="bgcolor">
                     <label>金额计算方式</label>
-                    <el-input :disabled="true" v-model="data.num" placeholder="无记录"></el-input>
+                    <label class="dataLeft">无</label>
                 </el-col>
                 <el-col :span="5" class="bgcolor">
                     <label>批次定单号</label>
-                    <el-input :disabled="true" v-model="data.handmade" placeholder="无记录"></el-input>
+                    <label class="dataLeft">123123</label>
                 </el-col>
                 <el-col :span="5" class="bgcolor">
                     <label>汇率</label>
-                    <el-input :disabled="true" v-model="data.wareHouse" placeholder="无记录"></el-input>
+                    <label class="dataLeft">1.00</label>
                 </el-col>
-                <el-col :span="5" class="bgcolor">
+                <!-- <el-col :span="5" class="bgcolor">
                     <label>开单日期</label>
                     <el-input :disabled="true" v-model="data.wareHouse" placeholder="无记录"></el-input>
-                </el-col>
+                </el-col> -->
                 <el-col :span="5" class="bgcolor">
                     <label>操作员</label>
-                    <el-input :disabled="true" v-model="data.wareHouse" placeholder="无记录"></el-input>
+                   <label class="dataLeft">3111111</label>
                 </el-col>
             </el-col> 
         </el-row>
-        <el-row class="tabZoo">
+
+<el-row class="nopadding">  
+    <div class="tabZoo">
+        <el-col :span="24">
+            <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="公司" name="company" v-if="count.isCheckCompany">
+                    <el-col :span="24">
+                        <div class="companyInfo">
+                            <el-col :span="24">
+                                <el-col :span="5"  class="getPadding">
+                                    <el-checkbox v-model="group">集团公司</el-checkbox>
+                                    <el-checkbox v-model="isUse">是否启用</el-checkbox>
+                                </el-col> 
+                            </el-col>
+                            <el-col :span="22"  class="getPadding">
+                                <div class="bgcolor"><label>上级公司</label><el-input v-model="company.higher" placeholder="请选择上级公司"></el-input></div>
+                                <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="请输入法人代表"></el-input></div>
+                                <div class="bgcolor">
+                                    <label>用户状态</label>
+                                    <el-select v-model="valueState">
+                                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </el-col>
+                        </div>
+                    </el-col>   
+                </el-tab-pane>
+                <el-tab-pane label="财务" name="finance" v-if="count.isCheckFinance">财务</el-tab-pane>
+                <el-tab-pane label="业务" name="business" v-if="count.isCheckBusiness">业务</el-tab-pane>
+            </el-tabs>
+        </el-col>
+    </div>
+ </el-row> 
+
+        <!-- <el-row class="tabZoo">
             <el-col :span="24" class="operationBtn">
                 <button class="erp_bt bt_codeNew"><div class="btImg"><img src="../../../static/image/common/bt_codeNew.png"></div><span class="btDetail">扫码新增</span></button>
                 <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
@@ -186,7 +221,7 @@
             :total="10000"
             class="pagination">
             </el-pagination>
-        </el-row>
+        </el-row> -->
     </div>
 </template>
 <script>
@@ -464,8 +499,18 @@
 .orderDetail .noPadding{
     padding: 0;
 }
-.orderDetail .nomargin .bgcolor{
+.orderDetail .formData{
+    padding: 10px;
+}
+.orderDetail .formData .bgcolor{
     margin-bottom: 0;
+}
+.orderDetail .dataLeft{
+    text-align: left;
+}
+.h4.getPadding{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e4e4e4;
 }
 </style>
 

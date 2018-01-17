@@ -5,11 +5,161 @@
             <a class="oneA" href="javascript:;">版本动态</a>
             <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
         </li>
-        <li class="one" v-for="item in items">
-            <span class="menuIcon"><img :src="item.src" alt="item.name"></span>
+        <!-- <li class="one" v-for="item in items">
+            <span class="menuIcon"><img :src="item.src"></span>
             <a class="oneA" href="javascript:;">{{item.name}}</a>
             <ul class="slidUl slid1">
                 <li class="two" v-for="i in item.secondLevel">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li> -->
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
+            <a class="oneA" href="javascript:;">常用功能</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel1">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/系统管理.png"></span>
+            <a class="oneA" href="javascript:;">系统管理</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel2">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/基础资料.png"></span>
+            <a class="oneA" href="javascript:;">基础资料</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel3">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/采购管理.png"></span>
+            <a class="oneA" href="javascript:;">采购管理</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel4">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one" >
+            <span class="menuIcon"><img src="../../static/image/siderbar/批发管理.png"></span>
+            <a class="oneA" href="javascript:;">批发管理</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel5">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/零售管理.png"></span>
+            <a class="oneA" href="javascript:;">零售管理</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel6">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/库存管理.png"></span>
+            <a class="oneA" href="javascript:;">库存管理</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel7">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/会员管理.png"></span>
+            <a class="oneA" href="javascript:;">会员管理</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel8">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/电商管理.png"></span>
+            <a class="oneA" href="javascript:;">电商管理</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel9">
+                    <a href="javascript:;">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.thirdInfo">
+                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/应收应付.png"></span>
+            <a class="oneA" href="javascript:;">应收应付</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in secondLevel10">
                     <a href="javascript:;">{{i.name}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
@@ -27,101 +177,241 @@ export default {
   name: 'appsiderbar',
   data(){
     return{
-        items:
-        [
-            {
-                name:'常用功能',
-                src:'../../static/image/siderbar/常用功能.png',
-                secondLevel:[
-                    {
-                    name:'基础资料',
-                    thirdInfo:[      
-                        {name:'业务组织(精简版)-详细',address:'detail'},                 
-                        {name:'数据资料短',address:'shortData'},
-                        {name:'数据资料长',address:'longData'},
-                        {name:'数据资料中',address:'midData'},   
-                        {name:'仓库数据列表',address:'repositoryList'},
-                        {name:'仓库资料',address:'repositoryData'},
-                        {name:'商品资料',address:'goodsData'},
-                        {name:'店铺数据列表',address:'storeData'},   
-                        {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-                        {name:'客户资料-基本信息',address:'customerBasicInfor'},
-                        {name:'客户资料',address:'customerInfor'},
-                        {name:'现货采购订单-订单列表',address:'orderList'}, 
-                        {name:'现货采购订单-订单详情',address:'orderDetails'},
-                        {name:'集团管理',address:'groupManager'},
-                        {name:'供应商列表',address:'supplierList'},   
-                        {name:'组织单元',address:'organization'},    
-                    ]
-                },{
-                    name:'基础资料',
-                    thirdInfo:[
-                    ]
-                },{
-                    name:'租户管理',
-                    thirdInfo:[
-                    ]
-                },{
-                    name:'集团管理',
-                     thirdInfo:[
-                        {name:'集团管理',address:'groupManager'},
-                        {name:'业务组织(精简版)-详细',address:'detail'},
-                        {name:'组织单元',address:'organization'},
-                    ]
-                },{
-                    name:'用户组',
-                    thirdInfo:[
-                    ]
-                }
-                ,{
-                    name:'采购管理',
-                    thirdInfo:[
-                    ]
-                },{
-                    name:'客户资料',
-                    thirdInfo:[
-                    ]
-                },{
-                    name:'单据模板',
-                    thirdInfo:[
-                        {name:'列表资料',address:'orderDetails'},
-                        {name:'单据-主多从模板',address:'orderList'},
-                    ]
-                }]
-            }, {
-                name:'系统管理',
-                src:'../../static/image/siderbar/系统管理.png',
-                secondLevel:[
-                    {
-                    name:'公共基础资料',
-                }, {
-                    name:'公共基础资料',
-                }]
-            }, {
-                name:'基础资料',
-                src:'../../static/image/siderbar/基础资料.png',
-            }, {
-                name:'采购管理',
-                src:'../../static/image/siderbar/采购管理.png',
-            }, {
-                name:'批发管理',
-                src:'../../static/image/siderbar/批发管理.png',
-            }, {
-                name:'零售管理',
-                src:'../../static/image/siderbar/零售管理.png',
-            }, {
-                name:'库存管理',
-                src:'../../static/image/siderbar/库存管理.png',
-            }, {
-                name:'会员管理',
-                src:'../../static/image/siderbar/会员管理.png',
-            }, {
-                name:'电商管理',
-                src:'../../static/image/siderbar/电商管理.png',
-            }, {
-                name:'应收应付',
-                src:'../../static/image/siderbar/应收应付.png',
-            }]
+        secondLevel1:[{
+            name:'基础资料',
+            thirdInfo:[      
+                {name:'业务组织(精简版)-详细',address:'detail'},                 
+                {name:'数据资料短',address:'shortData'},
+                {name:'数据资料长',address:'longData'},
+                {name:'数据资料中',address:'midData'},   
+                {name:'仓库数据列表',address:'repositoryList'},
+                {name:'仓库资料',address:'repositoryData'},
+                {name:'商品资料',address:'goodsData'},
+                {name:'店铺数据列表',address:'storeData'},   
+                {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+                {name:'客户资料-基本信息',address:'customerBasicInfor'},
+                {name:'客户资料',address:'customerInfor'},
+                {name:'现货采购订单-订单列表',address:'orderList'}, 
+                {name:'现货采购订单-订单详情',address:'orderDetails'},
+                {name:'集团管理',address:'groupManager'},
+                {name:'供应商列表',address:'supplierList'},   
+                {name:'组织单元',address:'organization'},    
+            ]}],
+        secondLevel2:[{
+            name:'基础资料',
+            thirdInfo:[      
+                {name:'业务组织(精简版)-详细',address:'detail'},                 
+                {name:'数据资料短',address:'shortData'},
+               
+            ]}],
+        secondLevel3:[{
+        name:'基础资料',
+        thirdInfo:[      
+            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+            {name:'客户资料-基本信息',address:'customerBasicInfor'},
+            {name:'客户资料',address:'customerInfor'},
+            {name:'现货采购订单-订单列表',address:'orderList'}, 
+            {name:'现货采购订单-订单详情',address:'orderDetails'},
+            {name:'集团管理',address:'groupManager'},
+            {name:'供应商列表',address:'supplierList'},   
+            {name:'组织单元',address:'organization'},    
+        ]}],
+        secondLevel4:[{
+        name:'基础资料',
+        thirdInfo:[      
+            {name:'业务组织(精简版)-详细',address:'detail'},                 
+            {name:'数据资料短',address:'shortData'},
+            {name:'数据资料长',address:'longData'},
+            {name:'数据资料中',address:'midData'},   
+            {name:'仓库数据列表',address:'repositoryList'},
+            {name:'仓库资料',address:'repositoryData'},
+            {name:'商品资料',address:'goodsData'},
+            {name:'集团管理',address:'groupManager'},
+            {name:'供应商列表',address:'supplierList'},   
+            {name:'组织单元',address:'organization'},    
+        ]}],
+        secondLevel5:[{
+        name:'基础资料',
+        thirdInfo:[      
+        ]}],
+        secondLevel6:[{
+        name:'基础资料',
+        thirdInfo:[      
+            {name:'业务组织(精简版)-详细',address:'detail'},                 
+            {name:'数据资料短',address:'shortData'},
+            {name:'数据资料长',address:'longData'},
+            {name:'数据资料中',address:'midData'},   
+            {name:'仓库数据列表',address:'repositoryList'},
+            {name:'仓库资料',address:'repositoryData'},
+            {name:'商品资料',address:'goodsData'},
+            {name:'店铺数据列表',address:'storeData'},   
+            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+            {name:'客户资料-基本信息',address:'customerBasicInfor'},
+            {name:'客户资料',address:'customerInfor'},
+            {name:'现货采购订单-订单列表',address:'orderList'}, 
+            {name:'现货采购订单-订单详情',address:'orderDetails'},
+            {name:'集团管理',address:'groupManager'},
+            {name:'供应商列表',address:'supplierList'},   
+            {name:'组织单元',address:'organization'},    
+        ]}],
+        secondLevel7:[],
+        secondLevel8:[{
+        name:'基础资料',
+        thirdInfo:[      
+            {name:'业务组织(精简版)-详细',address:'detail'},                 
+            {name:'数据资料短',address:'shortData'},
+            {name:'数据资料长',address:'longData'},
+            {name:'数据资料中',address:'midData'},   
+            {name:'仓库数据列表',address:'repositoryList'},
+            {name:'仓库资料',address:'repositoryData'},
+            {name:'商品资料',address:'goodsData'},
+            {name:'店铺数据列表',address:'storeData'},   
+            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+            {name:'客户资料-基本信息',address:'customerBasicInfor'},
+            {name:'客户资料',address:'customerInfor'},
+            {name:'现货采购订单-订单列表',address:'orderList'}, 
+            {name:'现货采购订单-订单详情',address:'orderDetails'},
+            {name:'集团管理',address:'groupManager'},
+            {name:'供应商列表',address:'supplierList'},   
+            {name:'组织单元',address:'organization'},    
+        ]}],
+        secondLevel9:[{
+        name:'基础资料',
+        thirdInfo:[      
+            {name:'业务组织(精简版)-详细',address:'detail'},                 
+            {name:'数据资料短',address:'shortData'},
+            {name:'数据资料长',address:'longData'},
+            {name:'数据资料中',address:'midData'},   
+            {name:'仓库数据列表',address:'repositoryList'},
+            {name:'仓库资料',address:'repositoryData'},
+            {name:'商品资料',address:'goodsData'},
+            {name:'店铺数据列表',address:'storeData'},   
+            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+            {name:'客户资料-基本信息',address:'customerBasicInfor'},
+            {name:'客户资料',address:'customerInfor'},
+            {name:'现货采购订单-订单列表',address:'orderList'}, 
+            {name:'现货采购订单-订单详情',address:'orderDetails'},
+            {name:'集团管理',address:'groupManager'},
+            {name:'供应商列表',address:'supplierList'},   
+            {name:'组织单元',address:'organization'},    
+        ]}],
+        secondLevel10:[{
+        name:'基础资料',
+        thirdInfo:[      
+            {name:'业务组织(精简版)-详细',address:'detail'},                 
+            {name:'数据资料短',address:'shortData'},
+            {name:'数据资料长',address:'longData'},
+            {name:'数据资料中',address:'midData'},   
+            {name:'仓库数据列表',address:'repositoryList'},
+            {name:'仓库资料',address:'repositoryData'},
+            {name:'商品资料',address:'goodsData'},
+            {name:'店铺数据列表',address:'storeData'},   
+            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+            {name:'客户资料-基本信息',address:'customerBasicInfor'},
+            {name:'客户资料',address:'customerInfor'},
+            {name:'现货采购订单-订单列表',address:'orderList'}, 
+            {name:'现货采购订单-订单详情',address:'orderDetails'},
+            {name:'集团管理',address:'groupManager'},
+            {name:'供应商列表',address:'supplierList'},   
+            {name:'组织单元',address:'organization'},    
+        ]}]
+            
+        // items:
+        // [
+        //     {
+        //         name:'常用功能',
+        //         src:'../../static/image/siderbar/常用功能.png',
+        //         secondLevel:[
+        //             {
+        //             name:'基础资料',
+        //             thirdInfo:[      
+        //                 {name:'业务组织(精简版)-详细',address:'detail'},                 
+        //                 {name:'数据资料短',address:'shortData'},
+        //                 {name:'数据资料长',address:'longData'},
+        //                 {name:'数据资料中',address:'midData'},   
+        //                 {name:'仓库数据列表',address:'repositoryList'},
+        //                 {name:'仓库资料',address:'repositoryData'},
+        //                 {name:'商品资料',address:'goodsData'},
+        //                 {name:'店铺数据列表',address:'storeData'},   
+        //                 {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+        //                 {name:'客户资料-基本信息',address:'customerBasicInfor'},
+        //                 {name:'客户资料',address:'customerInfor'},
+        //                 {name:'现货采购订单-订单列表',address:'orderList'}, 
+        //                 {name:'现货采购订单-订单详情',address:'orderDetails'},
+        //                 {name:'集团管理',address:'groupManager'},
+        //                 {name:'供应商列表',address:'supplierList'},   
+        //                 {name:'组织单元',address:'organization'},    
+        //             ]
+        //         },{
+        //             name:'基础资料',
+        //             thirdInfo:[
+        //             ]
+        //         },{
+        //             name:'租户管理',
+        //             thirdInfo:[
+        //             ]
+        //         },{
+        //             name:'集团管理',
+        //              thirdInfo:[
+        //                 {name:'集团管理',address:'groupManager'},
+        //                 {name:'业务组织(精简版)-详细',address:'detail'},
+        //                 {name:'组织单元',address:'organization'},
+        //             ]
+        //         },{
+        //             name:'用户组',
+        //             thirdInfo:[
+        //                 {name:'用户资料-详细',address:'userInfoDetail'},
+        //             ]
+        //         }
+        //         ,{
+        //             name:'采购管理',
+        //             thirdInfo:[
+        //             ]
+        //         },{
+        //             name:'客户资料',
+        //             thirdInfo:[
+        //             ]
+        //         },{
+        //             name:'单据模板',
+        //             thirdInfo:[
+        //                 {name:'列表资料',address:'orderDetails'},
+        //                 {name:'单据-主多从模板',address:'orderList'},
+        //             ]
+        //         }]
+        //     }, {
+        //         name:'系统管理',
+        //         src:'../../static/image/siderbar/系统管理.png',
+        //         secondLevel:[
+        //             {
+        //             name:'公共基础资料',
+        //         }, {
+        //             name:'公共基础资料',
+        //         }]
+        //     }, {
+        //         name:'基础资料',
+        //         src:'../../static/image/siderbar/基础资料.png',
+        //     }, {
+        //         name:'采购管理',
+        //         src:'../../static/image/siderbar/采购管理.png',
+        //     }, {
+        //         name:'批发管理',
+        //         src:'../../static/image/siderbar/批发管理.png',
+        //     }, {
+        //         name:'零售管理',
+        //         src:'../../static/image/siderbar/零售管理.png',
+        //     }, {
+        //         name:'库存管理',
+        //         src:'../../static/image/siderbar/库存管理.png',
+        //     }, {
+        //         name:'会员管理',
+        //         src:'../../static/image/siderbar/会员管理.png',
+        //     }, {
+        //         name:'电商管理',
+        //         src:'../../static/image/siderbar/电商管理.png',
+        //     }, {
+        //         name:'应收应付',
+        //         src:'../../static/image/siderbar/应收应付.png',
+        //     }]
         }
     },
     methods:{
