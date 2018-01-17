@@ -177,107 +177,6 @@ export default {
   name: 'appsiderbar',
   data(){
     return{
-<<<<<<< HEAD
-        items:
-        [
-            {
-                name:'常用功能',
-                src:'../../static/image/siderbar/常用功能.png',
-                secondLevel:[
-                    {
-                    name:'基础资料',
-                    thirdInfo:[      
-                        {name:'业务组织(精简版)-详细',address:'detail'},                 
-                        {name:'数据资料短',address:'shortData'},
-                        {name:'数据资料长',address:'longData'},
-                        {name:'数据资料中',address:'midData'},   
-                        {name:'仓库数据列表',address:'repositoryList'},
-                        {name:'仓库资料',address:'repositoryData'},
-                        {name:'商品资料',address:'goodsData'},
-                        {name:'店铺数据列表',address:'storeData'},   
-                        {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-                        {name:'客户资料-基本信息',address:'customerBasicInfor'},
-                        {name:'客户资料',address:'customerInfor'},
-                        {name:'现货采购订单-订单列表',address:'orderList'}, 
-                        {name:'现货采购订单-订单详情',address:'orderDetails'},
-                        {name:'集团管理',address:'groupManager'},
-                        {name:'供应商列表',address:'supplierList'},   
-                        {name:'组织单元',address:'organization'},    
-                    ]
-                },{
-                    name:'基础资料',
-                    thirdInfo:[
-                    ]
-                },{
-                    name:'租户管理',
-                    thirdInfo:[
-                        {name:'租户管理',address:'tenantManagement'},
-                        {name:'租户管理-添加',address:'tenantManagementAdd'},
-                    ]
-                },{
-                    name:'集团管理',
-                     thirdInfo:[
-                        {name:'集团管理',address:'groupManager'},
-                        {name:'业务组织(精简版)-详细',address:'detail'},
-                        {name:'组织单元',address:'organization'},
-                    ]
-                },{
-                    name:'用户组',
-                    thirdInfo:[
-                        {name:'用户列表',address:'userList'},
-                        {name:'用户数据列表',address:'userDataList'},
-                    ]
-                }
-                ,{
-                    name:'采购管理',
-                    thirdInfo:[
-                    ]
-                },{
-                    name:'客户资料',
-                    thirdInfo:[
-                    ]
-                },{
-                    name:'单据模板',
-                    thirdInfo:[
-                        {name:'列表资料',address:'orderDetails'},
-                        {name:'单据-主多从模板',address:'orderList'},
-                    ]
-                }]
-            }, {
-                name:'系统管理',
-                src:'../../static/image/siderbar/系统管理.png',
-                secondLevel:[
-                    {
-                    name:'公共基础资料',
-                }, {
-                    name:'公共基础资料',
-                }]
-            }, {
-                name:'基础资料',
-                src:'../../static/image/siderbar/基础资料.png',
-            }, {
-                name:'采购管理',
-                src:'../../static/image/siderbar/采购管理.png',
-            }, {
-                name:'批发管理',
-                src:'../../static/image/siderbar/批发管理.png',
-            }, {
-                name:'零售管理',
-                src:'../../static/image/siderbar/零售管理.png',
-            }, {
-                name:'库存管理',
-                src:'../../static/image/siderbar/库存管理.png',
-            }, {
-                name:'会员管理',
-                src:'../../static/image/siderbar/会员管理.png',
-            }, {
-                name:'电商管理',
-                src:'../../static/image/siderbar/电商管理.png',
-            }, {
-                name:'应收应付',
-                src:'../../static/image/siderbar/应收应付.png',
-            }]
-=======
         secondLevel1:[{
             name:'基础资料',
             thirdInfo:[      
@@ -298,6 +197,7 @@ export default {
                 {name:'供应商列表',address:'supplierList'},   
                 {name:'组织单元',address:'organization'},    
             ]}],
+            
         secondLevel2:[{
             name:'基础资料',
             thirdInfo:[      
@@ -513,7 +413,6 @@ export default {
         //         name:'应收应付',
         //         src:'../../static/image/siderbar/应收应付.png',
         //     }]
->>>>>>> 98cc1cda1193c0c7cc650e93395114bc9c4f9b5d
         }
     },
     methods:{
