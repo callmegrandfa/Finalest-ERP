@@ -160,6 +160,7 @@ export default {
 <style  scoped>
 
 .slidUl{
+    font-family: 'microsoft yahei';
     width: 235px;
     height: auto;
     background-color: #414e61;

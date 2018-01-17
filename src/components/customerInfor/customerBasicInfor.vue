@@ -87,7 +87,7 @@
                     <el-input v-model="data.taxNum" placeholder="请录入登记号"></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label>业务地区</label>
+                    <label>业务地区区号</label>
                     <el-select v-model="valueAreaBusiness">
                         <el-option v-for="item in areaBusiness" :key="item.valueAreaBusiness" :label="item.label" :value="item.valueAreaBusiness"></el-option>
                     </el-select>
@@ -357,6 +357,9 @@ export default({
   </script>
 
   <style>
+  .customerBasicForm{
+      font-family: 'microsoft yahei';
+  }
  /*收起*/
  .customerBasicForm .upBt{
      font-size: 12px;

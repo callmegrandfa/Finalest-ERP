@@ -180,6 +180,7 @@ export default {
     margin-left: 15px;
 }
 .routerContain{
+    font-family: 'microsoft yahei';
     position: relative;
     height: 43px;
     background-color: #eef1f5;
