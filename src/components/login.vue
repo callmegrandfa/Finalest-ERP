@@ -77,12 +77,9 @@ export default {
       }
   },
   methods:{
-      setCookie(c_name,value,expiredays){
-        var exdate=new Date();
-        exdate.setDate(exdate.getDate()+expiredays);
-        document.cookie=c_name+ "=" +escape(value)+
-        ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
-        },
+      setSessionStorage(c_name,value){
+        window.sessionStorage.setItem(c_name,value);
+      },
       switch(url){
             this.$router.push({path:url});//点击切换路由
         },
@@ -92,10 +89,8 @@ export default {
           _this.$axios.posts('/api/TokenAuth/Authenticate',this.login)
           .then(function (res) {
                 //成功之后处理逻辑
-                // console.log(res);
-                _this.$store.state.username=_this.login.userNameOrEmailAddress;//vuex,store里面存入userNameOrEmailAddress
-                _this.$store.state.accessToken='Bearer '+res.result.accessToken;//vuex,store里面存入token
-                _this.setCookie(_this.$store.state.username,_this.$store.state.accessToken,'30');//设置cookie过期时间30天
+                _this.setSessionStorage(_this.login.userNameOrEmailAddress,'Bearer '+res.result.accessToken);//sessionStorage
+                _this.$store.state.alerts=true;
                 _this.switch('/home');
                 },function (res) {
                 //失败之后处理逻辑
