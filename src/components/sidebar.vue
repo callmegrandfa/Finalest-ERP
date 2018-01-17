@@ -36,7 +36,7 @@
             </ul>
         </li>
         <li class="one">
-            <span class="menuIcon"><img src="../../static/image/siderbar/系统管理.png"></span>
+            <span class="menuIcon"><img src="../../static/image/login/setting.png"></span>
             <a class="oneA" href="javascript:;">系统管理</a>
             <ul class="slidUl slid1">
                 <li class="two" v-for="i in secondLevel2">
@@ -196,7 +196,19 @@ export default {
                 {name:'集团管理',address:'groupManager'},
                 {name:'供应商列表',address:'supplierList'},   
                 {name:'组织单元',address:'organization'},    
-            ]}],
+            ]},{
+                name:'租户管理',
+            },{
+                name:'集团管理',
+            },{
+                name:'用户组',
+            },{
+                name:'采购管理',
+            },{
+                name:'客户资料',
+            },{
+                name:'单据模板',
+            }],
         secondLevel2:[{
             name:'基础资料',
             thirdInfo:[      

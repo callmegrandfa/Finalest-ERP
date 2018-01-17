@@ -149,28 +149,8 @@
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="公司" name="company" v-if="count.isCheckCompany">
-                    <el-col :span="24">
-                        <div class="companyInfo">
-                            <el-col :span="24">
-                                <el-col :span="5"  class="getPadding">
-                                    <el-checkbox v-model="group">集团公司</el-checkbox>
-                                    <el-checkbox v-model="isUse">是否启用</el-checkbox>
-                                </el-col> 
-                            </el-col>
-                            <el-col :span="22"  class="getPadding">
-                                <div class="bgcolor"><label>上级公司</label><el-input v-model="company.higher" placeholder="请选择上级公司"></el-input></div>
-                                <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="请输入法人代表"></el-input></div>
-                                <div class="bgcolor">
-                                    <label>用户状态</label>
-                                    <el-select v-model="valueState">
-                                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                            </el-col>
-                        </div>
-                    </el-col>   
+                <el-tab-pane label="货品明细" name="company" v-if="count.isCheckCompany">
+                    
                 </el-tab-pane>
                 <el-tab-pane label="财务" name="finance" v-if="count.isCheckFinance">财务</el-tab-pane>
                 <el-tab-pane label="业务" name="business" v-if="count.isCheckBusiness">业务</el-tab-pane>
