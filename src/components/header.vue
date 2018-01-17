@@ -27,7 +27,7 @@
                 <div class="username">
                     <span>{{username}}<i class="fa fa-angle-down"></i></span>   
                     <ul class="box">
-                        <li><a>数据统计表</a></li>
+                        <li><a @click="cancellation">注销</a></li>
                         <li><a>数据统计表</a></li>
                     </ul>     
                 </div>
@@ -54,6 +54,11 @@ export default {
     }
   },
    methods: {
+       cancellation(){
+        sessionStorage.removeItem(this.$store.state.name);
+        this.$store.state.name='';
+        this.$router.push({path:'/login'});
+       },
         querySearch(queryString, cb) {
         var restaurants = this.restaurants;
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;

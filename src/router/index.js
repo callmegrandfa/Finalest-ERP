@@ -51,7 +51,7 @@ const routes = [
       let flag=false;
       let x='';
       if(store.state.alerts){
-         x=prompt("当前登录"+names.length+"个账号,分别是："+names.join(',')+"请输入您将要登录的账号或者关闭浏览器重新登录");
+         x=prompt("当前登录"+names.length+"个账号,分别是："+names.join(',')+"请输入您将要登录的账号或者关闭浏览器重新登录或者注销已经登录的账号重新登录");
       }
       if(x!=null && x!=""){
         let token='';
@@ -71,7 +71,6 @@ const routes = [
           store.state.alerts=false;
           store.state.name=x;
           store.state.accessToken=token;
-          console.log('当前登录账号:'+store.state.name)
           next();
         }else{
           store.state.alerts=true;
@@ -84,7 +83,6 @@ const routes = [
     }else if(names.length==1){//正常登录
       store.state.name=store.state.username[0].name;
       store.state.accessToken=store.state.username[0].accessToken;
-      console.log('当前登录账号:'+store.state.name)
       next();
     }else{
       next('/login')
