@@ -24,6 +24,8 @@ const orderList = () =>import('../components/purchaseOrder/orderList')
 const supplierList = () =>import('../components/supplierData/supplierList')
 const organization = () =>import('../components/groupManage/organization')
 const userInfoDetail = () =>import('../components/user/userInfoDetail')
+const userList = () =>import('../components/user/userList')
+const userDataList = () =>import('../components/user/userDataList')
 Vue.use(Router)
 
 const routes = [
@@ -110,7 +112,8 @@ children:[
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/organization/:id', component: organization,name:'organization' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
-
+  { path: '/userList/:id', component: userList,name:'userList' },
+  { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
 ]}
 ]
 let router=new Router({
