@@ -16,9 +16,9 @@
         <el-row>
                 <!--公司信息  -->
             <el-col :span="24" class="getPadding">
-                <div class="errorTips">
+                <div class="errorTips" :class="{block : show}">
                     <p class="msgDetail">错误提示：名称不能为特殊字符</p>
-                    <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    <div class="closeMsg" @click="show = !show"><i class="fa fa-times" aria-hidden="true"></i></div>
                 </div>
                 <div class="bgcolor">
                     <label>编码</label>
@@ -144,7 +144,8 @@
 export default({
     data() {
         return{
-             ifShow:true,
+            show:false,
+            ifShow:true,
             activeName: 'company',
             basicInformation:{//基础信息
                 version:'sts11s',
@@ -310,6 +311,9 @@ export default({
   </script>
 
   <style>
+  .block{
+      display: none;
+  }
   .detailForm{
       font-family: 'microsoft yahei';
   }

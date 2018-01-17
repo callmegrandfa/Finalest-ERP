@@ -34,9 +34,9 @@ export default {
                 src:'../../static/image/siderbar/常用功能.png',
                 secondLevel:[
                     {
-                    name:'公共基础资料',
-                    thirdInfo:[
-                        {name:'业务组织(精简版)-详细',address:'detail'},
+                    name:'基础资料',
+                    thirdInfo:[      
+                        {name:'业务组织(精简版)-详细',address:'detail'},                 
                         {name:'数据资料短',address:'shortData'},
                         {name:'数据资料长',address:'longData'},
                         {name:'数据资料中',address:'midData'},   
@@ -54,14 +54,39 @@ export default {
                         {name:'组织单元',address:'organization'},    
                     ]
                 },{
-                    name:'公共基础资料',
+                    name:'基础资料',
+                    thirdInfo:[
+                    ]
                 },{
-                    name:'公共基础资料',
+                    name:'租户管理',
+                    thirdInfo:[
+                    ]
                 },{
-                    name:'公共基础资料',
+                    name:'集团管理',
+                     thirdInfo:[
+                        {name:'集团管理',address:'groupManager'},
+                        {name:'业务组织(精简版)-详细',address:'detail'},
+                        {name:'组织单元',address:'organization'},
+                    ]
+                },{
+                    name:'用户组',
+                    thirdInfo:[
+                    ]
                 }
                 ,{
-                    name:'公共基础资料',
+                    name:'采购管理',
+                    thirdInfo:[
+                    ]
+                },{
+                    name:'客户资料',
+                    thirdInfo:[
+                    ]
+                },{
+                    name:'单据模板',
+                    thirdInfo:[
+                        {name:'列表资料',address:'orderDetails'},
+                        {name:'单据-主多从模板',address:'orderList'},
+                    ]
                 }]
             }, {
                 name:'系统管理',
