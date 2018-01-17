@@ -107,7 +107,6 @@
                        <span class="super-search"> 超级搜索</span>
                     </el-col>
                     <el-col :span='3' :offset="8">
-                        <!-- <img src="../../assets/close.png" style="cursor:pointer;" @click="closeHighSearch"> -->
                         <i class="el-icon-circle-close" style="cursor:pointer;" @click="closeHighSearch"></i>
                     </el-col>
                 </el-row>
@@ -325,7 +324,7 @@
                                     </el-date-picker>
                             </el-col>
 
-                            <el-col :span="11" :offset="1">
+                            <el-col :span="11">
                                 <el-date-picker
                                     v-model="value1"
                                     type="date"
@@ -350,7 +349,7 @@
                                     </el-date-picker>
                             </el-col>
 
-                            <el-col :span="11" :offset="1">
+                            <el-col :span="11" >
                                 <el-date-picker
                                     v-model="value1"
                                     type="date"
@@ -375,7 +374,7 @@
                                     </el-date-picker>
                             </el-col>
 
-                            <el-col :span="11" :offset="1">
+                            <el-col :span="11" >
                                 <el-date-picker
                                     v-model="value1"
                                     type="date"

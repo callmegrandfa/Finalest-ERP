@@ -114,12 +114,12 @@
                        <span class="super-search"> 超级搜索</span>
                     </el-col>
                     <el-col :span='3' :offset="8" style="padding-top:10px;">
-                        <img src="../../assets/close.png" style="cursor:pointer;" @click="closeHighSearch">
+                        <i class="el-icon-circle-close" style="cursor:pointer;" @click="closeHighSearch"></i>
                     </el-col>
                 </el-row>
 
                 <el-row>
-                    <el-col :span='5' :offset="1" class="search-plan">
+                    <el-col :span='5' :offset="1">
                         <span>查询方案</span>
                     </el-col>
                     <el-col :span='4' :offset='10' class="search-edit">
@@ -321,19 +321,24 @@
                     <el-col :span="4" :offset="1">
                         <span>开单日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2">
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择开始日期">
-                            </el-date-picker>
-                        
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择结束日期">
-                            </el-date-picker>
+                    <el-col :span="15" :offset="3">
+                        <el-row>
+                            <el-col :span="11">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择开始日期">
+                                    </el-date-picker>
+                            </el-col>
 
+                            <el-col :span="11" :offset="1">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择结束日期">
+                                    </el-date-picker>
+                            </el-col>
+                        </el-row>
                     </el-col>
                 </el-row>
 
@@ -341,18 +346,24 @@
                     <el-col :span="4" :offset="1">
                         <span>生效日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2">
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择开始日期">
-                            </el-date-picker>
-                        
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择结束日期">
-                            </el-date-picker>
+                    <el-col :span="15" :offset="3">
+                        <el-row>
+                            <el-col :span="11">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择开始日期">
+                                    </el-date-picker>
+                            </el-col>
+
+                            <el-col :span="11" :offset="1">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择结束日期">
+                                    </el-date-picker>
+                            </el-col>
+                        </el-row>
                     </el-col>
                 </el-row>
 
@@ -360,22 +371,28 @@
                     <el-col :span="4" :offset="1">
                         <span>交货日期</span>
                     </el-col>
-                    <el-col :span="15" :offset="2">
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择开始日期">
-                            </el-date-picker>
-                        
-                        <el-date-picker
-                            v-model="value1"
-                            type="date"
-                            placeholder="选择结束日期">
-                            </el-date-picker>
+                    <el-col :span="15" :offset="3">
+                        <el-row>
+                            <el-col :span="11">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择开始日期">
+                                    </el-date-picker>
+                            </el-col>
+
+                            <el-col :span="11" :offset="1">
+                                <el-date-picker
+                                    v-model="value1"
+                                    type="date"
+                                    placeholder="选择结束日期">
+                                    </el-date-picker>
+                            </el-col>
+                        </el-row>
                     </el-col>
                 </el-row>
 
-                <el-row  class="last-btn">
+                <el-row  class="last-btn mt10">
                     <el-col :span="3" :offset="3">
                         <span class="s-btn">查询</span>
                     </el-col>
@@ -711,8 +728,8 @@ export default {
     to {right: 0;}
 } */
 .high-search-header{
-    height: 73px;
-    line-height: 73px;
+    height: 60px;
+    line-height: 60px;
     border-bottom: 1px solid #cccccc;
 }
 .high-search-header .el-col{
@@ -736,7 +753,7 @@ export default {
     padding: 0;
     list-style: none;
     border-bottom: 6px solid #cccccc;
-    padding-top:10px;  
+    padding-top:5px;  
 }
 .this-week li{
     width: 89px;
@@ -746,7 +763,7 @@ export default {
     border-radius: 3px;
     text-align: center;
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     margin-left: 15px;
     position: relative
 }
