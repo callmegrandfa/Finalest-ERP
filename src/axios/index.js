@@ -1,4 +1,5 @@
 import store from '../store'
+import router from '../router'
 import axios from 'axios'
 import qs from 'qs'
 
@@ -10,18 +11,10 @@ axios.defaults.baseURL = 'http://192.168.100.105';
 //axios.interceptors.response.use接受返回后，回调之前处理处理
 //POST传参序列化
 axios.interceptors.request.use((config) => {
-    // if(store.state.username.length=1){//有且只有一个账号登录
-    //   config.headers.Authorization=store.state.username.accessToken;
-    //   //console.log(store.state.username)
-    // }else if(store.state.username.length>1){
-    //   //登录账号过多，并未注销
-    // }else{
-    //   //还未登录
-    // }
     if(store.state.accessToken!=''){
       config.headers.Authorization=store.state.accessToken;
     }else{
-      //未登录
+      router.push({path:'/login'});
     }
     return config;
   },(error) =>{

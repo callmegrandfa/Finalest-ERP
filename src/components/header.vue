@@ -25,7 +25,7 @@
             <li class="user">
                 <div class="imgWrap"><img src="../assets/logo.png" alt=""></div>
                 <div class="username">
-                    <span>lomen<i class="fa fa-angle-down"></i></span>   
+                    <span>{{username}}<i class="fa fa-angle-down"></i></span>   
                     <ul class="box">
                         <li><a>数据统计表</a></li>
                         <li><a>数据统计表</a></li>
@@ -47,6 +47,11 @@ export default {
         restaurants: [],
         state3: ''
       }
+  },
+  computed: {
+    username () {
+      return this.$store.state.name;//获取最新的页签数组
+    }
   },
    methods: {
         querySearch(queryString, cb) {

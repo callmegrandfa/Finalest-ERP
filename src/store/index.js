@@ -5,7 +5,7 @@ Vue.use(vuex);
 export default new vuex.Store({
     state:{
         alerts:true,
-        username:[],//存储session纪录的每条登录账号{'name':key,'accessToken':value}
+        username:[],//存储session纪录的每条登录账号{'name':key,'accessToken':value},用于多账号登录
         name:'',//当前登录用户名
         accessToken:'',//当前登录token
         show:false,//控制slidebar显示隐藏
