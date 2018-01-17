@@ -26,6 +26,8 @@ const organization = () =>import('../components/groupManage/organization')
 const userInfoDetail = () =>import('../components/user/userInfoDetail')
 const userList = () =>import('../components/user/userList')
 const userDataList = () =>import('../components/user/userDataList')
+const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
+const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
 Vue.use(Router)
 
 const routes = [
@@ -114,6 +116,8 @@ children:[
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
   { path: '/userList/:id', component: userList,name:'userList' },
   { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
+  { path: '/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
+  { path: '/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
 ]}
 ]
 let router=new Router({
