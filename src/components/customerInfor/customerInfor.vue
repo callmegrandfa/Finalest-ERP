@@ -123,7 +123,7 @@
                                     <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                                 </template>
                             </el-table-column>
-                    </el-table> 
+                        </el-table> 
                     </el-col>
                 </el-row>
 
