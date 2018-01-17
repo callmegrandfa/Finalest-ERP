@@ -15,15 +15,11 @@
      <div v-show="ifShow">
         <el-row>
                 <!--公司信息  -->
-            <el-col :span="24" class="getPadding"> 
-                <el-alert
-                    title="错误提示：名称不能为特殊字符"
-                    type="error">
-                </el-alert>
-                <!-- <div class="errorTips">
+            <el-col :span="24" class="getPadding">
+                <div class="errorTips" :class="{block : show}">
                     <p class="msgDetail">错误提示：名称不能为特殊字符</p>
-                    <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
-                </div> -->
+                    <div class="closeMsg" @click="show = !show"><i class="fa fa-times" aria-hidden="true"></i></div>
+                </div>
                 <div class="bgcolor">
                     <label>编码</label>
                     <el-input v-model="companyInformation.node" :disabled="true"></el-input>
@@ -63,7 +59,7 @@
                 <div class="bgcolor"><label>地址</label><el-input v-model="companyInformation.address" placeholder="请填入地址"></el-input></div>
                 <div class="bgcolor"><label>备注</label><el-input v-model="companyInformation.remarks" placeholder="备注"></el-input></div>
                 <div class="bgcolor">
-                    <label>启用状态</label>
+                    <label>用户状态</label>
                     <el-select v-model="valueState">
                         <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
                         </el-option>
@@ -110,6 +106,13 @@
                             <el-col :span="22"  class="getPadding">
                                 <div class="bgcolor"><label>上级公司</label><el-input v-model="company.higher" placeholder="请选择上级公司"></el-input></div>
                                 <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="请输入法人代表"></el-input></div>
+                                <div class="bgcolor">
+                                    <label>用户状态</label>
+                                    <el-select v-model="valueState">
+                                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
+                                        </el-option>
+                                    </el-select>
+                                </div>
                             </el-col>
                          </div>
                      </el-col>   
@@ -141,7 +144,8 @@
 export default({
     data() {
         return{
-             ifShow:true,
+            show:false,
+            ifShow:true,
             activeName: 'company',
             basicInformation:{//基础信息
                 version:'sts11s',
@@ -307,6 +311,12 @@ export default({
   </script>
 
   <style>
+  .block{
+      display: none;
+  }
+  .detailForm{
+      font-family: 'microsoft yahei';
+  }
   /*收起*/
  .detailForm .upBt{
      font-size: 12px;

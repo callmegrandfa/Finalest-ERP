@@ -87,7 +87,7 @@
                     <el-input v-model="data.taxNum" placeholder="请录入登记号"></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label>业务地区</label>
+                    <label>业务地区区号</label>
                     <el-select v-model="valueAreaBusiness">
                         <el-option v-for="item in areaBusiness" :key="item.valueAreaBusiness" :label="item.label" :value="item.valueAreaBusiness"></el-option>
                     </el-select>
@@ -132,9 +132,10 @@
                <el-tabs v-model="activeName">
                     <el-tab-pane label="银行信息" name="bank" class="getPadding">
                         <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                        <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                         <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                         <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
-                        <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
+                        
                 
                         <el-table :data="tableData" stripe border style="width: 100%">
                             <el-table-column prop="clearInfor" label="结算信息" width="180"></el-table-column>
@@ -357,6 +358,9 @@ export default({
   </script>
 
   <style>
+  .customerBasicForm{
+      font-family: 'microsoft yahei';
+  }
  /*收起*/
  .customerBasicForm .upBt{
      font-size: 12px;

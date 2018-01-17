@@ -14,7 +14,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="6">
                     <el-steps :active="2">
                         <el-step title="Step1" description="新增报表信息"></el-step>
                         <el-step title="Step2" description="提交送审"></el-step>
@@ -35,11 +35,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="2">     
-                <h4>基础信息</h4>
-            </el-col> 
-
-            <el-col :span="20" :class="{slidup : showBasicInfo}" class="down">
+            <el-col :span="24" class="getPadding">
                 <el-col :span="5" class="bgcolor">
                     <label>单号</label>
                     <el-input :disabled="true" v-model="data.num" placeholder="请录入单号"></el-input>
@@ -117,48 +113,36 @@
                     <el-input v-model="data.orderNum" placeholder="请录入工厂订单号"></el-input>
                 </el-col>
                 <el-col :span="10" class="bgcolor moreWidth"><label>备注</label><el-input v-model="data.remarks" placeholder="备注"></el-input></el-col>  
-            </el-col> 
-
-            <el-col :span="2">   
-                <a class="upBtn" @click="showBasicInfo = !showBasicInfo">
-                    收起<span class="el-icon-arrow-down"></span>
-                </a>
             </el-col>  
         </el-row>
 
-        <el-row>
-            <el-col :span="2">     
-                <h4>其他信息</h4>
+        <el-row class="noPadding">
+            <el-col :span="24" class="getPadding greyClr">     
+                <h4 class="h4">其他信息</h4>
             </el-col> 
 
-            <el-col :span="20" :class="{slidup : showOtherInfo}" class="down">
-                <el-col :span="5" class="bgcolor noColor">
+            <el-col :span="24" class="getPadding nomargin">
+                <el-col :span="5" class="bgcolor">
                     <label>金额计算方式</label>
                     <el-input :disabled="true" v-model="data.num" placeholder="无记录"></el-input>
                 </el-col>
-                <el-col :span="5" class="bgcolor noColor">
+                <el-col :span="5" class="bgcolor">
                     <label>批次定单号</label>
                     <el-input :disabled="true" v-model="data.handmade" placeholder="无记录"></el-input>
                 </el-col>
-                <el-col :span="5" class="bgcolor noColor">
+                <el-col :span="5" class="bgcolor">
                     <label>汇率</label>
                     <el-input :disabled="true" v-model="data.wareHouse" placeholder="无记录"></el-input>
                 </el-col>
-                <el-col :span="5" class="bgcolor noColor">
+                <el-col :span="5" class="bgcolor">
                     <label>开单日期</label>
                     <el-input :disabled="true" v-model="data.wareHouse" placeholder="无记录"></el-input>
                 </el-col>
-                <el-col :span="5" class="bgcolor noColor">
+                <el-col :span="5" class="bgcolor">
                     <label>操作员</label>
                     <el-input :disabled="true" v-model="data.wareHouse" placeholder="无记录"></el-input>
                 </el-col>
             </el-col> 
-
-            <el-col :span="2">   
-                <a class="upBtn" @click="showOtherInfo = !showOtherInfo">
-                    收起<span class="el-icon-arrow-down"></span>
-                </a>
-            </el-col>  
         </el-row>
         <el-row class="tabZoo">
             <el-col :span="24" class="operationBtn">
@@ -173,9 +157,9 @@
                     <span>搜索</span>
                 </el-col>
                 <el-col :span='2' :offset="6">
-                    <i class="fa fa-bars upBtn" aria-hidden="true"></i>
-                    <i class="fa fa-bars rotate upBtn" aria-hidden="true"></i>
-                    <span class="upBtn">全屏</span>
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                    <i class="fa fa-bars rotate" aria-hidden="true"></i>
+                    <span>全屏</span>
                 </el-col>   
             </el-col>
             <el-table :data="tableData" stripe border style="width: 100%">
@@ -210,8 +194,6 @@
         data(){
             return{
                 currentPage:4,//分页当前页
-                showBasicInfo:false,
-                showOtherInfo:false,
                 tableData: [{//表格
                     code: 'A001',
                     size: '红',
@@ -303,7 +285,9 @@
     })
 </script>
 <style>
-
+ .orderDetail{
+      font-family: 'microsoft yahei';
+  }
 .orderDetail .orderHead{
     background-color: #fff;
     padding: 5px 0;
@@ -370,6 +354,9 @@
     top: 0px;
     left: 42px;
 }
+.orderDetail .el-steps .el-step__head{
+    width: 120px;
+}
 .orderDetail .el-steps .el-step__title{
     font-size: 12px;
     line-height: 20px;
@@ -381,14 +368,7 @@
     width: 36px;
     height: 36px;
 }
-.orderDetail .down{
-    overflow: hidden;
-    transition: max-height 0.5s;
-    -moz-transition: max-height 0.5s;
-    -webkit-transition: max-height 0.5s;
-    -o-transition: max-height 0.5s; 
-    max-height:  900px;
-  }
+
   .orderDetail .slidup{
        max-height: 90px;
   }
@@ -401,32 +381,24 @@
     border: none;
 }
 
-.orderDetail .noColor{
-    background-color:transparent;
-}
+
 .orderDetail .el-row{
+     padding:15px 0;
+     border-bottom: 1px solid #e4e4e4;
+     background-color: #fff;
+  }
+.orderDetail .el-row:first-child{
+    padding: 0;
+    border:none;
     margin-bottom: 15px;
 }
 
 
-.orderDetail .noColor .el-input input[disabled]{
-    background-color: transparent;
-}
 .orderDetail .companyInfo>.el-col:first-child,
 .orderDetail .companyInfo .el-col h4{
     margin-bottom: 15px;
 }
-.orderDetail .upBtn{
-    font-size: 12px;
-    color: #BCBCBC;
-    cursor: pointer;
-}
-.orderDetail .upBtn:hover{
-    color: #3cc;
-}
-.orderDetail .upBtn .el-icon-arrow-down{
-    margin-left: 5px;
-}
+
 .orderDetail .tabZoo{
      overflow: hidden;
      background-color: #fff;
@@ -435,8 +407,8 @@
      border: 1px solid #BCBCBC;
      border-radius: 4px;
  }
- .orderDetail .tabZoo .getPadding,.tabZoo .el-tabs__nav-scroll{
-     padding: 0 20px;
+ .orderDetail .getPadding,.tabZoo .el-tabs__nav-scroll{
+     padding: 0 10px;
  }
  .orderDetail .tabZoo .auditInformation{
      margin-top: 15px;
@@ -485,7 +457,16 @@
  .orderDetail .pagination{
      float: right;
  }
-
+.orderDetail .greyClr{
+    background-color: #f2f2f2;
+    padding-top: 15px;
+}
+.orderDetail .noPadding{
+    padding: 0;
+}
+.orderDetail .nomargin .bgcolor{
+    margin-bottom: 0;
+}
 </style>
 
 

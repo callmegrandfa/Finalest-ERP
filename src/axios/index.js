@@ -1,4 +1,5 @@
 import store from '../store'
+import router from '../router'
 import axios from 'axios'
 import qs from 'qs'
 
@@ -11,7 +12,9 @@ axios.defaults.baseURL = 'http://192.168.100.105';
 //POST传参序列化
 axios.interceptors.request.use((config) => {
     if(store.state.accessToken!=''){
-      config.headers.Authorization = store.state.accessToken;
+      config.headers.Authorization=store.state.accessToken;
+    }else{
+      router.push({path:'/login'});
     }
     return config;
   },(error) =>{
@@ -31,7 +34,7 @@ axios.interceptors.request.use((config) => {
 // //公共方法：
 //   export function posts(url, params) {
 //     return new Promise((resolve, reject) => {
-//       axios.post(url, params)
+//       axios.post(url, params)  
 //         .then(response => {
 //           resolve(response.data);
 //         }, err => {
