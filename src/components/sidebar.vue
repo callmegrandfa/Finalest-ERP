@@ -71,6 +71,8 @@ export default {
                 },{
                     name:'用户组',
                     thirdInfo:[
+                        {name:'用户列表',address:'userList'},
+                        {name:'用户数据列表',address:'userDataList'},
                     ]
                 }
                 ,{

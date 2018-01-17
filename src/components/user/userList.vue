@@ -1,5 +1,5 @@
 <template>
-    <div class="customer-infor-wrapper">
+    <div class="user-list-wrapper">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
@@ -16,10 +16,10 @@
 
                 <el-row class="mt20 pl15 h30">
                     <el-col :span="5" class="fs12">
-                        <span>客户分类</span>
+                        <span>用户组编码</span>
                     </el-col>
                     <el-col :span="15" class="fs12 border1 pl10">
-                        <el-select v-model="value" placeholder="请选择客户类型">
+                        <el-select v-model="value" placeholder="请选择用户组编码">
                             <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -32,55 +32,19 @@
 
                 <el-row class="mt10 pl15 h30 fs12">
                     <el-col :span="5">
+                        <span>用户组名称</span>
+                    </el-col>
+                    <el-col :span="15" class="border1 pl10">
+                        <input type="text" class="input-need" placeholder="请录入用户组名称">
+                    </el-col>
+                </el-row>
+
+                <el-row class="mt10 pl15 h30 fs12">
+                    <el-col :span="5">
                         <span>所属组织</span>
                     </el-col>
                     <el-col :span="15" class="border1 pl10">
                         <input type="text" class="input-need" placeholder="请录入所属组织">
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>行政地区</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入行政地区">
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>业务地区</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入业务地区">
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>编码</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入编码">
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>名称</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入名称">
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>客户性质</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入客户性质">
                     </el-col>
                 </el-row>
 
@@ -91,6 +55,7 @@
 
             <el-col :span='19'>
                 <el-row class="h48 pt5">
+                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -135,7 +100,7 @@
 
 <script>
     export default{
-        name:'customerInfor',
+        name:'userList',
         data(){
             return {
                 try:{
@@ -399,19 +364,19 @@
 </style>
 
 <style>
-.customer-infor-wrapper .el-input input{
+.user-list-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
 }
 /* 重写checkbox */
-.customer-infor-wrapper .el-checkbox__inner{
+.user-list-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.customer-infor-wrapper .el-checkbox__inner::after{
+.user-list-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -434,7 +399,7 @@
 }
 
 /* 重写el-table样式 */
-.customer-infor-wrapper .el-table th {
+.user-list-wrapper .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -443,20 +408,20 @@
     text-align: center;
     background-color: #ececec;
 }
-.customer-infor-wrapper .el-table td{
+.user-list-wrapper .el-table td{
     padding: 3px 0;
 }
-.customer-infor-wrapper .el-table__body{
+.user-list-wrapper .el-table__body{
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+.user-list-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
 }
-.customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
+.user-list-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
 }
-.customer-infor-wrapper .el-input--suffix .el-input__inner{
+.user-list-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
 } 
 </style>
