@@ -93,7 +93,7 @@
 .bgcolor .el-select .el-input {
     width: 100%;
 }
-.el-select .el-input.is-focus .el-input__inner{
+.bgcolor .el-select .el-input.is-focus .el-input__inner{
   border-color: #33CCCC;
 }
 .bgcolor .el-select{
