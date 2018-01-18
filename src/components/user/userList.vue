@@ -56,7 +56,7 @@
             <el-col :span='19'>
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button class="erp_bt bt_add" @click="storageData"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
@@ -253,20 +253,36 @@
             
         },
         methods:{
-            test:function(){
-                // console.log(this.try)
-                this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
-                .then(function(res){
-                console.log(res);
-            },function(res){
-                console.log('err:'+res)
-            })
+
+            switch(){
+                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
-            test1:function(){
-                this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){
-                console.log(res);
-            })
+            storageData(e){//点击新增跳转
+                var flag=false;
+                var slidbarData=this.$store.state.slidbarData;//储存页签数组
+                let name = '用户资料-列表';
+                if(slidbarData.length==0){//slidbarData为空
+                    flag=true;
+                }else{//slidbarData不为空
+                    for(var i=0;i<slidbarData.length;i++){
+                        if(slidbarData[i].name==name){//相同页签
+                            flag=false;
+                            break;
+                        }else{
+                        flag=true;
+                        }
+                    }
+                }
+                //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
+                var pushItem={'name':'用户资料-列表','url':'userDataList','params':'default'}
+                this.$store.state.url='/userDataList/default';//储存当前url
+                if(flag){
+                    slidbarData.push(pushItem);
+                }
+        
+                this.switch();
+                
             },
 
         },
@@ -437,13 +453,4 @@
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.user-list-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
-.user-list-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-}
-.user-list-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
 </style>
