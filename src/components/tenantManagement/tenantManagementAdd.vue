@@ -16,10 +16,10 @@
 
                 <el-row class="mt20 pl15 h30">
                     <el-col :span="5" class="fs12">
-                        <span>用户组编码</span>
+                        <span>租户编码</span>
                     </el-col>
                     <el-col :span="15" class="fs12 border1 pl10">
-                        <el-select v-model="value" placeholder="请选择用户组编码">
+                        <el-select v-model="value" placeholder="请选择租户编码">
                             <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -32,19 +32,110 @@
 
                 <el-row class="mt10 pl15 h30 fs12">
                     <el-col :span="5">
-                        <span>用户组名称</span>
+                        <span>租户名称</span>
                     </el-col>
                     <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入用户组名称">
+                        <input type="text" class="input-need" placeholder="请录入租户名称">
                     </el-col>
                 </el-row>
 
                 <el-row class="mt10 pl15 h30 fs12">
                     <el-col :span="5">
-                        <span>所属组织</span>
+                        <span>行业</span>
                     </el-col>
                     <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入所属组织">
+                        <input type="text" class="input-need" placeholder="请录入行业">
+                    </el-col>
+                </el-row>
+
+                <el-row class="mt10 pl15 h30 fs12">
+                    <el-col :span="5" class="fs12">
+                        <span>收费方式</span>
+                    </el-col>
+                    <el-col :span="15" class="fs12 border1 pl10">
+                        <el-select v-model="value" placeholder="请选择收费方式">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-row>
+
+                <el-row class="mt10 pl15 h30 fs12">
+                    <el-col :span="5">
+                        <span>用户数</span>
+                    </el-col>
+                    <el-col :span="15" class="border1 pl10">
+                        <input type="text" class="input-need" placeholder="请录入用户数">
+                    </el-col>
+                </el-row>
+
+                <el-row class="mt10 pl15 h30 fs12">
+                    <el-col :span="5" class="fs12">
+                        <span>行政区域</span>
+                    </el-col>
+                    <el-col :span="15" class="fs12 border1 pl10">
+                        <el-select v-model="value" placeholder="请选择行政区域">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-row>
+
+                <el-row class="mt10 pl15 h30 fs12">
+                    <el-col :span="5" class="fs12">
+                        <span>地址</span>
+                    </el-col>
+                    <el-col :span="15" class="fs12 border1 pl10">
+                        <el-select v-model="value" placeholder="请选择地址">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-row>
+
+                <el-row class="mt10 pl15 h30 fs12">
+                    <el-col :span="5">
+                        <span>启用年月</span>
+                    </el-col>
+                    <el-col :span="15" class="border1 pl10">
+                        <input type="text" class="input-need" placeholder="请录入启用年月">
+                    </el-col>
+                </el-row>
+
+                 <el-row class="mt10 pl15 h30 fs12">
+                    <el-col :span="5">
+                        <span>备注</span>
+                    </el-col>
+                    <el-col :span="15" class="border1 pl10">
+                        <input type="text" class="input-need" placeholder="请录入备注">
+                    </el-col>
+                </el-row>
+
+                <el-row class="mt10 pl15 h30 fs12">
+                    <el-col :span="5" class="fs12">
+                        <span>状态</span>
+                    </el-col>
+                    <el-col :span="15" class="fs12 border1 pl10">
+                        <el-select v-model="value" placeholder="请选择状态">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-col>
                 </el-row>
 
