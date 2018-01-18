@@ -39,7 +39,18 @@
                 <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
               </el-select>
             </div>
-            <div class="bgcolor"><label><small>*</small>有效时间</label><el-date-picker v-model="date" type="date" placeholder=""></el-date-picker></div>
+            <div class="bgcolor">
+              <label><small>*</small>有效时间</label>
+               <div class="rangeDate">
+                  <el-date-picker
+                  v-model="valueDate"
+                  type="daterange"
+                  range-separator="to"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期">
+                  </el-date-picker>
+              </div>
+            </div>
             <div class="bgcolor">
               <label>状态</label>
               <el-select v-model="valueContain">
@@ -49,7 +60,34 @@
           </el-col>
 
           <el-col :span="24">
-            <el-checkbox v-model="check">是否授权</el-checkbox>
+            <div class="bgcolor">
+              <label><el-checkbox v-model="check"></el-checkbox></label>
+              <span class="isGive">是否授权</span>
+            </div>
+          </el-col>
+
+          <el-col :span="24">
+            <div class="bgcolor longWidth">
+              <label>备注</label>
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 4, maxRows: 10}"
+                placeholder="请输入内容">
+              </el-input>
+            </div>
+          </el-col>
+
+          <el-col :span="24">
+            <div class="bgcolor longWidth">
+              <label>角色</label>
+              <div class="addZoo">
+                  <a class="add" href="javascript:;">+</a>
+                  <button class="addRole">角色1<i class="el-icon-error"></i></button>
+                  <button class="addRole">角色2<i class="el-icon-error"></i></button>
+                  <button class="addRole">角色3<i class="el-icon-error"></i></button>
+              </div>
+
+            </div>
           </el-col>
         </el-row>
     </div>
@@ -87,4 +125,61 @@
    padding: 7px 0;
    border-bottom: 1px solid #e4e4e4;
   }
+  .userDetail .bgcolor .isGive{
+    display: block;
+    float: left;
+    height: 100%;
+    line-height: 35px;
+  }
+.userDetail .bgcolor.longWidth{
+    width: 100%;
+    height:auto;
+  }
+ .userDetail .bgcolor.longWidth .el-textarea{
+   width: 436px;
+   font-size: 12px;
+ } 
+ .userDetail .bgcolor.longWidth .addZoo{
+   float: left;
+   width: calc(100% - 82px)
+ }
+.userDetail .bgcolor.longWidth .add{
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 3px;
+    background-color: #c7c7c7;
+    color: #fff;
+    text-align: center;
+    line-height: 35px;
+    text-decoration: none;
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.userDetail .bgcolor.longWidth .addRole{
+  display: inline-block;
+  width: 66px;
+  height: 35px;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+}
+.userDetail .bgcolor.longWidth .addRole i{
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  color: #cccccc;
+}
+.userDetail .bgcolor.longWidth .addRole:hover i{
+  color:#f66;
+}
+</style>
+
+<style>
+
 </style>
