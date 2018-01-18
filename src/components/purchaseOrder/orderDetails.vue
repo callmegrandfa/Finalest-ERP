@@ -134,10 +134,6 @@
                     <label>汇率</label>
                     <label class="dataLeft">1.00</label>
                 </el-col>
-                <!-- <el-col :span="5" class="bgcolor">
-                    <label>开单日期</label>
-                    <el-input :disabled="true" v-model="data.wareHouse" placeholder="无记录"></el-input>
-                </el-col> -->
                 <el-col :span="5" class="bgcolor">
                     <label>操作员</label>
                    <label class="dataLeft">3111111</label>
@@ -145,89 +141,91 @@
             </el-col> 
         </el-row>
 
-<el-row class="nopadding">  
+<el-row class="tabPage">  
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="货品明细" name="company" v-if="count.isCheckCompany">
-                    
+                <el-tab-pane label="货品明细" name="detail">
+                    <el-col :span="24" class="operationBtn">
+                        <button class="erp_bt bt_codeNew"><div class="btImg"><img src="../../../static/image/common/bt_codeNew.png"></div><span class="btDetail">扫码新增</span></button>
+                        <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
+                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
+                        <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                        <div class="right">
+                            <div class="formSearch">
+                                <input type="text" class="inputForm" placeholder="编码/名称...">
+                                <button>搜索</button>
+                            </div>
+                            <div class="rightBts">
+                                <i class="fa fa-bars first" aria-hidden="true"></i>
+                                <i class="fa fa-bars rotate" aria-hidden="true"></i>
+                                <span>全屏</span>
+                            </div>
+                            
+                        </div>
+                    </el-col>
+                    <el-table :data="tableData" stripe border style="width: 100%">
+                        <el-table-column prop="xid"  width="50" label=""></el-table-column>
+                        <el-table-column prop="code" label="货号" width="220"></el-table-column>
+                        <el-table-column prop="size" label="规格" width="220"></el-table-column>
+                        <el-table-column prop="num" label="数量" width="220"></el-table-column>
+                        <el-table-column prop="money" label="零售价" width="220"></el-table-column>
+                        <el-table-column prop="volume" label="体积" width="220"></el-table-column>
+                        <el-table-column fixed="right" label="操作">
+                            <template slot-scope="scope">
+                                <el-button @click="handleClick(scope.row)" type="text" size="small">插入</el-button>
+                                <el-button type="text" size="small">卡片展示</el-button>
+                                <el-button type="text" size="small">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-size="100"
+                    layout="total, prev, pager, next"
+                    :total="10000"
+                    class="pagination">
+                    </el-pagination>
                 </el-tab-pane>
-                <el-tab-pane label="财务" name="finance" v-if="count.isCheckFinance">财务</el-tab-pane>
-                <el-tab-pane label="业务" name="business" v-if="count.isCheckBusiness">业务</el-tab-pane>
+                <el-tab-pane label="合同信息" name="info">合同信息</el-tab-pane>
             </el-tabs>
         </el-col>
     </div>
  </el-row> 
-
-        <!-- <el-row class="tabZoo">
-            <el-col :span="24" class="operationBtn">
-                <button class="erp_bt bt_codeNew"><div class="btImg"><img src="../../../static/image/common/bt_codeNew.png"></div><span class="btDetail">扫码新增</span></button>
-                <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
-                <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
-                 <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                <el-col :span='5' class="search-input">
-                    <input type="text" class="form-control" placeholder="编码/名称..."/>
-                </el-col>
-                <el-col :span='2' class="search-btn">
-                    <span>搜索</span>
-                </el-col>
-                <el-col :span='2' :offset="6">
-                    <i class="fa fa-bars" aria-hidden="true"></i>
-                    <i class="fa fa-bars rotate" aria-hidden="true"></i>
-                    <span>全屏</span>
-                </el-col>   
-            </el-col>
-            <el-table :data="tableData" stripe border style="width: 100%">
-                <el-table-column prop="code" label="货号" width="200"></el-table-column>
-                <el-table-column prop="size" label="规格" width="180"></el-table-column>
-                <el-table-column prop="num" label="数量" width="180"></el-table-column>
-                <el-table-column prop="money" label="零售价" width="180"></el-table-column>
-                <el-table-column prop="volume" label="体积" width="180"></el-table-column>
-                 <el-table-column fixed="right" label="操作">
-                     <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="text" size="small">插入</el-button>
-                        <el-button type="text" size="small">卡片展示</el-button>
-                        <el-button type="text" size="small">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-            background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="100"
-            layout="total, prev, pager, next"
-            :total="10000"
-            class="pagination">
-            </el-pagination>
-        </el-row> -->
     </div>
 </template>
 <script>
     export default({
         data(){
             return{
+                activeName:'detail',
                 currentPage:4,//分页当前页
                 tableData: [{//表格
+                    xid:'1',
                     code: 'A001',
                     size: '红',
                     num: '1',
                     money:'1',
                     volume:'1',
                     },{//表格
+                    xid:'2',
                     code: 'A001',
                     size: '红',
                     num: '1',
                     money:'1',
                     volume:'1',
                     },{//表格
+                    xid:'3',
                     code: 'A004005006',
                     size: '红',
                     num: '1',
                     money:'1',
                     volume:'1',
                     },{//表格
+                    xid:'4',
                     code: 'A004005006',
                     size: '红',
                     num: '1',
@@ -303,6 +301,7 @@
  .orderDetail{
       font-family: 'microsoft yahei';
   }
+ 
 .orderDetail .orderHead{
     background-color: #fff;
     padding: 5px 0;
@@ -422,9 +421,19 @@
      border: 1px solid #BCBCBC;
      border-radius: 4px;
  }
- .orderDetail .getPadding,.tabZoo .el-tabs__nav-scroll{
+ .orderDetail .getPadding{
      padding: 0 10px;
  }
+ .orderDetail .tabZoo .el-tabs__nav-scroll{
+     padding:10px;
+ }
+ .orderDetail .tabZoo .el-tabs__content{
+     padding: 0 10px;
+     border: 1px solid #e4e4e4;
+     width: calc(100% - 40px);
+     margin:auto;
+ }
+
  .orderDetail .tabZoo .auditInformation{
      margin-top: 15px;
  }
@@ -432,39 +441,6 @@
      margin-bottom: 15px;
  }
 
-
-  /* 搜索框 */
-.orderDetail .search-input{
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-    border-right: none;
-    margin-left: 10px;
-}
-.orderDetail .search-input .form-control{
-    width:100%;
-    height:27px;
-    outline: none;
-    padding-left: 5px;
-    border:none;
-    border-radius:3px 0 0 3px;
-}
-.orderDetail .search-btn{
-    background:#82AAFC;
-    height:30px;
-    text-align:center;
-    line-height:30px;
-    border-radius:0 4px 4px 0;
-    cursor: pointer;
-    margin-left: -1px;
-    color: #fff;
-}
-.orderDetail .rotate{
-     transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
- }
  .orderDetail .operationBtn{
      padding: 15px 0;
  }
@@ -488,10 +464,49 @@
 .orderDetail .dataLeft{
     text-align: left;
 }
-.h4.getPadding{
+.orderDetail .h4.getPadding{
     padding-bottom: 10px;
     border-bottom: 1px solid #e4e4e4;
 }
+.orderDetail .tabPage{
+    padding-top: 0;
+    width: 100%;
+}
+.orderDetail .el-tabs__header{
+    margin: 0;
+}
+/* 搜索框 */
+.orderDetail .right{
+    float: right;
+    width: 480px;
+    height: 100%;
+    margin-right: 20px;
+    margin-top: 3px;
+}
+.orderDetail .right .formSearch{
+     float: left;
+ }
+.orderDetail .right i,.orderDetail .right span{
+    line-height: 30px;
+    font-size: 12px;
+    color: #c9c9c9;
+    cursor: pointer;
+}
+.orderDetail .right i:hover,.orderDetail .right span:hover{
+    color: #3cc;
+}
+.orderDetail .right .rightBts{
+    float: right;
+}
+.orderDetail .right .rotate{
+     transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    margin-left: 5px;
+    margin-right: 10px;
+ }
 </style>
 
 
