@@ -8,7 +8,8 @@
                     <ul id="routerBox">
                         <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
                             <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
-                            <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
+                            <!-- <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span> -->
+                            <i class="el-icon-error close" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i>
                         </li>
                     </ul>
                 </div>
@@ -221,7 +222,7 @@ export default {
     display: block;
     position: absolute;
     top: 5px;
-    right: 0;
+    right: 2px;
     color: #000;;
     font-size: 12px;
     cursor: pointer;

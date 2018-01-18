@@ -3,12 +3,12 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
-                    <el-col :span="15">
+                    <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12">+ 展开</span>
+                        <span class="fs12 open">+ 展开</span>
                     </el-col>
                 </el-row>
                 <div class="mt20 bgcolor"><label>单号</label><el-input placeholder="请录入单号"></el-input></div>
@@ -472,6 +472,7 @@
     color: white;
     cursor: pointer;
 }
+
 </style>
 
 <style>
@@ -480,7 +481,16 @@
     line-height:30px;
 }
 
-
+.orderList .open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
+}
 /* 重写checkbox */
 .orderList .el-checkbox__inner{
     width: 24px;
