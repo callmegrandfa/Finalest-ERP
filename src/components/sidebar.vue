@@ -189,7 +189,7 @@ export default {
                 {name:'商品资料',address:'goodsData'},
                 {name:'店铺数据列表',address:'storeData'},   
                 {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-                {name:'客户资料-基本信息',address:'customerBasicInfor'},
+                {name:'客户资料-详细',address:'customerBasicInfor'},
                 {name:'客户资料',address:'customerInfor'},
                 {name:'现货采购订单-订单列表',address:'orderList'}, 
                 {name:'现货采购订单-订单详情',address:'orderDetails'},
@@ -216,7 +216,7 @@ export default {
                 name:'客户资料',
                 thirdInfo:[
                     {name:'客户资料-列表',address:'customerInfor'},
-                    {name:'客户资料-基本信息',address:'customerBasicInfor'}
+                    {name:'客户资料-详细',address:'customerBasicInfor'}
                 ]
             },{
                 name:'单据模板',

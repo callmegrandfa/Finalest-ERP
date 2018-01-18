@@ -124,8 +124,16 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
-                        </el-table> 
-                        <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                        </el-table>
+                        <el-row>
+                            <el-col :span='10'>
+                                <span style="display:inline-block;margin-top:20px;">记录 40，当前第 1 页，共 4 页</span>
+                            </el-col>
+                            <el-col :span='14'>
+                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                            </el-col>
+                        </el-row> 
+                        
                     </el-col>
                 </el-row>
 
@@ -495,13 +503,13 @@
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+/* .customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
-}
-.customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
+} */
+/* .customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
-}
-.customer-infor-wrapper .el-input--suffix .el-input__inner{
+} */
+/* .customer-infor-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
-} 
+}  */
 </style>

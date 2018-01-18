@@ -283,20 +283,10 @@
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
-
 .data-list-container .text-right{
     text-align: right;
 }
 .mt-10{
     margin-top: 10px;
 }
-.data-list-container .el-date-editor.el-input,.data-list-container .el-date-editor.el-input__inner{
-    width: 130px;
-}
-.data-list-container .el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
 </style>

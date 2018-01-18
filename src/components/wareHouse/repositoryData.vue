@@ -553,9 +553,7 @@
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
+
 
 .data-wrapper .text-right{
     text-align: right;
@@ -563,13 +561,6 @@
 .mt-10{
     margin-top: 10px;
 }
-.data-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-}
-.data-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
-
 </style>
 
 

@@ -391,21 +391,4 @@
 .goods-data-wrapper .el-table__body{
     text-align: center;
 }
-/* 重写el-pagination样式 */
-.goods-data-wrapper .el-pagination.is-background .btn-next,.goods-data-wrapper .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
-
-.text-right{
-    text-align: right;
-}
-.mt-10{
-    margin-top: 10px;
-}
-.goods-data-wrapper .el-date-editor.el-input,.goods-data-wrapper .el-date-editor.el-input__inner{
-    width: 130px;
-}
-.goods-data-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
 </style>

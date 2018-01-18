@@ -423,14 +423,4 @@
 .tenant-management-wrapper .el-table__body{
     text-align: center;
 }
-/* 重写el-pagination样式 */
-.tenant-management-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
-.tenant-management-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-}
-.tenant-management-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
 </style>
