@@ -97,6 +97,7 @@
   export default({
     data(){
       return{
+        valueDate:'',
          check:true,//是否授权
          date:'',//有效时间
          valueContain:'',
