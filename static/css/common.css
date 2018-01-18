@@ -11,7 +11,9 @@
 }
 /* elementUI表单控件 */
 /* input输入框 */
-/* <div class="bgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  */
+/* <div class="bgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  
+ <div class="bgcolor smallBgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  */
+
 .bgcolor{
     height: 35px;
     font-size: 12px;
@@ -20,6 +22,10 @@
     float: left;
     overflow: hidden;
     margin-right: 5px;
+}
+.smallBgcolor{
+  width: 100%;
+  height: 28px;
 }
 .bgcolor label{
     margin-right: 10px; 
@@ -34,6 +40,9 @@
     font-weight: 400;
     font-style: normal;
 }
+.smallBgcolor label{
+  line-height:28px;
+}
 .bgcolor label small{
     color: #FF669B;
     margin-right: 2px;
@@ -45,11 +54,17 @@
     float: left;
     font-size: 12px;
 }
+.smallBgcolor .el-input{
+    width: 168px;
+    height: 35px;
+}
 .bgcolor .el-input input{
     border: 1px solid rgb(194, 202, 216);
     height: 35px;
 }
-
+.smallBgcolor .el-input input{
+  height: 28px;
+}
 .bgcolor .el-input input:focus{
   border-color: #33CCCC;
 }
@@ -66,6 +81,9 @@
 }
 .bgcolor .el-input__prefix i{
     line-height: 35px;
+}
+.smallBgcolor .el-input__prefix i{
+  line-height: 28px;
 }
 .bgcolor .el-date-editor input{
      padding: 0 15px;
@@ -84,8 +102,9 @@
     height: 35px;
     float: left;
 }
-
-
+.smallBgcolor .el-select{
+  height: 28px;
+}
 /* 输入框 placeholder字体颜色*/
 ::-webkit-input-placeholder {
     color: #333333; }
@@ -529,10 +548,23 @@
     end-placeholder="结束日期">
     </el-date-picker>
 </div> */
+
+/* <div class="rangeDate smallRangeDate">
+<el-date-picker
+v-model="valueDate"
+type="daterange"
+range-separator="to"
+start-placeholder="开始日期"
+end-placeholder="结束日期">
+</el-date-picker>
+</div>  */
 .rangeDate{
   width: 168px;
   height: 35px;
   float: left;
+}
+.smallRangeDate{
+  height: 28px;
 }
 .rangeDate .el-input__inner{
   padding: 0;
@@ -540,6 +572,9 @@
   width: 168px;
   height: 35px;
   border-color: #c0c4cc;
+}
+.smallRangeDate .el-input__inner{
+  height: 28px;
 }
 .rangeDate .el-range-editor.is-active,.rangeDate .el-range-editor.is-active:hover{
   border-color: #3cc;
@@ -557,6 +592,9 @@
   font-size: 12px;
   border-radius: 5px;
 }
+.smallRangeDate input.el-range-input{
+    height: 26px;
+}
 .rangeDate .el-range-separator{
   padding: 0;
   display: block;
@@ -568,4 +606,7 @@
   margin: 0;
   line-height: 35px;
   font-size: 12px;
+}
+.smallRangeDate .el-range-separator{
+  line-height: 28px;
 }
