@@ -2,7 +2,7 @@
     <div class="orderDetail">
         <el-row>
             <el-col :span="24" class="orderHead">
-                <el-col :span="18" class="orderTittle">
+                <el-col :span="17" class="orderTittle">
                     <h4>采购订单-详细资料</h4>
                     <div class="seal">
                         <div class="seal1">
@@ -15,11 +15,107 @@
                     </div>
                 </el-col>
                 <el-col :span="6">
-                    <el-steps :active="2">
+                    <el-steps :active="2" finish-status="success">
                         <el-step title="Step1" description="新增报表信息"></el-step>
                         <el-step title="Step2" description="提交送审"></el-step>
                         <el-step title="Step3" description="完成"></el-step>
                     </el-steps>
+                </el-col>
+                <el-col :span="1">
+                    <div style="position: relative;width:20px;">
+                        <i class="el-icon-more" @click="show = !show"></i>
+                        <diV class="triangle" :class="{activeShow : show}"></diV>
+                        <div class="detailStep" :class="{activeShow : show}">
+                            <div class="ARow">
+                                <div class="one messageStep">
+                                    <div class="leftD">
+                                        <p class="tittle">完成</p>
+                                        <p class="detail"> </p>
+                                    </div>
+                                    <div class="circle"></div>
+                                    <div class="rightD">
+                                        <p class="tittle">09</p>
+                                        <p class="detail">2018/01&nbsp;&nbsp;&nbsp;10:05:36</p>
+                                    </div>
+                                </div>
+                                <div class="two messageStep">
+                                    <div class="leftD"></div>
+                                    <div class="circle"></div>
+                                    <div class="rightD">
+                                        <p class="tittle">提交申请</p>
+                                        <p class="detail">填写表单申请</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ARow">
+                                <div class="one messageStep">
+                                <div class="leftD">
+                                    <p class="tittle">第二审核</p>
+                                    <p class="detail">审核内容</p>
+                                </div>
+                                <div class="circle"></div>
+                                <div class="rightD">
+                                    <p class="tittle">08</p>
+                                    <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
+                                </div>
+                                </div>
+                                <div class="two active messageStep">
+                                    <div class="leftD"></div>
+                                    <div class="circle"></div>
+                                    <div class="rightD">
+                                        <p class="tittle">正在审批中</p>
+                                        <p class="detail"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ARow">
+                                <div class="one messageStep">
+                                <div class="leftD">
+                                    <p class="tittle">第二审核</p>
+                                    <p class="detail">审核内容</p>
+                                </div>
+                                <div class="circle"></div>
+                                <div class="rightD">
+                                    <p class="tittle">07</p>
+                                    <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
+                                </div>
+                                </div>
+                                <div class="two messageStep">
+                                    <div class="leftD"></div>
+                                    <div class="circle"></div>
+                                    <div class="rightD">
+                                        <p class="tittle">提交中</p>
+                                        <p class="detail"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ARow">
+                                <div class="one messageStep">
+                                <div class="leftD">
+                                    <p class="tittle">第二审核</p>
+                                    <p class="detail">审核内容</p>
+                                </div>
+                                <div class="circle"></div>
+                                <div class="rightD">
+                                    <p class="tittle">06</p>
+                                    <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
+                                </div>
+                                </div>
+                                <div class="two messageStep">
+                                    <div class="leftD"></div>
+                                    <div class="circle"></div>
+                                    <div class="rightD">
+                                        <p class="tittle">提交中</p>
+                                        <p class="detail"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
                 </el-col>
             </el-col> 
         </el-row>
@@ -201,6 +297,7 @@
     export default({
         data(){
             return{
+                show:true,
                 activeName:'detail',
                 currentPage:4,//分页当前页
                 tableData: [{//表格
@@ -301,7 +398,119 @@
  .orderDetail{
       font-family: 'microsoft yahei';
   }
+
+  /* 三角形 */
  
+.orderDetail .triangle{
+    display: none;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #dedede;
+    position: absolute;
+    right: -3px;
+    top:38px;
+    width: 0;
+    height: 0;
+    z-index: 11;
+}
+.orderDetail .triangle:after{
+    content: '';
+     position: absolute;
+     top: 1px;
+     left: 0;
+     margin-left: -14px;
+     border-left: 14px solid transparent;
+     border-right: 14px solid transparent;
+     border-bottom: 14px solid #ffffff;
+     position: absolute;
+     z-index: 0;
+ }
+/* 步骤详情 */
+ .orderDetail .detailStep{
+     display: none;
+     border-radius: 5px;
+     font-size: 12px;
+     position: absolute;
+     border: 1px solid  #dedede;
+     right: -50px;
+     top: 52px;
+     z-index: 10;
+     width: 300px;
+     background-color: #ffffff;
+ }
+ .orderDetail .detailStep .big{
+
+ }
+ .orderDetail .detailStep .circle{
+     position: absolute;
+     border-radius: 50%;
+     border: 1px solid #dedede;
+     background-color: #fff;
+ }  
+ .orderDetail .detailStep .one .circle{
+     width: 16px;
+     height: 16px;
+     left: 141px;
+     top: 30.5px;
+ }
+ .orderDetail .detailStep .two .circle{
+     height: 10px;
+     width: 10px;
+     left: 144px;
+     top: 30.5px;
+ }
+ .orderDetail .detailStep .ARow{
+     width: 100%;
+     height: 150px;;
+ }
+.orderDetail .detailStep .ARow .messageStep{
+    position: relative;
+    width: 100%;
+    height: 75px;
+}
+.orderDetail .detailStep .ARow .messageStep .leftD{
+    border-right: 1px solid #dedede;
+    width: 149.5px;
+    height: 75px;
+    float: left;
+}
+.orderDetail .detailStep .ARow .messageStep .rightD{
+    width: 149.5px;
+    height: 75px;
+    float: left;
+}
+
+.orderDetail .detailStep .ARow .messageStep .tittle{
+    margin-top: 30px;
+}
+.orderDetail .detailStep .ARow .messageStep .detail{
+    color: #a1a1a1;
+}
+.orderDetail .detailStep .ARow .messageStep .leftD p{
+    text-align: right;
+    padding-right: 20px;
+}
+.orderDetail .detailStep .ARow .messageStep .rightD p{
+    text-align: left;
+    padding-left: 20px;
+}
+.orderDetail .detailStep .active .circle{
+    border: none;
+    background-color: rgb(103, 194, 58);
+}
+.orderDetail .detailStep .active .rightD p{
+    color: rgb(103, 194, 58);
+}
+.orderDetail .detailStep .one .rightD .tittle{
+    font-family: 'Arial Negreta', 'Arial';
+    font-weight: 700;
+    font-size: 28px;
+    margin-top: 25px;
+}
+  .orderDetail .activeShow{
+      display: block;
+  }
+
 .orderDetail .orderHead{
     background-color: #fff;
     padding: 5px 0;
@@ -360,7 +569,6 @@
 }
 /* steps */
 .orderDetail .el-steps .el-step__line{
-    /* 水平线 */
     display: none;
 }
 .orderDetail .el-steps .el-step__main{
@@ -383,17 +591,17 @@
     height: 36px;
 }
 
-  .orderDetail .slidup{
-       max-height: 90px;
-  }
-  .orderDetail .slidUp{
-      max-height: 45px;
-  }
-
-.orderDetail .el-button--primary{
-    background-color: #82AAFC;
-    border: none;
+.orderDetail .el-icon-more{
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg); 
+    margin-top: 9px;
+    color: #67c23a;
+    cursor: pointer;
 }
+
 
 
 .orderDetail .el-row{

@@ -1,5 +1,5 @@
 <template>
-    <div class="tenant-management-wrapper">
+    <div class="orderList">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
@@ -34,7 +34,7 @@
                     </el-select>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>供应商</label>
+                    <label>开单日期</label>
                     <div class="rangeDate ">
                     <el-date-picker
                     v-model="valueDate"
@@ -369,7 +369,7 @@
 
 <style scoped>
 
-.store-data-wrapper{
+.orderList{
     width: 100%;
     height: auto;
 }
@@ -476,18 +476,18 @@
 
 <style>
 
-.tenant-management-wrapper .bgcolor label{
+.orderList .bgcolor label{
     line-height:30px;
 }
 
 
 /* 重写checkbox */
-.tenant-management-wrapper .el-checkbox__inner{
+.orderList .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.tenant-management-wrapper .el-checkbox__inner::after{
+.orderList .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -510,7 +510,7 @@
 }
 
 /* 重写el-table样式 */
-.tenant-management-wrapper .el-table th {
+.orderList .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -519,21 +519,15 @@
     text-align: center;
     background-color: #ececec;
 }
-.tenant-management-wrapper .el-table td{
+.orderList .el-table td{
     padding: 3px 0;
 }
-.tenant-management-wrapper .el-table__body{
+.orderList .el-table__body{
     text-align: center;
 }
-/* 重写el-pagination样式 */
-.tenant-management-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
-
-.tenant-management-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
-.tenant-management-wrapper .el-table__body .el-table__row .el-table_1_column_2 .cell{
+.orderList .el-table__body .el-table__row .el-table_1_column_2 .cell{
     color:#33CCCC;
 }
+
+
 </style>
