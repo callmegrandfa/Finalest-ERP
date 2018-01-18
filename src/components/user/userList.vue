@@ -89,6 +89,15 @@
                                 </template>
                             </el-table-column>
                     </el-table> 
+
+                    <el-row>
+                            <el-col :span='10'>
+                                <span style="display:inline-block;margin-top:20px;">记录 40，当前第 1 页，共 4 页</span>
+                            </el-col>
+                            <el-col :span='14'>
+                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                            </el-col>
+                        </el-row> 
                     </el-col>
                 </el-row>
 
@@ -234,6 +243,9 @@
                         wareHouse:'对应财务组织',
                         ifAllow:true,
                     }],
+
+                    pageIndex:-1,//分页的当前页码
+			        totalPage:20,//当前分页总数
             }
         },
         created:function(){
