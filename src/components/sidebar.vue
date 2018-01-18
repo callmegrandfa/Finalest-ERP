@@ -208,12 +208,13 @@ export default {
                 name:'集团管理',
                 thirdInfo:[
                     {name:'业务组织(精简版)-详细',address:'detail'},
+                    {name:'业务组织(精简版)-列表',address:'groupManageList'},
                 ]
             },{
                 name:'用户组',
                 thirdInfo:[
-                    {name:'用户组-列表',address:'userList'},
-                    {name:'用户资料-列表',address:'userDataList'},
+                    // {name:'用户组-列表',address:'userList'},
+                    // {name:'用户资料-列表',address:'userDataList'},
                     {name:'用户资料-详细',address:'userInfoDetail'},
                 ]
             },{
