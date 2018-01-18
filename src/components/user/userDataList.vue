@@ -19,24 +19,28 @@
                                     <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="organization" label="所属组织" ></el-table-column>
-                            <el-table-column prop="cusCode" label="客户编码"></el-table-column>
-                            <el-table-column prop="cusName" label="客户名称"></el-table-column>
-                            <el-table-column prop="cusCall" label="客户简称"></el-table-column>
-                            <el-table-column prop="cusType" label="客户分类"></el-table-column>
-                            <el-table-column prop="cusNature" label="客户性质"></el-table-column>
-                            <el-table-column prop="ifSupply" label="供应">
-                                <template scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifSupply" ></el-checkbox>
-                                </template>
-                            </el-table-column>   
-                            <el-table-column prop="wareHouse" label="对应财务组织"></el-table-column>
-                            <el-table-column prop="ifAllow" label="允许使用">
-                                <template scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
-                                </template>
-                            </el-table-column>
-                    </el-table> 
+                            <el-table-column prop="num" label="序号" ></el-table-column>
+                            <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                            <el-table-column prop="userName" label="用户名称"></el-table-column>
+                            <el-table-column prop="userGroup" label="所属用户组"></el-table-column>
+                            <el-table-column prop="group" label="所属组织"></el-table-column>
+                            <el-table-column prop="idType" label="身份类型"></el-table-column>
+                            <el-table-column prop="language" label="语种"></el-table-column>
+                            <el-table-column prop="certainType" label="认证类型"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="failDate" label="失效日期"></el-table-column>
+                            <el-table-column prop="role" label="角色"></el-table-column>
+                        </el-table>
+
+                        <el-row>
+                            <el-col :span='10'>
+                                <span style="display:inline-block;margin-top:20px;">记录 40，当前第 1 页，共 4 页</span>
+                            </el-col>
+                            <el-col :span='14'>
+                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                            </el-col>
+                        </el-row> 
+
                     </el-col>
                 </el-row>
 
@@ -84,104 +88,112 @@
                 value: '',
                 tableData: [{
                     ifAction:true,
-                    organization: '组织',
-                    cusCode: '客户编码',
-                    cusName: '客户名称',
-                    cusCall: '客户简称',
-                    cusType:'客户分类',
-                    cusNature:'客户性质',
-                    ifSupply:true,
-                     wareHouse:'对应财务组织',
-                    ifAllow:true,
+                    num:'序号',
+                    userCode:'用户编码',
+                    userName:'用户名称',
+                    userGroup:'所属用户组',
+                    group:'所属组织',
+                    idType:'身份类型',
+                    language:'语种',
+                    certainType:'认证类型',
+                    status:'状态',
+                    failDate:'失效日期',
+                    role:'js',
                     }, {
                         ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
+                        num:'序号',
+                        userCode:'用户编码',
+                        userName:'用户名称',
+                        userGroup:'所属用户组',
+                        group:'所属组织',
+                        idType:'身份类型',
+                        language:'语种',
+                        certainType:'认证类型',
+                        status:'状态',
+                        failDate:'失效日期',
+                        role:'js',
                     }, {
                         ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
+                        num:'序号',
+                        userCode:'用户编码',
+                        userName:'用户名称',
+                        userGroup:'所属用户组',
+                        group:'所属组织',
+                        idType:'身份类型',
+                        language:'语种',
+                        certainType:'认证类型',
+                        status:'状态',
+                        failDate:'失效日期',
+                        role:'js',
                     }, {
                         ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
+                        num:'序号',
+                        userCode:'用户编码',
+                        userName:'用户名称',
+                        userGroup:'所属用户组',
+                        group:'所属组织',
+                        idType:'身份类型',
+                        language:'语种',
+                        certainType:'认证类型',
+                        status:'状态',
+                        failDate:'失效日期',
+                        role:'js',
                     }, {
                         ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
+                        num:'序号',
+                        userCode:'用户编码',
+                        userName:'用户名称',
+                        userGroup:'所属用户组',
+                        group:'所属组织',
+                        idType:'身份类型',
+                        language:'语种',
+                        certainType:'认证类型',
+                        status:'状态',
+                        failDate:'失效日期',
+                        role:'js',
                     }, {
                         ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
+                        num:'序号',
+                        userCode:'用户编码',
+                        userName:'用户名称',
+                        userGroup:'所属用户组',
+                        group:'所属组织',
+                        idType:'身份类型',
+                        language:'语种',
+                        certainType:'认证类型',
+                        status:'状态',
+                        failDate:'失效日期',
+                        role:'js',
                     }, {
                         ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
+                        num:'序号',
+                        userCode:'用户编码',
+                        userName:'用户名称',
+                        userGroup:'所属用户组',
+                        group:'所属组织',
+                        idType:'身份类型',
+                        language:'语种',
+                        certainType:'认证类型',
+                        status:'状态',
+                        failDate:'失效日期',
+                        role:'js',
                     }, {
                         ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
+                        num:'序号',
+                        userCode:'用户编码',
+                        userName:'用户名称',
+                        userGroup:'所属用户组',
+                        group:'所属组织',
+                        idType:'身份类型',
+                        language:'语种',
+                        certainType:'认证类型',
+                        status:'状态',
+                        failDate:'失效日期',
+                        role:'js',
                     }],
+
+                    pageIndex:-1,//分页的当前页码
+			        totalPage:20,//当前分页总数
             }
         },
         created:function(){

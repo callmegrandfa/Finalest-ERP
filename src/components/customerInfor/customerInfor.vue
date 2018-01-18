@@ -118,11 +118,6 @@
                                 </template>
                             </el-table-column>   
                             <el-table-column prop="moneyOrganization" label="对应财务组织"></el-table-column>
-                            <el-table-column prop="ifAllow" label="允许使用">
-                                <template scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
-                                </template>
-                            </el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
                         </el-table>
                         <el-row>
@@ -189,7 +184,6 @@
                     cusNature:'客户性质',
                     ifSupply:true,
                      wareHouse:'对应财务组织',
-                    ifAllow:true,
                     status:'启用',
                     }, {
                         ifAction:true,
@@ -201,7 +195,6 @@
                         cusNature:'客户性质',
                         ifSupply:true,
                         wareHouse:'对应财务组织',
-                        ifAllow:true,
                         status:'启用',
                     }, {
                         ifAction:true,
@@ -213,7 +206,6 @@
                         cusNature:'客户性质',
                         ifSupply:true,
                         wareHouse:'对应财务组织',
-                        ifAllow:true,
                         status:'停用',
                     }, {
                         ifAction:true,
@@ -225,7 +217,6 @@
                         cusNature:'客户性质',
                         ifSupply:true,
                         wareHouse:'对应财务组织',
-                        ifAllow:true,
                         status:'冻结',
                     }, {
                         ifAction:true,
@@ -237,7 +228,6 @@
                         cusNature:'客户性质',
                         ifSupply:true,
                         wareHouse:'对应财务组织',
-                        ifAllow:true,
                         status:'恢复',
                     }, {
                         ifAction:true,
@@ -249,7 +239,6 @@
                         cusNature:'客户性质',
                         ifSupply:true,
                         wareHouse:'对应财务组织',
-                        ifAllow:true,
                     }, {
                         ifAction:true,
                         organization: '组织',
@@ -260,7 +249,6 @@
                         cusNature:'客户性质',
                         ifSupply:true,
                         wareHouse:'对应财务组织',
-                        ifAllow:true,
                     }, {
                         ifAction:true,
                         organization: '组织',
@@ -271,7 +259,6 @@
                         cusNature:'客户性质',
                         ifSupply:true,
                         wareHouse:'对应财务组织',
-                        ifAllow:true,
                     }, {
                         ifAction:true,
                         organization: '组织',
@@ -282,7 +269,6 @@
                         cusNature:'客户性质',
                         ifSupply:true,
                         wareHouse:'对应财务组织',
-                        ifAllow:true,
                     }],
 
                     pageIndex:-1,//分页的当前页码
@@ -399,7 +385,7 @@
     font-size: 12px;
 }
 .border1{
-    border: 1px solid #999999;
+    border: 1px solid #cccccc;
     border-radius: 3px;
 }
 .border-left{
