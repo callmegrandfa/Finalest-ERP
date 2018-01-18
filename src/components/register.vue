@@ -73,11 +73,27 @@
     <input type="text" class="inputForm">
     <button>搜索</button>
   </div>
+<div class="rangeDate">
+    <el-date-picker
+    v-model="valueDate"
+    type="daterange"
+    range-separator="to"
+    start-placeholder="开始日期"
+    end-placeholder="结束日期">
+    </el-date-picker>
+</div>
+
+
 </div>
   
 </template>
 <script>
 export default {
+  data(){
+    return{
+      valueDate:'',
+    }
+  },
   methods:{
     open8() {
         this.$notify({
@@ -122,6 +138,7 @@ export default {
   }
 }
 </script>
-<style scoped>
-   
+<style>
+
+
 </style>

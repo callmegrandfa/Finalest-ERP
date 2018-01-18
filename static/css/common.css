@@ -515,3 +515,53 @@
  border-bottom-right-radius: 4px;
  border: none;
 }
+/* 范围选择日期 */
+/* <div class="rangeDate">
+    <el-date-picker
+    v-model="valueDate"
+    type="daterange"
+    range-separator="to"
+    start-placeholder="开始日期"
+    end-placeholder="结束日期">
+    </el-date-picker>
+</div> */
+.rangeDate{
+  width: 168px;
+  height: 35px;
+  float: left;
+}
+.rangeDate .el-input__inner{
+  padding: 0;
+  margin: 0;
+  width: 168px;
+  height: 35px;
+  border-color: #c0c4cc;
+}
+.rangeDate .el-range-editor.is-active,.rangeDate .el-range-editor.is-active:hover{
+  border-color: #3cc;
+}
+.rangeDate .el-input__icon{
+  display: none;
+}
+.rangeDate input.el-range-input{
+  width: 73px;
+  top:-2px;
+  height: 33px;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  border-radius: 5px;
+}
+.rangeDate .el-range-separator{
+  padding: 0;
+  display: block;
+  width: 20px;
+  text-align: center;
+  background-color: rgb(194, 202, 216);
+  height: 100%;
+  display: inline-block;
+  margin: 0;
+  line-height: 35px;
+  font-size: 12px;
+}
