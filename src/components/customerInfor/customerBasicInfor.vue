@@ -2,10 +2,12 @@
  <div class="customerBasicForm">
      <el-row>
          <el-col :span="24">
-            <button class="headBtn">返回</button>
-            <button class="headBtn">保存</button>
-            <button class="headBtn">保存并新增</button>
-            <button class="headBtn">删除</button>
+            <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+            <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+            <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+            <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+            <button class="erp_bt bt_look"><div class="btImg"><img src="../../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
     </el-row>
@@ -138,14 +140,27 @@
                         
                 
                         <el-table :data="tableData" stripe border style="width: 100%">
-                            <el-table-column prop="clearInfor" label="结算信息" width="180"></el-table-column>
+                            <el-table-column prop="ifAllow" label=" ">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="clearCurrency" label="结算币种" width="180"></el-table-column>
                             <el-table-column prop="bankNum" label="银行账号" width="180"></el-table-column>
                             <el-table-column prop="bankAccount" label="银行账户" width="180"></el-table-column>
                             <el-table-column prop="openBank" label="开户银行" width="180"></el-table-column>
                             <el-table-column prop="contact" label="联系人" width="180"></el-table-column>
                             <el-table-column prop="phone" label="联系电话" width="180"></el-table-column>
-                            <el-table-column prop="defaults" label="默认" width="180"></el-table-column>
-                            <el-table-column ></el-table-column>
+                            <el-table-column prop="ifDefault" label="默认">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].ifDefault" ></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label='操作'>
+                                <template slot-scope="scope">
+                                    <el-button v-on:click="handleDelete(scope.$index)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </el-tab-pane>
                     <el-tab-pane label="送货地址" name="address">送货地址</el-tab-pane>
@@ -163,9 +178,9 @@
             <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="选择创建时间"></el-date-picker></div>
             <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></div>
             <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="选择修改时间"></el-date-picker></el-input></div>
-            <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
+            <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
             <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>    
+            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
         </div>                                  
     </el-col>
 </el-row>                                                                       
@@ -178,7 +193,9 @@ export default({
         return{
              ifShow:true,
             tableData: [{//表格
-                clearInfor: '',
+                ifAllow:true,
+                ifDefault:true,
+                clearCurrency: '结算币种',
                 bankNum: '',
                 bankAccount: '',
                 openBank:'农业银行',
@@ -186,7 +203,9 @@ export default({
                 phone:'',
                 defaults:''
                 },{//表格
-                clearInfor: '',
+                ifAllow:true,
+                ifDefault:true,
+                clearCurrency: '结算币种',
                 bankNum: '',
                 bankAccount: '',
                 openBank:'工商银行',
@@ -194,7 +213,9 @@ export default({
                 phone:'',
                 defaults:''
                 },{//表格
-                clearInfor: '',
+                ifAllow:true,
+                ifDefault:true,
+                clearCurrency: '结算币种',
                 bankNum: '',
                 bankAccount: '',
                 openBank:'建设银行',
@@ -202,7 +223,9 @@ export default({
                 phone:'',
                 defaults:''
                 },{//表格
-                clearInfor: '',
+                ifAllow:true,
+                ifDefault:true,
+                clearCurrency: '结算币种',
                 bankNum: '',
                 bankAccount: '',
                 openBank:'中国银行',
@@ -350,7 +373,10 @@ export default({
     methods:{
          handleChange(val) {
             console.log(val);
-        }
+        },
+        handleDelete:function(index){//表格内删除操作
+			this.tableData.splice(index,1);
+		},
     }
        
 

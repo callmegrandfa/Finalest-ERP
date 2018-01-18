@@ -42,28 +42,27 @@
               </el-row>
           </el-col>
           <el-col :span="2" class="ml10">
-              <span class="search-btn" style="cursor:pointer;" @click="storageData()">查询</span>
+              <span class="search-btn" style="cursor:pointer;">查询</span>
           </el-col>
       </el-row>
 
       <div class="bg-white mr10 mt10 pt10">
           <el-row>
-              <el-col :span='2' class="ml10 ">
-                  <span class="btn" @click="storageData">新增</span>
-                  <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-              </el-col>
-              <el-col :span='2' class="ml10">
-                  <span class="btn">修改</span>
-              </el-col>
-              <el-col :span='2' class="ml10">
-                  <span class="btn">辅助功能</span>
-              </el-col>
-              <el-col :span='2' :offset="12">
-                  <span class="rbtn">打印</span>
-              </el-col>
-              <el-col :span='2' class="ml10">
-                  <span class="rbtn">Excel</span>
-              </el-col>
+              <!-- <el-col :span='2' class="ml10 "> -->
+                  <button class="erp_bt bt_add" @click="storageData"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <!-- </el-col> -->
+              <!-- <el-col :span='2' class="ml10"> -->
+                  <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
+              <!-- </el-col> -->
+              <!-- <el-col :span='2' class="ml10"> -->
+                  <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+              <!-- </el-col> -->
+              <!-- <el-col :span='2' :offset="12"> -->
+                  <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+              <!-- </el-col> -->
+              <!-- <el-col :span='2' class="ml10"> -->
+                  <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
+              <!-- </el-col> -->
           </el-row>
 
           <el-row class="pt10">
