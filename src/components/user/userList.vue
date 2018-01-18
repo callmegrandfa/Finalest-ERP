@@ -3,13 +3,13 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
-                    <el-col :span="15">
+                    <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
                         
-                            <span class="fs12">+ 展开</span>
+                            <span class="fs12 open">+ 展开</span>
                         
                     </el-col>
                 </el-row>
@@ -359,6 +359,16 @@
     border-radius: 3px;
     background: #4A6997;
     color: white;
+    cursor: pointer;
+}
+.open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
     cursor: pointer;
 }
 </style>

@@ -3,13 +3,13 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
-                    <el-col :span="15">
+                    <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
                         
-                            <span class="fs12">+ 展开</span>
+                            <span class="fs12 open">+ 展开</span>
                         
                     </el-col>
                 </el-row>
@@ -89,9 +89,9 @@
                 </el-row>
             </el-col>
 
-            <el-col :span='19'>
+            <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button class="erp_bt bt_add" @click="storageData"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
@@ -101,7 +101,7 @@
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="tableData" border style="width: 100%" stripe>
-                            <el-table-column prop="ifAction" label="操作">
+                            <el-table-column prop="ifAction" label=" ">
                                 <template scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
                                 </template>
@@ -117,13 +117,23 @@
                                     <el-checkbox v-model="tableData[scope.$index].ifSupply" ></el-checkbox>
                                 </template>
                             </el-table-column>   
-                            <el-table-column prop="wareHouse" label="对应财务组织"></el-table-column>
+                            <el-table-column prop="moneyOrganization" label="对应财务组织"></el-table-column>
                             <el-table-column prop="ifAllow" label="允许使用">
                                 <template scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                                 </template>
                             </el-table-column>
-                        </el-table> 
+                            <el-table-column prop="status" label="状态"></el-table-column>
+                        </el-table>
+                        <el-row>
+                            <el-col :span='10'>
+                                <span style="display:inline-block;margin-top:20px;">记录 40，当前第 1 页，共 4 页</span>
+                            </el-col>
+                            <el-col :span='14'>
+                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                            </el-col>
+                        </el-row> 
+                        
                     </el-col>
                 </el-row>
 
@@ -180,6 +190,7 @@
                     ifSupply:true,
                      wareHouse:'对应财务组织',
                     ifAllow:true,
+                    status:'启用',
                     }, {
                         ifAction:true,
                         organization: '组织',
@@ -191,6 +202,7 @@
                         ifSupply:true,
                         wareHouse:'对应财务组织',
                         ifAllow:true,
+                        status:'启用',
                     }, {
                         ifAction:true,
                         organization: '组织',
@@ -202,6 +214,7 @@
                         ifSupply:true,
                         wareHouse:'对应财务组织',
                         ifAllow:true,
+                        status:'停用',
                     }, {
                         ifAction:true,
                         organization: '组织',
@@ -213,6 +226,7 @@
                         ifSupply:true,
                         wareHouse:'对应财务组织',
                         ifAllow:true,
+                        status:'冻结',
                     }, {
                         ifAction:true,
                         organization: '组织',
@@ -224,6 +238,7 @@
                         ifSupply:true,
                         wareHouse:'对应财务组织',
                         ifAllow:true,
+                        status:'恢复',
                     }, {
                         ifAction:true,
                         organization: '组织',
@@ -269,6 +284,9 @@
                         wareHouse:'对应财务组织',
                         ifAllow:true,
                     }],
+
+                    pageIndex:-1,//分页的当前页码
+			        totalPage:20,//当前分页总数
             }
         },
         created:function(){
@@ -276,20 +294,39 @@
             
         },
         methods:{
-            test:function(){
-                // console.log(this.try)
-                this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
-                .then(function(res){
-                console.log(res);
-            },function(res){
-                console.log('err:'+res)
-            })
+            handleCurrentChange:function(val){//获取当前页码
+                this.pageIndex=val;
             },
 
-            test1:function(){
-                this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){
-                console.log(res);
-            })
+            switch(){
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+
+            storageData(e){//点击新增跳转
+                var flag=false;
+                var slidbarData=this.$store.state.slidbarData;//储存页签数组
+                let name = '客户资料-基本信息';
+                if(slidbarData.length==0){//slidbarData为空
+                    flag=true;
+                }else{//slidbarData不为空
+                    for(var i=0;i<slidbarData.length;i++){
+                        if(slidbarData[i].name==name){//相同页签
+                            flag=false;
+                            break;
+                        }else{
+                        flag=true;
+                        }
+                    }
+                }
+                //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
+                var pushItem={'name':'客户资料-基本信息','url':'customerBasicInfor','params':'default'}
+                this.$store.state.url='/customerBasicInfor/default';//储存当前url
+                if(flag){
+                    slidbarData.push(pushItem);
+                }
+        
+                this.switch();
+                
             },
 
         },
@@ -365,6 +402,9 @@
     border: 1px solid #999999;
     border-radius: 3px;
 }
+.border-left{
+    border-left: 1px solid #E4E4E4;
+}
 .btn{
     display: inline-block;
     width: 100%;
@@ -395,6 +435,19 @@
     background: #4A6997;
     color: white;
     cursor: pointer;
+}
+.open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
+}
+.text-right{
+    text-align: right;
 }
 </style>
 
@@ -450,13 +503,13 @@
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+/* .customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
-}
-.customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
+} */
+/* .customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
-}
-.customer-infor-wrapper .el-input--suffix .el-input__inner{
+} */
+/* .customer-infor-wrapper .el-input--suffix .el-input__inner{
     padding-right: 0;
-} 
+}  */
 </style>

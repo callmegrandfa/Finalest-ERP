@@ -363,13 +363,4 @@
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.user-list-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
-.user-list-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-}
-.user-list-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
 </style>

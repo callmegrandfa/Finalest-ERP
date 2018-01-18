@@ -3,12 +3,12 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
-                    <el-col :span="15">
+                    <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12">+ 展开</span>
+                        <span class="fs12 open">+ 展开</span>
                     </el-col>
                 </el-row>
 
@@ -360,6 +360,16 @@
     color: white;
     cursor: pointer;
 }
+.open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
+}
 </style>
 
 <style>
@@ -413,14 +423,4 @@
 .tenant-management-wrapper .el-table__body{
     text-align: center;
 }
-/* 重写el-pagination样式 */
-.tenant-management-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-}
-.tenant-management-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-}
-.tenant-management-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-} 
 </style>

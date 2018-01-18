@@ -951,9 +951,9 @@ export default {
     text-align: center;
 }
 /* 重写el-pagination样式 */
-.short-basic-data .el-pagination.is-background .btn-next,.short-basic-data .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+/* .short-basic-data .el-pagination.is-background .btn-next,.short-basic-data .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
     border-radius: 50%;
-}
+} */
 
 .short-basic-data .text-right{
     text-align: right;
@@ -961,10 +961,10 @@ export default {
 .mt-10{
     margin-top: 10px;
 }
-.short-basic-data .el-date-editor.el-input, .el-date-editor.el-input__inner{
+/* .short-basic-data .el-date-editor.el-input, .el-date-editor.el-input__inner{
     width: 130px;
 }
 .short-basic-data .el-input--suffix .el-input__inner{
     padding-right: 0;
-} 
+}  */
 </style>
