@@ -67,11 +67,33 @@
       <p class="msgDetail">错误提示：名称不能为特殊字符</p>
       <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
   </div>
+
+  <!-- 搜索 -->
+  <div class="formSearch">
+    <input type="text" class="inputForm">
+    <button>搜索</button>
+  </div>
+<div class="rangeDate">
+    <el-date-picker
+    v-model="valueDate"
+    type="daterange"
+    range-separator="to"
+    start-placeholder="开始日期"
+    end-placeholder="结束日期">
+    </el-date-picker>
+</div>
+
+
 </div>
   
 </template>
 <script>
 export default {
+  data(){
+    return{
+      valueDate:'',
+    }
+  },
   methods:{
     open8() {
         this.$notify({
@@ -116,17 +138,7 @@ export default {
   }
 }
 </script>
-<style scoped>
-    .headBtn{
-      width: 93px;
-      height: 28px;
-      border-radius: 3px;
-      background-color: transparent;
-      border: 1px solid rgb(161, 161, 161);
-      cursor: pointer;
-    }
-    .headBtn:hover{
-       background-color: rgb(161, 161, 161);
-       color: #fff;
-    }
+<style>
+
+
 </style>
