@@ -1,9 +1,13 @@
 
 /* elementUI分页 */
+/* <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage"></el-pagination> */
 .el-pagination .btn-next, 
 .el-pagination .btn-prev, 
 .el-pagination .el-pager li{
     border-radius: 50%!important;
+}
+.text-right{
+  text-align: right;
 }
 /* elementUI表单控件 */
 /* input输入框 */

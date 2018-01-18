@@ -178,7 +178,7 @@ export default {
   data(){
     return{
         secondLevel1:[{
-            name:'基础资料',
+            name:'测试列表',
             thirdInfo:[      
                 {name:'业务组织(精简版)-详细',address:'detail'},                 
                 {name:'数据资料短',address:'shortData'},
@@ -204,11 +204,15 @@ export default {
                 ]
             },{
                 name:'集团管理',
+                thirdInfo:[
+                    {name:'业务组织(精简版)-详细',address:'detail'},
+                ]
             },{
                 name:'用户组',
                 thirdInfo:[
-                    {name:'用户列表',address:'userList'},
-                    {name:'用户资料列表',address:'userDataList'},
+                    {name:'用户组-列表',address:'userList'},
+                    {name:'用户资料-列表',address:'userDataList'},
+                    {name:'用户资料-详细',address:'userInfoDetail'},
                 ]
             },{
                 name:'采购管理',
@@ -220,6 +224,10 @@ export default {
                 ]
             },{
                 name:'单据模板',
+                thirdInfo:[
+                     {name:'列表资料',address:'orderList'},
+                     {name:'单据-主多从模板',address:'orderDetails'},
+                ]
             }],
         secondLevel2:[{
             name:'基础资料',
