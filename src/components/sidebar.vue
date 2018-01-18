@@ -198,14 +198,25 @@ export default {
                 {name:'组织单元',address:'organization'},    
             ]},{
                 name:'租户管理',
+                thirdInfo:[
+                    {name:'租户管理',address:'tenantManagement'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                ]
             },{
                 name:'集团管理',
             },{
                 name:'用户组',
+                thirdInfo:[
+                    {name:'用户列表',address:'userList'},
+                    {name:'用户资料列表',address:'userDataList'},
+                ]
             },{
                 name:'采购管理',
             },{
                 name:'客户资料',
+                thirdInfo:[
+                    {name:'客户资料',address:'customerInfor'},
+                ]
             },{
                 name:'单据模板',
             }],
