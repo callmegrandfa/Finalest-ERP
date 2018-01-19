@@ -12,67 +12,67 @@
                     </el-col>
                 </el-row>
 
-                <el-row class="mt20 pl15 h30">
-                    <el-col :span="5" class="fs12">
-                        <span>租户</span>
-                    </el-col>
-                    <el-col :span="15" class="fs12 border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入租户">                    
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>行政区域</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <el-select v-model="value" placeholder="请选择行政区域">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt20" style="text-align:center;">
+                <div class="mt20 bgcolor smallBgcolor">
+                    <label><small>*</small>组织类型</label>
+                    <el-select  v-model="value">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor"><label>编码</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>名称</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <el-col style="text-align:center;" :span="24">
                     <span class="search-btn">查询</span>
-                </el-row>
+                    <span class="search-btn">高级搜索</span>
+                </el-col>
             </el-col>
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
+                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
-                    <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-                    <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                    <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>                    
+                    <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
+                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>                   
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span='4' class="tree-container">
-                        <el-tree :data="componyTree" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                        <el-tree :data="componyTree"></el-tree>
                     </el-col>
 
                     <el-col :span='19' class="ml10">
                         <el-table :data="tableData" border style="width: 100%" stripe>
-                            <el-table-column prop="ifAction" label="操作">
+                            <el-table-column prop="ifAction" label="操作"  width="50">
                                 <template scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="tenantCode" label="租户编码" ></el-table-column>
-                            <el-table-column prop="tenantName" label="租户名称"></el-table-column>
-                            <el-table-column prop="phone" label="手机号码"></el-table-column>
-                            <el-table-column prop="data" label="启用年月"></el-table-column>
-                            <el-table-column prop="area" label="行政地区"></el-table-column>
-                            <el-table-column prop="status" label="当前状态"></el-table-column>
+                            <el-table-column prop="groupCode" label="编码" ></el-table-column>
+                            <el-table-column prop="groupFullname" label="名称"></el-table-column>
+                            <el-table-column prop="groupName" label="简称"></el-table-column>
+                            <el-table-column prop="groupId" label="上级业务单元"></el-table-column>
+                            <el-table-column prop="groupParentid" label="所属公司"></el-table-column>
+                            <el-table-column prop="currencyID" label="本位币种"></el-table-column>
+                            <el-table-column prop="effectiveStart" label="启用年月"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="industry" label="公司"></el-table-column>
+                            <el-table-column prop="groupParentid" label="业务"></el-table-column>
+                            <el-table-column prop="groupParentid" label="财务"></el-table-column>
+                            <el-table-column prop="id" label="版本号"></el-table-column>
                         </el-table>  
-                        <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>   
+<el-pagination
+ style="margin-top:20px;" 
+ class="text-right" 
+ background layout="total, prev, pager, next" 
+ @current-change="handleCurrentChange"
+ :page-count="totalPage" >
+ </el-pagination>   
                     </el-col>
                 </el-row>
 
@@ -120,77 +120,19 @@
                 value: '',
                 tableData: [{
                     ifAction:true,
-                    tenantCode: '租户编码',
-                    tenantName: '租户名称',
-                    phone: '手机号码',
-                    data: '启用年月',
-                    area:'行政地区',
-                    status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }],
+                    groupCode : '编码',
+                    groupFullname  : '名称',
+                    groupName : '简称',
+                    groupId  : '上级业务单元',
+                    groupParentid :'所属公司',
+                    currencyID :'本位币种',
+                    effectiveStart :'启用年月',
+                    status:'状态',
+                    industry:'公司',
+                    groupParentid:'业务',
+                    groupParentid:'财务',
+                    id:'版本号',
+                    },],
 
                     componyTree: [{
                         label: '一级 1',
@@ -229,16 +171,31 @@
                         }],
 
                     pageIndex:-1,//分页的当前页码
-			        totalPage:20,//当前分页总数
+			        totalPage:100,//当前分页总数
             }
         },
-        created:function(){
-            
-            
+        created:function(){       
+            let _this=this;
+            _this.$axios.gets('/api/services/app/GroupManagement/GetAll',{SkipCount:0,MaxResultCount:10}).then(function(res){
+                _this.tableData=res.result.items;
+                console.log(res.result.items);
+                },function(res){
+                console.log(res);   
+                })
         },
         methods:{
+            handleCurrentChange(val) {
+                console.log('当前页:'+val);
+                 let _this=this;
+                 let oneItem=10;
+                _this.$axios.gets('/api/services/app/GroupManagement/GetAll',{SkipCount:val*10,MaxResultCount:10}).then(function(res){
+                    _this.tableData=res.result.items;
+                    console.log(res.result.items);
+                    },function(res){
+                    console.log(res);   
+                    })
+            },
             test:function(){
-                // console.log(this.try)
                 this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
                 .then(function(res){
                 console.log(res);
@@ -248,7 +205,7 @@
             },
 
             test1:function(){
-                this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){
+                this.$axios.gets('/api/services/app/Language/GetLanguages',{}).then(function(res){
                 console.log(res);
             })
             },
@@ -351,6 +308,7 @@
     cursor: pointer;
 }
 .search-btn{
+    font-size: 12px;
     display: inline-block;
     width: 87px;
     height: 30px;

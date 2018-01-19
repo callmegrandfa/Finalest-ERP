@@ -11,6 +11,16 @@ export default {
 }
 </script>
 <style>
+/* @import"../static/assets/global/plugins/font-awesome/css/font-awesome.min.css";
+@import"../static/assets/global/plugins/simple-line-icons/simple-line-icons.min.css";
+@import"../static/assets/global/plugins/bootstrap/css/bootstrap.min.css";
+@import"../static/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css";
+@import"../static/assets/global/plugins/fullcalendar/fullcalendar.min.css";
+@import"../static/assets/global/css/components.min.css";
+@import"../static/assets/global/css/plugins.min.css";
+@import"../static/assets/layouts/layout2/css/layout.min.css";
+@import"../static/assets/layouts/layout2/css/themes/blue.min.css";
+@import"../static/assets/layouts/layout2/css/custom.min.css"; */
 @import"//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 @import"../static/css/common.css";
 .wrapper{

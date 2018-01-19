@@ -18,7 +18,7 @@
             <button class="goRight" @click="right"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></button>
             <div class="goClose"><span>关闭操作<i class="fa fa-angle-up" aria-hidden="true"></i></span></div>
         </div>    
-        <div class="content">
+        <div class="content" id="content">
             <div class="whiteBg">
                 <keep-alive>
                 <router-view></router-view>
@@ -43,6 +43,9 @@ export default {
   },
   mounted:function(){
     this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
+    let content=document.getElementById('content');//设置高度为全屏
+    let height=window.innerHeight-123;
+    content.style.minHeight=height+'px';
   },
   methods:{
       right:function(){
@@ -172,8 +175,7 @@ export default {
 }
 .content{
     padding: 15px 0;
-    background-color:#eef1f5; 
-    min-height:851px ;
+    background-color:#eef1f5;
     width: 100%;
 }
 .whiteBg{
