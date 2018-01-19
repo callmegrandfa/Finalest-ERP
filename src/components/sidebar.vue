@@ -643,9 +643,12 @@ export default {
 }
 .menu li.two:hover .slid2{
     display: block;
+    width: 470px;
     max-height: 460px;
-    overflow-y: scroll;
-    overflow-x:hidden;
+}
+.menu li.two:hover .slid2 li{
+    width: 235px;
+    float: left;
 }
 
 .slid2{
