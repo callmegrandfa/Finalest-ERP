@@ -39,7 +39,7 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label><small>*</small>启用月份</label><el-date-picker v-model="addData.month" type="month" placeholder="请选择月份"></el-date-picker></div>
+                <div class="bgcolor"><label><small>*</small>启用月份</label><el-date-picker v-model="addData.regtime" type="month" placeholder="请选择月份"></el-date-picker></div>
                 <div class="bgcolor">
                     <label>本位币种</label>
                     <el-select v-model="addData.baseCurrencyId">
