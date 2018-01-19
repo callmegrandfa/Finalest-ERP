@@ -25,7 +25,7 @@
                 <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.areaId" placeholder="请录入单号"></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.status" placeholder="请录入单号"></el-input></div>
                 <el-col style="text-align:center;" :span="24">
-                    <span class="search-btn">查询</span>
+                    <span class="search-btn" @click="searching">查询</span>
                     <span class="search-btn">高级搜索</span>
                 </el-col>
             </el-col>
@@ -49,7 +49,7 @@
                     <el-col :span='19' class="ml10">
                         <el-table :data="tableData" border style="width: 100%" stripe>
                             <el-table-column prop="ifAction" label="操作">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].ifAction"></el-checkbox>
                                 </template>
                             </el-table-column>
@@ -62,17 +62,17 @@
                             <el-table-column prop="effectiveStart" label="启用年月"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column prop="isCompany" label="公司">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].isCompany" disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="isPurchase" label="业务">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].isPurchase" disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="isFinance" label="财务">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].isFinance" disabled></el-checkbox>
                                 </template>
                             </el-table-column>
@@ -111,6 +111,7 @@
                 "remark": "st54ring"
                 },
                 searchData:{
+                    groupId:'1',//
                     ouCode: "",//编码
                     ouName: "",//名称
                     companyOuId:'',//所属公司
@@ -120,31 +121,31 @@
                 },
                 options: [{
                     basOuTypes: '1',
-                    label: '1'
+                    label: '10'
                     }, {
                     basOuTypes: '2',
-                    label: '2'
+                    label: '20'
                     }, {
                     basOuTypes: '3',
-                    label: '3'
+                    label: '30'
                     }, {
                     basOuTypes: '4',
-                    label: '4'
+                    label: '40'
                     }, {
                     basOuTypes: '5',
-                    label: '5'
+                    label: '50'
                     }, {
                     basOuTypes: '6',
-                    label: '6'
+                    label: '60'
                     }, {
                     basOuTypes: '7',
-                    label: '7'
+                    label: '70'
                     }, {
                     basOuTypes: '8',
-                    label: '8'
+                    label: '80'
                     }, {
                     basOuTypes: '9',
-                    label: '9'
+                    label: '90'
                     }],
                 tableData: [{
                     ifAction:true,
@@ -200,41 +201,35 @@
 
                     pageIndex:-1,//分页的当前页码
                     totalPage:0,//当前分页总数
-                    oneItem:5//每页有多少条信息
+                    oneItem:10//每页有多少条信息
             }
         },
         created:function(){       
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:0,MaxResultCount:_this.oneItem}).then(function(res){
                 _this.tableData=res.result.items;
-                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem)
-                console.log(res.result)
+                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                console.log(res.result.items )
                 },function(res){
                 })
         },
         methods:{
-            handleCurrentChange(val) {
+            handleCurrentChange(val) {//页码改变
                  let _this=this;
-                 let oneItem=10;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(val-1)*oneItem,MaxResultCount:_this.oneItem}).then(function(res){
+                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(val-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){
                     _this.tableData=res.result.items;
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem)
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){ 
                     })
             },
-            test:function(){
-                this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
-                .then(function(res){
-                console.log(res);
-            },function(res){
-                console.log('err:'+res)
-            })
-            },
-
-            test1:function(){
-                this.$axios.gets('/api/services/app/Language/GetLanguages',{}).then(function(res){
-                console.log(res);
-            })
+            searching(){//搜索
+                //  let _this=this;
+                // _this.$axios.posts('/api/services/app/OuManagement/Create',_this.searchData)
+                // .then(function(res){
+                //     console.log(res);
+                // },function(res){
+                //     console.log('err:'+res)
+                // })
             },
 
         },

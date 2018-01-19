@@ -544,7 +544,7 @@ export default {
     top: 50px;
     z-index:2;
     left: 0;
-    float: left;
+    position: fixed;
     transition: all 0.5s;
     -moz-transition: all 0.5s;
     -webkit-transition: all 0.5s;
