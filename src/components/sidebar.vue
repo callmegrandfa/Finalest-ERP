@@ -178,31 +178,31 @@ export default {
   data(){
     return{
         secondLevel1:[
-            // {
-            // name:'测试列表',
-            // thirdInfo:[      
-            //     {name:'业务组织(精简版)-详细',address:'detail'},                 
-            //     {name:'数据资料短',address:'shortData'},
-            //     {name:'数据资料长',address:'longData'},
-            //     {name:'数据资料中',address:'midData'},   
-            //     {name:'仓库数据列表',address:'repositoryList'},
-            //     {name:'仓库资料',address:'repositoryData'},
-            //     {name:'商品资料',address:'goodsData'},
-            //     {name:'店铺数据列表',address:'storeData'},   
-            //     {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-            //     {name:'客户资料-详细',address:'customerBasicInfor'},
-            //     {name:'客户资料',address:'customerInfor'},
-            //     {name:'现货采购订单-订单列表',address:'orderList'}, 
-            //     {name:'现货采购订单-订单详情',address:'orderDetails'},
-            //     {name:'集团管理',address:'groupManager'},
-            //     {name:'供应商列表',address:'supplierList'},   
-            //     {name:'组织单元',address:'organization'},    
-            // ]},
+            {
+            name:'测试列表',
+            thirdInfo:[      
+                {name:'业务组织(精简版)-详细',address:'detail'},                 
+                {name:'数据资料短',address:'shortData'},
+                {name:'数据资料长',address:'longData'},
+                {name:'数据资料中',address:'midData'},   
+                {name:'仓库数据列表',address:'repositoryList'},
+                {name:'仓库资料',address:'repositoryData'},
+                {name:'商品资料',address:'goodsData'},
+                {name:'店铺数据列表',address:'storeData'},   
+                {name:'店铺资料-基本信息',address:'storeBasicInfor'},
+                {name:'客户资料-基本信息',address:'customerBasicInfor'},
+                {name:'客户资料-列表',address:'customerInfor'},
+                {name:'现货采购订单-订单列表',address:'orderList'}, 
+                {name:'现货采购订单-订单详情',address:'orderDetails'},
+                {name:'集团管理',address:'groupManager'},
+                {name:'供应商列表',address:'supplierList'},   
+                {name:'组织单元',address:'organization'},    
+            ]},
             {
                 name:'租户管理',
                 thirdInfo:[
-                    {name:'租户管理',address:'tenantManagement'},
-                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    // {name:'租户管理',address:'tenantManagement'},
+                    // {name:'租户管理-添加',address:'tenantManagementAdd'},
                 ]
             },{
                 name:'集团管理',
@@ -213,8 +213,8 @@ export default {
             },{
                 name:'用户组',
                 thirdInfo:[
-                    // {name:'用户组-列表',address:'userList'},
-                    // {name:'用户资料-列表',address:'userDataList'},
+                    {name:'用户组-列表',address:'userList'},
+                    {name:'用户资料-列表',address:'userDataList'},
                     {name:'用户资料-详细',address:'userInfoDetail'},
                 ]
             },{
@@ -223,7 +223,7 @@ export default {
                 name:'客户资料',
                 thirdInfo:[
                     {name:'客户资料-列表',address:'customerInfor'},
-                    {name:'客户资料-详细',address:'customerBasicInfor'}
+                    {name:'客户资料-基本信息',address:'customerBasicInfor'}
                 ]
             },{
                 name:'单据模板',
