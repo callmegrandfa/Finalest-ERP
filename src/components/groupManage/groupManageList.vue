@@ -14,16 +14,16 @@
 
                 <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select  v-model="value">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                    <el-select  v-model="searchData.basOuTypes">
+                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor smallBgcolor"><label>编码</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>名称</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.ouCode" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.ouName" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.companyOuId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.areaId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.status" placeholder="请录入单号"></el-input></div>
                 <el-col style="text-align:center;" :span="24">
                     <span class="search-btn">查询</span>
                     <span class="search-btn">高级搜索</span>
@@ -48,31 +48,42 @@
 
                     <el-col :span='19' class="ml10">
                         <el-table :data="tableData" border style="width: 100%" stripe>
-                            <el-table-column prop="ifAction" label="操作"  width="50">
+                            <el-table-column prop="ifAction" label="操作">
                                 <template scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
+                                    <el-checkbox v-model="tableData[scope.$index].ifAction"></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="groupCode" label="编码" ></el-table-column>
-                            <el-table-column prop="groupFullname" label="名称"></el-table-column>
-                            <el-table-column prop="groupName" label="简称"></el-table-column>
-                            <el-table-column prop="groupId" label="上级业务单元"></el-table-column>
-                            <el-table-column prop="groupParentid" label="所属公司"></el-table-column>
-                            <el-table-column prop="currencyID" label="本位币种"></el-table-column>
+                            <el-table-column prop="ouCode" label="编码" ></el-table-column>
+                            <el-table-column prop="ouName" label="名称"></el-table-column>
+                            <el-table-column prop="ouName" label="简称"></el-table-column>
+                            <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
+                            <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
+                            <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
                             <el-table-column prop="effectiveStart" label="启用年月"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
-                            <el-table-column prop="industry" label="公司"></el-table-column>
-                            <el-table-column prop="groupParentid" label="业务"></el-table-column>
-                            <el-table-column prop="groupParentid" label="财务"></el-table-column>
-                            <el-table-column prop="id" label="版本号"></el-table-column>
+                            <el-table-column prop="isCompany" label="公司">
+                                <template scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isCompany" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="isPurchase" label="业务">
+                                <template scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isPurchase" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="isFinance" label="财务">
+                                <template scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isFinance" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
                         </el-table>  
-<el-pagination
- style="margin-top:20px;" 
- class="text-right" 
- background layout="total, prev, pager, next" 
- @current-change="handleCurrentChange"
- :page-count="totalPage" >
- </el-pagination>   
+                        <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total, prev, pager, next" 
+                        @current-change="handleCurrentChange"
+                        :page-count="totalPage" >
+                        </el-pagination>   
                     </el-col>
                 </el-row>
 
@@ -99,38 +110,55 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-
+                searchData:{
+                    ouCode: "",//编码
+                    ouName: "",//名称
+                    companyOuId:'',//所属公司
+                    areaId: '',//行政地区
+                    status: '',//启用状态
+                    basOuTypes: '',//组织类型
+                },
                 options: [{
-                    value: '选项1',
-                    label: '仓库'
+                    basOuTypes: '1',
+                    label: '1'
                     }, {
-                    value: '选项2',
-                    label: '地址'
+                    basOuTypes: '2',
+                    label: '2'
                     }, {
-                    value: '选项3',
-                    label: '总部'
+                    basOuTypes: '3',
+                    label: '3'
                     }, {
-                    value: '选项4',
-                    label: '总部2'
+                    basOuTypes: '4',
+                    label: '4'
                     }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
+                    basOuTypes: '5',
+                    label: '5'
+                    }, {
+                    basOuTypes: '6',
+                    label: '6'
+                    }, {
+                    basOuTypes: '7',
+                    label: '7'
+                    }, {
+                    basOuTypes: '8',
+                    label: '8'
+                    }, {
+                    basOuTypes: '9',
+                    label: '9'
                     }],
-
-                value: '',
                 tableData: [{
                     ifAction:true,
-                    groupCode : '编码',
-                    groupFullname  : '名称',
-                    groupName : '简称',
-                    groupId  : '上级业务单元',
-                    groupParentid :'所属公司',
-                    currencyID :'本位币种',
-                    effectiveStart :'启用年月',
+                    ouCode: '编码',
+                    ouName: '名称',
+                    ouName: '简称',
+                    ouParentName: '上级业务单元',
+                    companyOuId:'所属公司',
+                    baseCurrencyId:'本位币种',
+                    effectiveStart:'启用年月',
                     status:'状态',
-                    industry:'公司',
-                    groupParentid:'业务',
-                    groupParentid:'财务',
+                    isCompany:'公司',
+                    isPurchase:'业务',
+                    isFinance:'财务',
                     id:'版本号',
                     },],
 
@@ -171,28 +199,27 @@
                         }],
 
                     pageIndex:-1,//分页的当前页码
-			        totalPage:100,//当前分页总数
+                    totalPage:0,//当前分页总数
+                    oneItem:5//每页有多少条信息
             }
         },
         created:function(){       
             let _this=this;
-            _this.$axios.gets('/api/services/app/GroupManagement/GetAll',{SkipCount:0,MaxResultCount:10}).then(function(res){
+            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:0,MaxResultCount:_this.oneItem}).then(function(res){
                 _this.tableData=res.result.items;
-                console.log(res.result.items);
+                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem)
+                console.log(res.result)
                 },function(res){
-                console.log(res);   
                 })
         },
         methods:{
             handleCurrentChange(val) {
-                console.log('当前页:'+val);
                  let _this=this;
                  let oneItem=10;
-                _this.$axios.gets('/api/services/app/GroupManagement/GetAll',{SkipCount:val*10,MaxResultCount:10}).then(function(res){
+                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(val-1)*oneItem,MaxResultCount:_this.oneItem}).then(function(res){
                     _this.tableData=res.result.items;
-                    console.log(res.result.items);
-                    },function(res){
-                    console.log(res);   
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem)
+                    },function(res){ 
                     })
             },
             test:function(){
