@@ -190,8 +190,8 @@ export default {
             //     {name:'商品资料',address:'goodsData'},
             //     {name:'店铺数据列表',address:'storeData'},   
             //     {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-            //     {name:'客户资料-详细',address:'customerBasicInfor'},
-            //     {name:'客户资料',address:'customerInfor'},
+            //     {name:'客户资料-基本信息',address:'customerBasicInfor'},
+            //     {name:'客户资料-列表',address:'customerInfor'},
             //     {name:'现货采购订单-订单列表',address:'orderList'}, 
             //     {name:'现货采购订单-订单详情',address:'orderDetails'},
             //     {name:'集团管理',address:'groupManager'},
@@ -201,8 +201,8 @@ export default {
             {
                 name:'租户管理',
                 thirdInfo:[
-                    {name:'租户管理',address:'tenantManagement'},
-                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    // {name:'租户管理',address:'tenantManagement'},
+                    // {name:'租户管理-添加',address:'tenantManagementAdd'},
                 ]
             },{
                 name:'集团管理',
@@ -213,8 +213,8 @@ export default {
             },{
                 name:'用户组',
                 thirdInfo:[
-                    // {name:'用户组-列表',address:'userList'},
-                    // {name:'用户资料-列表',address:'userDataList'},
+                    {name:'用户组-列表',address:'userList'},
+                    {name:'用户资料-列表',address:'userDataList'},
                     {name:'用户资料-详细',address:'userInfoDetail'},
                 ]
             },{
@@ -223,7 +223,7 @@ export default {
                 name:'客户资料',
                 thirdInfo:[
                     {name:'客户资料-列表',address:'customerInfor'},
-                    {name:'客户资料-详细',address:'customerBasicInfor'}
+                    {name:'客户资料-基本信息',address:'customerBasicInfor'}
                 ]
             },{
                 name:'单据模板',
