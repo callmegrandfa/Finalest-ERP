@@ -22,7 +22,7 @@
                     </el-steps>
                 </el-col>
                 <el-col :span="1">
-                    <div style="position: relative;width:20px;">
+                    <div style="position: relative;width:20px;float: right;margin-right: 10px;">
                         <i class="el-icon-more" @click="show = !show"></i>
                         <diV class="triangle" :class="{activeShow : show}"></diV>
                         <div class="detailStep" :class="{activeShow : show}">
@@ -432,7 +432,7 @@
      font-size: 12px;
      position: absolute;
      border: 1px solid  #dedede;
-     right: -50px;
+     right: -11px;
      top: 52px;
      z-index: 10;
      width: 300px;

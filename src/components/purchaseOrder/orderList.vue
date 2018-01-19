@@ -11,31 +11,31 @@
                         <span class="fs12 open">+ 展开</span>
                     </el-col>
                 </el-row>
-                <div class="mt20 bgcolor"><label>单号</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor">
+                <div class="mt20 bgcolor smallBgcolor"><label>单号</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor">
                     <label><small>*</small>供应商</label>
                     <el-select  v-model="value">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor smallBgcolor">
                     <label><small>*</small>供应商</label>
                     <el-select  v-model="value">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor smallBgcolor">
                     <label><small>*</small>供应商</label>
                     <el-select  v-model="value">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor smallBgcolor">
                     <label>开单日期</label>
-                    <div class="rangeDate ">
+                    <div class="rangeDate smallRangeDate">
                     <el-date-picker
                     v-model="valueDate"
                     type="daterange"
@@ -46,13 +46,13 @@
                 </div>
                 </div>
                
-                <div class="bgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor"><label>订单状态</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor"><label>订单状态</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor"><label>订单状态</label><el-input placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>订单状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>订单状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>订单状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
                 <el-col style="text-align:center;" :span="24">
                     <span class="search-btn">查询</span>
                     <span class="search-btn">高级搜索</span>
