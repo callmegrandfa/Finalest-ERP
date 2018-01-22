@@ -453,31 +453,32 @@ export default {
         switch(){
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
-        storageData(e){
-            var flag=false;
-            var isSame=false;
-            var slidbarData=this.$store.state.slidbarData;//储存页签数组
+        storageData(e){//localStorage里存入页签，刷新页面不会消失
+            // var flag=false;
+            // var isSame=false;
+            // var slidbarData=this.$store.state.slidbarData;//储存页签数组
             var name=e.target.getAttribute("menuname");
             var menuUrl=e.target.getAttribute("menuurl");
-        
-            if(slidbarData.length==0){//slidbarData为空
-                flag=true;
-            }else{//slidbarData不为空
-                for(var i=0;i<slidbarData.length;i++){
-                    if(slidbarData[i].name==name){//相同页签
-                        flag=false;
-                        isSame=false;
-                        break;
-                    }else{
-                      flag=true;
-                      isSame=true; 
-                    }   
-                }
-            }
-            
-            var pushItem={'name':name,'url':menuUrl,'params':'default'};
             this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
-            var isSwitch=true;
+             window.localStorage.setItem(name,menuUrl+'+default');
+             this.switch();
+            // if(slidbarData.length==0){//slidbarData为空
+            //     flag=true;
+            // }else{//slidbarData不为空
+            //     for(var i=0;i<slidbarData.length;i++){
+            //         if(slidbarData[i].name==name){//相同页签
+            //             flag=false;
+            //             isSame=false;
+            //             break;
+            //         }else{
+            //           flag=true;
+            //           isSame=true; 
+            //         }   
+            //     }
+            // }
+            // var pushItem={'name':name,'url':menuUrl+'+default'};
+            // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
+            // var isSwitch=true;
             //  if(slidbarData.length>=10){
             //     if(isSame){
             //         var r=confirm("您选择打开的窗口已达到10个，如需继续添加新的窗口，默认关闭第一个窗口");
@@ -490,17 +491,14 @@ export default {
             //             isSwitch=false;
             //         }
             //     }else{
-                    
             //     }
-                
             // }
-
-            if(flag){
-                 slidbarData.push(pushItem);
-            }
-            if(isSwitch){
-                this.switch();
-            }
+            // if(flag){
+            //      slidbarData.push(pushItem);
+            // }
+            // if(isSwitch){
+            //     this.switch();
+            // }
             
         }
     }

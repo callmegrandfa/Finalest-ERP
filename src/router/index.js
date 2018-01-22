@@ -54,6 +54,7 @@ const routes = [
         }
     }
     if(names.length>1){//多账号登录
+      window.localStorage.clear();
       let flag=false;
       let x='';
       if(store.state.alerts){
@@ -128,6 +129,7 @@ let router=new Router({
   routes
 })
 router.beforeEach((to, from, next) => {
+  store.commit('slidbarData');
   document.title = to.name
    next()
 })

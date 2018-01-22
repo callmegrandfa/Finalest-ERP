@@ -147,7 +147,6 @@ export default({
             show:false,
             ifShow:true,
             activeName: 'company',
-
             addData:{
                 groupId:'集团ID',
                 ouCode: '组织代码',//存在
