@@ -3,7 +3,7 @@
  <div class="detailForm">
      <el-row>
          <el-col :span="24">
-            <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+            <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
             <button class="erp_bt bt_save" plain @click="open"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
@@ -147,7 +147,6 @@ export default({
             show:false,
             ifShow:true,
             activeName: 'company',
-
             addData:{
                 groupId:'集团ID',
                 ouCode: '组织代码',//存在
@@ -267,6 +266,10 @@ export default({
             }
     },       
     methods:{
+        back(){
+            this.$store.state.url='/groupManage/default/groupManageList/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
         open() {
             this.$notify({
             position: 'bottom-right',

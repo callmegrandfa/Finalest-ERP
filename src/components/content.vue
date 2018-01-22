@@ -1,21 +1,27 @@
 <template>
     <div class="content-wrapper" :class="{contentActive : $store.state.show}">
          <div class="routerContain">
-            <button class="goLeft" @click="left"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+            <button class="goLeft" @click="left">
+                <!-- <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> -->
+                <img src="../../static/image/content/go.png">
+            </button>
             <div class="homePage"> <router-link to="/home">首页</router-link></div>
             <div id="window">
                 <div id="longWidth">
                     <ul id="routerBox">
                         <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
+
                             <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
-                            <!-- <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span> -->
                             <i class="el-icon-error close" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i>
                         </li>
                     </ul>
                 </div>
                 
             </div>
-            <button class="goRight" @click="right"><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></button>
+            <button class="goRight" @click="right">
+                <!-- <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> -->
+                <img src="../../static/image/content/go.png">
+            </button>
             <div class="goClose"><span>关闭操作<i class="fa fa-angle-up" aria-hidden="true"></i></span></div>
         </div>    
         <div class="content" id="content">
@@ -55,8 +61,7 @@ export default {
           }else{
               left=0
           }
-        var width=document.getElementById('routerBox').offsetWidth;
-        console.log(left-this.go+'~~'+width)
+        let width=document.getElementById('routerBox').offsetWidth;
         if(left-this.go+width<0){
             // alert('已到尽头')
         }else{
@@ -65,7 +70,7 @@ export default {
         }
       },
       left:function(){
-        var left=parseInt(document.getElementById('longWidth').style.left);
+        let left=parseInt(document.getElementById('longWidth').style.left);
         if(left<0){
             this.x+=this.go;
             document.getElementById('longWidth').style.left=this.x+'px';
@@ -75,14 +80,17 @@ export default {
         
       },
       close:function(e){
-          var nowIndex=e.target.getAttribute('index');//close元素上面绑定的index
-          var elClose=document.getElementsByClassName('close');
-          var elA=document.querySelectorAll('.addBtn a');
-          var slidbarData=this.$store.state.slidbarData;//储存页签数组
-          var index;
-          var previousIndex;//
-         for(var i=0;i<elClose.length;i++){//获取点击关闭按钮时，点击的多项在元素.close数组里的下标
-            // var indexArray=elClose[i].getAttribute("index");
+          window.localStorage.removeItem('loglevel:webpack-dev-server');
+          let nowIndex=e.target.getAttribute('index');//close元素上面绑定的index
+          let elClose=document.getElementsByClassName('close');
+          let elA=document.querySelectorAll('.addBtn a');
+            if(this.$store.state.slidbarData){
+                this.$store.state.temporary=this.$store.state.slidbarData;
+            }
+          let temporary=this.$store.state.temporary; 
+          let index;
+          let previousIndex;//
+         for(let i=0;i<elClose.length;i++){//获取点击关闭按钮时，点击的多项在元素.close数组里的下标
              if(elClose[i].getAttribute("index")==nowIndex){
                  previousIndex=i-1;
                  index=i;
@@ -90,17 +98,19 @@ export default {
          }
         
          if(previousIndex>=0&&this.hasClass(elA[index],'active')){//判断前一个路由按钮index是否存在，判断当前路由按钮是否激活
-                 var url='/'+elClose[previousIndex].getAttribute('menuurl')+'/default';
+                 let url='/'+elClose[previousIndex].getAttribute('menuurl')+'/default';
                  this.$router.push({path:url})
          }else if(previousIndex==-1&&this.hasClass(elA[0],'active')){
              this.$router.push({path:'/home'})
          }
-          slidbarData.splice(nowIndex,1);//储存页签数组里删除当前页签  
+         temporary.splice(nowIndex,1);//储存页签数组里删除当前页签
+         window.localStorage.setItem('ERP',JSON.stringify(temporary));
+         this.$store.commit('slidbarData');
       },
       hasClass:function(obj, cls){
-        var obj_class = obj.className,//获取 class 内容.
+        let obj_class = obj.className,//获取 class 内容.
         obj_class_lst = obj_class.split(/\s+/);//通过split空字符将cls转换成数组.
-        var x = 0;
+        let x = 0;
         for(x in obj_class_lst) {
             if(obj_class_lst[x] == cls) {//循环数组, 判断是否包含cls
             return true;
@@ -187,6 +197,13 @@ export default {
     position: relative;
     height: 43px;
     background-color: #eef1f5;
+}
+.routerContain .goLeft img{
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+    -moz-transform:rotate(180deg);
+    -webkit-transform:rotate(180deg);
+    -o-transform:rotate(180deg);
 }
 #window{
     overflow: hidden;

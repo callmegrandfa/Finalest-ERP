@@ -96,6 +96,7 @@ export default {
                 //成功之后处理逻辑
                 _this.setSessionStorage(_this.login.userNameOrEmailAddress,'Bearer '+res.result.accessToken);//sessionStorage
                 _this.$store.state.alerts=true;
+                window.localStorage.removeItem('ERP');
                 _this.switch('/home');
                 },function (res) {
                 //失败之后处理逻辑

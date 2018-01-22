@@ -5,7 +5,6 @@ const index = () =>import(/* webpackChunkName: "group-index" */'../components/in
 const login = () =>import('../components/login')
 const register = () =>import('../components/register')
 const page404 = () =>import('../components/page404')
-const detail = () =>import('../components/groupManage/detail')
 const shortData = () =>import('../components/dataTemplate/shortData')
 const midData = () =>import('../components/dataTemplate/midData')
 const longData = () =>import('../components/dataTemplate/longData')
@@ -13,22 +12,25 @@ const home = () =>import(/* webpackChunkName: "group-index" */'../components/hom
 const repositoryList = () =>import('../components/wareHouse/repositoryList')
 const repositoryData = () =>import('../components/wareHouse/repositoryData')
 const supplierEdit = () =>import('../components/supplierData/supplierEdit')
-const groupManager = () =>import('../components/groupManage/groupManager')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
 const customerBasicInfor = () =>import('../components/customerInfor/customerBasicInfor')
 const customerInfor = () =>import('../components/customerInfor/customerInfor')
+const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
-const orderList = () =>import('../components/purchaseOrder/orderList')
+const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
 const supplierList = () =>import('../components/supplierData/supplierList')
-const organization = () =>import('../components/groupManage/organization')
 const userInfoDetail = () =>import('../components/user/userInfoDetail')
 const userList = () =>import('../components/user/userList')
 const userDataList = () =>import('../components/user/userDataList')
 const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
 const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
-const groupManageList = () =>import('../components/groupManage/groupManageList')
+const groupManage = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManage')
+const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManageList')
+const detail = () =>import('../components/groupManage/detail')
+const organization = () =>import('../components/groupManage/organization')
+const groupManager = () =>import('../components/groupManage/groupManager')
 Vue.use(Router)
 
 const routes = [
@@ -54,6 +56,7 @@ const routes = [
         }
     }
     if(names.length>1){//多账号登录
+      window.localStorage.clear();
       let flag=false;
       let x='';
       if(store.state.alerts){
@@ -97,7 +100,6 @@ const routes = [
   },
 children:[
   { path: '/home', component: home,name:'home' },
-  { path: '/detail/:id', component: detail,name:'detail' },
   { path: '/shortData/:id', component: shortData,name:'shortData' },
   { path: '/longData/:id', component: longData,name:'longData' },
   { path: '/midData/:id', component: midData,name:'midData' },
@@ -110,8 +112,18 @@ children:[
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
   { path: '/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
   { path: '/customerInfor/:id', component: customerInfor,name:'customerInfor' },
-  { path: '/orderDetails/:id', component: orderDetails,name:'orderDetails' },
-  { path: '/orderList/:id', component: orderList,name:'orderList' },
+  { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开弹模板
+    return store.state.OrderActiveRouter;
+  },children:[
+      { path: '/order/default/orderDetails/:id', component: orderDetails,name:'orderDetails' },
+      { path: '/order/default/orderList/:id', component: orderList,name:'orderList' },
+  ]},
+  { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//集团管理
+    return store.state.groupActiveRouter;
+  },children:[
+      { path: '/groupManage/default/detail/:id', component: detail,name:'detail' },
+      { path: '/groupManage/default/groupManageList/:id', component: groupManageList,name:'groupManageList' },
+  ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/organization/:id', component: organization,name:'organization' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
@@ -119,7 +131,6 @@ children:[
   { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
   { path: '/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
   { path: '/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
-  { path: '/groupManageList/:id', component: groupManageList,name:'groupManageList' },
 ]}
 ]
 let router=new Router({
@@ -128,7 +139,17 @@ let router=new Router({
   routes
 })
 router.beforeEach((to, from, next) => {
+  store.commit('slidbarData');
   document.title = to.name
+  if(to.name=='orderDetails'){
+    store.state.OrderActiveRouter='/order/default/orderDetails/:id';
+  }else if(to.name=='orderList'){
+    store.state.OrderActiveRouter='/order/default/orderList/:id';
+  }else if(to.name=='detail'){
+    store.state.groupActiveRouter='/groupManage/default/detail/:id';
+  }else if(to.name=='groupManageList'){
+    store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
+  }
    next()
 })
 export default router

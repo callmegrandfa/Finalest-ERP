@@ -61,7 +61,7 @@
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_look"><div class="btImg"><img src="../../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
                     <button class="erp_bt bt_end"><div class="btImg"><img src="../../../static/image/common/bt_end.png"></div><span class="btDetail">终止</span></button>
@@ -342,13 +342,8 @@
 			        totalPage:20,//当前分页总数
             }
         },
-        created:function(){
-            
-            
-        },
         methods:{
             test:function(){
-                // console.log(this.try)
                 this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
                 .then(function(res){
                 console.log(res);
@@ -356,12 +351,11 @@
                 console.log('err:'+res)
             })
             },
-
-            test1:function(){
-                this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){
-                console.log(res);
-            })
-            },
+            newAdd(){
+                this.$store.state.url='/order/default/orderDetails/default'
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            }
+           
 
         },
     }

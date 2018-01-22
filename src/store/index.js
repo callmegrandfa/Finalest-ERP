@@ -9,13 +9,20 @@ export default new vuex.Store({
         name:'',//当前登录用户名
         accessToken:'',//当前登录token
         show:false,//控制slidebar显示隐藏
-        slidbarData:[],//页签数组
-        url:'/',
+        url:'/',//当前页签
+        temporary:[],//本地暂时存储页签
+        slidbarData:[],//从localStorage读取页签
+        OrderActiveRouter:'/order/default/orderList/:id',
+        groupActiveRouter:'/groupManage/default/groupManageList/:id',
     },
     mutations: {
         go(state){//控制slidebar显示隐藏
             state.show=!state.show
-        }
-        
+        },
+        slidbarData(state){
+            if(window.localStorage.getItem('ERP')!=''){
+                state.slidbarData=JSON.parse(window.localStorage.getItem('ERP'))
+            }
+        },//页签数组
     }
 })
