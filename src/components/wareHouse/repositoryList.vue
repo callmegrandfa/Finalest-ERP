@@ -55,7 +55,7 @@
                   <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
               <!-- </el-col> -->
               <!-- <el-col :span='2' class="ml10"> -->
-                  <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+                  <button class="erp_bt bt_del" @click="deleteRepository"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
               <!-- </el-col> -->
               <!-- <el-col :span='2' :offset="12"> -->
                   <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
@@ -100,8 +100,25 @@
 
         methods:{
             getAllList:function(){//获取所有仓库列表
+
+                // ouId (integer, optional): 组织单元ID ,
+                // stockCode (string, optional): 仓库编码 ,
+                // stockName (string, optional): 仓库名称 ,
+                // stockFullName (string, optional): 仓库全称 ,
+                // opAreaId (integer, optional): 业务地区 ,
+                // adAreaId (integer, optional): 行政地区 ,
+                // stockTypeId (integer, optional): 仓库类型 ,
+                // invTypeId (integer, optional): 库存分类 ,
+                // fax (string, optional): 传真 ,
+                // email (string, optional): 邮箱 ,
+                // status (integer, optional): 启用状态 ,
+                // manager (string, optional): 负责人 ,
+                // phone (string, optional): 电话 ,
+                // remark (string, optional): 备注 ,
+                // id (integer, optional)
+
                 let self = this;
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList?OuId=1&Draw=1&Start=0&Length=10').then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',self.getAllParam).then(function(res){
                     console.log(res);
                     self.allList = res.data;
                 },function(res){
@@ -109,11 +126,29 @@
                 })
             },
 
-            getStockListById:function(){
+            getStockListById:function(){//根据stockID查找仓库信息
+
+                // ouId (integer, optional): 组织单元ID ,
+                // stockCode (string, optional): 仓库编码 ,
+                // stockName (string, optional): 仓库名称 ,
+                // stockFullName (string, optional): 仓库全称 ,
+                // opAreaId (integer, optional): 业务地区 ,
+                // adAreaId (integer, optional): 行政地区 ,
+                // stockTypeId (integer, optional): 仓库类型 ,
+                // invTypeId (integer, optional): 库存分类 ,
+                // fax (string, optional): 传真 ,
+                // email (string, optional): 邮箱 ,
+                // status (integer, optional): 启用状态 ,
+                // manager (string, optional): 负责人 ,
+                // phone (string, optional): 电话 ,
+                // remark (string, optional): 备注 ,
+                // id (integer, optional)
+
                 let self = this;
-                this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',self.searchId).then(function(res){
+                this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',self.queryId).then(function(res){
                     console.log(res);
-                    self.allList = res.result;
+                    self.queryList.push(res.result);
+                    self.allList = self.searchList;
                 })
             },
 
@@ -124,7 +159,12 @@
 
                 self.listById = res.result;
               })
+            },
 
+            deleteRepository:function(){//删除仓库
+                this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',self.deleteId).then(function(res){
+                console.log(res);
+              })
             },
 
             switch(){
@@ -169,11 +209,22 @@
         },
         data(){
             return{ 
-
                 allList:[],//获取所有的列表数据
+                queryList:[],//将查询回来的数据保存为数组形式
+               
                 listById:'',//根据id获取的list
-                searchId:{id:'16'},//需要查询的stockId
+               
+                getAllParam:{
+                    OuId:'1',//组织单元ID()
+                    Draw:'1',
+                    Start:'0',//偏移量
+                    Length:'10',//长度
+                },
+                queryId:{//需要查询的stockId
+                    id:'16'
+                },
 
+                deleteId:'50',//需要删除的仓库的Id
                
             }
         },

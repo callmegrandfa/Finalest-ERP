@@ -171,7 +171,11 @@
     <button class="erp_bt bt_save"><div class="btImg"><img src="../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
     <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
     <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-    <button class="erp_bt bt_print"><div class="btImg"><img src="../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button> */
+    <button class="erp_bt bt_print"><div class="btImg"><img src="../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+    <button class="erp_bt bt_print"><div class="btImg"><img src="../../static/image/common/bt_print.png"></div><span class="btDetail">增行</span></button>
+    <button class="erp_bt bt_print"><div class="btImg"><img src="../../static/image/common/bt_print.png"></div><span class="btDetail">删行</span></button>
+    <button class="erp_bt bt_print"><div class="btImg"><img src="../../static/image/common/bt_print.png"></div><span class="btDetail">插行</span></button> */
+
 
 
     /* 小的圆按钮 */
