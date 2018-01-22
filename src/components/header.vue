@@ -1,6 +1,6 @@
 <template>
-    <header class="header">
-        <div class="menuBtn" @click="$store.commit('go')"></div>
+    <header class="header page-top">
+        <div class="menuBtn menu-toggler sidebar-toggler" @click="$store.commit('go')"></div>
         <div class="page-logo">
             <a href="">
                <img src="../../static/image/login/ERP.png" alt="HKERP">

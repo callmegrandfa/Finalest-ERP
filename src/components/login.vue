@@ -1,5 +1,5 @@
 <template>
-    <el-row class="loginWrapper">
+    <el-row class="loginWrapper" id="loginWrapper">
         
         <el-col class="leftDiv">
              <el-col :span="24">
@@ -76,6 +76,11 @@ export default {
           }
       }
   },
+  mounted:function(){//设置高度为全屏
+      let loginWrapper=document.getElementById('loginWrapper');
+      let height=window.innerHeight;
+      loginWrapper.style.height=height+'px';
+  },
   methods:{
       setSessionStorage(c_name,value){
         window.sessionStorage.setItem(c_name,value);
@@ -107,7 +112,6 @@ export default {
 <style scoped>
     .loginWrapper{
         width: 100%;
-        height: 974px;
         background-image: url(../../static/image/login/bg.jpg);
         background-repeat: no-repeat;
         background-size: cover;

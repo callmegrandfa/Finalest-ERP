@@ -12,67 +12,78 @@
                     </el-col>
                 </el-row>
 
-                <el-row class="mt20 pl15 h30">
-                    <el-col :span="5" class="fs12">
-                        <span>租户</span>
-                    </el-col>
-                    <el-col :span="15" class="fs12 border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入租户">                    
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>行政区域</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <el-select v-model="value" placeholder="请选择行政区域">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt20" style="text-align:center;">
-                    <span class="search-btn">查询</span>
-                </el-row>
+                <div class="mt20 bgcolor smallBgcolor">
+                    <label><small>*</small>组织类型</label>
+                    <el-select  v-model="searchData.basOuTypes">
+                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.ouCode" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.ouName" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.companyOuId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.areaId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.status" placeholder="请录入单号"></el-input></div>
+                <el-col style="text-align:center;" :span="24">
+                    <span class="search-btn" @click="searching">查询</span>
+                    <span class="search-btn">高级搜索</span>
+                </el-col>
             </el-col>
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
+                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
-                    <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-                    <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                    <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>                    
+                    <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
+                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>                   
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span='4' class="tree-container">
-                        <el-tree :data="componyTree" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                        <el-tree :data="componyTree"></el-tree>
                     </el-col>
 
                     <el-col :span='19' class="ml10">
                         <el-table :data="tableData" border style="width: 100%" stripe>
                             <el-table-column prop="ifAction" label="操作">
-                                <template scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].ifAction"></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="tenantCode" label="租户编码" ></el-table-column>
-                            <el-table-column prop="tenantName" label="租户名称"></el-table-column>
-                            <el-table-column prop="phone" label="手机号码"></el-table-column>
-                            <el-table-column prop="data" label="启用年月"></el-table-column>
-                            <el-table-column prop="area" label="行政地区"></el-table-column>
-                            <el-table-column prop="status" label="当前状态"></el-table-column>
+                            <el-table-column prop="ouCode" label="编码" ></el-table-column>
+                            <el-table-column prop="ouName" label="名称"></el-table-column>
+                            <el-table-column prop="ouName" label="简称"></el-table-column>
+                            <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
+                            <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
+                            <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
+                            <el-table-column prop="effectiveStart" label="启用年月"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="isCompany" label="公司">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isCompany" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="isPurchase" label="业务">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isPurchase" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="isFinance" label="财务">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isFinance" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
                         </el-table>  
-                        <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>   
+                        <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total, prev, pager, next" 
+                        @current-change="handleCurrentChange"
+                        :page-count="totalPage" >
+                        </el-pagination>   
                     </el-col>
                 </el-row>
 
@@ -99,98 +110,58 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-
+                searchData:{
+                    groupId:'1',//
+                    ouCode: "",//编码
+                    ouName: "",//名称
+                    companyOuId:'',//所属公司
+                    areaId: '',//行政地区
+                    status: '',//启用状态
+                    basOuTypes: '',//组织类型
+                },
                 options: [{
-                    value: '选项1',
-                    label: '仓库'
+                    basOuTypes: '1',
+                    label: '10'
                     }, {
-                    value: '选项2',
-                    label: '地址'
+                    basOuTypes: '2',
+                    label: '20'
                     }, {
-                    value: '选项3',
-                    label: '总部'
+                    basOuTypes: '3',
+                    label: '30'
                     }, {
-                    value: '选项4',
-                    label: '总部2'
+                    basOuTypes: '4',
+                    label: '40'
                     }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
+                    basOuTypes: '5',
+                    label: '50'
+                    }, {
+                    basOuTypes: '6',
+                    label: '60'
+                    }, {
+                    basOuTypes: '7',
+                    label: '70'
+                    }, {
+                    basOuTypes: '8',
+                    label: '80'
+                    }, {
+                    basOuTypes: '9',
+                    label: '90'
                     }],
-
-                value: '',
                 tableData: [{
                     ifAction:true,
-                    tenantCode: '租户编码',
-                    tenantName: '租户名称',
-                    phone: '手机号码',
-                    data: '启用年月',
-                    area:'行政地区',
-                    status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }],
+                    ouCode: '编码',
+                    ouName: '名称',
+                    ouName: '简称',
+                    ouParentName: '上级业务单元',
+                    companyOuId:'所属公司',
+                    baseCurrencyId:'本位币种',
+                    effectiveStart:'启用年月',
+                    status:'状态',
+                    isCompany:'公司',
+                    isPurchase:'业务',
+                    isFinance:'财务',
+                    id:'版本号',
+                    },],
 
                     componyTree: [{
                         label: '一级 1',
@@ -229,28 +200,36 @@
                         }],
 
                     pageIndex:-1,//分页的当前页码
-			        totalPage:20,//当前分页总数
+                    totalPage:0,//当前分页总数
+                    oneItem:10//每页有多少条信息
             }
         },
-        created:function(){
-            
-            
+        created:function(){       
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:0,MaxResultCount:_this.oneItem}).then(function(res){
+                _this.tableData=res.result.items;
+                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                console.log(res.result.items )
+                },function(res){
+                })
         },
         methods:{
-            test:function(){
-                // console.log(this.try)
-                this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
-                .then(function(res){
-                console.log(res);
-            },function(res){
-                console.log('err:'+res)
-            })
+            handleCurrentChange(val) {//页码改变
+                 let _this=this;
+                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(val-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){
+                    _this.tableData=res.result.items;
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    },function(res){ 
+                    })
             },
-
-            test1:function(){
-                this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){
-                console.log(res);
-            })
+            searching(){//搜索
+                //  let _this=this;
+                // _this.$axios.posts('/api/services/app/OuManagement/Create',_this.searchData)
+                // .then(function(res){
+                //     console.log(res);
+                // },function(res){
+                //     console.log('err:'+res)
+                // })
             },
 
         },
@@ -351,6 +330,7 @@
     cursor: pointer;
 }
 .search-btn{
+    font-size: 12px;
     display: inline-block;
     width: 87px;
     height: 30px;

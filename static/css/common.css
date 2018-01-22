@@ -1,4 +1,6 @@
-
+.el-tabs__header{
+  z-index: 1;
+}
 /* elementUI分页 */
 /* <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage"></el-pagination> */
 .el-pagination .btn-next, 
@@ -585,7 +587,7 @@ end-placeholder="结束日期">
 .rangeDate input.el-range-input{
   width: 73px;
   top:-2px;
-  height: 33px;
+  height: 31px;
   position: relative;
   margin: 0;
   padding: 0;
@@ -593,7 +595,7 @@ end-placeholder="结束日期">
   border-radius: 5px;
 }
 .smallRangeDate input.el-range-input{
-    height: 26px;
+    height: 24px;
 }
 .rangeDate .el-range-separator{
   padding: 0;

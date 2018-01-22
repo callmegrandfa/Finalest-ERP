@@ -22,45 +22,45 @@
                 </div>
                 <div class="bgcolor">
                     <label>编码</label>
-                    <el-input v-model="companyInformation.node" :disabled="true"></el-input>
+                    <el-input v-model="addData.ouCode" :disabled="true"></el-input>
                 </div> 
                 <div class="bgcolor">
                         <label>名称</label>
-                    <el-input v-model="companyInformation.handNum" placeholder="请录入手工单号"></el-input>
+                    <el-input v-model="addData.ouName" placeholder="请录入手工单号"></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>全称</label>
-                    <el-input v-model="companyInformation.warehouse" placeholder="请选择仓库"></el-input>
+                    <el-input v-model="addData.ouName" placeholder="请选择仓库"></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>上级业务单元</label>
-                    <el-select v-model="valueHigherUnit">
+                    <el-select v-model="addData.ouParentid">
                         <el-option v-for="item in higherUnit" :key="item.valueHigherUnit" :label="item.label" :value="item.valueHigherUnit">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label><small>*</small>启用月份</label><el-date-picker v-model="companyInformation.month" type="month" placeholder="请选择月份"></el-date-picker></div>
+                <div class="bgcolor"><label><small>*</small>启用月份</label><el-date-picker v-model="addData.regtime" type="month" placeholder="请选择月份"></el-date-picker></div>
                 <div class="bgcolor">
                     <label>本位币种</label>
-                    <el-select v-model="valueMoney">
-                        <el-option v-for="item in money" :key="item.valueMoney" :label="item.label" :value="item.valueMoney">
+                    <el-select v-model="addData.baseCurrencyId">
+                        <el-option v-for="item in money" :key="item.baseCurrencyId" :label="item.label" :value="item.baseCurrencyId">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select v-model="valueCompany">
+                    <el-select v-model="addData.companyOuId ">
                         <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label>联系人</label><el-input v-model="companyInformation.contacts" placeholder="请填入联系人"></el-input></div>
-                <div class="bgcolor"><label>电话</label><el-input v-model="companyInformation.phone" placeholder="请填入电话"></el-input></div>
-                <div class="bgcolor"><label>地址</label><el-input v-model="companyInformation.address" placeholder="请填入地址"></el-input></div>
-                <div class="bgcolor"><label>备注</label><el-input v-model="companyInformation.remarks" placeholder="备注"></el-input></div>
+                <div class="bgcolor"><label>联系人</label><el-input v-model="addData.contactPerson " placeholder="请填入联系人"></el-input></div>
+                <div class="bgcolor"><label>电话</label><el-input v-model="addData.phone" placeholder="请填入电话"></el-input></div>
+                <div class="bgcolor"><label>地址</label><el-input v-model="addData.address" placeholder="请填入地址"></el-input></div>
+                <div class="bgcolor"><label>备注</label><el-input v-model="addData.remark" placeholder="备注"></el-input></div>
                 <div class="bgcolor">
                     <label>用户状态</label>
-                    <el-select v-model="valueState">
+                    <el-select v-model="addData.status">
                         <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
                         </el-option>
                     </el-select>
@@ -81,14 +81,14 @@
     </el-col>           
  </el-row> 
     <!--基础信息  -->  
-<el-row> 
+<!-- <el-row> 
     <el-col :span="24" class="getPadding"><h4 class="h4">基础信息</h4></el-col>
     <el-col :span="22" class="getPadding">
         <div class="bgcolor"><label>版本号</label><el-input v-model="basicInformation.version" placeholder="备注" :disabled="true"></el-input></div>
         <div class="bgcolor"><label><small>*</small>版本开始日期</label><el-date-picker v-model="basicInformation.start" type="date" placeholder="请录入开始日期"></el-date-picker></div>
         <div class="bgcolor"><label><small>*</small>版本结束日期</label><el-date-picker v-model="basicInformation.finish" type="date" placeholder="请录入结束日期"></el-date-picker></div>
     </el-col> 
-</el-row>  
+</el-row>   -->
     <!-- 公司业务财务bootTab标签页 -->
 <el-row class="nopadding">  
     <div class="tabZoo">
@@ -108,7 +108,7 @@
                                 <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="请输入法人代表"></el-input></div>
                                 <div class="bgcolor">
                                     <label>用户状态</label>
-                                    <el-select v-model="valueState">
+                                    <el-select v-model="addData.status">
                                         <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
                                         </el-option>
                                     </el-select>
@@ -147,20 +147,30 @@ export default({
             show:false,
             ifShow:true,
             activeName: 'company',
-            basicInformation:{//基础信息
-                version:'sts11s',
-                start:'2017.11.11',
-                finish:'',
-            },
-            companyInformation:{//公司信息
-                node:"PO1711060111111-002",
-                month:'',
-                handNum:'',
-                warehouse:'',
-                contacts:"",
-                phone:"123456",
-                address:"",
-                remarks:"",
+
+            addData:{
+                groupId:'集团ID',
+                ouCode: '组织代码',//存在
+                ouName: '组织名称' ,//存在
+                foreignName: '外文名称' ,
+                mnemonic: '助记码' ,
+                ouParentid: '上级组织ID' ,//存在
+                accountPeriodId: '会计期间ID' ,
+                baseCurrencyId: '本位币种id' ,//存在
+                companyOuId: '所属公司ID' ,//存在
+                contactPerson: '联系人' ,//存在
+                phone: '电话' ,//存在
+                address: '地址' ,//存在
+                areaId: '行政区域ID' ,
+                entityProperty : '实体属性' ,
+                status: '启用状态' ,//存在
+                remark: '备注' ,//存在
+                basOuTypes: '组织职能' ,
+                isGroupCompany:true ,
+                ouCompanyParentid: '上级公司组织ID' ,
+                legalPerson: '法人代表' ,
+                companyStatus: '公司启用状态' ,
+                regtime: '公司成立时间'
             },
             auditInformation:{//审计信息
                     createName:"张三",
@@ -182,11 +192,6 @@ export default({
             
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
-            valueHigherUnit: '无',//初始上级单元
-            valueMoney:'请选择本位币种',//初始本位币种
-            valueCompany:'请选择所属公司',//初始所属公司
-            valueState:'启用',//初始启用状态 
-        
             higherUnit: [{//上级单元数据
                 valueHigherUnit: '选项1',
                 label: '361度'
@@ -198,31 +203,31 @@ export default({
                 label: '红旗连锁'
             }],
             money: [{//本位币种
-                valueMoney:'选项1',
+                baseCurrencyId:'选项1',
                 label: 'RMB'
             }, {
-                valueMoney:'选项2',
+                baseCurrencyId:'选项2',
                 label: '美元'
             }, {
-                valueMoney:'选项3',
+                baseCurrencyId:'选项3',
                 label: '英镑'
             },{
-                valueMoney:'选项4',
+                baseCurrencyId:'选项4',
                 label: '日元'
             }, {
-                valueMoney:'选项5',
+                baseCurrencyId:'选项5',
                 label: '韩元'
             }, {
-                valueMoney:'选项6',
+                baseCurrencyId:'选项6',
                 label: '越南盾'
             },{
-                valueMoney:'选项7',
+                baseCurrencyId:'选项7',
                 label: '泰铢'
             }, {
-                valueMoney:'选项8',
+                baseCurrencyId:'选项8',
                 label: '港币'
             }, {
-                valueMoney:'选项9',
+                baseCurrencyId:'选项9',
                 label: '银元'
             }],
             company: [{ //   所属公司数据

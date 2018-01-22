@@ -477,9 +477,7 @@
 
 <style>
 
-.orderList .bgcolor label{
-    line-height:30px;
-}
+
 
 .orderList .open{
     display: inline-block;
