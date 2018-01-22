@@ -42,7 +42,7 @@
               </el-row>
           </el-col>
           <el-col :span="2" class="ml10">
-              <span class="search-btn" style="cursor:pointer;">查询</span>
+              <span class="search-btn" style="cursor:pointer;" @click="getStockListById">查询</span>
           </el-col>
       </el-row>
 
@@ -109,6 +109,14 @@
                 })
             },
 
+            getStockListById:function(){
+                let self = this;
+                this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',self.searchId).then(function(res){
+                    console.log(res);
+                    self.allList = res.result;
+                })
+            },
+
             searchListById:function(){//根据Id获取列表
                 let self = this;
                 this.$axios.gets('/api/services/app/StockAddressManagement/Get',{params:{Id:1}}).then(function(res){
@@ -164,6 +172,7 @@
 
                 allList:[],//获取所有的列表数据
                 listById:'',//根据id获取的list
+                searchId:{id:'16'},//需要查询的stockId
 
                
             }

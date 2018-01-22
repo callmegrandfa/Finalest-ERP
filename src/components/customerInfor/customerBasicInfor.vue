@@ -132,7 +132,7 @@
         <div class="tabZoo">
             <el-col :span="24">
                <el-tabs v-model="activeName">
-                    <el-tab-pane label="银行信息" name="bank" class="getPadding">
+                    <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
                         <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                         <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                         <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -163,9 +163,9 @@
                             </el-table-column>
                         </el-table>
                     </el-tab-pane>
-                    <el-tab-pane label="送货地址" name="address">送货地址</el-tab-pane>
-                    <el-tab-pane label="使用组织" name="organization">使用组织</el-tab-pane>
-                    <el-tab-pane label="信用信息" name="creditInfor">信用信息</el-tab-pane>
+                    <el-tab-pane label="送货地址" name="address" style="z-index:-1000">送货地址</el-tab-pane>
+                    <el-tab-pane label="使用组织" name="organization" style="z-index:-1000">使用组织</el-tab-pane>
+                    <el-tab-pane label="信用信息" name="creditInfor" style="z-index:-1000">信用信息</el-tab-pane>
                 </el-tabs>
             </el-col>
         </div>
