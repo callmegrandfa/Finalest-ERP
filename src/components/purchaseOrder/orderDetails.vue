@@ -122,7 +122,7 @@
 
         <el-row>
             <el-col :span="24">
-                <button class="headBtn">返回</button>
+                <button @click="back" class="headBtn">返回</button>
                 <button class="headBtn">保存</button>
                 <button class="headBtn">保存并新增</button>
                 <button class="headBtn">保存并审核</button>
@@ -390,6 +390,10 @@
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+            },
+            back(){
+                this.$store.state.url='/order/default/orderList/default'
+                this.$router.push({path:this.$store.state.url})//点击切换路由
             }
         },
     })

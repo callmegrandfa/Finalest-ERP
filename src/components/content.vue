@@ -11,7 +11,7 @@
                     <ul id="routerBox">
                         <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
 
-                            <router-link :to="{name:i.url.substring(0,i.url.indexOf('+')),params:{id:i.url.substring(i.url.indexOf('+')+1)}}">{{i.name}}</router-link>
+                            <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
                             <i class="el-icon-error close" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i>
                         </li>
                     </ul>
@@ -84,7 +84,10 @@ export default {
           let nowIndex=e.target.getAttribute('index');//close元素上面绑定的index
           let elClose=document.getElementsByClassName('close');
           let elA=document.querySelectorAll('.addBtn a');
-        //   let slidbarData=this.$store.state.slidbarData;//储存页签数组
+            if(this.$store.state.slidbarData){
+                this.$store.state.temporary=this.$store.state.slidbarData;
+            }
+          let temporary=this.$store.state.temporary; 
           let index;
           let previousIndex;//
          for(let i=0;i<elClose.length;i++){//获取点击关闭按钮时，点击的多项在元素.close数组里的下标
@@ -95,18 +98,14 @@ export default {
          }
         
          if(previousIndex>=0&&this.hasClass(elA[index],'active')){//判断前一个路由按钮index是否存在，判断当前路由按钮是否激活
-                 let url='/'+elClose[previousIndex].getAttribute('menuurl').replace('+','/');
+                 let url='/'+elClose[previousIndex].getAttribute('menuurl')+'/default';
                  this.$router.push({path:url})
          }else if(previousIndex==-1&&this.hasClass(elA[0],'active')){
              this.$router.push({path:'/home'})
          }
-        //  slidbarData.splice(nowIndex,1);//储存页签数组里删除当前页签
-         for(let i=0;i<window.localStorage.length;i++){
-            if(nowIndex==i){
-                localStorage.removeItem(window.localStorage.key(i));//localStorage里删除当前页签   
-                this.$store.commit('slidbarData');
-            }
-        }
+         temporary.splice(nowIndex,1);//储存页签数组里删除当前页签
+         window.localStorage.setItem('ERP',JSON.stringify(temporary));
+         this.$store.commit('slidbarData');
       },
       hasClass:function(obj, cls){
         let obj_class = obj.className,//获取 class 内容.

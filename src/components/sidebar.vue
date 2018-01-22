@@ -180,8 +180,7 @@ export default {
         secondLevel1:[
             {
             name:'测试列表',
-            thirdInfo:[      
-                {name:'业务组织(精简版)-详细',address:'detail'},                 
+            thirdInfo:[               
                 {name:'数据资料短',address:'shortData'},
                 {name:'数据资料长',address:'longData'},
                 {name:'数据资料中',address:'midData'},   
@@ -192,8 +191,6 @@ export default {
                 {name:'店铺资料-基本信息',address:'storeBasicInfor'},
                 {name:'客户资料-基本信息',address:'customerBasicInfor'},
                 {name:'客户资料-列表',address:'customerInfor'},
-                {name:'现货采购订单-订单列表',address:'orderList'}, 
-                {name:'现货采购订单-订单详情',address:'orderDetails'},
                 {name:'集团管理',address:'groupManager'},
                 {name:'供应商列表',address:'supplierList'},   
                 {name:'组织单元',address:'organization'},    
@@ -207,8 +204,7 @@ export default {
             },{
                 name:'集团管理',
                 thirdInfo:[
-                    {name:'业务组织(精简版)-详细',address:'detail'},
-                    {name:'业务组织(精简版)-列表',address:'groupManageList'},
+                    {name:'业务组织',address:'groupManage'},
                 ]
             },{
                 name:'用户组',
@@ -228,42 +224,20 @@ export default {
             },{
                 name:'单据模板',
                 thirdInfo:[
-                     {name:'列表资料',address:'orderList'},
-                     {name:'单据-主多从模板',address:'orderDetails'},
+                     {name:'单据开单模板',address:'order'}, 
                 ]
             }],
         secondLevel2:[{
             name:'基础资料',
-            thirdInfo:[      
-                {name:'业务组织(精简版)-详细',address:'detail'},                 
-                {name:'数据资料短',address:'shortData'},
-               
+            thirdInfo:[
             ]}],
         secondLevel3:[{
         name:'基础资料',
-        thirdInfo:[      
-            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-            {name:'客户资料-基本信息',address:'customerBasicInfor'},
-            {name:'客户资料',address:'customerInfor'},
-            {name:'现货采购订单-订单列表',address:'orderList'}, 
-            {name:'现货采购订单-订单详情',address:'orderDetails'},
-            {name:'集团管理',address:'groupManager'},
-            {name:'供应商列表',address:'supplierList'},   
-            {name:'组织单元',address:'organization'},    
+        thirdInfo:[ 
         ]}],
         secondLevel4:[{
         name:'基础资料',
-        thirdInfo:[      
-            {name:'业务组织(精简版)-详细',address:'detail'},                 
-            {name:'数据资料短',address:'shortData'},
-            {name:'数据资料长',address:'longData'},
-            {name:'数据资料中',address:'midData'},   
-            {name:'仓库数据列表',address:'repositoryList'},
-            {name:'仓库资料',address:'repositoryData'},
-            {name:'商品资料',address:'goodsData'},
-            {name:'集团管理',address:'groupManager'},
-            {name:'供应商列表',address:'supplierList'},   
-            {name:'组织单元',address:'organization'},    
+        thirdInfo:[
         ]}],
         secondLevel5:[{
         name:'基础资料',
@@ -271,84 +245,20 @@ export default {
         ]}],
         secondLevel6:[{
         name:'基础资料',
-        thirdInfo:[      
-            {name:'业务组织(精简版)-详细',address:'detail'},                 
-            {name:'数据资料短',address:'shortData'},
-            {name:'数据资料长',address:'longData'},
-            {name:'数据资料中',address:'midData'},   
-            {name:'仓库数据列表',address:'repositoryList'},
-            {name:'仓库资料',address:'repositoryData'},
-            {name:'商品资料',address:'goodsData'},
-            {name:'店铺数据列表',address:'storeData'},   
-            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-            {name:'客户资料-基本信息',address:'customerBasicInfor'},
-            {name:'客户资料',address:'customerInfor'},
-            {name:'现货采购订单-订单列表',address:'orderList'}, 
-            {name:'现货采购订单-订单详情',address:'orderDetails'},
-            {name:'集团管理',address:'groupManager'},
-            {name:'供应商列表',address:'supplierList'},   
-            {name:'组织单元',address:'organization'},    
+        thirdInfo:[  
         ]}],
         secondLevel7:[],
         secondLevel8:[{
         name:'基础资料',
-        thirdInfo:[      
-            {name:'业务组织(精简版)-详细',address:'detail'},                 
-            {name:'数据资料短',address:'shortData'},
-            {name:'数据资料长',address:'longData'},
-            {name:'数据资料中',address:'midData'},   
-            {name:'仓库数据列表',address:'repositoryList'},
-            {name:'仓库资料',address:'repositoryData'},
-            {name:'商品资料',address:'goodsData'},
-            {name:'店铺数据列表',address:'storeData'},   
-            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-            {name:'客户资料-基本信息',address:'customerBasicInfor'},
-            {name:'客户资料',address:'customerInfor'},
-            {name:'现货采购订单-订单列表',address:'orderList'}, 
-            {name:'现货采购订单-订单详情',address:'orderDetails'},
-            {name:'集团管理',address:'groupManager'},
-            {name:'供应商列表',address:'supplierList'},   
-            {name:'组织单元',address:'organization'},    
+        thirdInfo:[   
         ]}],
         secondLevel9:[{
         name:'基础资料',
-        thirdInfo:[      
-            {name:'业务组织(精简版)-详细',address:'detail'},                 
-            {name:'数据资料短',address:'shortData'},
-            {name:'数据资料长',address:'longData'},
-            {name:'数据资料中',address:'midData'},   
-            {name:'仓库数据列表',address:'repositoryList'},
-            {name:'仓库资料',address:'repositoryData'},
-            {name:'商品资料',address:'goodsData'},
-            {name:'店铺数据列表',address:'storeData'},   
-            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-            {name:'客户资料-基本信息',address:'customerBasicInfor'},
-            {name:'客户资料',address:'customerInfor'},
-            {name:'现货采购订单-订单列表',address:'orderList'}, 
-            {name:'现货采购订单-订单详情',address:'orderDetails'},
-            {name:'集团管理',address:'groupManager'},
-            {name:'供应商列表',address:'supplierList'},   
-            {name:'组织单元',address:'organization'},    
+        thirdInfo:[    
         ]}],
         secondLevel10:[{
         name:'基础资料',
-        thirdInfo:[      
-            {name:'业务组织(精简版)-详细',address:'detail'},                 
-            {name:'数据资料短',address:'shortData'},
-            {name:'数据资料长',address:'longData'},
-            {name:'数据资料中',address:'midData'},   
-            {name:'仓库数据列表',address:'repositoryList'},
-            {name:'仓库资料',address:'repositoryData'},
-            {name:'商品资料',address:'goodsData'},
-            {name:'店铺数据列表',address:'storeData'},   
-            {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-            {name:'客户资料-基本信息',address:'customerBasicInfor'},
-            {name:'客户资料',address:'customerInfor'},
-            {name:'现货采购订单-订单列表',address:'orderList'}, 
-            {name:'现货采购订单-订单详情',address:'orderDetails'},
-            {name:'集团管理',address:'groupManager'},
-            {name:'供应商列表',address:'supplierList'},   
-            {name:'组织单元',address:'organization'},    
+        thirdInfo:[ 
         ]}]
             
         // items:
@@ -453,53 +363,33 @@ export default {
         switch(){
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
-        storageData(e){//localStorage里存入页签，刷新页面不会消失
-            // var flag=false;
-            // var isSame=false;
-            // var slidbarData=this.$store.state.slidbarData;//储存页签数组
+        storageData(e){
+            var flag=false;
+            if(this.$store.state.slidbarData){
+                this.$store.state.temporary=this.$store.state.slidbarData;
+            }
+            var temporary=this.$store.state.temporary;
             var name=e.target.getAttribute("menuname");
             var menuUrl=e.target.getAttribute("menuurl");
+            if(temporary.length==0){//temporary为空
+                flag=true;
+            }else{//temporary不为空
+                for(var i=0;i<temporary.length;i++){
+                    if(temporary[i].name==name){//相同页签
+                        flag=false;
+                        break;
+                    }else{
+                      flag=true;
+                    }   
+                }
+            }
+            var pushItem={'name':name,'url':menuUrl,'params':'default'};
             this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
-             window.localStorage.setItem(name,menuUrl+'+default');
-             this.switch();
-            // if(slidbarData.length==0){//slidbarData为空
-            //     flag=true;
-            // }else{//slidbarData不为空
-            //     for(var i=0;i<slidbarData.length;i++){
-            //         if(slidbarData[i].name==name){//相同页签
-            //             flag=false;
-            //             isSame=false;
-            //             break;
-            //         }else{
-            //           flag=true;
-            //           isSame=true; 
-            //         }   
-            //     }
-            // }
-            // var pushItem={'name':name,'url':menuUrl+'+default'};
-            // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
-            // var isSwitch=true;
-            //  if(slidbarData.length>=10){
-            //     if(isSame){
-            //         var r=confirm("您选择打开的窗口已达到10个，如需继续添加新的窗口，默认关闭第一个窗口");
-            //         if (r==true)
-            //         {
-            //             slidbarData.shift();
-            //             flag=true;
-            //         }else{
-            //             flag=false;
-            //             isSwitch=false;
-            //         }
-            //     }else{
-            //     }
-            // }
-            // if(flag){
-            //      slidbarData.push(pushItem);
-            // }
-            // if(isSwitch){
-            //     this.switch();
-            // }
-            
+            if(flag){
+                 temporary.push(pushItem);
+            }
+            window.localStorage.setItem('ERP',JSON.stringify(temporary));
+            this.switch();
         }
     }
 }

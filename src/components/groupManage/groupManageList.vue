@@ -33,7 +33,7 @@
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
                     <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
@@ -212,7 +212,7 @@
                 console.log(res.result.items )
                 },function(res){
                 })
-        },
+             },
         methods:{
             handleCurrentChange(val) {//页码改变
                  let _this=this;
@@ -231,6 +231,10 @@
                 //     console.log('err:'+res)
                 // })
             },
+            goDetail(){
+                this.$store.state.url='/groupManage/default/detail/default'
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            }
 
         },
     }
