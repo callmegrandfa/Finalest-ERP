@@ -81,7 +81,14 @@
                             <el-checkbox v-model="allList[scope.$index].ifAllow" ></el-checkbox>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updateDate" label="   "></el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <!-- <span>{{scope.row}}</span> -->
+                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
+                            <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                        </template>
+                    </el-table-column>
                   </el-table> 
               </el-col>
           </el-row>
@@ -161,6 +168,23 @@
               })
             },
 
+            handleEdit:function(index){//表格内编辑操作
+			this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+            console.log(index)
+            },
+
+            handleDelete:function(index,id){//表格内删除操作
+                this.allList.splice(index,1);
+                console.log(id)
+                
+                let self = this;
+                self.deleteId = id;
+                console.log(self.deleteId)
+                this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',self.deleteId).then(function(res){
+                console.log(res);
+              })
+            },
+
             deleteRepository:function(){//删除仓库
                 this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',self.deleteId).then(function(res){
                 console.log(res);
@@ -204,6 +228,8 @@
                 this.switch();
                 
             },
+
+            
             
            
         },
@@ -218,13 +244,13 @@
                     OuId:'1',//组织单元ID()
                     Draw:'1',
                     Start:'0',//偏移量
-                    Length:'10',//长度
+                    Length:'100',//长度
                 },
                 queryId:{//需要查询的stockId
                     id:'16'
                 },
 
-                deleteId:'50',//需要删除的仓库的Id
+                deleteId:'',//需要删除的仓库的Id
                
             }
         },

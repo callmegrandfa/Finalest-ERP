@@ -65,7 +65,11 @@
                         <el-table :data="tableData" border style="width: 100%" stripe>
                             <el-table-column prop="sequence" label="序号" ></el-table-column>
                             <el-table-column prop="planCode" label="结算方式代码" ></el-table-column>
-                            <el-table-column prop="planName" label="结算方式名称"></el-table-column>
+                            <el-table-column prop="planName" label="结算方式名称">
+                                <template slot-scope="scope">
+                                    <input class="input-need" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="remark" label="备注">
                                 <template slot-scope="scope">
                                     <input class="input-need" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
@@ -549,9 +553,11 @@ export default {
         },
 		handleEdit:function(index){//表格内编辑操作
 			this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+            console.log(index)
 		},
 		handleDelete:function(index){//表格内删除操作
 			this.tableData.splice(index,1);
+            console.log(index)
 		},
 		finishEdit: function(index) {//表格内编辑完成事件
 			this.isEdit=-1;
@@ -871,7 +877,10 @@ export default {
     border-radius: 3px;
 }
 /* 高级搜索结束 */
-
+input:disabled{
+    background: white;
+    text-align: center;
+}
 </style>
 
 <style>
