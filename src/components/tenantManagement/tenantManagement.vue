@@ -61,7 +61,7 @@
                     <el-col :span='19' class="ml10">
                         <el-table :data="tableData" border style="width: 100%" stripe>
                             <el-table-column prop="ifAction" label="操作">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
                                 </template>
                             </el-table-column>

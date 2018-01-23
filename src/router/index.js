@@ -41,62 +41,75 @@ const routes = [
   { path: '/register', component: register,name:'register' },
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
-    let names=[];
-    store.state.username=[];//初始化，避免重复push
-    for(let i=0;i<window.sessionStorage.length;i++){
-        let key=window.sessionStorage.key(i);
-        let value=window.sessionStorage.getItem(key);
-        let item={'name':key,'accessToken':value};
-        store.state.username.push(item);//vuex,store里面存入数据
-        for(let e=0;e<store.state.username.length;e++){
-            let name=store.state.username[e].name;
-            let token=store.state.username[e].accessToken;
-            if(key==name){//vuex里面存在用户名和sessionStorage里面key值相等
-              names.push(name); 
-            }
+    store.commit('username');
+    console.log(store.state.username)
+    if(store.state.username!=null){
+      if(store.state.username.length>1){//多账号登录
+        window.localStorage.clear();
+        let flag=false;
+        let x='';
+        let names=[];
+        for(let i=0;i<store.state.username.length;i++){
+            let name=store.state.username[i].name;
+            console.log(name)
+            names.push(name);
+          }
+        if(store.state.alerts){
+           x=prompt("当前登录"+names.length+"个账号,分别是："+names.join(',')+"请输入您将要登录的账号或者关闭浏览器重新登录或者注销账号重新登录");
         }
-    }
-    if(names.length>1){//多账号登录
-      window.localStorage.clear();
-      let flag=false;
-      let x='';
-      if(store.state.alerts){
-         x=prompt("当前登录"+names.length+"个账号,分别是："+names.join(',')+"请输入您将要登录的账号或者关闭浏览器重新登录或者注销已经登录的账号重新登录");
-      }
-      if(x!=null && x!=""){
-        let token='';
-        let username='';
-        for(let e=0;e<store.state.username.length;e++){
-            let name=store.state.username[e].name;
-            if(x==name){//vuex里面存在用户名和sessionStorage里面key值相等
-              token=store.state.username[e].accessToken;
-              username=name;
-              flag=true;
-              break;
-            }else{
-              flag=false;
-            }
-        }
-        if(flag){
-          store.state.alerts=false;
-          store.state.name=x;
-          store.state.accessToken=token;
-          next();
+        if(x!=null && x!=""){
+          let token='';
+          let username='';
+          for(let e=0;e<store.state.username.length;e++){
+              let name=store.state.username[e].name;
+              if(x==name){//vuex里面存在用户名和sessionStorage里面key值相等
+                token=store.state.username[e].accessToken;
+                username=name;
+                flag=true;
+                break;
+              }else{
+                flag=false;
+              }
+          }
+          if(flag){
+            store.state.alerts=false;
+            store.state.name=x;
+            store.state.accessToken=token;
+            next();
+          }else{
+            store.state.alerts=true;
+            alert('用户名错误');
+            next('/login')
+          }
         }else{
-          store.state.alerts=true;
-          alert('用户名错误');
-          next('/login')
+          alert('用户名不能为空');
         }
+      }else if(store.state.username.length==1){
+        store.state.name=store.state.username[0].name;
+        store.state.accessToken=store.state.username[0].accessToken;
+        next();
       }else{
-        alert('用户名不能为空');
+        next('/login')
       }
-    }else if(names.length==1){//正常登录
-      store.state.name=store.state.username[0].name;
-      store.state.accessToken=store.state.username[0].accessToken;
-      next();
     }else{
       next('/login')
     }
+    
+    // let names=[];
+    // store.state.username=[];//初始化，避免重复push
+    // for(let i=0;i<window.sessionStorage.length;i++){
+    //     let key=window.sessionStorage.key(i);
+    //     let value=window.sessionStorage.getItem(key);
+    //     let item={'name':key,'accessToken':value};
+    //     store.state.username.push(item);//vuex,store里面存入数据
+    //     for(let e=0;e<store.state.username.length;e++){
+    //         let name=store.state.username[e].name;
+    //         let token=store.state.username[e].accessToken;
+    //         if(key==name){//vuex里面存在用户名和sessionStorage里面key值相等
+    //           names.push(name); 
+    //         }
+    //     }
+    // }
   
   },
 children:[
