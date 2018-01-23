@@ -43,7 +43,14 @@
 
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span='4' class="tree-container">
-                        <el-tree :data="componyTree"></el-tree>
+                        <el-tree
+                        :data="componyTree"
+                        :props="defaultProps"
+                        node-key="treeId"
+                        default-expand-all
+                        :expand-on-click-node="false"
+                        :render-content="renderContent">
+                        </el-tree>
                     </el-col>
 
                     <el-col :span='19' class="ml10">
@@ -90,6 +97,7 @@
 </template>
 
 <script>
+    let treeId = 1000;
     export default{
         name:'customerInfor',
         data(){
@@ -159,25 +167,20 @@
                     id:'',
                     },],
 
-                    componyTree: [{
-                        label: '宝胜国际',
-                        children: [{
-                            label: '二级 2-1',
-                            children: [{
-                            label: '三级 2-1-1'
-                            }]
-                        }, {
-                            label: '二级 2-2',
-                            children: [{
-                            label: '三级 2-2-1'
-                            }]
-                        }]
+                    componyTree:  [{
+                        treeId: 1,
+                        label: '',
+                        children: []
                         }],
-                    
+                    defaultProps: {
+                        children: 'children',
+                        label: 'label'
+                    },
                     pageIndex:-1,//分页的当前页码
                     totalPage:0,//当前分页总数
                     oneItem:10,//每页有多少条信息
                     multipleSelection: [],//复选框选中数据
+                    page:1,//当前页
                     
             }
         },
@@ -189,26 +192,38 @@
         methods:{
             loadTableData(){//表格
                  let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:0,MaxResultCount:_this.oneItem}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
-                        _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){
                 })
             },
             loadTreeData(){//树形控件
                  let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1}).then(function(res){
-                    //console.log(res)
+                    console.log(res.result)
+                     let children=[];
+                    if(res.result.length>0){
+                        for(let i=0;i<res.result.length;i++){
+                            let label=res.result[i].deptName;
+                            let treeId=res.result[i].id;
+                            let child={'treeId':treeId,'label':label,children:[]}
+                            children.push(child)
+                        }
+                    }
+                    _this.componyTree=[{
+                                treeId: 1,
+                                label: '宝胜',
+                                children: children
+                     }]
+                    
                 },function(res){
                 })
             },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(val-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){
-                    _this.tableData=res.result.items;
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    },function(res){ 
-                    })
+                 _this.page=val;
+                _this.loadTableData();
             },
             searching(){//搜索
                 //  let _this=this;
@@ -245,8 +260,42 @@
                         })
                     }
                 };  
-            }
+            },
+            // append(data) {
+            //     const newChild = { treeId: treeId++, label: 'testtest', children: [] };
+            //     if (!data.children) {
+            //     this.$set(data, 'children', []);
+            //     }
+            //     data.children.push(newChild);
+            // },
 
+            // remove(node, data) {
+            //     const parent = node.parent;
+            //     const children = parent.data.children || parent.data;
+            //     const index = children.findIndex(d => d.treeId === data.treeId);
+            //     children.splice(index, 1);
+            // },
+
+            renderContent(h, { node, data, store }) {
+                // return (
+                // <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+                //     <span>
+                //     <span>{node.label}</span>
+                //     </span>
+                //     <span>
+                //     <el-button style="font-size: 12px;" type="text" on-click={ () => this.append(data) }>+</el-button>
+                //     <el-button style="font-size: 12px;" type="text" on-click={ () => this.remove(node, data) }>-</el-button>
+                //     </span>
+                // </span>);
+                return (
+                <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+                    <span>
+                    <span>{node.label}</span>
+                    </span>
+                    <span>
+                    </span>
+                </span>);
+            }
         },
     }
 </script>
