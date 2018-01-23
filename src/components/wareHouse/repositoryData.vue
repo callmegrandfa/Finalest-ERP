@@ -1,10 +1,10 @@
 <template>
   <div class="data-wrapper">
       <el-row class="bg-white pl10 pt10 pb10">
-          <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+          <button class="erp_bt bt_back" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
           <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
           <button class="erp_bt bt_save" @click="createRepository"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-          <button class="erp_bt bt_saveAdd" @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+          <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
           <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
           <button class="erp_bt bt_look"><div class="btImg"><img src="../../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
       </el-row>
@@ -261,7 +261,7 @@
           </el-col>
           <el-col :span="24">
               <button class="erp_bt bt_print" @click='addCol'><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">增行</span></button>
-              <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">删行</span></button>
+              <button class="erp_bt bt_save" @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
               <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">插行</span></button>
           </el-col>
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
@@ -380,11 +380,22 @@
                 self.tableData = self.allList.items;
               })
             },
-            createRepository:function(){
+
+            open(x) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:'el-icon-circle-check',
+                title: x,
+                showClose: true,
+                duration: 3000,
+                });
+            },
+
+            createRepository:function(){//创建新仓库
                 let self = this;
                 this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
                     console.log(res);
-                    alert('创建成功')
+                    self.open('创建仓库成功');
 
               })
             },
@@ -407,12 +418,12 @@
                 this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){
                     console.log(res);
                     self.getAllList();
+                    self.open('创建仓库地址成功');
 
               })
             },
 
             addCol:function(){//添加行
-                console.log(13)
                 let self = this;
                 self.allList.items.unshift(self.col);
             },
@@ -423,14 +434,18 @@
 
             handleDelete:function(index,id){//表格内删除操作
                 this.tableData.splice(index,1);
-                console.log(id);
-                let self = this;
-                self.deleteId.id = id;
                 this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
                 console.log(res);
                 alert('删除成功')
               })
-		    },
+            },
+            
+            back(){
+                this.$store.state.url='/repository/default/repositoryList/default'
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+
+
         },
 
         data(){
@@ -464,19 +479,7 @@
 
                 value: '',
                 tableData:[],
-                col:{
-                    addressId:'1',
-                    completPerson:'1',
-                    contactPerson:'1',
-                    groupId:'1',
-                    id:'1',
-                    isDefault:'1',
-                    logisticsCompany:'1',
-                    phone:'1',
-                    remark:'1',
-                    stockId:'1',
-                    transportMethodId:'1',
-                },
+                
                 createRepositoryParams:{//创建新仓库的参数
                     "ouId": '1',
                     "stockCode": "",
@@ -504,12 +507,21 @@
                     logisticsCompany:'物流公司',//物流公司
                     isDefault:true,//是否默认
                     remark:'fff',//备注
-                    },
-                
-                deleteId:{
-                    id:''
-                },//需要删除的仓库地址Id
-                
+                },
+
+                col:{
+                    addressId:'1',
+                    completPerson:'1',
+                    contactPerson:'1',
+                    groupId:'1',
+                    id:'1',
+                    isDefault:'1',
+                    logisticsCompany:'1',
+                    phone:'1',
+                    remark:'1',
+                    stockId:'1',
+                    transportMethodId:'1',
+                },
             }
         },
     }

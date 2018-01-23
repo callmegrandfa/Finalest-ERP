@@ -14,6 +14,7 @@ export default new vuex.Store({
         slidbarData:[],//从localStorage读取页签
         OrderActiveRouter:'/order/default/orderList/:id',
         groupActiveRouter:'/groupManage/default/groupManageList/:id',
+        resActiveRouter:'/repository/default/repositoryList/:id',
     },
     mutations: {
         go(state){//控制slidebar显示隐藏

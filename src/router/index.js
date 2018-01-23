@@ -31,6 +31,7 @@ const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../co
 const detail = () =>import('../components/groupManage/detail')
 const organization = () =>import('../components/groupManage/organization')
 const groupManager = () =>import('../components/groupManage/groupManager')
+const repository = () =>import('../components/wareHouse/repository')
 Vue.use(Router)
 
 const routes = [
@@ -103,7 +104,12 @@ children:[
   { path: '/shortData/:id', component: shortData,name:'shortData' },
   { path: '/longData/:id', component: longData,name:'longData' },
   { path: '/midData/:id', component: midData,name:'midData' },
-  { path: '/repositoryList/:id', component: repositoryList,name:'repositoryList' },
+  { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//集团管理
+    return store.state.resActiveRouter;
+  },children:[
+      { path: '/repository/default/repositoryData/:id', component: repositoryData,name:'repositoryData' },
+      { path: '/repository/default/repositoryList/:id', component: repositoryList,name:'repositoryList' },
+  ]},
   { path: '/repositoryData/:id', component: repositoryData,name:'repositoryData' },
   { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
   { path: '/groupManager/:id', component: groupManager,name:'groupManager'},
@@ -149,6 +155,10 @@ router.beforeEach((to, from, next) => {
     store.state.groupActiveRouter='/groupManage/default/detail/:id';
   }else if(to.name=='groupManageList'){
     store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
+  }else if(to.name=='repositoryList'){
+    store.state.resActiveRouter='/repository/default/repositoryList/:id'
+  } else if(to.name=='repositoryData'){
+    store.state.resActiveRouter='/repository/default/repositoryData/:id'
   }
    next()
 })
