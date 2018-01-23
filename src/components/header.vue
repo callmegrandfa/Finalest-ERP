@@ -55,8 +55,10 @@ export default {
   },
    methods: {
        cancellation(){
-        sessionStorage.removeItem(this.$store.state.name);
+        window.sessionStorage.removeItem('_ERP');
         this.$store.state.name='';
+        this.$store.state.accessToken='';
+        this.$store.commit('username');
         this.$router.push({path:'/login'});
        },
         querySearch(queryString, cb) {

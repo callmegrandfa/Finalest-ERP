@@ -82,19 +82,39 @@ export default {
       loginWrapper.style.height=height+'px';
   },
   methods:{
-      setSessionStorage(c_name,value){
-        window.sessionStorage.setItem(c_name,value);
-      },
       switch(url){
             this.$router.push({path:url});//点击切换路由
         },
       loginAjax:function(){
-          var _this=this;
+          let _this=this;
           //if(表单验证通过)发送ajax
-          _this.$axios.posts('/api/TokenAuth/Authenticate',this.login)
+          _this.$axios.posts('/api/TokenAuth/Authenticate',_this.login)
           .then(function (res) {
                 //成功之后处理逻辑
-                _this.setSessionStorage(_this.login.userNameOrEmailAddress,'Bearer '+res.result.accessToken);//sessionStorage
+                let flag=false;
+                if(_this.$store.state.username){
+                  _this.$store.state.temporaryLogin=_this.$store.state.username;
+                }
+                let temporaryLogin=_this.$store.state.temporaryLogin;
+                if(temporaryLogin.length==0){//temporary为空
+                    flag=true;
+                }else{//temporary不为空
+                    for(var i=0;i<temporaryLogin.length;i++){
+                        if(temporaryLogin[i].name==_this.login.userNameOrEmailAddress){//相同页签
+                            flag=false;
+                            break;
+                        }else{
+                        flag=true;
+                        }   
+                    }
+                }
+                if(flag){
+                    let pushItem={'name':_this.login.userNameOrEmailAddress,'accessToken':'Bearer '+res.result.accessToken};
+                    temporaryLogin.push(pushItem);
+                }
+                window.sessionStorage.setItem('_ERP',JSON.stringify(temporaryLogin));
+                _this.$store.commit('username');
+                //_this.sessionStorage(_this.login.userNameOrEmailAddress,'Bearer '+res.result.accessToken);//sessionStorage
                 _this.$store.state.alerts=true;
                 window.localStorage.removeItem('ERP');
                 _this.switch('/home');

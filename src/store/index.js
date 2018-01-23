@@ -5,6 +5,7 @@ Vue.use(vuex);
 export default new vuex.Store({
     state:{
         alerts:true,
+        temporaryLogin:[],//本地暂时存储用户名,tokten
         username:[],//存储session纪录的每条登录账号{'name':key,'accessToken':value},用于多账号登录
         name:'',//当前登录用户名
         accessToken:'',//当前登录token
@@ -24,5 +25,10 @@ export default new vuex.Store({
                 state.slidbarData=JSON.parse(window.localStorage.getItem('ERP'))
             }
         },//页签数组
+        username(state){
+            if(window.localStorage.getItem('_ERP')!=''){
+                state.username=JSON.parse(window.sessionStorage.getItem('_ERP'))
+            }
+        }
     }
 })
