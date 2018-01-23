@@ -183,9 +183,7 @@ export default {
             thirdInfo:[               
                 {name:'数据资料短',address:'shortData'},
                 {name:'数据资料长',address:'longData'},
-                {name:'数据资料中',address:'midData'},   
-                {name:'仓库数据列表',address:'repositoryList'},
-                {name:'仓库资料',address:'repositoryData'},
+                {name:'数据资料中',address:'midData'},
                 {name:'商品资料',address:'goodsData'},
                 {name:'店铺数据列表',address:'storeData'},   
                 {name:'店铺资料-基本信息',address:'storeBasicInfor'},
@@ -225,6 +223,11 @@ export default {
                 name:'单据模板',
                 thirdInfo:[
                      {name:'单据开单模板',address:'order'}, 
+                ]
+            },{
+                name:'仓库资料',
+                thirdInfo:[
+                     {name:'仓库资料',address:'repository'}, 
                 ]
             }],
         secondLevel2:[{

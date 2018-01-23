@@ -4,10 +4,13 @@
           <el-col :span="5" class="bg-white">
               <el-row class="height35">
                   <el-col :span='4'>
-                      <span>编码</span>
+                      <span>仓库Id</span>
                   </el-col>
                   <el-col :span='20'>
-                      <input type="text" placeholder="请录入编码" class="input-need">
+                      <input v-model='queryId'
+                             type="text" 
+                             placeholder="请录入编码" 
+                             class="input-need">
                   </el-col>
               </el-row>
           </el-col>
@@ -49,13 +52,13 @@
       <div class="bg-white mr10 mt10 pt10">
           <el-row>
               <!-- <el-col :span='2' class="ml10 "> -->
-                  <button class="erp_bt bt_add" @click="storageData"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                  <button class="erp_bt bt_add" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
               <!-- </el-col> -->
               <!-- <el-col :span='2' class="ml10"> -->
                   <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
               <!-- </el-col> -->
               <!-- <el-col :span='2' class="ml10"> -->
-                  <button class="erp_bt bt_del" @click="deleteRepository"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                  <!-- <button class="erp_bt bt_del" @click="deleteRepository"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
               <!-- </el-col> -->
               <!-- <el-col :span='2' :offset="12"> -->
                   <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
@@ -152,10 +155,10 @@
                 // id (integer, optional)
 
                 let self = this;
-                this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',self.queryId).then(function(res){
+                this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.queryId}).then(function(res){
                     console.log(res);
                     self.queryList.push(res.result);
-                    self.allList = self.searchList;
+                    self.allList = self.queryList;
                 })
             },
 
@@ -176,11 +179,7 @@
             handleDelete:function(index,id){//表格内删除操作
                 this.allList.splice(index,1);
                 console.log(id)
-                
-                let self = this;
-                self.deleteId = id;
-                console.log(self.deleteId)
-                this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',self.deleteId).then(function(res){
+                this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:id}).then(function(res){
                 console.log(res);
               })
             },
@@ -195,41 +194,12 @@
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
-            storageData(e){//点击新增跳转
-                var flag=false;
-                var slidbarData=this.$store.state.slidbarData;//储存页签数组
-                let name = '仓库资料';
-                //console.log(slidbarData)
-                if(slidbarData.length==0){//slidbarData为空
-                    flag=true;
-                }else{//slidbarData不为空
-                    for(var i=0;i<slidbarData.length;i++){
-                        if(slidbarData[i].name==name){//相同页签
-                            flag=false;
-                            break;
-                        }else{
-                        flag=true;
-                        }
-                    }
-                }
-                //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
-                var pushItem={'name':'仓库资料','url':'repositoryData','params':'default'}
-                this.$store.state.url='/repositoryData/default';//储存当前url
-                if(flag){
-                    slidbarData.push(pushItem);
-                }
-                // if(slidbarData.length>=15){
-                //     var r=confirm("您选择打开的窗口已达到15个，如需继续添加新的窗口，默认关闭第一个窗口");
-                //     if (r==true)
-                //     {
-                //         slidbarData.shift();
-                //     }
-                // }
-                this.switch();
-                
-            },
+        
 
-            
+            back(){
+                this.$store.state.url='/repository/default/repositoryData/default'
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
             
            
         },
@@ -246,11 +216,9 @@
                     Start:'0',//偏移量
                     Length:'100',//长度
                 },
-                queryId:{//需要查询的stockId
-                    id:'16'
-                },
-
-                deleteId:'',//需要删除的仓库的Id
+                queryId:'',//需要查询的stockId
+                    
+                
                
             }
         },
