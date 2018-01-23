@@ -3,8 +3,8 @@
       <el-row class="bg-white pl10 pt10 pb10">
           <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
           <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-          <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-          <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+          <button class="erp_bt bt_save" @click="createRepository"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+          <button class="erp_bt bt_saveAdd" @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
           <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
           <button class="erp_bt bt_look"><div class="btImg"><img src="../../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
       </el-row>
@@ -31,13 +31,13 @@
           <el-col :span="5" class="bg-white br3 h30 ml10">
               <el-row>
                   <el-col :span="8" class="pl10">
-                      <span>编码</span>
+                      <span>仓库编码</span>
                   </el-col>
                   <el-col :span="15">
-                      <input 
-                                class="input-need" 
-                                type="text" 
-                                placeholder="请录入编码">
+                      <input v-model="createRepositoryParams.stockCode"
+                             class="input-need" 
+                             type="text" 
+                             placeholder="请录入仓库编码">
                   </el-col>
               </el-row>
           </el-col>
@@ -48,7 +48,7 @@
                       <span>名称</span>
                   </el-col>
                   <el-col :span="15">
-                      <input 
+                      <input v-model="createRepositoryParams.stockFullName"
                             class="input-need" 
                             type="text" 
                             placeholder="请录入名称">
@@ -62,7 +62,10 @@
                       <span>简称</span>
                   </el-col>
                   <el-col :span="15">
-                      <input  class="input-need" type="text" placeholder="无">
+                      <input  v-model="createRepositoryParams.stockName"
+                              class="input-need" 
+                              type="text" 
+                              placeholder="请录入简称">
                   </el-col>
               </el-row>
           </el-col>
@@ -164,7 +167,10 @@
                                 <span>负责人</span>
                             </el-col>
                             <el-col :span="15">
-                                <input class="input-need"  type="text" placeholder="请录入手工单号">
+                                <input v-model="createRepositoryParams.manager"
+                                        class="input-need"  
+                                        type="text" 
+                                        placeholder="请录入负责人">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -175,10 +181,10 @@
                                 <span>电话</span>
                             </el-col>
                             <el-col :span="15">
-                                <input 
+                                <input  v-model='createRepositoryParams.phone'
                                         class="input-need" 
                                         type="text" 
-                                        placeholder="请选择仓库">
+                                        placeholder="请录入电话">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -189,10 +195,10 @@
                                 <span>Email</span>
                             </el-col>
                             <el-col :span="15">
-                                <input  
+                                <input  v-model="createRepositoryParams.email"
                                         class="input-need" 
                                         type="text" 
-                                        placeholder="无">
+                                        placeholder="请录入邮箱">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -205,10 +211,10 @@
                                 <span>传真</span>
                             </el-col>
                             <el-col :span="15">
-                                <input class="input-need" 
-                                        
+                                <input  v-model="createRepositoryParams.fax"
+                                        class="input-need"
                                         type="text" 
-                                        placeholder="PO1235656">
+                                        placeholder="请录入传真">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -219,7 +225,7 @@
                                 <span>地址</span>
                             </el-col>
                             <el-col :span="15">
-                                <input class="input-need" type="text" placeholder="请录入手工单号">
+                                <input class="input-need" type="text" placeholder="请录入地址">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -230,7 +236,7 @@
                                 <span>备注</span>
                             </el-col>
                             <el-col :span="18">
-                                <input 
+                                <input  v-model="createRepositoryParams.remark"
                                         class="input-need" 
                                         type="text" 
                                         placeholder="请录入备注">
@@ -268,10 +274,18 @@
                     <el-table-column prop="logisticsCompany" label="物流公司"></el-table-column>
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="tableData[scope.$index].isDefault" ></el-checkbox>
+                            <el-checkbox v-model="tableData[scope.$index].isDefault"></el-checkbox>
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" label="备注"></el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <!-- <el-button v-on:click='a(scope.row)'>123</el-button> -->
+                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
+                            <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                        </template>
+                    </el-table-column>
               </el-table> 
           </el-col>
       </el-row>
@@ -357,13 +371,21 @@
                 // logisticsCompany (string, optional): 物流公司 ,
                 // isDefault (boolean, optional): 是否默认 ,
                 // remark (string, optional): 备注 ,
-                // id (integer, optional)
+                // id (integer, optional)仓库地址ID
 
                 let self = this;
                 this.$axios.gets('/api/services/app/StockAddressManagement/GetAll').then(function(res){
-                // console.log(res);
+                console.log(res);
                 self.allList = res.result;
                 self.tableData = self.allList.items;
+              })
+            },
+            createRepository:function(){
+                let self = this;
+                this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
+                    console.log(res);
+                    alert('创建成功')
+
               })
             },
 
@@ -378,27 +400,37 @@
                 // logisticsCompany (string, optional): 物流公司 ，
                 // isDefault (boolean, optional): 是否默认 ,
                 // remark (string, optional): 备注 ,
-                // id (integer, optional)
+                // id (integer, optional):仓库地址的ID
 
                 let self = this;
                 console.log(self.createParams)
                 this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){
                     console.log(res);
+                    self.getAllList();
+
               })
             },
 
-
-            deleteAddress:function(){
-                this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',self.deleteId).then(function(res){
-                console.log(res);
-              })
-            },
-
-            addCol:function(){
+            addCol:function(){//添加行
                 console.log(13)
                 let self = this;
                 self.allList.items.unshift(self.col);
             },
+
+            handleEdit:function(index){//表格内编辑操作
+                this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+            },
+
+            handleDelete:function(index,id){//表格内删除操作
+                this.tableData.splice(index,1);
+                console.log(id);
+                let self = this;
+                self.deleteId.id = id;
+                this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
+                console.log(res);
+                alert('删除成功')
+              })
+		    },
         },
 
         data(){
@@ -433,23 +465,50 @@
                 value: '',
                 tableData:[],
                 col:{
-                    
+                    addressId:'1',
+                    completPerson:'1',
+                    contactPerson:'1',
+                    groupId:'1',
+                    id:'1',
+                    isDefault:'1',
+                    logisticsCompany:'1',
+                    phone:'1',
+                    remark:'1',
+                    stockId:'1',
+                    transportMethodId:'1',
                 },
-
+                createRepositoryParams:{//创建新仓库的参数
+                    "ouId": '1',
+                    "stockCode": "",
+                    "stockName": "",
+                    "stockFullName": "",
+                    "opAreaId": 1,
+                    "adAreaId": 1,
+                    "stockTypeId": 1,
+                    "invTypeId": 1,
+                    "fax": " ",
+                    "email":  '',
+                    "status": 1,
+                    "manager": "",
+                    "phone": "",
+                    "remark": ""
+                },
                 createParams:{//创建新的仓库地址
                     groupId:'1',//集团ID
                     stockId:'16',//仓库ID
                     addressId:'2',//地址ID
                     completeAddress:'详情地址',//详情地址
                     transportMethodId:'2',//运输方式
-                    contactPerson:'联系人',//联系人
-                    phone:'13333333333',//联系电话
+                    contactPerson:'大大大',//联系人
+                    phone:'13666666666',//联系电话
                     logisticsCompany:'物流公司',//物流公司
                     isDefault:true,//是否默认
-                    remark:'hb',//备注
+                    remark:'fff',//备注
                     },
                 
-                deleteId:'50',//需要删除的仓库地址Id
+                deleteId:{
+                    id:''
+                },//需要删除的仓库地址Id
                 
             }
         },
