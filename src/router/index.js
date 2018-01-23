@@ -41,7 +41,6 @@ const routes = [
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
     store.commit('username');
-    console.log(store.state.username)
     if(store.state.username!=null){
       if(store.state.username.length>1){//多账号登录
         window.localStorage.clear();
@@ -93,23 +92,6 @@ const routes = [
     }else{
       next('/login')
     }
-    
-    // let names=[];
-    // store.state.username=[];//初始化，避免重复push
-    // for(let i=0;i<window.sessionStorage.length;i++){
-    //     let key=window.sessionStorage.key(i);
-    //     let value=window.sessionStorage.getItem(key);
-    //     let item={'name':key,'accessToken':value};
-    //     store.state.username.push(item);//vuex,store里面存入数据
-    //     for(let e=0;e<store.state.username.length;e++){
-    //         let name=store.state.username[e].name;
-    //         let token=store.state.username[e].accessToken;
-    //         if(key==name){//vuex里面存在用户名和sessionStorage里面key值相等
-    //           names.push(name); 
-    //         }
-    //     }
-    // }
-  
   },
 children:[
   { path: '/home', component: home,name:'home' },
@@ -125,7 +107,7 @@ children:[
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
   { path: '/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
   { path: '/customerInfor/:id', component: customerInfor,name:'customerInfor' },
-  { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开弹模板
+  { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开单模板
     return store.state.OrderActiveRouter;
   },children:[
       { path: '/order/default/orderDetails/:id', component: orderDetails,name:'orderDetails' },

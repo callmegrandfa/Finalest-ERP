@@ -126,7 +126,7 @@
     .el-checkbox__inner {
         width: 24px;
         height: 24px;
-        border-radius: 50% !important;
+        border-radius: 50%;
     }   
     .el-checkbox__inner::after{
         -webkit-box-sizing: content-box;

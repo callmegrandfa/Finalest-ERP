@@ -48,6 +48,7 @@
                         :props="defaultProps"
                         node-key="treeId"
                         default-expand-all
+                        show-checkbox
                         :expand-on-click-node="false"
                         :render-content="renderContent">
                         </el-tree>
@@ -425,32 +426,33 @@
     padding-left: 0;
 }
 /* 重写checkbox */
-.tenant-management-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.tenant-management-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
+.tree-container .el-checkbox__inner {
+        width: 24px;
+        height: 24px;
+        border-radius: 50% !important;
+    }   
+   .tree-container .el-checkbox__inner::after{
+        -webkit-box-sizing: content-box;
+        box-sizing: content-box;
+        content: "";
+        border: 3px solid #fff;
+        border-left: 0;
+        border-top: 0;
+        height: 11px;
+        left: 6px;
+        position: absolute;
+        top: 1px;
+        -webkit-transform: rotate(45deg) scaleY(0);
+        transform: rotate(45deg) scaleY(0);
+        width: 6px;
+        -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+        transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+        -webkit-transform-origin: center;
+        transform-origin: center;
+    }
 
 /* 重写el-table样式 */
 .group-management-wrapper .el-table th {
