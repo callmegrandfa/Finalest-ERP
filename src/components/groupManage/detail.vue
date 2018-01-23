@@ -4,9 +4,9 @@
      <el-row>
          <el-col :span="24">
             <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-            <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-            <button class="erp_bt bt_save" plain @click="open"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+            <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+            <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <button class="erp_bt bt_saveAdd" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
             <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>编码</label>
-                    <el-input v-model="addData.ouCode" :disabled="true"></el-input>
+                    <el-input v-model="addData.ouCode"></el-input>
                 </div> 
                 <div class="bgcolor">
                         <label>名称</label>
@@ -127,13 +127,13 @@
     <el-col :span="24" class="getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-input v-model="auditInformation.createTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-input v-model="auditInformation.modifyTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>启用日期</label><el-input v-model="auditInformation.startTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>封存日期</label><el-input v-model="auditInformation.finishTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" :disabled="true"></el-input></div>    
+            <div class="bgcolor"><label>创建人</label><el-input v-model="addData.creatorUser" :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>创建时间</label><el-input v-model="addData.creationTime" :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>修改人</label><el-input v-model="addData.lastModifierUserId" :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>修改时间</label><el-input v-model="addData.lastModificationTime" :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>启用日期</label><el-input v-model="addData.startTime" :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>封存日期</label><el-input v-model="addData.lastModificationTime" :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>封存人</label><el-input v-model="addData.lastModifierUser" :disabled="true"></el-input></div>    
         </div>                                  
     </el-col>
 </el-row>                                                           
@@ -148,37 +148,28 @@ export default({
             ifShow:true,
             activeName: 'company',
             addData:{
-                groupId:'集团ID',
-                ouCode: '组织代码',//存在
-                ouName: '组织名称' ,//存在
-                foreignName: '外文名称' ,
-                mnemonic: '助记码' ,
-                ouParentid: '上级组织ID' ,//存在
-                accountPeriodId: '会计期间ID' ,
-                baseCurrencyId: '本位币种id' ,//存在
-                companyOuId: '所属公司ID' ,//存在
-                contactPerson: '联系人' ,//存在
-                phone: '电话' ,//存在
-                address: '地址' ,//存在
-                areaId: '行政区域ID' ,
-                entityProperty : '实体属性' ,
-                status: '启用状态' ,//存在
-                remark: '备注' ,//存在
-                basOuTypes: '组织职能' ,
-                isGroupCompany:true ,
-                ouCompanyParentid: '上级公司组织ID' ,
-                legalPerson: '法人代表' ,
-                companyStatus: '公司启用状态' ,
-                regtime: '公司成立时间'
-            },
-            auditInformation:{//审计信息
-                    createName:"张三",
-                    createTime:"2001.12.12",
-                    modifyName:"李四",
-                    modifyTime:"2001.12.12",
-                    startTime:"2001.12.12",
-                    finishTime:"2001.12.12",
-                    finishName:"李",
+                groupId:1,//集团ID
+                ouCode: 'string',//组织代码存在 
+                ouName: 'string' ,//组织名称存在
+                foreignName: 'string' ,//外文名称
+                mnemonic: 'string' ,//助记码
+                ouParentid: 0 ,//上级组织ID存在
+                accountPeriodId: 0 ,//会计期间ID
+                baseCurrencyId: 0,//本位币种id存在
+                companyOuId: 0,//所属公司ID存在
+                contactPerson: 'string' ,//联系人存在
+                phone: 'string' ,//电话存在
+                address: 'string' ,//地址存在
+                areaId: 0 ,//行政区域ID
+                entityProperty : 0 ,//实体属性
+                status: 0 ,//启用状态存在
+                remark: 'string' ,//备注存在
+                basOuTypes: [ 0 ],//组织职能
+                isGroupCompany:true ,//
+                ouCompanyParentid: 0 ,//上级公司组织ID
+                legalPerson: 'string' ,//法人代表
+                companyStatus: 0 ,//公司启用状态
+                regtime: '2018-01-23T02:20:35.833Z'//公司成立时间
             },
             company:{//公司
                 higher:"恒康",
@@ -192,58 +183,58 @@ export default({
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
             higherUnit: [{//上级单元数据
-                valueHigherUnit: '选项1',
+                valueHigherUnit: '0',
                 label: '361度'
             }, {
-                valueHigherUnit: '选项2',
+                valueHigherUnit: '1',
                 label: '恒康'
             }, {
-                valueHigherUnit: '选项3',
+                valueHigherUnit: '2',
                 label: '红旗连锁'
             }],
             money: [{//本位币种
-                baseCurrencyId:'选项1',
+                baseCurrencyId:'0',
                 label: 'RMB'
             }, {
-                baseCurrencyId:'选项2',
+                baseCurrencyId:'1',
                 label: '美元'
             }, {
-                baseCurrencyId:'选项3',
+                baseCurrencyId:'2',
                 label: '英镑'
             },{
-                baseCurrencyId:'选项4',
+                baseCurrencyId:'3',
                 label: '日元'
             }, {
-                baseCurrencyId:'选项5',
+                baseCurrencyId:'4',
                 label: '韩元'
             }, {
-                baseCurrencyId:'选项6',
+                baseCurrencyId:'5',
                 label: '越南盾'
             },{
-                baseCurrencyId:'选项7',
+                baseCurrencyId:'6',
                 label: '泰铢'
             }, {
-                baseCurrencyId:'选项8',
+                baseCurrencyId:'7',
                 label: '港币'
             }, {
-                baseCurrencyId:'选项9',
+                baseCurrencyId:'8',
                 label: '银元'
             }],
             company: [{ //   所属公司数据
-                valueCompany:'选项1',
+                valueCompany:'0',
                 label: '恒康'
             }, {
-                valueCompany:'选项2',
+                valueCompany:'1',
                 label: '361度'
             }, {
-                valueCompany:'选项3',
+                valueCompany:'2',
                 label: '红旗连锁'
             }],
             state: [{ //启用状态数据
-                valueState:'选项1',
+                valueState:'0',
                 label: '启用'
             }, {
-                valueState:'选项2',
+                valueState:'1',
                 label: '停用'
             }]          
         }
@@ -270,17 +261,17 @@ export default({
             this.$store.state.url='/groupManage/default/groupManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
-        open() {
+        open(x) {
             this.$notify({
             position: 'bottom-right',
             iconClass:'el-icon-circle-check',
-            title: '保存成功',
+            title: x,
             showClose: true,
             duration: 3000,
             });
         },
          handleClick(tab, event) {
-            console.log(tab, event);
+            // console.log(tab, event);
         },
         checkFinance:function(e){
             
@@ -312,6 +303,55 @@ export default({
                 }
             }
         },
+        save(){
+            let _this=this;
+            _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                    console.log(res)
+                    _this.addData=res.result;
+                    _this.open('保存成功');
+                },function(res){
+            })
+        },
+        saveAdd(){
+             let _this=this;
+            _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                    console.log(res)
+                    _this.addData=res.result;
+                    _this.open('保存并新增成功');
+                     _this.clearData();
+                },function(res){
+                })
+        },
+        newAdd(){   
+            this.clearData();
+            this.open('新增成功');
+        },
+        clearData(){
+            this.addData={
+                groupId:1,//集团ID
+                ouCode: 'string',//组织代码存在 
+                ouName: 'string' ,//组织名称存在
+                foreignName: 'string' ,//外文名称
+                mnemonic: 'string' ,//助记码
+                ouParentid: 0 ,//上级组织ID存在
+                accountPeriodId: 0 ,//会计期间ID
+                baseCurrencyId: 0,//本位币种id存在
+                companyOuId: 0,//所属公司ID存在
+                contactPerson: 'string' ,//联系人存在
+                phone: 'string' ,//电话存在
+                address: 'string' ,//地址存在
+                areaId: 0 ,//行政区域ID
+                entityProperty : 0 ,//实体属性
+                status: 0 ,//启用状态存在
+                remark: 'string' ,//备注存在
+                basOuTypes: [ 0 ],//组织职能
+                isGroupCompany:true ,//
+                ouCompanyParentid: 0 ,//上级公司组织ID
+                legalPerson: 'string' ,//法人代表
+                companyStatus: 0 ,//公司启用状态
+                regtime: '2018-01-23T02:20:35.833Z'//公司成立时间
+            }
+        }
     }
 
 })        
