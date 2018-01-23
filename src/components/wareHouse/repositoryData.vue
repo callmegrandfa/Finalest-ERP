@@ -1,15 +1,12 @@
 <template>
   <div class="data-wrapper">
       <el-row class="bg-white pl10 pt10 pb10">
-          <el-col :span="2">
-              <span class="btn" @click='getOuManagement()'>保存新增</span>
-          </el-col>
-          <el-col :span="2" class="ml15">
-              <span class="btn">保存</span>
-          </el-col>
-          <el-col :span="2" class="ml15">
-              <span class="btn">辅助功能</span>
-          </el-col>
+          <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+          <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+          <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+          <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+          <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+          <button class="erp_bt bt_look"><div class="btImg"><img src="../../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
       </el-row>
 
       <el-row class="ft12 pt10 pr10">
@@ -37,7 +34,7 @@
                       <span>编码</span>
                   </el-col>
                   <el-col :span="15">
-                      <input v-model="queryResult.stockCode" 
+                      <input 
                                 class="input-need" 
                                 type="text" 
                                 placeholder="请录入编码">
@@ -51,7 +48,7 @@
                       <span>名称</span>
                   </el-col>
                   <el-col :span="15">
-                      <input v-model="queryResult.stockFullName" 
+                      <input 
                             class="input-need" 
                             type="text" 
                             placeholder="请录入名称">
@@ -65,7 +62,7 @@
                       <span>简称</span>
                   </el-col>
                   <el-col :span="15">
-                      <input v-model="queryResult.stockName" class="input-need" type="text" placeholder="无">
+                      <input  class="input-need" type="text" placeholder="无">
                   </el-col>
               </el-row>
           </el-col>
@@ -167,7 +164,7 @@
                                 <span>负责人</span>
                             </el-col>
                             <el-col :span="15">
-                                <input class="input-need" v-model="queryResult.manager" type="text" placeholder="请录入手工单号">
+                                <input class="input-need"  type="text" placeholder="请录入手工单号">
                             </el-col>
                         </el-row>
                     </el-col>
@@ -178,7 +175,7 @@
                                 <span>电话</span>
                             </el-col>
                             <el-col :span="15">
-                                <input v-model="queryResult.phone" 
+                                <input 
                                         class="input-need" 
                                         type="text" 
                                         placeholder="请选择仓库">
@@ -192,7 +189,7 @@
                                 <span>Email</span>
                             </el-col>
                             <el-col :span="15">
-                                <input v-model="queryResult.email" 
+                                <input  
                                         class="input-need" 
                                         type="text" 
                                         placeholder="无">
@@ -209,7 +206,7 @@
                             </el-col>
                             <el-col :span="15">
                                 <input class="input-need" 
-                                        v-model="queryResult.fax" 
+                                        
                                         type="text" 
                                         placeholder="PO1235656">
                             </el-col>
@@ -233,7 +230,7 @@
                                 <span>备注</span>
                             </el-col>
                             <el-col :span="18">
-                                <input v-model='queryResult.remark' 
+                                <input 
                                         class="input-need" 
                                         type="text" 
                                         placeholder="请录入备注">
@@ -255,6 +252,11 @@
       <el-row class="ft12 pr10 pt10 br3">
           <el-col :span='24' class="bg-white pt10 pl10 pb10 bb1">
               <span class="header-title">送货信息</span>
+          </el-col>
+          <el-col :span="24">
+              <button class="erp_bt bt_print" @click='addCol'><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">增行</span></button>
+              <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">删行</span></button>
+              <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">插行</span></button>
           </el-col>
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
               <el-table :data="tableData" border style="width: 100%" stripe>
@@ -341,13 +343,22 @@
         name:'repositoryData',
         created:function(){
             this.getAllList();
-            this.queryRepositoryDetail();
-            this.getOuManagement();
         },
 
         methods:{
-            getAllList:function(){
-                // console.log(123);
+            getAllList:function(){//查询所有仓库地址
+                // groupId (integer, optional): 集团ID ,
+                // stockId (integer, optional): 仓库ID ,
+                // addressId (integer, optional): 地址ID ,
+                // completeAddress (string, optional): 详情地址 ,
+                // transportMethodId (integer, optional): 运输方式 ,
+                // contactPerson (string, optional): 联系人 ,
+                // phone (string, optional): 联系电话 ,
+                // logisticsCompany (string, optional): 物流公司 ,
+                // isDefault (boolean, optional): 是否默认 ,
+                // remark (string, optional): 备注 ,
+                // id (integer, optional)
+
                 let self = this;
                 this.$axios.gets('/api/services/app/StockAddressManagement/GetAll').then(function(res){
                 // console.log(res);
@@ -356,23 +367,37 @@
               })
             },
 
-            queryRepositoryDetail:function(){
-                let self= this;
-                this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',this.queryId)
-                .then(function(res){
-                    // console.log(res);
-                    self.queryResult = res.result;
-                },function(res){
-                    console.log('err:'+res)
-                })
+            saveAdd:function(){//创建新的仓库地址
+                // groupId (integer, optional): 集团ID ,
+                // stockId (integer, optional): 仓库ID ,
+                // addressId (integer, optional): 地址ID ,
+                // completeAddress (string, optional): 详情地址 ,
+                // transportMethodId (integer, optional): 运输方式 ,
+                // contactPerson (string, optional): 联系人 ,
+                // phone (string, optional): 联系电话 ,
+                // logisticsCompany (string, optional): 物流公司 ，
+                // isDefault (boolean, optional): 是否默认 ,
+                // remark (string, optional): 备注 ,
+                // id (integer, optional)
+
+                let self = this;
+                console.log(self.createParams)
+                this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){
+                    console.log(res);
+              })
             },
 
-            getOuManagement:function(){
-                let self = this;
-                this.$axios.gets('/api/services/app/OuManagement/Get?id=1').then(function(res){
-                    console.log(res);
-                    self.ouGet = res.result;
+
+            deleteAddress:function(){
+                this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',self.deleteId).then(function(res){
+                console.log(res);
               })
+            },
+
+            addCol:function(){
+                console.log(13)
+                let self = this;
+                self.allList.items.unshift(self.col);
             },
         },
 
@@ -382,10 +407,7 @@
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制允许使用
 
-                queryId:{//搜索的ID
-                    id:'16'
-                    },  
-                queryResult:'', //搜索结果
+                
                 queryOuId:{//ouManagement的搜索Id
                     id:'2'
                 },
@@ -410,6 +432,24 @@
 
                 value: '',
                 tableData:[],
+                col:{
+                    
+                },
+
+                createParams:{//创建新的仓库地址
+                    groupId:'1',//集团ID
+                    stockId:'16',//仓库ID
+                    addressId:'2',//地址ID
+                    completeAddress:'详情地址',//详情地址
+                    transportMethodId:'2',//运输方式
+                    contactPerson:'联系人',//联系人
+                    phone:'13333333333',//联系电话
+                    logisticsCompany:'物流公司',//物流公司
+                    isDefault:true,//是否默认
+                    remark:'hb',//备注
+                    },
+                
+                deleteId:'50',//需要删除的仓库地址Id
                 
             }
         },
