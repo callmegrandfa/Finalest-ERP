@@ -34,7 +34,7 @@
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                    <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
                     <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
                     <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
@@ -47,13 +47,9 @@
                     </el-col>
 
                     <el-col :span='19' class="ml10">
-                        <el-table :data="tableData" border style="width: 100%" stripe>
-                            <el-table-column prop="ifAction" label="操作">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAction"></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="ouCode" label="编码" ></el-table-column>
+                        <el-table :data="tableData" border style="width: 100%" stripe @selection-change="handleSelectionChange"> ref="multipleTable">
+                            <el-table-column type="selection"></el-table-column>
+                            <el-table-column prop="ouCode" label="编码"></el-table-column>
                             <el-table-column prop="ouName" label="名称"></el-table-column>
                             <el-table-column prop="ouName" label="简称"></el-table-column>
                             <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
@@ -98,6 +94,7 @@
         name:'customerInfor',
         data(){
             return {
+               
                 try:{
                 "groupId": 2,
                 "stockId": 1,
@@ -148,31 +145,22 @@
                     label: '90'
                     }],
                 tableData: [{
-                    ifAction:true,
-                    ouCode: '编码',
-                    ouName: '名称',
-                    ouName: '简称',
-                    ouParentName: '上级业务单元',
-                    companyOuId:'所属公司',
-                    baseCurrencyId:'本位币种',
-                    effectiveStart:'启用年月',
-                    status:'状态',
-                    isCompany:'公司',
-                    isPurchase:'业务',
-                    isFinance:'财务',
-                    id:'版本号',
+                    ouCode: '',
+                    ouName: '',
+                    ouName: '',
+                    ouParentName: '',
+                    companyOuId:'',
+                    baseCurrencyId:'',
+                    effectiveStart:'',
+                    status:'',
+                    isCompany:'',
+                    isPurchase:'',
+                    isFinance:'',
+                    id:'',
                     },],
 
                     componyTree: [{
-                        label: '一级 1',
-                        children: [{
-                            label: '二级 1-1',
-                            children: [{
-                            label: '三级 1-1-1'
-                            }]
-                        }]
-                        }, {
-                        label: '一级 2',
+                        label: '宝胜国际',
                         children: [{
                             label: '二级 2-1',
                             children: [{
@@ -184,36 +172,36 @@
                             label: '三级 2-2-1'
                             }]
                         }]
-                        }, {
-                        label: '一级 3',
-                        children: [{
-                            label: '二级 3-1',
-                            children: [{
-                            label: '三级 3-1-1'
-                            }]
-                        }, {
-                            label: '二级 3-2',
-                            children: [{
-                            label: '三级 3-2-1'
-                            }]
-                        }]
                         }],
-
+                    
                     pageIndex:-1,//分页的当前页码
                     totalPage:0,//当前分页总数
-                    oneItem:10//每页有多少条信息
+                    oneItem:10,//每页有多少条信息
+                    multipleSelection: [],//复选框选中数据
+                    
             }
         },
         created:function(){       
-            let _this=this;
-            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:0,MaxResultCount:_this.oneItem}).then(function(res){
-                _this.tableData=res.result.items;
-                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                console.log(res.result.items )
-                },function(res){
-                })
+                let _this=this;
+                _this.loadTableData();
+                _this.loadTreeData();
              },
         methods:{
+            loadTableData(){//表格
+                 let _this=this;
+                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:0,MaxResultCount:_this.oneItem}).then(function(res){ 
+                    _this.tableData=res.result.items;
+                        _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    },function(res){
+                })
+            },
+            loadTreeData(){//树形控件
+                 let _this=this;
+                _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1}).then(function(res){
+                    //console.log(res)
+                },function(res){
+                })
+            },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(val-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){
@@ -234,6 +222,29 @@
             goDetail(){
                 this.$store.state.url='/groupManage/default/detail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+             handleSelectionChange(val) {//点击复选框选中的数据
+                this.multipleSelection = val;
+                //console.log(val)
+            },
+            delRow(){
+                let _this=this;
+                if(_this.multipleSelection.length>0){
+                    for(let i=0;i<_this.multipleSelection.length;i++){
+                        _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
+                        .then(function(res){
+                             _this.loadTableData();
+                            // for(let x=0;x<_this.tableData.length;x++){
+                            //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){
+                            //         console.log(_this.tableData[x]);
+                            //         _this.tableData.splice(x, 1);
+                            //     }
+                            // }
+                        },function(res){
+                            console.log('err:'+res)
+                        })
+                    }
+                };  
             }
 
         },
@@ -311,6 +322,7 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
+    min-height: 380px;
 }
 .btn{
     display: inline-block;
