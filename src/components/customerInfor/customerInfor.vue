@@ -102,7 +102,7 @@
                     <el-col :span="24">
                         <el-table :data="tableData" border style="width: 100%" stripe>
                             <el-table-column prop="ifAction" label=" ">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
                                 </template>
                             </el-table-column>
@@ -113,7 +113,7 @@
                             <el-table-column prop="cusType" label="客户分类"></el-table-column>
                             <el-table-column prop="cusNature" label="客户性质"></el-table-column>
                             <el-table-column prop="ifSupply" label="供应">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].ifSupply" ></el-checkbox>
                                 </template>
                             </el-table-column>   

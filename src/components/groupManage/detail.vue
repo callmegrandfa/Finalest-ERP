@@ -99,8 +99,8 @@
                           <div class="companyInfo">
                             <el-col :span="24">
                                 <el-col :span="5"  class="getPadding">
-                                    <el-checkbox v-model="group">集团公司</el-checkbox>
-                                    <el-checkbox v-model="isUse">是否启用</el-checkbox>
+                                    <el-checkbox v-model="group" disabled>集团公司</el-checkbox>
+                                    <el-checkbox v-model="addData.isGroupCompany">是否启用</el-checkbox>
                                 </el-col> 
                             </el-col>
                             <el-col :span="22"  class="getPadding">
