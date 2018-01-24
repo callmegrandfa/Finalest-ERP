@@ -91,7 +91,7 @@
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add" @click="storageData"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button class="erp_bt bt_add" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
@@ -140,7 +140,7 @@
 
 <script>
     export default{
-        name:'customerInfor',
+        name:'customerList',
         data(){
             return {
                 try:{
@@ -284,36 +284,11 @@
                 this.pageIndex=val;
             },
 
-            switch(){
+            back(){
+                this.$store.state.url='/customer/default/customerBasicInfor/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
-            storageData(e){//点击新增跳转
-                var flag=false;
-                var slidbarData=this.$store.state.slidbarData;//储存页签数组
-                let name = '客户资料-基本信息';
-                if(slidbarData.length==0){//slidbarData为空
-                    flag=true;
-                }else{//slidbarData不为空
-                    for(var i=0;i<slidbarData.length;i++){
-                        if(slidbarData[i].name==name){//相同页签
-                            flag=false;
-                            break;
-                        }else{
-                        flag=true;
-                        }
-                    }
-                }
-                //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
-                var pushItem={'name':'客户资料-基本信息','url':'customerBasicInfor','params':'default'}
-                this.$store.state.url='/customerBasicInfor/default';//储存当前url
-                if(flag){
-                    slidbarData.push(pushItem);
-                }
-        
-                this.switch();
-                
-            },
 
         },
     }

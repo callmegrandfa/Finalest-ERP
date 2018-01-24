@@ -9,14 +9,16 @@ const shortData = () =>import('../components/dataTemplate/shortData')
 const midData = () =>import('../components/dataTemplate/midData')
 const longData = () =>import('../components/dataTemplate/longData')
 const home = () =>import(/* webpackChunkName: "group-index" */'../components/home/home')
+const repository = () =>import('../components/wareHouse/repository')
 const repositoryList = () =>import('../components/wareHouse/repositoryList')
 const repositoryData = () =>import('../components/wareHouse/repositoryData')
 const supplierEdit = () =>import('../components/supplierData/supplierEdit')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
+const customer = () =>import('../components/customerInfor/customer')
+const customerList = () =>import('../components/customerInfor/customerList')
 const customerBasicInfor = () =>import('../components/customerInfor/customerBasicInfor')
-const customerInfor = () =>import('../components/customerInfor/customerInfor')
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
@@ -31,7 +33,8 @@ const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../co
 const detail = () =>import('../components/groupManage/detail')
 const organization = () =>import('../components/groupManage/organization')
 const groupManager = () =>import('../components/groupManage/groupManager')
-const repository = () =>import('../components/wareHouse/repository')
+
+
 Vue.use(Router)
 
 const routes = [
@@ -39,6 +42,7 @@ const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: login,name:'login' },
   { path: '/register', component: register,name:'register' },
+  { path: '/customer', component: customer,name:'customer' },
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
     store.commit('username');
@@ -117,7 +121,7 @@ children:[
   { path: '/shortData/:id', component: shortData,name:'shortData' },
   { path: '/longData/:id', component: longData,name:'longData' },
   { path: '/midData/:id', component: midData,name:'midData' },
-  { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//集团管理
+  { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//仓库资料
     return store.state.resActiveRouter;
   },children:[
       { path: '/repository/default/repositoryData/:id', component: repositoryData,name:'repositoryData' },
@@ -129,8 +133,12 @@ children:[
   { path: '/goodsData/:id', component: goodsData,name:'goodsData' },
   { path: '/storeData/:id', component: storeData,name:'storeData' },
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
-  { path: '/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
-  { path: '/customerInfor/:id', component: customerInfor,name:'customerInfor' },
+  { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//客户资料
+    return store.state.customerActiveRouter;
+  },children:[
+      { path: '/customer/default/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
+      { path: '/customer/default/customerList/:id', component: customerList,name:'customerList' },
+  ]},
   { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开弹模板
     return store.state.OrderActiveRouter;
   },children:[
@@ -170,8 +178,12 @@ router.beforeEach((to, from, next) => {
     store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
   }else if(to.name=='repositoryList'){
     store.state.resActiveRouter='/repository/default/repositoryList/:id'
-  } else if(to.name=='repositoryData'){
+  }else if(to.name=='repositoryData'){
     store.state.resActiveRouter='/repository/default/repositoryData/:id'
+  }else if(to.name=='customerList'){
+    store.state.customerActiveRouter='/customer/default/customerList/:id'
+  }else if(to.name=='customerBasicInfor'){
+    store.state.customerActiveRouter='/customer/default/customerBasicInfor/:id'
   }
    next()
 })

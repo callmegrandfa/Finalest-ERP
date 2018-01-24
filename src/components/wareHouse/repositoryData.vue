@@ -1,12 +1,33 @@
 <template>
   <div class="data-wrapper">
       <el-row class="bg-white pl10 pt10 pb10">
-          <button class="erp_bt bt_back" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-          <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-          <button class="erp_bt bt_save" @click="createRepository"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-          <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-          <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-          <button class="erp_bt bt_look"><div class="btImg"><img src="../../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
+            <button class="erp_bt bt_back" @click="back">
+                <div class="btImg">
+                  <img src="../../../static/image/common/bt_back.png">
+                </div>
+                <span class="btDetail">返回</span>
+            </button>
+
+            <button class="erp_bt bt_save" @click="createRepository">
+                <div class="btImg">
+                  <img src="../../../static/image/common/bt_save.png">
+                </div>
+                <span class="btDetail">保存</span>
+            </button>
+
+            <button class="erp_bt bt_saveAdd">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_saveAdd.png">
+                </div>
+                <span class="btDetail">保存并新增</span>
+            </button>
+
+            <button class="erp_bt bt_look">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_look.png">
+                </div>
+                <span class="btDetail">审核</span>
+            </button>
       </el-row>
 
       <el-row class="ft12 pt10 pr10">
@@ -256,33 +277,61 @@
       </el-row>
 
       <el-row class="ft12 pr10 pt10 br3">
-          <el-col :span='24' class="bg-white pt10 pl10 pb10 bb1">
+          <el-col :span='24' class="bg-white pt10 pl10">
               <span class="header-title">送货信息</span>
           </el-col>
-          <el-col :span="24">
+
+          <el-col :span="24" class="bg-white pt10">
               <button class="erp_bt bt_print" @click='addCol'><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">增行</span></button>
               <button class="erp_bt bt_save" @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
               <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">插行</span></button>
           </el-col>
+
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
               <el-table :data="tableData" border style="width: 100%" stripe>
-                    <el-table-column prop="contactPerson" label="联系人" ></el-table-column>
-                    <el-table-column prop="phone" label="手机" ></el-table-column>
+                    <el-table-column prop="contactPerson" label="联系人" >
+                        <template slot-scope="scope">
+                            <!-- <span>{{scope.$index%2}}</span> -->
+                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.contactPerson" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="phone" label="手机" >
+                        <template slot-scope="scope">
+                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.phone" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="phoneNum" label="电话"></el-table-column>
-                    <el-table-column prop="completeAddress" label="送货地址"></el-table-column>
-                    <el-table-column prop="transportMethodId" label="运输方式"></el-table-column>
-                    <el-table-column prop="logisticsCompany" label="物流公司"></el-table-column>
+                    <el-table-column prop="completeAddress" label="送货地址">
+                        <template slot-scope="scope">
+                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.completeAddress" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="transportMethodId" label="运输方式">
+                        <template slot-scope="scope">
+                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.transportMethodId" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="logisticsCompany" label="物流公司">
+                        <template slot-scope="scope">
+                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.logisticsCompany" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
                             <el-checkbox v-model="tableData[scope.$index].isDefault"></el-checkbox>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="remark" label="备注"></el-table-column>
+                    <el-table-column prop="remark" label="备注">
+                        <template slot-scope="scope">
+                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.remark" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
+                            <!-- <span>{{scope.row}}</span> -->
                             <!-- <el-button v-on:click='a(scope.row)'>123</el-button> -->
-                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
-                            <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
+                            <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button>
+                            <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button> 
                             <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
@@ -400,7 +449,7 @@
               })
             },
 
-            saveAdd:function(){//创建新的仓库地址
+            saveAdd:function(){//创建新的仓库地址  保存修改已有仓库地址
                 // groupId (integer, optional): 集团ID ,
                 // stockId (integer, optional): 仓库ID ,
                 // addressId (integer, optional): 地址ID ,
@@ -415,21 +464,43 @@
 
                 let self = this;
                 console.log(self.createParams)
-                this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){
+                this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){//创建
                     console.log(res);
                     self.getAllList();
                     self.open('创建仓库地址成功');
+                    self.clearData();
 
               })
             },
 
-            addCol:function(){//添加行
+            addCol:function(){//增行
                 let self = this;
-                self.allList.items.unshift(self.col);
+                self.allList.items.unshift(self.createParams);
+            },
+
+            clearData:function(){//清除创建的参数
+                let self = this;
+                self.createParams={
+                    groupId:'1',//集团ID
+                    stockId:'16',//仓库ID
+                    addressId:'2',//地址ID
+                    completeAddress:'',//详情地址
+                    transportMethodId:'',//运输方式
+                    contactPerson:'',//联系人
+                    phone:'',//联系电话
+                    logisticsCompany:'',//物流公司
+                    isDefault:true,//是否默认
+                    remark:'',//备注
+                };
+            },
+
+            finishEdit: function(index) {//表格内编辑完成事件
+                this.isEdit=-1;
             },
 
             handleEdit:function(index){//表格内编辑操作
                 this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+
             },
 
             handleDelete:function(index,id){//表格内删除操作
@@ -440,6 +511,17 @@
               })
             },
             
+            handleSave:function(index,row){
+                console.log(index);
+                console.log(row);
+                let self = this;
+                this.$axios.puts('/api/services/app/StockAddressManagement/Update',row).then(function(res){//创建
+                    console.log(res);
+                    self.getAllList();
+                    self.open('修改资料成功');
+              })
+            },
+
             back(){
                 this.$store.state.url='/repository/default/repositoryList/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -453,8 +535,8 @@
                 allList:'',//页面数据获取
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制允许使用
-
-                
+                isEdit:-1,//表格下标
+                // ifSave:-1,//保存按钮（是否可见）
                 queryOuId:{//ouManagement的搜索Id
                     id:'2'
                 },
@@ -500,27 +582,13 @@
                     groupId:'1',//集团ID
                     stockId:'16',//仓库ID
                     addressId:'2',//地址ID
-                    completeAddress:'详情地址',//详情地址
-                    transportMethodId:'2',//运输方式
-                    contactPerson:'大大大',//联系人
-                    phone:'13666666666',//联系电话
-                    logisticsCompany:'物流公司',//物流公司
+                    completeAddress:'',//详情地址
+                    transportMethodId:'',//运输方式
+                    contactPerson:'',//联系人
+                    phone:'',//联系电话
+                    logisticsCompany:'',//物流公司
                     isDefault:true,//是否默认
-                    remark:'fff',//备注
-                },
-
-                col:{
-                    addressId:'1',
-                    completPerson:'1',
-                    contactPerson:'1',
-                    groupId:'1',
-                    id:'1',
-                    isDefault:'1',
-                    logisticsCompany:'1',
-                    phone:'1',
-                    remark:'1',
-                    stockId:'1',
-                    transportMethodId:'1',
+                    remark:'',//备注
                 },
             }
         },
@@ -594,6 +662,14 @@
     outline: none;
     width: 100%;
 }
+.input-bgw{
+    background: white;
+    text-align: center;
+}
+.input-bgp{
+    background: #FAFAFA;
+    text-align: center;
+}
 .header-title{
     color: #F55E6E;
     font-size: 16px;
@@ -610,6 +686,13 @@
 }
 .toggle-btn{
     cursor: pointer;
+}
+input:-ms-input-placeholder{
+    color: rgba(0, 0, 0, 0.349019607843137);
+}
+
+input::-webkit-input-placeholder{
+    color: rgba(0, 0, 0, 0.349019607843137);
 }
 </style>
 <style>
