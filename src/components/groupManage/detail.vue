@@ -144,7 +144,7 @@
 export default({
     data() {
         return{
-            show:false,
+            show:true,
             ifShow:true,
             activeName: 'company',
             addData:{
@@ -261,13 +261,14 @@ export default({
             this.$store.state.url='/groupManage/default/groupManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
-        open(x) {
+        open(tittle,iconClass,className) {
             this.$notify({
             position: 'bottom-right',
-            iconClass:'el-icon-circle-check',
-            title: x,
-            showClose: true,
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
             duration: 3000,
+            customClass:className
             });
         },
          handleClick(tab, event) {
@@ -308,23 +309,25 @@ export default({
             _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     console.log(res)
                     _this.addData=res.result;
-                    _this.open('保存成功');
+                    _this.open('保存成功','el-icon-circle-check','successERP');
                 },function(res){
-            })
+                    _this.open('保存失败','el-icon-error','faildERP');
+                })
         },
         saveAdd(){
              let _this=this;
             _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     console.log(res)
                     _this.addData=res.result;
-                    _this.open('保存并新增成功');
+                    _this.open('保存并新增成功','el-icon-circle-check','successERP');
                      _this.clearData();
                 },function(res){
+                    _this.open('保存并新增失败','el-icon-error','faildERP');
                 })
         },
         newAdd(){   
             this.clearData();
-            this.open('新增成功');
+            this.open('新增成功','el-icon-circle-check','successERP');
         },
         clearData(){
             this.addData={

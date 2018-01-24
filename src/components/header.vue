@@ -1,39 +1,41 @@
 <template>
-    <header class="header page-top">
-        <div class="menuBtn menu-toggler sidebar-toggler" @click="$store.commit('go')"></div>
-        <div class="page-logo">
-            <a href="">
-               <img src="../../static/image/login/ERP.png" alt="HKERP">
-               <span>恒康智能云</span>
-            </a> 
+    <header class="header navbar page-header">
+        <div class="page-header-inner ">
+            <div class="menuBtn menu-toggler sidebar-toggler" @click="$store.commit('go')"></div>
+            <div class="pageLogo">
+                <a href="">
+                <img src="../../static/image/login/ERP.png" alt="HKERP">
+                <span>恒康智能云</span>
+                </a> 
+            </div>
+            <!-- 搜索框 -->
+            <el-autocomplete class="search" popper-class="my-autocomplete" v-model="state3" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
+                <i class="el-icon-search el-input__icon" slot="prefix" @click="handleIconClick"> </i>
+                <template slot-scope="restaurants">
+                    <div class="name">{{ restaurants.item.value }}</div>
+                    <span class="addr">{{ restaurants.item.address }}</span>
+                </template>
+            </el-autocomplete>
+            <ul class="userInfo">
+                <li class="icon">
+                    <a href="javascript:;"><i class="fa fa-question-circle"></i></a>
+                </li>
+                <li class="icon">
+                    <a href="javascript:;"><i class="fa fa-commenting-o"></i><span class="num">79</span></a>
+                </li>
+                <li class="user">
+                    <div class="imgWrap"><img src="../assets/logo.png" alt=""></div>
+                    <div class="username">
+                        <span>{{username}}<i class="fa fa-angle-down"></i></span>   
+                        <ul class="box">
+                            <li><a @click="cancellation">注销</a></li>
+                            <li><a>数据统计表</a></li>
+                        </ul>     
+                    </div>
+                    
+                </li>
+            </ul>
         </div>
-        <!-- 搜索框 -->
-        <el-autocomplete class="search" popper-class="my-autocomplete" v-model="state3" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
-            <i class="el-icon-search el-input__icon" slot="prefix" @click="handleIconClick"> </i>
-            <template slot-scope="restaurants">
-                <div class="name">{{ restaurants.item.value }}</div>
-                <span class="addr">{{ restaurants.item.address }}</span>
-            </template>
-        </el-autocomplete>
-        <ul class="userInfo">
-            <li class="icon">
-                <a href="javascript:;"><i class="fa fa-question-circle"></i></a>
-            </li>
-            <li class="icon">
-                <a href="javascript:;"><i class="fa fa-commenting-o"></i><span class="num">79</span></a>
-            </li>
-            <li class="user">
-                <div class="imgWrap"><img src="../assets/logo.png" alt=""></div>
-                <div class="username">
-                    <span>{{username}}<i class="fa fa-angle-down"></i></span>   
-                    <ul class="box">
-                        <li><a @click="cancellation">注销</a></li>
-                        <li><a>数据统计表</a></li>
-                    </ul>     
-                </div>
-                
-            </li>
-        </ul>
     </header>
 </template>
 <script>
@@ -104,14 +106,14 @@ export default {
     background-color: rgba(53, 64, 82, 1);
     z-index: 3;
 }
-.header .page-logo{
+.header .pageLogo{
     float: left;
     width: 193px;
     height: 100%;
     position: relative;
    
 }
-.header .page-logo a{
+.header .pageLogo a{
     position: relative;
     width: 70px;
     cursor: pointer;
@@ -124,23 +126,23 @@ export default {
     text-decoration: none;  
     font-family: 'Arial Negreta', 'Arial Normal', 'Arial';    
 }
-.header .page-logo a img{
+.header .pageLogo a img{
     width: 100%;
     height: 100%;
 }
-.header .page-logo a span{
+.header .pageLogo a span{
     font-size: 12px;
     position: absolute;
     right: -43px;
     bottom: -2px;
 }
-.header .page-logo a:hover,.header .page-logo a:focus{
+.header .pageLogo a:hover,.header .pageLogo a:focus{
     text-decoration: none;
 }        
 .menuBtn{
     cursor: pointer;
     width: 50px;
-    height: 100%;
+    height: 50px;
     float: left;
     background-color: rgba(65, 78, 97, 1);
     background-image: url(../assets/sidebar-toggler.png);

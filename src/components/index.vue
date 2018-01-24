@@ -1,7 +1,8 @@
 <template>
   <div>
     <app-header></app-header>
-    <div class="wrapper">
+    <div class="clearfix"> </div>
+    <div class="wrapper page-container">
       <app-sidebar></app-sidebar>
       <app-content></app-content>
     </div>   

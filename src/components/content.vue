@@ -1,36 +1,38 @@
 <template>
-    <div class="content-wrapper" :class="{contentActive : $store.state.show}">
-         <div class="routerContain">
-            <button class="goLeft" @click="left">
-                <!-- <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> -->
-                <img src="../../static/image/content/go.png">
-            </button>
-            <div class="homePage"> <router-link to="/home">首页</router-link></div>
-            <div id="window">
-                <div id="longWidth">
-                    <ul id="routerBox">
-                        <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
+    <div class="content-wrapper page-content-wrapper" :class="{contentActive : $store.state.show}">
+        <div class="page-content">
+            <div class="routerContain">
+                <button class="goLeft" @click="left">
+                    <!-- <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> -->
+                    <img src="../../static/image/content/go.png">
+                </button>
+                <div class="homePage"> <router-link to="/home">首页</router-link></div>
+                <div id="window">
+                    <div id="longWidth">
+                        <ul id="routerBox">
+                            <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
 
-                            <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
-                            <i class="el-icon-error close" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i>
-                        </li>
-                    </ul>
+                                <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
+                                <i class="el-icon-error close" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i>
+                            </li>
+                        </ul>
+                    </div>
+                    
                 </div>
-                
+                <button class="goRight" @click="right">
+                    <!-- <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> -->
+                    <img src="../../static/image/content/go.png">
+                </button>
+                <div class="goClose"><span>关闭操作<i class="fa fa-angle-up" aria-hidden="true"></i></span></div>
+            </div>    
+            <div class="content" id="content">
+                <div class="whiteBg">
+                    <keep-alive>
+                    <router-view></router-view>
+                    </keep-alive>
+                </div>   
             </div>
-            <button class="goRight" @click="right">
-                <!-- <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> -->
-                <img src="../../static/image/content/go.png">
-            </button>
-            <div class="goClose"><span>关闭操作<i class="fa fa-angle-up" aria-hidden="true"></i></span></div>
-        </div>    
-        <div class="content" id="content">
-            <div class="whiteBg">
-                <keep-alive>
-                <router-view></router-view>
-                </keep-alive>
-            </div>   
-        </div>
+        </div>   
     </div>
 </template>
 <script>
@@ -49,9 +51,12 @@ export default {
   },
   mounted:function(){
     this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
-    let content=document.getElementById('content');//设置高度为全屏
-    let height=window.innerHeight-123;
-    content.style.minHeight=height+'px';
+    
+     window.onresize = function(){
+         let content=document.getElementById('content');//设置高度为全屏
+         let height=window.innerHeight-123;
+         content.style.minHeight=height+'px';
+     }
   },
   methods:{
       right:function(){
@@ -214,7 +219,7 @@ export default {
     margin-left: 1px;
 }
 #window #longWidth{
-    width: 10000px;
+    width: 100000px;
     position: relative;
     transition: all 0.5s;
     -moz-transition: all 0.5s;

@@ -49,8 +49,9 @@
                         node-key="treeId"
                         default-expand-all
                         show-checkbox
-                        :expand-on-click-node="false"
-                        :render-content="renderContent">
+                        :expand-on-click-node="true"
+                        @check-change="checkChange"
+                        @node-click="nodeClick">
                         </el-tree>
                     </el-col>
 
@@ -98,7 +99,6 @@
 </template>
 
 <script>
-    let treeId = 1000;
     export default{
         name:'customerInfor',
         data(){
@@ -153,25 +153,11 @@
                     basOuTypes: '9',
                     label: '90'
                     }],
-                tableData: [{
-                    ouCode: '',
-                    ouName: '',
-                    ouName: '',
-                    ouParentName: '',
-                    companyOuId:'',
-                    baseCurrencyId:'',
-                    effectiveStart:'',
-                    status:'',
-                    isCompany:'',
-                    isPurchase:'',
-                    isFinance:'',
-                    id:'',
-                    },],
+                tableData: [],
 
                     componyTree:  [{
                         treeId: 1,
-                        label: '',
-                        children: []
+                        label: '集团名',
                         }],
                     defaultProps: {
                         children: 'children',
@@ -182,13 +168,14 @@
                     oneItem:10,//每页有多少条信息
                     multipleSelection: [],//复选框选中数据
                     page:1,//当前页
+                    treeCheck:[],
                     
             }
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
-                _this.loadTreeData();
+                _this.loadTree();
              },
         methods:{
             loadTableData(){//表格
@@ -199,27 +186,26 @@
                     },function(res){
                 })
             },
-            loadTreeData(){//树形控件
-                 let _this=this;
-                _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1}).then(function(res){
-                    console.log(res.result)
-                     let children=[];
+            loadTree(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
+                .then(function(res){
+                    console.log(res)
+                    let children=[];
                     if(res.result.length>0){
                         for(let i=0;i<res.result.length;i++){
                             let label=res.result[i].deptName;
                             let treeId=res.result[i].id;
                             let child={'treeId':treeId,'label':label,children:[]}
                             children.push(child)
-                        }
+                        }     
                     }
                     _this.componyTree=[{
-                                treeId: 1,
-                                label: '宝胜',
-                                children: children
-                     }]
-                    
-                },function(res){
-                })
+                        treeId: 1,
+                        label: '集团名',
+                        children:children
+                        }]
+               })
             },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
@@ -245,7 +231,7 @@
             },
             delRow(){
                 let _this=this;
-                if(_this.multipleSelection.length>0){
+                if(_this.multipleSelection.length>0){//表格
                     for(let i=0;i<_this.multipleSelection.length;i++){
                         _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
                         .then(function(res){
@@ -260,43 +246,55 @@
                             console.log('err:'+res)
                         })
                     }
-                };  
+                };
+
+                if(_this.treeCheck.length>0){//tree
+                    for(let i=0;i<_this.treeCheck.length;i++){
+                        _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
+                        .then(function(res){    
+                          _this.loadTree();
+                        },function(res){
+                            console.log('err:'+res)
+                        })
+                    }
+                }
+
             },
-            // append(data) {
-            //     const newChild = { treeId: treeId++, label: 'testtest', children: [] };
-            //     if (!data.children) {
-            //     this.$set(data, 'children', []);
-            //     }
-            //     data.children.push(newChild);
-            // },
-
-            // remove(node, data) {
-            //     const parent = node.parent;
-            //     const children = parent.data.children || parent.data;
-            //     const index = children.findIndex(d => d.treeId === data.treeId);
-            //     children.splice(index, 1);
-            // },
-
-            renderContent(h, { node, data, store }) {
-                // return (
-                // <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-                //     <span>
-                //     <span>{node.label}</span>
-                //     </span>
-                //     <span>
-                //     <el-button style="font-size: 12px;" type="text" on-click={ () => this.append(data) }>+</el-button>
-                //     <el-button style="font-size: 12px;" type="text" on-click={ () => this.remove(node, data) }>-</el-button>
-                //     </span>
-                // </span>);
-                return (
-                <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-                    <span>
-                    <span>{node.label}</span>
-                    </span>
-                    <span>
-                    </span>
-                </span>);
-            }
+            checkChange(data,check){
+                let _this=this;
+                let add=false;
+                if(check){
+                    _this.treeCheck.push(data.treeId);
+                }else{
+                    for(let i=0;i<_this.treeCheck.length;i++){
+                        if(_this.treeCheck[i]==data.treeId){
+                            _this.treeCheck.splice(i,1);
+                        }
+                    }
+                }
+                
+                
+                
+            },
+            nodeClick(data){
+                // console.log(data)
+                 let _this=this;
+                 if(data.treeId!=1){
+                     _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
+                    .then(function(res){
+                        console.log(res)
+                        if(res.result.length>0){
+                            for(let i=0;i<res.result.length;i++){
+                                let label=res.result[i].deptName;
+                                let treeId=res.result[i].id;
+                                let child={'treeId':treeId,'label':label,children:[]}
+                                data.children.push(child)
+                            }
+                        }
+                    })
+                 }
+                
+            },
         },
     }
 </script>
@@ -427,31 +425,22 @@
 }
 /* 重写checkbox */
 .tree-container .el-checkbox__inner {
-        width: 24px;
-        height: 24px;
-        border-radius: 50% !important;
+        width: 12px;
+        height: 12px;
+        border-radius: 0;
     }   
    .tree-container .el-checkbox__inner::after{
         -webkit-box-sizing: content-box;
         box-sizing: content-box;
         content: "";
-        border: 3px solid #fff;
+        border: 1px solid #fff;
         border-left: 0;
         border-top: 0;
-        height: 11px;
-        left: 6px;
+        height: 8px;
+        left: 3px;
         position: absolute;
-        top: 1px;
-        -webkit-transform: rotate(45deg) scaleY(0);
-        transform: rotate(45deg) scaleY(0);
-        width: 6px;
-        -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        -webkit-transform-origin: center;
-        transform-origin: center;
+        top: 0px;
+        width: 4px;
     }
 
 /* 重写el-table样式 */

@@ -187,9 +187,6 @@ export default {
                 {name:'商品资料',address:'goodsData'},
                 {name:'店铺数据列表',address:'storeData'},   
                 {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-                {name:'客户资料-基本信息',address:'customerBasicInfor'},
-                {name:'客户资料-列表',address:'customerInfor'},
-                {name:'集团管理',address:'groupManager'},
                 {name:'供应商列表',address:'supplierList'},  
             ]},
             {
