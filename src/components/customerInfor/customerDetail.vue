@@ -2,7 +2,7 @@
  <div class="customerBasicForm">
      <el-row>
          <el-col :span="24">
-            <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+            <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
             <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
@@ -376,7 +376,11 @@ export default({
         },
         handleDelete:function(index){//表格内删除操作
 			this.tableData.splice(index,1);
-		},
+        },
+        back(){//点击新增跳转
+            this.$store.state.url='/customer/default/customerList/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
     }
        
 

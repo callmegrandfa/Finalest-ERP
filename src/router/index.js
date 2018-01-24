@@ -15,8 +15,9 @@ const supplierEdit = () =>import('../components/supplierData/supplierEdit')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
-const customerBasicInfor = () =>import('../components/customerInfor/customerBasicInfor')
-const customerInfor = () =>import('../components/customerInfor/customerInfor')
+const customer = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customer')
+const customerDetail = () =>import('../components/customerInfor/customerDetail')
+const customerList = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customerList')
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
@@ -111,8 +112,13 @@ children:[
   { path: '/goodsData/:id', component: goodsData,name:'goodsData' },
   { path: '/storeData/:id', component: storeData,name:'storeData' },
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
-  { path: '/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
-  { path: '/customerInfor/:id', component: customerInfor,name:'customerInfor' },
+
+  { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//集团管理
+    return store.state.customerActiveRouter;
+  },children:[
+      { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
+      { path: '/customer/default/customerList/:id', component: customerList,name:'customerList' },
+  ]},
   { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开单模板
     return store.state.OrderActiveRouter;
   },children:[
@@ -152,8 +158,12 @@ router.beforeEach((to, from, next) => {
     store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
   }else if(to.name=='repositoryList'){
     store.state.resActiveRouter='/repository/default/repositoryList/:id'
-  } else if(to.name=='repositoryData'){
+  }else if(to.name=='repositoryData'){
     store.state.resActiveRouter='/repository/default/repositoryData/:id'
+  }else if(to.name=='customerList'){
+    store.state.resActiveRouter='/customer/default/customerList/:id'
+  }else if(to.name=='customerDetail'){
+    store.state.resActiveRouter='/customer/default/customerDetail/:id'
   }
    next()
 })

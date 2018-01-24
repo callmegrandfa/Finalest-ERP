@@ -216,8 +216,7 @@ export default {
             },{
                 name:'客户资料',
                 thirdInfo:[
-                    {name:'客户资料-列表',address:'customerInfor'},
-                    {name:'客户资料-基本信息',address:'customerBasicInfor'}
+                    {name:'客户',address:'customer'},
                 ]
             },{
                 name:'单据模板',
