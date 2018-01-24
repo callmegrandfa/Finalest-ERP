@@ -30,7 +30,6 @@ const tenantManagementAdd = () =>import('../components/tenantManagement/tenantMa
 const groupManage = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManage')
 const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManageList')
 const detail = () =>import('../components/groupManage/detail')
-const organization = () =>import('../components/groupManage/organization')
 const groupManager = () =>import('../components/groupManage/groupManager')
 const repository = () =>import('../components/wareHouse/repository')
 Vue.use(Router)
@@ -100,20 +99,19 @@ children:[
   { path: '/shortData/:id', component: shortData,name:'shortData' },
   { path: '/longData/:id', component: longData,name:'longData' },
   { path: '/midData/:id', component: midData,name:'midData' },
-  { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//集团管理
+  { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//仓库管理
     return store.state.resActiveRouter;
   },children:[
       { path: '/repository/default/repositoryData/:id', component: repositoryData,name:'repositoryData' },
       { path: '/repository/default/repositoryList/:id', component: repositoryList,name:'repositoryList' },
   ]},
-  { path: '/repositoryData/:id', component: repositoryData,name:'repositoryData' },
   { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
   { path: '/groupManager/:id', component: groupManager,name:'groupManager'},
   { path: '/goodsData/:id', component: goodsData,name:'goodsData' },
   { path: '/storeData/:id', component: storeData,name:'storeData' },
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
 
-  { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//集团管理
+  { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//客户管理
     return store.state.customerActiveRouter;
   },children:[
       { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
@@ -125,14 +123,13 @@ children:[
       { path: '/order/default/orderDetails/:id', component: orderDetails,name:'orderDetails' },
       { path: '/order/default/orderList/:id', component: orderList,name:'orderList' },
   ]},
-  { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//集团管理
+  { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//组织管理
     return store.state.groupActiveRouter;
   },children:[
       { path: '/groupManage/default/detail/:id', component: detail,name:'detail' },
       { path: '/groupManage/default/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
-  { path: '/organization/:id', component: organization,name:'organization' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
   { path: '/userList/:id', component: userList,name:'userList' },
   { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
