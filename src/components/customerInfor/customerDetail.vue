@@ -377,11 +377,7 @@ export default({
         handleDelete:function(index){//表格内删除操作
 			this.tableData.splice(index,1);
         },
-<<<<<<< HEAD:src/components/customerInfor/customerBasicInfor.vue
-        back(){
-=======
         back(){//点击新增跳转
->>>>>>> 1bfa6302172c56a869563619210a16c027b0071b:src/components/customerInfor/customerDetail.vue
             this.$store.state.url='/customer/default/customerList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
