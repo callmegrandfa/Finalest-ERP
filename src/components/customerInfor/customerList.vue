@@ -91,7 +91,11 @@
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
+<<<<<<< HEAD:src/components/customerInfor/customerList.vue
                     <button class="erp_bt bt_add" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+=======
+                    <button class="erp_bt bt_add" @click="goDetail"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+>>>>>>> 1bfa6302172c56a869563619210a16c027b0071b:src/components/customerInfor/customerList.vue
                     <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
@@ -289,6 +293,10 @@
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
+            goDetail(){//点击新增跳转
+               this.$store.state.url='/customer/default/customerDetail/default'
+               this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
 
         },
     }

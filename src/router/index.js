@@ -16,9 +16,9 @@ const supplierEdit = () =>import('../components/supplierData/supplierEdit')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
-const customer = () =>import('../components/customerInfor/customer')
-const customerList = () =>import('../components/customerInfor/customerList')
-const customerBasicInfor = () =>import('../components/customerInfor/customerBasicInfor')
+const customer = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customer')
+const customerDetail = () =>import('../components/customerInfor/customerDetail')
+const customerList = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customerList')
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
@@ -31,7 +31,6 @@ const tenantManagementAdd = () =>import('../components/tenantManagement/tenantMa
 const groupManage = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManage')
 const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManageList')
 const detail = () =>import('../components/groupManage/detail')
-const organization = () =>import('../components/groupManage/organization')
 const groupManager = () =>import('../components/groupManage/groupManager')
 
 
@@ -46,7 +45,6 @@ const routes = [
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
     store.commit('username');
-    console.log(store.state.username)
     if(store.state.username!=null){
       if(store.state.username.length>1){//多账号登录
         window.localStorage.clear();
@@ -98,23 +96,6 @@ const routes = [
     }else{
       next('/login')
     }
-    
-    // let names=[];
-    // store.state.username=[];//初始化，避免重复push
-    // for(let i=0;i<window.sessionStorage.length;i++){
-    //     let key=window.sessionStorage.key(i);
-    //     let value=window.sessionStorage.getItem(key);
-    //     let item={'name':key,'accessToken':value};
-    //     store.state.username.push(item);//vuex,store里面存入数据
-    //     for(let e=0;e<store.state.username.length;e++){
-    //         let name=store.state.username[e].name;
-    //         let token=store.state.username[e].accessToken;
-    //         if(key==name){//vuex里面存在用户名和sessionStorage里面key值相等
-    //           names.push(name); 
-    //         }
-    //     }
-    // }
-  
   },
 children:[
   { path: '/home', component: home,name:'home' },
@@ -127,32 +108,31 @@ children:[
       { path: '/repository/default/repositoryData/:id', component: repositoryData,name:'repositoryData' },
       { path: '/repository/default/repositoryList/:id', component: repositoryList,name:'repositoryList' },
   ]},
-  { path: '/repositoryData/:id', component: repositoryData,name:'repositoryData' },
   { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
   { path: '/groupManager/:id', component: groupManager,name:'groupManager'},
   { path: '/goodsData/:id', component: goodsData,name:'goodsData' },
   { path: '/storeData/:id', component: storeData,name:'storeData' },
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
-  { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//客户资料
+
+  { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//客户管理
     return store.state.customerActiveRouter;
   },children:[
-      { path: '/customer/default/customerBasicInfor/:id', component: customerBasicInfor,name:'customerBasicInfor' },
+      { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
       { path: '/customer/default/customerList/:id', component: customerList,name:'customerList' },
   ]},
-  { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开弹模板
+  { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开单模板
     return store.state.OrderActiveRouter;
   },children:[
       { path: '/order/default/orderDetails/:id', component: orderDetails,name:'orderDetails' },
       { path: '/order/default/orderList/:id', component: orderList,name:'orderList' },
   ]},
-  { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//集团管理
+  { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//组织管理
     return store.state.groupActiveRouter;
   },children:[
       { path: '/groupManage/default/detail/:id', component: detail,name:'detail' },
       { path: '/groupManage/default/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
-  { path: '/organization/:id', component: organization,name:'organization' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
   { path: '/userList/:id', component: userList,name:'userList' },
   { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
@@ -181,9 +161,15 @@ router.beforeEach((to, from, next) => {
   }else if(to.name=='repositoryData'){
     store.state.resActiveRouter='/repository/default/repositoryData/:id'
   }else if(to.name=='customerList'){
+<<<<<<< HEAD
     store.state.customerActiveRouter='/customer/default/customerList/:id'
   }else if(to.name=='customerBasicInfor'){
     store.state.customerActiveRouter='/customer/default/customerBasicInfor/:id'
+=======
+    store.state.resActiveRouter='/customer/default/customerList/:id'
+  }else if(to.name=='customerDetail'){
+    store.state.resActiveRouter='/customer/default/customerDetail/:id'
+>>>>>>> 1bfa6302172c56a869563619210a16c027b0071b
   }
    next()
 })

@@ -187,11 +187,7 @@ export default {
                 {name:'商品资料',address:'goodsData'},
                 {name:'店铺数据列表',address:'storeData'},   
                 {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-                {name:'客户资料-基本信息',address:'customerBasicInfor'},
-                {name:'客户资料-列表',address:'customerInfor'},
-                {name:'集团管理',address:'groupManager'},
-                {name:'供应商列表',address:'supplierList'},   
-                {name:'组织单元',address:'organization'},    
+                {name:'供应商列表',address:'supplierList'},  
             ]},
             {
                 name:'租户管理',
@@ -216,8 +212,7 @@ export default {
             },{
                 name:'客户资料',
                 thirdInfo:[
-                    {name:'客户资料-列表',address:'customerList'},
-                    {name:'客户资料-基本信息',address:'customerBasicInfor'}
+                    {name:'客户',address:'customer'},
                 ]
             },{
                 name:'单据模板',
@@ -287,8 +282,7 @@ export default {
         //                 {name:'现货采购订单-订单列表',address:'orderList'}, 
         //                 {name:'现货采购订单-订单详情',address:'orderDetails'},
         //                 {name:'集团管理',address:'groupManager'},
-        //                 {name:'供应商列表',address:'supplierList'},   
-        //                 {name:'组织单元',address:'organization'},    
+        //                 {name:'供应商列表',address:'supplierList'},
         //             ]
         //         },{
         //             name:'基础资料',
@@ -303,7 +297,6 @@ export default {
         //              thirdInfo:[
         //                 {name:'集团管理',address:'groupManager'},
         //                 {name:'业务组织(精简版)-详细',address:'detail'},
-        //                 {name:'组织单元',address:'organization'},
         //             ]
         //         },{
         //             name:'用户组',

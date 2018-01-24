@@ -77,9 +77,15 @@ export default {
       }
   },
   mounted:function(){//设置高度为全屏
-      let loginWrapper=document.getElementById('loginWrapper');
-      let height=window.innerHeight;
-      loginWrapper.style.height=height+'px';
+            let loginWrapper=document.getElementById('loginWrapper');
+            let body=document.getElementsByTagName('body')[0];
+            let h=window.innerHeight;
+            loginWrapper.style.height=h+'px';
+            body.style.height=h+'px';
+      window.onresize = function(){
+            let height=window.innerHeight;
+            body.style.height=h+'px';
+     }
   },
   methods:{
       switch(url){
@@ -133,6 +139,7 @@ export default {
 <style scoped>
     .loginWrapper{
         width: 100%;
+        height: 100%;
         background-image: url(../../static/image/login/bg.jpg);
         background-repeat: no-repeat;
         background-size: cover;
