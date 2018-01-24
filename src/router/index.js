@@ -161,15 +161,9 @@ router.beforeEach((to, from, next) => {
   }else if(to.name=='repositoryData'){
     store.state.resActiveRouter='/repository/default/repositoryData/:id'
   }else if(to.name=='customerList'){
-<<<<<<< HEAD
-    store.state.customerActiveRouter='/customer/default/customerList/:id'
-  }else if(to.name=='customerBasicInfor'){
-    store.state.customerActiveRouter='/customer/default/customerBasicInfor/:id'
-=======
     store.state.resActiveRouter='/customer/default/customerList/:id'
   }else if(to.name=='customerDetail'){
     store.state.resActiveRouter='/customer/default/customerDetail/:id'
->>>>>>> 1bfa6302172c56a869563619210a16c027b0071b
   }
    next()
 })
