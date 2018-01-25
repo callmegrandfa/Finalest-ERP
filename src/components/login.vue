@@ -7,50 +7,54 @@
                     <span>恒康智能云</span>
                 </el-col>
             </el-col>
-            <el-col :span="24">
-                <el-col :span="22" class="product" :offset="1"></el-col>
-            </el-col>
+             <el-col :span="22" class="product">
+             </el-col>
         </el-col>
         <el-col class="loginForm">
            
             <div class="code">
                  <img src="../../static/image/login/QRcode.png">
             </div>
-            
-            <el-col :span="3" :offset="15" class="choose">
-               <img src="../../static/image/login/language.png" alt="语言"><span>语言</span>
-            </el-col>
-            <el-col :span="3" :offset="1" class="choose">
+            <el-col :span="3" class="choose">
                <img src="../../static/image/login/setting.png" alt="设置"><span>设置</span>
             </el-col>
-             <el-col :span="24" class="formInputs">
-                <el-col :span="16" :offset="4" class="formInput">
+            <el-col :span="3" class="choose">
+               <img src="../../static/image/login/language.png" alt="语言"><span>语言</span>
+            </el-col>
+            
+                <el-col :span="24" class="formInput name">
                     <el-input placeholder="Admin" v-model="login.userNameOrEmailAddress"></el-input>
                 </el-col>
-                <el-col :span="16" :offset="4" class="formInput">
+                <el-col :span="24" class="formInput psw">
                    <el-input placeholder="123qwe" v-model="login.password"></el-input>
                 </el-col>
-                <el-col :span="16" :offset="4" class="formInput">
+                <el-col :span="24" class="formInput bt">
                    <button @click="loginAjax">登&nbsp;&nbsp;录</button> 
                 </el-col>
-                <el-col :span="16" :offset="4" class="formInput">
-                   <el-col :span="12" class="remember">
-                        <i class="fa fa-check-circle" aria-hidden="true" :class="{check : ischecked}" @click="ischecked = !ischecked"></i>
-                        <span @click="ischecked = !ischecked">记住密码</span></el-col>
-                   <el-col :span="12" class="forget"><span @click="goRegister">忘记密码</span></el-col>
+                <el-col :span="24" class="formInput go">
+                    <div class="operate">
+                        <el-col :span="12" class="remember">
+                            <i class="fa fa-check-circle" aria-hidden="true" :class="{check : ischecked}" @click="ischecked = !ischecked"></i>
+                            <span @click="ischecked = !ischecked">记住密码</span>
+                        </el-col>
+                        <el-col :span="12" class="forget"><span @click="goRegister">忘记密码</span></el-col>
+                    </div>
+                   
                 </el-col>
-                <el-col :span="10" :offset="7" class="formInput thirdParty">
-                     <el-col :span="2" :offset="3">
-                        <hr>
-                     </el-col>  
-                     <el-col :span="12" :offset="1">
-                        <span>使用第三方账号登录</span>
-                     </el-col> 
-                     <el-col :span="2" :offset="1">
-                        <hr>
-                     </el-col>    
+                <el-col :span="24" class="formInput thirdParty">
+                    <div class="thirds">
+                        <el-col :span="2" :offset="4">
+                            <hr>
+                        </el-col>  
+                        <el-col :span="12">
+                            <span>使用第三方账号登录</span>
+                        </el-col> 
+                        <el-col :span="2">
+                            <hr>
+                        </el-col>   
+                    </div>    
                 </el-col>
-                <el-col class="formInput" :span="24">
+                <el-col class="formInput lg" :span="24">
                     <div class="thirdLogo">
                         <div class="circleLogin weChat" alt="微信"></div>
                         <div class="circleLogin DD" alt="钉钉"></div>
@@ -60,7 +64,6 @@
                 <el-col :span="24" class="copyright">
                     <p>版权制作 广州恒康信息科技有限公司</p>
                 </el-col>
-            </el-col>
         </el-col>
     </el-row>
 </template>
@@ -77,14 +80,14 @@ export default {
       }
   },
   mounted:function(){//设置高度为全屏
-            let loginWrapper=document.getElementById('loginWrapper');
+            // let loginWrapper=document.getElementById('loginWrapper');
             let body=document.getElementsByTagName('body')[0];
             let h=window.innerHeight;
-            loginWrapper.style.height=h+'px';
+            // loginWrapper.style.height=h+'px';
             body.style.height=h+'px';
       window.onresize = function(){
             let height=window.innerHeight;
-            body.style.height=h+'px';
+            body.style.height=height+'px';
      }
   },
   methods:{
@@ -93,6 +96,7 @@ export default {
         },
       loginAjax:function(){
           let _this=this;
+          _this.switch('/home');
           //if(表单验证通过)发送ajax
           _this.$axios.posts('/api/TokenAuth/Authenticate',_this.login)
           .then(function (res) {
@@ -137,6 +141,7 @@ export default {
 }
 </script>
 <style scoped>
+    
     .loginWrapper{
         width: 100%;
         height: 100%;
@@ -145,10 +150,14 @@ export default {
         background-size: cover;
     }
     .loginWrapper .leftDiv{
-        width: calc(100% - 872.2px);
+        position: relative;
+        width: 51%;
+        float: left;
+        height: 100%;
     }
     .loginWrapper .loginForm{
-        width: 872.2px;
+        float: left;
+        width: 49%;
         height: 100%;
         background-repeat: no-repeat;
         background-position: right bottom;
@@ -177,8 +186,8 @@ export default {
         bottom: 0;
     }
     .loginWrapper .loginForm .choose{
+        float: right;
         cursor: pointer;
-        margin-top: 20px;
     }
     .loginWrapper .loginForm .choose span{
         font-size: 16px;
@@ -193,7 +202,6 @@ export default {
         margin-right: 10px;
     }
     .loginWrapper .ERP{
-        margin-top: 40px;
         position: relative;
         height: 54px;
         width: 124px;
@@ -208,22 +216,56 @@ export default {
         bottom: 0;
         right: -30px;
     }
+
     .loginWrapper .product{
-        height: 370px;
+        position: absolute;
+        bottom:20%;
+        left: 4.1%;
+        height: 60%;
         background-image: url(../../static/image/login/product.png);
         background-repeat: no-repeat;
-        background-size: 70%;
+        background-size: contain;
         background-position: center;
-        margin-top: 150px;
     }
-    .loginWrapper .formInputs{
-       margin-top: 200px;
+    /* .loginWrapper .product img{
+        max-width: 100%;
+        max-height: 100%;
+        margin: auto;
+    } */
+    .loginWrapper .formInput{
+        position: absolute;
     }
-    .loginWrapper .formInputs .formInput{
-       margin-bottom: 15px;
+    .loginWrapper .formInput.name{
+        bottom: 66%;
     }
-    .loginWrapper .formInputs .formInput button{
-        margin-top: 15px;
+    .loginWrapper .formInput.psw{
+        bottom: 60%;
+    }
+    .loginWrapper .formInput.bt{
+        bottom: 51%;
+    }
+    .loginWrapper .formInput.go{
+        bottom: 47%;
+    }
+    .loginWrapper .formInput.thirdParty{
+        bottom: 40%;
+    }
+    .loginWrapper .formInput.lg{
+        bottom: 30%;
+    }
+     .loginWrapper .copyright{
+        position: absolute;
+        bottom: 6%;
+    }
+    .loginWrapper .formInput .el-input,
+    .loginWrapper .formInput button,
+    .loginWrapper .operate{
+        width: 70%;
+        position: relative;
+        left: 15%;
+    }
+
+    .loginWrapper .formInput button{
         -webkit-appearance: none;
         background-color: #3cc;
         color: #fff!important;
@@ -240,10 +282,10 @@ export default {
         padding: 0 15px;
         -webkit-transition: background-color .2s cubic-bezier(.645,.045,.355,1);
         transition: background-color .2s cubic-bezier(.645,.045,.355,1);
-        width: 100%;
+        margin: auto;
         cursor: pointer;
     }
-    .loginWrapper .formInputs .formInput button:hover{
+    .loginWrapper .formInput button:hover{
         background-color: #20e4e4;
     }
     .loginWrapper .remember{
@@ -269,16 +311,20 @@ export default {
     .loginWrapper .thirdParty{
         color: #fff;
         text-align: center;
-        margin-top: 30px;
+    }
+    .loginWrapper .thirdParty .thirds{
+        width: 40%;
+        position: relative;
+        margin: auto;
     }
     .loginWrapper .thirdLogo{
-        width: 242px;
+        width: 26%;
         margin: auto;
-        margin-top: 18px;
         overflow: hidden;
+        position: relative;
+        height: 58px    ;
     }
     .loginWrapper .circleLogin{
-        float: left;
         width: 58px;
         height: 58px;
         background-color: #fff;
@@ -287,23 +333,24 @@ export default {
         background-repeat: no-repeat;
         background-position: center;
         cursor: pointer;
-        margin-left:34px;
+        position: absolute;
     }
     
     .loginWrapper .circleLogin:first-child{
         margin-left: 0;
     }
     .weChat{
-        background-image: url(../../static/image/login/wechat.png)
+        background-image: url(../../static/image/login/wechat.png);
+        left: 0;
+        
     }
     .DD{
-        background-image: url(../../static/image/login/DD.png)
+        background-image: url(../../static/image/login/DD.png);
+        left: calc(50% - 29px);
     }
     .QQ{
-        background-image: url(../../static/image/login/QQ.png)
-    }
-    .loginWrapper .copyright{
-        margin-top: 250px;
+        background-image: url(../../static/image/login/QQ.png);
+        right: 0;
     }
     .loginWrapper .copyright p{
         font-size: 12px;

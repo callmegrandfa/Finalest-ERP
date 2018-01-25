@@ -51,12 +51,13 @@ export default {
   },
   mounted:function(){
     this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
-    
-     window.onresize = function(){
          let content=document.getElementById('content');//设置高度为全屏
          let height=window.innerHeight-123;
          content.style.minHeight=height+'px';
-     }
+         window.onresize = function(){
+            let h=window.innerHeight-123;
+            content.style.minHeight=h+'px';
+        }
   },
   methods:{
       right:function(){
@@ -192,16 +193,18 @@ export default {
     padding: 15px 0;
     background-color:#eef1f5;
     width: 100%;
+    padding-top: 58px;
 }
 .whiteBg{
     width:calc(100% - 30px);
     margin-left: 15px;
 }
 .routerContain{
+    position: fixed;
     font-family: 'microsoft yahei';
-    position: relative;
     height: 43px;
     background-color: #eef1f5;
+    z-index: 2;
 }
 .routerContain .goLeft img{
     transform:rotate(180deg);
