@@ -46,9 +46,9 @@
                         <el-tree
                         :data="componyTree"
                         :props="defaultProps"
+                        show-checkbox
                         node-key="treeId"
                         default-expand-all
-                        show-checkbox
                         :expand-on-click-node="true"
                         @check-change="checkChange"
                         @node-click="nodeClick">
@@ -79,6 +79,11 @@
                             <el-table-column prop="isFinance" label="财务">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].isFinance" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                 <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>  
@@ -169,6 +174,7 @@
                     multipleSelection: [],//复选框选中数据
                     page:1,//当前页
                     treeCheck:[],
+                    isClick:[],
                     
             }
         },
@@ -277,12 +283,27 @@
                 
             },
             nodeClick(data){
-                // console.log(data)
                  let _this=this;
-                 if(data.treeId!=1){
+                 let flag=false;
+                 if(_this.isClick.length>0){
+                     for(let i=0;i<_this.isClick.length;i++){
+                        if(_this.isClick[i]==data.treeId){
+                            flag=false
+                            break;
+                        }else{
+                            flag=true;
+                        }
+                    }
+                 }else{
+                     flag=true;
+                 }
+                 
+                //  console.log(flag)
+                 if(data.treeId!=1&&flag){
                      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
                     .then(function(res){
-                        console.log(res)
+                        _this.isClick.push(data.treeId);
+                        //console.log(res)
                         if(res.result.length>0){
                             for(let i=0;i<res.result.length;i++){
                                 let label=res.result[i].deptName;
@@ -295,6 +316,10 @@
                  }
                 
             },
+            modify(row){
+                this.$store.state.url='/groupManage/default/modify/'+row.id
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            }
         },
     }
 </script>
@@ -422,6 +447,9 @@
     height: 30px;
     line-height: 30px;
     padding-left: 0;
+}
+.group-management-wrapper .el-button+.el-button{
+    margin-left: 0;
 }
 /* 重写checkbox */
 .tree-container .el-checkbox__inner {

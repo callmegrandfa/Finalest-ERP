@@ -31,6 +31,7 @@ const tenantManagementAdd = () =>import('../components/tenantManagement/tenantMa
 const groupManage = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManage')
 const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManageList')
 const detail = () =>import('../components/groupManage/detail')
+const modify = () =>import('../components/groupManage/modify')
 const groupManager = () =>import('../components/groupManage/groupManager')
 
 
@@ -129,6 +130,7 @@ children:[
   { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//组织管理
     return store.state.groupActiveRouter;
   },children:[
+      { path: '/groupManage/default/modify/:id', component: modify,name:'modify' },
       { path: '/groupManage/default/detail/:id', component: detail,name:'detail' },
       { path: '/groupManage/default/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
@@ -154,6 +156,8 @@ router.beforeEach((to, from, next) => {
     store.state.OrderActiveRouter='/order/default/orderList/:id';
   }else if(to.name=='detail'){
     store.state.groupActiveRouter='/groupManage/default/detail/:id';
+  }else if(to.name=='modify'){
+    store.state.groupActiveRouter='/groupManage/default/modify/:id';
   }else if(to.name=='groupManageList'){
     store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
   }else if(to.name=='repositoryList'){
