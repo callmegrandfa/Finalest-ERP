@@ -51,21 +51,34 @@
 
       <div class="bg-white mr10 mt10 pt10">
           <el-row>
-              <!-- <el-col :span='2' class="ml10 "> -->
-                  <button class="erp_bt bt_add" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-              <!-- </el-col> -->
-              <!-- <el-col :span='2' class="ml10"> -->
-                  <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
-              <!-- </el-col> -->
-              <!-- <el-col :span='2' class="ml10"> -->
-                  <!-- <button class="erp_bt bt_del" @click="deleteRepository"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
-              <!-- </el-col> -->
-              <!-- <el-col :span='2' :offset="12"> -->
-                  <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
-              <!-- </el-col> -->
-              <!-- <el-col :span='2' class="ml10"> -->
-                  <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-              <!-- </el-col> -->
+                    <button class="erp_bt bt_add" @click="goDetail">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_add.png">
+                        </div>
+                        <span class="btDetail">新增</span>
+                    </button>
+              
+                    <button class="erp_bt bt_print">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_print.png">
+                        </div>
+                        <span class="btDetail">打印</span>
+                    </button>
+              
+                    <button class="erp_bt bt_excel">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_excel.png">
+                        </div>
+                        <span class="btDetail">Excel</span>
+                    </button>
+
+                    <button class="erp_bt bt_auxiliary">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_auxiliary.png">
+                        </div>
+                        <span class="btDetail">辅助功能</span>
+                    </button>
+              
           </el-row>
 
           <el-row class="pt10">
@@ -84,6 +97,11 @@
                             <el-checkbox v-model="allList[scope.$index].ifAllow" ></el-checkbox>
                         </template>
                     </el-table-column>
+                    <el-table-column label=" ">
+                        <template slot-scope="scope">
+                            <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <!-- <span>{{scope.row}}</span> -->
@@ -93,6 +111,7 @@
                         </template>
                     </el-table-column>
                   </el-table> 
+                  <!-- <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination> -->
               </el-col>
           </el-row>
       </div>
@@ -181,20 +200,42 @@
                 console.log(id)
                 this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:id}).then(function(res){
                 console.log(res);
+                self.open('删除仓库成功','el-icon-circle-check','successERP')
+              }).then(function(){
+
               })
+            },
+
+            handleCurrentChange:function(val){//获取当前页码
+                this.pageIndex=val;
             },
 
             deleteRepository:function(){//删除仓库
                 this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',self.deleteId).then(function(res){
-                console.log(res);
+                // console.log(res);
               })
             },        
 
-            back(){
+            goDetail(){
                 this.$store.state.url='/repository/default/repositoryData/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
-            
+            goModify:function(id){
+                console.log(id)
+                this.$store.state.url='/repository/default/repositoryModify/'+id
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+
+            open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
            
         },
         data(){
@@ -212,7 +253,8 @@
                 },
                 queryId:'',//需要查询的stockId
                     
-                
+                pageIndex:-1,//分页的当前页码
+			    totalPage:20,//当前分页总数
                
             }
         },

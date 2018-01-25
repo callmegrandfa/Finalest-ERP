@@ -12,6 +12,7 @@ const home = () =>import(/* webpackChunkName: "group-index" */'../components/hom
 const repository = () =>import('../components/wareHouse/repository')
 const repositoryList = () =>import('../components/wareHouse/repositoryList')
 const repositoryData = () =>import('../components/wareHouse/repositoryData')
+const repositoryModify = () =>import('../components/wareHouse/repositoryModify')
 const supplierEdit = () =>import('../components/supplierData/supplierEdit')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
@@ -106,8 +107,9 @@ children:[
   { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//仓库资料
     return store.state.resActiveRouter;
   },children:[
-      { path: '/repository/default/repositoryData/:id', component: repositoryData,name:'repositoryData' },
       { path: '/repository/default/repositoryList/:id', component: repositoryList,name:'repositoryList' },
+      { path: '/repository/default/repositoryData/:id', component: repositoryData,name:'repositoryData' }, 
+      { path: '/repository/default/repositoryModify/:id', component: repositoryModify,name:'repositoryModify' },
   ]},
   { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
   { path: '/groupManager/:id', component: groupManager,name:'groupManager'},
@@ -167,6 +169,8 @@ router.beforeEach((to, from, next) => {
     store.state.resActiveRouter='/repository/default/repositoryList/:id'
   }else if(to.name=='repositoryData'){
     store.state.resActiveRouter='/repository/default/repositoryData/:id'
+  }else if(to.name=='repositoryModify'){
+    store.state.resActiveRouter='/repository/default/repositoryModify/:id'
   }else if(to.name=='customerList'){
     store.state.resActiveRouter='/customer/default/customerList/:id'
   }else if(to.name=='customerDetail'){
