@@ -4,7 +4,7 @@
           <el-col :span="5" class="bg-white">
               <el-row class="height35">
                   <el-col :span='4'>
-                      <span>仓库Id</span>
+                      <span>编码</span>
                   </el-col>
                   <el-col :span='20'>
                       <input v-model='queryId'
@@ -283,6 +283,13 @@
     outline: none;
     border:none;
     width: 100%;
+}
+input:-ms-input-placeholder{
+    color: rgba(0, 0, 0, 0.349019607843137);
+}
+
+input::-webkit-input-placeholder{
+    color: rgba(0, 0, 0, 0.349019607843137);
 }
 </style>
 <style>
