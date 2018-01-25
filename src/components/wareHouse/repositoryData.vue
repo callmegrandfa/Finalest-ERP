@@ -1,6 +1,6 @@
 <template>
-  <div class="data-wrapper">
-      <el-row class="bg-white pl10 pt10 pb10">
+  <div class="data-wrapper b1">
+      <el-row class="bg-white pt10 pb10 bb1">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                   <img src="../../../static/image/common/bt_back.png">
@@ -30,14 +30,14 @@
             </button>
       </el-row>
 
-      <el-row class="ft12 pt10 pr10">
-          <el-col :span="5" class="bg-white br3 h30">
+      <el-row class="bg-white ft12 pt10 pr10">
+          <el-col :span="5" class="h30">
               <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>所属组织</span>
+                  <el-col :span="8">
+                      <span class="fr pr10">所属组织</span>
                   </el-col>
-                  <el-col :span="15">
-                       <el-select v-model="value" placeholder="广州总部">
+                  <el-col :span="15" class="b1 br3 pl10">
+                       <el-select v-model="value" placeholder="广州总部" >
                             <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -49,26 +49,26 @@
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
+          <el-col :span="5" class="bg-white h30 ml10">
               <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>仓库编码</span>
+                  <el-col :span="8">
+                      <span class="fr pr10">仓库编码</span>
                   </el-col>
-                  <el-col :span="15">
+                  <el-col :span="15" class="b1 br3 pl10">
                       <input v-model="createRepositoryParams.stockCode"
-                             class="input-need" 
+                             class='input-need' 
                              type="text" 
                              placeholder="请录入仓库编码">
                   </el-col>
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
+          <el-col :span="5" class="bg-white h30 ml10">
               <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>名称</span>
+                  <el-col :span="8">
+                      <span class="fr pr10">名称</span>
                   </el-col>
-                  <el-col :span="15">
+                  <el-col :span="15" class="b1 br3 pl10">
                       <input v-model="createRepositoryParams.stockFullName"
                             class="input-need" 
                             type="text" 
@@ -77,12 +77,12 @@
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
+          <el-col :span="5" class="bg-white h30 ml10">
               <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>简称</span>
+                  <el-col :span="8">
+                      <span class="fr pr10">简称</span>
                   </el-col>
-                  <el-col :span="15">
+                  <el-col :span="15" class="b1 br3 pl10">
                       <input  v-model="createRepositoryParams.stockName"
                               class="input-need" 
                               type="text" 
@@ -98,13 +98,13 @@
 
       </el-row>
 
-      <el-row class="ft12 pt10 pr10">
-          <el-col :span="5" class="bg-white br3 h30">
+      <el-row class="bg-white ft12 pt10 pr10">
+          <el-col :span="5" class="bg-white h30">
               <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>助记码</span>
+                  <el-col :span="8">
+                      <span class="fr pr10">助记码</span>
                   </el-col>
-                  <el-col :span="15">
+                  <el-col :span="15" class="b1 br3 pl10">
                       <input v-model="ouGet.mnemonic" 
                                 class="input-need" 
                                 type="text" 
@@ -113,12 +113,12 @@
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
+          <el-col :span="5" class="bg-white h30 ml10">
               <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>仓库类型</span>
+                  <el-col :span="8">
+                      <span class="fr pr10">仓库类型</span>
                   </el-col>
-                  <el-col :span="15">
+                  <el-col :span="15" class="b1 br3 pl10">
                       <el-select v-model="value" placeholder="广州总部">
                             <el-option
                                 v-for="item in options"
@@ -131,23 +131,23 @@
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
+          <el-col :span="5" class="bg-white h30 ml10">
               <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>库存分类</span>
+                  <el-col :span="8">
+                      <span class="fr pr10">库存分类</span>
                   </el-col>
-                  <el-col :span="15">
+                  <el-col :span="15" class="b1 br3 pl10">
                       <input class="input-need" type="text" placeholder="请录入库存分类">
                   </el-col>
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white br3 h30 ml10">
+          <el-col :span="5" class="h30 ml10">
               <el-row>
-                  <el-col :span="8" class="pl10">
-                      <span>业务地区</span>
+                  <el-col :span="8">
+                      <span class="fr pr10">业务地区</span>
                   </el-col>
-                  <el-col :span="15">
+                  <el-col :span="15" class="b1 br3 pl10">
                       <el-select v-model="value" placeholder="广州">
                             <el-option
                                 v-for="item in options"
@@ -162,14 +162,14 @@
       </el-row>
 
       <el-collapse-transition>
-            <div v-show="ifShow">
-                <el-row class="ft12 pt10 pr10">
-                    <el-col :span="5" class="bg-white br3 h30">
+            <div v-show="ifShow" class="bb1">
+                <el-row class="bg-white ft12 pt10 pr10">
+                    <el-col :span="5" class="h30">
                         <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>行政地区</span>
+                            <el-col :span="8">
+                                <span class="fr pr10">行政地区</span>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="15" class="b1 br3 pl10">
                                 <el-select v-model="value" placeholder="广州总部">
                                         <el-option
                                             v-for="item in options"
@@ -182,12 +182,12 @@
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="bg-white br3 h30 ml10">
+                    <el-col :span="5" class="h30 ml10">
                         <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>负责人</span>
+                            <el-col :span="8">
+                                <span class="fr pr10">负责人</span>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="15" class="b1 br3 pl10">
                                 <input v-model="createRepositoryParams.manager"
                                         class="input-need"  
                                         type="text" 
@@ -196,12 +196,12 @@
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="bg-white br3 h30 ml10">
+                    <el-col :span="5" class="h30 ml10">
                         <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>电话</span>
+                            <el-col :span="8">
+                                <span class="fr pr10">电话</span>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="15" class="b1 br3 pl10">
                                 <input  v-model='createRepositoryParams.phone'
                                         class="input-need" 
                                         type="text" 
@@ -210,12 +210,12 @@
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="bg-white br3 h30 ml10">
+                    <el-col :span="5" class="h30 ml10">
                         <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>Email</span>
+                            <el-col :span="8">
+                                <span class="fr pr10">Email</span>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="15" class="b1 br3 pl10">
                                 <input  v-model="createRepositoryParams.email"
                                         class="input-need" 
                                         type="text" 
@@ -225,13 +225,13 @@
                     </el-col>
                 </el-row>
 
-                <el-row class="ft12 pt10 pr10">
-                    <el-col :span="5" class="bg-white br3 h30">
+                <el-row class="bg-white ft12 pt10 pr10">
+                    <el-col :span="5" class="h30">
                         <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>传真</span>
+                            <el-col :span="8">
+                                <span class="fr pr10">传真</span>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="15" class="b1 br3 pl10">
                                 <input  v-model="createRepositoryParams.fax"
                                         class="input-need"
                                         type="text" 
@@ -240,23 +240,23 @@
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="bg-white br3 h30 ml10">
+                    <el-col :span="5" class="h30 ml10">
                         <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>地址</span>
+                            <el-col :span="8">
+                                <span class="fr pr10">地址</span>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="15" class="b1 br3 pl10">
                                 <input class="input-need" type="text" placeholder="请录入地址">
                             </el-col>
                         </el-row>
                     </el-col>
 
-                    <el-col :span="10" class="bg-white br3 h30 ml10">
+                    <el-col :span="5" class="h30 ml10">
                         <el-row>
-                            <el-col :span="4" class="pl10">
-                                <span>备注</span>
+                            <el-col :span="8">
+                                <span class="fr pr10">备注</span>
                             </el-col>
-                            <el-col :span="18">
+                            <el-col :span="15" class="b1 br3 pl10">
                                 <input  v-model="createRepositoryParams.remark"
                                         class="input-need" 
                                         type="text" 
@@ -264,20 +264,18 @@
                             </el-col>
                         </el-row>
                     </el-col>
+
+                    <el-col :span="24" class="mt20 mb10">
+                        <template>
+                            <el-checkbox v-model="ifCan">允许使用</el-checkbox>
+                        </template>
+                </el-col>
                 </el-row>
             </div>
       </el-collapse-transition>
 
-      <el-row class="mt20 mb10">
-          <el-col :span="2">
-                <template>
-                    <el-checkbox v-model="ifCan">允许使用</el-checkbox>
-                </template>
-          </el-col>
-      </el-row>
-
       <el-row class="ft12 pr10 pt10 br3">
-          <el-col :span='24' class="bg-white pt10 pl10">
+          <el-col :span='24' class="pl10 mb10">
               <span class="header-title">送货信息</span>
           </el-col>
 
@@ -285,6 +283,8 @@
               <button class="erp_bt bt_print" @click='addCol'><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">增行</span></button>
               <button class="erp_bt bt_save" @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
               <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">插行</span></button>
+              <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
+              <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
           </el-col>
 
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
@@ -430,13 +430,14 @@
               })
             },
 
-            open(x) {
+            open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
-                iconClass:'el-icon-circle-check',
-                title: x,
-                showClose: true,
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
                 duration: 3000,
+                customClass:className
                 });
             },
 
@@ -444,7 +445,7 @@
                 let self = this;
                 this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
                     console.log(res);
-                    self.open('创建仓库成功');
+                    self.open('创建仓库成功','el-icon-circle-check','successERP');
 
               })
             },
@@ -633,7 +634,6 @@
 }
 .ft12{
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
 }
 .btn{
     display: inline-block;
@@ -650,7 +650,7 @@
     border-radius: 3px;
 }
 .h30{
-    height: 30px;
+    height: 32px;
     line-height: 30px;
 }
 .h35{
@@ -683,6 +683,9 @@
 }
 .b1{
     border: 1px solid #cccccc;
+}
+.fr{
+    float: right;
 }
 .toggle-btn{
     cursor: pointer;
