@@ -7,19 +7,19 @@
                 </div>
                 <span class="btDetail">返回</span>
             </button>
-                                            <!-- 保存新创建的仓库信息 -->
-            <button class="erp_bt bt_save" @click="createRepository">
+                                              <!-- 保存修改 -->
+            <button class="erp_bt bt_save" @click="saveModify">
                 <div class="btImg">
                   <img src="../../../static/image/common/bt_save.png">
                 </div>
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_saveAdd" @click='saveAdd'>
+            <button class="erp_bt bt_modify">
                 <div class="btImg">
-                    <img src="../../../static/image/common/bt_saveAdd.png">
+                    <img src="../../../static/image/common/bt_modify.png">
                 </div>
-                <span class="btDetail">保存并新增</span>
+                <span class="btDetail">修改</span>
             </button>
 
             <button class="erp_bt bt_look">
@@ -55,7 +55,7 @@
                       <span class="fr pr10">仓库编码</span>
                   </el-col>
                   <el-col :span="15" class="b1 br3 pl10">
-                      <input v-model="createRepositoryParams.stockCode"
+                      <input v-model="repositoryData.stockCode"
                              class='input-need' 
                              type="text" 
                              placeholder="请录入仓库编码">
@@ -69,7 +69,7 @@
                       <span class="fr pr10">名称</span>
                   </el-col>
                   <el-col :span="15" class="b1 br3 pl10">
-                      <input v-model="createRepositoryParams.stockFullName"
+                      <input v-model="repositoryData.stockFullName"
                             class="input-need" 
                             type="text" 
                             placeholder="请录入名称">
@@ -83,7 +83,7 @@
                       <span class="fr pr10">简称</span>
                   </el-col>
                   <el-col :span="15" class="b1 br3 pl10">
-                      <input  v-model="createRepositoryParams.stockName"
+                      <input  v-model="repositoryData.stockName"
                               class="input-need" 
                               type="text" 
                               placeholder="请录入简称">
@@ -188,7 +188,7 @@
                                 <span class="fr pr10">负责人</span>
                             </el-col>
                             <el-col :span="15" class="b1 br3 pl10">
-                                <input v-model="createRepositoryParams.manager"
+                                <input v-model="repositoryData.manager"
                                         class="input-need"  
                                         type="text" 
                                         placeholder="请录入负责人">
@@ -202,7 +202,7 @@
                                 <span class="fr pr10">电话</span>
                             </el-col>
                             <el-col :span="15" class="b1 br3 pl10">
-                                <input  v-model='createRepositoryParams.phone'
+                                <input  v-model='repositoryData.phone'
                                         class="input-need" 
                                         type="text" 
                                         placeholder="请录入电话">
@@ -216,7 +216,7 @@
                                 <span class="fr pr10">Email</span>
                             </el-col>
                             <el-col :span="15" class="b1 br3 pl10">
-                                <input  v-model="createRepositoryParams.email"
+                                <input  v-model="repositoryData.email"
                                         class="input-need" 
                                         type="text" 
                                         placeholder="请录入邮箱">
@@ -232,7 +232,7 @@
                                 <span class="fr pr10">传真</span>
                             </el-col>
                             <el-col :span="15" class="b1 br3 pl10">
-                                <input  v-model="createRepositoryParams.fax"
+                                <input  v-model="repositoryData.fax"
                                         class="input-need"
                                         type="text" 
                                         placeholder="请录入传真">
@@ -257,7 +257,7 @@
                                 <span class="fr pr10">备注</span>
                             </el-col>
                             <el-col :span="15" class="b1 br3 pl10">
-                                <input  v-model="createRepositoryParams.remark"
+                                <input  v-model="repositoryData.remark"
                                         class="input-need" 
                                         type="text" 
                                         placeholder="请录入备注">
@@ -280,14 +280,44 @@
           </el-col>
 
           <el-col :span="24" class="bg-white pt10">
-              <button class="erp_bt bt_print" @click='addCol'><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">增行</span></button>
-              <button class="erp_bt bt_save" @click="createReAddress"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-              <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+                <button class="erp_bt bt_print" @click='addCol'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_print.png">
+                    </div>
+                    <span class="btDetail">增行</span>
+                </button>
+                                          <!-- 保存新增的仓库地址信息 -->
+                <button class="erp_bt bt_save" @click="saveAddress">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_save.png">
+                    </div>
+                    <span class="btDetail">保存</span>
+                </button>
+
+                <button class="erp_bt bt_modify">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_modify.png">
+                    </div>
+                    <span class="btDetail">修改</span>
+                </button>
+
+                <button class="erp_bt bt_excel">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_excel.png">
+                    </div>
+                    <span class="btDetail">Excel</span>
+                </button>
+
+                <button class="erp_bt bt_auxiliary">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_auxiliary.png">
+                    </div>
+                    <span class="btDetail">辅助功能</span>
+                </button>
           </el-col>
 
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
-              <el-table :data="allList" border style="width: 100%" stripe>
+              <el-table :data="repositoryAddressData" border style="width: 100%" stripe>
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
                             <!-- <span>{{scope.$index%2}}</span> -->
@@ -317,7 +347,7 @@
                     </el-table-column>
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="allList[scope.$index].isDefault"></el-checkbox>
+                            <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault"></el-checkbox>
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" label="备注">
@@ -402,33 +432,61 @@
 
 <script>
     export default{
-        name:'repositoryData',
+        name:'repositoryModify',
         created:function(){
-            
+            let self = this;
+            self.loadData();
         },
 
         methods:{
-            // getAllList:function(){
-                //查询所有仓库地址
-                // groupId (integer, optional): 集团ID ,
-                // stockId (integer, optional): 仓库ID ,
-                // addressId (integer, optional): 地址ID ,
-                // completeAddress (string, optional): 详情地址 ,
-                // transportMethodId (integer, optional): 运输方式 ,
-                // contactPerson (string, optional): 联系人 ,
-                // phone (string, optional): 联系电话 ,
-                // logisticsCompany (string, optional): 物流公司 ,
-                // isDefault (boolean, optional): 是否默认 ,
+            loadData:function(){//根据id查找仓库信息和仓库地址信息
+                // ouId (integer, optional): 组织单元ID ,
+                // stockCode (string, optional): 仓库编码 ,
+                // stockName (string, optional): 仓库名称 ,
+                // stockFullName (string, optional): 仓库全称 ,
+                // opAreaId (integer, optional): 业务地区 ,
+                // adAreaId (integer, optional): 行政地区 ,
+                // stockTypeId (integer, optional): 仓库类型 ,
+                // invTypeId (integer, optional): 库存分类 ,
+                // fax (string, optional): 传真 ,
+                // email (string, optional): 邮箱 ,
+                // status (integer, optional): 启用状态 ,
+                // manager (string, optional): 负责人 ,
+                // phone (string, optional): 电话 ,
                 // remark (string, optional): 备注 ,
-                // id (integer, optional)仓库地址ID
+                // id (integer, optional)
 
-            //     let self = this;
-            //     this.$axios.gets('/api/services/app/StockAddressManagement/GetAll').then(function(res){
-            //     console.log(res);
-            //     self.allList = res.result;
-            //     self.tableData = self.allList.items;
-            //   })
-            // },
+                let self = this;
+                if(self.$route.params.id!='default'){
+                    self.$destroy()
+
+                    //根据仓库id获取仓库信息
+                    this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
+                        console.log(res)               
+                        self.repositoryData = res.result;
+                        // console.log(self.repositoryData);
+                    });
+                    console.log(self.$route.params.id)
+                    //根据仓库id获取仓库地址信息
+                    self.createParams.stockId = self.$route.params.id;
+                    self.getRepositoryAddressParams={
+                        stockId:self.$route.params.id,
+                        // stockId:16,
+                        Draw:0,
+                        start:0,
+                        length:0,
+                        MaxResultCount:100,
+                        SkipCount:0
+                    }
+                    console.log(self.getRepositoryAddressParams)
+                    this.$axios.gets('/api/services/app/StockAddressManagement/GetAllData',self.getRepositoryAddressParams).then(function(res){
+                        // console.log(res);
+                        self.repositoryAddressData = res.data;
+                    })
+                }
+                
+            
+            },
 
             open(tittle,iconClass,className) {
                 this.$notify({
@@ -441,67 +499,39 @@
                 });
             },
 
-            createRepository:function(){//创建新仓库
+            saveModify:function(){//修改完仓库信息保存
                 let self = this;
-                this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
+                this.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
                     console.log(res);
-                    self.open('创建仓库成功','el-icon-circle-check','successERP');
-              })
-            },
+                    self.open('修改仓库信息成功','el-icon-circle-check','successERP');
 
-            saveAdd:function(){//创建新的仓库并且清除数据
-                let self = this;
-                this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
-                    console.log(res);
-                    self.open('创建仓库成功','el-icon-circle-check','successERP');
-              })
-              self.createRepositoryParams = {
-                    "ouId": '1',
-                    "stockCode": "",
-                    "stockName": "",
-                    "stockFullName": "",
-                    "opAreaId": 1,
-                    "adAreaId": 1,
-                    "stockTypeId": 1,
-                    "invTypeId": 1,
-                    "fax": " ",
-                    "email":  '',
-                    "status": 1,
-                    "manager": "",
-                    "phone": "",
-                    "remark": ""
-                }
-                
-            },
-            createReAddress:function(){//点击下方保存按钮，保存创建新的仓库地址
-                // groupId (integer, optional): 集团ID ,
-                // stockId (integer, optional): 仓库ID ,
-                // addressId (integer, optional): 地址ID ,
-                // completeAddress (string, optional): 详情地址 ,
-                // transportMethodId (integer, optional): 运输方式 ,
-                // contactPerson (string, optional): 联系人 ,
-                // phone (string, optional): 联系电话 ,
-                // logisticsCompany (string, optional): 物流公司 ,
-                // isDefault (boolean, optional): 是否默认 ,
-                // remark (string, optional): 备注
-
-                let self = this;
-                this.$axios.posts('api/services/app/StockAddressManagement/Create',self.createRepositoryAddressParams).then(function(res){
-                    console.log(res);
-                    self.open('创建仓库地址成功','el-icon-circle-check','successERP');
               })
             },
 
             addCol:function(){//增行
                 let self = this;
-                self.allList.unshift(self.createRepositoryParams);
+                // console.log(1)
+                console.log(self.repositoryAddressData)
+                self.repositoryAddressData.unshift(self.createParams);
+                console.log(self.repositoryAddressData)
+            },
+
+            saveAddress:function(){//下方保存按钮，保存新增的仓库地址信息
+                let self = this;
+                this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){//创建
+                    console.log(res);
+                    self.loadData();
+                    self.open('创建仓库成功','el-icon-circle-check','successERP');
+                    self.clearData();
+
+              })
             },
 
             clearData:function(){//清除创建的参数
                 let self = this;
                 self.createParams={
                     groupId:'1',//集团ID
-                    stockId:'16',//仓库ID
+                    stockId:'',//仓库ID
                     addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
@@ -523,10 +553,10 @@
             },
 
             handleDelete:function(index,id){//表格内删除操作
-                this.tableData.splice(index,1);
+                this.repositoryAddressData.splice(index,1);
                 this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
                 console.log(res);
-                alert('删除成功')
+                self.open('删除仓库地址成功','el-icon-circle-check','successERP');
               })
             },
             
@@ -536,8 +566,8 @@
                 let self = this;
                 this.$axios.puts('/api/services/app/StockAddressManagement/Update',row).then(function(res){//创建
                     console.log(res);
-                    self.getAllList();
-                    self.open('修改资料成功');
+                    self.loadData();
+                    self.open('修改仓库地址成功','el-icon-circle-check','successERP');
               })
             },
 
@@ -551,7 +581,17 @@
 
         data(){
             return {
-                allList:[],
+                repositoryData:'',//根据仓库id查出的仓库信息
+                repositoryAddressData:[],//根据仓库id查出的仓库地址信息
+                getRepositoryAddressParams:{
+                    stockId:'',
+                    Draw:'',
+                    start:'',
+                    length:'',
+                    MaxResultCount:'',
+                    SkipCount:''
+                }, 
+
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制允许使用
                 isEdit:-1,//表格下标
@@ -597,9 +637,9 @@
                     "phone": "",
                     "remark": ""
                 },
-                createRepositoryAddressParams:{//创建新的仓库地址参数
+                createParams:{//创建新的仓库地址
                     groupId:'1',//集团ID
-                    stockId:'16',//仓库ID
+                    stockId:'',//仓库ID
                     addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
