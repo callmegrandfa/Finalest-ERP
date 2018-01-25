@@ -7,8 +7,6 @@
                     <span>恒康智能云</span>
                 </el-col>
             </el-col>
-             <el-col :span="22" class="product">
-             </el-col>
         </el-col>
         <el-col class="loginForm">
            
@@ -154,6 +152,10 @@ export default {
         width: 51%;
         float: left;
         height: 100%;
+        background-image: url(../../static/image/login/product.png);
+        background-repeat: no-repeat;
+        background-size: 70%;
+        background-position: center;
     }
     .loginWrapper .loginForm{
         float: left;
@@ -216,22 +218,6 @@ export default {
         bottom: 0;
         right: -30px;
     }
-
-    .loginWrapper .product{
-        position: absolute;
-        bottom:20%;
-        left: 4.1%;
-        height: 60%;
-        background-image: url(../../static/image/login/product.png);
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-    }
-    /* .loginWrapper .product img{
-        max-width: 100%;
-        max-height: 100%;
-        margin: auto;
-    } */
     .loginWrapper .formInput{
         position: absolute;
     }

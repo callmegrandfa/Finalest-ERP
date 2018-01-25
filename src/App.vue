@@ -23,11 +23,11 @@ export default {
 @import"../static/css/assets/layouts/layout2/css/custom.min.css";
 @import"//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 @import"../static/css/common.css";
-/* .wrapper{
-  background-color: rgba(38, 52, 75, 1);
-  padding-top: 73px;
-  position: relative;
-  overflow: hidden;
-} */
+@media (max-width: 767px){
+  .page-header.navbar {
+      background: rgba(53, 64, 82, 1);
+  }
+}
+
 </style>
 

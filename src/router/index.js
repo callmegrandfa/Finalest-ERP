@@ -32,6 +32,7 @@ const groupManage = () =>import(/* webpackChunkName: "group-manage" */'../compon
 const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManageList')
 const detail = () =>import('../components/groupManage/detail')
 const modify = () =>import('../components/groupManage/modify')
+const see = () =>import('../components/groupManage/see')
 const groupManager = () =>import('../components/groupManage/groupManager')
 
 
@@ -42,7 +43,6 @@ const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: login,name:'login' },
   { path: '/register', component: register,name:'register' },
-  { path: '/customer', component: customer,name:'customer' },
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
     store.commit('username');
@@ -130,6 +130,7 @@ children:[
   { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//组织管理
     return store.state.groupActiveRouter;
   },children:[
+      { path: '/groupManage/default/see/:id', component: see,name:'see' },
       { path: '/groupManage/default/modify/:id', component: modify,name:'modify' },
       { path: '/groupManage/default/detail/:id', component: detail,name:'detail' },
       { path: '/groupManage/default/groupManageList/:id', component: groupManageList,name:'groupManageList' },
@@ -158,6 +159,8 @@ router.beforeEach((to, from, next) => {
     store.state.groupActiveRouter='/groupManage/default/detail/:id';
   }else if(to.name=='modify'){
     store.state.groupActiveRouter='/groupManage/default/modify/:id';
+  }else if(to.name=='see'){
+    store.state.groupActiveRouter='/groupManage/default/see/:id';
   }else if(to.name=='groupManageList'){
     store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
   }else if(to.name=='repositoryList'){
