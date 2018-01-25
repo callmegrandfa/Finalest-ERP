@@ -62,7 +62,7 @@
                             <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
                             <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="effectiveStart" label="启用年月"></el-table-column>
+                            <el-table-column prop="creationTime" label="启用年月"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column prop="isCompany" label="公司">
                                 <template slot-scope="scope">
