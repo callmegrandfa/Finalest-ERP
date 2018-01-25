@@ -15,10 +15,10 @@
      <div v-show="ifShow">   
         <el-row>
             <el-col :span="24" class="getPadding"> 
-                <div class="errorTips">
+                <!-- <div class="errorTips">
                     <p class="msgDetail">错误提示：名称不能为特殊字符</p>
                     <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
-                </div>
+                </div> -->
                 <div class="bgcolor">
                     <label>所属组织</label>
                     <el-select v-model="valueOrganization">
@@ -134,7 +134,7 @@
                <el-tabs v-model="activeName">
                     <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
                         <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                        <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
+                        <button class="erp_bt bt_excel mb10"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                         <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                         <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
                         
@@ -442,15 +442,14 @@ export default({
      margin-top: 15px;
  }
 
- .customerBasicForm .erp_bt{
-     margin-bottom: 15px;
- }
 .customerBasicForm .tabZoo .erp_bt:first-child{
     margin-left: 0;
 }
 .customerBasicForm .nopadding{
     padding-top: 0;
 }
-
+.mb10{
+    margin-bottom: 10px;
+}
   </style>
   
