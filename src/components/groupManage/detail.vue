@@ -22,7 +22,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>编码</label>
-                    <el-input v-model="addData.ouCode"></el-input>
+                    <el-input v-model="addData.ouCode" placeholder="请录入编码"></el-input>
                 </div> 
                 <div class="bgcolor">
                         <label>名称</label>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select v-model="addData.companyOuId ">
+                    <el-select v-model="addData.companyOuId">
                         <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
                         </el-option>
                     </el-select>
@@ -104,8 +104,8 @@
                                 </el-col> 
                             </el-col>
                             <el-col :span="22"  class="getPadding">
-                                <div class="bgcolor"><label>上级公司</label><el-input v-model="company.higher" placeholder="请选择上级公司"></el-input></div>
-                                <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="请输入法人代表"></el-input></div>
+                                <div class="bgcolor"><label>上级公司</label><el-input v-model="addData.ouCompanyParentid" placeholder="请选择上级公司"></el-input></div>
+                                <div class="bgcolor"><label>法人代表</label><el-input v-model="addData.legalPerson" placeholder="请输入法人代表"></el-input></div>
                                 <div class="bgcolor">
                                     <label>用户状态</label>
                                     <el-select v-model="addData.status">
@@ -151,32 +151,28 @@ export default({
             auditInfo:{},//审计信息
             addData:{
                 groupId:1,//集团ID
-                ouCode: 'string',//组织代码存在 
-                ouName: 'string' ,//组织名称存在
-                foreignName: 'string' ,//外文名称
-                mnemonic: 'string' ,//助记码
+                ouCode: '默认',//组织代码存在 
+                ouName: '默认' ,//组织名称存在
+                foreignName: '默认' ,//外文名称
+                mnemonic: '默认' ,//助记码
                 ouParentid: 0 ,//上级组织ID存在
                 accountPeriodId: 0 ,//会计期间ID
                 baseCurrencyId: 0,//本位币种id存在
                 companyOuId: 0,//所属公司ID存在
-                contactPerson: 'string' ,//联系人存在
-                phone: 'string' ,//电话存在
-                address: 'string' ,//地址存在
+                contactPerson: '默认' ,//联系人存在
+                phone: '默认' ,//电话存在
+                address: '默认' ,//地址存在
                 areaId: 0 ,//行政区域ID
                 entityProperty : 0 ,//实体属性
                 status: 0 ,//启用状态存在
-                remark: 'string' ,//备注存在
+                remark: '默认' ,//备注存在
                 basOuTypes: [ 0 ],//组织职能
                 isGroupCompany:true ,//
                 ouCompanyParentid: 0 ,//上级公司组织ID
-                legalPerson: 'string' ,//法人代表
+                legalPerson: '默认' ,//法人代表
                 companyStatus: 0 ,//公司启用状态
                 regtime: '2018-01-23T02:20:35.833Z'//公司成立时间
             },
-            company:{//公司
-                higher:"恒康",
-                representative:"lioman",    
-            },  
             ischeck:{isCheckCompany:true,//公司复选框初始选种状态
                     isCheckFinance:false,//财务复选框初始选种状态
                     isCheckBusiness:false}//业务复选框初始选种状态 
@@ -224,13 +220,13 @@ export default({
             }],
             company: [{ //   所属公司数据
                 valueCompany:'0',
-                label: '恒康'
+                label: '0'
             }, {
                 valueCompany:'1',
-                label: '361度'
+                label: '1'
             }, {
                 valueCompany:'2',
-                label: '红旗连锁'
+                label: '2'
             }],
             state: [{ //启用状态数据
                 valueState:'0',
@@ -238,7 +234,8 @@ export default({
             }, {
                 valueState:'1',
                 label: '停用'
-            }]          
+            }],
+            isSave:true,//是否可以保存
         }
     },
     watch:{
@@ -256,8 +253,8 @@ export default({
     computed:{
         count () {
             return this.ischeck;
-            }
-    },       
+            },
+    },         
     methods:{
         back(){
             this.$store.state.url='/groupManage/default/groupManageList/default'
@@ -308,7 +305,8 @@ export default({
         },
         save(){
             let _this=this;
-            _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+            if(_this.isSave){
+                 _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     //console.log(res)
                     _this.addData=res.result;
                      _this.addData={
@@ -354,27 +352,77 @@ export default({
                     if(res.result.creatorUser!=null){
                         _this.creatorUser=res.result.creatorUser
                     }
-                    
+                    _this.isSave=false;
                     _this.open('保存成功','el-icon-circle-check','successERP');
                 },function(res){
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
+            }else{
+                _this.open('保存失败','el-icon-error','faildERP');
+            }
         },
         saveAdd(){
              let _this=this;
-            _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+             if(_this.isSave){
+                  _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     _this.open('保存并新增成功','el-icon-circle-check','successERP');
+                    _this.isSave=true;
                     _this.clearData();
                 },function(res){
                     _this.open('保存并新增失败','el-icon-error','faildERP');
                 })
+             }else{
+                  _this.open('保存并新增失败','el-icon-error','faildERP');
+             }
+           
         },
-        newAdd(){   
+        newAdd(){
+            this.isSave=true;
             this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },
         clearData(){
-           this.$destroy()
+            this.creatorUser=[];
+            this.auditInfo={
+                id:'',
+                lastModifierUser:'',
+                isDeleted:false,
+                deleterUserId:'',
+                deletionTime:'',
+                lastModificationTime:'',
+                lastModifierUserId:'',
+                creationTime:'',
+                creatorUserId:'',
+                isCompany : false,
+                isAdministration :false,
+                isFinance: false,
+                isCapital :false,
+                isPurchase :false,
+            };
+            this.addData={
+                groupId:1,//集团ID
+                ouCode: '',//组织代码存在 
+                ouName: '' ,//组织名称存在
+                foreignName: '' ,//外文名称
+                mnemonic: '',//助记码
+                ouParentid: '' ,//上级组织ID存在
+                accountPeriodId:'' ,//会计期间ID
+                baseCurrencyId: '',//本位币种id存在
+                companyOuId: '',//所属公司ID存在
+                contactPerson:'',//联系人存在
+                phone:'',//电话存在
+                address:'' ,//地址存在
+                areaId: '',//行政区域ID
+                entityProperty : '',//实体属性
+                status: '',//启用状态存在
+                remark: '' ,//备注存在
+                basOuTypes: [0],//组织职能
+                isGroupCompany:false ,//
+                ouCompanyParentid: '' ,//上级公司组织ID
+                legalPerson:'',//法人代表
+                companyStatus:'' ,//公司启用状态
+                regtime:''//公司成立时间
+            };
         }
     }
 

@@ -46,11 +46,9 @@
                         <el-tree
                         :data="componyTree"
                         :props="defaultProps"
-                        show-checkbox
                         node-key="treeId"
                         default-expand-all
                         :expand-on-click-node="true"
-                        @check-change="checkChange"
                         @node-click="nodeClick">
                         </el-tree>
                     </el-col>
@@ -64,7 +62,7 @@
                             <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
                             <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="effectiveStart" label="启用年月"></el-table-column>
+                            <el-table-column prop="creationTime" label="启用年月"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column prop="isCompany" label="公司">
                                 <template slot-scope="scope">
@@ -84,6 +82,7 @@
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
+                                    <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>  
@@ -108,19 +107,6 @@
         name:'customerInfor',
         data(){
             return {
-               
-                try:{
-                "groupId": 2,
-                "stockId": 1,
-                "addressId": 8,
-                "completeAddress": "str33ing",
-                "transportMethodId": 1,
-                "contactPerson": "stri55ng",
-                "phone": "18200326666",
-                "logisticsCompany": "str55ing",
-                "isDefault": true,
-                "remark": "st54ring"
-                },
                 searchData:{
                     groupId:'1',//
                     ouCode: "",//编码
@@ -163,6 +149,7 @@
                     componyTree:  [{
                         treeId: 1,
                         label: '集团名',
+                        children:[]
                         }],
                     defaultProps: {
                         children: 'children',
@@ -175,15 +162,24 @@
                     page:1,//当前页
                     treeCheck:[],
                     isClick:[],
-                    
             }
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
-                _this.loadTree();
+                //_this.loadTree();
              },
         methods:{
+             open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
             loadTableData(){//表格
                  let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
@@ -241,7 +237,8 @@
                     for(let i=0;i<_this.multipleSelection.length;i++){
                         _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
                         .then(function(res){
-                             _this.loadTableData();
+                            _this.loadTableData();
+                            _this.open('删除成功','el-icon-circle-check','successERP');
                             // for(let x=0;x<_this.tableData.length;x++){
                             //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){
                             //         console.log(_this.tableData[x]);
@@ -249,39 +246,37 @@
                             //     }
                             // }
                         },function(res){
-                            console.log('err:'+res)
+                            _this.open('删除失败','el-icon-error','faildERP');
+                            //console.log('err:'+res)
                         })
                     }
                 };
 
-                if(_this.treeCheck.length>0){//tree
-                    for(let i=0;i<_this.treeCheck.length;i++){
-                        _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
-                        .then(function(res){    
-                          _this.loadTree();
-                        },function(res){
-                            console.log('err:'+res)
-                        })
-                    }
-                }
+                // if(_this.treeCheck.length>0){//tree
+                //     for(let i=0;i<_this.treeCheck.length;i++){
+                //         _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
+                //         .then(function(res){    
+                //           _this.loadTree();
+                //         },function(res){
+                //             console.log('err:'+res)
+                //         })
+                //     }
+                // }
 
             },
-            checkChange(data,check){
-                let _this=this;
-                let add=false;
-                if(check){
-                    _this.treeCheck.push(data.treeId);
-                }else{
-                    for(let i=0;i<_this.treeCheck.length;i++){
-                        if(_this.treeCheck[i]==data.treeId){
-                            _this.treeCheck.splice(i,1);
-                        }
-                    }
-                }
-                
-                
-                
-            },
+            // checkChange(data,check){
+            //     let _this=this;
+            //     let add=false;
+            //     if(check){
+            //         _this.treeCheck.push(data.treeId);
+            //     }else{
+            //         for(let i=0;i<_this.treeCheck.length;i++){
+            //             if(_this.treeCheck[i]==data.treeId){
+            //                 _this.treeCheck.splice(i,1);
+            //             }
+            //         }
+            //     }
+            // },
             nodeClick(data){
                  let _this=this;
                  let flag=false;
@@ -299,7 +294,7 @@
                  }
                  
                 //  console.log(flag)
-                 if(data.treeId!=1&&flag){
+                 if(flag){
                      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
                     .then(function(res){
                         _this.isClick.push(data.treeId);
@@ -318,6 +313,10 @@
             },
             modify(row){
                 this.$store.state.url='/groupManage/default/modify/'+row.id
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            see(row){
+                this.$store.state.url='/groupManage/default/see/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             }
         },

@@ -1,7 +1,7 @@
 <template>
     <div class="content-wrapper page-content-wrapper" :class="{contentActive : $store.state.show}">
         <div class="page-content">
-            <div class="routerContain">
+            <div class="routerContain" :class="{routerActive : $store.state.show}">
                 <button class="goLeft" @click="left">
                     <!-- <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> -->
                     <img src="../../static/image/content/go.png">
@@ -11,9 +11,9 @@
                     <div id="longWidth">
                         <ul id="routerBox">
                             <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
-
                                 <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
-                                <i class="el-icon-error close" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i>
+                                <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
+                                <!-- <i class="el-icon-error close" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i> -->
                             </li>
                         </ul>
                     </div>
@@ -201,10 +201,18 @@ export default {
 }
 .routerContain{
     position: fixed;
+    width: calc(100% - 235px);
     font-family: 'microsoft yahei';
     height: 43px;
     background-color: #eef1f5;
     z-index: 2;
+    transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+}
+.routerActive{
+    width: calc(100% - 50px);
 }
 .routerContain .goLeft img{
     transform:rotate(180deg);
@@ -236,7 +244,6 @@ export default {
     height: 100%;
     width: auto;
 }
-
 #window #routerBox .routerBtn{
     height: 100%;
     position: relative;
@@ -247,14 +254,21 @@ export default {
 
 #window #routerBox .routerBtn .close{
     display: block;
+    width: 12px;
+    height: 12px;
     position: absolute;
-    top: 5px;
-    right: 2px;
-    color: #000;;
-    font-size: 12px;
+    top: 3px;
+    right: 0;
+    color: #fff;
+    background-color: #f55e6e;
+    font-size: 14px;
+    font-weight: bolder;
+    text-align: center;
+    line-height: 12px;
     cursor: pointer;
 }
 #window #routerBox .routerBtn a{
+    position: relative;
     margin-top: 3px;
     height: 40px;
     padding: 0 15px;
