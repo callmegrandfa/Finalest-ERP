@@ -188,13 +188,7 @@
                 this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',self.deleteId).then(function(res){
                 console.log(res);
               })
-            },
-
-            switch(){
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-
-        
+            },        
 
             back(){
                 this.$store.state.url='/repository/default/repositoryData/default'

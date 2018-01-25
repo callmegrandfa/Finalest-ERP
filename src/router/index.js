@@ -9,6 +9,7 @@ const shortData = () =>import('../components/dataTemplate/shortData')
 const midData = () =>import('../components/dataTemplate/midData')
 const longData = () =>import('../components/dataTemplate/longData')
 const home = () =>import(/* webpackChunkName: "group-index" */'../components/home/home')
+const repository = () =>import('../components/wareHouse/repository')
 const repositoryList = () =>import('../components/wareHouse/repositoryList')
 const repositoryData = () =>import('../components/wareHouse/repositoryData')
 const supplierEdit = () =>import('../components/supplierData/supplierEdit')
@@ -32,7 +33,8 @@ const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../co
 const detail = () =>import('../components/groupManage/detail')
 const modify = () =>import('../components/groupManage/modify')
 const groupManager = () =>import('../components/groupManage/groupManager')
-const repository = () =>import('../components/wareHouse/repository')
+
+
 Vue.use(Router)
 
 const routes = [
@@ -40,6 +42,7 @@ const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: login,name:'login' },
   { path: '/register', component: register,name:'register' },
+  { path: '/customer', component: customer,name:'customer' },
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
     store.commit('username');
@@ -100,7 +103,7 @@ children:[
   { path: '/shortData/:id', component: shortData,name:'shortData' },
   { path: '/longData/:id', component: longData,name:'longData' },
   { path: '/midData/:id', component: midData,name:'midData' },
-  { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//仓库管理
+  { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//仓库资料
     return store.state.resActiveRouter;
   },children:[
       { path: '/repository/default/repositoryData/:id', component: repositoryData,name:'repositoryData' },

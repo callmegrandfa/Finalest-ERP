@@ -212,7 +212,7 @@ export default {
             },{
                 name:'客户资料',
                 thirdInfo:[
-                    {name:'客户',address:'customer'},
+                    {name:'客户资料',address:'customer'},
                 ]
             },{
                 name:'单据模板',

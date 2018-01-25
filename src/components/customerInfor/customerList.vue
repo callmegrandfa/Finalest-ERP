@@ -8,9 +8,7 @@
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        
-                            <span class="fs12 open">+ 展开</span>
-                        
+                        <span class="fs12 open">+ 展开</span>
                     </el-col>
                 </el-row>
 
@@ -20,11 +18,10 @@
                     </el-col>
                     <el-col :span="15" class="fs12 border1 pl10">
                         <el-select v-model="value" placeholder="请选择客户类型">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                            <el-option v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
                             </el-option>
                         </el-select>
                     </el-col>
@@ -91,11 +88,40 @@
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add" @click="goDetail"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
-                    <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+                    <button class="erp_bt bt_add" @click="goDetail">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_add.png">
+                        </div>
+                        <span class="btDetail">新增</span>
+                    </button>
+
+                    <button class="erp_bt bt_excel">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_excel.png">
+                        </div>
+                        <span class="btDetail">Excel</span>
+                    </button>
+
+                    <button class="erp_bt bt_del">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_del.png">
+                        </div>
+                        <span class="btDetail">删除</span>
+                    </button>
+
+                    <button class="erp_bt bt_auxiliary">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_auxiliary.png">
+                        </div>
+                        <span class="btDetail">辅助功能</span>
+                    </button>
+
+                    <button class="erp_bt bt_print">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_print.png">
+                        </div>
+                        <span class="btDetail">打印</span>
+                    </button>
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
@@ -140,7 +166,7 @@
 
 <script>
     export default{
-        name:'customerInfor',
+        name:'customerList',
         data(){
             return {
                 try:{
@@ -284,13 +310,13 @@
                 this.pageIndex=val;
             },
 
-            switch(){
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-
             goDetail(){//点击新增跳转
                this.$store.state.url='/customer/default/customerDetail/default'
                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+
+            loadAllList:function(){//获取所有列表数据
+                
             },
 
         },
