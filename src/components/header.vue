@@ -1,7 +1,6 @@
 <template>
-    <header class="header navbar page-header">
-        <div class="page-header-inner ">
-            <div class="menuBtn menu-toggler sidebar-toggler" @click="$store.commit('go')"></div>
+    <div class="header">
+            <div class="menuBtn" @click="$store.commit('go')"></div>
             <div class="pageLogo">
                 <a href="">
                 <img src="../../static/image/login/ERP.png" alt="HKERP">
@@ -35,8 +34,7 @@
                     
                 </li>
             </ul>
-        </div>
-    </header>
+    </div>
 </template>
 <script>
 export default {
@@ -118,8 +116,8 @@ export default {
     width: 70px;
     cursor: pointer;
     height: 31px;
-    padding-top: 10px;
-    padding-left: 15px;
+    margin-top: 10px;
+    margin-left: 15px;
     display: block;
     color: #fff;
     text-align: center;

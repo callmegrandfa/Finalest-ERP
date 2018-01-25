@@ -1,6 +1,5 @@
 <template>
-    <div class="content-wrapper page-content-wrapper" :class="{contentActive : $store.state.show}">
-        <div class="page-content">
+    <div class="contentWrapper" :class="{contentActive : $store.state.show}">
             <div class="routerContain" :class="{routerActive : $store.state.show}">
                 <button class="goLeft" @click="left">
                     <!-- <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> -->
@@ -25,14 +24,13 @@
                 </button>
                 <div class="goClose"><span>关闭操作<i class="fa fa-angle-up" aria-hidden="true"></i></span></div>
             </div>    
-            <div class="content" id="content">
+            <div class="contents" id="contents">
                 <div class="whiteBg">
                     <keep-alive>
                     <router-view></router-view>
                     </keep-alive>
                 </div>   
             </div>
-        </div>   
     </div>
 </template>
 <script>
@@ -51,7 +49,7 @@ export default {
   },
   mounted:function(){
     this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
-         let content=document.getElementById('content');//设置高度为全屏
+         let content=document.getElementById('contents');//设置高度为全屏
          let height=window.innerHeight-123;
          content.style.minHeight=height+'px';
          window.onresize = function(){
@@ -175,25 +173,24 @@ export default {
 .goClose{
     float: left;
 }
-.content-wrapper{
+.contentWrapper{
     transition: all 0.5s;
     -moz-transition: all 0.5s;
     -webkit-transition: all 0.5s;
     -o-transition: all 0.5s;
     background-color: #414e61;
-    float: left;  
-    width: calc(100% - 235px);
+    /* width: calc(100% - 235px); */
     padding-left: 235px;
 }
 .contentActive{
-    width: calc(100% - 50px);
+    /* width: calc(100% - 50px); */
     padding-left:50px;
 }
-.content{
+.contents{
     padding: 15px 0;
     background-color:#eef1f5;
     width: 100%;
-    padding-top: 58px;
+    margin-top: 43px;
 }
 .whiteBg{
     width:calc(100% - 30px);
@@ -202,6 +199,7 @@ export default {
 .routerContain{
     position: fixed;
     width: calc(100% - 235px);
+    top: 50px;
     font-family: 'microsoft yahei';
     height: 43px;
     background-color: #eef1f5;
