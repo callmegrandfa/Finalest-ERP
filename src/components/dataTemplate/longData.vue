@@ -544,7 +544,8 @@ export default {
 			ifUpdate:-1,//编辑按钮（是否可见）
 			//ifSave:-1,//保存按钮（是否可见）
 			pageIndex:-1,//分页的当前页码
-			totalPage:20,//当前分页总数
+            totalPage:20,//当前分页总数
+            value1:'',
       }
   },
   methods:{

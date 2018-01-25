@@ -111,6 +111,7 @@
                         </template>
                     </el-table-column>
                   </el-table> 
+                  <!-- <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination> -->
               </el-col>
           </el-row>
       </div>
@@ -205,6 +206,10 @@
               })
             },
 
+            handleCurrentChange:function(val){//获取当前页码
+                this.pageIndex=val;
+            },
+
             deleteRepository:function(){//删除仓库
                 this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',self.deleteId).then(function(res){
                 // console.log(res);
@@ -248,7 +253,8 @@
                 },
                 queryId:'',//需要查询的stockId
                     
-                
+                pageIndex:-1,//分页的当前页码
+			    totalPage:20,//当前分页总数
                
             }
         },
