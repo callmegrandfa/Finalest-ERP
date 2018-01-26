@@ -21,13 +21,6 @@
                 </div>
                 <span class="btDetail">修改</span>
             </button>
-
-            <button class="erp_bt bt_look">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_look.png">
-                </div>
-                <span class="btDetail">审核</span>
-            </button>
       </el-row>
 
       <el-row class="bg-white ft12 pt10 pr10">
@@ -265,7 +258,7 @@
                         </el-row>
                     </el-col>
 
-                    <el-col :span="24" class="mt20 mb10">
+                    <el-col :span="24" class="mt20 mb10 pl40">
                         <template>
                             <el-checkbox v-model="ifCan">允许使用</el-checkbox>
                         </template>
@@ -382,7 +375,7 @@
                         </el-col>
 
                         <el-col :span="15">
-                            <input class="input-need" type="text" placeholder="请录入创建人">
+                            <input class="input-need" type="text" disabled>
                         </el-col>
                     </el-row>
                   </el-col>
@@ -394,7 +387,7 @@
                         </el-col>
 
                         <el-col :span="15">
-                            <input class="input-need" type="text" placeholder="请录入创建时间">
+                            <input class="input-need" type="text" disabled>
                         </el-col>
                     </el-row>
                   </el-col>
@@ -406,7 +399,7 @@
                         </el-col>
 
                         <el-col :span="15">
-                            <input class="input-need" type="text" placeholder="请录入修改人">
+                            <input class="input-need" type="text" disabled>
                         </el-col>
                     </el-row>
                   </el-col>
@@ -418,7 +411,7 @@
                         </el-col>
 
                         <el-col :span="15">
-                            <input class="input-need" type="text" placeholder="请录入修改时间">
+                            <input class="input-need" type="text" disabled>
                         </el-col>
                     </el-row>
                   </el-col>
@@ -665,6 +658,9 @@
 }
 .pl10{
     padding-left: 10px;
+}
+.pl40{
+    padding-left: 40px;
 }
 .ml15{
     margin-left: 15px;

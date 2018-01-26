@@ -145,6 +145,11 @@
                             </el-table-column>   
                             <el-table-column prop="moneyOrganization" label="对应财务组织"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
+                                </template>
+                            </el-table-column>
                         </el-table>
                         <el-row>
                             <el-col :span='10'>
@@ -255,46 +260,6 @@
                         ifSupply:true,
                         wareHouse:'对应财务组织',
                         status:'恢复',
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
                     }],
 
                     pageIndex:-1,//分页的当前页码
@@ -302,22 +267,37 @@
             }
         },
         created:function(){
-            
+            this.loadAllList();
             
         },
         methods:{
-            handleCurrentChange:function(val){//获取当前页码
-                this.pageIndex=val;
-            },
-
             goDetail(){//点击新增跳转
                this.$store.state.url='/customer/default/customerDetail/default'
                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
-            loadAllList:function(){//获取所有列表数据
-                
+            goModify:function(){//点击跳转修改页modify
+                this.$store.state.url='/customer/default/customerModify/default'
+                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
+
+            handleCurrentChange:function(val){//获取当前页码
+                this.pageIndex=val;
+            },
+
+            loadAllList:function(){//获取所有列表数据
+                let self = this;
+                this.$axios.gets('/api/services/app/ContactManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                    console.log(res);
+                    self.allList = res.data;
+                    self.total = res.total;
+                    self.totalPage = Math.ceil(res.total/self.eachPage)
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
+
+            
 
         },
     }

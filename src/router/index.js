@@ -9,17 +9,22 @@ const shortData = () =>import('../components/dataTemplate/shortData')
 const midData = () =>import('../components/dataTemplate/midData')
 const longData = () =>import('../components/dataTemplate/longData')
 const home = () =>import(/* webpackChunkName: "group-index" */'../components/home/home')
+
 const repository = () =>import('../components/wareHouse/repository')
 const repositoryList = () =>import('../components/wareHouse/repositoryList')
 const repositoryData = () =>import('../components/wareHouse/repositoryData')
 const repositoryModify = () =>import('../components/wareHouse/repositoryModify')
+
 const supplierEdit = () =>import('../components/supplierData/supplierEdit')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
+
 const customer = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customer')
-const customerDetail = () =>import('../components/customerInfor/customerDetail')
 const customerList = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customerList')
+const customerDetail = () =>import('../components/customerInfor/customerDetail')
+const customerModify = () =>import('../components/customerInfor/customerModify')
+
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
@@ -120,8 +125,9 @@ children:[
   { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//客户管理
     return store.state.customerActiveRouter;
   },children:[
-      { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
       { path: '/customer/default/customerList/:id', component: customerList,name:'customerList' },
+      { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
+      { path: '/customer/default/customerModify/:id', component: customerModify,name:'customerModify' },
   ]},
   { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开单模板
     return store.state.OrderActiveRouter;
@@ -175,6 +181,8 @@ router.beforeEach((to, from, next) => {
     store.state.customerActiveRouter='/customer/default/customerList/:id'
   }else if(to.name=='customerDetail'){
     store.state.customerActiveRouter='/customer/default/customerDetail/:id'
+  }else if(to.name=='customerModify'){
+    store.state.customerActiveRouter='/customer/default/customerModify/:id'
   }
    next()
 })

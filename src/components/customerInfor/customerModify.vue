@@ -16,11 +16,11 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_saveAdd">
+            <button class="erp_bt bt_modify">
                 <div class="btImg">
-                    <img src="../../../static/image/common/bt_saveAdd.png">
+                    <img src="../../../static/image/common/bt_modify.png">
                 </div>
-                <span class="btDetail">保存并新增</span>
+                <span class="btDetail">修改</span>
             </button>
 
             <button class="erp_bt bt_look">
