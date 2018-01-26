@@ -111,7 +111,18 @@
                         </template>
                     </el-table-column>
                   </el-table> 
-                  <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                  <el-row>
+                      <el-col :span='6'>
+                          <div style="margin-top:20px;" class="ml10">
+                                记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
+                          </div>
+                         
+                      </el-col>
+                      <el-col :span="18">
+                          <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                      </el-col>
+                  </el-row>
+                  
               </el-col>
           </el-row>
       </div>
@@ -157,7 +168,8 @@
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Draw:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.data;
-                    self.totalPage = Math.ceil(res.recordsTotal/self.eachPage)
+                    self.total = res.total;
+                    self.totalPage = Math.ceil(res.total/self.eachPage)
                 },function(res){
                     console.log('err'+res)
                 })
@@ -252,6 +264,7 @@
         data(){
             return{ 
                 allList:[],//获取所有的列表数据
+                total:'',//数据总条数
                 queryList:[],//将查询回来的数据保存为数组形式
                
                 listById:'',//根据id获取的list
