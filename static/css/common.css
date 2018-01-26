@@ -226,6 +226,8 @@
       .erp_bt .btImg img{
         max-width: 100%;
         max-height: 100%;
+        position: absolute;
+        left: 0;
       }
       .bt_del .btImg{
       transform: rotate(45deg);

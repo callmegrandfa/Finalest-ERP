@@ -2,7 +2,7 @@
   <div>
     <app-header></app-header>
     <div class="clearfix"> </div>
-    <div class="wrapper page-container">
+    <div class="wrapper">
       <app-sidebar></app-sidebar>
       <app-content></app-content>
     </div>   
