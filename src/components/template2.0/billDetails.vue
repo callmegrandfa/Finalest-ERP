@@ -1,5 +1,5 @@
 <template>
-    <div class="orderDetail">
+    <div class="billDetail">
         <el-row>
             <el-col :span="24" class="orderHead">
                 <el-col :span="17" class="orderTittle">
@@ -15,32 +15,27 @@
                     </div>
                 </el-col>
                 <el-col :span="6">
-                    <!-- <el-steps :active="1" finish-status="success">
-                        <el-step title="Step1" description="新增报表信息"></el-step>
-                        <el-step title="Step2" description="提交送审"></el-step>
-                        <el-step title="Step3" description="完成"></el-step>
-                    </el-steps> -->
-                        <el-col class="stepItem" :span="8">
-                            <div class="stepCircle">1</div>
-                            <div class="stepMsg">
-                                <p>&nbsp;&nbsp;Step1</p>
-                                <p>&nbsp;&nbsp;新增报表信息</p>
-                            </div>
-                        </el-col>
-                        <el-col class="stepItem" :span="8">
-                            <div class="stepCircle stepActive">2</div>
-                            <div class="stepMsg">
-                                <p>&nbsp;&nbsp;Step2</p>
-                                <p>&nbsp;&nbsp;提交审核</p>
-                            </div>
-                        </el-col>
-                        <el-col class="stepItem" :span="8">
-                            <div class="stepCircle">3</div>
-                            <div class="stepMsg">
-                                <p>&nbsp;&nbsp;Step3</p>
-                                <p>&nbsp;&nbsp;完成</p>
-                            </div>
-                        </el-col>
+                    <el-col class="stepItem" :span="8">
+                        <div class="stepCircle">1</div>
+                        <div class="stepMsg">
+                            <p>&nbsp;&nbsp;Step1</p>
+                            <p>&nbsp;&nbsp;新增报表信息</p>
+                        </div>
+                    </el-col>
+                    <el-col class="stepItem" :span="8">
+                        <div class="stepCircle stepActive">2</div>
+                        <div class="stepMsg">
+                            <p>&nbsp;&nbsp;Step2</p>
+                            <p>&nbsp;&nbsp;提交审核</p>
+                        </div>
+                    </el-col>
+                    <el-col class="stepItem" :span="8">
+                        <div class="stepCircle">3</div>
+                        <div class="stepMsg">
+                            <p>&nbsp;&nbsp;Step3</p>
+                            <p>&nbsp;&nbsp;完成</p>
+                        </div>
+                    </el-col>
                 </el-col>
                 <el-col :span="1">
                     <div style="position: relative;width:20px;float: right;margin-right: 10px;">
@@ -413,20 +408,20 @@
                 console.log(`当前页: ${val}`);
             },
             back(){
-                this.$store.state.url='/order/default/orderList/default'
+                this.$store.state.url='/bill/default/billList/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             }
         },
     })
 </script>
 <style>
- .orderDetail{
+ .billDetail{
       font-family: 'microsoft yahei';
   }
 
   /* 三角形 */
  
-.orderDetail .triangle{
+.billDetail .triangle{
     display: none;
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
@@ -438,7 +433,7 @@
     height: 0;
     z-index: 11;
 }
-.orderDetail .triangle:after{
+.billDetail .triangle:after{
     content: '';
      position: absolute;
      top: 1px;
@@ -451,10 +446,10 @@
      z-index: 0;
  }
  /* step */
- .orderDetail .stepItem{
+ .billDetail .stepItem{
      height: 36px;
  }
- .orderDetail .stepCircle{
+ .billDetail .stepCircle{
      width: 36px;
      height: 36px;
      border-radius: 50%;
@@ -468,26 +463,25 @@
      background-color: #d7d7d7;
      float: left;
  }
- .orderDetail .stepActive{
+ .billDetail .stepActive{
      background-color: #F55E6E;
      color: #fff;
  }
- .orderDetail .stepMsg{
+ .billDetail .stepMsg{
     float: left;
     width: calc(100% - 36px);
     color: #333333;
     height: 36px;
     white-space: nowrap;
  }
- .orderDetail .stepMsg p{
+ .billDetail .stepMsg p{
     font-family: 'microsoft yahei';
     font-weight: 400;
     font-style: normal;
     font-size: 12px;
  }
-
 /* 步骤详情 */
- .orderDetail .detailStep{
+ .billDetail .detailStep{
      display: none;
      border-radius: 5px;
      font-size: 12px;
@@ -499,84 +493,84 @@
      width: 300px;
      background-color: #ffffff;
  }
- .orderDetail .detailStep .big{
+ .billDetail .detailStep .big{
 
  }
- .orderDetail .detailStep .circle{
+ .billDetail .detailStep .circle{
      position: absolute;
      border-radius: 50%;
      border: 1px solid #dedede;
      background-color: #fff;
  }  
- .orderDetail .detailStep .one .circle{
+ .billDetail .detailStep .one .circle{
      width: 16px;
      height: 16px;
      left: 141px;
      top: 30.5px;
  }
- .orderDetail .detailStep .two .circle{
+ .billDetail .detailStep .two .circle{
      height: 10px;
      width: 10px;
      left: 144px;
      top: 30.5px;
  }
- .orderDetail .detailStep .ARow{
+ .billDetail .detailStep .ARow{
      width: 100%;
      height: 150px;;
  }
-.orderDetail .detailStep .ARow .messageStep{
+.billDetail .detailStep .ARow .messageStep{
     position: relative;
     width: 100%;
     height: 75px;
 }
-.orderDetail .detailStep .ARow .messageStep .leftD{
+.billDetail .detailStep .ARow .messageStep .leftD{
     border-right: 1px solid #dedede;
     width: 149.5px;
     height: 75px;
     float: left;
 }
-.orderDetail .detailStep .ARow .messageStep .rightD{
+.billDetail .detailStep .ARow .messageStep .rightD{
     width: 149.5px;
     height: 75px;
     float: left;
 }
 
-.orderDetail .detailStep .ARow .messageStep .tittle{
+.billDetail .detailStep .ARow .messageStep .tittle{
     margin-top: 30px;
 }
-.orderDetail .detailStep .ARow .messageStep .detail{
+.billDetail .detailStep .ARow .messageStep .detail{
     color: #a1a1a1;
 }
-.orderDetail .detailStep .ARow .messageStep .leftD p{
+.billDetail .detailStep .ARow .messageStep .leftD p{
     text-align: right;
     padding-right: 20px;
 }
-.orderDetail .detailStep .ARow .messageStep .rightD p{
+.billDetail .detailStep .ARow .messageStep .rightD p{
     text-align: left;
     padding-left: 20px;
 }
-.orderDetail .detailStep .active .circle{
+.billDetail .detailStep .active .circle{
     border: none;
     background-color: #F55E6E;
 }
-.orderDetail .detailStep .active .rightD p{
+.billDetail .detailStep .active .rightD p{
     color: #F55E6E;
 }
-.orderDetail .detailStep .one .rightD .tittle{
+.billDetail .detailStep .one .rightD .tittle{
     font-family: 'Arial Negreta', 'Arial';
     font-weight: 700;
     font-size: 28px;
     margin-top: 25px;
 }
-  .orderDetail .activeShow{
+  .billDetail .activeShow{
       display: block;
   }
 
-.orderDetail .orderHead{
+.billDetail .orderHead{
     background-color: #fff;
     padding: 5px 0;
 }
-.orderDetail .orderHead .orderTittle h4{
+.billDetail .orderHead .orderTittle h4{
     padding-left: 15px;
     font-size: 20px;
     font-weight: bold;
@@ -584,10 +578,10 @@
 }
 /* 已生效 */
 
-.orderDetail .orderHead .orderTittle .seal,
-.orderDetail .orderHead .orderTittle .seal1,
-.orderDetail .orderHead .orderTittle .seal2,
-.orderDetail .orderHead .orderTittle .seal3{
+.billDetail .orderHead .orderTittle .seal,
+.billDetail .orderHead .orderTittle .seal1,
+.billDetail .orderHead .orderTittle .seal2,
+.billDetail .orderHead .orderTittle .seal3{
     position: absolute;
     background-repeat:no-repeat;
     background-position:center;
@@ -596,7 +590,7 @@
     width: 55px;
     height: 55px;
 }
-.orderDetail .orderHead .orderTittle .seal{
+.billDetail .orderHead .orderTittle .seal{
     transform: rotate(-34deg);
     -ms-transform: rotate(-34deg);
     -webkit-transform: rotate(-34deg);
@@ -606,16 +600,16 @@
     left: 210px;
     background-image: url(../../../static/image/u1.png);
 }
-.orderDetail .orderHead .orderTittle .seal1{
+.billDetail .orderHead .orderTittle .seal1{
     background-image: url(../../../static/image/u2.png);
 }
-.orderDetail .orderHead .orderTittle .seal2{
+.billDetail .orderHead .orderTittle .seal2{
     background-image: url(../../../static/image/u3.png);
 }
-.orderDetail .orderHead .orderTittle .seal3{
+.billDetail .orderHead .orderTittle .seal3{
     background-image: url(../../../static/image/u4.png);
 }
-.orderDetail .orderHead .orderTittle .seal3 span{
+.billDetail .orderHead .orderTittle .seal3 span{
     font-weight: bold;
     position: absolute;
     font-size: 12px;
@@ -629,30 +623,30 @@
     -moz-transform: rotate(87deg);	
 }
 /* steps */
-.orderDetail .el-steps .el-step__line{
+.billDetail .el-steps .el-step__line{
     display: none;
 }
-.orderDetail .el-steps .el-step__main{
+.billDetail .el-steps .el-step__main{
     position: absolute;
     top: 0px;
     left: 42px;
 }
-.orderDetail .el-steps .el-step__head{
+.billDetail .el-steps .el-step__head{
     width: 120px;
 }
-.orderDetail .el-steps .el-step__title{
+.billDetail .el-steps .el-step__title{
     font-size: 12px;
     line-height: 20px;
 }
-.orderDetail .el-steps .el-step__description{
+.billDetail .el-steps .el-step__description{
     padding-right: 0;
 }
-.orderDetail .el-steps .el-step__icon{
+.billDetail .el-steps .el-step__icon{
     width: 36px;
     height: 36px;
 }
 
-.orderDetail .el-icon-more{
+.billDetail .el-icon-more{
     transform:rotate(90deg);
     -ms-transform:rotate(90deg);
     -moz-transform:rotate(90deg);
@@ -665,109 +659,109 @@
 
 
 
-.orderDetail .el-row{
+.billDetail .el-row{
      padding:15px 0;
      border-bottom: 1px solid #e4e4e4;
      background-color: #fff;
   }
-.orderDetail .el-row:first-child{
+.billDetail .el-row:first-child{
     padding: 0;
     border:none;
     margin-bottom: 15px;
 }
 
 
-.orderDetail .companyInfo>.el-col:first-child,
-.orderDetail .companyInfo .el-col h4{
+.billDetail .companyInfo>.el-col:first-child,
+.billDetail .companyInfo .el-col h4{
     margin-bottom: 15px;
 }
 
-.orderDetail .tabZoo{
+.billDetail .tabZoo{
      overflow: hidden;
      background-color: #fff;
  }
- .orderDetail .tabZoo .bgcolor{
+ .billDetail .tabZoo .bgcolor{
      border: 1px solid #BCBCBC;
      border-radius: 4px;
  }
- .orderDetail .getPadding{
+ .billDetail .getPadding{
      padding: 0 10px;
  }
- .orderDetail .tabZoo .el-tabs__nav-scroll{
+ .billDetail .tabZoo .el-tabs__nav-scroll{
      padding:10px;
  }
- .orderDetail .tabZoo .el-tabs__content{
+ .billDetail .tabZoo .el-tabs__content{
      padding: 0 10px;
      border: 1px solid #e4e4e4;
      width: calc(100% - 40px);
      margin:auto;
  }
 
- .orderDetail .tabZoo .auditInformation{
+ .billDetail .tabZoo .auditInformation{
      margin-top: 15px;
  }
- .orderDetail .tabZoo .auditInformation h4{
+ .billDetail .tabZoo .auditInformation h4{
      margin-bottom: 15px;
  }
 
- .orderDetail .operationBtn{
+ .billDetail .operationBtn{
      padding: 15px 0;
  }
  /* 分页 */
- .orderDetail .pagination{
+ .billDetail .pagination{
      float: right;
  }
-.orderDetail .greyClr{
+.billDetail .greyClr{
     background-color: #f2f2f2;
     padding-top: 15px;
 }
-.orderDetail .noPadding{
+.billDetail .noPadding{
     padding: 0;
 }
-.orderDetail .formData{
+.billDetail .formData{
     padding: 10px;
 }
-.orderDetail .formData .bgcolor{
+.billDetail .formData .bgcolor{
     margin-bottom: 0;
 }
-.orderDetail .dataLeft{
+.billDetail .dataLeft{
     text-align: left;
 }
-.orderDetail .h4.getPadding{
+.billDetail .h4.getPadding{
     padding-bottom: 10px;
     border-bottom: 1px solid #e4e4e4;
 }
-.orderDetail .tabPage{
+.billDetail .tabPage{
     padding-top: 0;
     width: 100%;
 }
-.orderDetail .el-tabs__header{
+.billDetail .el-tabs__header{
     margin: 0;
 }
 /* 搜索框 */
-.orderDetail .right{
+.billDetail .right{
     float: right;
     width: 480px;
     height: 100%;
     margin-right: 20px;
     margin-top: 3px;
 }
-.orderDetail .right .formSearch{
+.billDetail .right .formSearch{
      float: left;
  }
-.orderDetail .right i,.orderDetail .right span{
+.billDetail .right i,.billDetail .right span{
     line-height: 30px;
     font-size: 12px;
     color: #c9c9c9;
     cursor: pointer;
 }
-.orderDetail .right i:hover,.orderDetail .right span:hover{
+.billDetail .right i:hover,.billDetail .right span:hover{
     color: #3cc;
 }
-.orderDetail .right .rightBts{
+.billDetail .right .rightBts{
     float: right;
 }
-.orderDetail .right .rotate{
+.billDetail .right .rotate{
      transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
