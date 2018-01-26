@@ -11,8 +11,8 @@
                         <ul id="routerBox">
                             <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
                                 <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
-                                <span class="close" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
-                                <!-- <i class="el-icon-error close" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i> -->
+                                <span class="closes" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
+                                <!-- <i class="el-icon-error closes" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i> -->
                             </li>
                         </ul>
                     </div>
@@ -86,7 +86,7 @@ export default {
       close:function(e){
           window.localStorage.removeItem('loglevel:webpack-dev-server');
           let nowIndex=e.target.getAttribute('index');//close元素上面绑定的index
-          let elClose=document.getElementsByClassName('close');
+          let elClose=document.getElementsByClassName('closes');
           let elA=document.querySelectorAll('.addBtn a');
             if(this.$store.state.slidbarData){
                 this.$store.state.temporary=this.$store.state.slidbarData;
@@ -250,7 +250,7 @@ export default {
 }
 
 
-#window #routerBox .routerBtn .close{
+#window #routerBox .routerBtn .closes{
     display: block;
     width: 12px;
     height: 12px;
