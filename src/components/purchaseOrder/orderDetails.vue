@@ -15,11 +15,32 @@
                     </div>
                 </el-col>
                 <el-col :span="6">
-                    <el-steps :active="2" finish-status="success">
+                    <!-- <el-steps :active="1" finish-status="success">
                         <el-step title="Step1" description="新增报表信息"></el-step>
                         <el-step title="Step2" description="提交送审"></el-step>
                         <el-step title="Step3" description="完成"></el-step>
-                    </el-steps>
+                    </el-steps> -->
+                        <el-col class="stepItem" :span="8">
+                            <div class="stepCircle">1</div>
+                            <div class="stepMsg">
+                                <p>&nbsp;&nbsp;Step1</p>
+                                <p>&nbsp;&nbsp;新增报表信息</p>
+                            </div>
+                        </el-col>
+                        <el-col class="stepItem" :span="8">
+                            <div class="stepCircle stepActive">2</div>
+                            <div class="stepMsg">
+                                <p>&nbsp;&nbsp;Step2</p>
+                                <p>&nbsp;&nbsp;提交审核</p>
+                            </div>
+                        </el-col>
+                        <el-col class="stepItem" :span="8">
+                            <div class="stepCircle">3</div>
+                            <div class="stepMsg">
+                                <p>&nbsp;&nbsp;Step3</p>
+                                <p>&nbsp;&nbsp;完成</p>
+                            </div>
+                        </el-col>
                 </el-col>
                 <el-col :span="1">
                     <div style="position: relative;width:20px;float: right;margin-right: 10px;">
@@ -297,7 +318,7 @@
     export default({
         data(){
             return{
-                show:true,
+                show:false,
                 activeName:'detail',
                 currentPage:4,//分页当前页
                 tableData: [{//表格
@@ -429,6 +450,42 @@
      position: absolute;
      z-index: 0;
  }
+ /* step */
+ .orderDetail .stepItem{
+     height: 36px;
+ }
+ .orderDetail .stepCircle{
+     width: 36px;
+     height: 36px;
+     border-radius: 50%;
+     text-align: center;
+     line-height: 36px;
+     font-family: 'microsoft yahei';
+     font-weight: 700;
+     font-style: normal;
+     font-size: 16px;
+     color: #333333;
+     background-color: #d7d7d7;
+     float: left;
+ }
+ .orderDetail .stepActive{
+     background-color: #F55E6E;
+     color: #fff;
+ }
+ .orderDetail .stepMsg{
+    float: left;
+    width: calc(100% - 36px);
+    color: #333333;
+    height: 36px;
+    white-space: nowrap;
+ }
+ .orderDetail .stepMsg p{
+    font-family: 'microsoft yahei';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+ }
+
 /* 步骤详情 */
  .orderDetail .detailStep{
      display: none;
@@ -500,10 +557,10 @@
 }
 .orderDetail .detailStep .active .circle{
     border: none;
-    background-color: rgb(103, 194, 58);
+    background-color: #F55E6E;
 }
 .orderDetail .detailStep .active .rightD p{
-    color: rgb(103, 194, 58);
+    color: #F55E6E;
 }
 .orderDetail .detailStep .one .rightD .tittle{
     font-family: 'Arial Negreta', 'Arial';
@@ -602,7 +659,7 @@
     -webkit-transform:rotate(90deg);
     -o-transform:rotate(90deg); 
     margin-top: 9px;
-    color: #67c23a;
+    color: #F55E6E;
     cursor: pointer;
 }
 
