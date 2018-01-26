@@ -209,6 +209,9 @@ export default {
                 ]
             },{
                 name:'采购管理',
+                thirdInfo:[
+                     {name:'采购管理列表',address:'order'}, 
+                ]
             },{
                 name:'客户资料',
                 thirdInfo:[
@@ -217,7 +220,7 @@ export default {
             },{
                 name:'单据模板',
                 thirdInfo:[
-                     {name:'单据开单模板',address:'order'}, 
+                     {name:'单据开单模板',address:'bill'}, 
                 ]
             },{
                 name:'仓库资料',

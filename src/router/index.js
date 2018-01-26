@@ -35,6 +35,10 @@ const detail = () =>import('../components/groupManage/detail')
 const modify = () =>import('../components/groupManage/modify')
 const see = () =>import('../components/groupManage/see')
 const groupManager = () =>import('../components/groupManage/groupManager')
+// 2.0单据模板
+const bill = () =>import(/* webpackChunkName: "group-bill" */'../components/template2.0/bill')
+const billDetails = () =>import('../components/template2.0/billDetails')
+const billList = () =>import(/* webpackChunkName: "group-bill" */'../components/template2.0/billList')
 
 
 Vue.use(Router)
@@ -123,12 +127,21 @@ children:[
       { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
       { path: '/customer/default/customerList/:id', component: customerList,name:'customerList' },
   ]},
-  { path: '/order/:id', component: order,name:'order',redirect: function(){//单据开单模板
+
+  { path: '/order/:id', component: order,name:'order',redirect: function(){//采购管理
     return store.state.OrderActiveRouter;
   },children:[
       { path: '/order/default/orderDetails/:id', component: orderDetails,name:'orderDetails' },
       { path: '/order/default/orderList/:id', component: orderList,name:'orderList' },
   ]},
+
+  { path: '/bill/:id', component: bill,name:'bill',redirect: function(){//单据开单模板
+    return store.state.billActiveRouter;
+  },children:[
+      { path: '/bill/default/billDetails/:id', component: billDetails,name:'billDetails' },
+      { path: '/bill/default/billList/:id', component: billList,name:'billList' },
+  ]},
+
   { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//组织管理
     return store.state.groupActiveRouter;
   },children:[
@@ -175,6 +188,10 @@ router.beforeEach((to, from, next) => {
     store.state.customerActiveRouter='/customer/default/customerList/:id'
   }else if(to.name=='customerDetail'){
     store.state.customerActiveRouter='/customer/default/customerDetail/:id'
+  }else if(to.name=='billDetails'){
+    store.state.billActiveRouter='/bill/default/billDetails/:id'
+  }else if(to.name=='billList'){
+    store.state.billActiveRouter='/bill/default/billList/:id'
   }
    next()
 })

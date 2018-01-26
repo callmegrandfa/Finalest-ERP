@@ -1,5 +1,5 @@
 <template>
-    <div class="orderList">
+    <div class="billList">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
@@ -13,55 +13,40 @@
                 </el-row>
                 <div class="mt20 bgcolor smallBgcolor"><label>单号</label><el-input placeholder="请录入单号"></el-input></div>
                 <div class="bgcolor smallBgcolor">
-                    <label>客户分类</label>
+                    <label>开单日期</label>
+                    <div class="rangeDate smallRangeDate">
+                        <el-date-picker
+                        v-model="valueDate"
+                        type="daterange"
+                        range-separator="to"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                        </el-date-picker>
+                    </div>
+                </div>
+               <div class="bgcolor smallBgcolor">
+                    <label>供应商</label>
                     <el-select  v-model="value">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor smallBgcolor">
-                    <label>所属组织</label>
-                    <el-input placeholder="所属组织"></el-input>
-                </div>
-                <div class="bgcolor smallBgcolor">
-                    <label>行政地区</label>
-                    <el-input placeholder="行政地区"></el-input>
-                </div>
-                <div class="bgcolor smallBgcolor">
-                    <label>业务地区</label>
-                    <el-input placeholder="业务地区"></el-input>
-                </div>
-               
-                <div class="bgcolor smallBgcolor">
-                    <label>编码</label>
-                    <el-input placeholder="编码"></el-input>
-                </div>
-                <div class="bgcolor smallBgcolor">
-                    <label>名称</label>
-                    <el-select  v-model="value">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor smallBgcolor">
-                    <label>客户性质</label>
-                    <el-select  v-model="value">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
+                <div class="bgcolor smallBgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>订单状态</label><el-input placeholder="请录入单号"></el-input></div>
                 <el-col style="text-align:center;" :span="24">
                     <span class="search-btn">查询</span>
+                    <span class="search-btn">高级搜索</span>
                 </el-col>
             </el-col>
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
-                    <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+                    <button class="erp_bt bt_look"><div class="btImg"><img src="../../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
+                    <button class="erp_bt bt_end"><div class="btImg"><img src="../../../static/image/common/bt_end.png"></div><span class="btDetail">终止</span></button>
+                    <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>  
+                    <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
@@ -70,15 +55,20 @@
                     <el-col :span='24'>
                         <el-table :data="tableData" border style="width: 100%" stripe>
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="code" label="所属组织" class="code"></el-table-column>
-                            <el-table-column prop="handCode" label="客户编码"></el-table-column>
-                            <el-table-column prop="startDate" label="客户名称"></el-table-column>
-                            <el-table-column prop="supply" label="客户简称"></el-table-column>
-                            <el-table-column prop="store" label="客户类型"></el-table-column>
-                            <el-table-column prop="total" label="客户性质"></el-table-column>
-                            <el-table-column prop="money" label="供应..."></el-table-column>
-                            <el-table-column prop="giveDate" label="对应财务组织"></el-table-column>
-                            <el-table-column prop="type" label="允许使用"></el-table-column>
+                            <el-table-column prop="code" label="单号" class="code"></el-table-column>
+                            <el-table-column prop="handCode" label="手工单号"></el-table-column>
+                            <el-table-column prop="startDate" label="开单日期"></el-table-column>
+                            <el-table-column prop="supply" label="供应商"></el-table-column>
+                            <el-table-column prop="store" label="仓库"></el-table-column>
+                            <el-table-column prop="total" label="数量"></el-table-column>
+                            <el-table-column prop="money" label="金额"></el-table-column>
+                            <el-table-column prop="giveDate" label="交货如期"></el-table-column>
+                            <el-table-column prop="type" label="关联单据类型"></el-table-column>
+                            <el-table-column prop="number" label="关联单号"></el-table-column>
+                            <el-table-column prop="status" label="订单状态"></el-table-column>
+                            <el-table-column prop="create" label="制单人"></el-table-column>
+                            <el-table-column prop="examine" label="审核人"></el-table-column>
+                            <el-table-column prop="lookTime" label="审核时间"></el-table-column>
                         </el-table>  
                         <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage"></el-pagination>   
                     </el-col>
@@ -338,7 +328,7 @@
             })
             },
             newAdd(){
-                this.$store.state.url='/order/default/orderDetails/default'
+                this.$store.state.url='/bill/default/billDetails/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             }
            
@@ -349,7 +339,7 @@
 
 <style scoped>
 
-.orderList{
+.billList{
     width: 100%;
     height: auto;
 }
@@ -459,7 +449,7 @@
 
 
 
-.orderList .open{
+.billList .open{
     display: inline-block;
     width: 49px;
     height: 22px;
@@ -470,12 +460,12 @@
     cursor: pointer;
 }
 /* 重写checkbox */
-.orderList .el-checkbox__inner{
+.billList .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.orderList .el-checkbox__inner::after{
+.billList .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -498,7 +488,7 @@
 }
 
 /* 重写el-table样式 */
-.orderList .el-table th {
+.billList .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -507,13 +497,13 @@
     text-align: center;
     background-color: #ececec;
 }
-.orderList .el-table td{
+.billList .el-table td{
     padding: 3px 0;
 }
-.orderList .el-table__body{
+.billList .el-table__body{
     text-align: center;
 }
-.orderList .el-table__body .el-table__row .el-table_1_column_2 .cell{
+.billList .el-table__body .el-table__row .el-table_1_column_2 .cell{
     color:#33CCCC;
 }
 
