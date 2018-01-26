@@ -220,8 +220,8 @@
         height: 14px;
         top:10px;
       }
-      .erp_bt.bt_cancel .btImg{
-        margin-top: -2.5px;
+      .erp_bt.bt_cancel .btImg img{
+        top: 5px;
       }
       .erp_bt .btImg img{
         max-width: 100%;
@@ -236,13 +236,19 @@
       -o-transform: rotate(45deg);
       -moz-transform: rotate(45deg);	
       }
-      .bt_out .btImg{
+      .bt_out .btImg img{
         transform: rotate(180deg);
         -ms-transform: rotate(180deg);
         -webkit-transform: rotate(180deg);
         -o-transform: rotate(180deg);
         -moz-transform: rotate(180deg);	
+        bottom: 2px;
+        left: 2px;
         }
+      .bt_in .btImg img{
+        bottom: 2px;
+        left: 2px;
+      }
       .erp_bt .btDetail{
         font-size: 12px;
         color: #fff;
