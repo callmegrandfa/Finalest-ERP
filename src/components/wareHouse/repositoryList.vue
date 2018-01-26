@@ -111,7 +111,7 @@
                         </template>
                     </el-table-column>
                   </el-table> 
-                  <!-- <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination> -->
+                  <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
               </el-col>
           </el-row>
       </div>
@@ -146,10 +146,18 @@
                 // remark (string, optional): 备注 ,
                 // id (integer, optional)
 
+                //  getAllParam:{
+                //     OuId:'1',//组织单元ID()
+                //     Draw:'1',
+                //     Start:'0',//偏移量
+                //     Length:'100',//长度
+                // }
+
                 let self = this;
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',self.getAllParam).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Draw:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.data;
+                    self.totalPage = Math.ceil(res.recordsTotal/self.eachPage)
                 },function(res){
                     console.log('err'+res)
                 })
@@ -208,6 +216,9 @@
 
             handleCurrentChange:function(val){//获取当前页码
                 this.pageIndex=val;
+                console.log(val)
+                this.page = val;
+                this.getAllList();
             },
 
             deleteRepository:function(){//删除仓库
@@ -255,7 +266,8 @@
                     
                 pageIndex:-1,//分页的当前页码
 			    totalPage:20,//当前分页总数
-               
+                page:1,//当前页
+                eachPage:10,//一页显示的数量
             }
         },
     }
