@@ -274,9 +274,9 @@
 
           <el-col :span="24" class="bg-white pt10">
               <button class="erp_bt bt_print" @click='addCol'><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">增行</span></button>
-              <button class="erp_bt bt_save" @click="createReAddress"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-              <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+              <!-- <button class="erp_bt bt_save" @click="createReAddress"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button> -->
+              <!-- <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button> -->
+              <!-- <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button> -->
           </el-col>
 
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
@@ -284,28 +284,50 @@
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
                             <!-- <span>{{scope.$index%2}}</span> -->
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.contactPerson" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.contactPerson" 
+                                    v-on:click='handleEdit(scope.$index)'
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="phone" label="手机" >
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.phone" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.phone" 
+                                    v-on:click='handleEdit(scope.$index)'
+                                    type="text"/>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="phoneNum" label="电话"></el-table-column>
+                    <!-- <el-table-column prop="phoneNum" label="电话"></el-table-column> -->
                     <el-table-column prop="completeAddress" label="送货地址">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.completeAddress" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.completeAddress" 
+                                    v-on:click='handleEdit(scope.$index)'
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="transportMethodId" label="运输方式">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.transportMethodId" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.transportMethodId" 
+                                    v-on:click='handleEdit(scope.$index)'
+                                    type="text"/>
                         </template>
                     </el-table-column>
                     <el-table-column prop="logisticsCompany" label="物流公司">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.logisticsCompany" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.logisticsCompany" 
+                                    v-on:click='handleEdit(scope.$index)'
+                                    type="text"/>
                         </template>
                     </el-table-column>
                     <el-table-column prop="isDefault" label="默认">
@@ -315,15 +337,19 @@
                     </el-table-column>
                     <el-table-column prop="remark" label="备注">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.remark" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.remark" 
+                                    v-on:click='handleEdit(scope.$index)'
+                                    type="text"/>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <!-- <span>{{scope.row}}</span> -->
                             <!-- <el-button v-on:click='a(scope.row)'>123</el-button> -->
-                            <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button>
-                            <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button> 
+                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
+                            <!-- <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button>  -->
                             <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
@@ -439,6 +465,7 @@
                 this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
                     console.log(res);
                     self.open('创建仓库成功','el-icon-circle-check','successERP');
+                    self.createReAddress();
               })
             },
 
@@ -487,7 +514,7 @@
 
             addCol:function(){//增行
                 let self = this;
-                self.allList.unshift(self.createRepositoryParams);
+                self.allList.unshift(self.createRepositoryAddressParams);
             },
 
             clearData:function(){//清除创建的参数
@@ -511,7 +538,7 @@
             },
 
             handleEdit:function(index){//表格内编辑操作
-                this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+                // this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
 
             },
 
@@ -674,7 +701,7 @@
 .input-need{
     border:none;
     outline: none;
-    width: 100%;
+    width: 90%;
 }
 .input-bgw{
     background: white;

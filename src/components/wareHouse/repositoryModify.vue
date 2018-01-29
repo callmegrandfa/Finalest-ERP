@@ -280,12 +280,12 @@
                     <span class="btDetail">增行</span>
                 </button>
                                           <!-- 保存新增的仓库地址信息 -->
-                <button class="erp_bt bt_save" @click="saveAddress">
+                <!-- <button class="erp_bt bt_save" @click="saveAddress">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
-                </button>
+                </button> -->
 
                 <button class="erp_bt bt_modify">
                     <div class="btImg">
@@ -314,40 +314,71 @@
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
                             <!-- <span>{{scope.$index%2}}</span> -->
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.contactPerson" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.contactPerson" 
+                                    v-on:click="handleEdit(scope.$index)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="phone" label="手机" >
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.phone" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.phone" 
+                                    v-on:click="handleEdit(scope.$index)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
                     <el-table-column prop="phoneNum" label="电话"></el-table-column>
+
                     <el-table-column prop="completeAddress" label="送货地址">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.completeAddress" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.completeAddress" 
+                                    v-on:click="handleEdit(scope.$index)"
+                                    type="text" />
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="transportMethodId" label="运输方式">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.transportMethodId" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.transportMethodId" 
+                                    v-on:click="handleEdit(scope.$index)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="logisticsCompany" label="物流公司">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.logisticsCompany" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.logisticsCompany" 
+                                    v-on:click="handleEdit(scope.$index)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
                             <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault"></el-checkbox>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="remark" label="备注">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.remark" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.remark" 
+                                    v-on:click="handleEdit(scope.$index)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <!-- <span>{{scope.row}}</span> -->
@@ -497,8 +528,8 @@
                 this.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
                     console.log(res);
                     self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-
               })
+                self.saveAddress();
             },
 
             addCol:function(){//增行
@@ -541,8 +572,8 @@
             },
 
             handleEdit:function(index){//表格内编辑操作
-                this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
-
+                // this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+                console.log(this.isEdit)
             },
 
             handleDelete:function(index,id){//表格内删除操作

@@ -315,7 +315,7 @@
 .input-need{
     outline: none;
     border:none;
-    width: 100%;
+    width: 90%;
     height: 28px;
 }
 .h48{
@@ -374,6 +374,7 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
+    min-height: 380px;
 }
 .btn{
     display: inline-block;
