@@ -2,51 +2,13 @@
   <div class="data-list-container">
       <el-row>
           <el-col :span="5" class="bg-white">
-              <el-row class="height35">
-                  <el-col :span='4'>
-                      <span>编码</span>
-                  </el-col>
-                  <el-col :span='20'>
-                      <input v-model='queryId'
-                             type="text" 
-                             placeholder="请录入编码" 
-                             class="input-need">
+              <el-row>
+                  <el-col :span='24'>
+                      <div class="bgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="page" placeholder=""></el-input></div>
+                      <div class="bgcolor smallBgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="page" placeholder=""></el-input></div>
                   </el-col>
               </el-row>
-          </el-col>
-          <el-col :span="5" class="ml10 bg-white">
-              <el-row  class="height35">
-                  <el-col :span='4'>
-                      <span>名称</span>
-                  </el-col>
-                  <el-col :span='20'>
-                      <input type="text" placeholder="请录入名称" class="input-need">
-                  </el-col>
-              </el-row>
-          </el-col>
-          <el-col :span="5" class="ml10 bg-white">
-              <el-row  class="height35">
-                  <el-col :span='6'>
-                      <span>业务地区</span>
-                  </el-col>
-                  <el-col :span='18'>
-                      <input type="text" placeholder="请录入编码" class="input-need">
-                  </el-col>
-              </el-row>
-          </el-col>
-          <el-col :span="5" class="ml10 bg-white">
-              <el-row  class="height35">
-                  <el-col :span='6'>
-                      <span>仓库类型</span>
-                  </el-col>
-                  <el-col :span='18'>
-                      <input type="text" placeholder="请录入编码" class="input-need">
-                  </el-col>
-              </el-row>
-          </el-col>
-          <el-col :span="2" class="ml10">
-              <span class="search-btn" style="cursor:pointer;" @click="getStockListById">查询</span>
-          </el-col>
+          </el-col>       
       </el-row>
 
       <div class="bg-white mr10 mt10 pt10">
@@ -94,12 +56,7 @@
                     <el-table-column prop="manager" label="负责人"></el-table-column>
                     <el-table-column prop="ifAllow" label="允许使用">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="allList[scope.$index].ifAllow" ></el-checkbox>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label=" ">
-                        <template slot-scope="scope">
-                            <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
+                            <el-checkbox v-model="allList[scope.$index].ifAllow" disabled></el-checkbox>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作">
@@ -107,6 +64,7 @@
                             <!-- <span>{{scope.row}}</span> -->
                             <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
                             <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
+                            <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
                             <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
@@ -175,26 +133,9 @@
                 })
             },
 
-            getStockListById:function(){//根据stockID查找仓库信息
-
-                // ouId (integer, optional): 组织单元ID ,
-                // stockCode (string, optional): 仓库编码 ,
-                // stockName (string, optional): 仓库名称 ,
-                // stockFullName (string, optional): 仓库全称 ,
-                // opAreaId (integer, optional): 业务地区 ,
-                // adAreaId (integer, optional): 行政地区 ,
-                // stockTypeId (integer, optional): 仓库类型 ,
-                // invTypeId (integer, optional): 库存分类 ,
-                // fax (string, optional): 传真 ,
-                // email (string, optional): 邮箱 ,
-                // status (integer, optional): 启用状态 ,
-                // manager (string, optional): 负责人 ,
-                // phone (string, optional): 电话 ,
-                // remark (string, optional): 备注 ,
-                // id (integer, optional)
-
+            searchList:function(){//根据条件查找仓库信息
                 let self = this;
-                this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.queryId}).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:'1',StockName:'',AreaCode:'',Start:'0',Length:'100'}).then(function(res){
                     console.log(res);
                     self.queryList.push(res.result);
                     self.allList = self.queryList;
@@ -246,6 +187,7 @@
             goModify:function(id){
                 console.log(id)
                 this.$store.state.url='/repository/default/repositoryModify/'+id
+                // this.$store.state.url='/repository/default/repositoryModify/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
@@ -278,7 +220,7 @@
                 queryId:'',//需要查询的stockId
                     
                 pageIndex:-1,//分页的当前页码
-			    totalPage:20,//当前分页总数
+			    totalPage:0,//当前分页总数
                 page:1,//当前页
                 eachPage:10,//一页显示的数量
             }
@@ -306,12 +248,6 @@
     background:white;
     border-radius: 3px;
     font-size: 14px;
-}
-.height35{
-    height: 35px;
-    line-height: 35px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-    padding-left:10px;
 }
 .ml10{
     margin-left: 10px;

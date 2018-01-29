@@ -26,7 +26,6 @@ const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
 
 const customer = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customer')
-const customerDetail = () =>import('../components/customerInfor/customerDetail')
 const customerList = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customerList')
 
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
@@ -136,8 +135,9 @@ children:[
   { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//客户管理
     return store.state.customerActiveRouter;
   },children:[
-      { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
       { path: '/customer/default/customerList/:id', component: customerList,name:'customerList' },
+      { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
+      { path: '/customer/default/customerModify/:id', component: customerModify,name:'customerModify' },
   ]},
 
   { path: '/order/:id', component: order,name:'order',redirect: function(){//采购管理
