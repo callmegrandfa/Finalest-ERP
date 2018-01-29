@@ -4,7 +4,7 @@
      <el-row>
          <el-col :span="24">
             <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-            <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+            <!-- <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
             <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button class="erp_bt bt_saveAdd" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
             <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
@@ -104,7 +104,13 @@
                                 </el-col> 
                             </el-col>
                             <el-col :span="22"  class="getPadding">
-                                <div class="bgcolor"><label>上级公司</label><el-input v-model="addData.ouCompanyParentid" placeholder="请选择上级公司"></el-input></div>
+                                <div class="bgcolor">
+                                    <label>上级公司</label>
+                                    <el-select>
+                                        <el-option v-for="item in preCompany" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
+                                        </el-option>
+                                    </el-select>
+                                </div>
                                 <div class="bgcolor"><label>法人代表</label><el-input v-model="addData.legalPerson" placeholder="请输入法人代表"></el-input></div>
                                 <div class="bgcolor">
                                     <label>用户状态</label>
@@ -151,21 +157,21 @@ export default({
             auditInfo:{},//审计信息
             addData:{
                 groupId:1,//集团ID
-                ouCode: '默认',//组织代码存在 
-                ouName: '默认' ,//组织名称存在
+                ouCode: '默认',//组织代码
+                ouName: '默认' ,//组织名称
                 foreignName: '默认' ,//外文名称
                 mnemonic: '默认' ,//助记码
-                ouParentid: 0 ,//上级组织ID存在
+                ouParentid: 0 ,//上级组织ID
                 accountPeriodId: 0 ,//会计期间ID
-                baseCurrencyId: 0,//本位币种id存在
-                companyOuId: 0,//所属公司ID存在
-                contactPerson: '默认' ,//联系人存在
-                phone: '默认' ,//电话存在
-                address: '默认' ,//地址存在
+                baseCurrencyId: 0,//本位币种id
+                companyOuId: 0,//所属公司ID
+                contactPerson: '默认' ,//联系人
+                phone: '默认' ,//电话
+                address: '默认' ,//地址
                 areaId: 0 ,//行政区域ID
                 entityProperty : 0 ,//实体属性
-                status: 0 ,//启用状态存在
-                remark: '默认' ,//备注存在
+                status: 0 ,//启用状态
+                remark: '默认' ,//备注
                 basOuTypes: [ 0 ],//组织职能
                 isGroupCompany:true ,//
                 ouCompanyParentid: 0 ,//上级公司组织ID
@@ -228,6 +234,16 @@ export default({
                 valueCompany:'2',
                 label: '2'
             }],
+            preCompany: [{ //   上级公司
+                valueCompany:0,
+                label: '0'
+            }, {
+                valueCompany:1,
+                label: '1'
+            }, {
+                valueCompany:2,
+                label: '2'
+            }],
             state: [{ //启用状态数据
                 valueState:'0',
                 label: '启用'
@@ -258,6 +274,7 @@ export default({
     methods:{
         back(){
             this.$store.state.url='/groupManage/default/groupManageList/default'
+            // this.$store.state.url='/groupManage/groupManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         open(tittle,iconClass,className) {

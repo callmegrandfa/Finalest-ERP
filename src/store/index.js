@@ -15,6 +15,7 @@ export default new vuex.Store({
         slidbarData:[],//从localStorage读取页签
         OrderActiveRouter:'/order/default/orderList/:id',
         groupActiveRouter:'/groupManage/default/groupManageList/:id',
+        // groupActiveRouter:'/groupManage/groupManageList/:id',
         resActiveRouter:'/repository/default/repositoryList/:id',
         customerActiveRouter:'/customer/default/customerList/:id',
         billActiveRouter:'/bill/default/billList/:id',

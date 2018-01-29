@@ -2,33 +2,45 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
 const index = () =>import(/* webpackChunkName: "group-index" */'../components/index')
+// 登录
 const login = () =>import('../components/login')
+// 注册
 const register = () =>import('../components/register')
+// 404
 const page404 = () =>import('../components/page404')
+// home
+const home = () =>import(/* webpackChunkName: "group-index" */'../components/home/home')
+
 const shortData = () =>import('../components/dataTemplate/shortData')
 const midData = () =>import('../components/dataTemplate/midData')
 const longData = () =>import('../components/dataTemplate/longData')
-const home = () =>import(/* webpackChunkName: "group-index" */'../components/home/home')
+
 const repository = () =>import('../components/wareHouse/repository')
 const repositoryList = () =>import('../components/wareHouse/repositoryList')
 const repositoryData = () =>import('../components/wareHouse/repositoryData')
 const repositoryModify = () =>import('../components/wareHouse/repositoryModify')
+
 const supplierEdit = () =>import('../components/supplierData/supplierEdit')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
+
 const customer = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customer')
 const customerDetail = () =>import('../components/customerInfor/customerDetail')
 const customerList = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customerList')
+
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
+
 const supplierList = () =>import('../components/supplierData/supplierList')
 const userInfoDetail = () =>import('../components/user/userInfoDetail')
 const userList = () =>import('../components/user/userList')
 const userDataList = () =>import('../components/user/userDataList')
+
 const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
 const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
+
 const groupManage = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManage')
 const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManageList')
 const detail = () =>import('../components/groupManage/detail')
@@ -150,6 +162,14 @@ children:[
       { path: '/groupManage/default/detail/:id', component: detail,name:'detail' },
       { path: '/groupManage/default/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
+  // { path: '/groupManage', component: groupManage,name:'groupManage',redirect: function(){//组织管理
+  //   return store.state.groupActiveRouter;
+  // },children:[
+  //     { path: '/groupManage/see/:id', component: see,name:'see' },
+  //     { path: '/groupManage/modify/:id', component: modify,name:'modify' },
+  //     { path: '/groupManage/detail/:id', component: detail,name:'detail' },
+  //     { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
+  // ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
   { path: '/userList/:id', component: userList,name:'userList' },
@@ -158,41 +178,54 @@ children:[
   { path: '/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
 ]}
 ]
-let router=new Router({
+const  router=new Router({
   mode: 'history',
   linkActiveClass: 'active',
   routes
 })
 router.beforeEach((to, from, next) => {
   store.commit('slidbarData');
-  document.title = to.name
-  if(to.name=='orderDetails'){
-    store.state.OrderActiveRouter='/order/default/orderDetails/:id';
-  }else if(to.name=='orderList'){
-    store.state.OrderActiveRouter='/order/default/orderList/:id';
-  }else if(to.name=='detail'){
-    store.state.groupActiveRouter='/groupManage/default/detail/:id';
-  }else if(to.name=='modify'){
-    store.state.groupActiveRouter='/groupManage/default/modify/:id';
-  }else if(to.name=='see'){
-    store.state.groupActiveRouter='/groupManage/default/see/:id';
-  }else if(to.name=='groupManageList'){
-    store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
-  }else if(to.name=='repositoryList'){
-    store.state.resActiveRouter='/repository/default/repositoryList/:id'
-  }else if(to.name=='repositoryData'){
-    store.state.resActiveRouter='/repository/default/repositoryData/:id'
-  }else if(to.name=='repositoryModify'){
-    store.state.resActiveRouter='/repository/default/repositoryModify/:id'
-  }else if(to.name=='customerList'){
-    store.state.customerActiveRouter='/customer/default/customerList/:id'
-  }else if(to.name=='customerDetail'){
-    store.state.customerActiveRouter='/customer/default/customerDetail/:id'
-  }else if(to.name=='billDetails'){
-    store.state.billActiveRouter='/bill/default/billDetails/:id'
-  }else if(to.name=='billList'){
-    store.state.billActiveRouter='/bill/default/billList/:id'
-  }
+  if(store.accessToken!=''){
+    document.title = to.name
+    if(to.name=='orderDetails'){
+      store.state.OrderActiveRouter='/order/default/orderDetails/:id';
+    }else if(to.name=='orderList'){
+      store.state.OrderActiveRouter='/order/default/orderList/:id';
+    }
+    else if(to.name=='detail'){
+      store.state.groupActiveRouter='/groupManage/default/detail/:id';
+    }else if(to.name=='modify'){
+      store.state.groupActiveRouter='/groupManage/default/modify/:id';
+    }else if(to.name=='see'){
+      store.state.groupActiveRouter='/groupManage/default/see/:id';
+    }else if(to.name=='groupManageList'){
+      store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
+    }
+    // else if(to.name=='detail'){
+    //   store.state.groupActiveRouter='/groupManage/detail/:id';
+    // }else if(to.name=='modify'){
+    //   store.state.groupActiveRouter='/groupManage/modify/:id';
+    // }else if(to.name=='see'){
+    //   store.state.groupActiveRouter='/groupManage/see/:id';
+    // }else if(to.name=='groupManageList'){
+    //   store.state.groupActiveRouter='/groupManage/groupManageList/:id';
+    // }
+    else if(to.name=='repositoryList'){
+      store.state.resActiveRouter='/repository/default/repositoryList/:id'
+    }else if(to.name=='repositoryData'){
+      store.state.resActiveRouter='/repository/default/repositoryData/:id'
+    }else if(to.name=='repositoryModify'){
+      store.state.resActiveRouter='/repository/default/repositoryModify/:id'
+    }else if(to.name=='customerList'){
+      store.state.customerActiveRouter='/customer/default/customerList/:id'
+    }else if(to.name=='customerDetail'){
+      store.state.customerActiveRouter='/customer/default/customerDetail/:id'
+    }else if(to.name=='billDetails'){
+      store.state.billActiveRouter='/bill/default/billDetails/:id'
+    }else if(to.name=='billList'){
+      store.state.billActiveRouter='/bill/default/billList/:id'
+    }
+  } 
    next()
 })
 export default router

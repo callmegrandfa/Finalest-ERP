@@ -11,6 +11,7 @@
                         <ul id="routerBox">
                             <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
                                 <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
+                                <!-- <router-link :to="{name:i.url,params:{id:'default'}}">{{i.name}}</router-link> -->
                                 <span class="closes" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
                                 <!-- <i class="el-icon-error closes" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i> -->
                             </li>
