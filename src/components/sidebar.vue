@@ -372,8 +372,7 @@ export default {
     },
     methods:{
         switch(){
-            this.$router.push({path:this.$store.state.url})//点击切换路由
-            // this.$router.push({name:this.$store.state.url,params:{id:'default'}})//点击切换路由
+            this.$router.push({name:this.$store.state.url,params:{id:'default'}})//点击切换路由
         },
         storageData(e){
             if(e.target.getAttribute("menuurl")&&e.target.getAttribute("menuurl")!=''){
@@ -396,9 +395,9 @@ export default {
                         }   
                     }
                 }
-                var pushItem={'name':name,'url':menuUrl,'params':'default'};
-                // this.$store.state.url=menuUrl;//储存当前url在router里的name
-                this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
+                var pushItem={'name':name,'url':menuUrl};
+                this.$store.state.url=menuUrl;//储存当前url在router里的name
+                // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
                 if(flag){
                     temporary.push(pushItem);
                 }

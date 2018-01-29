@@ -294,7 +294,7 @@ export default({
     },       
     methods:{
         back(){
-            this.$store.state.url='/groupManage/default/groupManageList/default'
+            this.$store.state.url='/groupManage/groupManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         open(tittle,iconClass,className) {

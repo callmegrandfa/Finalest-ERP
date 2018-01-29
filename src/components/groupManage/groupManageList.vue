@@ -224,8 +224,7 @@
                 // })
             },
             goDetail(){
-                this.$store.state.url='/groupManage/default/detail/default'
-                // this.$store.state.url='/groupManage/detail/default'
+                this.$store.state.url='/groupManage/detail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
              handleSelectionChange(val) {//点击复选框选中的数据
@@ -313,11 +312,11 @@
                 
             },
             modify(row){
-                this.$store.state.url='/groupManage/default/modify/'+row.id
+                this.$store.state.url='/groupManage/modify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             see(row){
-                this.$store.state.url='/groupManage/default/see/'+row.id
+                this.$store.state.url='/groupManage/see/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             }
         },

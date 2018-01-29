@@ -13,12 +13,12 @@ export default new vuex.Store({
         url:'/',//当前页签
         temporary:[],//本地暂时存储页签
         slidbarData:[],//从localStorage读取页签
-        OrderActiveRouter:'/order/default/orderList/:id',
-        groupActiveRouter:'/groupManage/default/groupManageList/:id',
+        OrderActiveRouter:'/order/orderList/:id',
+        groupActiveRouter:'/groupManage/groupManageList/:id',
         // groupActiveRouter:'/groupManage/groupManageList/:id',
-        resActiveRouter:'/repository/default/repositoryList/:id',
-        customerActiveRouter:'/customer/default/customerList/:id',
-        billActiveRouter:'/bill/default/billList/:id',
+        resActiveRouter:'/repository/repositoryList/:id',
+        customerActiveRouter:'/customer/customerList/:id',
+        billActiveRouter:'/bill/billList/:id',
     },
     mutations: {
         go(state){//控制slidebar显示隐藏

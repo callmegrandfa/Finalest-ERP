@@ -117,15 +117,15 @@ const routes = [
   },
 children:[
   { path: '/home', component: home,name:'home' },
-  { path: '/shortData/:id', component: shortData,name:'shortData' },
-  { path: '/longData/:id', component: longData,name:'longData' },
-  { path: '/midData/:id', component: midData,name:'midData' },
-  { path: '/repository/:id', component: repository,name:'repository',redirect: function(){//仓库资料
+  { path: '/shortData', component: shortData,name:'shortData' },
+  { path: '/longData', component: longData,name:'longData' },
+  { path: '/midData', component: midData,name:'midData' },
+  { path: '/repository', component: repository,name:'repository',redirect: function(){//仓库资料
     return store.state.resActiveRouter;
   },children:[
-      { path: '/repository/default/repositoryList/:id', component: repositoryList,name:'repositoryList' },
-      { path: '/repository/default/repositoryData/:id', component: repositoryData,name:'repositoryData' }, 
-      { path: '/repository/default/repositoryModify/:id', component: repositoryModify,name:'repositoryModify' },
+      { path: '/repository/repositoryList/:id', component: repositoryList,name:'repositoryList' },
+      { path: '/repository/repositoryData/:id', component: repositoryData,name:'repositoryData' }, 
+      { path: '/repository/repositoryModify/:id', component: repositoryModify,name:'repositoryModify' },
   ]},
   { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
   { path: '/groupManager/:id', component: groupManager,name:'groupManager'},
@@ -133,43 +133,35 @@ children:[
   { path: '/storeData/:id', component: storeData,name:'storeData' },
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
 
-  { path: '/customer/:id', component: customer,name:'customer',redirect: function(){//客户管理
+  { path: '/customer', component: customer,name:'customer',redirect: function(){//客户管理
     return store.state.customerActiveRouter;
   },children:[
-      { path: '/customer/default/customerDetail/:id', component: customerDetail,name:'customerDetail' },
-      { path: '/customer/default/customerList/:id', component: customerList,name:'customerList' },
+      { path: '/customer/customerDetail/:id', component: customerDetail,name:'customerDetail' },
+      { path: '/customer/customerList/:id', component: customerList,name:'customerList' },
   ]},
 
-  { path: '/order/:id', component: order,name:'order',redirect: function(){//采购管理
+  { path: '/order', component: order,name:'order',redirect: function(){//采购管理
     return store.state.OrderActiveRouter;
   },children:[
-      { path: '/order/default/orderDetails/:id', component: orderDetails,name:'orderDetails' },
-      { path: '/order/default/orderList/:id', component: orderList,name:'orderList' },
+      { path: '/order/orderDetails/:id', component: orderDetails,name:'orderDetails' },
+      { path: '/order/orderList/:id', component: orderList,name:'orderList' },
   ]},
 
-  { path: '/bill/:id', component: bill,name:'bill',redirect: function(){//单据开单模板
+  { path: '/bill', component: bill,name:'bill',redirect: function(){//单据开单模板
     return store.state.billActiveRouter;
   },children:[
-      { path: '/bill/default/billDetails/:id', component: billDetails,name:'billDetails' },
-      { path: '/bill/default/billList/:id', component: billList,name:'billList' },
+      { path: '/bill/billDetails/:id', component: billDetails,name:'billDetails' },
+      { path: '/bill/billList/:id', component: billList,name:'billList' },
   ]},
 
-  { path: '/groupManage/:id', component: groupManage,name:'groupManage',redirect: function(){//组织管理
+  { path: '/groupManage', component: groupManage,name:'groupManage',redirect: function(){//组织管理
     return store.state.groupActiveRouter;
   },children:[
-      { path: '/groupManage/default/see/:id', component: see,name:'see' },
-      { path: '/groupManage/default/modify/:id', component: modify,name:'modify' },
-      { path: '/groupManage/default/detail/:id', component: detail,name:'detail' },
-      { path: '/groupManage/default/groupManageList/:id', component: groupManageList,name:'groupManageList' },
+      { path: '/groupManage/see/:id', component: see,name:'see' },
+      { path: '/groupManage/modify/:id', component: modify,name:'modify' },
+      { path: '/groupManage/detail/:id', component: detail,name:'detail' },
+      { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
-  // { path: '/groupManage', component: groupManage,name:'groupManage',redirect: function(){//组织管理
-  //   return store.state.groupActiveRouter;
-  // },children:[
-  //     { path: '/groupManage/see/:id', component: see,name:'see' },
-  //     { path: '/groupManage/modify/:id', component: modify,name:'modify' },
-  //     { path: '/groupManage/detail/:id', component: detail,name:'detail' },
-  //     { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
-  // ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
   { path: '/userList/:id', component: userList,name:'userList' },
@@ -188,18 +180,18 @@ router.beforeEach((to, from, next) => {
   if(store.accessToken!=''){
     document.title = to.name
     if(to.name=='orderDetails'){
-      store.state.OrderActiveRouter='/order/default/orderDetails/:id';
+      store.state.OrderActiveRouter='/order/orderDetails/:id';
     }else if(to.name=='orderList'){
-      store.state.OrderActiveRouter='/order/default/orderList/:id';
+      store.state.OrderActiveRouter='/order/orderList/:id';
     }
     else if(to.name=='detail'){
-      store.state.groupActiveRouter='/groupManage/default/detail/:id';
+      store.state.groupActiveRouter='/groupManage/detail/:id';
     }else if(to.name=='modify'){
-      store.state.groupActiveRouter='/groupManage/default/modify/:id';
+      store.state.groupActiveRouter='/groupManage/modify/:id';
     }else if(to.name=='see'){
-      store.state.groupActiveRouter='/groupManage/default/see/:id';
+      store.state.groupActiveRouter='/groupManage/see/:id';
     }else if(to.name=='groupManageList'){
-      store.state.groupActiveRouter='/groupManage/default/groupManageList/:id';
+      store.state.groupActiveRouter='/groupManage/groupManageList/:id';
     }
     // else if(to.name=='detail'){
     //   store.state.groupActiveRouter='/groupManage/detail/:id';
@@ -211,19 +203,19 @@ router.beforeEach((to, from, next) => {
     //   store.state.groupActiveRouter='/groupManage/groupManageList/:id';
     // }
     else if(to.name=='repositoryList'){
-      store.state.resActiveRouter='/repository/default/repositoryList/:id'
+      store.state.resActiveRouter='/repository/repositoryList/:id'
     }else if(to.name=='repositoryData'){
-      store.state.resActiveRouter='/repository/default/repositoryData/:id'
+      store.state.resActiveRouter='/repository/repositoryData/:id'
     }else if(to.name=='repositoryModify'){
-      store.state.resActiveRouter='/repository/default/repositoryModify/:id'
+      store.state.resActiveRouter='/repository/repositoryModify/:id'
     }else if(to.name=='customerList'){
-      store.state.customerActiveRouter='/customer/default/customerList/:id'
+      store.state.customerActiveRouter='/customer/customerList/:id'
     }else if(to.name=='customerDetail'){
-      store.state.customerActiveRouter='/customer/default/customerDetail/:id'
+      store.state.customerActiveRouter='/customer/customerDetail/:id'
     }else if(to.name=='billDetails'){
-      store.state.billActiveRouter='/bill/default/billDetails/:id'
+      store.state.billActiveRouter='/bill/billDetails/:id'
     }else if(to.name=='billList'){
-      store.state.billActiveRouter='/bill/default/billList/:id'
+      store.state.billActiveRouter='/bill/billList/:id'
     }
   } 
    next()
