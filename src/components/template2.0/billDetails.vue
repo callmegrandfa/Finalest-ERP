@@ -408,7 +408,7 @@
                 console.log(`当前页: ${val}`);
             },
             back(){
-                this.$store.state.url='/bill/default/billList/default'
+                this.$store.state.url='/bill/billList/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             }
         },

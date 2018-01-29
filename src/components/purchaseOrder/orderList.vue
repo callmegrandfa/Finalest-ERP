@@ -338,7 +338,7 @@
             })
             },
             newAdd(){
-                this.$store.state.url='/order/default/orderDetails/default'
+                this.$store.state.url='/order/orderDetails/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             }
            
