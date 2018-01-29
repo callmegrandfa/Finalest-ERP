@@ -218,12 +218,12 @@
             },        
 
             goDetail(){
-                this.$store.state.url='/repository/default/repositoryData/default'
+                this.$store.state.url='/repository/repositoryData/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             goModify:function(id){
                 console.log(id)
-                this.$store.state.url='/repository/default/repositoryModify/'+id
+                this.$store.state.url='/repository/repositoryModify/'+id
                 // this.$store.state.url='/repository/default/repositoryModify/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },

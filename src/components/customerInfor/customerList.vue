@@ -12,11 +12,9 @@
                     </el-col>
                 </el-row>
 
-                <el-row class="mt20 pl15 h30">
-                    <el-col :span="5" class="fs12">
-                        <span>客户分类</span>
-                    </el-col>
-                    <el-col :span="15" class="fs12 border1 pl10">
+                <el-row class="mt10">
+                    <div class="bgcolor">
+                        <label><small>*</small>客户分类</label>
                         <el-select v-model="value" placeholder="请选择客户类型">
                             <el-option v-for="item in options"
                                         :key="item.value"
@@ -24,64 +22,52 @@
                                         :value="item.value">
                             </el-option>
                         </el-select>
-                    </el-col>
+                    </div>
                 </el-row>
 
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>所属组织</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入所属组织">
-                    </el-col>
+                <el-row class="fs12">
+                   <div class="bgcolor">
+                        <label>所属组织</label>
+                        <el-input placeholder="" v-model="stockC"></el-input>
+                    </div> 
                 </el-row>
 
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>行政地区</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入行政地区">
-                    </el-col>
+                <el-row class="fs12">
+                    <div class="bgcolor">
+                        <label>行政地区</label>
+                        <el-input placeholder="" v-model="stockC"></el-input>
+                    </div> 
                 </el-row>
 
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>业务地区</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入业务地区">
-                    </el-col>
+                <el-row class="fs12">
+                    <div class="bgcolor">
+                        <label>业务地区</label>
+                        <el-input placeholder="" v-model="stockC"></el-input>
+                    </div> 
                 </el-row>
 
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>编码</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入编码">
-                    </el-col>
+                <el-row class="fs12">
+                    <div class="bgcolor">
+                        <label>编码</label>
+                        <el-input placeholder="" v-model="stockC"></el-input>
+                    </div> 
                 </el-row>
 
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>名称</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入名称">
-                    </el-col>
+                <el-row class="fs12">
+                    <div class="bgcolor">
+                        <label>名称</label>
+                        <el-input placeholder="" v-model="stockC"></el-input>
+                    </div> 
                 </el-row>
 
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>客户性质</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入客户性质">
-                    </el-col>
+                <el-row class="fs12">
+                    <div class="bgcolor">
+                        <label>客户性质</label>
+                        <el-input placeholder="" v-model="stockC"></el-input>
+                    </div> 
                 </el-row>
 
-                <el-row class="mt20" style="text-align:center;">
+                <el-row style="text-align:center;">
                     <span class="search-btn">查询</span>
                 </el-row>
             </el-col>
@@ -272,12 +258,12 @@
         },
         methods:{
             goDetail(){//点击新增跳转
-               this.$store.state.url='/customer/default/customerDetail/default'
+               this.$store.state.url='/customer/customerDetail/default'
                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
             goModify:function(){//点击跳转修改页modify
-                this.$store.state.url='/customer/default/customerModify/default'
+                this.$store.state.url='/customer/customerModify/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
@@ -374,7 +360,7 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 380px;
+    min-height: 400px;
 }
 .btn{
     display: inline-block;
@@ -423,12 +409,6 @@
 </style>
 
 <style>
-.customer-infor-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
 /* 重写checkbox */
 .customer-infor-wrapper .el-checkbox__inner{
     width: 24px;
@@ -473,14 +453,4 @@
 .customer-infor-wrapper .el-table__body{
     text-align: center;
 }
-/* 重写el-pagination样式 */
-/* .customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-} */
-/* .customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-} */
-/* .customer-infor-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-}  */
 </style>
