@@ -5,24 +5,9 @@
             <a class="oneA" href="javascript:;">版本动态</a>
             <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
         </li>
-        <!-- <li class="one" v-for="item in items">
-            <span class="menuIcon"><img :src="item.src"></span>
-            <a class="oneA" href="javascript:;">{{item.name}}</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in item.secondLevel">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li> -->
         <li class="one">
             <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
-            <a class="oneA" href="javascript:;">常用功能</a>
+            <a class="oneA" href="javascript:;">测试</a>
             <ul class="slidUl slid1">
                 <li class="two" v-for="i in secondLevel1">
                     <a href="javascript:;">{{i.name}}</a>
@@ -35,7 +20,7 @@
                 </li>
             </ul>
         </li>
-        <li class="one">
+        <!-- <li class="one">
             <span class="menuIcon"><img src="../../static/image/login/setting.png"></span>
             <a class="oneA" href="javascript:;">系统管理</a>
             <ul class="slidUl slid1">
@@ -169,6 +154,23 @@
                     </ul>
                 </li>
             </ul>
+        </li> -->
+        <li class="one" v-for="item in items" :menuId="item.id">
+            <span class="menuIcon" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData"><i :class="item.icon"></i></span>
+            <a class="oneA" href="javascript:;" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData">{{item.name}}</a>
+            <ul class="slidUl slid1">
+                <li class="two" v-for="i in item.items">
+                    <span class="menuIcon" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData"><i :class="i.icon"></i></span>
+                    <a href="javascript:;" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData">{{i.name}}</a>
+                    <diV class="triangle"></diV>
+                    <ul class="slidUl slid2" >
+                        <li class="three" v-for="it in i.items">
+                            <span class="menuIcon" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData"><i :class="i.icon"></i></span>
+                            <a href="javascript:;" :menuId="it.id" :parentId="it.parentId" :menuUrl="it.url" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </li>
     </ul>
 </template>
@@ -260,8 +262,8 @@ export default {
         secondLevel10:[{
         name:'基础资料',
         thirdInfo:[ 
-        ]}]
-            
+        ]}],
+        items:[]    
         // items:
         // [
         //     {
@@ -358,38 +360,51 @@ export default {
         //     }]
         }
     },
+    created:function(){
+        let _this=this;
+        _this.$axios.gets('/api/services/app/Navigation/GetAllNavigationsForTree')
+        .then(function(res){
+            _this.items=res.result.items;
+            console.log(res);
+        },function(res){
+
+        })
+    },
     methods:{
         switch(){
-            this.$router.push({path:this.$store.state.url})//点击切换路由
+            this.$router.push({name:this.$store.state.url,params:{id:'default'}})//点击切换路由
         },
         storageData(e){
-            var flag=false;
-            if(this.$store.state.slidbarData){
-                this.$store.state.temporary=this.$store.state.slidbarData;
-            }
-            var temporary=this.$store.state.temporary;
-            var name=e.target.getAttribute("menuname");
-            var menuUrl=e.target.getAttribute("menuurl");
-            if(temporary.length==0){//temporary为空
-                flag=true;
-            }else{//temporary不为空
-                for(var i=0;i<temporary.length;i++){
-                    if(temporary[i].name==name){//相同页签
-                        flag=false;
-                        break;
-                    }else{
-                      flag=true;
-                    }   
+            if(e.target.getAttribute("menuurl")&&e.target.getAttribute("menuurl")!=''){
+                var flag=false;
+                if(this.$store.state.slidbarData){
+                    this.$store.state.temporary=this.$store.state.slidbarData;
                 }
+                var temporary=this.$store.state.temporary;
+                var name=e.target.getAttribute("menuname");
+                var menuUrl=e.target.getAttribute("menuurl");
+                if(temporary.length==0){//temporary为空
+                    flag=true;
+                }else{//temporary不为空
+                    for(var i=0;i<temporary.length;i++){
+                        if(temporary[i].name==name){//相同页签
+                            flag=false;
+                            break;
+                        }else{
+                        flag=true;
+                        }   
+                    }
+                }
+                var pushItem={'name':name,'url':menuUrl};
+                this.$store.state.url=menuUrl;//储存当前url在router里的name
+                // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
+                if(flag){
+                    temporary.push(pushItem);
+                }
+                window.localStorage.setItem('ERP',JSON.stringify(temporary));
+                this.switch();
             }
-            var pushItem={'name':name,'url':menuUrl,'params':'default'};
-            this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
-            if(flag){
-                 temporary.push(pushItem);
-            }
-            window.localStorage.setItem('ERP',JSON.stringify(temporary));
-            this.switch();
-        }
+        }     
     }
 }
 </script>
@@ -429,7 +444,7 @@ export default {
     display: block;
     width: 235px;
     top: 50px;
-    z-index:2;
+    z-index:5;
     left: 0;
     position: fixed;
     transition: all 0.5s;

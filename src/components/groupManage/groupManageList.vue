@@ -81,7 +81,7 @@
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
+                                    <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
                                     <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
                                 </template>
                             </el-table-column>
@@ -167,7 +167,7 @@
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
-                //_this.loadTree();
+                _this.loadTree();
              },
         methods:{
              open(tittle,iconClass,className) {
@@ -224,7 +224,7 @@
                 // })
             },
             goDetail(){
-                this.$store.state.url='/groupManage/default/detail/default'
+                this.$store.state.url='/groupManage/detail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
              handleSelectionChange(val) {//点击复选框选中的数据
@@ -294,7 +294,7 @@
                  }
                  
                 //  console.log(flag)
-                 if(flag){
+                 if(data.treeId!=1&&flag){
                      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
                     .then(function(res){
                         _this.isClick.push(data.treeId);
@@ -312,11 +312,11 @@
                 
             },
             modify(row){
-                this.$store.state.url='/groupManage/default/modify/'+row.id
+                this.$store.state.url='/groupManage/modify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             see(row){
-                this.$store.state.url='/groupManage/default/see/'+row.id
+                this.$store.state.url='/groupManage/see/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             }
         },

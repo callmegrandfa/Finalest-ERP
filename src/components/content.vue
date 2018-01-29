@@ -10,7 +10,8 @@
                     <div id="longWidth">
                         <ul id="routerBox">
                             <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
-                                <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link>
+                                <!-- <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link> -->
+                                <router-link :to="{name:i.url,params:{id:'default'}}">{{i.name}}</router-link>
                                 <span class="closes" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
                                 <!-- <i class="el-icon-error closes" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i> -->
                             </li>
@@ -100,10 +101,9 @@ export default {
                  index=i;
              }
          }
-        
          if(previousIndex>=0&&this.hasClass(elA[index],'active')){//判断前一个路由按钮index是否存在，判断当前路由按钮是否激活
-                 let url='/'+elClose[previousIndex].getAttribute('menuurl')+'/default';
-                 this.$router.push({path:url})
+                 let url=elClose[previousIndex].getAttribute('menuurl');
+                 this.$router.push({name:url,params:{id:'default'}})//点击切换路由
          }else if(previousIndex==-1&&this.hasClass(elA[0],'active')){
              this.$router.push({path:'/home'})
          }

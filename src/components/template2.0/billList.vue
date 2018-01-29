@@ -328,7 +328,7 @@
             })
             },
             newAdd(){
-                this.$store.state.url='/bill/default/billDetails/default'
+                this.$store.state.url='/bill/billDetails/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             }
            

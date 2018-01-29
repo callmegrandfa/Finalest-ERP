@@ -89,10 +89,10 @@
                                 <el-col :span="5"  class="getPadding">
                                     <el-checkbox v-model="group" readonly>集团公司</el-checkbox>
                                     <el-checkbox v-model="addData.isGroupCompany" readonly>是否启用</el-checkbox>
-                                </el-col> 
+                                </el-col>
                             </el-col>
                             <el-col :span="22"  class="getPadding">
-                                <div class="bgcolor"><label>上级公司</label><el-input v-model="company.higher" placeholder="无记录" readonly></el-input></div>
+                                <div class="bgcolor"><label>上级公司</label><el-input placeholder="无记录" readonly></el-input></div>
                                 <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="无记录" readonly></el-input></div>
                                 <div class="bgcolor">
                                     <label>用户状态</label>
@@ -294,7 +294,7 @@ export default({
     },       
     methods:{
         back(){
-            this.$store.state.url='/groupManage/default/groupManageList/default'
+            this.$store.state.url='/groupManage/groupManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         open(tittle,iconClass,className) {
