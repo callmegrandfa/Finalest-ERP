@@ -414,22 +414,21 @@
                 let self = this;
                 if(self.$route.params.id!='default'){
                     self.$destroy()
-                    console.log('look'+self.$route.params.id)
                     //根据仓库id获取仓库信息
                     this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
-                        console.log(res)               
+                        // console.log(res)               
                         self.repositoryData = res.result;
                         // console.log(self.repositoryData);
                     });
-                    console.log(self.$route.params.id)
+                    // console.log(self.$route.params.id)
                     //根据仓库id获取仓库地址信息
                     self.createParams.stockId = self.$route.params.id;
                     self.getRepositoryAddressParams={
                         id:self.$route.params.id,
                     }
-                    console.log(self.getRepositoryAddressParams)
+                    // console.log(self.getRepositoryAddressParams)
                     this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',self.getRepositoryAddressParams).then(function(res){
-                        console.log(res);
+                        // console.log(res);
                         self.repositoryAddressData = res.result;
                     })
                 }
@@ -453,7 +452,19 @@
                 this.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
                     console.log(res);
                     self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-              })
+                })
+
+                if(self.updataList.length>0){
+                    for(let i in self.updataList){
+                        console.log(i)
+                        this.$axios.puts('/api/services/app/StockAddressManagement/Update',self.updataList[i]).then(function(res){
+                            console.log(res);
+                            self.open('修改仓库信息成功','el-icon-circle-check','successERP');
+                            self.updataList = [];
+                        })
+                    }
+                }
+                
                 self.saveAddress();
             },
 
@@ -470,7 +481,7 @@
                 this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){//创建
                     console.log(res);
                     self.loadData();
-                    self.open('修改仓库成功','el-icon-circle-check','successERP');
+                    self.open('新增仓库成功','el-icon-circle-check','successERP');
                     self.clearData();
               })
               self.handleSave();
@@ -713,19 +724,13 @@ input::-webkit-input-placeholder{
 }
 </style>
 <style>
-.data-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
 /* 重写checkbox */
 .data-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.data-wrapper .el-checkbox__inner::after{
+/* .data-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -745,7 +750,7 @@ input::-webkit-input-placeholder{
     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
     -webkit-transform-origin: center;
     transform-origin: center;
-}
+} */
 
 /* 重写el-table样式 */
 .data-wrapper .el-table th {
