@@ -9,7 +9,7 @@
                 <span class="btDetail">返回</span>
             </button>
 
-            <button class="erp_bt bt_save">
+            <button class="erp_bt bt_save" @click="save">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_save.png">
                 </div>
@@ -43,55 +43,52 @@
                 </div> -->
                 <div class="bgcolor">
                     <label>所属组织</label>
-                    <el-select v-model="valueOrganization">
-                        <el-option v-for="item in organization" :key="item.valueMonth" :label="item.label" :value="item.valueOrganization"></el-option>
+                    <el-select v-model="createContactParams.ouId" placeholder="请选择所属组织">
+                        <el-option v-for="item in ou" :key="item.ou" :label="item.label" :value="item.ou"></el-option>
                     </el-select>
                 </div> 
 
 
                 <div class="bgcolor">
                     <label>编码</label>
-                    <el-input v-model="data.code" placeholder="请录入编码"></el-input>
+                    <el-input v-model="createContactParams.contact" placeholder="请录入编码"></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label>名称</label>
-                    <el-input v-model="data.name" placeholder="请录入名称"></el-input>
+                    <el-input v-model="createContactParams.contactName" placeholder="请录入名称"></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label>全称</label>
-                    <el-input v-model="data.fullName" placeholder="请录入全称"></el-input>
+                    <el-input v-model="createContactParams.contactFullName" placeholder="请录入全称"></el-input>
                 </div>
 
                 <div class="bgcolor">
                     <label>助记码</label>
-                    <el-input v-model="data.mnemonicCode" placeholder="请录入助记码"></el-input>
+                    <el-input v-model="createContactParams.mnemonic" placeholder="请录入助记码"></el-input>
                 </div>
                     
-
-
                 <div class="bgcolor">
                     <label>客户分类</label>
-                    <el-select v-model="valueCustomerType">
+                    <el-select v-model="createContactParams.contactClassId" placeholder="请选择客户类型">
                         <el-option v-for="item in customerType" :key="item.valueCustomerType" :label="item.label" :value="item.valueCustomerType"></el-option>
                     </el-select>
                 </div>
-                
-                
-                
+                             
                 <div class="bgcolor">
                     <label>客户性质</label>
-                    <el-select v-model="valueNature">
-                        <el-option v-for="item in nature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
+                    <el-select v-model="createContactParams.contactWorkPropertyId" placeholder="请选择客户性质">
+                        <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
                     </el-select>
                 </div>
+
                 <div class="bgcolor">
                     <label>客户等级</label>
-                    <el-select v-model="valueGrade">
-                        <el-option v-for="item in grade" :key="item.valueGrade" :label="item.label" :value="item.valueGrade"></el-option>
+                    <el-select v-model="createContactParams.contactGradeId" placeholder="请选择客户登记">
+                        <el-option v-for="item in customerGrade" :key="item.valueGrade" :label="item.label" :value="item.valueGrade"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -102,18 +99,18 @@
                 </div>   
                 <div class="bgcolor">
                     <label>对应财务组织</label>
-                    <el-select v-model="valueFinance">
-                        <el-option v-for="item in finance" :key="item.valueFinance" :label="item.label" :value="item.valueFinance"></el-option>
+                    <el-select v-model="createContactParams.ficaOuId" placeholder="请选择财务组织">
+                        <el-option v-for="item in ficaOu" :key="item.valueFinance" :label="item.label" :value="item.valueFinance"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
                     <label>纳税登记号</label>
-                    <el-input v-model="data.taxNum" placeholder="请录入登记号"></el-input>
+                    <el-input v-model="createContactParams.taxCode" placeholder="请录入登记号"></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>业务地区区号</label>
-                    <el-select v-model="valueAreaBusiness">
-                        <el-option v-for="item in areaBusiness" :key="item.valueAreaBusiness" :label="item.label" :value="item.valueAreaBusiness"></el-option>
+                    <el-select v-model="createContactParams.opAreaId">
+                        <el-option v-for="item in opArea" :key="item.valueAreaBusiness" :label="item.label" :value="item.valueAreaBusiness"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -124,22 +121,34 @@
                 </div>
                 <div class="bgcolor">
                     <label>行政地区</label>
-                    <el-select v-model="valueAreaAdministrative">
-                        <el-option v-for="item in areaAdministrative" :key="item.valueAreaAdministrative" :label="item.label" :value="item.valueAreaAdministrative"></el-option>
+                    <el-select v-model="createContactParams.adAreaId" placeholder="请选择行政区域">
+                        <el-option v-for="item in adArea" :key="item.adArea" :label="item.label" :value="item.adArea"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
                     <label>法人代表</label>
-                    <el-input v-model="data.legal" placeholder="请录入法人代表"></el-input>
+                    <el-input v-model="createContactParams.legalPerson" placeholder="请录入法人代表"></el-input>
                 </div>
+
                 <div class="bgcolor">
                     <label>注册地址</label>
-                    <el-input v-model="data.address" placeholder="请录入注册地址"></el-input>
+                    <el-input v-model="createContactParams.regAddress" placeholder="请录入注册地址"></el-input>
                 </div>
-                <div class="bgcolor"><label>负责人</label><el-input v-model="data.chargePerson" placeholder="请填写负责人"></el-input></div>
-                <div class="bgcolor"><label>电话</label><el-input v-model="data.telephone" placeholder="请填写电话"></el-input></div>
+
+                <div class="bgcolor">
+                    <label>负责人</label>
+                    <el-input v-model="createContactParams.manager" placeholder="请填写负责人"></el-input>
+                </div>
                 
-                <div class="bgcolor"><label>备注</label><el-input v-model="data.remarks" placeholder="备注"></el-input></div>
+                <div class="bgcolor">
+                    <label>电话</label>
+                    <el-input v-model="createContactParams.phone" placeholder="请填写电话"></el-input>
+                </div>
+                
+                <div class="bgcolor">
+                    <label>备注</label>
+                    <el-input v-model="createContactParams.remark" placeholder="备注"></el-input>
+                </div>
             </el-col>
         </el-row>
      </div>
@@ -161,10 +170,10 @@
                         <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
                         
                 
-                        <el-table :data="tableData" stripe border style="width: 100%">
+                        <el-table :data="allList" stripe border style="width: 100%">
                             <el-table-column prop="ifAllow" label=" ">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
+                                    <el-checkbox v-model="allList[scope.$index].ifAllow" ></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="clearCurrency" label="结算币种" width="180"></el-table-column>
@@ -175,7 +184,7 @@
                             <el-table-column prop="phone" label="联系电话" width="180"></el-table-column>
                             <el-table-column prop="ifDefault" label="默认">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifDefault" ></el-checkbox>
+                                    <el-checkbox v-model="allList[scope.$index].ifDefault" ></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label='操作'>
@@ -213,48 +222,8 @@
 export default({
     data() {
         return{
-             ifShow:true,
-            tableData: [{//表格
-                ifAllow:true,
-                ifDefault:true,
-                clearCurrency: '结算币种',
-                bankNum: '',
-                bankAccount: '',
-                openBank:'农业银行',
-                contact:'',
-                phone:'',
-                defaults:''
-                },{//表格
-                ifAllow:true,
-                ifDefault:true,
-                clearCurrency: '结算币种',
-                bankNum: '',
-                bankAccount: '',
-                openBank:'工商银行',
-                contact:'',
-                phone:'',
-                defaults:''
-                },{//表格
-                ifAllow:true,
-                ifDefault:true,
-                clearCurrency: '结算币种',
-                bankNum: '',
-                bankAccount: '',
-                openBank:'建设银行',
-                contact:'',
-                phone:'',
-                defaults:''
-                },{//表格
-                ifAllow:true,
-                ifDefault:true,
-                clearCurrency: '结算币种',
-                bankNum: '',
-                bankAccount: '',
-                openBank:'中国银行',
-                contact:'',
-                phone:'',
-                defaults:''
-                }, ],
+            ifShow:true,
+            showCompany:false,//初始默认公司计信息状态展开  
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -264,60 +233,51 @@ export default({
                 finishTime:"",
                 finishName:"",
             },
-            data:{
-                code:'',//编码
-                name:'',//名称
-                mnemonicCode:'PO1711060111111',//助记码
-                chargePerson:'',//负责人
-                telephone:'',//电话
-                address:'',//注册地址
-                longitude:'',//经度
-                latitude:'',//纬度
-                remarks:'',//备注
-                fullName:'无',//全称
-                taxNum:'',//纳税登记号
-                legal:'张三',//法人代表
-            },
-             organization: [{//所属组织
-                valueOrganization:'选项1',
-                label: '恒康'
+
+            ou: [{//所属组织
+                    ou:'1',
+                    label: '恒康'
+                }, {
+                    ou:'2',
+                    label: '恒大'
+                }, {
+                    ou:'3',
+                    label: '361度'
+                }],
+
+            customerType:[{//客户类型
+                valueCustomerType:'1',
+                label: '选项1'
             }, {
-                valueOrganization:'选项2',
-                label: '恒大'
+                valueCustomerType:'2',
+                label:'选项2' 
             }, {
-                valueOrganization:'选项3',
-                label: '361度'
+                valueCustomerType:'3',
+                label:'选项3' 
             }],
-            customerType:[{//客户分类
-                valueCustomerType:'选项1',
-                label: '1'
+
+            customerNature:[{//客户性质
+                valueNature:'1',
+                label: '选项1'
             }, {
-                valueCustomerType:'选项2',
-                label: '2'
+                valueNature:'2',
+                label: '选项2'
             }, {
-                valueCustomerType:'选项3',
-                label: '3'
+                valueNature:'3',
+                label: '选项3'
             }],
-            nature:[{//客户性质
-                valueNature:'选项1',
-                label: '1'
+
+            customerGrade:[{//客户等级
+                valueGrade:'1',
+                label: '选项1'
             }, {
-                valueNature:'选项2',
-                label: '2'
+                valueGrade:'2',
+                label: '选项2'
             }, {
-                valueNature:'选项3',
-                label: '3'
+                valueGrade:'3',
+                label: '选项3'
             }],
-            grade:[{//客户等级
-                valueGrade:'选项1',
-                label: '1'
-            }, {
-                valueGrade:'选项2',
-                label: '2'
-            }, {
-                valueGrade:'选项3',
-                label: '3'
-            }],
+
             sort:[{//客户类型
                 valueSort:'选项1',
                 label: '1'
@@ -328,81 +288,120 @@ export default({
                 valueSort:'选项3',
                 label: '3'
             }],
-            areaBusiness:[{//业务地区
-                valueAreaBusiness:'选项1',
-                label: '1'
+            
+            ficaOu :[{//对应财务组织
+                valueFinance:'1',
+                label: '选项1'
             }, {
-                valueAreaBusiness:'选项2',
-                label: '2'
+                valueFinance:'2',
+                label: '选项2'
             }, {
-                valueAreaBusiness:'选项3',
-                label: '3'
+                valueFinance:'3',
+                label: '选项3'
             }],
-            finance :[{//对应财务组织
-                valueFinance:'选项1',
-                label: '1'
+
+            opArea:[{//业务地区
+                valueAreaBusiness:'1',
+                label: '选项1'
             }, {
-                valueFinance:'选项2',
-                label: '2'
+                valueAreaBusiness:'2',
+                label: '选项2'
             }, {
-                valueFinance:'选项3',
-                label: '3'
+                valueAreaBusiness:'3',
+                label: '选项3'
             }],
+
             country :[{//国家/地区
-                valueCountry:'选项1',
-                label: '1'
+                valueCountry:'1',
+                label: '选项1'
             }, {
-                valueCountry:'选项2',
-                label: '2'
+                valueCountry:'2',
+                label: '选项2'
             }, {
-                valueCountry:'选项3',
-                label: '3'
+                valueCountry:'3',
+                label: '选项3'
             }],
-            areaAdministrative :[{//行政地区
-                valueAreaAdministrative:'选项1',
-                label: '1'
+            adArea :[{//行政地区
+                adArea:'1',
+                label: '选项1'
             }, {
-                valueAreaAdministrative:'选项2',
-                label: '2'
+                adArea:'2',
+                label: '选项2'
             }, {
-                valueAreaAdministrative:'选项3',
-                label: '3'
+                adArea:'3',
+                label: '选项3'
             }],
             activeName: 'bank',//tabs标签页默认激活name
-            
-
-            
             supplier:true,//同为供应商
             credit :true,//信用管理
 
-            showCompany:false,//初始默认公司计信息状态展开  
-            valueOrganization: '请选择组织',//所属组织
-            valueShopType:'请选择店铺类型',//店铺类型
-            valueNature:'请选择店铺性质',//店铺性质
-            valueGrade:'请选择店铺等级',//店铺等级 
-            valueWarehouse:'请选择对应仓库',//对应仓库 
-            valueAreaBusiness:'请选择业务地区',//业务地区 
-            valueAreaAdministrative:'请选择行政地区',//行政地区 
-            valueOpenData:'请选择开店日期',//开店日期 
-            valueBrand:'请选择主营品牌',//主营品牌 
-            valueTradingArea:'请选择商圈',//商圈  
-            valueCountry:'中国',//国家地区 
-            valueFinance:'亚投行',//财务组织 
-            valueSort:'学生',//客户类型 
-            valueCustomerType:'中国人',//客户分类 
+            createContactParams:{//创建客户资料参数
+                'groupId':1,//集团Id
+                'ouId':'',//组织单元id
+                'contact':'',//供应商编码
+                'contactName':'',//客户名称
+                'contactFullName':'',//供应商全称
+                'mnemonic':'',//助记码
+                'contactClassId':'',//客户分类
+                'contactWorkPropertyId':'',//客户性质
+                'contactGradeId':'',//客户/供应商等级ID,
+                'isSupplier':0,//是否为供应商
+                'isCustomer':0,//是否客户
+                'ficaOuId':'',//财务组织单元 ID
+                'taxCode':'',//纳税登记号
+                'opAreaId':'',//业务地区
+                'adAreaId':'',//行政地区
+                'legalPerson':'',//法人代表
+                'regAddress':'',// 注册地址
+                'manager':'',//负责人
+                'phone':'',//电话
+                'remark':'',//备注
+                'creditMgt':true,//信用管理
+                },
+            
+            allList:[],
         }
     },
     methods:{
-         handleChange(val) {
+        //---控制跳转------------------------------------------------
+        back(){//点击新增跳转
+            this.$store.state.url='/customer/customerList/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+        //----------------------------------------------------------
+        //---控制编辑删除等-------------------------------------------
+        handleChange(val) {
             console.log(val);
         },
         handleDelete:function(index){//表格内删除操作
 			this.tableData.splice(index,1);
         },
-        back(){//点击新增跳转
-            this.$store.state.url='/customer/default/customerList/default'
-            this.$router.push({path:this.$store.state.url})//点击切换路由
+        //------------------------------------------------------------
+        //---创建数据--------------------------------------------------       
+        save:function(){//点击保存创建客户资料
+            let self = this;
+            console.log(self.createContactParams)
+            this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
+                    console.log(res);
+                    self.open('创建客户资料成功','el-icon-circle-check','successERP');
+              },function(res){
+                  console.log(res)
+                  self.open('创建失败失败','el-icon-error','faildERP')
+              })
+
         },
+        //------------------------------------------------------------
+        
     }
        
 
@@ -473,5 +472,15 @@ export default({
 .mb10{
     margin-bottom: 10px;
 }
+.customerBasicForm .el-table th {
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+    text-align: left;
+    padding: 5px 0;
+    text-align: center;
+    background-color: #ececec;
+}
+
   </style>
   

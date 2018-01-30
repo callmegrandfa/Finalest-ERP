@@ -262,47 +262,6 @@ export default({
     data() {
         return{
              ifShow:true,
-            tableData: [{//表格
-                ifAllow:true,
-                ifDefault:true,
-                clearCurrency: '结算币种',
-                bankNum: '',
-                bankAccount: '',
-                openBank:'农业银行',
-                contact:'',
-                phone:'',
-                defaults:''
-                },{//表格
-                ifAllow:true,
-                ifDefault:true,
-                clearCurrency: '结算币种',
-                bankNum: '',
-                bankAccount: '',
-                openBank:'工商银行',
-                contact:'',
-                phone:'',
-                defaults:''
-                },{//表格
-                ifAllow:true,
-                ifDefault:true,
-                clearCurrency: '结算币种',
-                bankNum: '',
-                bankAccount: '',
-                openBank:'建设银行',
-                contact:'',
-                phone:'',
-                defaults:''
-                },{//表格
-                ifAllow:true,
-                ifDefault:true,
-                clearCurrency: '结算币种',
-                bankNum: '',
-                bankAccount: '',
-                openBank:'中国银行',
-                contact:'',
-                phone:'',
-                defaults:''
-                }, ],
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -459,7 +418,7 @@ export default({
 			this.tableData.splice(index,1);
         },
         back(){//点击新增跳转
-            this.$store.state.url='/customer/default/customerList/default'
+            this.$store.state.url='/customer/customerList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
     }

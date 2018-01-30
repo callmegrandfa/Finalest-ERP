@@ -365,28 +365,6 @@
         },
 
         methods:{
-            // getAllList:function(){
-                //查询所有仓库地址
-                // groupId (integer, optional): 集团ID ,
-                // stockId (integer, optional): 仓库ID ,
-                // addressId (integer, optional): 地址ID ,
-                // completeAddress (string, optional): 详情地址 ,
-                // transportMethodId (integer, optional): 运输方式 ,
-                // contactPerson (string, optional): 联系人 ,
-                // phone (string, optional): 联系电话 ,
-                // logisticsCompany (string, optional): 物流公司 ,
-                // isDefault (boolean, optional): 是否默认 ,
-                // remark (string, optional): 备注 ,
-                // id (integer, optional)仓库地址ID
-
-            //     let self = this;
-            //     this.$axios.gets('/api/services/app/StockAddressManagement/GetAll').then(function(res){
-            //     console.log(res);
-            //     self.allList = res.result;
-            //     self.tableData = self.allList.items;
-            //   })
-            // },
-
             open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -484,7 +462,6 @@
                 this.allList.splice(index,1);
                 this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
                 console.log(res);
-                alert('删除成功')
               })
             },
             

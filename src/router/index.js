@@ -26,8 +26,9 @@ const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
 
 const customer = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customer')
-const customerDetail = () =>import('../components/customerInfor/customerDetail')
 const customerList = () =>import(/* webpackChunkName: "group-customer" */'../components/customerInfor/customerList')
+const customerDetail = () =>import('../components/customerInfor/customerDetail')
+const customerModify = () =>import('../components/customerInfor/customerModify')
 
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
@@ -135,9 +136,10 @@ children:[
 
   { path: '/customer', component: customer,name:'customer',redirect: function(){//客户管理
     return store.state.customerActiveRouter;
-  },children:[
-      { path: '/customer/customerDetail/:id', component: customerDetail,name:'customerDetail' },
+  },children:[  
       { path: '/customer/customerList/:id', component: customerList,name:'customerList' },
+      { path: '/customer/customerDetail/:id', component: customerDetail,name:'customerDetail' },
+      { path: '/customer/customerModify/:id', component: customerModify,name:'customerModify' },
   ]},
 
   { path: '/order', component: order,name:'order',redirect: function(){//采购管理

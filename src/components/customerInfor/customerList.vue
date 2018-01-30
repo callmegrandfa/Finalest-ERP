@@ -28,42 +28,42 @@
                 <el-row class="fs12">
                    <div class="bgcolor">
                         <label>所属组织</label>
-                        <el-input placeholder="" v-model="stockC"></el-input>
+                        <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor">
                         <label>行政地区</label>
-                        <el-input placeholder="" v-model="stockC"></el-input>
+                        <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor">
                         <label>业务地区</label>
-                        <el-input placeholder="" v-model="stockC"></el-input>
+                        <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor">
                         <label>编码</label>
-                        <el-input placeholder="" v-model="stockC"></el-input>
+                        <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor">
                         <label>名称</label>
-                        <el-input placeholder="" v-model="stockC"></el-input>
+                        <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor">
                         <label>客户性质</label>
-                        <el-input placeholder="" v-model="stockC"></el-input>
+                        <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
@@ -112,24 +112,24 @@
 
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
-                        <el-table :data="tableData" border style="width: 100%" stripe>
+                        <el-table :data="allList" border style="width: 100%" stripe>
                             <el-table-column prop="ifAction" label=" ">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
+                                    <el-checkbox v-model="allList[scope.$index].ifAction" ></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="organization" label="所属组织" ></el-table-column>
-                            <el-table-column prop="cusCode" label="客户编码"></el-table-column>
-                            <el-table-column prop="cusName" label="客户名称"></el-table-column>
-                            <el-table-column prop="cusCall" label="客户简称"></el-table-column>
-                            <el-table-column prop="cusType" label="客户分类"></el-table-column>
-                            <el-table-column prop="cusNature" label="客户性质"></el-table-column>
-                            <el-table-column prop="ifSupply" label="供应">
+                            <el-table-column prop="ouId" label="所属组织" ></el-table-column>
+                            <el-table-column prop="contact" label="客户编码"></el-table-column>
+                            <el-table-column prop="contactFullName" label="客户名称"></el-table-column>
+                            <el-table-column prop="contactName" label="客户简称"></el-table-column>
+                            <el-table-column prop="contactClassId" label="客户分类"></el-table-column>
+                            <el-table-column prop="contactWorkPropertyId" label="客户性质"></el-table-column>
+                            <el-table-column prop="isSupplier" label="供应">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifSupply" ></el-checkbox>
+                                    <el-checkbox v-model="allList[scope.$index].isSupplier" ></el-checkbox>
                                 </template>
                             </el-table-column>   
-                            <el-table-column prop="moneyOrganization" label="对应财务组织"></el-table-column>
+                            <el-table-column prop="ficaOuId" label="对应财务组织"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
@@ -138,13 +138,16 @@
                             </el-table-column>
                         </el-table>
                         <el-row>
-                            <el-col :span='10'>
-                                <span style="display:inline-block;margin-top:20px;">记录 40，当前第 1 页，共 4 页</span>
+                            <el-col :span='6'>
+                                <div style="margin-top:20px;" class="ml10">
+                                        记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
+                                </div>
+                                
                             </el-col>
-                            <el-col :span='14'>
+                            <el-col :span="18">
                                 <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
                             </el-col>
-                        </el-row> 
+                        </el-row>
                         
                     </el-col>
                 </el-row>
@@ -160,19 +163,7 @@
         name:'customerList',
         data(){
             return {
-                try:{
-                "groupId": 2,
-                "stockId": 1,
-                "addressId": 8,
-                "completeAddress": "str33ing",
-                "transportMethodId": 1,
-                "contactPerson": "stri55ng",
-                "phone": "18200326666",
-                "logisticsCompany": "str55ing",
-                "isDefault": true,
-                "remark": "st54ring"
-                },
-
+                allList:[],//所有数据列表
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -191,65 +182,11 @@
                     }],
 
                 value: '',
-                tableData: [{
-                    ifAction:true,
-                    organization: '组织',
-                    cusCode: '客户编码',
-                    cusName: '客户名称',
-                    cusCall: '客户简称',
-                    cusType:'客户分类',
-                    cusNature:'客户性质',
-                    ifSupply:true,
-                     wareHouse:'对应财务组织',
-                    status:'启用',
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        status:'启用',
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        status:'停用',
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        status:'冻结',
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        status:'恢复',
-                    }],
-
-                    pageIndex:-1,//分页的当前页码
-			        totalPage:20,//当前分页总数
+                pageIndex:-1,//分页的当前页码
+                totalPage:0,//当前分页总数
+                total:'',//数据总条数
+                page:1,//当前页
+                eachPage:10,//一页显示的数量
             }
         },
         created:function(){
@@ -257,32 +194,38 @@
             
         },
         methods:{
+        // ---跳转开始------------------------------------------------------
             goDetail(){//点击新增跳转
                this.$store.state.url='/customer/customerDetail/default'
                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
-            goModify:function(){//点击跳转修改页modify
-                this.$store.state.url='/customer/customerModify/default'
+            goModify:function(id){//点击跳转修改页modify
+                // this.$store.state.url='/customer/customerModify/default'
+                this.$store.state.url='/customer/customerModify/'+id;
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
-
+        //------------------------------------------------------------------
+       
+        //---控制修改及分页--------------------------------------------------
             handleCurrentChange:function(val){//获取当前页码
                 this.pageIndex=val;
             },
-
+        //------------------------------------------------------------------
+        
+        //---获取数据-------------------------------------------------------
             loadAllList:function(){//获取所有列表数据
                 let self = this;
                 this.$axios.gets('/api/services/app/ContactManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
                     console.log(res);
-                    self.allList = res.data;
-                    self.total = res.total;
-                    self.totalPage = Math.ceil(res.total/self.eachPage)
+                    self.allList = res.result.items;
+                    self.total = res.result.totalCount;
+                    self.totalPage = Math.ceil(self.total/self.eachPage)
                 },function(res){
                     console.log('err'+res)
                 })
             },
-
+        //-------------------------------------------------------------------
             
 
         },
