@@ -30,6 +30,7 @@ const customerList = () =>import(/* webpackChunkName: "group-customer" */'../com
 const customerDetail = () =>import('../components/customerInfor/customerDetail')
 const customerModify = () =>import('../components/customerInfor/customerModify')
 
+//采购管理
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
@@ -41,7 +42,7 @@ const userDataList = () =>import('../components/user/userDataList')
 
 const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
 const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
-
+//组织管理
 const groupManage = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManage')
 const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManageList')
 const detail = () =>import('../components/groupManage/detail')
@@ -52,7 +53,11 @@ const groupManager = () =>import('../components/groupManage/groupManager')
 const bill = () =>import(/* webpackChunkName: "group-bill" */'../components/template2.0/bill')
 const billDetails = () =>import('../components/template2.0/billDetails')
 const billList = () =>import(/* webpackChunkName: "group-bill" */'../components/template2.0/billList')
-
+// 菜单管理
+const menu = () =>import(/* webpackChunkName: "group-menu" */'../components/menu/menu')
+const menuDetail = () =>import('../components/menu/menuDetail')
+const menuList = () =>import(/* webpackChunkName: "group-menu" */'../components/menu/menuList')
+const addLangulage = () =>import('../components/menu/addLangulage')
 
 Vue.use(Router)
 
@@ -164,6 +169,13 @@ children:[
       { path: '/groupManage/detail/:id', component: detail,name:'detail' },
       { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
+  { path: '/menu', component: menu,name:'menu',redirect: function(){//菜单管理
+    return store.state.menuActiveRouter;
+  },children:[
+      { path: '/menu/menuDetail/:id', component: menuDetail,name:'menuDetail' },
+      { path: '/menu/menuList/:id', component: menuList,name:'menuList' },
+      { path: '/menu/addLangulage/:id', component: addLangulage,name:'addLangulage' },
+  ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
   { path: '/userList/:id', component: userList,name:'userList' },
@@ -194,17 +206,7 @@ router.beforeEach((to, from, next) => {
       store.state.groupActiveRouter='/groupManage/see/:id';
     }else if(to.name=='groupManageList'){
       store.state.groupActiveRouter='/groupManage/groupManageList/:id';
-    }
-    // else if(to.name=='detail'){
-    //   store.state.groupActiveRouter='/groupManage/detail/:id';
-    // }else if(to.name=='modify'){
-    //   store.state.groupActiveRouter='/groupManage/modify/:id';
-    // }else if(to.name=='see'){
-    //   store.state.groupActiveRouter='/groupManage/see/:id';
-    // }else if(to.name=='groupManageList'){
-    //   store.state.groupActiveRouter='/groupManage/groupManageList/:id';
-    // }
-    else if(to.name=='repositoryList'){
+    }else if(to.name=='repositoryList'){
       store.state.resActiveRouter='/repository/repositoryList/:id'
     }else if(to.name=='repositoryData'){
       store.state.resActiveRouter='/repository/repositoryData/:id'
@@ -218,7 +220,14 @@ router.beforeEach((to, from, next) => {
       store.state.billActiveRouter='/bill/billDetails/:id'
     }else if(to.name=='billList'){
       store.state.billActiveRouter='/bill/billList/:id'
+    }else if(to.name=='menuDetail'){
+      store.state.menuActiveRouter='/menu/menuDetail/:id'
+    }else if(to.name=='menuList'){
+      store.state.menuActiveRouter='/menu/menuList/:id'
+    }else if(to.name=='addLangulage'){
+      store.state.menuActiveRouter='/menu/addLangulage/:id'
     }
+    
   } 
    next()
 })

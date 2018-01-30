@@ -94,7 +94,6 @@ export default {
         },
       loginAjax:function(){
           let _this=this;
-          _this.switch('/home');
           //if(表单验证通过)发送ajax
           _this.$axios.posts('/api/TokenAuth/Authenticate',_this.login)
           .then(function (res) {
@@ -129,6 +128,7 @@ export default {
                 },function (res) {
                 //失败之后处理逻辑
                 // alert('用户名或密码错误')
+                // _this.switch('/home');
                 console.log(res);
             }) 
       },

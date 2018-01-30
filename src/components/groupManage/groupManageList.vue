@@ -14,18 +14,18 @@
 
                 <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select  v-model="searchData.basOuTypes">
+                    <el-select  v-model="searchData.OuType">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.ouCode" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.ouName" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.companyOuId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.areaId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.status" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder="请录入单号"></el-input></div>
                 <el-col style="text-align:center;" :span="24">
-                    <span class="search-btn" @click="searching">查询</span>
+                    <span class="search-btn" @click="SimpleSearch">查询</span>
                     <span class="search-btn">高级搜索</span>
                 </el-col>
             </el-col>
@@ -108,60 +108,59 @@
         data(){
             return {
                 searchData:{
-                    groupId:'1',//
-                    ouCode: "",//编码
-                    ouName: "",//名称
-                    companyOuId:'',//所属公司
-                    areaId: '',//行政地区
-                    status: '',//启用状态
-                    basOuTypes: '',//组织类型
+                    OuCode: "",//编码
+                    Name: "",//名称
+                    CompanyOuId:'',//所属公司
+                    AreaId: '',//行政地区
+                    Status: '',//启用状态
+                    OuType: '',//组织类型
                 },
                 options: [{
                     basOuTypes: '1',
-                    label: '10'
+                    label: '1'
                     }, {
                     basOuTypes: '2',
-                    label: '20'
+                    label: '2'
                     }, {
                     basOuTypes: '3',
-                    label: '30'
+                    label: '3'
                     }, {
                     basOuTypes: '4',
-                    label: '40'
+                    label: '4'
                     }, {
                     basOuTypes: '5',
-                    label: '50'
+                    label: '5'
                     }, {
                     basOuTypes: '6',
-                    label: '60'
+                    label: '6'
                     }, {
                     basOuTypes: '7',
-                    label: '70'
+                    label: '7'
                     }, {
                     basOuTypes: '8',
-                    label: '80'
+                    label: '8'
                     }, {
                     basOuTypes: '9',
-                    label: '90'
+                    label: '9'
                     }],
-                tableData: [],
+                tableData:[],
 
-                    componyTree:  [{
-                        treeId: 1,
-                        label: '集团名',
-                        children:[]
-                        }],
-                    defaultProps: {
-                        children: 'children',
-                        label: 'label'
-                    },
-                    pageIndex:-1,//分页的当前页码
-                    totalPage:0,//当前分页总数
-                    oneItem:10,//每页有多少条信息
-                    multipleSelection: [],//复选框选中数据
-                    page:1,//当前页
-                    treeCheck:[],
-                    isClick:[],
+                componyTree:  [{
+                    treeId: 1,
+                    label: '集团名',
+                    children:[]
+                    }],
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
+                pageIndex:-1,//分页的当前页码
+                totalPage:0,//当前分页总数
+                oneItem:10,//每页有多少条信息
+                multipleSelection: [],//复选框选中数据
+                page:1,//当前页
+                treeCheck:[],
+                isClick:[],
             }
         },
         created:function(){       
@@ -214,14 +213,14 @@
                  _this.page=val;
                 _this.loadTableData();
             },
-            searching(){//搜索
-                //  let _this=this;
-                // _this.$axios.posts('/api/services/app/OuManagement/Create',_this.searchData)
-                // .then(function(res){
-                //     console.log(res);
-                // },function(res){
-                //     console.log('err:'+res)
-                // })
+            SimpleSearch(){//简单搜索
+                 let _this=this;
+                _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
+                .then(function(res){
+                    console.log(res);
+                },function(res){
+                    console.log('err:'+res)
+                })
             },
             goDetail(){
                 this.$store.state.url='/groupManage/detail/default'
