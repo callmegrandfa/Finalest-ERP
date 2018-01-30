@@ -20,7 +20,7 @@
                 </li>
             </ul>
         </li>
-        <!-- <li class="one">
+        <li class="one">
             <span class="menuIcon"><img src="../../static/image/login/setting.png"></span>
             <a class="oneA" href="javascript:;">系统管理</a>
             <ul class="slidUl slid1">
@@ -154,8 +154,8 @@
                     </ul>
                 </li>
             </ul>
-        </li> -->
-        <li class="one" v-for="item in items" :menuId="item.id">
+        </li>
+        <!-- <li class="one" v-for="item in items" :menuId="item.id">
             <span class="menuIcon" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData"><i :class="item.icon"></i></span>
             <a class="oneA" href="javascript:;" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData">{{item.name}}</a>
             <ul class="slidUl slid1">
@@ -171,7 +171,7 @@
                     </ul>
                 </li>
             </ul>
-        </li>
+        </li> -->
     </ul>
 </template>
 <script>
@@ -367,13 +367,13 @@ export default {
     },
     created:function(){
         let _this=this;
-        _this.$axios.gets('/api/services/app/Navigation/GetAllNavigationsForTree')
-        .then(function(res){
-            _this.items=res.result.items;
-            console.log(res);
-        },function(res){
+        // _this.$axios.gets('/api/services/app/Navigation/GetAllNavigationsForTree')
+        // .then(function(res){
+        //     _this.items=res.result.items;
+        //     console.log(res);
+        // },function(res){
 
-        })
+        // })
     },
     methods:{
         switch(){
