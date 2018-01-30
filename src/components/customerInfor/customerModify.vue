@@ -16,12 +16,12 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_modify">
+            <!-- <button class="erp_bt bt_modify">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_modify.png">
                 </div>
                 <span class="btDetail">修改</span>
-            </button>
+            </button> -->
 
             <button class="erp_bt bt_look">
                 <div class="btImg">
@@ -155,8 +155,7 @@
             <el-col :span="24">
                <el-tabs v-model="activeName">
                     <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
-                        <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                        <button class="erp_bt bt_excel mb10"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
+                        <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">增行</span></button>
                         <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                         <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
                         
@@ -167,19 +166,68 @@
                                     <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="clearCurrency" label="结算币种" width="180"></el-table-column>
-                            <el-table-column prop="bankNum" label="银行账号" width="180"></el-table-column>
-                            <el-table-column prop="bankAccount" label="银行账户" width="180"></el-table-column>
-                            <el-table-column prop="openBank" label="开户银行" width="180"></el-table-column>
-                            <el-table-column prop="contact" label="联系人" width="180"></el-table-column>
-                            <el-table-column prop="phone" label="联系电话" width="180"></el-table-column>
+                            <el-table-column prop="clearCurrency" label="结算币种" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.clearCurrency" 
+                                        type="text"    
+                                        v-on:click="handleEdit(scope.$index)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="bankNum" label="银行账号" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.bankNum" 
+                                        type="text"    
+                                        v-on:click="handleEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="bankAccount" label="银行账户" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.bankAccount" 
+                                        type="text"    
+                                        v-on:click="handleEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="openBank" label="开户银行" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.openBank" 
+                                        type="text"    
+                                        v-on:click="handleEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="contact" label="联系人" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.contact" 
+                                        type="text"    
+                                        v-on:click="handleEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="phone" label="联系电话" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.phone" 
+                                        type="text"    
+                                        v-on:click="handleEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="ifDefault" label="默认">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifDefault" ></el-checkbox>
+                                    <el-checkbox v-model="tableData[scope.$index].ifDefault"></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label='操作'>
-                                <template slot-scope="scope">
+                                <template slot-scope="scope" >
                                     <el-button v-on:click="handleDelete(scope.$index)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
@@ -390,11 +438,22 @@ export default({
             valueFinance:'亚投行',//财务组织 
             valueSort:'学生',//客户类型 
             valueCustomerType:'中国人',//客户分类 
+
+            isEdit:-1,
         }
     },
     methods:{
-         handleChange(val) {
+        handleChange(val) {
             console.log(val);
+        },
+        finishEdit: function(index) {//表格内编辑完成事件
+            this.isEdit=-1;
+        },
+
+        handleEdit:function(index,row){//表格内编辑操作
+            // this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+            console.log(this.isEdit)
+            console.log('0123')
         },
         handleDelete:function(index){//表格内删除操作
 			this.tableData.splice(index,1);
@@ -472,6 +531,20 @@ export default({
 }
 .mb10{
     margin-bottom: 10px;
+}
+.input-need{
+    outline: none;
+    border:none;
+    width: 100%;
+    text-align: center
+}
+.input-bgw{
+    background: white;
+    text-align: center;
+}
+.input-bgp{
+    background: #FAFAFA;
+    text-align: center;
 }
   </style>
   

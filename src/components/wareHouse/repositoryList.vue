@@ -1,18 +1,62 @@
 <template>
   <div class="data-list-container">
-      <el-row>
-          <el-col :span="5" class="bg-white">
-              <el-row>
-                  <el-col :span='24'>
-                      <div class="bgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="page" placeholder=""></el-input></div>
-                      <div class="bgcolor smallBgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="page" placeholder=""></el-input></div>
-                  </el-col>
-              </el-row>
-          </el-col>       
-      </el-row>
+      <el-row class="bg-white">
+            <el-col :span="5">
+                <el-row class="h48 pl15">
+                    <el-col :span="18">
+                        <i class="el-icon-search"></i>
+                        <span>查询</span>
+                    </el-col>
+                    <el-col :span="5">
+                        <span class="fs12 open">+ 展开</span>
+                    </el-col>
+                </el-row>
 
-      <div class="bg-white mr10 mt10 pt10">
-          <el-row>
+                <el-row class="mt10">
+                    <div class="bgcolor">
+                        <label><small>*</small>组织类型</label>
+                        <el-select v-model="ouValue" placeholder="请选择客户类型">
+                            <el-option v-for="item in ouValue"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </el-row>
+
+                <el-row> 
+                    <div class="bgcolor">
+                        <label>编码</label>
+                        <el-input placeholder="" v-model="stockC"></el-input>
+                    </div> 
+                </el-row>
+
+                <el-row>
+                    <div class="bgcolor">
+                        <label>仓库名称</label>
+                        <el-input placeholder="" v-model='stockNm'></el-input>
+                    </div> 
+                </el-row>
+
+                <el-row>
+                    <div class="bgcolor">
+                        <label>业务地区</label>
+                        <el-input placeholder="" v-model="AreaCode"></el-input>
+                    </div>
+                </el-row>
+
+                <!-- <el-row>
+                    <div class="bgcolor"><label>仓库类型</label><el-input placeholder=""></el-input></div>
+                </el-row> -->
+
+                <el-row style="text-align:center;">
+                    <span class="search-btn" @click="searchList">查询</span>
+                </el-row>
+            </el-col>
+
+            <el-col :span='19' class="border-left">
+                <el-row class="h48 pt5">
                     <button class="erp_bt bt_add" @click="goDetail">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_add.png">
@@ -26,7 +70,7 @@
                         </div>
                         <span class="btDetail">打印</span>
                     </button>
-              
+
                     <button class="erp_bt bt_excel">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_excel.png">
@@ -40,50 +84,51 @@
                         </div>
                         <span class="btDetail">辅助功能</span>
                     </button>
-              
-          </el-row>
+                </el-row>
 
-          <el-row class="pt10">
-              <el-col :span="24">
-                  <el-table :data="allList" border style="width: 100%" stripe>
-                    <el-table-column prop="ouId" label="业务组织" ></el-table-column>
-                    <el-table-column prop="stockCode" label="仓库编码" ></el-table-column>
-                    <el-table-column prop="stockFullName" label="仓库名称"></el-table-column>
-                    <el-table-column prop="stockName" label="仓库简称"></el-table-column>
-                    <el-table-column prop="stockTypeId" label="仓库类型"></el-table-column>
-                    <el-table-column prop="opAreaId" label="业务地区"></el-table-column>
-                    <el-table-column prop="address" label="地址"></el-table-column>
-                    <el-table-column prop="manager" label="负责人"></el-table-column>
-                    <el-table-column prop="ifAllow" label="允许使用">
-                        <template slot-scope="scope">
-                            <el-checkbox v-model="allList[scope.$index].ifAllow" disabled></el-checkbox>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作">
-                        <template slot-scope="scope">
-                            <!-- <span>{{scope.row}}</span> -->
-                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
-                            <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
-                            <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
-                        </template>
-                    </el-table-column>
-                  </el-table> 
-                  <el-row>
-                      <el-col :span='6'>
-                          <div style="margin-top:20px;" class="ml10">
-                                记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
-                          </div>
-                         
-                      </el-col>
-                      <el-col :span="18">
-                          <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
-                      </el-col>
-                  </el-row>
+                <el-row class="pl10 pt10 pr10 pb10">
+                    <el-col :span="24">
+                        <el-table :data="allList" border style="width: 100%" stripe>
+                            <el-table-column prop="ouId" label="业务组织" ></el-table-column>
+                            <el-table-column prop="stockCode" label="仓库编码" ></el-table-column>
+                            <el-table-column prop="stockFullName" label="仓库名称"></el-table-column>
+                            <el-table-column prop="stockName" label="仓库简称"></el-table-column>
+                            <el-table-column prop="stockTypeId" label="仓库类型"></el-table-column>
+                            <el-table-column prop="opAreaId" label="业务地区"></el-table-column>
+                            <el-table-column prop="address" label="地址"></el-table-column>
+                            <el-table-column prop="manager" label="负责人"></el-table-column>
+                            <el-table-column prop="ifAllow" label="允许使用">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="allList[scope.$index].ifAllow" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <!-- <span>{{scope.row}}</span> -->
+                                    <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
+                                    <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
+                                    <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
+                                    <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table> 
+                    
+                        <el-row>
+                            <el-col :span='6'>
+                                <div style="margin-top:20px;" class="ml10">
+                                        记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
+                                </div>
+                                
+                            </el-col>
+                            <el-col :span="18">
+                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                            </el-col>
+                        </el-row>
                   
-              </el-col>
-          </el-row>
-      </div>
+                    </el-col>
+                </el-row>
+            </el-col>   
+      </el-row>
   </div>
 </template>
 
@@ -135,20 +180,12 @@
 
             searchList:function(){//根据条件查找仓库信息
                 let self = this;
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:'1',StockName:'',AreaCode:'',Start:'0',Length:'100'}).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:self.stockC,StockName:self.stockNm,AreaCode:self.AreaCode,Start:'0',Length:'100'}).then(function(res){
                     console.log(res);
-                    self.queryList.push(res.result);
+                    self.queryList=res.data;
                     self.allList = self.queryList;
+                    self.total = res.total;
                 })
-            },
-
-            searchListById:function(){//根据Id获取列表
-                let self = this;
-                this.$axios.gets('/api/services/app/StockAddressManagement/Get',{params:{Id:1}}).then(function(res){
-                // console.log(res);
-
-                self.listById = res.result;
-              })
             },
 
             handleEdit:function(index){//表格内编辑操作
@@ -181,12 +218,12 @@
             },        
 
             goDetail(){
-                this.$store.state.url='/repository/default/repositoryData/default'
+                this.$store.state.url='/repository/repositoryData/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             goModify:function(id){
                 console.log(id)
-                this.$store.state.url='/repository/default/repositoryModify/'+id
+                this.$store.state.url='/repository/repositoryModify/'+id
                 // this.$store.state.url='/repository/default/repositoryModify/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
@@ -223,6 +260,12 @@
 			    totalPage:0,//当前分页总数
                 page:1,//当前页
                 eachPage:10,//一页显示的数量
+
+                stockC:'',
+                stockNm:'',
+                AreaCode:'',
+
+                ouValue:'',
             }
         },
     }
@@ -242,7 +285,8 @@
     border-radius: 3px;
     line-height: 30px;
     color: white;
-     background:rgba(130, 170, 252, 1);
+    background:rgba(130, 170, 252, 1);
+    cursor: pointer;
 }
 .bg-white{
     background:white;
@@ -258,8 +302,17 @@
 .mt10{
     margin-top: 10px;
 }
+.pt5{
+    padding-top: 5px;
+}
 .pt10{
     padding-top: 10px;
+}
+.pl10{
+    padding-left: 10px;
+}
+.pl15{
+    padding-left: 15px;
 }
 .btn{
     display: inline-block;
@@ -293,6 +346,28 @@ input:-ms-input-placeholder{
 
 input::-webkit-input-placeholder{
     color: rgba(0, 0, 0, 0.349019607843137);
+}
+.h48{
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #E4E4E4;
+}
+.fs12{
+    font-size: 12px;
+}
+.open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
+}
+.border-left{
+    border-left: 1px solid #E4E4E4;
+    min-height: 380px;
 }
 </style>
 <style>

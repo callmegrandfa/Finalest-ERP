@@ -21,240 +21,178 @@
                 </div>
                 <span class="btDetail">修改</span>
             </button>
+
+            <div class="toggle-btn">
+                <span @click='ifShow = !ifShow'>收起</span>
+                <i class="el-icon-arrow-up"></i>
+            </div>
       </el-row>
 
       <el-row class="bg-white ft12 pt10 pr10">
-          <el-col :span="5" class="h30">
+          <el-col :span="5">
               <el-row>
-                  <el-col :span="8">
-                      <span class="fr pr10">所属组织</span>
-                  </el-col>
-                  <el-col :span="15" class="b1 br3 pl10">
-                       <el-select v-model="value" placeholder="广州总部" >
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                  <div class="bgcolor">
+                        <label><small>*</small>所属组织</label>
+                        <el-select v-model="value" placeholder="请选择所属组织">
+                            <el-option v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
                             </el-option>
-                       </el-select>
-                  </el-col>
+                        </el-select>
+                    </div>
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white h30 ml10">
+          <el-col :span="5">
               <el-row>
-                  <el-col :span="8">
-                      <span class="fr pr10">仓库编码</span>
-                  </el-col>
-                  <el-col :span="15" class="b1 br3 pl10">
-                      <input v-model="repositoryData.stockCode"
-                             class='input-need' 
-                             type="text" 
-                             placeholder="请录入仓库编码">
-                  </el-col>
+                  <div class="bgcolor">
+                    <label>仓库编码</label>
+                    <el-input placeholder="请录入仓库编码" v-model="repositoryData.stockCode"></el-input>
+                  </div>
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white h30 ml10">
+          <el-col :span="5">
               <el-row>
-                  <el-col :span="8">
-                      <span class="fr pr10">名称</span>
-                  </el-col>
-                  <el-col :span="15" class="b1 br3 pl10">
-                      <input v-model="repositoryData.stockFullName"
-                            class="input-need" 
-                            type="text" 
-                            placeholder="请录入名称">
-                  </el-col>
+                  <div class="bgcolor">
+                    <label>仓库名称</label>
+                    <el-input placeholder="请录入仓库名称" v-model="repositoryData.stockFullName"></el-input>
+                  </div>
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white h30 ml10">
+          <el-col :span="5">
               <el-row>
-                  <el-col :span="8">
-                      <span class="fr pr10">简称</span>
-                  </el-col>
-                  <el-col :span="15" class="b1 br3 pl10">
-                      <input  v-model="repositoryData.stockName"
-                              class="input-need" 
-                              type="text" 
-                              placeholder="请录入简称">
-                  </el-col>
+                  <div class="bgcolor">
+                    <label>仓库简称</label>
+                    <el-input placeholder="请录入仓库简称" v-model="repositoryData.stockName"></el-input>
+                  </div>
               </el-row>
           </el-col>
-
-          <el-col :span="2" :offset="1" class="toggle-btn">
-              <span @click='ifShow = !ifShow'>收起</span>
-              <i class="el-icon-arrow-up"></i>
-          </el-col>
-
       </el-row>
 
-      <el-row class="bg-white ft12 pt10 pr10">
-          <el-col :span="5" class="bg-white h30">
+      <el-row class="bg-white ft12 pr10">
+          <el-col :span="5">
               <el-row>
-                  <el-col :span="8">
-                      <span class="fr pr10">助记码</span>
-                  </el-col>
-                  <el-col :span="15" class="b1 br3 pl10">
-                      <input v-model="ouGet.mnemonic" 
-                                class="input-need" 
-                                type="text" 
-                                placeholder="PO123456789">
-                  </el-col>
+                  <div class="bgcolor">
+                    <label>助记码</label>
+                    <el-input placeholder="请录入助记码" v-model="ouGet.mnemonic"></el-input>
+                  </div>
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white h30 ml10">
+          <el-col :span="5">
               <el-row>
-                  <el-col :span="8">
-                      <span class="fr pr10">仓库类型</span>
-                  </el-col>
-                  <el-col :span="15" class="b1 br3 pl10">
-                      <el-select v-model="value" placeholder="广州总部">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                  <div class="bgcolor">
+                        <label><small>*</small>仓库类型</label>
+                        <el-select v-model="value" placeholder="请选择仓库类型">
+                            <el-option v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
                             </el-option>
-                       </el-select>
-                  </el-col>
+                        </el-select>
+                    </div>
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="bg-white h30 ml10">
+          <el-col :span="5">
               <el-row>
-                  <el-col :span="8">
-                      <span class="fr pr10">库存分类</span>
-                  </el-col>
-                  <el-col :span="15" class="b1 br3 pl10">
-                      <input class="input-need" type="text" placeholder="请录入库存分类">
-                  </el-col>
+                  <div class="bgcolor">
+                    <label>助记码</label>
+                    <el-input placeholder="请录入库存分类"></el-input>
+                  </div>
               </el-row>
           </el-col>
 
-          <el-col :span="5" class="h30 ml10">
+          <el-col :span="5">
               <el-row>
-                  <el-col :span="8">
-                      <span class="fr pr10">业务地区</span>
-                  </el-col>
-                  <el-col :span="15" class="b1 br3 pl10">
-                      <el-select v-model="value" placeholder="广州">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                  <div class="bgcolor">
+                        <label><small>*</small>业务地区</label>
+                        <el-select v-model="value" placeholder="请选择业务地区">
+                            <el-option v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
                             </el-option>
-                       </el-select>
-                  </el-col>
+                        </el-select>
+                    </div>
               </el-row>
           </el-col>
       </el-row>
 
       <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
-                <el-row class="bg-white ft12 pt10 pr10">
-                    <el-col :span="5" class="h30">
+                <el-row class="bg-white ft12 pr10">
+                    <el-col :span="5">
                         <el-row>
-                            <el-col :span="8">
-                                <span class="fr pr10">行政地区</span>
-                            </el-col>
-                            <el-col :span="15" class="b1 br3 pl10">
-                                <el-select v-model="value" placeholder="广州总部">
-                                        <el-option
-                                            v-for="item in options"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                        </el-option>
+                            <div class="bgcolor">
+                                <label><small>*</small>行政地区</label>
+                                <el-select v-model="value" placeholder="请选择行政地区">
+                                    <el-option v-for="item in options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                    </el-option>
                                 </el-select>
-                            </el-col>
+                            </div>
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="h30 ml10">
+                    <el-col :span="5">
                         <el-row>
-                            <el-col :span="8">
-                                <span class="fr pr10">负责人</span>
-                            </el-col>
-                            <el-col :span="15" class="b1 br3 pl10">
-                                <input v-model="repositoryData.manager"
-                                        class="input-need"  
-                                        type="text" 
-                                        placeholder="请录入负责人">
-                            </el-col>
+                            <div class="bgcolor">
+                                <label>负责人</label>
+                                <el-input placeholder="请录入负责人" v-model="repositoryData.manager"></el-input>
+                            </div>
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="h30 ml10">
+                    <el-col :span="5">
                         <el-row>
-                            <el-col :span="8">
-                                <span class="fr pr10">电话</span>
-                            </el-col>
-                            <el-col :span="15" class="b1 br3 pl10">
-                                <input  v-model='repositoryData.phone'
-                                        class="input-need" 
-                                        type="text" 
-                                        placeholder="请录入电话">
-                            </el-col>
+                            <div class="bgcolor">
+                                <label>电话</label>
+                                <el-input placeholder="请录入电话" v-model="repositoryData.phone"></el-input>
+                            </div>
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="h30 ml10">
+                    <el-col :span="5">
                         <el-row>
-                            <el-col :span="8">
-                                <span class="fr pr10">Email</span>
-                            </el-col>
-                            <el-col :span="15" class="b1 br3 pl10">
-                                <input  v-model="repositoryData.email"
-                                        class="input-need" 
-                                        type="text" 
-                                        placeholder="请录入邮箱">
-                            </el-col>
+                            <div class="bgcolor">
+                                <label>Email</label>
+                                <el-input placeholder="请录入邮箱" v-model="repositoryData.email"></el-input>
+                            </div>
                         </el-row>
                     </el-col>
                 </el-row>
 
-                <el-row class="bg-white ft12 pt10 pr10">
+                <el-row class="bg-white ft12 pr10">
                     <el-col :span="5" class="h30">
                         <el-row>
-                            <el-col :span="8">
-                                <span class="fr pr10">传真</span>
-                            </el-col>
-                            <el-col :span="15" class="b1 br3 pl10">
-                                <input  v-model="repositoryData.fax"
-                                        class="input-need"
-                                        type="text" 
-                                        placeholder="请录入传真">
-                            </el-col>
+                            <div class="bgcolor">
+                                <label>传真</label>
+                                <el-input placeholder="请录入传真" v-model="createRepositoryParams.fax"></el-input>
+                            </div>
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="h30 ml10">
+                    <el-col :span="5">
                         <el-row>
-                            <el-col :span="8">
-                                <span class="fr pr10">地址</span>
-                            </el-col>
-                            <el-col :span="15" class="b1 br3 pl10">
-                                <input class="input-need" type="text" placeholder="请录入地址">
-                            </el-col>
+                            <div class="bgcolor">
+                                <label>地址</label>
+                                <el-input placeholder="请录入地址"></el-input>
+                            </div>
                         </el-row>
                     </el-col>
 
-                    <el-col :span="5" class="h30 ml10">
+                    <el-col :span="5">
                         <el-row>
-                            <el-col :span="8">
-                                <span class="fr pr10">备注</span>
-                            </el-col>
-                            <el-col :span="15" class="b1 br3 pl10">
-                                <input  v-model="repositoryData.remark"
-                                        class="input-need" 
-                                        type="text" 
-                                        placeholder="请录入备注">
-                            </el-col>
+                            <div class="bgcolor">
+                                <label>备注</label>
+                                <el-input placeholder="请录入备注" v-model="repositoryData.remark"></el-input>
+                            </div>
                         </el-row>
                     </el-col>
 
@@ -280,19 +218,12 @@
                     <span class="btDetail">增行</span>
                 </button>
                                           <!-- 保存新增的仓库地址信息 -->
-                <button class="erp_bt bt_save" @click="saveAddress">
+                <!-- <button class="erp_bt bt_save" @click="saveAddress">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
-                </button>
-
-                <button class="erp_bt bt_modify">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_modify.png">
-                    </div>
-                    <span class="btDetail">修改</span>
-                </button>
+                </button> -->
 
                 <button class="erp_bt bt_excel">
                     <div class="btImg">
@@ -314,46 +245,77 @@
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
                             <!-- <span>{{scope.$index%2}}</span> -->
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.contactPerson" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.contactPerson" 
+                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="phone" label="手机" >
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.phone" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.phone" 
+                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
                     <el-table-column prop="phoneNum" label="电话"></el-table-column>
+
                     <el-table-column prop="completeAddress" label="送货地址">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.completeAddress" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.completeAddress" 
+                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    type="text" />
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="transportMethodId" label="运输方式">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.transportMethodId" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.transportMethodId" 
+                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="logisticsCompany" label="物流公司">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.logisticsCompany" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.logisticsCompany" 
+                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
                             <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault"></el-checkbox>
                         </template>
                     </el-table-column>
+
                     <el-table-column prop="remark" label="备注">
                         <template slot-scope="scope">
-                            <input class="input-need" :class="[scope.$index%2==0?'input-bgw':'input-bgp']" v-model="scope.row.remark" type="text" :disabled="scope.$index!=isEdit" v-on:blur="finishEdit(scope.$index)"/>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.remark" 
+                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    type="text"/>
                         </template>
                     </el-table-column>
+
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <!-- <span>{{scope.row}}</span> -->
                             <!-- <el-button v-on:click='a(scope.row)'>123</el-button> -->
-                            <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button>
-                            <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button> 
+                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
+                            <!-- <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button>  -->
                             <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
@@ -452,7 +414,7 @@
                 let self = this;
                 if(self.$route.params.id!='default'){
                     self.$destroy()
-
+                    console.log('look'+self.$route.params.id)
                     //根据仓库id获取仓库信息
                     this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
@@ -463,18 +425,12 @@
                     //根据仓库id获取仓库地址信息
                     self.createParams.stockId = self.$route.params.id;
                     self.getRepositoryAddressParams={
-                        stockId:self.$route.params.id,
-                        // stockId:16,
-                        Draw:0,
-                        start:0,
-                        length:0,
-                        MaxResultCount:100,
-                        SkipCount:0
+                        id:self.$route.params.id,
                     }
                     console.log(self.getRepositoryAddressParams)
-                    this.$axios.gets('/api/services/app/StockAddressManagement/GetAllData',self.getRepositoryAddressParams).then(function(res){
-                        // console.log(res);
-                        self.repositoryAddressData = res.data;
+                    this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',self.getRepositoryAddressParams).then(function(res){
+                        console.log(res);
+                        self.repositoryAddressData = res.result;
                     })
                 }
                 
@@ -492,13 +448,13 @@
                 });
             },
 
-            saveModify:function(){//修改完仓库信息保存
+            saveModify:function(){//修改仓库信息保存
                 let self = this;
                 this.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
                     console.log(res);
                     self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-
               })
+                self.saveAddress();
             },
 
             addCol:function(){//增行
@@ -514,10 +470,10 @@
                 this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){//创建
                     console.log(res);
                     self.loadData();
-                    self.open('创建仓库成功','el-icon-circle-check','successERP');
+                    self.open('修改仓库成功','el-icon-circle-check','successERP');
                     self.clearData();
-
               })
+              self.handleSave();
             },
 
             clearData:function(){//清除创建的参数
@@ -540,9 +496,12 @@
                 this.isEdit=-1;
             },
 
-            handleEdit:function(index){//表格内编辑操作
-                this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
-
+            handleEdit:function(index,row){//表格内编辑操作
+                // this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+                console.log(this.isEdit)
+                let self = this;
+                self.updataList.push(row);
+                console.log(self.updataList);
             },
 
             handleDelete:function(index,id){//表格内删除操作
@@ -565,7 +524,7 @@
             },
 
             back(){
-                this.$store.state.url='/repository/default/repositoryList/default'
+                this.$store.state.url='/repository/repositoryList/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
@@ -577,12 +536,7 @@
                 repositoryData:'',//根据仓库id查出的仓库信息
                 repositoryAddressData:[],//根据仓库id查出的仓库地址信息
                 getRepositoryAddressParams:{
-                    stockId:'',
-                    Draw:'',
-                    start:'',
-                    length:'',
-                    MaxResultCount:'',
-                    SkipCount:''
+                   id:'',
                 }, 
 
                 ifShow:true,//控制折叠页面
@@ -642,6 +596,7 @@
                     isDefault:true,//是否默认
                     remark:'',//备注
                 },
+                updataList:[],
             }
         },
     }
@@ -743,6 +698,11 @@
 }
 .toggle-btn{
     cursor: pointer;
+    font-size: 12px;
+    float: right;
+    margin-right: 20px;
+    height: 36px;
+    line-height: 36px;
 }
 input:-ms-input-placeholder{
     color: rgba(0, 0, 0, 0.349019607843137);
