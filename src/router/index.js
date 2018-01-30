@@ -51,7 +51,11 @@ const groupManager = () =>import('../components/groupManage/groupManager')
 const bill = () =>import(/* webpackChunkName: "group-bill" */'../components/template2.0/bill')
 const billDetails = () =>import('../components/template2.0/billDetails')
 const billList = () =>import(/* webpackChunkName: "group-bill" */'../components/template2.0/billList')
-
+// 菜单管理
+const menu = () =>import(/* webpackChunkName: "group-menu" */'../components/menu/menu')
+const menuDetail = () =>import('../components/menu/menuDetail')
+const menuList = () =>import(/* webpackChunkName: "group-menu" */'../components/menu/menuList')
+const addLangulage = () =>import('../components/menu/addLangulage')
 
 Vue.use(Router)
 
@@ -61,60 +65,60 @@ const routes = [
   { path: '/login', component: login,name:'login' },
   { path: '/register', component: register,name:'register' },
   { path: '/index', component: index,name:'index',
-  // beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
-  //   store.commit('username');
-  //   if(store.state.username!=null){
-  //     if(store.state.username.length>1){//多账号登录
-  //       window.localStorage.clear();
-  //       let flag=false;
-  //       let x='';
-  //       let names=[];
-  //       for(let i=0;i<store.state.username.length;i++){
-  //           let name=store.state.username[i].name;
-  //           console.log(name)
-  //           names.push(name);
-  //         }
-  //       if(store.state.alerts){
-  //          x=prompt("当前登录"+names.length+"个账号,分别是："+names.join(',')+"请输入您将要登录的账号或者关闭浏览器重新登录或者注销账号重新登录");
-  //       }
-  //       if(x!=null && x!=""){
-  //         let token='';
-  //         let username='';
-  //         for(let e=0;e<store.state.username.length;e++){
-  //             let name=store.state.username[e].name;
-  //             if(x==name){//vuex里面存在用户名和sessionStorage里面key值相等
-  //               token=store.state.username[e].accessToken;
-  //               username=name;
-  //               flag=true;
-  //               break;
-  //             }else{
-  //               flag=false;
-  //             }
-  //         }
-  //         if(flag){
-  //           store.state.alerts=false;
-  //           store.state.name=x;
-  //           store.state.accessToken=token;
-  //           next();
-  //         }else{
-  //           store.state.alerts=true;
-  //           alert('用户名错误');
-  //           next('/login')
-  //         }
-  //       }else{
-  //         alert('用户名不能为空');
-  //       }
-  //     }else if(store.state.username.length==1){
-  //       store.state.name=store.state.username[0].name;
-  //       store.state.accessToken=store.state.username[0].accessToken;
-  //       next();
-  //     }else{
-  //       next('/login')
-  //     }
-  //   }else{
-  //     next('/login')
-  //   }
-  // },
+  beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
+    store.commit('username');
+    if(store.state.username!=null){
+      if(store.state.username.length>1){//多账号登录
+        window.localStorage.clear();
+        let flag=false;
+        let x='';
+        let names=[];
+        for(let i=0;i<store.state.username.length;i++){
+            let name=store.state.username[i].name;
+            console.log(name)
+            names.push(name);
+          }
+        if(store.state.alerts){
+           x=prompt("当前登录"+names.length+"个账号,分别是："+names.join(',')+"请输入您将要登录的账号或者关闭浏览器重新登录或者注销账号重新登录");
+        }
+        if(x!=null && x!=""){
+          let token='';
+          let username='';
+          for(let e=0;e<store.state.username.length;e++){
+              let name=store.state.username[e].name;
+              if(x==name){//vuex里面存在用户名和sessionStorage里面key值相等
+                token=store.state.username[e].accessToken;
+                username=name;
+                flag=true;
+                break;
+              }else{
+                flag=false;
+              }
+          }
+          if(flag){
+            store.state.alerts=false;
+            store.state.name=x;
+            store.state.accessToken=token;
+            next();
+          }else{
+            store.state.alerts=true;
+            alert('用户名错误');
+            next('/login')
+          }
+        }else{
+          alert('用户名不能为空');
+        }
+      }else if(store.state.username.length==1){
+        store.state.name=store.state.username[0].name;
+        store.state.accessToken=store.state.username[0].accessToken;
+        next();
+      }else{
+        next('/login')
+      }
+    }else{
+      next('/login')
+    }
+  },
 children:[
   { path: '/home', component: home,name:'home' },
   { path: '/shortData', component: shortData,name:'shortData' },
@@ -162,6 +166,13 @@ children:[
       { path: '/groupManage/detail/:id', component: detail,name:'detail' },
       { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
+  { path: '/menu', component: menu,name:'menu',redirect: function(){//菜单管理
+    return store.state.menuActiveRouter;
+  },children:[
+      { path: '/menu/menuDetail/:id', component: menuDetail,name:'menuDetail' },
+      { path: '/menu/menuList/:id', component: menuList,name:'menuList' },
+      { path: '/menu/addLangulage/:id', component: addLangulage,name:'addLangulage' },
+  ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
   { path: '/userList/:id', component: userList,name:'userList' },
@@ -192,17 +203,7 @@ router.beforeEach((to, from, next) => {
       store.state.groupActiveRouter='/groupManage/see/:id';
     }else if(to.name=='groupManageList'){
       store.state.groupActiveRouter='/groupManage/groupManageList/:id';
-    }
-    // else if(to.name=='detail'){
-    //   store.state.groupActiveRouter='/groupManage/detail/:id';
-    // }else if(to.name=='modify'){
-    //   store.state.groupActiveRouter='/groupManage/modify/:id';
-    // }else if(to.name=='see'){
-    //   store.state.groupActiveRouter='/groupManage/see/:id';
-    // }else if(to.name=='groupManageList'){
-    //   store.state.groupActiveRouter='/groupManage/groupManageList/:id';
-    // }
-    else if(to.name=='repositoryList'){
+    }else if(to.name=='repositoryList'){
       store.state.resActiveRouter='/repository/repositoryList/:id'
     }else if(to.name=='repositoryData'){
       store.state.resActiveRouter='/repository/repositoryData/:id'
@@ -216,7 +217,14 @@ router.beforeEach((to, from, next) => {
       store.state.billActiveRouter='/bill/billDetails/:id'
     }else if(to.name=='billList'){
       store.state.billActiveRouter='/bill/billList/:id'
+    }else if(to.name=='menuDetail'){
+      store.state.menuActiveRouter='/menu/menuDetail/:id'
+    }else if(to.name=='menuList'){
+      store.state.menuActiveRouter='/menu/menuList/:id'
+    }else if(to.name=='addLangulage'){
+      store.state.menuActiveRouter='/menu/addLangulage/:id'
     }
+    
   } 
    next()
 })

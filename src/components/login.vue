@@ -128,7 +128,7 @@ export default {
                 },function (res) {
                 //失败之后处理逻辑
                 // alert('用户名或密码错误')
-                _this.switch('/home');
+                // _this.switch('/home');
                 console.log(res);
             }) 
       },

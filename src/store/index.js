@@ -18,6 +18,7 @@ export default new vuex.Store({
         resActiveRouter:'/repository/repositoryList/:id',
         customerActiveRouter:'/customer/customerList/:id',
         billActiveRouter:'/bill/billList/:id',
+        menuActiveRouter:'/menu/menuList/:id',
     },
     mutations: {
         go(state){//控制slidebar显示隐藏
