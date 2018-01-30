@@ -14,7 +14,7 @@ axios.interceptors.request.use((config) => {
     if(store.state.accessToken!=''){
       config.headers.Authorization=store.state.accessToken;
     }else{
-      router.push({path:'/login'});
+      // router.push({path:'/login'});
     }
     return config;
   },(error) =>{

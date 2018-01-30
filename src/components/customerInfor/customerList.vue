@@ -272,12 +272,12 @@
         },
         methods:{
             goDetail(){//点击新增跳转
-               this.$store.state.url='/customer/default/customerDetail/default'
+               this.$store.state.url='/customer/customerDetail/default'
                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 
             goModify:function(){//点击跳转修改页modify
-                this.$store.state.url='/customer/default/customerModify/default'
+                this.$store.state.url='/customer/customerModify/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
 

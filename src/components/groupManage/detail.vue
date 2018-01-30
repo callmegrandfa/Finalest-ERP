@@ -106,8 +106,8 @@
                             <el-col :span="22"  class="getPadding">
                                 <div class="bgcolor">
                                     <label>上级公司</label>
-                                    <el-select>
-                                        <el-option v-for="item in preCompany" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
+                                    <el-select v-model="companys">
+                                        <el-option v-for="item in preCompany" :key="item.valueCo" :label="item.label" :value="item.valueCo">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -150,33 +150,34 @@
 export default({
     data() {
         return{
+            companys:1,
             show:true,
             ifShow:true,
             activeName: 'company',
             creatorUser:[],
             auditInfo:{},//审计信息
-            addData:{
+            addData:{//post需要的键值对
                 groupId:1,//集团ID
                 ouCode: '默认',//组织代码
                 ouName: '默认' ,//组织名称
                 foreignName: '默认' ,//外文名称
                 mnemonic: '默认' ,//助记码
-                ouParentid: 0 ,//上级组织ID
-                accountPeriodId: 0 ,//会计期间ID
-                baseCurrencyId: 0,//本位币种id
-                companyOuId: 0,//所属公司ID
+                ouParentid: 1 ,//上级组织ID
+                accountPeriodId:1 ,//会计期间ID
+                baseCurrencyId: 1,//本位币种id
+                companyOuId: 1,//所属公司ID
                 contactPerson: '默认' ,//联系人
                 phone: '默认' ,//电话
                 address: '默认' ,//地址
-                areaId: 0 ,//行政区域ID
-                entityProperty : 0 ,//实体属性
-                status: 0 ,//启用状态
+                areaId: 1 ,//行政区域ID
+                entityProperty : 1 ,//实体属性
+                status: 1 ,//启用状态
                 remark: '默认' ,//备注
-                basOuTypes: [ 0 ],//组织职能
-                isGroupCompany:true ,//
-                ouCompanyParentid: 0 ,//上级公司组织ID
+                basOuTypes: [ 1,2 ],//组织职能
+                isGroupCompany:false ,//是否是法人公司
+                ouCompanyParentid: 1 ,//上级公司组织ID
                 legalPerson: '默认' ,//法人代表
-                companyStatus: 0 ,//公司启用状态
+                companyStatus: 1 ,//公司启用状态
                 regtime: '2018-01-23T02:20:35.833Z'//公司成立时间
             },
             ischeck:{isCheckCompany:true,//公司复选框初始选种状态
@@ -235,13 +236,13 @@ export default({
                 label: '2'
             }],
             preCompany: [{ //   上级公司
-                valueCompany:0,
+                valueCo:0,
                 label: '0'
             }, {
-                valueCompany:1,
+                valueCo:1,
                 label: '1'
             }, {
-                valueCompany:2,
+                valueCo:2,
                 label: '2'
             }],
             state: [{ //启用状态数据

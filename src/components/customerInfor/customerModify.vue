@@ -400,7 +400,7 @@ export default({
 			this.tableData.splice(index,1);
         },
         back(){//点击新增跳转
-            this.$store.state.url='/customer/default/customerList/default'
+            this.$store.state.url='/customer/customerList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
     }
