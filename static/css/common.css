@@ -35,6 +35,22 @@
 /* <div class="bgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  
  <div class="bgcolor smallBgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  */
 
+ /* <div class="bgcolor smallBgcolor">
+    <label></label>
+    <span class="search-btn">查询</span>
+</div> */
+.smallBgcolor .search-btn{
+    text-align: center;
+    font-size: 12px;
+    display: inline-block;
+    width: 87px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 3px;
+    background: #4A6997;
+    color: #F9F9F9;
+    cursor: pointer;
+}
 .bgcolor{
     height: 35px;
     font-size: 12px;
@@ -59,13 +75,14 @@
     width:72px;
     height: 100%;
     float: left;
-    color: #333333;
+    color: #333333; 
     font-family: 'microsoft yahei';
     font-weight: 400;
     font-style: normal;
 }
 .smallBgcolor label{
   line-height:28px;
+  width:100px;
 }
 .bgcolor label small{
     color: #FF669B;

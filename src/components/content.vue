@@ -28,7 +28,7 @@
             <div class="contents" id="contents">
                 <div class="whiteBg">
                     <keep-alive>
-                    <router-view></router-view>
+                        <router-view></router-view>
                     </keep-alive>
                 </div>   
             </div>

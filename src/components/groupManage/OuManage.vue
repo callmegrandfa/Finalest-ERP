@@ -1,4 +1,4 @@
 <template>
-<!-- 集团管理 -->
+<!-- 组织管理 -->
     <router-view></router-view>
 </template>

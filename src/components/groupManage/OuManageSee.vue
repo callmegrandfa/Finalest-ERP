@@ -1,11 +1,11 @@
 <template>
 <!-- 集团管理-组织单元 -->
- <div class="detailForm">
+ <div class="OuSeeForm">
      <el-row>
          <el-col :span="24">
             <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <!-- <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
-            <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <!-- <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button> -->
             <!-- <button class="erp_bt bt_saveAdd" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button> -->
             <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
@@ -22,48 +22,36 @@
                 </div>
                 <div class="bgcolor">
                     <label>编码</label>
-                    <el-input v-model="addData.ouCode" placeholder="请录入编码"></el-input>
+                    <el-input v-model="addData.ouCode" placeholder="无记录" readonly></el-input>
                 </div> 
                 <div class="bgcolor">
-                        <label>名称</label>
-                    <el-input v-model="addData.ouName" placeholder="请录入手工单号"></el-input>
+                    <label>名称</label>
+                    <el-input v-model="addData.ouName" placeholder="无记录" readonly></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>全称</label>
-                    <el-input v-model="addData.ouName" placeholder="请选择仓库"></el-input>
+                    <el-input v-model="addData.ouName" placeholder="无记录" readonly></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>上级业务单元</label>
-                    <el-select v-model="addData.ouParentid">
-                        <el-option v-for="item in higherUnit" :key="item.valueHigherUnit" :label="item.label" :value="item.valueHigherUnit">
-                        </el-option>
-                    </el-select>
+                    <el-input v-model="addData.ouParentid" placeholder="无记录" readonly></el-input>
                 </div>
-                <div class="bgcolor"><label><small>*</small>启用月份</label><el-date-picker v-model="addData.regtime" type="month" placeholder="请选择月份"></el-date-picker></div>
+                <div class="bgcolor"><label>启用月份</label> <el-input v-model="addData.regtime" placeholder="无记录" readonly></el-input></div>
                 <div class="bgcolor">
                     <label>本位币种</label>
-                    <el-select v-model="addData.baseCurrencyId">
-                        <el-option v-for="item in money" :key="item.baseCurrencyId" :label="item.label" :value="item.baseCurrencyId">
-                        </el-option>
-                    </el-select>
+                    <el-input v-model="addData.baseCurrencyId" placeholder="无记录" readonly></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select v-model="addData.companyOuId ">
-                        <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
-                        </el-option>
-                    </el-select>
+                    <el-input v-model="addData.companyOuId" placeholder="无记录" readonly></el-input>
                 </div>
-                <div class="bgcolor"><label>联系人</label><el-input v-model="addData.contactPerson " placeholder="请填入联系人"></el-input></div>
-                <div class="bgcolor"><label>电话</label><el-input v-model="addData.phone" placeholder="请填入电话"></el-input></div>
-                <div class="bgcolor"><label>地址</label><el-input v-model="addData.address" placeholder="请填入地址"></el-input></div>
-                <div class="bgcolor"><label>备注</label><el-input v-model="addData.remark" placeholder="备注"></el-input></div>
+                <div class="bgcolor"><label>联系人</label><el-input v-model="addData.contactPerson " placeholder="无记录" readonly></el-input></div>
+                <div class="bgcolor"><label>电话</label><el-input v-model="addData.phone" placeholder="无记录" readonly></el-input></div>
+                <div class="bgcolor"><label>地址</label><el-input v-model="addData.address" placeholder="无记录" readonly></el-input></div>
+                <div class="bgcolor"><label>备注</label><el-input v-model="addData.remark" placeholder="无记录" readonly></el-input></div>
                 <div class="bgcolor">
                     <label>用户状态</label>
-                    <el-select v-model="addData.status">
-                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
-                        </el-option>
-                    </el-select>
+                    <el-input v-model="addData.status" placeholder="无记录" readonly></el-input>
                 </div>
             </el-col> 
         </el-row>
@@ -99,19 +87,16 @@
                           <div class="companyInfo">
                             <el-col :span="24">
                                 <el-col :span="5"  class="getPadding">
-                                    <el-checkbox v-model="group" disabled>集团公司</el-checkbox>
-                                    <el-checkbox v-model="addData.isGroupCompany">是否启用</el-checkbox>
-                                </el-col> 
+                                    <el-checkbox v-model="group" readonly>集团公司</el-checkbox>
+                                    <el-checkbox v-model="addData.isGroupCompany" readonly>是否启用</el-checkbox>
+                                </el-col>
                             </el-col>
                             <el-col :span="22"  class="getPadding">
-                                <div class="bgcolor"><label>上级公司</label><el-input v-model="company.higher" placeholder="请选择上级公司"></el-input></div>
-                                <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="请输入法人代表"></el-input></div>
+                                <div class="bgcolor"><label>上级公司</label><el-input placeholder="无记录" readonly></el-input></div>
+                                <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="无记录" readonly></el-input></div>
                                 <div class="bgcolor">
                                     <label>用户状态</label>
-                                    <el-select v-model="addData.status">
-                                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
-                                        </el-option>
-                                    </el-select>
+                                    <el-input v-model="addData.status" placeholder="无记录" readonly></el-input>
                                 </div>
                             </el-col>
                          </div>
@@ -127,13 +112,13 @@
     <el-col :span="24" class="getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="creatorUser.fullName" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-input v-model="auditInfo.creationTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInfo.lastModifierUserId" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-input v-model="auditInfo.lastModificationTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>启用日期</label><el-input v-model="auditInfo.startTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>封存日期</label><el-input v-model="auditInfo.lastModificationTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInfo.lastModifierUser" :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="creatorUser.fullName" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>创建时间</label><el-input v-model="auditInfo.creationTime" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInfo.lastModifierUserId" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>修改时间</label><el-input v-model="auditInfo.lastModificationTime" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>启用日期</label><el-input v-model="auditInfo.startTime" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>封存日期</label><el-input v-model="auditInfo.lastModificationTime" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInfo.lastModifierUser" readonly placeholder="无记录"    ></el-input></div>
         </div>                                  
     </el-col>
 </el-row>                                                           
@@ -299,7 +284,7 @@ export default({
         },function(res){
             //console.log('err:'+res)
         })
-    
+        
          
     },
     computed:{
@@ -309,7 +294,7 @@ export default({
     },       
     methods:{
         back(){
-            this.$store.state.url='/groupManage/default/groupManageList/default'
+            this.$store.state.url='/OuManage/OuManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         open(tittle,iconClass,className) {
@@ -355,28 +340,6 @@ export default({
                 }
             }
         },
-        save(){
-            let _this=this;
-            _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-                    _this.auditInfo={
-                        lastModifierUser:res.result.lastModifierUser,
-                        isDeleted:res.result.isDeleted,
-                        deleterUserId:res.result.deleterUserId,
-                        deletionTime:res.result.deletionTime,
-                        lastModificationTime:res.result.lastModificationTime,
-                        lastModifierUserId:res.result.lastModifierUserId,
-                        creationTime:res.result.creationTime,
-                        creatorUserId:res.result.creatorUserId,
-                    }
-                    if(res.result.creatorUser!=null){
-                        _this.creatorUser=res.result.creatorUser
-                    }
-                    //console.log(res.result)
-                    _this.open('保存成功','el-icon-circle-check','successERP');
-                },function(res){
-                    _this.open('保存失败','el-icon-error','faildERP');
-                })
-        },
     }
 
 })        
@@ -387,18 +350,21 @@ export default({
   .block{
       display: none;
   }
-  .detailForm{
+  .OuSeeForm{
       font-family: 'microsoft yahei';
   }
+  .OuSeeForm .bgcolor input{
+      /* border: none; */
+  }
   /*收起*/
- .detailForm .upBt{
+ .OuSeeForm .upBt{
      font-size: 12px;
      float: right;
      margin-right: 10px;
      margin-top: 10px;
      cursor: pointer;
  }
- .detailForm .upBt i{
+ .OuSeeForm .upBt i{
     transition: all 0.5s;
     -moz-transition: all 0.5s;
     -webkit-transition: all 0.5s;
@@ -406,7 +372,7 @@ export default({
     color:#cacaca;
     margin-left: 5px;
  }
- .detailForm .upBt i.rotate{
+ .OuSeeForm .upBt i.rotate{
      transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
@@ -415,31 +381,31 @@ export default({
  }
 
 /*表单提示信息*/
-.detailForm  .errorTips{
+.OuSeeForm  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
 }
 
-  .detailForm .el-row{
+  .OuSeeForm .el-row{
      padding:15px 0;
      border-bottom: 1px solid #e4e4e4;
      background-color: #fff;
   }
-.detailForm .el-row:last-child{
+.OuSeeForm .el-row:last-child{
       border-bottom:none;
   }
 
-.detailForm .tabZoo .getPadding:first-child{
+.OuSeeForm .tabZoo .getPadding:first-child{
     padding-bottom: 15px;
 }
- .detailForm .getPadding,.tabZoo .el-tabs__nav-scroll{
+ .OuSeeForm .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 10px;
  }
- .detailForm .tabZoo .el-tabs__active-bar{
+ .OuSeeForm .tabZoo .el-tabs__active-bar{
      width: 28px!important;
  }
 
-.detailForm .nopadding{
+.OuSeeForm .nopadding{
     padding-top: 0;
 }
 

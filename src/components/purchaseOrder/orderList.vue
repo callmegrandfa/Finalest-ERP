@@ -50,9 +50,10 @@
                         </el-option>
                     </el-select>
                 </div>
-                <el-col style="text-align:center;" :span="24">
+                <div class="bgcolor smallBgcolor">
+                    <label></label>
                     <span class="search-btn">查询</span>
-                </el-col>
+                </div>
             </el-col>
 
             <el-col :span='19' class="border-left">
@@ -441,18 +442,6 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.search-btn{
-    font-size: 12px;
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-
 </style>
 
 <style>

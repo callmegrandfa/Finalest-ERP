@@ -21,4 +21,7 @@ new Vue({
   render: h => h(App),
   template: '<App/>',
   components: { App },
+  meta: {
+    keepAlive: store.state.Alive // 用户登录跳转时页面不被缓存
+  }
 })

@@ -4,6 +4,7 @@ Vue.use(vuex);
 
 export default new vuex.Store({
     state:{
+        Alive:true,//页面是否缓存
         alerts:true,
         temporaryLogin:[],//本地暂时存储用户名,tokten
         username:[],//存储session纪录的每条登录账号{'name':key,'accessToken':value},用于多账号登录
@@ -14,11 +15,12 @@ export default new vuex.Store({
         temporary:[],//本地暂时存储页签
         slidbarData:[],//从localStorage读取页签
         OrderActiveRouter:'/order/orderList/:id',
-        groupActiveRouter:'/groupManage/groupManageList/:id',
+        OuActiveRouter:'/OuManage/OuManageList/:id',
         resActiveRouter:'/repository/repositoryList/:id',
         customerActiveRouter:'/customer/customerList/:id',
         billActiveRouter:'/bill/billList/:id',
         menuActiveRouter:'/menu/menuList/:id',
+        groupActiveRouter:'/groupManage/groupManageList/:id',
     },
     mutations: {
         go(state){//控制slidebar显示隐藏

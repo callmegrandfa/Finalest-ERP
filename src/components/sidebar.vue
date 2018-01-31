@@ -20,7 +20,7 @@
                 </li>
             </ul>
         </li>
-        <!-- <li class="one">
+        <li class="one">
             <span class="menuIcon"><img src="../../static/image/login/setting.png"></span>
             <a class="oneA" href="javascript:;">系统管理</a>
             <ul class="slidUl slid1">
@@ -154,8 +154,8 @@
                     </ul>
                 </li>
             </ul>
-        </li> -->
-        <li class="one" v-for="item in items" :menuId="item.id">
+        </li>
+        <!-- <li class="one" v-for="item in items" :menuId="item.id">
             <span class="menuIcon" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData"><i :class="item.icon"></i></span>
             <a class="oneA" href="javascript:;" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData">{{item.name}}</a>
             <ul class="slidUl slid1">
@@ -171,7 +171,7 @@
                     </ul>
                 </li>
             </ul>
-        </li>
+        </li> -->
     </ul>
 </template>
 <script>
@@ -200,7 +200,8 @@ export default {
             },{
                 name:'集团管理',
                 thirdInfo:[
-                    {name:'业务组织',address:'groupManage'},
+                    {name:'集团管理',address:'groupManage'},
+                    {name:'组织管理',address:'OuManage'},
                 ]
             },{
                 name:'菜单管理',
@@ -291,7 +292,7 @@ export default {
         //                 {name:'客户资料',address:'customerInfor'},
         //                 {name:'现货采购订单-订单列表',address:'orderList'}, 
         //                 {name:'现货采购订单-订单详情',address:'orderDetails'},
-        //                 {name:'集团管理',address:'groupManager'},
+        //                 {name:'集团管理',address:'OuManage'},
         //                 {name:'供应商列表',address:'supplierList'},
         //             ]
         //         },{
@@ -305,7 +306,7 @@ export default {
         //         },{
         //             name:'集团管理',
         //              thirdInfo:[
-        //                 {name:'集团管理',address:'groupManager'},
+        //                 {name:'集团管理',address:'OuManage'},
         //                 {name:'业务组织(精简版)-详细',address:'detail'},
         //             ]
         //         },{
@@ -367,17 +368,28 @@ export default {
     },
     created:function(){
         let _this=this;
-        _this.$axios.gets('/api/services/app/Navigation/GetAllNavigationsForTree')
-        .then(function(res){
-            _this.items=res.result.items;
-            console.log(res);
-        },function(res){
+        // _this.$axios.gets('/api/services/app/Navigation/GetAllNavigationsForTree')
+        // .then(function(res){
+        //     _this.items=res.result.items;
+        //     console.log(res);
+        // },function(res){
 
-        })
+        // })
+    },
+    mounted:function(){
+        let _this=this;
+        _this.slid2Height()
     },
     methods:{
         switch(){
             this.$router.push({name:this.$store.state.url,params:{id:'default'}})//点击切换路由
+        },
+        slid2Height:function(){     
+            let h=window.innerHeight;
+           
+            // let body=document.getElementsByTagName('slid2')[0];
+            // let h=window.innerHeight;
+            // body.style.height=h+'px';
         },
         storageData(e){
             if(e.target.getAttribute("menuurl")&&e.target.getAttribute("menuurl")!=''){
@@ -550,8 +562,7 @@ export default {
 }
 .menu li.two:hover .slid2{
     display: block;
-    width: 470px;
-    max-height: 460px;
+    width: 235px;
 }
 .menu li.two:hover .slid2 li{
     width: 235px;
