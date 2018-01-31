@@ -56,10 +56,21 @@ export default {
    methods: {
        cancellation(){
         window.sessionStorage.removeItem('_ERP');
+        window.localStorage.removeItem('ERP');
         this.$store.state.name='';
         this.$store.state.accessToken='';
+        this.$store.state.url='';
+        this.$store.state.temporaryLogin=[];
+        this.$store.state.temporary=[];
+        this.$store.state.OrderActiveRouter='/order/orderList/:id';
+        this.$store.state.groupActiveRouter='/groupManage/groupManageList/:id';
+        this.$store.state.resActiveRouter='/repository/repositoryList/:id';
+        this.$store.state.customerActiveRouter='/customer/customerList/:id';
+        this.$store.state.billActiveRouter='/bill/billList/:id';
+        this.$store.state.menuActiveRouter='/menu/menuList/:id';
         this.$store.commit('username');
-        this.$router.push({path:'/login'});
+         this.$store.commit('slidbarData');
+         this.$router.push({path:'/login'});
        },
         querySearch(queryString, cb) {
         var restaurants = this.restaurants;

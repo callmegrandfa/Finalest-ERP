@@ -4,7 +4,7 @@
             <el-col :span="24">
                 <button @click="goBack" class="goBack"><i class="fa fa-angle-left" aria-hidden="true"></i> </button>
                 <span class="pageName">语言列表（管理菜单的语言包）</span>
-                <button class="erp_bt bt_add f_right"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">创建新的语言</span></button>
+                <button class="erp_bt bt_add f_right" @click="addNew"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">创建新的语言</span></button>
             </el-col>
         </el-row>
 
@@ -117,6 +117,22 @@
             goBack(){
                 this.$store.state.url='/menu/menuDetail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            addNew(){
+                let _this=this;
+                _this.$axios.posts('/api/services/app/Language/CreateOrUpdateLanguage',{
+                    "language": {
+                        "id": 0,
+                        "name": "中文",
+                        "icon": "fa",
+                        "isEnabled": true
+                    }
+                    }).then(function(res){
+                            console.log(res)
+                    },function(res){
+                        
+                    })
+            
             }
         },
     }

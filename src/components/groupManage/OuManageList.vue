@@ -1,5 +1,5 @@
 <template>
-    <div class="groupList">
+    <div class="OuListForm">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
@@ -13,46 +13,33 @@
                 </el-row>
 
                 <div class="mt20 bgcolor smallBgcolor">
-                    <label>集团编码</label>
+                    <label><small>*</small>组织类型</label>
                     <el-select  v-model="searchData.OuType">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor smallBgcolor"><label>集团名称</label><el-input v-model="searchData.OuCode" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>集团全称</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder="请录入单号"></el-input></div>
                 <div class="bgcolor smallBgcolor">
-                    <label>启用会计月份</label>
-                    <el-select  v-model="searchData.OuType">
-                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
-                        </el-option>
-                    </el-select>
+                    <label></label>
+                    <span class="search-btn" @click="SimpleSearch">查询</span>
+                    <span class="search-btn">高级搜索</span>
                 </div>
-                <div class="bgcolor smallBgcolor">
-                    <label>本位币种</label>
-                    <el-select  v-model="searchData.OuType">
-                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor smallBgcolor"><label>行业</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>电话</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>传真</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>地址</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor lh-28"><label></label><el-checkbox class="w-auto"></el-checkbox>允许使用</div>
-                <div class="bgcolor smallBgcolor"><label></label><span class="search-btn" @click="SimpleSearch">查询</span></div>
             </el-col>
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
-                    <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-                    <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+                    <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+                    <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
+                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>                   
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
@@ -70,8 +57,29 @@
                     <el-col :span='19' class="ml10">
                         <el-table :data="tableData" border style="width: 100%" stripe @selection-change="handleSelectionChange"> ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="ouCode" label="启用时间"></el-table-column>
-                            <el-table-column prop="ouName" label="生效时间"></el-table-column>
+                            <el-table-column prop="ouCode" label="编码"></el-table-column>
+                            <el-table-column prop="ouName" label="名称"></el-table-column>
+                            <el-table-column prop="ouName" label="简称"></el-table-column>
+                            <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
+                            <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
+                            <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
+                            <el-table-column prop="creationTime" label="启用年月"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="isCompany" label="公司">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isCompany" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="isPurchase" label="业务">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isPurchase" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="isFinance" label="财务">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].isFinance" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
                                     <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
@@ -140,21 +148,8 @@
 
                 componyTree:  [{
                     treeId: 1,
-                    label: 'HKERP',
-                    children:[{
-                            treeId: 2,
-                            label: '系统管理',
-                            children:[]
-                        },{
-                            treeId: 3,
-                            label: '采购管理',
-                            children:[]
-                        },{
-                            treeId: 4,
-                            label: '零售管理',
-                            children:[]
-                        },
-                    ]
+                    label: '集团名',
+                    children:[]
                     }],
                 defaultProps: {
                     children: 'children',
@@ -172,7 +167,7 @@
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
-                //_this.loadTree();
+                _this.loadTree();
              },
         methods:{
              open(tittle,iconClass,className) {
@@ -329,12 +324,6 @@
 </script>
 
 <style scoped>
-.lh-28{
-    line-height: 28px;
-}
-.w-auto{
-    width: auto;
-}
 .store-data-wrapper{
     width: 100%;
     height: auto;
@@ -405,7 +394,7 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 670px;
+    min-height: 380px;
 }
 .btn{
     display: inline-block;
@@ -428,18 +417,6 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.search-btn{
-    font-size: 12px;
-    display: inline-block;
-    width: 87px;
-    height: 28px;
-    line-height: 28px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-    text-align: center; 
-}
 .open{
     display: inline-block;
     width: 49px;
@@ -459,7 +436,7 @@
     line-height: 30px;
     padding-left: 0;
 }
-.groupList .el-button+.el-button{
+.OuListForm .el-button+.el-button{
     margin-left: 0;
 }
 /* 重写checkbox */
@@ -483,7 +460,7 @@
     }
 
 /* 重写el-table样式 */
-.groupList .el-table th {
+.OuListForm .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -492,10 +469,10 @@
     text-align: center;
     background-color: #ececec;
 }
-.groupList .el-table td{
+.OuListForm .el-table td{
     padding: 3px 0;
 }
-.groupList .el-table__body{
+.OuListForm .el-table__body{
     text-align: center;
 }
 </style>

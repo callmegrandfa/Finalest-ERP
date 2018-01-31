@@ -42,13 +42,15 @@ const userDataList = () =>import('../components/user/userDataList')
 
 const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
 const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
+//集团管理
+const groupManage = () =>import(/* webpackChunkName: "group-group" */'../components/groupManage/groupManage')
+const groupManageList = () =>import(/* webpackChunkName: "group-group" */'../components/groupManage/groupManageList')
 //组织管理
-const groupManage = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManage')
-const groupManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/groupManageList')
-const detail = () =>import('../components/groupManage/detail')
-const modify = () =>import('../components/groupManage/modify')
-const see = () =>import('../components/groupManage/see')
-const groupManager = () =>import('../components/groupManage/groupManager')
+const OuManage = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/OuManage')
+const OuManageList = () =>import(/* webpackChunkName: "group-manage" */'../components/groupManage/OuManageList')
+const OuManageDetail = () =>import('../components/groupManage/OuManageDetail')
+const OuManageModify = () =>import('../components/groupManage/OuManageModify')
+const OuManageSee = () =>import('../components/groupManage/OuManageSee')
 // 2.0单据模板
 const bill = () =>import(/* webpackChunkName: "group-bill" */'../components/template2.0/bill')
 const billDetails = () =>import('../components/template2.0/billDetails')
@@ -134,7 +136,6 @@ children:[
       { path: '/repository/repositoryModify/:id', component: repositoryModify,name:'repositoryModify' },
   ]},
   { path: '/supplierEdit/:id', component: supplierEdit,name:'supplierEdit'},
-  { path: '/groupManager/:id', component: groupManager,name:'groupManager'},
   { path: '/goodsData/:id', component: goodsData,name:'goodsData' },
   { path: '/storeData/:id', component: storeData,name:'storeData' },
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
@@ -160,14 +161,18 @@ children:[
       { path: '/bill/billDetails/:id', component: billDetails,name:'billDetails' },
       { path: '/bill/billList/:id', component: billList,name:'billList' },
   ]},
-
-  { path: '/groupManage', component: groupManage,name:'groupManage',redirect: function(){//组织管理
+  { path: '/groupManage', component: groupManage,name:'groupManage',redirect: function(){//集团管理
     return store.state.groupActiveRouter;
   },children:[
-      { path: '/groupManage/see/:id', component: see,name:'see' },
-      { path: '/groupManage/modify/:id', component: modify,name:'modify' },
-      { path: '/groupManage/detail/:id', component: detail,name:'detail' },
       { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
+  ]},
+  { path: '/OuManage', component: OuManage,name:'OuManage',redirect: function(){//组织管理
+    return store.state.OuActiveRouter;
+  },children:[
+      { path: '/OuManage/OuManageSee/:id', component: OuManageSee,name:'OuManageSee' },
+      { path: '/OuManage/OuManageModify/:id', component: OuManageModify,name:'OuManageModify' },
+      { path: '/OuManage/OuManageDetail/:id', component: OuManageDetail,name:'OuManageDetail' },
+      { path: '/OuManage/OuManageList/:id', component: OuManageList,name:'OuManageList' },
   ]},
   { path: '/menu', component: menu,name:'menu',redirect: function(){//菜单管理
     return store.state.menuActiveRouter;
@@ -191,6 +196,11 @@ const  router=new Router({
 })
 router.beforeEach((to, from, next) => {
   store.commit('slidbarData');
+  if(from.name=='login'){
+    store.state.Alive=false;
+  }else{
+    store.state.Alive=true;
+  }
   if(store.accessToken!=''){
     document.title = to.name
     if(to.name=='orderDetails'){
@@ -198,14 +208,14 @@ router.beforeEach((to, from, next) => {
     }else if(to.name=='orderList'){
       store.state.OrderActiveRouter='/order/orderList/:id';
     }
-    else if(to.name=='detail'){
-      store.state.groupActiveRouter='/groupManage/detail/:id';
-    }else if(to.name=='modify'){
-      store.state.groupActiveRouter='/groupManage/modify/:id';
-    }else if(to.name=='see'){
-      store.state.groupActiveRouter='/groupManage/see/:id';
-    }else if(to.name=='groupManageList'){
-      store.state.groupActiveRouter='/groupManage/groupManageList/:id';
+    else if(to.name=='OuManageDetail'){
+      store.state.OuActiveRouter='/OuManage/OuManageDetail/:id';
+    }else if(to.name=='OuManageModify'){
+      store.state.OuActiveRouter='/OuManage/OuManageModify/:id';
+    }else if(to.name=='OuManageSee'){
+      store.state.OuActiveRouter='/OuManage/OuManageSee/:id';
+    }else if(to.name=='OuManageList'){
+      store.state.OuActiveRouter='/OuManage/OuManageList/:id';
     }else if(to.name=='repositoryList'){
       store.state.resActiveRouter='/repository/repositoryList/:id'
     }else if(to.name=='repositoryData'){
@@ -226,6 +236,8 @@ router.beforeEach((to, from, next) => {
       store.state.menuActiveRouter='/menu/menuList/:id'
     }else if(to.name=='addLangulage'){
       store.state.menuActiveRouter='/menu/addLangulage/:id'
+    }else if(to.name=='groupManageList'){
+      store.state.groupActiveRouter='/groupManage/groupManageList/:id'
     }
     
   } 

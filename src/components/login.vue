@@ -78,10 +78,8 @@ export default {
       }
   },
   mounted:function(){//设置高度为全屏
-            // let loginWrapper=document.getElementById('loginWrapper');
             let body=document.getElementsByTagName('body')[0];
             let h=window.innerHeight;
-            // loginWrapper.style.height=h+'px';
             body.style.height=h+'px';
       window.onresize = function(){
             let height=window.innerHeight;
@@ -90,7 +88,7 @@ export default {
   },
   methods:{
       switch(url){
-            this.$router.push({path:url});//点击切换路由
+            this.$router.push({name:url});//点击切换路由
         },
       loginAjax:function(){
           let _this=this;
@@ -119,12 +117,14 @@ export default {
                     let pushItem={'name':_this.login.userNameOrEmailAddress,'accessToken':'Bearer '+res.result.accessToken};
                     temporaryLogin.push(pushItem);
                 }
+                // console.log('Bearer '+res.result.accessToken)
                 window.sessionStorage.setItem('_ERP',JSON.stringify(temporaryLogin));
                 _this.$store.commit('username');
                 //_this.sessionStorage(_this.login.userNameOrEmailAddress,'Bearer '+res.result.accessToken);//sessionStorage
                 _this.$store.state.alerts=true;
                 window.localStorage.removeItem('ERP');
-                _this.switch('/home');
+                _this.$store.state.url='/home';
+                _this.switch('home');
                 },function (res) {
                 //失败之后处理逻辑
                 // alert('用户名或密码错误')

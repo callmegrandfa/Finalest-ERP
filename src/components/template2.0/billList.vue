@@ -33,10 +33,11 @@
                 </div>
                 <div class="bgcolor smallBgcolor"><label>单据状态</label><el-input placeholder="请录入单号"></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>订单状态</label><el-input placeholder="请录入单号"></el-input></div>
-                <el-col style="text-align:center;" :span="24">
+                <div class="bgcolor smallBgcolor">
+                    <label></label>
                     <span class="search-btn">查询</span>
                     <span class="search-btn">高级搜索</span>
-                </el-col>
+                </div>
             </el-col>
 
             <el-col :span='19' class="border-left">
@@ -431,18 +432,6 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.search-btn{
-    font-size: 12px;
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-
 </style>
 
 <style>

@@ -1,6 +1,6 @@
 <template>
 <!-- 集团管理-组织单元 -->
- <div class="detailForm">
+ <div class="OuDetailForm">
      <el-row>
          <el-col :span="24">
             <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
@@ -274,7 +274,7 @@ export default({
     },         
     methods:{
         back(){
-            this.$store.state.url='/groupManage/groupManageList/default'
+            this.$store.state.url='/OuManage/OuManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         open(tittle,iconClass,className) {
@@ -451,18 +451,18 @@ export default({
   .block{
       display: none;
   }
-  .detailForm{
+  .OuDetailForm{
       font-family: 'microsoft yahei';
   }
   /*收起*/
- .detailForm .upBt{
+ .OuDetailForm .upBt{
      font-size: 12px;
      float: right;
      margin-right: 10px;
      margin-top: 10px;
      cursor: pointer;
  }
- .detailForm .upBt i{
+ .OuDetailForm .upBt i{
     transition: all 0.5s;
     -moz-transition: all 0.5s;
     -webkit-transition: all 0.5s;
@@ -470,7 +470,7 @@ export default({
     color:#cacaca;
     margin-left: 5px;
  }
- .detailForm .upBt i.rotate{
+ .OuDetailForm .upBt i.rotate{
      transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
@@ -479,31 +479,31 @@ export default({
  }
 
 /*表单提示信息*/
-.detailForm  .errorTips{
+.OuDetailForm  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
 }
 
-  .detailForm .el-row{
+  .OuDetailForm .el-row{
      padding:15px 0;
      border-bottom: 1px solid #e4e4e4;
      background-color: #fff;
   }
-.detailForm .el-row:last-child{
+.OuDetailForm .el-row:last-child{
       border-bottom:none;
   }
 
-.detailForm .tabZoo .getPadding:first-child{
+.OuDetailForm .tabZoo .getPadding:first-child{
     padding-bottom: 15px;
 }
- .detailForm .getPadding,.tabZoo .el-tabs__nav-scroll{
+ .OuDetailForm .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 10px;
  }
- .detailForm .tabZoo .el-tabs__active-bar{
+ .OuDetailForm .tabZoo .el-tabs__active-bar{
      width: 28px!important;
  }
 
-.detailForm .nopadding{
+.OuDetailForm .nopadding{
     padding-top: 0;
 }
 
