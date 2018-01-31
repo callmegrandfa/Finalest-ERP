@@ -13,7 +13,7 @@
                 </el-row>
 
                 <el-row class="mt10">
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label><small>*</small>客户分类</label>
                         <el-select v-model="value" placeholder="请选择客户类型">
                             <el-option v-for="item in options"
@@ -26,42 +26,42 @@
                 </el-row>
 
                 <el-row class="fs12">
-                   <div class="bgcolor">
+                   <div class="bgcolor smallBgcolor">
                         <label>所属组织</label>
                         <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label>行政地区</label>
                         <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
                         <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label>编码</label>
                         <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label>名称</label>
                         <el-input placeholder="" ></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label>客户性质</label>
                         <el-input placeholder="" ></el-input>
                     </div> 
@@ -88,7 +88,8 @@
                         <span class="btDetail">Excel</span>
                     </button>
 
-                    <button class="erp_bt bt_del">
+                    <button class="erp_bt bt_del" >
+                        <!-- @click='delete(scope.$index,scope.row)' -->
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -113,11 +114,11 @@
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe>
-                            <el-table-column prop="ifAction" label=" ">
+                            <!-- <el-table-column label=" ">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="allList[scope.$index].ifAction" ></el-checkbox>
+                                    <el-checkbox @click='selectDelete(scope.$index,scope.row)'></el-checkbox>
                                 </template>
-                            </el-table-column>
+                            </el-table-column> -->
                             <el-table-column prop="ouId" label="所属组织" ></el-table-column>
                             <el-table-column prop="contact" label="客户编码"></el-table-column>
                             <el-table-column prop="contactFullName" label="客户名称"></el-table-column>
@@ -126,7 +127,7 @@
                             <el-table-column prop="contactWorkPropertyId" label="客户性质"></el-table-column>
                             <el-table-column prop="isSupplier" label="供应">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="allList[scope.$index].isSupplier" ></el-checkbox>
+                                    <el-checkbox v-model="allList[scope.$index].isSupplier" disabled="disabled"></el-checkbox>
                                 </template>
                             </el-table-column>   
                             <el-table-column prop="ficaOuId" label="对应财务组织"></el-table-column>
@@ -208,6 +209,13 @@
         //------------------------------------------------------------------
        
         //---控制修改及分页--------------------------------------------------
+            // selectDelete:function(){//选择要删除的项
+            //     let self = this;
+            // },
+            // delete:function(index,row){//删除选中的项
+            //     let self = this;
+            //     self.allList.splice(index,1);
+            // },
             handleCurrentChange:function(val){//获取当前页码
                 this.pageIndex=val;
             },
@@ -225,11 +233,9 @@
                     console.log('err'+res)
                 })
             },
-        //-------------------------------------------------------------------
-            
-
-        },
+        //------------------------------------------------------------------
     }
+}
 </script>
 
 <style scoped>
