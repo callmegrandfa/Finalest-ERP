@@ -224,6 +224,11 @@ export default {
                     {name:'客户资料',address:'customer'},
                 ]
             },{
+                name:'币种资料',
+                thirdInfo:[
+                    {name:'币种资料',address:'currency'},
+                ]
+            },{
                 name:'单据模板',
                 thirdInfo:[
                      {name:'单据开单模板',address:'bill'}, 

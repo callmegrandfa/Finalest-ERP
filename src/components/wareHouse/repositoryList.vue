@@ -160,13 +160,6 @@
                 // remark (string, optional): 备注 ,
                 // id (integer, optional)
 
-                //  getAllParam:{
-                //     OuId:'1',//组织单元ID()
-                //     Draw:'1',
-                //     Start:'0',//偏移量
-                //     Length:'100',//长度
-                // }
-
                 let self = this;
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Draw:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
                     console.log(res);

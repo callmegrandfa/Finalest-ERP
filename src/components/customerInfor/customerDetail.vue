@@ -277,10 +277,10 @@
     <el-col :span="22" class="auditInformation getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="请录入创建人"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="选择创建时间"></el-date-picker></div>
-            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="请录入修改人"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="选择修改时间"></el-date-picker></el-input></div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="创建人" disabled="disabled"></el-input></div>
+            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="创建时间" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="修改人" disabled="disabled"></el-input></div>
+            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="修改时间" disabled="disabled"></el-date-picker></el-input></div>
             <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
             <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
             <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
@@ -453,12 +453,12 @@ export default({
             let self = this;
             console.log(self.createContactParams)
             this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.open('创建客户资料成功','el-icon-circle-check','successERP');
-                    console.log(self.createBankParams.contactId)
-                    console.log(res.result.id);
+                    // console.log(res.result.id);
                     self.createBankParams.contactId = res.result.id;
-                    console.log(self.createBankParams)
+                    // console.log(self.createBankParams.contactId)
+                    // console.log(self.createBankParams)
                     if(self.createBankParams.group!=''&&
                        self.createBankParams.contactId!=''&&
                        self.createBankParams.settlementCurrencyId!=''&&
@@ -478,11 +478,10 @@ export default({
         },
         createBank:function(){//创建银行资料
             let self = this;
-            self.createBankParams.contactId = self.$route.params.id;
 
             this.$axios.posts('/api/services/app/ContactBankManagement/Create',self.createBankParams).then(function(res){         
                 self.open('创建银行资料成功','el-icon-circle-check','successERP');
-                console.log(res)
+                // console.log(res)
             }),function(res){
                 self.open('创建银行资料失败','el-icon-error','faildERP');
             };
@@ -490,7 +489,7 @@ export default({
         addColbank:function(){//银行增行
             let self = this;
             self.bankData.unshift(self.createBankParams);
-            console.log(self.bankData);
+            // console.log(self.bankData);
         },
         //------------------------------------------------------------
         
