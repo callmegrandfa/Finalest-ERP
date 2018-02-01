@@ -4,6 +4,7 @@ Vue.use(vuex);
 
 export default new vuex.Store({
     state:{
+        closeItem:[],//存储关闭页签
         Alive:true,//页面是否缓存
         alerts:true,
         temporaryLogin:[],//本地暂时存储用户名,tokten
@@ -14,13 +15,31 @@ export default new vuex.Store({
         url:'/',//当前页签
         temporary:[],//本地暂时存储页签
         slidbarData:[],//从localStorage读取页签
-        OrderActiveRouter:'/order/orderList/:id',
-        OuActiveRouter:'/OuManage/OuManageList/:id',
-        resActiveRouter:'/repository/repositoryList/:id',
-        customerActiveRouter:'/customer/customerList/:id',
-        billActiveRouter:'/bill/billList/:id',
-        menuActiveRouter:'/menu/menuList/:id',
-        groupActiveRouter:'/groupManage/groupManageList/:id',
+        activeRouter:[//进入页面子路由，重定向路由。name,parent,defult不变,url将被重定向(name=parent)
+            {name:'order',url:'/order/orderList/:id',parent:'',default:'/order/orderList/:id'},//采购管理
+            {name:'orderDetails',url:'/order/orderDetails/:id',parent:'order'},
+            {name:'orderList',url:'/order/orderList/:id',parent:'order'},
+            {name:'OuManage',url:'/OuManage/OuManageList/:id',parent:'',default:'/OuManage/OuManageList/:id'},//组织管理
+            {name:'OuManageDetail',url:'/OuManage/OuManageDetail/:id',parent:'OuManage'},
+            {name:'OuManageModify',url:'/OuManage/OuManageModify/:id',parent:'OuManage'},
+            {name:'OuManageSee',url:'/OuManage/OuManageSee/:id',parent:'OuManage'},
+            {name:'OuManageList',url:'/OuManage/OuManageList/:id',parent:'OuManage'},
+            {name:'repository',url:'/repository/repositoryList/:id',parent:'',default:'/repository/repositoryList/:id'},//仓库管理
+            {name:'repositoryList',url:'/repository/repositoryList/:id',parent:'repository'},
+            {name:'repositoryData',url:'/repository/repositoryData/:id',parent:'repository'},
+            {name:'repositoryModify',url:'/repository/repositoryModify/:id',parent:'repository'},
+            {name:'customer',url:'/customer/customerList/:id',parent:'',default:'/customer/customerList/:id'},//客户管理
+            {name:'customerList',url:'/customer/customerList/:id',parent:'customer'},
+            {name:'customerDetail',url:'/customer/customerDetail/:id',parent:'customer'},
+            {name:'bill',url:'/bill/billList/:id',parent:'',default:'/bill/billList/:id'},//模板2.0
+            {name:'billDetails',url:'/bill/billDetails/:id',parent:'bill'},
+            {name:'billList',url:'/bill/billList/:id',parent:'bill'},
+            {name:'menu',url:'/menu/menuList/:id',parent:'',default:'/menu/menuList/:id'},//菜单管理
+            {name:'menuDetail',url:'/menu/menuDetail/:id',parent:'menu'},
+            {name:'menuList',url:'/menu/menuList/:id',parent:'menu'},
+            {name:'groupManage',url:'/groupManage/groupManageList/:id',parent:'',default:'/groupManage/groupManageList/:id'},//集团管理
+            {name:'groupManageList',url:'/groupManage/groupManageList/:id',parent:'groupManage'},
+        ],
     },
     mutations: {
         go(state){//控制slidebar显示隐藏
