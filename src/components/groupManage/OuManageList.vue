@@ -63,7 +63,7 @@
                             <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
                             <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="creationTime" label="启用年月"></el-table-column>
+                            <el-table-column prop="creationTime" label="公司成立时间"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column prop="isCompany" label="公司">
                                 <template slot-scope="scope">
@@ -148,7 +148,7 @@
 
                 componyTree:  [{
                     treeId: 1,
-                    label: '集团名',
+                    label: '',
                     children:[]
                     }],
                 defaultProps: {
@@ -162,6 +162,7 @@
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
+                load:true,
             }
         },
         created:function(){       
@@ -184,6 +185,7 @@
                  let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
+                    console.log(res)
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){
                 })
@@ -204,7 +206,7 @@
                     }
                     _this.componyTree=[{
                         treeId: 1,
-                        label: '集团名',
+                        label: 'erp',
                         children:children
                         }]
                })
@@ -212,12 +214,16 @@
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                  _this.page=val;
-                _this.loadTableData();
+                 if(_this.load){
+                     _this.loadTableData();
+                 }
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
                 .then(function(res){
+                    _this.load=false
+                    _this.tableData=res.result.basOus;
                     console.log(res);
                 },function(res){
                     console.log('err:'+res)
@@ -237,7 +243,10 @@
                     for(let i=0;i<_this.multipleSelection.length;i++){
                         _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
                         .then(function(res){
-                            _this.loadTableData();
+                            if(_this.load){
+                                _this.loadTableData();
+                            }
+                            
                             _this.open('删除成功','el-icon-circle-check','successERP');
                             // for(let x=0;x<_this.tableData.length;x++){
                             //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){

@@ -9,7 +9,7 @@
             <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
             <a class="oneA" href="javascript:;">测试</a>
             <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel1">
+                <li class="two" v-for="i in secondLevel1" @mouseenter="enter">
                     <a href="javascript:;">{{i.name}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
@@ -24,7 +24,7 @@
             <span class="menuIcon"><img src="../../static/image/login/setting.png"></span>
             <a class="oneA" href="javascript:;">系统管理</a>
             <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel2">
+                <li class="two" v-for="i in secondLevel2" @mouseenter="enter">
                     <a href="javascript:;">{{i.name}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
@@ -184,6 +184,16 @@ export default {
                 thirdInfo:[
                     {name:'租户管理',address:'tenantManagement'},
                     {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+           
+                    
                 ]
             },{
                 name:'集团管理',
@@ -353,6 +363,7 @@ export default {
         //         src:'../../static/image/siderbar/应收应付.png',
         //     }]
         }
+        
     },
     created:function(){
         let _this=this;
@@ -363,23 +374,32 @@ export default {
         // },function(res){
 
         // })
+        
     },
     mounted:function(){
         let _this=this;
-        _this.slid2Height()
+        _this.$store.state.slidbarHeight=$(window).height();
     },
     methods:{
+        enter: function(e){
+            let _this=this;
+            $('.slid2').each(function(x){
+                let maxheight=0;
+                if($(this).offset().top>0){
+                    let domHeight=$(this).height();
+                    let offsettop=$(this).offset().top;
+                    maxheight= _this.$store.state.slidbarHeight-offsettop;
+                    if(domHeight>maxheight){
+                        $(this).css({maxHeight:maxheight,width:'470px'})
+                    }else{
+                        $(this).css({maxHeight:maxheight,width:'235px'})
+                    }
+                }
+                
+            })
+        },
         switch(){
             this.$router.push({name:this.$store.state.url,params:{id:'default'}})//点击切换路由
-        },
-        slid2Height:function(){     
-            let h=window.innerHeight;
-            $('.slid2').each(function(e){
-                //console.log($(this).height())
-            })
-            // let body=document.getElementsByTagName('slid2')[0];
-            // let h=window.innerHeight;
-            // body.style.height=h+'px';
         },
         storageData(e){
             if(e.target.getAttribute("menuurl")&&e.target.getAttribute("menuurl")!=''){
@@ -438,10 +458,16 @@ export default {
     position: absolute;
     left: 235px;
     top:0px;
-    transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s; 
+    /* transition: width 0.5s;
+    -moz-transition: width 0.5s;
+    -webkit-transition: width 0.5s;
+    -o-transition: width 0.5s;  */
+}
+.slidUl:not(.slid2){
+    transition: width 0.5s;
+    -moz-transition: width 0.5s;
+    -webkit-transition: width 0.5s;
+    -o-transition: width 0.5s; 
 }
 .menuIcon{
     display: block;

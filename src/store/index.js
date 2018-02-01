@@ -4,6 +4,7 @@ Vue.use(vuex);
 
 export default new vuex.Store({
     state:{
+        slidbarHeight:0,
         closeItem:[],//存储关闭页签
         Alive:true,//页面是否缓存
         alerts:true,

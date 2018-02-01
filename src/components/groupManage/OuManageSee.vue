@@ -30,11 +30,11 @@
                 </div>
                 <div class="bgcolor">
                     <label>全称</label>
-                    <el-input v-model="addData.ouName" placeholder="无记录" readonly></el-input>
+                    <el-input v-model="addData.ouFullname" placeholder="无记录" readonly></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>上级业务单元</label>
-                    <el-input v-model="addData.ouParentid" placeholder="无记录" readonly></el-input>
+                    <el-input v-model="addData.ouParentName" placeholder="无记录" readonly></el-input>
                 </div>
                 <div class="bgcolor"><label>启用月份</label> <el-input v-model="addData.regtime" placeholder="无记录" readonly></el-input></div>
                 <div class="bgcolor">
@@ -62,9 +62,9 @@
     <el-col :span="24" class="getPadding"> <h4 class="h4">组织类型</h4></el-col>
     <el-col :span="22" class="getPadding"> 
         <el-col :span="6">  
-            <el-checkbox v-model="count.isCheckCompany" @change="checkCompany">公司</el-checkbox>
-            <el-checkbox v-model="count.isCheckFinance" @change="checkFinance">财务</el-checkbox>
-            <el-checkbox v-model="count.isCheckBusiness" @change="checkBusiness">业务</el-checkbox>
+            <el-checkbox v-model="addData.isCompany" @change="checkCompany" disabled>公司</el-checkbox>
+            <el-checkbox v-model="addData.isFinance" @change="checkFinance" disabled>财务</el-checkbox>
+            <el-checkbox v-model="addData.isPurchase" @change="checkBusiness" disabled>业务</el-checkbox>
         </el-col>              
     </el-col>           
  </el-row> 
@@ -82,28 +82,25 @@
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="公司" name="company" v-if="count.isCheckCompany">
+                <el-tab-pane label="公司" name="company" v-if="count.isCompany">
                      <el-col :span="24">
                           <div class="companyInfo">
                             <el-col :span="24">
                                 <el-col :span="5"  class="getPadding">
-                                    <el-checkbox v-model="group" readonly>集团公司</el-checkbox>
-                                    <el-checkbox v-model="addData.isGroupCompany" readonly>是否启用</el-checkbox>
+                                    <el-checkbox v-model="group" disabled>集团公司</el-checkbox>
+                                    <el-checkbox disabled>是否启用</el-checkbox>
                                 </el-col>
                             </el-col>
                             <el-col :span="22"  class="getPadding">
                                 <div class="bgcolor"><label>上级公司</label><el-input placeholder="无记录" readonly></el-input></div>
-                                <div class="bgcolor"><label>法人代表</label><el-input v-model="company.representative" placeholder="无记录" readonly></el-input></div>
-                                <div class="bgcolor">
-                                    <label>用户状态</label>
-                                    <el-input v-model="addData.status" placeholder="无记录" readonly></el-input>
-                                </div>
+                                <div class="bgcolor"><label>法人代表</label><el-input placeholder="无记录" readonly></el-input></div>
+                                
                             </el-col>
                          </div>
                      </el-col>   
                 </el-tab-pane>
-                <el-tab-pane label="财务" name="finance" v-if="count.isCheckFinance">财务</el-tab-pane>
-                <el-tab-pane label="业务" name="business" v-if="count.isCheckBusiness">业务</el-tab-pane>
+                <el-tab-pane label="财务" name="finance" v-if="count.isFinance">财务</el-tab-pane>
+                <el-tab-pane label="业务" name="business" v-if="count.isPurchase">业务</el-tab-pane>
             </el-tabs>
         </el-col>
     </div>
@@ -112,13 +109,13 @@
     <el-col :span="24" class="getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="creatorUser.fullName" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-input v-model="auditInfo.creationTime" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInfo.lastModifierUserId" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-input v-model="auditInfo.lastModificationTime" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>启用日期</label><el-input v-model="auditInfo.startTime" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>封存日期</label><el-input v-model="auditInfo.lastModificationTime" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInfo.lastModifierUser" readonly placeholder="无记录"    ></el-input></div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="addData.creatorUserName" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>创建时间</label><el-input v-model="addData.creationTime" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>修改人</label><el-input v-model="addData.lastModifierUserName" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>修改时间</label><el-input v-model="addData.lastModificationTime" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>启用日期</label><el-input v-model="addData.creationTime" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>封存日期</label><el-input v-model="addData.lastModificationTime" readonly placeholder="无记录"></el-input></div>
+            <div class="bgcolor"><label>封存人</label><el-input v-model="addData.lastModifierUserName" readonly placeholder="无记录"    ></el-input></div>
         </div>                                  
     </el-col>
 </el-row>                                                           
@@ -132,40 +129,53 @@ export default({
             show:true,
             ifShow:true,
             activeName: 'company',
-            creatorUser:[],
-            auditInfo:{},//审计信息
             addData:{
-                // id:0,
-                // groupId:1,//集团ID
-                // ouCode: 'string',//组织代码存在 
-                // ouName: 'string' ,//组织名称存在
-                // foreignName: 'string' ,//外文名称
-                // mnemonic: 'string' ,//助记码
-                // ouParentid: 0 ,//上级组织ID存在
-                // accountPeriodId: 0 ,//会计期间ID
-                // baseCurrencyId: 0,//本位币种id存在
-                // companyOuId: 0,//所属公司ID存在
-                // contactPerson: 'string' ,//联系人存在
-                // phone: 'string' ,//电话存在
-                // address: 'string' ,//地址存在
-                // areaId: 0 ,//行政区域ID
-                // entityProperty : 0 ,//实体属性
-                // status: 0 ,//启用状态存在
-                // remark: 'string' ,//备注存在
-                // basOuTypes: [ 0 ],//组织职能
-                // isGroupCompany:true ,//
-                // ouCompanyParentid: 0 ,//上级公司组织ID
-                // legalPerson: 'string' ,//法人代表
-                // companyStatus: 0 ,//公司启用状态
-                // regtime: '2018-01-23T02:20:35.833Z'//公司成立时间
+                // groupId:0,
+                // ouCode: "string",
+                // ouName: "string",
+                // ouFullname: "string",
+                // ouParentid: 0,
+                // ouParentName: "string",
+                // companyOuId: 0,
+                // baseCurrencyId: 0,
+                // accountPeriodId: 0,
+                // status: 0,
+                // isCompany: true,
+                // isAdministration: true,
+                // isFinance: true,
+                // isCapital: true,
+                // isPurchase: true,
+                // foreignName: "string",
+                // mnemonic: "string",
+                // contactPerson: "string",
+                // phone: "string",
+                // address: "string",
+                // areaId: 0,
+                // remark: "string",
+                // basOuTypes: [
+                //     {
+                //     groupId: 0,
+                //     ouId: 0,
+                //     ouType: 1,
+                //     id: 0
+                //     }
+                // ],
+                // creatorUserName: "string",
+                // lastModifierUserName: "string",
+                // isDeleted: true,
+                // deleterUserId: 0,
+                // deletionTime: "2018-02-01T02:32:05.993Z",
+                // lastModificationTime: "2018-02-01T02:32:05.993Z",
+                // lastModifierUserId: 0,
+                // creationTime: "2018-02-01T02:32:05.993Z",
+                // creatorUserId: 0,
+                // id: 0
             },
-            company:{//公司
-                higher:"恒康",
-                representative:"lioman",    
-            },  
-            ischeck:{isCheckCompany:true,//公司复选框初始选种状态
-                    isCheckFinance:false,//财务复选框初始选种状态
-                    isCheckBusiness:false}//业务复选框初始选种状态 
+            ischeck:{
+                        // isCompany:true,//公司复选框初始选种状态
+                        // isFinance:false,//财务复选框初始选种状态
+                        // isPurchase:false
+                    }//业务复选框初始选种状态 
             ,
             
             group:true,//集团公司复选框初始选种状态
@@ -228,11 +238,11 @@ export default({
         }
     },
     watch:{
-        ischeck: {
+        addData: {
         handler: function (val, oldVal) { 
-            var x=val.isCheckCompany || val.isCheckFinance
-            if(val.isCheckCompany || val.isCheckFinance || val.isCheckBusiness){}else{
-                this.ischeck.isCheckCompany=true;
+            var x=val.isCompany || val.isFinance
+            if(val.isCompany || val.isFinance || val.isPurchase){}else{
+                this.addData.isCompany=true;
                 this.activeName='company';
             } },
         deep: true,
@@ -243,44 +253,8 @@ export default({
         let _this=this;
         _this.$axios.gets('/api/services/app/OuManagement/Get',{id:_this.$route.params.id})
         .then(function(res){
-            _this.addData={
-                id: _this.$route.params.id,
-                groupId:1,//集团ID
-                ouCode: res.result.ouCode,//组织代码存在 
-                ouName: res.result.ouName ,//组织名称存在
-                foreignName: res.result.foreignName ,//外文名称
-                mnemonic: res.result.mnemonic,//助记码
-                ouParentid: res.result.ouParentid ,//上级组织ID存在
-                accountPeriodId: res.result.accountPeriodId ,//会计期间ID
-                baseCurrencyId: res.result.baseCurrencyId,//本位币种id存在
-                companyOuId: res.result.companyOuId,//所属公司ID存在
-                contactPerson: res.result.contactPerson ,//联系人存在
-                phone: res.result.phone ,//电话存在
-                address:res.result.address ,//地址存在
-                areaId: res.result.areaId,//行政区域ID
-                entityProperty : res.result.entityProperty,//实体属性
-                status: res.result.status,//启用状态存在
-                remark: res.result.remark ,//备注存在
-                basOuTypes: [0],//组织职能
-                isGroupCompany:res.result.isGroupCompany ,//
-                ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
-                legalPerson:res.result.legalPerson ,//法人代表
-                companyStatus: res.result.companyStatus ,//公司启用状态
-                regtime:res.result.regtime//公司成立时间
-            };
-            _this.auditInfo={
-                lastModifierUser:res.result.lastModifierUser,
-                isDeleted:res.result.isDeleted,
-                deleterUserId:res.result.deleterUserId,
-                deletionTime:res.result.deletionTime,
-                lastModificationTime:res.result.lastModificationTime,
-                lastModifierUserId:res.result.lastModifierUserId,
-                creationTime:res.result.creationTime,
-                creatorUserId:res.result.creatorUserId,
-            }
-            if(res.result.creatorUser!=null){
-                    _this.creatorUser=res.result.creatorUser
-                }
+            console.log(res)
+            _this.addData=res.result
         },function(res){
             //console.log('err:'+res)
         })
@@ -289,7 +263,7 @@ export default({
     },
     computed:{
         count () {
-            return this.ischeck;
+            return this.addData;
             },
     },       
     methods:{
@@ -313,7 +287,7 @@ export default({
         checkFinance:function(e){
             
             if(e){//选中财务
-                this.count.isCheckCompany=true;
+                this.count.isCompany=true;
                 this.activeName='finance';
             }else{
                 this.activeName='company';
@@ -324,8 +298,8 @@ export default({
                 this.activeName='company';
             }else{
                 this.activeName='business';
-                if(this.count.isCheckFinance){
-                     this.count.isCheckFinance=false;
+                if(this.count.isFinance){
+                     this.count.isFinance=false;
                 }
             }
         },
@@ -333,9 +307,9 @@ export default({
             if(e){//选中业务
                 this.activeName='business';
             }else{
-                if(this.count.isCheckFinance){
+                if(this.count.isFinance){
                     this.activeName='finance';
-                }else if(!this.count.isCheckFinance&&this.count.isCheckCompany){
+                }else if(!this.count.isFinance&&this.count.isCompany){
                     this.activeName='company';
                 }
             }
