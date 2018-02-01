@@ -1,5 +1,5 @@
 <template>
-    <div class="customer-infor-wrapper">
+    <div class="infor-wrapper">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
@@ -156,7 +156,7 @@
 
 <script>
     export default{
-        name:'customerList',
+        name:'currencyList',
         data(){
             return {
                 allList:[],//所有数据列表
@@ -389,12 +389,12 @@
 
 <style>
 /* 重写checkbox */
-.customer-infor-wrapper .el-checkbox__inner{
+.infor-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
 }
-.customer-infor-wrapper .el-checkbox__inner::after{
+.infor-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     content: "";
@@ -417,7 +417,7 @@
 }
 
 /* 重写el-table样式 */
-.customer-infor-wrapper .el-table th {
+.infor-wrapper .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -426,10 +426,10 @@
     text-align: center;
     background-color: #ececec;
 }
-.customer-infor-wrapper .el-table td{
+.infor-wrapper .el-table td{
     padding: 3px 0;
 }
-.customer-infor-wrapper .el-table__body{
+.infor-wrapper .el-table__body{
     text-align: center;
 }
 </style>

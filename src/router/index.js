@@ -30,6 +30,9 @@ const customerList = () =>import(/* webpackChunkName: "group-customer" */'../com
 const customerDetail = () =>import('../components/customerInfor/customerDetail')
 const customerModify = () =>import('../components/customerInfor/customerModify')
 
+const currency = () =>import(/* webpackChunkName: "group-customer" */'../components/currency/currency')
+const currencyList = () =>import(/* webpackChunkName: "group-customer" */'../components/currency/currencyList')
+
 //采购管理
 const order = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/order')
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
@@ -136,8 +139,7 @@ children:[
           break;
         }
     }
-  }
-  ,children:[
+  },children:[
       { path: '/repository/repositoryList/:id', component: repositoryList,name:'repositoryList' },
       { path: '/repository/repositoryData/:id', component: repositoryData,name:'repositoryData' }, 
       { path: '/repository/repositoryModify/:id', component: repositoryModify,name:'repositoryModify' },
@@ -160,6 +162,19 @@ children:[
       { path: '/customer/customerList/:id', component: customerList,name:'customerList' },
       { path: '/customer/customerDetail/:id', component: customerDetail,name:'customerDetail' },
       { path: '/customer/customerModify/:id', component: customerModify,name:'customerModify' },
+  ]},
+
+  { path: '/currency', component: currency,name:'currency',redirect: function(){//币种资料
+    let name='currency';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
+  },children:[  
+      { path: '/currency/currencyList/:id', component: currencyList,name:'currencyList' },
   ]},
 
   { path: '/order', component: order,name:'order',redirect: function(){//采购管理

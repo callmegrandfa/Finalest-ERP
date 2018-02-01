@@ -28,9 +28,14 @@ export default new vuex.Store({
             {name:'repositoryList',url:'/repository/repositoryList/:id',parent:'repository'},
             {name:'repositoryData',url:'/repository/repositoryData/:id',parent:'repository'},
             {name:'repositoryModify',url:'/repository/repositoryModify/:id',parent:'repository'},
+
             {name:'customer',url:'/customer/customerList/:id',parent:'',default:'/customer/customerList/:id'},//客户管理
             {name:'customerList',url:'/customer/customerList/:id',parent:'customer'},
             {name:'customerDetail',url:'/customer/customerDetail/:id',parent:'customer'},
+
+            {name:'currency',url:'/currency/currencyList/:id',parent:'',default:'/customer/currencyList/:id'},//客户管理
+            {name:'currencyList',url:'/currency/currencyList/:id',parent:'currency'},
+
             {name:'bill',url:'/bill/billList/:id',parent:'',default:'/bill/billList/:id'},//模板2.0
             {name:'billDetails',url:'/bill/billDetails/:id',parent:'bill'},
             {name:'billList',url:'/bill/billList/:id',parent:'bill'},
