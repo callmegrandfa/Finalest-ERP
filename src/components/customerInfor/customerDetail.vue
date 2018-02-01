@@ -455,6 +455,10 @@ export default({
             this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
                     console.log(res);
                     self.open('创建客户资料成功','el-icon-circle-check','successERP');
+                    console.log(self.createBankParams.contactId)
+                    console.log(res.result.id);
+                    self.createBankParams.contactId = res.result.id;
+                    console.log(self.createBankParams)
                     if(self.createBankParams.group!=''&&
                        self.createBankParams.contactId!=''&&
                        self.createBankParams.settlementCurrencyId!=''&&
@@ -464,12 +468,11 @@ export default({
                        self.createBankParams.contactPerson!=''&&
                        self.createBankParams.phone!=''&&
                        self.createBankParams.phone!=''){
-                           self.createBankParams.contactId = res.result.id
                             self.createBank();
                         }
               },function(res){
                   console.log(res)
-                  self.open('创建失败失败','el-icon-error','faildERP')
+                  self.open('创建失败','el-icon-error','faildERP')
               })
 
         },
