@@ -62,7 +62,6 @@ const menuList = () =>import(/* webpackChunkName: "group-menu" */'../components/
 const addLangulage = () =>import('../components/menu/addLangulage')
 
 Vue.use(Router)
-
 const routes = [
   { path: '*', component: page404},
   { path: '/', redirect: '/login' },
@@ -70,7 +69,7 @@ const routes = [
   { path: '/register', component: register,name:'register' },
   { path: '/index', component: index,name:'index',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
-    store.commit('username');
+    store.commit('username');    
     if(store.state.username!=null){
       if(store.state.username.length>1){//多账号登录
         window.localStorage.clear();
@@ -128,9 +127,17 @@ children:[
   { path: '/shortData', component: shortData,name:'shortData' },
   { path: '/longData', component: longData,name:'longData' },
   { path: '/midData', component: midData,name:'midData' },
-  { path: '/repository', component: repository,name:'repository',redirect: function(){//仓库资料
-    return store.state.resActiveRouter;
-  },children:[
+  { path: '/repository', component: repository,name:'repository',redirect: function(){//仓库管理
+    let name='repository';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
+  }
+  ,children:[
       { path: '/repository/repositoryList/:id', component: repositoryList,name:'repositoryList' },
       { path: '/repository/repositoryData/:id', component: repositoryData,name:'repositoryData' }, 
       { path: '/repository/repositoryModify/:id', component: repositoryModify,name:'repositoryModify' },
@@ -141,7 +148,14 @@ children:[
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
 
   { path: '/customer', component: customer,name:'customer',redirect: function(){//客户管理
-    return store.state.customerActiveRouter;
+    let name='customer';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
   },children:[  
       { path: '/customer/customerList/:id', component: customerList,name:'customerList' },
       { path: '/customer/customerDetail/:id', component: customerDetail,name:'customerDetail' },
@@ -149,25 +163,53 @@ children:[
   ]},
 
   { path: '/order', component: order,name:'order',redirect: function(){//采购管理
-    return store.state.OrderActiveRouter;
+    let name='order';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
   },children:[
       { path: '/order/orderDetails/:id', component: orderDetails,name:'orderDetails' },
       { path: '/order/orderList/:id', component: orderList,name:'orderList' },
   ]},
 
   { path: '/bill', component: bill,name:'bill',redirect: function(){//单据开单模板
-    return store.state.billActiveRouter;
+    let name='bill';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
   },children:[
       { path: '/bill/billDetails/:id', component: billDetails,name:'billDetails' },
       { path: '/bill/billList/:id', component: billList,name:'billList' },
   ]},
   { path: '/groupManage', component: groupManage,name:'groupManage',redirect: function(){//集团管理
-    return store.state.groupActiveRouter;
+    let name='groupManage';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
   },children:[
       { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
   { path: '/OuManage', component: OuManage,name:'OuManage',redirect: function(){//组织管理
-    return store.state.OuActiveRouter;
+    let name='OuManage';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
   },children:[
       { path: '/OuManage/OuManageSee/:id', component: OuManageSee,name:'OuManageSee' },
       { path: '/OuManage/OuManageModify/:id', component: OuManageModify,name:'OuManageModify' },
@@ -175,7 +217,14 @@ children:[
       { path: '/OuManage/OuManageList/:id', component: OuManageList,name:'OuManageList' },
   ]},
   { path: '/menu', component: menu,name:'menu',redirect: function(){//菜单管理
-    return store.state.menuActiveRouter;
+    let name='menu';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
   },children:[
       { path: '/menu/menuDetail/:id', component: menuDetail,name:'menuDetail' },
       { path: '/menu/menuList/:id', component: menuList,name:'menuList' },
@@ -195,50 +244,71 @@ const  router=new Router({
   routes
 })
 router.beforeEach((to, from, next) => {
+ 
   store.commit('slidbarData');
-  if(from.name=='login'){
+  if(from.name=='login'){//如果用户登录，清楚缓存
     store.state.Alive=false;
   }else{
     store.state.Alive=true;
-  }
+  } 
+    
+  let ActiveRouter=store.state.ActiveRouter
   if(store.accessToken!=''){
     document.title = to.name
-    if(to.name=='orderDetails'){
-      store.state.OrderActiveRouter='/order/orderDetails/:id';
-    }else if(to.name=='orderList'){
-      store.state.OrderActiveRouter='/order/orderList/:id';
+    let activeRouter=store.state.activeRouter;
+    let parent='';
+    let url='';
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==to.name){
+          parent=activeRouter[i].parent;
+          url=activeRouter[i].url;
+          break
+        }
     }
-    else if(to.name=='OuManageDetail'){
-      store.state.OuActiveRouter='/OuManage/OuManageDetail/:id';
-    }else if(to.name=='OuManageModify'){
-      store.state.OuActiveRouter='/OuManage/OuManageModify/:id';
-    }else if(to.name=='OuManageSee'){
-      store.state.OuActiveRouter='/OuManage/OuManageSee/:id';
-    }else if(to.name=='OuManageList'){
-      store.state.OuActiveRouter='/OuManage/OuManageList/:id';
-    }else if(to.name=='repositoryList'){
-      store.state.resActiveRouter='/repository/repositoryList/:id'
-    }else if(to.name=='repositoryData'){
-      store.state.resActiveRouter='/repository/repositoryData/:id'
-    }else if(to.name=='repositoryModify'){
-      store.state.resActiveRouter='/repository/repositoryModify/:id'
-    }else if(to.name=='customerList'){
-      store.state.customerActiveRouter='/customer/customerList/:id'
-    }else if(to.name=='customerDetail'){
-      store.state.customerActiveRouter='/customer/customerDetail/:id'
-    }else if(to.name=='billDetails'){
-      store.state.billActiveRouter='/bill/billDetails/:id'
-    }else if(to.name=='billList'){
-      store.state.billActiveRouter='/bill/billList/:id'
-    }else if(to.name=='menuDetail'){
-      store.state.menuActiveRouter='/menu/menuDetail/:id'
-    }else if(to.name=='menuList'){
-      store.state.menuActiveRouter='/menu/menuList/:id'
-    }else if(to.name=='addLangulage'){
-      store.state.menuActiveRouter='/menu/addLangulage/:id'
-    }else if(to.name=='groupManageList'){
-      store.state.groupActiveRouter='/groupManage/groupManageList/:id'
-    }
+    for(let i=0;i<activeRouter.length;i++){
+      if(activeRouter[i].name==parent){
+        activeRouter[i].url=url
+        break
+      }
+  }
+    
+    // if(to.name=='orderDetails'){
+    //   store.state.ActiveRouter.order='/order/orderDetails/:id';
+    // }else if(to.name=='orderList'){
+    //   store.state.ActiveRouter.order='/order/orderList/:id';
+    // }
+    // else if(to.name=='OuManageDetail'){
+    //   store.state.ActiveRouter.OuManage='/OuManage/OuManageDetail/:id';
+    // }else if(to.name=='OuManageModify'){
+    //   store.state.ActiveRouter.OuManage='/OuManage/OuManageModify/:id';
+    // }else if(to.name=='OuManageSee'){
+    //   store.state.ActiveRouter.OuManage='/OuManage/OuManageSee/:id';
+    // }else if(to.name=='OuManageList'){
+    //   store.state.ActiveRouter.OuManage='/OuManage/OuManageList/:id';
+    // }
+    // else if(to.name=='repositoryList'){
+    //   store.state.ActiveRouter.repository='/repository/repositoryList/:id'
+    // }else if(to.name=='repositoryData'){
+    //   store.state.ActiveRouter.repository='/repository/repositoryData/:id'
+    // }else if(to.name=='repositoryModify'){
+    //   store.state.ActiveRouter.repository='/repository/repositoryModify/:id'
+    // }else if(to.name=='customerList'){
+    //   store.state.ActiveRouter.customer='/customer/customerList/:id'
+    // }else if(to.name=='customerDetail'){
+    //   store.state.ActiveRouter.customer='/customer/customerDetail/:id'
+    // }else if(to.name=='billDetails'){
+    //   store.state.ActiveRouter.bill='/bill/billDetails/:id'
+    // }else if(to.name=='billList'){
+    //   store.state.ActiveRouter.bill='/bill/billList/:id'
+    // }else if(to.name=='menuDetail'){
+    //   store.state.ActiveRouter.menu='/menu/menuDetail/:id'
+    // }else if(to.name=='menuList'){
+    //   store.state.ActiveRouter.menu='/menu/menuList/:id'
+    // }else if(to.name=='addLangulage'){
+    //   store.state.ActiveRouter.menu='/menu/addLangulage/:id'
+    // }else if(to.name=='groupManageList'){
+    //   store.state.ActiveRouter.groupManage='/groupManage/groupManageList/:id'
+    // }
     
   } 
    next()

@@ -85,7 +85,6 @@ export default {
         
       },
       close:function(e){
-          window.localStorage.removeItem('loglevel:webpack-dev-server');
           let nowIndex=e.target.getAttribute('index');//close元素上面绑定的index
           let elClose=document.getElementsByClassName('closes');
           let elA=document.querySelectorAll('.addBtn a');
@@ -110,6 +109,16 @@ export default {
          temporary.splice(nowIndex,1);//储存页签数组里删除当前页签
          window.localStorage.setItem('ERP',JSON.stringify(temporary));
          this.$store.commit('slidbarData');
+
+
+        let activeRouter=this.$store.state.activeRouter;//关闭时取消路由重定向
+        for(let i=0;i<activeRouter.length;i++){
+            if(activeRouter[i].name==e.target.getAttribute('menuurl')){
+                activeRouter[i].url=activeRouter[i].default
+                break;
+            }
+        }
+       
       },
       hasClass:function(obj, cls){
         let obj_class = obj.className,//获取 class 内容.

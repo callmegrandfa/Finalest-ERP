@@ -386,7 +386,9 @@ export default {
         },
         slid2Height:function(){     
             let h=window.innerHeight;
-           
+            $('.slid2').each(function(e){
+                //console.log($(this).height())
+            })
             // let body=document.getElementsByTagName('slid2')[0];
             // let h=window.innerHeight;
             // body.style.height=h+'px';
@@ -417,8 +419,19 @@ export default {
                 // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
                 if(flag){
                     temporary.push(pushItem);
+                    // let closeItem=this.$store.state.closeItem;
+                    // if(closeItem.length>0){
+                    //     for(let i=0;i<closeItem.length;i++){
+                    //         if(closeItem[i]==menuUrl){
+                    //             closeItem.splice(i,1)
+                    //         }
+                    //     }
+                    // }
                 }
                 window.localStorage.setItem('ERP',JSON.stringify(temporary));
+
+                
+                 
                 this.switch();
             }
         }     
