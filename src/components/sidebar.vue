@@ -179,19 +179,7 @@ export default {
   name: 'appsiderbar',
   data(){
     return{
-        secondLevel1:[
-            {
-            name:'测试列表',
-            thirdInfo:[               
-                {name:'数据资料短',address:'shortData'},
-                {name:'数据资料长',address:'longData'},
-                {name:'数据资料中',address:'midData'},
-                {name:'商品资料',address:'goodsData'},
-                {name:'店铺数据列表',address:'storeData'},   
-                {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-                {name:'供应商列表',address:'supplierList'},  
-            ]},
-            {
+        secondLevel1:[{
                 name:'租户管理',
                 thirdInfo:[
                     {name:'租户管理',address:'tenantManagement'},
