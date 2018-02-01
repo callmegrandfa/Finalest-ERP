@@ -19,11 +19,13 @@ export default new vuex.Store({
             {name:'order',url:'/order/orderList/:id',parent:'',default:'/order/orderList/:id'},//采购管理
             {name:'orderDetails',url:'/order/orderDetails/:id',parent:'order'},
             {name:'orderList',url:'/order/orderList/:id',parent:'order'},
+
             {name:'OuManage',url:'/OuManage/OuManageList/:id',parent:'',default:'/OuManage/OuManageList/:id'},//组织管理
             {name:'OuManageDetail',url:'/OuManage/OuManageDetail/:id',parent:'OuManage'},
             {name:'OuManageModify',url:'/OuManage/OuManageModify/:id',parent:'OuManage'},
             {name:'OuManageSee',url:'/OuManage/OuManageSee/:id',parent:'OuManage'},
             {name:'OuManageList',url:'/OuManage/OuManageList/:id',parent:'OuManage'},
+
             {name:'repository',url:'/repository/repositoryList/:id',parent:'',default:'/repository/repositoryList/:id'},//仓库管理
             {name:'repositoryList',url:'/repository/repositoryList/:id',parent:'repository'},
             {name:'repositoryData',url:'/repository/repositoryData/:id',parent:'repository'},
@@ -33,15 +35,17 @@ export default new vuex.Store({
             {name:'customerList',url:'/customer/customerList/:id',parent:'customer'},
             {name:'customerDetail',url:'/customer/customerDetail/:id',parent:'customer'},
 
-            {name:'currency',url:'/currency/currencyList/:id',parent:'',default:'/customer/currencyList/:id'},//客户管理
+            {name:'currency',url:'/currency/currencyList/:id',parent:'',default:'/customer/currencyList/:id'},//币种管理
             {name:'currencyList',url:'/currency/currencyList/:id',parent:'currency'},
 
             {name:'bill',url:'/bill/billList/:id',parent:'',default:'/bill/billList/:id'},//模板2.0
             {name:'billDetails',url:'/bill/billDetails/:id',parent:'bill'},
             {name:'billList',url:'/bill/billList/:id',parent:'bill'},
+
             {name:'menu',url:'/menu/menuList/:id',parent:'',default:'/menu/menuList/:id'},//菜单管理
             {name:'menuDetail',url:'/menu/menuDetail/:id',parent:'menu'},
             {name:'menuList',url:'/menu/menuList/:id',parent:'menu'},
+            
             {name:'groupManage',url:'/groupManage/groupManageList/:id',parent:'',default:'/groupManage/groupManageList/:id'},//集团管理
             {name:'groupManageList',url:'/groupManage/groupManageList/:id',parent:'groupManage'},
         ],
