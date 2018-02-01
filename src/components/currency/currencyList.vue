@@ -1,7 +1,7 @@
 <template>
     <div class="infor-wrapper">
         <el-row class="bg-white">
-            <el-col :span='24' class="border-left">
+            <el-col :span='24'>
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_add" @click="addCol">
                         <div class="btImg">
@@ -17,6 +17,13 @@
                         <span class="btDetail">保存</span>
                     </button>
 
+                    <button class="erp_bt bt_del" @click="delRow">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_del.png">
+                        </div>
+                        <span class="btDetail">删除</span>
+                    </button>
+
                     <button class="erp_bt bt_excel">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_excel.png">
@@ -24,12 +31,7 @@
                         <span class="btDetail">Excel</span>
                     </button>
 
-                    <button class="erp_bt bt_del" @click="delRow">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_del.png">
-                        </div>
-                        <span class="btDetail">删除</span>
-                    </button>
+                    
 
                     <button class="erp_bt bt_auxiliary">
                         <div class="btImg">
@@ -274,19 +276,12 @@
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
                     for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:_this.multipleSelection[i].id})
+                        _this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:_this.multipleSelection[i].id})
                         .then(function(res){
                             _this.loadAllList();
                             _this.open('删除成功','el-icon-circle-check','successERP');
-                            // for(let x=0;x<_this.tableData.length;x++){
-                            //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){
-                            //         console.log(_this.tableData[x]);
-                            //         _this.tableData.splice(x, 1);
-                            //     }
-                            // }
                         },function(res){
                             _this.open('删除失败','el-icon-error','faildERP');
-                            //console.log('err:'+res)
                         })
                     }
                 };
@@ -386,10 +381,6 @@
 .border1{
     border: 1px solid #cccccc;
     border-radius: 3px;
-}
-.border-left{
-    border-left: 1px solid #E4E4E4;
-    min-height: 400px;
 }
 .btn{
     display: inline-block;
