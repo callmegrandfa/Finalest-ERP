@@ -13,7 +13,7 @@
                 </el-row>
 
                 <el-row class="mt10">
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label><small>*</small>组织类型</label>
                         <el-select v-model="ouValue" placeholder="请选择客户类型">
                             <el-option v-for="item in ouValue"
@@ -26,21 +26,21 @@
                 </el-row>
 
                 <el-row> 
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label>编码</label>
                         <el-input placeholder="" v-model="stockC"></el-input>
                     </div> 
                 </el-row>
 
                 <el-row>
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label>仓库名称</label>
                         <el-input placeholder="" v-model='stockNm'></el-input>
                     </div> 
                 </el-row>
 
                 <el-row>
-                    <div class="bgcolor">
+                    <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
                         <el-input placeholder="" v-model="AreaCode"></el-input>
                     </div>

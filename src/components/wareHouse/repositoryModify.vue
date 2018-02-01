@@ -328,56 +328,31 @@
               <span style="color:black;font-size:16px;font-weight:bolder;">审计信息</span>
           </el-col>
 
-          <el-col :span="24" class="bg-white pb10">
-              <el-row class="pl10">
-                  <el-col :span="5" class="bg-white br3 h35 b1">
-                    <el-row>
-                        <el-col :span="8" class="pl10">
-                            <span>创建人</span>
-                        </el-col>
+          <el-col :span="24" class="bg-white pb10">   
+              <div>
+                <div class="bgcolor">
+                    <label>创建人</label>
+                    <el-input placeholder="请录入创建人" disabled="disabled"></el-input>
+                </div>
 
-                        <el-col :span="15">
-                            <input class="input-need" type="text" disabled>
-                        </el-col>
-                    </el-row>
-                  </el-col>
+                <div class="bgcolor">
+                    <label>创建时间</label>
+                    <el-date-picker  type="date" placeholder="选择创建时间" disabled="disabled"></el-date-picker>
+                </div>
 
-                  <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                    <el-row>
-                        <el-col :span="8" class="pl10">
-                            <span>创建时间</span>
-                        </el-col>
+                <div class="bgcolor">
+                    <label>修改人</label>
+                    <el-input placeholder="请录入修改人" disabled="disabled"></el-input>
+                </div>
 
-                        <el-col :span="15">
-                            <input class="input-need" type="text" disabled>
-                        </el-col>
-                    </el-row>
-                  </el-col>
-
-                  <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                    <el-row>
-                        <el-col :span="8" class="pl10">
-                            <span>修改人</span>
-                        </el-col>
-
-                        <el-col :span="15">
-                            <input class="input-need" type="text" disabled>
-                        </el-col>
-                    </el-row>
-                  </el-col>
-
-                  <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                    <el-row>
-                        <el-col :span="8" class="pl10">
-                            <span>修改时间</span>
-                        </el-col>
-
-                        <el-col :span="15">
-                            <input class="input-need" type="text" disabled>
-                        </el-col>
-                    </el-row>
-                  </el-col>
-              </el-row>
+                <div class="bgcolor">
+                    <label>修改时间</label>
+                    <el-date-picker type="date" placeholder="选择修改时间" disabled="disabled"></el-date-picker>
+                </div>
+                <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
+                <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
+                <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+            </div> 
           </el-col>
       </el-row>
 
@@ -509,7 +484,7 @@
 
             handleEdit:function(index,row){//表格内编辑操作
                 // this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
-                console.log(this.isEdit)
+                // console.log(this.isEdit)
                 let self = this;
                 self.updataList.push(row);
                 console.log(self.updataList);
@@ -518,8 +493,8 @@
             handleDelete:function(index,id){//表格内删除操作
                 this.repositoryAddressData.splice(index,1);
                 this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
-                console.log(res);
-                self.open('删除仓库地址成功','el-icon-circle-check','successERP');
+                    console.log(res);
+                    self.open('删除仓库地址成功','el-icon-circle-check','successERP');
               })
             },
             
@@ -681,6 +656,8 @@
     border:none;
     outline: none;
     width: 100%;
+    height: 23px;
+    line-height: 23px;
 }
 .input-bgw{
     background: white;
@@ -767,6 +744,10 @@ input::-webkit-input-placeholder{
 }
 .data-wrapper .el-table__body{
     text-align: center;
+}
+.data-wrapper .el-table .cell{
+    padding-left:0px;
+    padding-right:0px;
 }
 /* 重写el-pagination样式 */
 

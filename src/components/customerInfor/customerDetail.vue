@@ -93,7 +93,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>客户类型</label>
-                    <el-select v-model="valueSort">
+                    <el-select>
                         <el-option v-for="item in sort" :key="item.valueSort" :label="item.label" :value="item.valueSort"></el-option>
                     </el-select>
                 </div>   
@@ -115,7 +115,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>国家/地区</label>
-                    <el-select v-model="valueCountry">
+                    <el-select>
                         <el-option v-for="item in country" :key="item.valueCountry" :label="item.label" :value="item.valueCountry"></el-option>
                     </el-select>
                 </div>
@@ -164,32 +164,104 @@
             <el-col :span="24">
                <el-tabs v-model="activeName">
                     <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
-                        <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                        <button class="erp_bt bt_excel mb10"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-                        <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+                        <button class="erp_bt bt_add" @click="addColbank">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_add.png">
+                            </div>
+                            <span class="btDetail">新增</span>
+                        </button>
+
+                        <button class="erp_bt bt_excel mb10">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_excel.png">
+                            </div>
+                            <span class="btDetail">Excel</span>
+                        </button>
+
+                        <button class="erp_bt bt_del">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_del.png">
+                            </div>
+                            <span class="btDetail">删除</span>
+                        </button>
+
+                        <button class="erp_bt bt_auxiliary">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_auxiliary.png">
+                            </div>
+                            <span class="btDetail">辅助功能</span>
+                        </button>
                         
                 
-                        <el-table :data="allList" stripe border style="width: 100%">
-                            <el-table-column prop="ifAllow" label=" ">
+                        <el-table :data="bankData" stripe border style="width: 100%">
+                            <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="allList[scope.$index].ifAllow" ></el-checkbox>
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.settlementCurrencyId" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="clearCurrency" label="结算币种" width="180"></el-table-column>
-                            <el-table-column prop="bankNum" label="银行账号" width="180"></el-table-column>
-                            <el-table-column prop="bankAccount" label="银行账户" width="180"></el-table-column>
-                            <el-table-column prop="openBank" label="开户银行" width="180"></el-table-column>
-                            <el-table-column prop="contact" label="联系人" width="180"></el-table-column>
-                            <el-table-column prop="phone" label="联系电话" width="180"></el-table-column>
+
+                            <el-table-column prop="accountNo" label="银行账号" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.accountNo" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="accountName" label="银行账户" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.accountName" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="openingBank" label="开户银行" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.openingBank" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="contactPerson" label="联系人" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.contactPerson" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="phone" label="联系电话" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.phone" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
                             <el-table-column prop="ifDefault" label="默认">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="allList[scope.$index].ifDefault" ></el-checkbox>
+                                    <el-checkbox v-model="bankData[scope.$index].ifDefault"></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label='操作'>
-                                <template slot-scope="scope">
-                                    <el-button v-on:click="handleDelete(scope.$index)" type="text" size="small">删除</el-button>
+                                <template slot-scope="scope" >
+                                    <el-button v-on:click="handleBankDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -359,10 +431,83 @@ export default({
                 'creditMgt':true,//信用管理
                 },
             
-            allList:[],
+            bankData:[],//银行数据列表，开始为空
+            updataBankList:[],//需要修改的银行信息
+
+            createBankParams:{//创建银行的参数
+                "groupId": 1,
+                "contactId":'',
+                "settlementCurrencyId": '',
+                "accountNo": "",
+                "accountName": "",
+                "openingBank": '',
+                "contactPerson": '',
+                "phone": '',
+                "isDefault": true
+            }
         }
     },
     methods:{
+        //---创建数据--------------------------------------------------       
+        save:function(){//点击保存创建客户资料
+            let self = this;
+            console.log(self.createContactParams)
+            this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
+                    console.log(res);
+                    self.open('创建客户资料成功','el-icon-circle-check','successERP');
+                    console.log(self.createBankParams.contactId)
+                    console.log(res.result.id);
+                    self.createBankParams.contactId = res.result.id;
+                    console.log(self.createBankParams)
+                    if(self.createBankParams.group!=''&&
+                       self.createBankParams.contactId!=''&&
+                       self.createBankParams.settlementCurrencyId!=''&&
+                       self.createBankParams.accountNo!=''&&
+                       self.createBankParams.accountName!=''&&
+                       self.createBankParams.openingBank!=''&&
+                       self.createBankParams.contactPerson!=''&&
+                       self.createBankParams.phone!=''&&
+                       self.createBankParams.phone!=''){
+                            self.createBank();
+                        }
+              },function(res){
+                  console.log(res)
+                  self.open('创建失败','el-icon-error','faildERP')
+              })
+
+        },
+        createBank:function(){//创建银行资料
+            let self = this;
+            self.createBankParams.contactId = self.$route.params.id;
+
+            this.$axios.posts('/api/services/app/ContactBankManagement/Create',self.createBankParams).then(function(res){         
+                self.open('创建银行资料成功','el-icon-circle-check','successERP');
+                console.log(res)
+            }),function(res){
+                self.open('创建银行资料失败','el-icon-error','faildERP');
+            };
+        },
+        addColbank:function(){//银行增行
+            let self = this;
+            self.bankData.unshift(self.createBankParams);
+            console.log(self.bankData);
+        },
+        //------------------------------------------------------------
+        
+        //---控制编辑删除等-------------------------------------------
+        handleBankEdit:function(index,row){//银行信息编辑
+            // this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+            // console.log(this.isEdit)
+            // console.log('0123')
+            let self = this;
+            self.updataBankList.push(row)
+        },
+        handleBankDelete:function(index){//表格内删除操作
+            let self = this;
+			this.bankData.splice(index,1);
+        },
+        //------------------------------------------------------------
+
         //---控制跳转------------------------------------------------
         back(){//点击新增跳转
             this.$store.state.url='/customer/customerList/default'
@@ -379,28 +524,6 @@ export default({
                 });
             },
         //----------------------------------------------------------
-        //---控制编辑删除等-------------------------------------------
-        handleChange(val) {
-            console.log(val);
-        },
-        handleDelete:function(index){//表格内删除操作
-			this.tableData.splice(index,1);
-        },
-        //------------------------------------------------------------
-        //---创建数据--------------------------------------------------       
-        save:function(){//点击保存创建客户资料
-            let self = this;
-            console.log(self.createContactParams)
-            this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
-                    console.log(res);
-                    self.open('创建客户资料成功','el-icon-circle-check','successERP');
-              },function(res){
-                  console.log(res)
-                  self.open('创建失败失败','el-icon-error','faildERP')
-              })
-
-        },
-        //------------------------------------------------------------
         
     }
        
@@ -469,8 +592,35 @@ export default({
 .customerBasicForm .nopadding{
     padding-top: 0;
 }
+.customerBasicForm .el-table th {
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+    text-align: left;
+    padding: 5px 0;
+    text-align: center;
+    background-color: #ececec;
+}
+.customerBasicForm .el-table td{
+    padding: 3px 0;
+}
+.customerBasicForm .el-table__body{
+    text-align: center;
+}
+.customerBasicForm .el-table .cell{
+    padding-left:0px;
+    padding-right:0px;
+}
 .mb10{
     margin-bottom: 10px;
+}
+.input-need{
+    border:none;
+    outline: none;
+    width: 100%;
+    height: 23px;
+    line-height: 23px;
+    text-align: center
 }
 .customerBasicForm .el-table th {
     white-space: nowrap;

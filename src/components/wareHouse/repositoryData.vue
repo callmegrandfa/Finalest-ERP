@@ -616,7 +616,9 @@
 .input-need{
     border:none;
     outline: none;
-    width: 90%;
+    width: 100%;
+    height: 23px;
+    line-height: 23px;
 }
 .input-bgw{
     background: white;
@@ -703,6 +705,10 @@ input::-webkit-input-placeholder{
 }
 .data-wrapper .el-table__body{
     text-align: center;
+}
+.data-wrapper .el-table .cell{
+    padding-left:0px;
+    padding-right:0px;
 }
 /* 重写el-pagination样式 */
 
