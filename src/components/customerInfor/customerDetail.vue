@@ -453,12 +453,12 @@ export default({
             let self = this;
             console.log(self.createContactParams)
             this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.open('创建客户资料成功','el-icon-circle-check','successERP');
-                    console.log(self.createBankParams.contactId)
-                    console.log(res.result.id);
+                    // console.log(res.result.id);
                     self.createBankParams.contactId = res.result.id;
-                    console.log(self.createBankParams)
+                    // console.log(self.createBankParams.contactId)
+                    // console.log(self.createBankParams)
                     if(self.createBankParams.group!=''&&
                        self.createBankParams.contactId!=''&&
                        self.createBankParams.settlementCurrencyId!=''&&
@@ -478,11 +478,10 @@ export default({
         },
         createBank:function(){//创建银行资料
             let self = this;
-            self.createBankParams.contactId = self.$route.params.id;
 
             this.$axios.posts('/api/services/app/ContactBankManagement/Create',self.createBankParams).then(function(res){         
                 self.open('创建银行资料成功','el-icon-circle-check','successERP');
-                console.log(res)
+                // console.log(res)
             }),function(res){
                 self.open('创建银行资料失败','el-icon-error','faildERP');
             };
@@ -490,7 +489,7 @@ export default({
         addColbank:function(){//银行增行
             let self = this;
             self.bankData.unshift(self.createBankParams);
-            console.log(self.bankData);
+            // console.log(self.bankData);
         },
         //------------------------------------------------------------
         

@@ -14,7 +14,7 @@
 
                 <el-row class="mt10">
                     <div class="bgcolor smallBgcolor">
-                        <label><small>*</small>客户分类</label>
+                        <label>客户分类</label>
                         <el-select v-model="value" placeholder="请选择客户类型">
                             <el-option v-for="item in options"
                                         :key="item.value"
@@ -88,8 +88,7 @@
                         <span class="btDetail">Excel</span>
                     </button>
 
-                    <button class="erp_bt bt_del" >
-                        <!-- @click='delete(scope.$index,scope.row)' -->
+                    <button class="erp_bt bt_del" @click="delRow">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -113,12 +112,8 @@
 
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
-                        <el-table :data="allList" border style="width: 100%" stripe>
-                            <!-- <el-table-column label=" ">
-                                <template slot-scope="scope">
-                                    <el-checkbox @click='selectDelete(scope.$index,scope.row)'></el-checkbox>
-                                </template>
-                            </el-table-column> -->
+                        <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
+                            <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="ouId" label="所属组织" ></el-table-column>
                             <el-table-column prop="contact" label="客户编码"></el-table-column>
                             <el-table-column prop="contactFullName" label="客户名称"></el-table-column>
@@ -188,6 +183,7 @@
                 total:'',//数据总条数
                 page:1,//当前页
                 eachPage:10,//一页显示的数量
+                multipleSelection: [],//复选框选中数据
             }
         },
         created:function(){
@@ -195,32 +191,6 @@
             
         },
         methods:{
-        // ---跳转开始------------------------------------------------------
-            goDetail(){//点击新增跳转
-               this.$store.state.url='/customer/customerDetail/default'
-               this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-
-            goModify:function(id){//点击跳转修改页modify
-                // this.$store.state.url='/customer/customerModify/default'
-                this.$store.state.url='/customer/customerModify/'+id;
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-        //------------------------------------------------------------------
-       
-        //---控制修改及分页--------------------------------------------------
-            // selectDelete:function(){//选择要删除的项
-            //     let self = this;
-            // },
-            // delete:function(index,row){//删除选中的项
-            //     let self = this;
-            //     self.allList.splice(index,1);
-            // },
-            handleCurrentChange:function(val){//获取当前页码
-                this.pageIndex=val;
-            },
-        //------------------------------------------------------------------
-        
         //---获取数据-------------------------------------------------------
             loadAllList:function(){//获取所有列表数据
                 let self = this;
@@ -232,6 +202,60 @@
                 },function(res){
                     console.log('err'+res)
                 })
+            },
+        //------------------------------------------------------------------
+
+        // ---跳转--------open----------------------------------------------
+            goDetail(){//点击新增跳转
+               this.$store.state.url='/customer/customerDetail/default'
+               this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+
+            goModify:function(id){//点击跳转修改页modify
+                // this.$store.state.url='/customer/customerModify/default'
+                this.$store.state.url='/customer/customerModify/'+id;
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            
+            open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+        //------------------------------------------------------------------
+
+        //---控制修改及分页--------------------------------------------------
+            delRow:function(){//删除选中的项
+                let _this=this;
+                if(_this.multipleSelection.length>0){//表格
+                    for(let i=0;i<_this.multipleSelection.length;i++){
+                        _this.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:_this.multipleSelection[i].id})
+                        .then(function(res){
+                            _this.loadAllList();
+                            _this.open('删除成功','el-icon-circle-check','successERP');
+                            // for(let x=0;x<_this.tableData.length;x++){
+                            //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){
+                            //         console.log(_this.tableData[x]);
+                            //         _this.tableData.splice(x, 1);
+                            //     }
+                            // }
+                        },function(res){
+                            _this.open('删除失败','el-icon-error','faildERP');
+                            //console.log('err:'+res)
+                        })
+                    }
+                };
+            },
+            handleSelectionChange:function(val){//点击复选框选中的数据
+                this.multipleSelection = val;
+            },
+            handleCurrentChange:function(val){//获取当前页码
+                this.pageIndex=val;
             },
         //------------------------------------------------------------------
     }
