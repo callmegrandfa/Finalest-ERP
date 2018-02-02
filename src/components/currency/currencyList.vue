@@ -227,11 +227,11 @@
             let self = this;
             if(self.createParams.group_id!=''&&
                self.createParams.currency_code!=''&&
-               self.createParams.group_id!=''&&
-               self.createParams.group_id!=''&&
-               self.createParams.group_id!=''&&
-               self.createParams.group_id!=''&&
-               self.createParams.group_id!=''){
+               self.createParams.currency_name!=''&&
+               self.createParams.increment!=''&&
+               self.createParams.seq!=''&&
+               self.createParams.status!=''&&
+               self.createParams.remark!=''){
                    this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.createParams).then(function(res){         
                         self.open('创建货币资料成功','el-icon-circle-check','successERP');
                         console.log(res)
