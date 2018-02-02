@@ -10,7 +10,17 @@
   <button class="erp_bt bt_modify"><div class="btImg"><img src="../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
   <button class="erp_bt bt_version"><div class="btImg"><img src="../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
   <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+  <button class="erp_bt bt_auxiliary bt_width">
+    <div class="btImg"><img src="../../static/image/common/bt_auxiliary.png"></div>
+    <span class="btDetail">辅助功能</span>
+    <div class="btRightImg"><img src="../../static/image/common/bt_down_right.png"></div>
+  </button>
   <button class="erp_bt bt_look"><div class="btImg"><img src="../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
+  <button class="erp_bt bt_look bt_width">
+    <div class="btImg"><img src="../../static/image/common/bt_look.png"></div>
+    <span class="btDetail">审核</span>
+    <div class="btRightImg"><img src="../../static/image/common/bt_down_right.png"></div>
+  </button>
   <button class="erp_bt bt_circulation"><div class="btImg"><img src="../../static/image/common/bt_circulation.png"></div><span class="btDetail">流转</span></button>
   <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
   <button class="erp_bt bt_end"><div class="btImg"><img src="../../static/image/common/bt_end.png"></div><span class="btDetail">终止</span></button>
@@ -83,6 +93,29 @@
     </el-date-picker>
 </div>
 
+<el-col :span="24">
+    <el-col class="stepItem" :span="8">
+        <div class="stepCircle">1</div>
+        <div class="stepMsg">
+            <p>&nbsp;&nbsp;Step1</p>
+            <p>&nbsp;&nbsp;新增报表信息</p>
+        </div>
+    </el-col>
+    <el-col class="stepItem" :span="8">
+        <div class="stepCircle stepActive">2</div>
+        <div class="stepMsg">
+            <p>&nbsp;&nbsp;Step2</p>
+            <p>&nbsp;&nbsp;提交审核</p>
+        </div>
+    </el-col>
+    <el-col class="stepItem" :span="8">
+        <div class="stepCircle">3</div>
+        <div class="stepMsg">
+            <p>&nbsp;&nbsp;Step3</p>
+            <p>&nbsp;&nbsp;完成</p>
+        </div>
+    </el-col>
+</el-col>
 
 </div>
   

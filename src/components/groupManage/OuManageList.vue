@@ -19,11 +19,11 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder="请录入编码"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder="请录入名称"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入所属公司"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder="请录入行政地区"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder="请录入启用状态"></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearch">查询</span>

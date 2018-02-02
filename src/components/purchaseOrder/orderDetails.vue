@@ -1,156 +1,175 @@
 <template>
     <div class="orderDetail">
         <el-row>
-            <el-col :span="24" class="orderHead">
-                <el-col :span="17" class="orderTittle">
-                    <h4>采购订单-详细资料</h4>
+            <el-col :span="24">
+                <button @click="back" class="erp_bt bt_back" style="margin-left:5px"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+                <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+                <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">删行</span></button>
+                <button class="erp_bt bt_look bt_width">
+                    <div class="btImg"><img src="../../../static/image/common/bt_look.png"></div>
+                    <span class="btDetail">审核</span>
+                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                </button>
+                <button class="erp_bt bt_auxiliary bt_width">
+                    <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
+                    <span class="btDetail">辅助功能</span>
+                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                </button>
+                 <div class="sealWapper">
                     <div class="seal">
                         <div class="seal1">
                             <div class="seal2">
                                 <div class="seal3">
-                                    <span>已生效</span>
+                                    <span>未送审</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </el-col>
-                <el-col :span="6">
-                    <!-- <el-steps :active="1" finish-status="success">
-                        <el-step title="Step1" description="新增报表信息"></el-step>
-                        <el-step title="Step2" description="提交送审"></el-step>
-                        <el-step title="Step3" description="完成"></el-step>
-                    </el-steps> -->
-                        <el-col class="stepItem" :span="8">
-                            <div class="stepCircle">1</div>
-                            <div class="stepMsg">
-                                <p>&nbsp;&nbsp;Step1</p>
-                                <p>&nbsp;&nbsp;新增报表信息</p>
-                            </div>
-                        </el-col>
-                        <el-col class="stepItem" :span="8">
-                            <div class="stepCircle stepActive">2</div>
-                            <div class="stepMsg">
-                                <p>&nbsp;&nbsp;Step2</p>
-                                <p>&nbsp;&nbsp;提交审核</p>
-                            </div>
-                        </el-col>
-                        <el-col class="stepItem" :span="8">
-                            <div class="stepCircle">3</div>
-                            <div class="stepMsg">
-                                <p>&nbsp;&nbsp;Step3</p>
-                                <p>&nbsp;&nbsp;完成</p>
-                            </div>
-                        </el-col>
-                </el-col>
-                <el-col :span="1">
-                    <div style="position: relative;width:20px;float: right;margin-right: 10px;">
-                        <i class="el-icon-more" @click="show = !show"></i>
-                        <diV class="triangle" :class="{activeShow : show}"></diV>
-                        <div class="detailStep" :class="{activeShow : show}">
-                            <div class="ARow">
-                                <div class="one messageStep">
-                                    <div class="leftD">
-                                        <p class="tittle">完成</p>
-                                        <p class="detail"> </p>
-                                    </div>
-                                    <div class="circle"></div>
-                                    <div class="rightD">
-                                        <p class="tittle">09</p>
-                                        <p class="detail">2018/01&nbsp;&nbsp;&nbsp;10:05:36</p>
-                                    </div>
-                                </div>
-                                <div class="two messageStep">
-                                    <div class="leftD"></div>
-                                    <div class="circle"></div>
-                                    <div class="rightD">
-                                        <p class="tittle">提交申请</p>
-                                        <p class="detail">填写表单申请</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="ARow">
-                                <div class="one messageStep">
-                                <div class="leftD">
-                                    <p class="tittle">第二审核</p>
-                                    <p class="detail">审核内容</p>
-                                </div>
-                                <div class="circle"></div>
-                                <div class="rightD">
-                                    <p class="tittle">08</p>
-                                    <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
-                                </div>
-                                </div>
-                                <div class="two active messageStep">
-                                    <div class="leftD"></div>
-                                    <div class="circle"></div>
-                                    <div class="rightD">
-                                        <p class="tittle">正在审批中</p>
-                                        <p class="detail"></p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="ARow">
-                                <div class="one messageStep">
-                                <div class="leftD">
-                                    <p class="tittle">第二审核</p>
-                                    <p class="detail">审核内容</p>
-                                </div>
-                                <div class="circle"></div>
-                                <div class="rightD">
-                                    <p class="tittle">07</p>
-                                    <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
-                                </div>
-                                </div>
-                                <div class="two messageStep">
-                                    <div class="leftD"></div>
-                                    <div class="circle"></div>
-                                    <div class="rightD">
-                                        <p class="tittle">提交中</p>
-                                        <p class="detail"></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="ARow">
-                                <div class="one messageStep">
-                                <div class="leftD">
-                                    <p class="tittle">第二审核</p>
-                                    <p class="detail">审核内容</p>
-                                </div>
-                                <div class="circle"></div>
-                                <div class="rightD">
-                                    <p class="tittle">06</p>
-                                    <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
-                                </div>
-                                </div>
-                                <div class="two messageStep">
-                                    <div class="leftD"></div>
-                                    <div class="circle"></div>
-                                    <div class="rightD">
-                                        <p class="tittle">提交中</p>
-                                        <p class="detail"></p>
-                                    </div>
+                </div>
+                 <div class="sealWapper">
+                    <div class="seal">
+                        <div class="seal1">
+                            <div class="seal2">
+                                <div class="seal3">
+                                    <span>已送审</span>
                                 </div>
                             </div>
                         </div>
-                       
                     </div>
-                </el-col>
-            </el-col> 
-        </el-row>
+                </div>
+                 <div class="sealWapper">
+                    <div class="seal">
+                        <div class="seal1">
+                            <div class="seal2">
+                                <div class="seal3">
+                                    <span>已审核</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="sealWapper">
+                    <div class="seal">
+                        <div class="seal1">
+                            <div class="seal2">
+                                <div class="seal3">
+                                    <span>已作废</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sealWapper">
+                    <div class="seal">
+                        <div class="seal1">
+                            <div class="seal2">
+                                <div class="seal3">
+                                    <span>已终止</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
+                <div class="step_wraper">
+                    <span @mouseenter="show = !show" @mouseleave="show = !show" class="upBt">审核日记<i class="el-icon-arrow-down"></i></span>
+                    <diV class="triangle" :class="{activeShow : show}"></diV>
+                    <div class="detailStep" :class="{activeShow : show}">
+                        <div class="ARow">
+                            <div class="one messageStep">
+                                <div class="leftD">
+                                    <p class="tittle">完成</p>
+                                    <p class="detail"> </p>
+                                </div>
+                                <div class="circle"></div>
+                                <div class="rightD">
+                                    <p class="tittle">09</p>
+                                    <p class="detail">2018/01&nbsp;&nbsp;&nbsp;10:05:36</p>
+                                </div>
+                            </div>
+                            <div class="two messageStep">
+                                <div class="leftD"></div>
+                                <div class="circle"></div>
+                                <div class="rightD">
+                                    <p class="tittle">提交申请</p>
+                                    <p class="detail">填写表单申请</p>
+                                </div>
+                            </div>
+                        </div>
 
-        <el-row>
-            <el-col :span="24">
-                <button @click="back" class="headBtn">返回</button>
-                <button class="headBtn">保存</button>
-                <button class="headBtn">保存并新增</button>
-                <button class="headBtn">保存并审核</button>
-                <button class="headBtn">审核</button>
+                        <div class="ARow">
+                            <div class="one messageStep">
+                            <div class="leftD">
+                                <p class="tittle">第二审核</p>
+                                <p class="detail">审核内容</p>
+                            </div>
+                            <div class="circle"></div>
+                            <div class="rightD">
+                                <p class="tittle">08</p>
+                                <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
+                            </div>
+                            </div>
+                            <div class="two active messageStep">
+                                <div class="leftD"></div>
+                                <div class="circle"></div>
+                                <div class="rightD">
+                                    <p class="tittle">正在审批中</p>
+                                    <p class="detail"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ARow">
+                            <div class="one messageStep">
+                            <div class="leftD">
+                                <p class="tittle">第二审核</p>
+                                <p class="detail">审核内容</p>
+                            </div>
+                            <div class="circle"></div>
+                            <div class="rightD">
+                                <p class="tittle">07</p>
+                                <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
+                            </div>
+                            </div>
+                            <div class="two messageStep">
+                                <div class="leftD"></div>
+                                <div class="circle"></div>
+                                <div class="rightD">
+                                    <p class="tittle">提交中</p>
+                                    <p class="detail"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ARow">
+                            <div class="one messageStep">
+                            <div class="leftD">
+                                <p class="tittle">第二审核</p>
+                                <p class="detail">审核内容</p>
+                            </div>
+                            <div class="circle"></div>
+                            <div class="rightD">
+                                <p class="tittle">06</p>
+                                <p class="detail">2018/01&nbsp;&nbsp;&nbsp;12:05:36</p>
+                            </div>
+                            </div>
+                            <div class="two messageStep">
+                                <div class="leftD"></div>
+                                <div class="circle"></div>
+                                <div class="rightD">
+                                    <p class="tittle">提交中</p>
+                                    <p class="detail"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </el-col>
         </el-row>
-
+<el-collapse-transition>
+    <div v-show="ifShow">
         <el-row>
             <el-col :span="24" class="getPadding">
                 <el-col :span="5" class="bgcolor">
@@ -183,10 +202,10 @@
                     <label><small>*</small>佣金</label>
                     <el-input v-model="data.commission" placeholder="请录入佣金"></el-input>
                 </el-col>
-                <!-- <el-col :span="5" class="bgcolor">
+                <el-col :span="5" class="bgcolor">
                     <label>年份</label>
                     <el-date-picker v-model="data.year" type="year" placeholder="请选择年份"></el-date-picker>
-                </el-col> -->
+                </el-col>
                 <el-col :span="5" class="bgcolor">
                     <label><small>*</small>季节</label>
                     <el-select v-model="valueSeason">
@@ -217,10 +236,10 @@
                     <label>PO类型</label>
                     <el-input v-model="data.POType" placeholder="请录入PO类型"></el-input>
                 </el-col>
-                <!-- <el-col :span="5" class="bgcolor">
+                <el-col :span="5" class="bgcolor">
                     <label>税率</label>
                     <el-input v-model="data.taxRate" placeholder="请录入税率"></el-input>
-                </el-col> -->
+                </el-col>
                 <el-col :span="5" class="bgcolor">
                     <label>付款条件</label>
                     <el-input v-model="data.payment" placeholder="请录入付款条件"></el-input>
@@ -232,8 +251,9 @@
                 <el-col :span="10" class="bgcolor moreWidth"><label>备注</label><el-input v-model="data.remarks" placeholder="备注"></el-input></el-col>  
             </el-col>  
         </el-row>
-
-        <el-row class="noPadding">
+    </div>    
+</el-collapse-transition>
+        <!-- <el-row class="noPadding">
             <el-col :span="24" class="greyClr">     
                 <h4 class="h4 getPadding">其他信息</h4>
             </el-col> 
@@ -256,7 +276,7 @@
                    <label class="dataLeft">3111111</label>
                 </el-col>
             </el-col> 
-        </el-row>
+        </el-row> -->
 
 <el-row class="tabPage">  
     <div class="tabZoo">
@@ -267,7 +287,11 @@
                         <button class="erp_bt bt_codeNew"><div class="btImg"><img src="../../../static/image/common/bt_codeNew.png"></div><span class="btDetail">扫码新增</span></button>
                         <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
                         <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
-                        <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                        <button class="erp_bt bt_out bt_width">
+                            <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
+                            <span class="btDetail">导出</span>
+                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                        </button>
                         <div class="right">
                             <div class="formSearch">
                                 <input type="text" class="inputForm" placeholder="编码/名称...">
@@ -282,7 +306,7 @@
                         </div>
                     </el-col>
                     <el-table :data="tableData" stripe border style="width: 100%">
-                        <el-table-column prop="xid"  width="50" label=""></el-table-column>
+                         <el-table-column type="selection"></el-table-column>
                         <el-table-column prop="code" label="货号" width="220"></el-table-column>
                         <el-table-column prop="size" label="规格" width="220"></el-table-column>
                         <el-table-column prop="num" label="数量" width="220"></el-table-column>
@@ -290,7 +314,6 @@
                         <el-table-column prop="volume" label="体积" width="220"></el-table-column>
                         <el-table-column fixed="right" label="操作">
                             <template slot-scope="scope">
-                                <el-button @click="handleClick(scope.row)" type="text" size="small">插入</el-button>
                                 <el-button type="text" size="small">卡片展示</el-button>
                                 <el-button type="text" size="small">删除</el-button>
                             </template>
@@ -308,6 +331,26 @@
                     </el-pagination>
                 </el-tab-pane>
                 <el-tab-pane label="合同信息" name="info">合同信息</el-tab-pane>
+                <el-tab-pane label="其他信息" name="other">
+                    <el-col :span="24" class="formData">
+                        <el-col :span="5" class="bgcolor">
+                            <label>金额计算方式</label>
+                            <label class="dataLeft">无</label>
+                        </el-col>
+                        <el-col :span="5" class="bgcolor">
+                            <label>批次定单号</label>
+                            <label class="dataLeft">123123</label>
+                        </el-col>
+                        <el-col :span="5" class="bgcolor">
+                            <label>汇率</label>
+                            <label class="dataLeft">1.00</label>
+                        </el-col>
+                        <el-col :span="5" class="bgcolor">
+                            <label>操作员</label>
+                        <label class="dataLeft">3111111</label>
+                        </el-col>
+                    </el-col> 
+                </el-tab-pane>
             </el-tabs>
         </el-col>
     </div>
@@ -318,6 +361,7 @@
     export default({
         data(){
             return{
+                ifShow:true,
                 show:false,
                 activeName:'detail',
                 currentPage:4,//分页当前页
@@ -404,13 +448,13 @@
         },
         methods:{
             handleClick(row) {
-                console.log(row);
+                // console.log(row);
             },
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                // console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                // console.log(`当前页: ${val}`);
             },
             back(){
                 this.$store.state.url='/order/orderList/default'
@@ -423,7 +467,10 @@
  .orderDetail{
       font-family: 'microsoft yahei';
   }
-
+  .orderDetail .step_wraper{
+      position: relative;
+      float: right;
+  }
   /* 三角形 */
  
 .orderDetail .triangle{
@@ -438,6 +485,7 @@
     height: 0;
     z-index: 11;
 }
+
 .orderDetail .triangle:after{
     content: '';
      position: absolute;
@@ -450,42 +498,6 @@
      position: absolute;
      z-index: 0;
  }
- /* step */
- .orderDetail .stepItem{
-     height: 36px;
- }
- .orderDetail .stepCircle{
-     width: 36px;
-     height: 36px;
-     border-radius: 50%;
-     text-align: center;
-     line-height: 36px;
-     font-family: 'microsoft yahei';
-     font-weight: 700;
-     font-style: normal;
-     font-size: 16px;
-     color: #333333;
-     background-color: #d7d7d7;
-     float: left;
- }
- .orderDetail .stepActive{
-     background-color: #F55E6E;
-     color: #fff;
- }
- .orderDetail .stepMsg{
-    float: left;
-    width: calc(100% - 36px);
-    color: #333333;
-    height: 36px;
-    white-space: nowrap;
- }
- .orderDetail .stepMsg p{
-    font-family: 'microsoft yahei';
-    font-weight: 400;
-    font-style: normal;
-    font-size: 12px;
- }
-
 /* 步骤详情 */
  .orderDetail .detailStep{
      display: none;
@@ -499,9 +511,7 @@
      width: 300px;
      background-color: #ffffff;
  }
- .orderDetail .detailStep .big{
 
- }
  .orderDetail .detailStep .circle{
      position: absolute;
      border-radius: 50%;
@@ -571,62 +581,71 @@
   .orderDetail .activeShow{
       display: block;
   }
-
-.orderDetail .orderHead{
-    background-color: #fff;
-    padding: 5px 0;
-}
-.orderDetail .orderHead .orderTittle h4{
-    padding-left: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 36px;
-}
 /* 已生效 */
-
-.orderDetail .orderHead .orderTittle .seal,
-.orderDetail .orderHead .orderTittle .seal1,
-.orderDetail .orderHead .orderTittle .seal2,
-.orderDetail .orderHead .orderTittle .seal3{
+.sealWapper{
+    position: relative;
+    overflow: visible;
+    width: 45px;
+    height: 40px;
+    float: left;
+    opacity: 0.5;
+}
+.seal,
+.seal1,
+.seal2,
+.seal3{
     position: absolute;
     background-repeat:no-repeat;
     background-position:center;
     top:0;
     left: 0;
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
 }
-.orderDetail .orderHead .orderTittle .seal{
-    transform: rotate(-34deg);
-    -ms-transform: rotate(-34deg);
-    -webkit-transform: rotate(-34deg);
-    -o-transform: rotate(-34deg);
-    -moz-transform: rotate(-34deg);	
-    top: -3px;
-    left: 210px;
+.seal{
+    transform: rotate(30deg);
+    -ms-transform: rotate(30deg);
+    -webkit-transform: rotate(30deg);
+    -o-transform: rotate(30deg);
+    -moz-transform: rotate(30deg);
+    top: 0;
+    left: 0;
     background-image: url(../../../static/image/u1.png);
 }
-.orderDetail .orderHead .orderTittle .seal1{
+.seal1{
     background-image: url(../../../static/image/u2.png);
 }
-.orderDetail .orderHead .orderTittle .seal2{
+.seal2{
     background-image: url(../../../static/image/u3.png);
 }
-.orderDetail .orderHead .orderTittle .seal3{
+.seal3{
+    transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
     background-image: url(../../../static/image/u4.png);
 }
-.orderDetail .orderHead .orderTittle .seal3 span{
-    font-weight: bold;
+.seal3 span{
+    font-family: 'microsoft yahei';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 10px;
+    color: #F55E6E;
     position: absolute;
-    font-size: 12px;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    line-height: 44px;
     color: #FF669B;
-    top: 20px;
-    left: 9px;
-    transform: rotate(87deg);
-    -ms-transform: rotate(87deg);
-    -webkit-transform: rotate(87deg);
-    -o-transform: rotate(87deg);
-    -moz-transform: rotate(87deg);	
+    transform: rotate(-90deg) scale(0.8);
+    -ms-transform: rotate(-90deg) scale(0.8);
+    -webkit-transform: rotate(-90deg) scale(0.8);
+    -o-transform: rotate(-90deg) scale(0.8);
+    -moz-transform: rotate(-90deg) scale(0.8);
 }
 /* steps */
 .orderDetail .el-steps .el-step__line{
@@ -666,15 +685,11 @@
 
 
 .orderDetail .el-row{
-     padding:15px 0;
+     padding:5px 0;
      border-bottom: 1px solid #e4e4e4;
      background-color: #fff;
   }
-.orderDetail .el-row:first-child{
-    padding: 0;
-    border:none;
-    margin-bottom: 15px;
-}
+
 
 
 .orderDetail .companyInfo>.el-col:first-child,
@@ -686,10 +701,7 @@
      overflow: hidden;
      background-color: #fff;
  }
- .orderDetail .tabZoo .bgcolor{
-     border: 1px solid #BCBCBC;
-     border-radius: 4px;
- }
+
  .orderDetail .getPadding{
      padding: 0 10px;
  }
@@ -701,6 +713,7 @@
      border: 1px solid #e4e4e4;
      width: calc(100% - 40px);
      margin:auto;
+     margin-top: 1px;
  }
 
  .orderDetail .tabZoo .auditInformation{
