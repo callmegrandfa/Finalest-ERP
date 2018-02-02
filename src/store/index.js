@@ -13,6 +13,7 @@ export default new vuex.Store({
         name:'',//当前登录用户名
         accessToken:'',//当前登录token
         show:false,//控制slidebar显示隐藏
+        fixed:false,
         url:'/',//当前页签
         temporary:[],//本地暂时存储页签
         slidbarData:[],//从localStorage读取页签
@@ -64,6 +65,12 @@ export default new vuex.Store({
             if(window.localStorage.getItem('_ERP')!=''){
                 state.username=JSON.parse(window.sessionStorage.getItem('_ERP'))
             }
-        }
+        },
+        go1(state){
+            state.fixed=true;
+        },
+        go2(state){
+            state.fixed=false;
+        },
     }
 })

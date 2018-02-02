@@ -374,6 +374,13 @@ export default {
     mounted:function(){
         let _this=this;
         _this.$store.state.slidbarHeight=$(window).height();
+
+        $('.slid1').css({
+            height:_this.$store.state.slidbarHeight
+        })
+        $('.slid2').css({
+            height:_this.$store.state.slidbarHeight
+        })
     },
     methods:{
         enter: function(e){
@@ -381,13 +388,13 @@ export default {
             $('.slid2').each(function(x){
                 let maxheight=0;
                 if($(this).offset().top>0){
-                    let domHeight=$(this).height();
+                    let domHeight=$(this).children('.three').length*50;
                     let offsettop=$(this).offset().top;
                     maxheight= _this.$store.state.slidbarHeight-offsettop;
                     if(domHeight>maxheight){
-                        $(this).css({maxHeight:maxheight,width:'470px'})
+                        $(this).css({height:maxheight,width:'470px'})
                     }else{
-                        $(this).css({maxHeight:maxheight,width:'235px'})
+                        $(this).css({height:maxheight,width:'235px'})
                     }
                 }
                 
@@ -450,9 +457,6 @@ export default {
     height: auto;
     background-color: #414e61;
     display: none;  
-    position: absolute;
-    left: 235px;
-    top:0px;
     /* transition: width 0.5s;
     -moz-transition: width 0.5s;
     -webkit-transition: width 0.5s;
@@ -483,7 +487,7 @@ export default {
     display: block;
     width: 235px;
     top: 50px;
-    z-index:5;
+    z-index:1000;
     left: 0;
     position: fixed;
     transition: all 0.5s;
@@ -498,8 +502,18 @@ export default {
     left: 50px;
 }
 .slid1{
+    left: 235px;
     background-color: #415c84;
+    position: fixed;
+    top:93px;
 }
+.slid2{
+    cursor: pointer;
+    left: 470px;
+    position: fixed;
+    top:93px;
+}
+
 .menu li{
     list-style: none; 
     width: 100%;
@@ -591,9 +605,7 @@ export default {
     float: left;
 }
 
-.slid2{
-    cursor: pointer;
-}
+
 
 /* 三角形 */
 .menu .two:hover .triangle{

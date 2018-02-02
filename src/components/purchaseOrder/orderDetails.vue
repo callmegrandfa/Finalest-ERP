@@ -1,8 +1,8 @@
 <template>
     <div class="orderDetail">
-        <el-row>
+        <el-row class="fixed">
             <el-col :span="24">
-                <button @click="back" class="erp_bt bt_back" style="margin-left:5px"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                 <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                 <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
                 <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
@@ -286,6 +286,8 @@
                     <el-col :span="24" class="operationBtn">
                         <button class="erp_bt bt_codeNew"><div class="btImg"><img src="../../../static/image/common/bt_codeNew.png"></div><span class="btDetail">扫码新增</span></button>
                         <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
+                        <button class="erp_bt bt_inputNew" @click="addRow"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">插行</span></button>
+                        <button class="erp_bt bt_inputNew" @click="delRow"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">删行</span></button>
                         <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
                         <button class="erp_bt bt_out bt_width">
                             <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
@@ -306,16 +308,36 @@
                         </div>
                     </el-col>
                     <el-table :data="tableData" stripe border style="width: 100%">
-                         <el-table-column type="selection"></el-table-column>
-                        <el-table-column prop="code" label="货号" width="220"></el-table-column>
-                        <el-table-column prop="size" label="规格" width="220"></el-table-column>
-                        <el-table-column prop="num" label="数量" width="220"></el-table-column>
-                        <el-table-column prop="money" label="零售价" width="220"></el-table-column>
-                        <el-table-column prop="volume" label="体积" width="220"></el-table-column>
+                        <el-table-column type="selection"></el-table-column>
+                        <el-table-column prop="code" label="货号">
+                            <template slot-scope="scope">
+                                <input type="text" v-model="tableData[scope.$index].code" class="table_add_td">
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="size" label="规格">
+                            <template slot-scope="scope">
+                                <input type="text" v-model="tableData[scope.$index].size" class="table_add_td">
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="num" label="数量">
+                            <template slot-scope="scope">
+                                <input type="text" v-model="tableData[scope.$index].num" class="table_add_td">
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="money" label="零售价">
+                            <template slot-scope="scope">
+                                <input type="text" v-model="tableData[scope.$index].money" class="table_add_td">
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="volume" label="体积">
+                            <template slot-scope="scope">
+                                <input type="text" v-model="tableData[scope.$index].volume" class="table_add_td">
+                            </template>
+                        </el-table-column>
                         <el-table-column fixed="right" label="操作">
                             <template slot-scope="scope">
                                 <el-button type="text" size="small">卡片展示</el-button>
-                                <el-button type="text" size="small">删除</el-button>
+                                <el-button type="text" size="small" @click="delThisRow(scope.$index,scope.row)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -361,10 +383,12 @@
     export default({
         data(){
             return{
+                x:0,
                 ifShow:true,
                 show:false,
                 activeName:'detail',
                 currentPage:4,//分页当前页
+                rows:[],
                 tableData: [{//表格
                     xid:'1',
                     code: 'A001',
@@ -459,6 +483,26 @@
             back(){
                 this.$store.state.url='/order/orderList/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            addRow(){
+                let _this=this;
+                _this.x++;
+                let newRow='newRow'+_this.x;
+                _this.rows.newRow={
+                    xid:'',
+                    code: '',
+                    size: '',
+                    num: '',
+                    money:'',
+                    volume:'',
+                }
+                _this.tableData.unshift(_this.rows.newRow)
+            },
+            delRow(){
+                
+            },
+            delThisRow(index,row){
+                this.tableData.splice(index,1);
             }
         },
     })
@@ -466,10 +510,20 @@
 <style>
  .orderDetail{
       font-family: 'microsoft yahei';
+      position: relative;
   }
   .orderDetail .step_wraper{
       position: relative;
       float: right;
+  }
+
+  .orderDetail .table_add_td{
+      text-align: center;
+      height: 26px;
+      border: none;
+  }
+  .orderDetail .table_add_td:focus{
+      outline: none;
   }
   /* 三角形 */
  
@@ -724,7 +778,7 @@
  }
 
  .orderDetail .operationBtn{
-     padding: 15px 0;
+     padding:5px 0;
  }
  /* 分页 */
  .orderDetail .pagination{
@@ -788,6 +842,10 @@
     -moz-transform: rotate(90deg);
     margin-left: 5px;
     margin-right: 10px;
+ }
+
+ .orderDetail .operationBtn .erp_bt:first-child{
+     margin-left: 0;
  }
 </style>
 

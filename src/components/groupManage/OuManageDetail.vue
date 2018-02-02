@@ -1,7 +1,7 @@
 <template>
 <!-- 集团管理-组织单元 -->
  <div class="OuDetailForm">
-     <el-row>
+     <el-row class="fixed">
          <el-col :span="24">
             <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <!-- <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->

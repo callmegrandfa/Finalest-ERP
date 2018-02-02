@@ -36,6 +36,39 @@ export default {
         content.style.minHeight=he+'px';
         _this.$store.state.slidbarHeight=$(window).height();
     }
+
+      $(window).scroll(function(){
+        console.log(_this.$store.state.fixed)
+        if($(window).scrollTop()>14){
+          
+          if(!_this.$store.state.show){
+            $('.fixed').css({
+              position:'fixed',
+              top:'93px',
+              zIndex:'999',
+              width:'calc(100% - 265px)',
+              transition: 'width 0s'
+            })
+          }else{
+             $('.fixed').css({
+              position:'fixed',
+              top:'93px',
+              zIndex:'999',
+              width:'calc(100% - 80px)',
+              transition: 'width 0s'
+            })
+          }
+          _this.$store.commit('go1');
+        }else{
+          $('.fixed').css({
+            position:'relative',
+            top:'0',
+            width:'100%',
+            transition: 'width 0s'
+          })
+          _this.$store.commit('go2');
+        }
+      })
   },
 }
 </script>

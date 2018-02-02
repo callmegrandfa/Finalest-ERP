@@ -201,7 +201,7 @@ export default {
     font-family: 'microsoft yahei';
     height: 43px;
     background-color: #eef1f5;
-    z-index: 2;
+    z-index: 999;
     transition: all 0.5s;
     -moz-transition: all 0.5s;
     -webkit-transition: all 0.5s;
