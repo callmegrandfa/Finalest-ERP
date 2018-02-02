@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-            <div class="menuBtn" @click="$store.commit('go')"></div>
+            <div class="menuBtn" @click="showSide"></div>
             <div class="pageLogo">
                 <a href="">
                 <img src="../../static/image/login/ERP.png" alt="HKERP">
@@ -54,6 +54,38 @@ export default {
     }
   },
    methods: {
+       showSide(){
+           this.$store.commit('go');
+           if(this.$store.state.fixed){
+               
+               if(this.$store.state.show){
+                //    alert(this.$store.state.show)
+                    $('.fixed').css({
+                        position:'fixed',
+                        top:'93px',
+                        zIndex:'999',
+                        width:'calc(100% - 80px)',
+                        transition: 'width 0.5s'
+                    })
+               }else{
+                   $('.fixed').css({
+                        position:'fixed',
+                        top:'93px',
+                        zIndex:'999',
+                        width:'calc(100% - 265px)',
+                        transition: 'width 0.5s'
+                    })
+               }
+               
+           }else{
+                $('.fixed').css({
+                    position:'relative',
+                    top:'0',
+                    width:'100%',
+                    transition: 'width 0s'
+                })
+           }
+       },
        cancellation(){
         window.sessionStorage.removeItem('_ERP');
         window.localStorage.removeItem('ERP');
@@ -113,7 +145,7 @@ export default {
     width: 100%;
     height: 50px;
     background-color: rgba(53, 64, 82, 1);
-    z-index: 3;
+    z-index: 999;
 }
 .header .pageLogo{
     float: left;
