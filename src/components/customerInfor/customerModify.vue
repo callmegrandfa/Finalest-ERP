@@ -672,7 +672,7 @@ export default({
                 self.open('删除地址资料失败','el-icon-error','faildERP');
             };
         },
-        addColAddress:function(){//银行增行
+        addColAddress:function(){//地址增行
             let self = this;
             self.addressData.unshift(self.createAddressParams);
             // console.log(self.bankData);
