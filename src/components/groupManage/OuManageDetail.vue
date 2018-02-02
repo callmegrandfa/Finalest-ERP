@@ -39,7 +39,7 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label><small>*</small>启用月份</label><el-date-picker v-model="addData.regtime" type="month" placeholder="请选择月份"></el-date-picker></div>
+                <div class="bgcolor"><label>公司成立时间</label><el-date-picker v-model="addData.regtime" type="month" placeholder="请选择月份"></el-date-picker></div>
                 <div class="bgcolor">
                     <label>本位币种</label>
                     <el-select v-model="addData.baseCurrencyId">
@@ -112,13 +112,7 @@
                                     </el-select>
                                 </div>
                                 <div class="bgcolor"><label>法人代表</label><el-input v-model="addData.legalPerson" placeholder="请输入法人代表"></el-input></div>
-                                <div class="bgcolor">
-                                    <label>用户状态</label>
-                                    <el-select v-model="addData.status">
-                                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
-                                        </el-option>
-                                    </el-select>
-                                </div>
+                                
                             </el-col>
                          </div>
                      </el-col>   
@@ -133,13 +127,13 @@
     <el-col :span="24" class="getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="creatorUser.fullName" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-input v-model="auditInfo.creationTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInfo.lastModifierUserId" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-input v-model="auditInfo.lastModificationTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>启用日期</label><el-input v-model="auditInfo.startTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>封存日期</label><el-input v-model="auditInfo.lastModificationTime" :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInfo.lastModifierUser" :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>创建人</label><el-input :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>创建时间</label><el-input :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>修改人</label><el-input :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>修改时间</label><el-input :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>启用日期</label><el-input :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>封存日期</label><el-input :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>封存人</label><el-input :disabled="true"></el-input></div>
         </div>                                  
     </el-col>
 </el-row>                                                           
@@ -154,12 +148,11 @@ export default({
             show:true,
             ifShow:true,
             activeName: 'company',
-            creatorUser:[],
             auditInfo:{},//审计信息
             addData:{//post需要的键值对
                 groupId:1,//集团ID
-                ouCode: '默认',//组织代码
-                ouName: '默认' ,//组织名称
+                ouCode: '',//组织代码
+                ouName: '' ,//组织名称
                 foreignName: '默认' ,//外文名称
                 mnemonic: '默认' ,//助记码
                 ouParentid: 1 ,//上级组织ID
@@ -167,18 +160,18 @@ export default({
                 baseCurrencyId: 1,//本位币种id
                 companyOuId: 1,//所属公司ID
                 contactPerson: '默认' ,//联系人
-                phone: '默认' ,//电话
-                address: '默认' ,//地址
+                phone: '' ,//电话
+                address: '' ,//地址
                 areaId: 1 ,//行政区域ID
                 entityProperty : 1 ,//实体属性
                 status: 1 ,//启用状态
-                remark: '默认' ,//备注
-                basOuTypes: [ 1,2 ],//组织职能
-                isGroupCompany:false ,//是否是法人公司
+                remark: '' ,//备注
+                basOuTypes: [ 1,2,3,4,5,6 ],//组织职能
+                isGroupCompany:true ,//是否是法人公司
                 ouCompanyParentid: 1 ,//上级公司组织ID
-                legalPerson: '默认' ,//法人代表
-                companyStatus: 1 ,//公司启用状态
-                regtime: '2018-01-23T02:20:35.833Z'//公司成立时间
+                legalPerson: '',//法人代表
+                companyStatus: 0 ,//公司启用状态
+                regtime: '2018-01'//公司成立时间
             },
             ischeck:{isCheckCompany:true,//公司复选框初始选种状态
                     isCheckFinance:false,//财务复选框初始选种状态
@@ -343,7 +336,7 @@ export default({
                         entityProperty : res.result.entityProperty,//实体属性
                         status: res.result.status,//启用状态存在
                         remark: res.result.remark ,//备注存在
-                        basOuTypes: [0],//组织职能
+                        basOuTypes: [1,2,3,4,5,6],//组织职能
                         isGroupCompany:res.result.isGroupCompany ,//
                         ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
                         legalPerson:res.result.legalPerson ,//法人代表
@@ -352,7 +345,7 @@ export default({
                     };
                     _this.auditInfo={
                         id:res.result.id,
-                        lastModifierUser:res.result.lastModifierUser,
+                        lastModifierUserName:res.result.lastModifierUserName,
                         isDeleted:res.result.isDeleted,
                         deleterUserId:res.result.deleterUserId,
                         deletionTime:res.result.deletionTime,
@@ -366,16 +359,48 @@ export default({
                         isCapital :res.result.isCapital ,//是否是资金
                         isPurchase :res.result.isPurchase ,//是否是采购
                     }
-                    if(res.result.creatorUser!=null){
-                        _this.creatorUser=res.result.creatorUser
-                    }
+                    
                     _this.isSave=false;
                     _this.open('保存成功','el-icon-circle-check','successERP');
                 },function(res){
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
             }else{
-                _this.open('保存失败','el-icon-error','faildERP');
+                _this.addData.id=_this.auditInfo.id;
+                 _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
+                    //console.log(res)
+                    _this.addData=res.result;
+                     _this.addData={
+                        groupId:1,//集团ID
+                        id:res.result.id,
+                        ouCode: res.result.ouCode,//组织代码存在 
+                        ouName: res.result.ouName ,//组织名称存在
+                        foreignName: res.result.foreignName ,//外文名称
+                        mnemonic: res.result.mnemonic,//助记码
+                        ouParentid: res.result.ouParentid ,//上级组织ID存在
+                        accountPeriodId: res.result.accountPeriodId ,//会计期间ID
+                        baseCurrencyId: res.result.baseCurrencyId,//本位币种id存在
+                        companyOuId: res.result.companyOuId,//所属公司ID存在
+                        contactPerson: res.result.contactPerson ,//联系人存在
+                        phone: res.result.phone ,//电话存在
+                        address:res.result.address ,//地址存在
+                        areaId: res.result.areaId,//行政区域ID
+                        entityProperty : res.result.entityProperty,//实体属性
+                        status: res.result.status,//启用状态存在
+                        remark: res.result.remark ,//备注存在
+                        basOuTypes: [0],//组织职能
+                        isGroupCompany:res.result.isGroupCompany ,//
+                        ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
+                        legalPerson:res.result.legalPerson ,//法人代表
+                        companyStatus: res.result.companyStatus ,//公司启用状态
+                        regtime:res.result.regtime//公司成立时间
+                    };
+                    
+                    _this.isSave=false;
+                    _this.open('保存成功','el-icon-circle-check','successERP');
+                },function(res){
+                    _this.open('保存失败','el-icon-error','faildERP');
+                })
             }
         },
         saveAdd(){

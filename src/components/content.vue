@@ -45,18 +45,7 @@ export default {
   data(){
       return{
           x:0,
-          go:0,
       }
-  },
-  mounted:function(){
-    this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
-         let content=document.getElementById('contents');//设置高度为全屏
-         let height=window.innerHeight-123;
-         content.style.minHeight=height+'px';
-         window.onresize = function(){
-            let h=window.innerHeight-123;
-            content.style.minHeight=h+'px';
-        }
   },
   methods:{
       right:function(){

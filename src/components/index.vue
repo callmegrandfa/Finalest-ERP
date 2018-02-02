@@ -19,7 +19,24 @@ export default {
     'app-header':header,
     'app-sidebar':sidebar,
     'app-content':content,
-  }
+  },
+  data(){
+      return{
+          go:0,
+      }
+  },
+  mounted:function(){
+    let _this=this;
+      _this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
+      let content=document.getElementById('contents');//设置高度为全屏
+      let height=window.innerHeight-123;
+      content.style.minHeight=height+'px';
+      window.onresize = function(){
+        let he=window.innerHeight-123;
+        content.style.minHeight=he+'px';
+        _this.$store.state.slidbarHeight=$(window).height();
+    }
+  },
 }
 </script>
 <style scoped>
