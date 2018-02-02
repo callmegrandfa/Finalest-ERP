@@ -479,29 +479,7 @@ export default({
   .OuDetailForm{
       font-family: 'microsoft yahei';
   }
-  /*收起*/
- .OuDetailForm .upBt{
-     font-size: 12px;
-     float: right;
-     margin-right: 10px;
-     margin-top: 10px;
-     cursor: pointer;
- }
- .OuDetailForm .upBt i{
-    transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s; 
-    color:#cacaca;
-    margin-left: 5px;
- }
- .OuDetailForm .upBt i.rotate{
-     transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);	
- }
+
 
 /*表单提示信息*/
 .OuDetailForm  .errorTips{
@@ -517,7 +495,9 @@ export default({
 .OuDetailForm .el-row:last-child{
       border-bottom:none;
   }
-
+.OuDetailForm>.el-row:first-child{
+      padding:5px 0;
+  }
 .OuDetailForm .tabZoo .getPadding:first-child{
     padding-bottom: 15px;
 }
@@ -531,6 +511,5 @@ export default({
 .OuDetailForm .nopadding{
     padding-top: 0;
 }
-
   </style>
   

@@ -61,7 +61,11 @@
                     <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
                     <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+                    <button class="erp_bt bt_auxiliary bt_width">
+                        <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
+                        <span class="btDetail">辅助功能</span>
+                        <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                    </button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
                 </el-row>
 

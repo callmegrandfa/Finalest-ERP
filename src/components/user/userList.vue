@@ -435,22 +435,4 @@
     -webkit-transform-origin: center;
     transform-origin: center;
 }
-
-/* 重写el-table样式 */
-.user-list-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.user-list-wrapper .el-table td{
-    padding: 3px 0;
-}
-.user-list-wrapper .el-table__body{
-    text-align: center;
-}
-/* 重写el-pagination样式 */
 </style>

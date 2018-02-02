@@ -475,26 +475,4 @@
     -webkit-transform-origin: center;
     transform-origin: center;
 }
-
-/* 重写el-table样式 */
-.billList .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.billList .el-table td{
-    padding: 3px 0;
-}
-.billList .el-table__body{
-    text-align: center;
-}
-.billList .el-table__body .el-table__row .el-table_1_column_2 .cell{
-    color:#33CCCC;
-}
-
-
 </style>

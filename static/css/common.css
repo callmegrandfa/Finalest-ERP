@@ -20,6 +20,22 @@
 .el-tabs__header{
   z-index: 1;
 }
+/* 重写el-table样式 */
+.el-table th {
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+  text-align: left;
+  padding: 5px 0;
+  text-align: center;
+  background-color: #ececec;
+}
+.el-table td{
+  padding: 3px 0;
+}
+.el-table__body{
+  text-align: center;
+}
 /* elementUI分页 */
 /* <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage"></el-pagination> */
 .el-pagination .btn-next, 
@@ -193,12 +209,27 @@
     /* 按钮 应用请更改图片相对路径 详情参考register.vue*/
     /* <button class="erp_bt bt_add"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
     <button class="erp_bt bt_out"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+    <button class="erp_bt bt_out bt_width">
+      <div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div>
+      <span class="btDetail">导出</span>
+      <div class="btRightImg"><img src="../../static/image/common/bt_down_right.png"></div>
+    </button>
     <button class="erp_bt bt_in"><div class="btImg"><img src="../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
     <button class="erp_bt bt_del"><div class="btImg"><img src="../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
     <button class="erp_bt bt_modify"><div class="btImg"><img src="../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
     <button class="erp_bt bt_version"><div class="btImg"><img src="../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
     <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+    <button class="erp_bt bt_auxiliary bt_width">
+      <div class="btImg"><img src="../../static/image/common/bt_auxiliary.png"></div>
+      <span class="btDetail">辅助功能</span>
+      <div class="btRightImg"><img src="../../static/image/common/bt_down_right.png"></div>
+    </button>
     <button class="erp_bt bt_look"><div class="btImg"><img src="../../static/image/common/bt_look.png"></div><span class="btDetail">审核</span></button>
+    <button class="erp_bt bt_look bt_width">
+      <div class="btImg"><img src="../../static/image/common/bt_look.png"></div>
+      <span class="btDetail">审核</span>
+      <div class="btRightImg"><img src="../../static/image/common/bt_down_right.png"></div>
+    </button>
     <button class="erp_bt bt_circulation"><div class="btImg"><img src="../../static/image/common/bt_circulation.png"></div><span class="btDetail">流转</span></button>
     <button class="erp_bt bt_inputNew"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">输入新增</span></button>
     <button class="erp_bt bt_end"><div class="btImg"><img src="../../static/image/common/bt_end.png"></div><span class="btDetail">终止</span></button>
@@ -247,6 +278,9 @@
         float: left;
         margin-right: 2px;
       }
+      .bt_width{
+        padding: 0 30px 0 10px;
+      }
       .erp_bt:first-child{
         margin-left: 10px;
       }
@@ -258,6 +292,20 @@
         width: 14px;
         height: 14px;
         top:10px;
+      }
+      .bt_width .btRightImg{
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        top:10px;
+        right: 7px;
+      }
+      .bt_width .btRightImg img{
+        max-width: 100%;
+        max-height: 100%;
+        position: absolute;
+        left: 0;
+        top:5px;
       }
       .erp_bt.bt_cancel .btImg img{
         top: 5px;
@@ -319,7 +367,7 @@
       background-color: #f93;
     }
     .bt_look{
-      background-color: #f93;
+      background-color: #96f;
     }
     .bt_circulation{
       background-color: #82aafc;
@@ -668,3 +716,92 @@ end-placeholder="结束日期">
 .smallRangeDate .el-range-separator{
   line-height: 28px;
 }
+ /* step 步骤条*/
+ /* <el-col :span="6">
+    <el-col class="stepItem" :span="8">
+        <div class="stepCircle">1</div>
+        <div class="stepMsg">
+            <p>&nbsp;&nbsp;Step1</p>
+            <p>&nbsp;&nbsp;新增报表信息</p>
+        </div>
+    </el-col>
+    <el-col class="stepItem" :span="8">
+        <div class="stepCircle stepActive">2</div>
+        <div class="stepMsg">
+            <p>&nbsp;&nbsp;Step2</p>
+            <p>&nbsp;&nbsp;提交审核</p>
+        </div>
+    </el-col>
+    <el-col class="stepItem" :span="8">
+        <div class="stepCircle">3</div>
+        <div class="stepMsg">
+            <p>&nbsp;&nbsp;Step3</p>
+            <p>&nbsp;&nbsp;完成</p>
+        </div>
+    </el-col>
+</el-col> */
+ .stepItem{
+  height: 36px;
+}
+.stepCircle{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 36px;
+  font-family: 'microsoft yahei';
+  font-weight: 700;
+  font-style: normal;
+  font-size: 16px;
+  color: #333333;
+  background-color: #d7d7d7;
+  float: left;
+}
+.stepActive{
+  background-color: #F55E6E;
+  color: #fff;
+}
+.stepMsg{
+ float: left;
+ width: calc(100% - 36px);
+ color: #333333;
+ height: 36px;
+ white-space: nowrap;
+}
+.stepMsg p{
+ font-family: 'microsoft yahei';
+ font-weight: 400;
+ font-style: normal;
+ font-size: 12px;
+}
+
+ /* 收起 */
+ /* <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span> */
+ /* <el-collapse-transition>
+        <div v-show="ifShow">
+        将要收起的内容
+        </div>
+    </el-collapse-transition> */
+.upBt{
+  font-size: 12px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.upBt i{
+ transition: all 0.5s;
+ -moz-transition: all 0.5s;
+ -webkit-transition: all 0.5s;
+ -o-transition: all 0.5s; 
+ color:#cacaca;
+ margin-left: 5px;
+}
+.upBt i.rotate{
+  transform: rotate(-90deg);
+ -ms-transform: rotate(-90deg);
+ -webkit-transform: rotate(-90deg);
+ -o-transform: rotate(-90deg);
+ -moz-transform: rotate(-90deg);	
+}
+
