@@ -560,6 +560,9 @@ export default({
             addressData:[],//地址数据列表，开始为空
             updataAddressList:[],//修改的银行信息
 
+            ouData:[],//组织数据列表，开始为空
+            updataOuList:[],//修改的组织信息
+
             
         }
     },

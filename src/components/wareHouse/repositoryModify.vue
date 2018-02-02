@@ -249,6 +249,7 @@
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 
                                     v-on:click="handleEdit(scope.$index,scope.row)"
+                                    @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -259,6 +260,7 @@
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.phone" 
                                     v-on:click="handleEdit(scope.$index,scope.row)"
+                                    @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -270,6 +272,7 @@
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.completeAddress" 
                                     v-on:click="handleEdit(scope.$index,scope.row)"
+                                    @change='handleChange(scope.$index,scope.row)'
                                     type="text" />
                         </template>
                     </el-table-column>
@@ -280,6 +283,7 @@
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.transportMethodId" 
                                     v-on:click="handleEdit(scope.$index,scope.row)"
+                                    @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -290,6 +294,7 @@
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.logisticsCompany" 
                                     v-on:click="handleEdit(scope.$index,scope.row)"
+                                    @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -306,6 +311,7 @@
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.remark" 
                                     v-on:click="handleEdit(scope.$index,scope.row)"
+                                    @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -445,10 +451,22 @@
 
             addCol:function(){//增行
                 let self = this;
-                // console.log(1)
-                console.log(self.repositoryAddressData)
-                self.repositoryAddressData.unshift(self.createParams);
-                console.log(self.repositoryAddressData)
+
+                self.x++;
+                let newCol = 'newCol'+self.x;
+                self.rows.newCol ={
+                    groupId:'1',//集团ID
+                    stockId:'',//仓库ID
+                    addressId:'2',//地址ID
+                    completeAddress:'',//详情地址
+                    transportMethodId:'',//运输方式
+                    contactPerson:'',//联系人
+                    phone:'',//联系电话
+                    logisticsCompany:'',//物流公司
+                    isDefault:true,//是否默认
+                    remark:'',//备注
+                };
+                self.repositoryAddressData.unshift(self.rows.newCol);
             },
 
             saveAddress:function(){//下方保存按钮，保存新增的仓库地址信息
@@ -483,13 +501,13 @@
             },
 
             handleEdit:function(index,row){//表格内编辑操作
-                // this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
-                // console.log(this.isEdit)
-                let self = this;
-                self.updataList.push(row);
-                console.log(self.updataList);
+                
             },
-
+            handleChange:function(index,row){
+                let self = this;
+                self.updateList.push(row);
+                // console.log(self.updateList)
+            },
             handleDelete:function(index,id){//表格内删除操作
                 this.repositoryAddressData.splice(index,1);
                 this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
@@ -583,6 +601,8 @@
                     remark:'',//备注
                 },
                 updataList:[],
+                x:0,//增行的下标
+                rows:[],//增行的数组
             }
         },
     }

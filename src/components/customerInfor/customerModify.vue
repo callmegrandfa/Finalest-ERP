@@ -517,10 +517,17 @@ export default({
             customerData:'',//根据id获得的客户信息
             bankData:[],//根据groupId获得银行信息
             addressData:[],//获取的所有地址信息/也可以根据contactId获得地址信息
+            ouData:[],//
 
             updataBankList:[],//需要修改的银行信息
             updataAddressList:[],//需要修改的地址信息
             updataOuList:[],//需要修改的组织信息
+            x:0,
+            y:0,
+            z:0,
+            xrows:[],
+            yrows:[],
+            zrows:[],
 
             createBankParams:{//创建银行的参数
                 "groupId": 1,
@@ -534,15 +541,22 @@ export default({
                 "isDefault": true
             },
             createAddressParams:{//创建地址的参数
-                "groupId": 0,
-                "contactId": 0,
-                "addressType": 0,
-                "addressId": 0,
-                "completeAddress": "string",
-                "contactPerson": "string",
-                "phone": "string",
+                "groupId": 1,
+                "contactId": '',
+                "addressType": '',
+                "addressId": '',
+                "completeAddress": "",
+                "contactPerson": "",
+                "phone": "",
                 "isDefault": true
-            }
+            },
+            createOuParams:{//创建组织参数
+                "groupId": 1,
+                "contactId": '',
+                "ouId": '',
+                "transport_method_id": '',
+                "is_default": true
+            },
         }
     },
     methods:{
@@ -635,12 +649,26 @@ export default({
                 self.open('创建地址信息失败','el-icon-error','faildERP');
             };
         },
+        createOu:function(){//创建组织资料
+            let self = this;
+            self.createAddressParams.contactId = self.$route.params.id;
+
+            this.$axios.posts('/api/services/app/ContactOuManagement/Create',self.createOuParams).then(function(res){         
+                self.open('创建组织信息成功','el-icon-circle-check','successERP');
+                console.log(res)
+            }),function(res){
+                self.open('创建组织信息失败','el-icon-error','faildERP');
+            };
+        },
         //-------------------------------------------------------
 
         // ---控制表格编辑----------------------------------------
         handleBankEdit:function(index,row){//银行信息编辑
+        
+        },
+        handleBankChange:function(index,row){
             let self = this;
-            self.updataBankList.push(row)
+            self.updataBankList.push(row);
         },
         handleBankDelete:function(index,row){//银行表格内删除操作
             let self = this;
@@ -654,13 +682,28 @@ export default({
         },
         addColbank:function(){//银行增行
             let self = this;
-            self.bankData.unshift(self.createBankParams);
-            console.log(self.bankData);
+            self.x++;
+            let newCol = 'newCol'+self.x;
+            self.xrows.newCol ={
+                "groupId": 1,
+                "contactId":'',
+                "settlementCurrencyId": '',
+                "accountNo": "",
+                "accountName": "",
+                "openingBank": '',
+                "contactPerson": '',
+                "phone": '',
+                "isDefault": true
+            };
+            self.bankData.unshift(self.xrows.newCol)
         },
 
-        handleAddressEdit:function(){//地址信息编辑
+        handleAddressEdit:function(index,row){//地址信息编辑
+            
+        },
+        handleAddressChange:function(index,row){
             let self = this;
-            self.updataBankList.push(row)
+            self.updataAddressList.push(row);
         },
         handleAddressDelete:function(index,row){//地址表格内删除操作
             let self = this;
@@ -674,9 +717,23 @@ export default({
         },
         addColAddress:function(){//地址增行
             let self = this;
-            self.addressData.unshift(self.createAddressParams);
-            // console.log(self.bankData);
+            self.y++;
+            let newCol = 'newCol'+self.y;
+            self.yrows.newCol ={
+                "groupId": 1,
+                "contactId": '',
+                "addressType": '',
+                "addressId": '',
+                "completeAddress": "",
+                "contactPerson": "",
+                "phone": "",
+                "isDefault": true
+            };
+            self.addressData.unshift(self.yrows.newCol)
         },
+        //-----------------------------------------------------------
+
+        //---路由------open------------------------------------------
         back(){//点击新增跳转
             this.$store.state.url='/customer/customerList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由

@@ -57,6 +57,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.seq" 
                                             v-on:click="handleEdit(scope.$index,scope.row)"
+                                            @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -69,6 +70,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.currency_code" 
                                             v-on:click="handleEdit(scope.$index,scope.row)"
+                                            @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -79,6 +81,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.currency_name" 
                                             v-on:click="handleEdit(scope.$index,scope.row)"
+                                            @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -89,6 +92,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.increment" 
                                             v-on:click="handleEdit(scope.$index,scope.row)"
+                                            @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -99,6 +103,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.status" 
                                             v-on:click="handleEdit(scope.$index,scope.row)"
+                                            @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -109,6 +114,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.remark" 
                                             v-on:click="handleEdit(scope.$index,scope.row)"
+                                            @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -118,7 +124,7 @@
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.createBy" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
+                                            disabled
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -128,7 +134,7 @@
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.createTime" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
+                                            disabled
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -191,7 +197,8 @@
                 total:'',//数据总条数
                 page:1,//当前页
                 eachPage:10,//一页显示的数量
-                
+                x:0,//增行的下标
+                rows:[],//增行的数组
                 createParams:{
                     "group_id": 1,
                     "currency_code": "",
@@ -254,7 +261,18 @@
         },
         addCol:function(){//增行
                 let self = this;
-                self.allList.unshift(self.createParams);
+                self.x++;
+                let newCol = 'newCol'+self.x;
+                self.rows.newCol ={
+                    "group_id": 1,
+                    "currency_code": "",
+                    "currency_name": "",
+                    "increment": '',
+                    "seq": '',
+                    "status": '',
+                    "remark": ""
+                };
+                self.allList.unshift(self.rows.newCol);
             },
         //-----------------------------------------------------------------
 
@@ -296,8 +314,13 @@
                 this.loadAllList();
             },
             handleEdit:function(index,row){//表格内编辑操作
+                
+                
+            },
+            handleChange:function(index,row){
                 let self = this;
                 self.updateList.push(row);
+                console.log(self.updateList)
             },
             handleDel:function(id){//每行右边的删除
                 let self = this;
