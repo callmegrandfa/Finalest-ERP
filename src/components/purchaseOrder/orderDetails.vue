@@ -306,7 +306,7 @@
                         </div>
                     </el-col>
                     <el-table :data="tableData" stripe border style="width: 100%">
-                        <el-table-column prop="xid"  width="50" label=""></el-table-column>
+                         <el-table-column type="selection"></el-table-column>
                         <el-table-column prop="code" label="货号" width="220"></el-table-column>
                         <el-table-column prop="size" label="规格" width="220"></el-table-column>
                         <el-table-column prop="num" label="数量" width="220"></el-table-column>
@@ -448,13 +448,13 @@
         },
         methods:{
             handleClick(row) {
-                console.log(row);
+                // console.log(row);
             },
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                // console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                // console.log(`当前页: ${val}`);
             },
             back(){
                 this.$store.state.url='/order/orderList/default'
