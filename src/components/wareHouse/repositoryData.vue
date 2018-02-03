@@ -430,7 +430,21 @@
 
             addCol:function(){//增行
                 let self = this;
-                self.allList.unshift(self.createRepositoryAddressParams);
+                self.x++;
+                let newCol = 'newCol'+self.x;
+                self.rows.newCol ={
+                    groupId:'1',//集团ID
+                    stockId:'16',//仓库ID
+                    addressId:'2',//地址ID
+                    completeAddress:'',//详情地址
+                    transportMethodId:'',//运输方式
+                    contactPerson:'',//联系人
+                    phone:'',//联系电话
+                    logisticsCompany:'',//物流公司
+                    isDefault:true,//是否默认
+                    remark:'',//备注
+                };
+                self.allList.unshift(self.rows.newCol);
             },
 
             clearData:function(){//清除创建的参数
@@ -454,7 +468,6 @@
             },
 
             handleEdit:function(index){//表格内编辑操作
-                // this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
 
             },
 
@@ -544,6 +557,8 @@
                     isDefault:true,//是否默认
                     remark:'',//备注
                 },
+                x:0,//增行的下标
+                rows:[],//增行的数组
             }
         },
     }
