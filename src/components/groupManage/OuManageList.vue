@@ -37,9 +37,17 @@
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
-                    <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                    <button class="erp_bt bt_out bt_width">
+                        <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
+                        <span class="btDetail">导出</span>
+                        <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                    </button>
                     <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
-                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>                   
+                    <button class="erp_bt bt_auxiliary bt_width">
+                        <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
+                        <span class="btDetail">辅助功能</span>
+                        <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                    </button>                
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
@@ -86,13 +94,15 @@
                                     <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
                                 </template>
                             </el-table-column>
-                        </el-table>  
+                        </el-table>
                         <el-pagination
                         style="margin-top:20px;" 
                         class="text-right" 
-                        background layout="total, prev, pager, next" 
+                        background layout="total,prev, pager, next,jumper" 
                         @current-change="handleCurrentChange"
-                        :page-count="totalPage" >
+                        :current-page="pageIndex"
+                        :page-size="oneItem"
+                        :total="totalItem">
                         </el-pagination>   
                     </el-col>
                 </el-row>
@@ -155,7 +165,7 @@
                     children: 'children',
                     label: 'label'
                 },
-                pageIndex:-1,//分页的当前页码
+                pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
                 multipleSelection: [],//复选框选中数据
@@ -163,6 +173,7 @@
                 treeCheck:[],
                 isClick:[],
                 load:true,
+                totalItem:0,//总共有多少条消息
             }
         },
         created:function(){       
@@ -185,7 +196,11 @@
                  let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
-                    console.log(res)
+                     $.each( _this.tableData,function(index,value){//处理时间格式
+                       let creationTime=value.creationTime.slice(0,value.creationTime.indexOf(".")).replace("T"," ");
+                       _this.tableData[index].creationTime=creationTime;
+                    })
+                    _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){
                 })
@@ -194,7 +209,6 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
                 .then(function(res){
-                    console.log(res)
                     let children=[];
                     if(res.result.length>0){
                         for(let i=0;i<res.result.length;i++){

@@ -35,12 +35,37 @@ export default {
         let he=window.innerHeight-123;
         content.style.minHeight=he+'px';
         _this.$store.state.slidbarHeight=$(window).height();
+
+        $('.menu').css({height:_this.$store.state.slidbarHeight-43+'px'})
+        if($('.menu').height()<$('.menu').children('.one').length*50){
+            $('.menu').css({overflowY:'scroll'})
+        }else{
+            $('.menu').css({overflowY:'hidden'})
+        }   
+        $('.slid1').each(function(){
+            $(this).css({
+                height:_this.$store.state.slidbarHeight-93+'px'
+            })
+            if($(this).height()<$(this).children('.two').length*50){
+                $(this).css({overflowY:'scroll'})
+            }else{
+                $(this).css({overflowY:'hidden'})
+            }
+        })
+        $('.slid2').each(function(x){
+            $(this).css({
+                height:_this.$store.state.slidbarHeight-93+'px'
+            })
+            if($(this).height()<$(this).children('.three').length*50){
+                $(this).css({width:'470px'})
+            }else{
+                $(this).css({width:'235px'})
+            }
+        })
     }
 
       $(window).scroll(function(){
-        console.log(_this.$store.state.fixed)
         if($(window).scrollTop()>14){
-          
           if(!_this.$store.state.show){
             $('.fixed').css({
               position:'fixed',

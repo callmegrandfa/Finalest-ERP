@@ -5,11 +5,11 @@
             <a class="oneA" href="javascript:;">版本动态</a>
             <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
         </li>
-        <li class="one">
+        <li class="one" @mouseenter="enter1">
             <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
             <a class="oneA" href="javascript:;">测试</a>
             <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel1" @mouseenter="enter">
+                <li class="two" v-for="i in secondLevel1" @mouseenter="enter2">
                     <a href="javascript:;">{{i.name}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
@@ -20,11 +20,11 @@
                 </li>
             </ul>
         </li>
-        <li class="one">
+        <li class="one" @mouseenter="enter1">
             <span class="menuIcon"><img src="../../static/image/login/setting.png"></span>
             <a class="oneA" href="javascript:;">系统管理</a>
             <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel2" @mouseenter="enter">
+                <li class="two" v-for="i in secondLevel2" @mouseenter="enter2">
                     <a href="javascript:;">{{i.name}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
@@ -35,11 +35,11 @@
                 </li>
             </ul>
         </li>
-        <li class="one">
+        <li class="one" @mouseenter="enter1">
             <span class="menuIcon"><img src="../../static/image/siderbar/基础资料.png"></span>
             <a class="oneA" href="javascript:;">基础资料</a>
             <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel3">
+                <li class="two" v-for="i in secondLevel3" @mouseenter="enter2">
                     <a href="javascript:;">{{i.name}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
@@ -228,7 +228,7 @@ export default {
                 thirdInfo:[
                      {name:'仓库资料',address:'repository'}, 
                 ]
-            }],
+            },],
         secondLevel2:[{
             name:'基础资料',
             thirdInfo:[
@@ -374,30 +374,38 @@ export default {
     mounted:function(){
         let _this=this;
         _this.$store.state.slidbarHeight=$(window).height();
-
-        $('.slid1').css({
-            height:_this.$store.state.slidbarHeight
-        })
-        $('.slid2').css({
-            height:_this.$store.state.slidbarHeight
-        })
+        $('.menu').css({height:_this.$store.state.slidbarHeight-43+'px'})
+        if($('.menu').height()<$('.menu').children('.one').length*50){
+            $('.menu').css({overflowY:'scroll'})
+        }else{
+            $('.menu').css({overflowY:'hidden'})
+        }
     },
     methods:{
-        enter: function(e){
+        enter1:function(){
+            let _this=this;     
+             $('.slid1').each(function(){
+                $(this).css({
+                    height:_this.$store.state.slidbarHeight-93+'px'
+                })
+                if($(this).height()<$(this).children('.two').length*50){
+                    $(this).css({overflowY:'scroll'})
+                }else{
+                    $(this).css({overflowY:'hidden'})
+                }
+            })
+        },
+        enter2: function(){
             let _this=this;
             $('.slid2').each(function(x){
-                let maxheight=0;
-                if($(this).offset().top>0){
-                    let domHeight=$(this).children('.three').length*50;
-                    let offsettop=$(this).offset().top;
-                    maxheight= _this.$store.state.slidbarHeight-offsettop;
-                    if(domHeight>maxheight){
-                        $(this).css({height:maxheight,width:'470px'})
-                    }else{
-                        $(this).css({height:maxheight,width:'235px'})
-                    }
+                $(this).css({
+                    height:_this.$store.state.slidbarHeight-93+'px'
+                })
+                if($(this).height()<$(this).children('.three').length*50){
+                    $(this).css({width:'470px'})
+                }else{
+                    $(this).css({width:'235px'})
                 }
-                
             })
         },
         switch(){
@@ -501,13 +509,24 @@ export default {
 .menuActive .slid1{
     left: 50px;
 }
+.menuActive .slid1 .slid2{
+    left: 285px;
+}
 .slid1{
+    transition: left 0.5s;
+    -moz-transition: left 0.5s;
+    -webkit-transition: left 0.5s;
+    -o-transition: left 0.5s; 
     left: 235px;
     background-color: #415c84;
     position: fixed;
     top:93px;
 }
 .slid2{
+    transition: left 0.5s;
+    -moz-transition: left 0.5s;
+    -webkit-transition: left 0.5s;
+    -o-transition: left 0.5s;
     cursor: pointer;
     left: 470px;
     position: fixed;
@@ -536,6 +555,7 @@ export default {
     height: 21px;
 }
 .one .versionInfo{
+    z-index: 1000;
     font-size: 12px;
     color: #fff;
     background-color:#f66;
@@ -560,7 +580,7 @@ export default {
     left: 26px!important;
     width: 30px!important;
 }
-.menu .one:hover,.menu .three:hover{
+.menu .one:hover{
     background: #415c84;
     color: #e4e9f2;
     box-shadow: 0 4px 0 #3b4758;
@@ -596,6 +616,9 @@ export default {
 .menu li.one:hover .slid1{
     display: block;
 }
+.menu li.two:hover>a{
+    color: #33cbcb;
+}
 .menu li.two:hover .slid2{
     display: block;
     width: 235px;
@@ -622,24 +645,47 @@ export default {
     border-right: 10px solid #414e61;
     border-bottom: 10px solid transparent;
 }
-.slid2::-webkit-scrollbar {
+.menu::-webkit-scrollbar {
+    display: none;
     width:10px;
     height:10px;
 }
-.slid2::-webkit-scrollbar-button    {
+.menu::-webkit-scrollbar-button    {
     background-color:#414e61;
 }
-.slid2::-webkit-scrollbar-track     {
+.menu::-webkit-scrollbar-track     {
     background:#414e61;
 }
-.slid2::-webkit-scrollbar-thumb{
+.menu::-webkit-scrollbar-thumb{
     background:#000;
     border-radius:4px;
 }
-.slid2::-webkit-scrollbar-corner {
+.menu::-webkit-scrollbar-corner {
     background:#414e61;
 }
-.slid2::-webkit-scrollbar-resizer  {
+.menu::-webkit-scrollbar-resizer  {
+    background:#414e61;
+}
+
+.slid1::-webkit-scrollbar {
+    display: none;
+    width:10px;
+    height:10px;
+}
+.slid1::-webkit-scrollbar-button    {
+    background-color:#414e61;
+}
+.slid1::-webkit-scrollbar-track     {
+    background:#414e61;
+}
+.slid1::-webkit-scrollbar-thumb{
+    background:#000;
+    border-radius:4px;
+}
+.slid1::-webkit-scrollbar-corner {
+    background:#414e61;
+}
+.slid1::-webkit-scrollbar-resizer  {
     background:#414e61;
 }
 </style>

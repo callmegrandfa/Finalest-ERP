@@ -145,7 +145,7 @@ export default {
     width: 100%;
     height: 50px;
     background-color: rgba(53, 64, 82, 1);
-    z-index: 999;
+    z-index: 1000;
 }
 .header .pageLogo{
     float: left;
