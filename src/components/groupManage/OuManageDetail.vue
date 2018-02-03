@@ -34,7 +34,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>全称</label>
-                    <el-input v-model="addData.ouName" placeholder="无字段"></el-input>
+                    <el-input placeholder="无字段"></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>上级业务单元</label>
