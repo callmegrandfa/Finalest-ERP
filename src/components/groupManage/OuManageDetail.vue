@@ -7,7 +7,11 @@
             <!-- <button class="erp_bt bt_add" @click="newAdd"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
             <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button class="erp_bt bt_saveAdd" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-            <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+            <button class="erp_bt bt_auxiliary bt_width">
+                <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
+                <span class="btDetail">辅助功能</span>
+                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+            </button>  
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
      </el-row>
@@ -30,7 +34,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>全称</label>
-                    <el-input v-model="addData.ouName" placeholder="请选择仓库"></el-input>
+                    <el-input placeholder="无字段"></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>上级业务单元</label>
@@ -39,18 +43,18 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label>公司成立时间</label><el-date-picker v-model="addData.regtime" type="month" placeholder="请选择月份"></el-date-picker></div>
+                <div class="bgcolor"><label>公司成立时间</label><el-date-picker v-model="addData.regtime" type="date" placeholder="请选择公司成立时间"></el-date-picker></div>
                 <div class="bgcolor">
                     <label>本位币种</label>
                     <el-select v-model="addData.baseCurrencyId">
-                        <el-option v-for="item in money" :key="item.baseCurrencyId" :label="item.label" :value="item.baseCurrencyId">
+                        <el-option v-for="item in money" :key="item.baseCurrencyId" :label="item.label" :value="item.baseCurrencyId" placeholder="请选择本位币种">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
                     <el-select v-model="addData.companyOuId">
-                        <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany">
+                        <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany" placeholder="请选择所属公司">
                         </el-option>
                     </el-select>
                 </div>
@@ -61,7 +65,7 @@
                 <div class="bgcolor">
                     <label>用户状态</label>
                     <el-select v-model="addData.status">
-                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState">
+                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState" placeholder="请选择用户状态">
                         </el-option>
                     </el-select>
                 </div>
