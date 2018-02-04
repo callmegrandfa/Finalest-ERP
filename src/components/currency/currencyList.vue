@@ -174,6 +174,7 @@
             return {
                 allList:[],//所有数据列表
                 updateList:[],//修改的数据
+                addList:[],//新增的数据
                 multipleSelection: [],//复选框选中数据
                 options: [{
                     value: '选项1',
@@ -191,7 +192,6 @@
                     value: '选项5',
                     label: '北京烤鸭'
                 }],
-
                 pageIndex:-1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
@@ -232,19 +232,15 @@
         // ---创建数据，修改数据---------------------------------------------
         save:function(){//点击保存按钮
             let self = this;
-            if(self.createParams.group_id!=''&&
-               self.createParams.currency_code!=''&&
-               self.createParams.currency_name!=''&&
-               self.createParams.increment!=''&&
-               self.createParams.seq!=''&&
-               self.createParams.status!=''&&
-               self.createParams.remark!=''){
-                   this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.createParams).then(function(res){         
+            if(self.addList.length>0){
+                for(let i in self.addList){
+                    this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.addList[i]).then(function(res){         
                         self.open('创建货币资料成功','el-icon-circle-check','successERP');
                         console.log(res)
                     }),function(res){
                         self.open('创建货币资料失败','el-icon-error','faildERP');
                     };
+                }
                };
             
             if(self.updateList.length>0){
@@ -263,6 +259,8 @@
                 let self = this;
                 self.x++;
                 let newCol = 'newCol'+self.x;
+                console.log(newCol)
+                console.log(self.rows)
                 self.rows.newCol ={
                     "group_id": 1,
                     "currency_code": "",
@@ -273,6 +271,7 @@
                     "remark": ""
                 };
                 self.allList.unshift(self.rows.newCol);
+                self.addList.unshift(self.rows.newCol);
             },
         //-----------------------------------------------------------------
 
@@ -319,8 +318,26 @@
             },
             handleChange:function(index,row){
                 let self = this;
-                self.updateList.push(row);
-                console.log(self.updateList)
+                let flag = false;
+                if(self.updateList.length==0){
+                    flag = true;
+                }else if(self.updateList.length>=1){
+                    for(let i in self.updateList){
+                        if(row.id != self.updateList[i].id){
+                            flag = true;
+                            console.log(flag) 
+                        }else{
+                            flag= false;
+                            break;        
+                        }
+                    }
+                }
+
+                if(flag){
+                    self.updateList.push(row);
+                    console.log(self.updateList)
+                }
+                
             },
             handleDel:function(id){//每行右边的删除
                 let self = this;
