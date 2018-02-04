@@ -721,7 +721,16 @@ export default({
             })
         },
         //------------------------------------------------------------
-        //---创建数据--------------------------------------------------       
+
+        //---跳转修改页------------------------------------------------
+        goModify:function(id){//点击跳转修改页modify
+            // this.$store.state.url='/customer/customerModify/default'
+            this.$store.state.url='/customer/customerModify/'+id;
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        //------------------------------------------------------------
+
+        //---保存数据--------------------------------------------------       
         save:function(){//点击保存创建客户资料
             let self = this;
             console.log(self.createContactParams)
@@ -748,13 +757,16 @@ export default({
                     }
                     self.createOu();
 
-                    self.loadData();
+                    self.goModify(self.backId);
               },function(res){
                   console.log(res)
                   self.open('创建失败','el-icon-error','faildERP')
               });
 
         },
+        //---------------------------------------------------------
+        
+        //---创建数据-----------------------------------------------
         createBank:function(){//创建银行资料
             let self = this;
             if(self.addBankList.length>0){
