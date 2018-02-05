@@ -11,6 +11,7 @@
                 </el-col>
                 <el-col :span='24' class="tree-container">
                     <el-tree
+                    v-loading="treeLoading" 
                     :data="componyTree"
                     :props="defaultProps"
                     node-key="treeId"
@@ -31,14 +32,14 @@
                         <span class="btDetail">导出</span>
                     </button>
                     <div class="formSearch">
-                        <input type="text" class="inputForm">
-                        <button>搜索</button>
+                        <input type="text" class="inputForm" v-model="Sorting">
+                        <button @click="loadTableData">搜索</button>
                     </div>
                 </el-row>
 
                 <el-row>
                     <el-col :span='24'>
-                        <el-table :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
+                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column label="序号">
                                  <template slot-scope="scope">
@@ -114,8 +115,7 @@
                     }],
                 tableData:[],
 
-                componyTree:  [
-                   ],
+                componyTree:  [],
                 defaultProps: {
                     children: 'items',
                     label: 'areaName',
@@ -130,6 +130,9 @@
                 isClick:[],
                 load:true,
                 totalItem:0,//总共有多少条消息
+                tableLoading:true,
+                treeLoading:true,
+                Sorting:'',//table搜索
             }
         },
         created:function(){       
@@ -150,7 +153,8 @@
             },
             loadTableData(){//表格
                  let _this=this;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:''}).then(function(res){ 
+                 _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
                     _this.tableData=res.result.items;
                      $.each( _this.tableData,function(index,value){//处理时间格式
                      if(value.creationTime&&value.creationTime!=''){
@@ -160,14 +164,20 @@
                     })
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.tableLoading=false;
                     },function(res){
+                    _this.tableLoading=false;
                 })
             },
             loadTree(){
                 let _this=this;
+                _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:0})
                 .then(function(res){
                     _this.componyTree=res.result
+                    _this.treeLoading=false;
+               },function(res){
+                   _this.treeLoading=false;
                })
             },
             handleCurrentChange(val) {//页码改变
@@ -179,13 +189,16 @@
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
+                 _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
                 .then(function(res){
                     _this.load=false
                     _this.tableData=res.result.basOus;
+                    _this.tableLoading=false;
                     console.log(res);
                 },function(res){
                     console.log('err:'+res)
+                    _this.tableLoading=false;
                 })
             },
             goDetail(){

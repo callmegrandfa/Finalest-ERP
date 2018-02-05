@@ -51,7 +51,7 @@
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span='4' class="tree-container">
+                    <el-col :span='4' class="tree-container" v-loading="treeLoading">
                         <el-tree
                         :data="componyTree"
                         :props="defaultProps"
@@ -63,7 +63,14 @@
                     </el-col>
 
                     <el-col :span='20'>
-                        <el-table :data="tableData" border style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
+                        <el-table 
+                        v-loading="tableLoading"
+                        :data="tableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe 
+                        @selection-change="handleSelectionChange" 
+                        ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="ouCode" label="编码"></el-table-column>
                             <el-table-column prop="ouName" label="名称"></el-table-column>
@@ -118,6 +125,8 @@
         name:'customerInfor',
         data(){
             return {
+                tableLoading:false,
+                treeLoading:false,
                 searchData:{
                     OuCode: "",//编码
                     Name: "",//名称
@@ -190,7 +199,8 @@
                 });
             },
             loadTableData(){//表格
-                 let _this=this;
+                let _this=this;
+                _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
                      $.each( _this.tableData,function(index,value){//处理时间格式
@@ -199,11 +209,14 @@
                     })
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.tableLoading=false;
                     },function(res){
+                    _this.tableLoading=false;
                 })
             },
             loadTree(){
                 let _this=this;
+                _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
                 .then(function(res){
                     // let children=[];
@@ -222,6 +235,9 @@
                     //     }]
 
                         _this.componyTree=res.result;
+                        _this.treeLoading=false;
+               },function(res){
+                   _this.treeLoading=false;
                })
             },
             handleCurrentChange(val) {//页码改变
@@ -233,13 +249,15 @@
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
+                 _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
                 .then(function(res){
                     _this.load=false
                     _this.tableData=res.result.basOus;
-                    console.log(res);
+                    _this.tableLoading=false;
                 },function(res){
                     console.log('err:'+res)
+                     _this.tableLoading=false;
                 })
             },
             goDetail(){
@@ -460,41 +478,5 @@
 }
 .OuListForm .el-button+.el-button{
     margin-left: 0;
-}
-/* 重写checkbox */
-.tree-container .el-checkbox__inner {
-        width: 12px;
-        height: 12px;
-        border-radius: 0;
-    }   
-   .tree-container .el-checkbox__inner::after{
-        -webkit-box-sizing: content-box;
-        box-sizing: content-box;
-        content: "";
-        border: 1px solid #fff;
-        border-left: 0;
-        border-top: 0;
-        height: 8px;
-        left: 3px;
-        position: absolute;
-        top: 0px;
-        width: 4px;
-    }
-
-/* 重写el-table样式 */
-.OuListForm .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.OuListForm .el-table td{
-    padding: 3px 0;
-}
-.OuListForm .el-table__body{
-    text-align: center;
 }
 </style>
