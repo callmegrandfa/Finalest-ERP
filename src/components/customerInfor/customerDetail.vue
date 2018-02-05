@@ -1,7 +1,7 @@
 <template>
  <div class="customerBasicForm">
      <el-row>
-         <el-col :span="24">
+         <el-col :span="24"  class="fixed">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_back.png">

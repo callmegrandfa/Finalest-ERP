@@ -1,7 +1,7 @@
 <template>
  <div class="customerBasicForm">
-     <el-row>
-         <el-col :span="24">
+     <el-row class="fixed">
+         <el-col :span="24" >
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_back.png">
@@ -574,8 +574,6 @@ export default({
             valueSort:'学生',//客户类型 
             valueCustomerType:'中国人',//客户分类 
 
-            isEdit:-1,
-
             customerData:'',//根据id获得的客户信息
             bankData:[],//根据groupId获得银行信息
             addressData:[],//获取的所有地址信息/也可以根据contactId获得地址信息
@@ -801,6 +799,9 @@ export default({
                 self.updataBankList.push(row);
                 console.log(self.updataBankList)
             }
+        },
+        handleSelectionChange:function(val){//点击复选框选中的数据
+                this.multipleSelection = val;
         },
         handleBankDelete:function(index,row){//银行表格内删除操作
             let self = this;

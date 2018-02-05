@@ -343,7 +343,7 @@
                 let self = this;
                 this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:id}).then(function(res){
                     console.log(res);
-                    self.open('删除货币资料成功','el-icon-circle-check','successERP');
+                    self.open('删除成功','el-icon-circle-check','successERP');
                     self.loadAllList();
               })
             }
