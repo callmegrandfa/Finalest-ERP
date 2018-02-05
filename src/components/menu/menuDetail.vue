@@ -8,49 +8,51 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div class="bgcolor"><label>菜单编码</label><el-input  placeholder="请输入菜单编码"></el-input></div>
+            <div class="bgcolor"><label>菜单编码</label><el-input v-model="addData.moduleCode"  placeholder="请输入菜单编码"></el-input></div>
+            <div class="bgcolor"><label>菜单名称</label><el-input v-model="addData.moduleName"  placeholder="请输入菜单名称"></el-input></div>
+            <div class="bgcolor"><label>图标</label><el-input v-model="addData.ico"  placeholder="请输入图标"></el-input></div>
+            <div class="bgcolor"><label>功能模块ID全路径</label><el-input v-model="addData.moduleFullPathId"></el-input></div>
+            <div class="bgcolor"><label>功能模块名称全路径</label><el-input v-model="addData.moduleFullPathName"></el-input></div>
+            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq"></el-input></div>
             <div class="bgcolor">
                 <label>语言</label>
-                <el-input  placeholder="请输入语言">
+                <el-input  placeholder="无字段">
                     <i slot="suffix" class="el-icon-more" @click="goLanguage" style="cursor:pointer"></i>
                 </el-input>
             </div>
             <div class="bgcolor">
-                <label>子系统</label>
-                <el-select v-model="valueContain">
+                <label>系统ID</label>
+                <el-input v-model="addData.systemId"></el-input>
+                <!-- <el-select v-model="addData.systemId" placeholder="请输入系统ID">
                   <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select>
+              </el-select> -->
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
-              <el-select v-model="valueContain">
+              <el-input v-model="addData.moduleParentId"></el-input>
+              <!-- <el-select v-model="addData.moduleParentId ">
                   <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select>
+              </el-select> -->
             </div>
             <div class="bgcolor moreWidth">
               <label>web地址</label>
-              <el-input  placeholder="请输入菜单编码"></el-input>
+              <el-input v-model="addData.url"  placeholder="请输入菜单编码"></el-input>
             </div>
             <div class="bgcolor">
               <label>状态</label>
-              <el-select v-model="valueContain">
-                <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select>
-            </div>
-            <div class="bgcolor">
-              <label>图标</label>
-              <el-select v-model="valueContain">
+              <el-select v-model="valueContain" placeholder="无字段">
                 <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
               </el-select>
             </div>
           </el-col>
+          <div class="bgcolor"><label>是否在最底层</label><el-checkbox class="w_auto" v-model="addData.moduleIsBottom"></el-checkbox></div>
             <el-col :span="24">
                 <div class="bgcolor longWidth">
                 <label>备注</label>
                 <el-input
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 10}"
-                    placeholder="请输入内容">
+                    placeholder="无字段">
                 </el-input>
                 </div>
             </el-col>
@@ -122,7 +124,7 @@
                 <div class="bgcolor longWidth">
                     <label class="h_35"></label>
                     <div>
-                        <button class="add_m_bt">提交</button>
+                        <button @click="save" class="add_m_bt">提交</button>
                         <button class="add_m_bt">返回</button>
                     </div>
                 </div>
@@ -135,29 +137,42 @@
   export default({
     data(){
         return{
+            isSave:true,//是否可以保存，不能保存就是修改
             menuCheck:true,
             dialogTableVisible:false,//控制对话框
-            data:[],//表数据
-            valueDate:'',
-            check:true,//是否授权
-            date:'',//有效时间
+            addData:{
+                "moduleParentId": 0,
+                "moduleCode": "string",
+                "moduleName": "仓库管理",
+                "url": "string",
+                "ico": "string",
+                "systemId": 0,
+                "moduleIsBottom": true,
+                "moduleFullPathId": "string",
+                "moduleFullPathName": "string",
+                "seq": 0
+            },//新增
+            modifyData:{
+                // "id": 0,
+                // "moduleParentId": 0,
+                // "moduleCode": "string",
+                // "moduleName": "string",
+                // "url": "string",
+                // "ico": "string",
+                // "systemId": 0,
+                // "moduleIsBottom": true,
+                // "moduleFullPathId": "string",
+                // "moduleFullPathName": "string",
+                // "seq": 0
+            },//修改
             valueContain:'',
             contain: [{ 
-                valueContain:'选项1',
+                valueContain:'1',
                 label: '腾讯'
             }, {
-                valueContain:'选项2',
+                valueContain:'2',
                 label: '阿里'
             }],
-            options:[
-                {
-                    basOuTypes: '1',
-                    label: '中文'
-                    }, {
-                    basOuTypes: '2',
-                    label: 'english'
-                },
-            ],
             componyTree:  [{
                 treeId: 1,
                 label: '集团名',
@@ -186,7 +201,101 @@
         goLanguage(){
             this.$store.state.url='/menu/addLangulage/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        open(tittle,iconClass,className) {
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
+         save(){
+            let _this=this;
+            if(_this.isSave){
+                 _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
+                    _this.isSave=false;
+                    _this.addData.id=res.result.id;
+                    _this.open('保存成功','el-icon-circle-check','successERP');
+                },function(res){
+                    _this.open('保存失败','el-icon-error','faildERP');
+                })
+            }else{
+                console.log(_this.addData)
+                 _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData).then(function(res){  
+                    _this.isSave=false;
+                    _this.open('修改成功','el-icon-circle-check','successERP');
+                },function(res){
+                    _this.open('修改失败','el-icon-error','faildERP');
+                })
+            }
+        },
+        saveAdd(){
+             let _this=this;
+             if(_this.isSave){
+                  _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                    _this.open('保存并新增成功','el-icon-circle-check','successERP');
+                    _this.isSave=true;
+                    _this.clearData();
+                },function(res){
+                    _this.open('保存并新增失败','el-icon-error','faildERP');
+                })
+             }else{
+                  _this.open('保存并新增失败','el-icon-error','faildERP');
+             }
+           
+        },
+        newAdd(){
+            this.isSave=true;
+            this.clearData();
+            this.open('新增成功','el-icon-circle-check','successERP');
+        },
+        clearData(){
+            this.creatorUser=[];
+            this.auditInfo={
+                id:'',
+                lastModifierUser:'',
+                isDeleted:false,
+                deleterUserId:'',
+                deletionTime:'',
+                lastModificationTime:'',
+                lastModifierUserId:'',
+                creationTime:'',
+                creatorUserId:'',
+                isCompany : false,
+                isAdministration :false,
+                isFinance: false,
+                isCapital :false,
+                isPurchase :false,
+            };
+            this.addData={
+                groupId:1,//集团ID
+                ouCode: '',//组织代码存在 
+                ouName: '' ,//组织名称存在
+                foreignName: '' ,//外文名称
+                mnemonic: '',//助记码
+                ouParentid: '' ,//上级组织ID存在
+                accountPeriodId:'' ,//会计期间ID
+                baseCurrencyId: '',//本位币种id存在
+                companyOuId: '',//所属公司ID存在
+                contactPerson:'',//联系人存在
+                phone:'',//电话存在
+                address:'' ,//地址存在
+                areaId: '',//行政区域ID
+                entityProperty : '',//实体属性
+                status: '',//启用状态存在
+                remark: '' ,//备注存在
+                basOuTypes: [0],//组织职能
+                isGroupCompany:false ,//
+                ouCompanyParentid: '' ,//上级公司组织ID
+                legalPerson:'',//法人代表
+                companyStatus:'' ,//公司启用状态
+                regtime:''//公司成立时间
+            };
         }
+    
     }
 
   })
@@ -195,6 +304,9 @@
 
 
 <style scoped>
+.w_auto{
+    width: auto;
+}
 .load_more{
     position: absolute;
     bottom: 40px;

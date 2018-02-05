@@ -14,7 +14,7 @@
                     v-loading="treeLoading" 
                     :data="componyTree"
                     :props="defaultProps"
-                    node-key="treeId"
+                    node-key="id"
                     default-expand-all
                     ref="tree"
                     :expand-on-click-node="true"
