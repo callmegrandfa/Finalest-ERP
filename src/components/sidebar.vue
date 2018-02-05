@@ -583,10 +583,12 @@ export default {
 }
 .menu .one:hover{
     background: #415c84;
-    color: #e4e9f2;
     box-shadow: 0 4px 0 #3b4758;
 }
-
+.menu .one:hover>a{
+    color: #33cbcb;
+}
+    
 .menu .two{
     position: relative;
 }
@@ -628,7 +630,9 @@ export default {
     width: 235px;
     float: left;
 }
-
+.menu li.three:hover>a{
+    color: #33cbcb;
+}
 
 
 /* 三角形 */

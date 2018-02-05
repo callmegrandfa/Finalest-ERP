@@ -9,19 +9,22 @@
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-col>
-                <el-col :span='24' class="tree-container">
+                <el-col :span='24' class="tree-container" >
                     <el-tree
                     v-loading="treeLoading" 
                     :data="componyTree"
                     :props="defaultProps"
                     node-key="treeId"
                     default-expand-all
+                    ref="tree"
                     :expand-on-click-node="true"
-                    @node-click="nodeClick">
+                    :filter-node-method="filterNode"
+                    @node-click="nodeClick"
+                    :render-content="renderContent"
+                    >
                     </el-tree>
-                </el-col>
+                </el-col>   
             </el-col>
-
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5 pr10 pl5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
@@ -140,6 +143,14 @@
                 _this.loadTableData();
                 _this.loadTree();
              },
+        mounted:function(){
+            let _this=this;
+        },  
+         watch: {
+            searchLeft(val) {
+                this.$refs.tree.filter(val);
+            }
+        },
         methods:{
              open(tittle,iconClass,className) {
                 this.$notify({
@@ -172,7 +183,7 @@
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:0})
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1})
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
@@ -300,6 +311,29 @@
                     _this.loadTableData();
                 },function(res){
                 })
+            },
+            whichButton(event,node, data){
+            let btnNum = event.button;
+                if (btnNum==2)
+                {
+                // alert("您点击了鼠标右键！")
+                event.preventDefault()  
+                var x = event.clientX  
+                var y = event.clientY  
+                // this.entityTreeContextMenu.axios = {  
+                // x, y  
+                // }  
+                }
+            },
+            filterNode(value, data) {
+                if (!value) return true;
+                 return data.areaName.indexOf(value) !== -1;
+            },
+            renderContent(h, { node, data, store }) {
+                return (
+                <span on-mousedown ={ (event) => this.whichButton(event,node, data) } style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+                    <span  >{node.label}</span>
+                </span>);
             }
         },
     }
