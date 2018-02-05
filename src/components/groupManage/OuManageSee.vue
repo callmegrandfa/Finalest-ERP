@@ -92,8 +92,8 @@
                                 </el-col>
                             </el-col>
                             <el-col :span="22"  class="getPadding">
-                                <div class="bgcolor"><label>上级公司</label><el-input placeholder="无记录" readonly></el-input></div>
-                                <div class="bgcolor"><label>法人代表</label><el-input placeholder="无记录" readonly></el-input></div>
+                                <div class="bgcolor"><label>上级公司</label><el-input placeholder="无字段" readonly></el-input></div>
+                                <div class="bgcolor"><label>法人代表</label><el-input placeholder="无字段" readonly></el-input></div>
                                 
                             </el-col>
                          </div>
@@ -113,9 +113,9 @@
             <div class="bgcolor"><label>创建时间</label><el-input v-model="addData.creationTime" readonly placeholder="无记录"></el-input></div>
             <div class="bgcolor"><label>修改人</label><el-input v-model="addData.lastModifierUserName" readonly placeholder="无记录"></el-input></div>
             <div class="bgcolor"><label>修改时间</label><el-input v-model="addData.lastModificationTime" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>启用日期</label><el-input v-model="addData.creationTime" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>封存日期</label><el-input v-model="addData.lastModificationTime" readonly placeholder="无记录"></el-input></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="addData.lastModifierUserName" readonly placeholder="无记录"    ></el-input></div>
+            <div class="bgcolor"><label>启用日期</label><el-input readonly placeholder="无字段"></el-input></div>
+            <div class="bgcolor"><label>封存日期</label><el-input readonly placeholder="无字段"></el-input></div>
+            <div class="bgcolor"><label>封存人</label><el-input readonly placeholder="无字段"    ></el-input></div>
         </div>                                  
     </el-col>
 </el-row>                                                           
