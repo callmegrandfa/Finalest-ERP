@@ -806,6 +806,7 @@ export default({
         handleBankDelete:function(index,row){//银行表格内删除操作
             let self = this;
             this.bankData.splice(index,1);
+            self.addBankList.splice(index,1);
             this.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:row.id}).then(function(res){
                 console.log(res);
                 self.open('删除银行资料成功','el-icon-circle-check','successERP');
@@ -860,6 +861,7 @@ export default({
         handleAddressDelete:function(index,row){//地址表格内删除操作
             let self = this;
             this.addressData.splice(index,1);
+            this.addAddressList.splice(index,1)
             this.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:row.id}).then(function(res){
                 console.log(res);
                 self.open('删除地址资料成功','el-icon-circle-check','successERP');
@@ -914,6 +916,7 @@ export default({
         handleOuDelete:function(index,row){//组织表格内删除操作
             let self = this;
             this.ouData.splice(index,1);
+            this.addOuList.splice(index,1)
             this.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:row.id}).then(function(res){
                 console.log(res);
                 self.open('删除地址资料成功','el-icon-circle-check','successERP');
