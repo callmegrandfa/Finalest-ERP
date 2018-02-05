@@ -219,6 +219,14 @@
 
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
               <el-table :data="allList" border style="width: 100%" stripe>
+                    <el-table-column type="selection"></el-table-column>
+
+                    <el-table-column prop="" label="" >
+                        <template slot-scope="scope">
+                            <span>{{scope.$index+1}}</span>
+                        </template>
+                    </el-table-column>
+                    
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
                             <!-- <span>{{scope.$index%2}}</span> -->

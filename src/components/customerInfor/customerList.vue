@@ -238,12 +238,6 @@
                         .then(function(res){
                             _this.loadAllList();
                             _this.open('删除成功','el-icon-circle-check','successERP');
-                            // for(let x=0;x<_this.tableData.length;x++){
-                            //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){
-                            //         console.log(_this.tableData[x]);
-                            //         _this.tableData.splice(x, 1);
-                            //     }
-                            // }
                         },function(res){
                             _this.open('删除失败','el-icon-error','faildERP');
                             //console.log('err:'+res)

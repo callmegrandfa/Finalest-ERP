@@ -1,7 +1,7 @@
 <template>
  <div class="customerBasicForm">
-     <el-row>
-         <el-col :span="24">
+     <el-row class="fixed">
+         <el-col :span="24" >
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_back.png">
@@ -801,6 +801,9 @@ export default({
                 self.updataBankList.push(row);
                 console.log(self.updataBankList)
             }
+        },
+        handleSelectionChange:function(val){//点击复选框选中的数据
+                this.multipleSelection = val;
         },
         handleBankDelete:function(index,row){//银行表格内删除操作
             let self = this;

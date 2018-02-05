@@ -187,14 +187,15 @@
             },
 
             handleDelete:function(index,id){//表格内删除操作
+                let self = this;
                 this.allList.splice(index,1);
                 console.log(id)
                 this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:id}).then(function(res){
-                console.log(res);
-                self.open('删除仓库成功','el-icon-circle-check','successERP')
-              }).then(function(){
+                    console.log(res);
+                    self.open('删除仓库成功','el-icon-circle-check','successERP')
+                }).then(function(){
 
-              })
+                })
             },
 
             handleCurrentChange:function(val){//获取当前页码
@@ -202,13 +203,7 @@
                 console.log(val)
                 this.page = val;
                 this.getAllList();
-            },
-
-            deleteRepository:function(){//删除仓库
-                this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',self.deleteId).then(function(res){
-                // console.log(res);
-              })
-            },        
+            },     
 
             goDetail(){
                 this.$store.state.url='/repository/repositoryData/default'

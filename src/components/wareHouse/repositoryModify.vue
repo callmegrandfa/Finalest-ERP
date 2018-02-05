@@ -1,6 +1,6 @@
 <template>
   <div class="data-wrapper b1">
-      <el-row class="bg-white pt10 pb10 bb1">
+      <el-row class="bg-white pt10 pb10 bb1 fixed">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                   <img src="../../../static/image/common/bt_back.png">
@@ -173,7 +173,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>传真</label>
-                                <el-input placeholder="请录入传真" v-model="createRepositoryParams.fax"></el-input>
+                                <el-input placeholder="请录入传真" v-model="repositoryData.fax"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -224,6 +224,12 @@
                     </div>
                     <span class="btDetail">保存</span>
                 </button> -->
+                <button class="erp_bt bt_del">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
 
                 <button class="erp_bt bt_excel">
                     <div class="btImg">
@@ -241,7 +247,15 @@
           </el-col>
 
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
-              <el-table :data="repositoryAddressData" border style="width: 100%" stripe>
+              <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
+                    <el-table-column type="selection"></el-table-column>
+
+                    <el-table-column prop="" label="" >
+                        <template slot-scope="scope">
+                            <span>{{scope.$index+1}}</span>
+                        </template>
+                    </el-table-column>
+
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
                             <!-- <span>{{scope.$index%2}}</span> -->
@@ -322,7 +336,7 @@
                             <!-- <el-button v-on:click='a(scope.row)'>123</el-button> -->
                             <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
                             <!-- <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button>  -->
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
               </el-table> 
@@ -375,29 +389,14 @@
         },
 
         methods:{
+            //---加载信息-----------------------------------------------
             loadData:function(){//根据id查找仓库信息和仓库地址信息
-                // ouId (integer, optional): 组织单元ID ,
-                // stockCode (string, optional): 仓库编码 ,
-                // stockName (string, optional): 仓库名称 ,
-                // stockFullName (string, optional): 仓库全称 ,
-                // opAreaId (integer, optional): 业务地区 ,
-                // adAreaId (integer, optional): 行政地区 ,
-                // stockTypeId (integer, optional): 仓库类型 ,
-                // invTypeId (integer, optional): 库存分类 ,
-                // fax (string, optional): 传真 ,
-                // email (string, optional): 邮箱 ,
-                // status (integer, optional): 启用状态 ,
-                // manager (string, optional): 负责人 ,
-                // phone (string, optional): 电话 ,
-                // remark (string, optional): 备注 ,
-                // id (integer, optional)
-
                 let self = this;
                 if(self.$route.params.id!='default'){
                     self.$destroy()
                     //根据仓库id获取仓库信息
                     this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
-                        // console.log(res)               
+                        console.log(res)               
                         self.repositoryData = res.result;
                         // console.log(self.repositoryData);
                     });
@@ -413,10 +412,10 @@
                         self.repositoryAddressData = res.result;
                     })
                 }
-                
-            
             },
+            //------------------------------------------------------------
 
+            //---open-------数据清除---------------------------------------
             open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -428,6 +427,24 @@
                 });
             },
 
+            clearData:function(){//清除创建的参数
+                let self = this;
+                self.createParams={
+                    groupId:'1',//集团ID
+                    stockId:self.$route.params.id,//仓库ID
+                    addressId:'2',//地址ID
+                    completeAddress:'',//详情地址
+                    transportMethodId:'',//运输方式
+                    contactPerson:'',//联系人
+                    phone:'',//联系电话
+                    logisticsCompany:'',//物流公司
+                    isDefault:true,//是否默认
+                    remark:'',//备注
+                };
+            },
+            //------------------------------------------------------------
+
+            //---修改完成保存----------------------------------------------
             saveModify:function(){//修改仓库信息保存
                 let self = this;
                 this.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
@@ -435,28 +452,47 @@
                     self.open('修改仓库信息成功','el-icon-circle-check','successERP');
                 })
 
-                if(self.updataList.length>0){
-                    for(let i in self.updataList){
-                        console.log(i)
-                        this.$axios.puts('/api/services/app/StockAddressManagement/Update',self.updataList[i]).then(function(res){
+                if(self.updateList.length>0){
+                    for(let i in self.updateList){
+                        this.$axios.puts('/api/services/app/StockAddressManagement/Update',self.updateList[i]).then(function(res){
                             console.log(res);
                             self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-                            self.updataList = [];
+                            self.updateList = [];
                         })
                     }
                 }
                 
-                self.saveAddress();
+                self.createAddress();
             },
 
+            
+
+            createAddress:function(){//保存新增的仓库地址信息
+                let self = this;
+                if(self.addList.length>0){
+                    for(let i in self.addList){
+                        this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.addList[i]).then(function(res){//创建
+                            console.log(res);
+                            self.open('新增仓库成功','el-icon-circle-check','successERP');
+                            self.loadData();
+                            self.clearData();
+                        })
+                    }
+                }
+                
+                
+            //   self.handleSave();
+            },
+            //------------------------------------------------------------
+
+            //---表格编辑-------------------------------------------------
             addCol:function(){//增行
                 let self = this;
-
                 self.x++;
                 let newCol = 'newCol'+self.x;
                 self.rows.newCol ={
                     groupId:'1',//集团ID
-                    stockId:'',//仓库ID
+                    stockId:self.$route.params.id,//仓库ID
                     addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
@@ -467,37 +503,30 @@
                     remark:'',//备注
                 };
                 self.repositoryAddressData.unshift(self.rows.newCol);
+                self.addList.unshift(self.rows.newCol);
+                // console.log(self.repositoryAddressData)
+                // console.log(self.x)
+                // console.log(self.rows)
+                // console.log(self.addList)
             },
-
-            saveAddress:function(){//下方保存按钮，保存新增的仓库地址信息
-                let self = this;
-                this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.createParams).then(function(res){//创建
-                    console.log(res);
-                    self.loadData();
-                    self.open('新增仓库成功','el-icon-circle-check','successERP');
-                    self.clearData();
-              })
-              self.handleSave();
-            },
-
-            clearData:function(){//清除创建的参数
-                let self = this;
-                self.createParams={
-                    groupId:'1',//集团ID
-                    stockId:'',//仓库ID
-                    addressId:'2',//地址ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
-                    remark:'',//备注
+            delRow:function(){//删除选中的项
+                let _this=this;
+                if(_this.multipleSelection.length>0){//表格
+                    for(let i=0;i<_this.multipleSelection.length;i++){
+                        _this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:_this.multipleSelection[i].id})
+                        .then(function(res){
+                            _this.loadData();
+                            _this.open('删除成功','el-icon-circle-check','successERP');
+                        },function(res){
+                            _this.open('删除失败','el-icon-error','faildERP');
+                            //console.log('err:'+res)
+                        })
+                    }
                 };
             },
-
-            finishEdit: function(index) {//表格内编辑完成事件
-                this.isEdit=-1;
+            handleSelectionChange:function(val){//点击复选框选中的数据
+                this.multipleSelection = val;
+                console.log(this.multipleSelection)
             },
 
             handleEdit:function(index,row){//表格内编辑操作
@@ -505,20 +534,35 @@
             },
             handleChange:function(index,row){
                 let self = this;
-                self.updateList.push(row);
-                // console.log(self.updateList)
+                let flag = false;
+                if(self.updateList.length==0){
+                    flag = true;
+                }else if(self.updateList.length>=1){
+                    for(let i in self.updateList){
+                        if(row.id != self.updateList[i].id){
+                            flag = true;
+                            console.log(flag) 
+                        }else{
+                            flag= false;
+                            break;        
+                        }
+                    }
+                };
+
+                if(flag){
+                    self.updateList.push(row);
+                    console.log(self.updateList)
+                }
             },
-            handleDelete:function(index,id){//表格内删除操作
+            handleDelete:function(index,row){//表格内删除操作
                 this.repositoryAddressData.splice(index,1);
-                this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
+                this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
                     console.log(res);
                     self.open('删除仓库地址成功','el-icon-circle-check','successERP');
               })
             },
             
             handleSave:function(index,row){
-                console.log(index);
-                console.log(row);
                 let self = this;
                 this.$axios.puts('/api/services/app/StockAddressManagement/Update',row).then(function(res){//创建
                     console.log(res);
@@ -570,7 +614,6 @@
                     }],
 
                 value: '',
-                tableData:[],
                 
                 createRepositoryParams:{//创建新仓库的参数
                     "ouId": '1',
@@ -600,9 +643,11 @@
                     isDefault:true,//是否默认
                     remark:'',//备注
                 },
-                updataList:[],
                 x:0,//增行的下标
                 rows:[],//增行的数组
+                updateList:[],//更新上传的数组
+                addList:[],//新增上传的数组
+                multipleSelection:[],//需要删除的数组
             }
         },
     }
