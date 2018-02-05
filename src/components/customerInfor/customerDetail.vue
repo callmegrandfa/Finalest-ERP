@@ -200,6 +200,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.settlementCurrencyId" 
                                         type="text"    
+                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -210,6 +211,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.accountNo" 
                                         type="text"    
+                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -220,6 +222,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.accountName" 
                                         type="text"    
+                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -230,6 +233,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.openingBank" 
                                         type="text"    
+                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -240,6 +244,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.contactPerson" 
                                         type="text"    
+                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -250,6 +255,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.phone" 
                                         type="text"    
+                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -290,6 +296,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.addressType" 
                                         type="text"    
+                                        @change='handleAddressChange(scope.$index,scope.row)'
                                         v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -300,6 +307,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.addressType" 
                                         type="text"    
+                                        @change='handleAddressChange(scope.$index,scope.row)'
                                         v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -310,6 +318,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.completeAddress" 
                                         type="text"    
+                                        @change='handleAddressChange(scope.$index,scope.row)'
                                         v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -320,6 +329,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.id" 
                                         type="text"    
+                                        @change='handleAddressChange(scope.$index,scope.row)'
                                         v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -330,6 +340,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.phone" 
                                         type="text"    
+                                        @change='handleAddressChange(scope.$index,scope.row)'
                                         v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -340,6 +351,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.contactPerson" 
                                         type="text"    
+                                        @change='handleAddressChange(scope.$index,scope.row)'
                                         v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -350,6 +362,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.contactPerson" 
                                         type="text"    
+                                        @change='handleAddressChange(scope.$index,scope.row)'
                                         v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -361,14 +374,119 @@
                             </el-table-column>
                             <el-table-column label='操作'>
                                 <template slot-scope="scope" >
-                                    <el-button v-on:click="handleDelete(scope.$index)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="handleAddressDelete(scope.$index)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
                     </el-tab-pane>
 
-                    <el-tab-pane label="使用组织" name="organization" style="z-index:-1000">使用组织</el-tab-pane>
-                    <el-tab-pane label="信用信息" name="creditInfor" style="z-index:-1000">信用信息</el-tab-pane>
+                    <el-tab-pane label="使用组织" name="organization" class="getPadding" style="z-index:-1000">
+                        <button class="erp_bt bt_add" @click="addColOu">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_add.png">
+                            </div>
+                            <span class="btDetail">增行</span>
+                        </button>
+
+                        <button class="erp_bt bt_auxiliary">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_auxiliary.png">
+                            </div>
+                            <span class="btDetail">辅助功能</span>
+                        </button>
+                        
+                
+                        <el-table :data="ouData" stripe border style="width: 100%">
+                            <el-table-column prop="addressType" label="地址类型" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.addressType" 
+                                        type="text"    
+                                        @change='handleOuChange(scope.$index,scope.row)'
+                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="completeAddress" label="供货地址" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.addressType" 
+                                        type="text"    
+                                        @change='handleOuChange(scope.$index,scope.row)'
+                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="completeAddress" label="省" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.completeAddress" 
+                                        type="text"    
+                                        @change='handleOuChange(scope.$index,scope.row)'
+                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/>  
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="id" label="市" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.id" 
+                                        type="text"    
+                                        @change='handleOuChange(scope.$index,scope.row)'
+                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/>  
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="phone" label="区" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.phone" 
+                                        type="text"    
+                                        @change='handleOuChange(scope.$index,scope.row)'
+                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="contactPerson" label="联系人" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.contactPerson" 
+                                        type="text"    
+                                        @change='handleOuChange(scope.$index,scope.row)'
+                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/>  
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="contactPerson" label="联系电话" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.contactPerson" 
+                                        type="text"    
+                                        @change='handleOuChange(scope.$index,scope.row)'
+                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="ifDefault" label="默认">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="ouData[scope.$index].ifDefault"></el-checkbox>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label='操作'>
+                                <template slot-scope="scope" >
+                                    <el-button v-on:click="handleOuDelete(scope.$index)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-tab-pane>
                 </el-tabs>
             </el-col>
         </div>
@@ -554,20 +672,65 @@ export default({
                 "isDefault": true
             },
             
+            createOuParams:{//创建组织参数
+                "groupId": 1,
+                "contactId": '',
+                "ouId": '',
+                "transport_method_id": '',
+                "is_default": true
+            },
             bankData:[],//银行数据列表，开始为空
             updataBankList:[],//需要修改的银行信息
+            addBankList:[],//需要添加的银行信息
 
             addressData:[],//地址数据列表，开始为空
             updataAddressList:[],//修改的银行信息
+            addAddressList:[],//需要添加的地址信息
 
             ouData:[],//组织数据列表，开始为空
             updataOuList:[],//修改的组织信息
+            addOuList:[],//需要添加的组织信息
 
-            
+            x:0,
+            y:0,
+            z:0,
+            xrows:[],
+            yrows:[],
+            zrows:[],
+            backId:'',
+            customerData:'',//根据id获得的客户信息
         }
     },
     methods:{
-        //---创建数据--------------------------------------------------       
+        //---创建完成后刷新页面获取数据----------------------------------
+        loadData:function(){
+            let self = this;
+            this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.backId}).then(function(res){
+                    // console.log(res);
+                    self.createContactParams = res.result;
+            })
+            //获取所有的银行信息，也可以用groupid获取，
+            this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                // console.log(res);
+                self.bankData = res.result.items;
+            })
+            //获取所有的地址信息，也可以用contactId获取
+            this.$axios.gets('/api/services/app/ContactAddressManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                console.log(res);
+                self.addressData = res.result.items;
+            })
+        },
+        //------------------------------------------------------------
+
+        //---跳转修改页------------------------------------------------
+        goModify:function(id){//点击跳转修改页modify
+            // this.$store.state.url='/customer/customerModify/default'
+            this.$store.state.url='/customer/customerModify/'+id;
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        //------------------------------------------------------------
+
+        //---保存数据--------------------------------------------------       
         save:function(){//点击保存创建客户资料
             let self = this;
             console.log(self.createContactParams)
@@ -575,99 +738,238 @@ export default({
                     // console.log(res);
                     self.open('创建客户资料成功','el-icon-circle-check','successERP');
                     // console.log(res.result.id);
+                    self.backId = res.result.id;
                     self.createBankParams.contactId = res.result.id;
                     // console.log(self.createBankParams.contactId)
                     // console.log(self.createBankParams)
-                    if(self.createBankParams.group!=''&&
-                       self.createBankParams.contactId!=''&&
-                       self.createBankParams.settlementCurrencyId!=''&&
-                       self.createBankParams.accountNo!=''&&
-                       self.createBankParams.accountName!=''&&
-                       self.createBankParams.openingBank!=''&&
-                       self.createBankParams.contactPerson!=''&&
-                       self.createBankParams.phone!=''&&
-                       self.createBankParams.isDefault!=''){
-                            self.createBank();
-                        };
+                    for(let i in self.addBankList){
+                        self.addBankList[i].contactId = res.result.id;
+                    }
+                    self.createBank();
+                    
+                    for(let i in self.addAddressList){
+                        self.addAddressList[i].contactId = res.result.id;
+                    }
+                    self.createBank();
 
-                    self.createAddressParams.contactId = res.result.id;
-                    if(self.createAddressParams.group!=''&&
-                       self.createAddressParams.contactId!=''&&
-                       self.createAddressParams.addressType!=''&&
-                       self.createAddressParams.addressId!=''&&
-                       self.createAddressParams.completeAddress!=''&&
-                       self.createAddressParams.phone!=''&&
-                       self.createAddressParams.isDefault!=''){
-                            self.createAddress();
-                        }
+                    for(let i in self.addOuList){
+                        self.addOuList[i].contactId = res.result.id;
+                    }
+                    self.createOu();
+
+                    self.goModify(self.backId);
               },function(res){
                   console.log(res)
                   self.open('创建失败','el-icon-error','faildERP')
               });
 
         },
+        //---------------------------------------------------------
+        
+        //---创建数据-----------------------------------------------
         createBank:function(){//创建银行资料
             let self = this;
-
-            this.$axios.posts('/api/services/app/ContactBankManagement/Create',self.createBankParams).then(function(res){         
-                self.open('创建银行资料成功','el-icon-circle-check','successERP');
-                // console.log(res)
-            }),function(res){
-                self.open('创建银行资料失败','el-icon-error','faildERP');
-            };
+            if(self.addBankList.length>0){
+                for(let i in self.addBankList){
+                    this.$axios.posts('/api/services/app/ContactBankManagement/Create',self.addBankList[i]).then(function(res){         
+                        self.open('创建银行资料成功','el-icon-circle-check','successERP');
+                        // console.log(res)
+                    }),function(res){
+                        self.open('创建银行资料失败','el-icon-error','faildERP');
+                    };
+                }
+            }
         },
         addColbank:function(){//银行增行
             let self = this;
-            self.bankData.unshift(self.createBankParams);
-            // console.log(self.bankData);
+                self.x++;
+                let newCol = 'newCol'+self.x;
+                self.xrows.newCol ={
+                    "groupId": 1,
+                    "contactId":'',
+                    "settlementCurrencyId": '',
+                    "accountNo": "",
+                    "accountName": "",
+                    "openingBank": '',
+                    "contactPerson": '',
+                    "phone": '',
+                    "isDefault": true
+                };
+                self.bankData.unshift(self.xrows.newCol);
+                self.addBankList.unshift(self.xrows.newCol)
         },
 
         createAddress:function(){//创建地址资料
             let self = this;
 
-            this.$axios.posts('/api/services/app/ContactAddressManagement/Create',self.createAddressParams).then(function(res){         
-                self.open('创建地址信息成功','el-icon-circle-check','successERP');
-                console.log(res)
-            }),function(res){
-                self.open('创建地址信息失败','el-icon-error','faildERP');
-            };
+            if(self.addAddressList.length>0){
+                for(let i in self.addAddressList){
+                    this.$axios.posts('/api/services/app/ContactAddressManagement/Create',self.addAddressList[i]).then(function(res){         
+                        self.open('创建地址信息成功','el-icon-circle-check','successERP');
+                        console.log(res)
+                    }),function(res){
+                        self.open('创建地址信息失败','el-icon-error','faildERP');
+                    };
+                }
+            }
         },
         addColAddress:function(){//地址增行
             let self = this;
-            self.addressData.unshift(self.createAddressParams);
-            // console.log(self.bankData);
+                self.y++;
+                let newCol = 'newCol'+self.y;
+                self.yrows.newCol ={
+                    "groupId": 1,
+                    "contactId": '',
+                    "addressType": '',
+                    "addressId": '',
+                    "completeAddress": "",
+                    "contactPerson": "",
+                    "phone": "",
+                    "isDefault": true
+                };
+                self.addressData.unshift(self.yrows.newCol);
+                self.addAddressList.unshift(self.yrows.newCol)
+        },
+
+        createOu:function(){//创建组织资料
+            let self = this;
+            if(self.addOuList.length>0){
+                for(let i in self.addOuList){
+                    this.$axios.posts('/api/services/app/ContactOuManagement/Create',self.addOuList[i]).then(function(res){         
+                        self.open('创建组织信息成功','el-icon-circle-check','successERP');
+                        console.log(res)
+                    }),function(res){
+                        self.open('创建组织信息失败','el-icon-error','faildERP');
+                    };
+                }
+            }
+        },
+        addColOu:function(){//组织增行
+            let self = this;
+            self.z++;
+            let newCol = 'newCol'+self.z;
+            self.zrows.newCol ={
+                "groupId": 1,
+                "contactId": '',
+                "ouId": '',
+                "transport_method_id": '',
+                "is_default": true
+            };
+            self.ouData.unshift(self.zrows.newCol)
+            self.addOuList.unshift(self.zrows.newCol)
         },
 
         //------------------------------------------------------------
         
         //---控制编辑删除等-------------------------------------------
+        
         handleBankEdit:function(index,row){//银行信息编辑
+            
+        },
+        handleBankChange:function(index,row){
             let self = this;
-            self.updataBankList.push(row)
+            let flag = false;
+            if(self.updataBankList.length==0){
+                flag = true;
+            }else if(self.updataBankList.length>=1){
+                for(let i in self.updataBankList){
+                    if(row.id != self.updataBankList[i].id){
+                        flag = true;
+                        console.log(flag) 
+                    }else{
+                        flag= false;
+                        break;        
+                    }
+                }
+            }
+
+            if(flag){
+                self.updataBankList.push(row);
+                console.log(self.updataBankList)
+            }
         },
         handleBankDelete:function(index,row){//银行表格内删除操作
             let self = this;
             this.bankData.splice(index,1);
-            this.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:row.id}).then(function(res){
-                console.log(res);
-                self.open('删除银行资料成功','el-icon-circle-check','successERP');
-            }),function(res){
-                self.open('删除银行资料失败','el-icon-error','faildERP');
-            };
+            // this.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:row.id}).then(function(res){
+            //     console.log(res);
+            //     self.open('删除银行资料成功','el-icon-circle-check','successERP');
+            // }),function(res){
+            //     self.open('删除银行资料失败','el-icon-error','faildERP');
+            // };
         },
+
         handleAddressEdit:function(){//地址信息编辑
+            
+        },
+        handleAddressChange:function(index,row){
+            let self = this;
+            let flag = false;
+            if(self.updataAddressList.length==0){
+                flag = true;
+            }else if(self.updataAddressList.length>=1){
+                for(let i in self.updataAddressList){
+                    if(row.id != self.updataAddressList[i].id){
+                        flag = true;
+                        console.log(flag) 
+                    }else{
+                        flag= false;
+                        break;        
+                    }
+                }
+            };
+
+            if(flag){
+                self.updataAddressList.push(row);
+                console.log(self.updataAddressList)
+            }
+        },
+        handleAddressDelete:function(index){//地址表格内删除操作
+            let self = this;
+            self.addressData.splice(index,1);
+            // this.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:row.id}).then(function(res){
+            //     console.log(res);
+            //     self.open('删除地址资料成功','el-icon-circle-check','successERP');
+            // }),function(res){
+            //     self.open('删除地址资料失败','el-icon-error','faildERP');
+            // };
+        },
+
+        handleOuEdit:function(){//地址信息编辑
             let self = this;
             self.updataAddressList.push(row)
         },
-        handleAddressDelete:function(index,row){//地址表格内删除操作
+        handleOuChange:function(index,row){
             let self = this;
-            this.addressList.splice(index,1);
-            this.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:row.id}).then(function(res){
-                console.log(res);
-                self.open('删除地址资料成功','el-icon-circle-check','successERP');
-            }),function(res){
-                self.open('删除地址资料失败','el-icon-error','faildERP');
+            let flag = false;
+            if(self.updataOuList.length==0){
+                flag = true;
+            }else if(self.updataOuList.length>=1){
+                for(let i in self.updataOuList){
+                    if(row.id != self.updataOuList[i].id){
+                        flag = true;
+                        console.log(flag) 
+                    }else{
+                        flag= false;
+                        break;        
+                    }
+                }
             };
+
+            if(flag){
+                self.updataOuList.push(row);
+                console.log(self.updataOuList)
+            }
+        },
+        handleOuDelete:function(index){//地址表格内删除操作
+            let self = this;
+            self.ouData.splice(index,1);
+            // this.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:row.id}).then(function(res){
+            //     console.log(res);
+            //     self.open('删除地址资料成功','el-icon-circle-check','successERP');
+            // }),function(res){
+            //     self.open('删除地址资料失败','el-icon-error','faildERP');
+            // };
         },
         //------------------------------------------------------------
 
