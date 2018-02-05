@@ -415,35 +415,6 @@
             },
             //------------------------------------------------------------
 
-            //---open-------数据清除---------------------------------------
-            open(tittle,iconClass,className) {
-                this.$notify({
-                position: 'bottom-right',
-                iconClass:iconClass,
-                title: tittle,
-                showClose: false,
-                duration: 3000,
-                customClass:className
-                });
-            },
-
-            clearData:function(){//清除创建的参数
-                let self = this;
-                self.createParams={
-                    groupId:'1',//集团ID
-                    stockId:self.$route.params.id,//仓库ID
-                    addressId:'2',//地址ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
-                    remark:'',//备注
-                };
-            },
-            //------------------------------------------------------------
-
             //---修改完成保存----------------------------------------------
             saveModify:function(){//修改仓库信息保存
                 let self = this;
@@ -465,8 +436,6 @@
                 self.createAddress();
             },
 
-            
-
             createAddress:function(){//保存新增的仓库地址信息
                 let self = this;
                 if(self.addList.length>0){
@@ -479,9 +448,6 @@
                         })
                     }
                 }
-                
-                
-            //   self.handleSave();
             },
             //------------------------------------------------------------
 
@@ -561,21 +527,40 @@
                     self.open('删除仓库地址成功','el-icon-circle-check','successERP');
               })
             },
-            
-            handleSave:function(index,row){
-                let self = this;
-                this.$axios.puts('/api/services/app/StockAddressManagement/Update',row).then(function(res){//创建
-                    console.log(res);
-                    self.loadData();
-                    self.open('修改仓库地址成功','el-icon-circle-check','successERP');
-              })
+            //------------------------------------------------------------
+
+            //---open-------数据清除--------路由跳转-----------------------
+            open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
             },
 
+            clearData:function(){//清除创建的参数
+                let self = this;
+                self.createParams={
+                    groupId:'1',//集团ID
+                    stockId:self.$route.params.id,//仓库ID
+                    addressId:'2',//地址ID
+                    completeAddress:'',//详情地址
+                    transportMethodId:'',//运输方式
+                    contactPerson:'',//联系人
+                    phone:'',//联系电话
+                    logisticsCompany:'',//物流公司
+                    isDefault:true,//是否默认
+                    remark:'',//备注
+                };
+            },
             back(){
                 this.$store.state.url='/repository/repositoryList/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
-
+            //------------------------------------------------------------
 
         },
 
@@ -589,7 +574,6 @@
 
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制允许使用
-                isEdit:-1,//表格下标
                 // ifSave:-1,//保存按钮（是否可见）
                 queryOuId:{//ouManagement的搜索Id
                     id:'2'

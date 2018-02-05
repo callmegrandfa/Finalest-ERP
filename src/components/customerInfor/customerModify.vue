@@ -574,8 +574,6 @@ export default({
             valueSort:'学生',//客户类型 
             valueCustomerType:'中国人',//客户分类 
 
-            isEdit:-1,
-
             customerData:'',//根据id获得的客户信息
             bankData:[],//根据groupId获得银行信息
             addressData:[],//获取的所有地址信息/也可以根据contactId获得地址信息
