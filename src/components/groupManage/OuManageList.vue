@@ -62,8 +62,8 @@
                         </el-tree>
                     </el-col>
 
-                    <el-col :span='19' class="ml10">
-                        <el-table :data="tableData" border style="width: 100%" stripe @selection-change="handleSelectionChange"> ref="multipleTable">
+                    <el-col :span='20'>
+                        <el-table :data="tableData" border style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="ouCode" label="编码"></el-table-column>
                             <el-table-column prop="ouName" label="名称"></el-table-column>
@@ -156,14 +156,11 @@
                     }],
                 tableData:[],
 
-                componyTree:  [{
-                    treeId: 1,
-                    label: '',
-                    children:[]
-                    }],
+                componyTree:  [],
                 defaultProps: {
-                    children: 'children',
-                    label: 'label'
+                    children: 'items',
+                    label: 'deptName',
+                    id:'id'
                 },
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
@@ -209,20 +206,22 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
                 .then(function(res){
-                    let children=[];
-                    if(res.result.length>0){
-                        for(let i=0;i<res.result.length;i++){
-                            let label=res.result[i].deptName;
-                            let treeId=res.result[i].id;
-                            let child={'treeId':treeId,'label':label,children:[]}
-                            children.push(child)
-                        }     
-                    }
-                    _this.componyTree=[{
-                        treeId: 1,
-                        label: 'erp',
-                        children:children
-                        }]
+                    // let children=[];
+                    // if(res.result.length>0){
+                    //     for(let i=0;i<res.result.length;i++){
+                    //         let label=res.result[i].deptName;
+                    //         let treeId=res.result[i].id;
+                    //         let child={'treeId':treeId,'label':label,children:[]}
+                    //         children.push(child)
+                    //     }     
+                    // }
+                    // _this.componyTree=[{
+                    //     treeId: 1,
+                    //     label: 'erp',
+                    //     children:children
+                    //     }]
+
+                        _this.componyTree=res.result;
                })
             },
             handleCurrentChange(val) {//页码改变
@@ -301,37 +300,37 @@
             //     }
             // },
             nodeClick(data){
-                 let _this=this;
-                 let flag=false;
-                 if(_this.isClick.length>0){
-                     for(let i=0;i<_this.isClick.length;i++){
-                        if(_this.isClick[i]==data.treeId){
-                            flag=false
-                            break;
-                        }else{
-                            flag=true;
-                        }
-                    }
-                 }else{
-                     flag=true;
-                 }
+                //  let _this=this;
+                //  let flag=false;
+                //  if(_this.isClick.length>0){
+                //      for(let i=0;i<_this.isClick.length;i++){
+                //         if(_this.isClick[i]==data.treeId){
+                //             flag=false
+                //             break;
+                //         }else{
+                //             flag=true;
+                //         }
+                //     }
+                //  }else{
+                //      flag=true;
+                //  }
                  
-                //  console.log(flag)
-                 if(data.treeId!=1&&flag){
-                     _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
-                    .then(function(res){
-                        _this.isClick.push(data.treeId);
-                        //console.log(res)
-                        if(res.result.length>0){
-                            for(let i=0;i<res.result.length;i++){
-                                let label=res.result[i].deptName;
-                                let treeId=res.result[i].id;
-                                let child={'treeId':treeId,'label':label,children:[]}
-                                data.children.push(child)
-                            }
-                        }
-                    })
-                 }
+                // //  console.log(flag)
+                //  if(data.treeId!=1&&flag){
+                //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
+                //     .then(function(res){
+                //         _this.isClick.push(data.treeId);
+                //         //console.log(res)
+                //         if(res.result.length>0){
+                //             for(let i=0;i<res.result.length;i++){
+                //                 let label=res.result[i].deptName;
+                //                 let treeId=res.result[i].id;
+                //                 let child={'treeId':treeId,'label':label,children:[]}
+                //                 data.children.push(child)
+                //             }
+                //         }
+                //     })
+                //  }
                 
             },
             modify(row){
