@@ -1,104 +1,66 @@
 <template>
-    <div class="OuListForm">
+    <div class="bAreaListForm">
         <el-row class="bg-white">
             <el-col :span="5">
-                <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <i class="el-icon-search"></i>
-                        <span>查询</span>
-                    </el-col>
-                    <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
-                    </el-col>
-                </el-row>
-
-                <div class="mt20 bgcolor smallBgcolor">
-                    <label><small>*</small>组织类型</label>
-                    <el-select  v-model="searchData.OuType">
-                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder="请录入编码"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder="请录入名称"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入所属公司"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder="请录入行政地区"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder="请录入启用状态"></el-input></div>
-                <div class="bgcolor smallBgcolor">
-                    <label></label>
-                    <span class="search-btn" @click="SimpleSearch">查询</span>
-                    <span class="search-btn">高级搜索</span>
-                </div>
+                <el-col class="h48 pl15 pr15" :span="24">
+                    <el-input
+                        placeholder="搜索..."
+                        v-model="searchLeft" class="bAreaSearch">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-col>
+                <el-col :span='24' class="tree-container" >
+                    <el-tree
+                    v-loading="treeLoading" 
+                    :data="componyTree"
+                    :props="defaultProps"
+                    node-key="treeId"
+                    default-expand-all
+                    ref="tree"
+                    :expand-on-click-node="true"
+                    :filter-node-method="filterNode"
+                    @node-click="nodeClick"
+                    :render-content="renderContent"
+                    >
+                    </el-tree>
+                </el-col>   
             </el-col>
-
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5">
+                <el-row class="h48 pt5 pr10 pl5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
                     <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
-                    <button class="erp_bt bt_out bt_width">
+                    <button class="erp_bt bt_out">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
                         <span class="btDetail">导出</span>
-                        <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                     </button>
-                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
-                    <button class="erp_bt bt_auxiliary bt_width">
-                        <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                        <span class="btDetail">辅助功能</span>
-                        <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                    </button>                
+                    <div class="formSearch">
+                        <input type="text" class="inputForm" v-model="Sorting">
+                        <button @click="loadTableData">搜索</button>
+                    </div>
                 </el-row>
 
-                <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span='4' class="tree-container" v-loading="treeLoading">
-                        <el-tree
-                        :data="componyTree"
-                        :props="defaultProps"
-                        node-key="treeId"
-                        default-expand-all
-                        :expand-on-click-node="true"
-                        @node-click="nodeClick">
-                        </el-tree>
-                    </el-col>
-
-                    <el-col :span='20'>
-                        <el-table 
-                        v-loading="tableLoading"
-                        :data="tableData" 
-                        border 
-                        style="width: 100%" 
-                        stripe 
-                        @selection-change="handleSelectionChange" 
-                        ref="multipleTable">
+                <el-row>
+                    <el-col :span='24'>
+                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="ouCode" label="编码"></el-table-column>
-                            <el-table-column prop="ouName" label="名称"></el-table-column>
-                            <el-table-column prop="ouName" label="简称"></el-table-column>
-                            <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
-                            <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
-                            <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="creationTime" label="公司成立时间"></el-table-column>
-                            <el-table-column prop="status" label="状态"></el-table-column>
-                            <el-table-column prop="isCompany" label="公司">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].isCompany" disabled></el-checkbox>
+                            <el-table-column label="序号">
+                                 <template slot-scope="scope">
+                                    {{scope.$index+1}}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="isPurchase" label="业务">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].isPurchase" disabled></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="isFinance" label="财务">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].isFinance" disabled></el-checkbox>
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="areaCode" label="业务地区编码"></el-table-column>
+                            <el-table-column prop="areaName" label="业务地区名称"></el-table-column>
+                            <el-table-column prop="manager" label="负责人"></el-table-column>
+                            <el-table-column prop="areaParentId" label="上级业务地区"></el-table-column>
+                            <el-table-column prop="remark" label="备注"></el-table-column>
+                            <el-table-column prop="status" label="允许使用"></el-table-column>
+                            <el-table-column label="创建时间(无字段)"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
                                     <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
-                                    <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
+                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
+                                    <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -125,16 +87,7 @@
         name:'customerInfor',
         data(){
             return {
-                tableLoading:false,
-                treeLoading:false,
-                searchData:{
-                    OuCode: "",//编码
-                    Name: "",//名称
-                    CompanyOuId:'',//所属公司
-                    AreaId: '',//行政地区
-                    Status: '',//启用状态
-                    OuType: '',//组织类型
-                },
+                searchLeft:'',
                 options: [{
                     basOuTypes: '1',
                     label: '1'
@@ -168,10 +121,10 @@
                 componyTree:  [],
                 defaultProps: {
                     children: 'items',
-                    label: 'deptName',
+                    label: 'areaName',
                     id:'id'
                 },
-                pageIndex:1,//分页的当前页码
+                pageIndex:0,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
                 multipleSelection: [],//复选框选中数据
@@ -180,6 +133,9 @@
                 isClick:[],
                 load:true,
                 totalItem:0,//总共有多少条消息
+                tableLoading:true,
+                treeLoading:true,
+                Sorting:'',//table搜索
             }
         },
         created:function(){       
@@ -187,6 +143,14 @@
                 _this.loadTableData();
                 _this.loadTree();
              },
+        mounted:function(){
+            let _this=this;
+        },  
+         watch: {
+            searchLeft(val) {
+                this.$refs.tree.filter(val);
+            }
+        },
         methods:{
              open(tittle,iconClass,className) {
                 this.$notify({
@@ -199,13 +163,15 @@
                 });
             },
             loadTableData(){//表格
-                let _this=this;
-                _this.tableLoading=true
-                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                 let _this=this;
+                 _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
                     _this.tableData=res.result.items;
                      $.each( _this.tableData,function(index,value){//处理时间格式
-                       let creationTime=value.creationTime.slice(0,value.creationTime.indexOf(".")).replace("T"," ");
-                       _this.tableData[index].creationTime=creationTime;
+                     if(value.creationTime&&value.creationTime!=''){
+                        let creationTime=value.creationTime.slice(0,value.creationTime.indexOf(".")).replace("T"," ");
+                        _this.tableData[index].creationTime=creationTime;
+                     } 
                     })
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
@@ -217,25 +183,10 @@
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1})
                 .then(function(res){
-                    // let children=[];
-                    // if(res.result.length>0){
-                    //     for(let i=0;i<res.result.length;i++){
-                    //         let label=res.result[i].deptName;
-                    //         let treeId=res.result[i].id;
-                    //         let child={'treeId':treeId,'label':label,children:[]}
-                    //         children.push(child)
-                    //     }     
-                    // }
-                    // _this.componyTree=[{
-                    //     treeId: 1,
-                    //     label: 'erp',
-                    //     children:children
-                    //     }]
-
-                        _this.componyTree=res.result;
-                        _this.treeLoading=false;
+                    _this.componyTree=res.result
+                    _this.treeLoading=false;
                },function(res){
                    _this.treeLoading=false;
                })
@@ -255,9 +206,10 @@
                     _this.load=false
                     _this.tableData=res.result.basOus;
                     _this.tableLoading=false;
+                    console.log(res);
                 },function(res){
                     console.log('err:'+res)
-                     _this.tableLoading=false;
+                    _this.tableLoading=false;
                 })
             },
             goDetail(){
@@ -272,19 +224,12 @@
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
                     for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
+                        _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:_this.multipleSelection[i].id})
                         .then(function(res){
                             if(_this.load){
                                 _this.loadTableData();
                             }
-                            
                             _this.open('删除成功','el-icon-circle-check','successERP');
-                            // for(let x=0;x<_this.tableData.length;x++){
-                            //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){
-                            //         console.log(_this.tableData[x]);
-                            //         _this.tableData.splice(x, 1);
-                            //     }
-                            // }
                         },function(res){
                             _this.open('删除失败','el-icon-error','faildERP');
                             //console.log('err:'+res)
@@ -358,104 +303,73 @@
             see(row){
                 this.$store.state.url='/OuManage/OuManageSee/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            delThis(row){//删除行
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:row.id})
+                .then(function(res){
+                    _this.loadTableData();
+                },function(res){
+                })
+            },
+            whichButton(event,node, data){
+            let btnNum = event.button;
+                if (btnNum==2)
+                {
+                // alert("您点击了鼠标右键！")
+                event.preventDefault()  
+                var x = event.clientX  
+                var y = event.clientY  
+                // this.entityTreeContextMenu.axios = {  
+                // x, y  
+                // }  
+                }
+            },
+            filterNode(value, data) {
+                if (!value) return true;
+                 return data.areaName.indexOf(value) !== -1;
+            },
+            renderContent(h, { node, data, store }) {
+                return (
+                <span on-mousedown ={ (event) => this.whichButton(event,node, data) } style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+                    <span  >{node.label}</span>
+                </span>);
             }
         },
     }
 </script>
 
 <style scoped>
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
+.formSearch{
+    float: right;
 }
 .bg-white{
     background: white;
     border-radius: 3px;
 }
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
+.pl5{
+    padding-left: 5px;
 }
 .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
+.pr10{
+    padding-right: 10px;
 }
 .pl15{
     padding-left: 15px;
 }
-.pt10{
-    padding-top: 10px;
+.pr15{
+    padding-right: 15px;
 }
 .pt5{
     padding-top: 5px;
 }
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
-}
 .border-left{
     border-left: 1px solid #E4E4E4;
     min-height: 380px;
-}
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
 }
 .open{
     display: inline-block;
@@ -470,13 +384,11 @@
 </style>
 
 <style>
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
-.OuListForm .el-button+.el-button{
+.bAreaListForm .el-button+.el-button{
     margin-left: 0;
+}
+.bAreaListForm .bAreaSearch .el-input__inner{
+    height: 30px;
+    border-radius: 30px;
 }
 </style>

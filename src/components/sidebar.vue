@@ -228,7 +228,12 @@ export default {
                 thirdInfo:[
                      {name:'仓库资料',address:'repository'}, 
                 ]
-            },],
+            },{
+                name:'业务地区',
+                thirdInfo:[
+                    {name:'业务地区管理',address:'businessArea'},
+                ]
+            }],
         secondLevel2:[{
             name:'基础资料',
             thirdInfo:[
@@ -464,11 +469,7 @@ export default {
     width: 235px;
     height: auto;
     background-color: #414e61;
-    display: none;  
-    /* transition: width 0.5s;
-    -moz-transition: width 0.5s;
-    -webkit-transition: width 0.5s;
-    -o-transition: width 0.5s;  */
+    display: none;
 }
 .slidUl:not(.slid2){
     transition: width 0.5s;
@@ -582,10 +583,12 @@ export default {
 }
 .menu .one:hover{
     background: #415c84;
-    color: #e4e9f2;
     box-shadow: 0 4px 0 #3b4758;
 }
-
+.menu .one:hover>a{
+    color: #33cbcb;
+}
+    
 .menu .two{
     position: relative;
 }
@@ -627,7 +630,9 @@ export default {
     width: 235px;
     float: left;
 }
-
+.menu li.three:hover>a{
+    color: #33cbcb;
+}
 
 
 /* 三角形 */

@@ -50,6 +50,9 @@ export default new vuex.Store({
             
             {name:'groupManage',url:'/groupManage/groupManageList/:id',parent:'',default:'/groupManage/groupManageList/:id'},//集团管理
             {name:'groupManageList',url:'/groupManage/groupManageList/:id',parent:'groupManage'},
+
+            {name:'businessArea',url:'/businessArea/businessAreaList/:id',parent:'',default:'/businessArea/businessAreaList/:id'},//业务地区管理
+            {name:'businessAreaList',url:'/businessArea/businessAreaList/:id',parent:'businessArea'},
         ],
     },
     mutations: {

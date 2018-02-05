@@ -94,7 +94,7 @@
                         </el-col>
                         
                     </el-col>
-                    <el-col :span="18" class="dialog_">
+                    <el-col :span="18" class="dialog_ dialog_r">
                         <button class="menu_item"><span class="menu_add">+</span>新增</button>
                         <button class="menu_item"><span class="menu_add">+</span>删除</button>
                         <button class="menu_item"><span class="menu_add">+</span>导入</button>
@@ -242,6 +242,9 @@
 }
 .dialog_l{
     background-color: #F9F9F9;
+}
+.dialog_r{
+    background-color: #fff;
 }
  .menuDetail .el-row{
     background-color: #fff;
