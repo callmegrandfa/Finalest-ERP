@@ -171,7 +171,7 @@
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
-                    console.log(_this.tableData)
+                    // console.log(_this.tableData)
                     },function(res){
                     _this.tableLoading=false;
                 })
@@ -181,6 +181,7 @@
                 _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
                 .then(function(res){
+                    console.log(res)
                     _this.componyTree=res
                     _this.treeLoading=false;
                },function(res){
