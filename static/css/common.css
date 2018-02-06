@@ -82,8 +82,10 @@
   line-height: 35px;
 }
 .smallBgcolor{
-  width: 100%;
   height: 28px;
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
 }
 .bgcolor label{
     margin-right: 10px; 
@@ -100,7 +102,6 @@
 }
 .smallBgcolor label{
   line-height:28px;
-  width:100px;
 }
 .bgcolor label small{
     color: #FF669B;
@@ -180,6 +181,9 @@
 
 /* checkbox */
 /* <el-checkbox v-model="">集团公司</el-checkbox> */
+.bgcolor .el-checkbox{
+      width: auto;
+    }
     .el-checkbox__inner {
         width: 24px;
         height: 24px;
