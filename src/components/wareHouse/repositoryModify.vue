@@ -521,7 +521,11 @@
                 }
             },
             handleDelete:function(index,row){//表格内删除操作
+                let self = this;
                 this.repositoryAddressData.splice(index,1);
+                self.addList.splice(index,1);
+                console.log(self.repositoryAddressData)
+                console.log(self.addList)
                 this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
                     console.log(res);
                     self.open('删除仓库地址成功','el-icon-circle-check','successERP');

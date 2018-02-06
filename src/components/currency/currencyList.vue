@@ -341,6 +341,7 @@
             },
             handleDel:function(id){//每行右边的删除
                 let self = this;
+                // self.addList.splice(index,1);
                 this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:id}).then(function(res){
                     console.log(res);
                     self.open('删除成功','el-icon-circle-check','successERP');

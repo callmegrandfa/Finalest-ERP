@@ -1,8 +1,14 @@
 <template>
     <div class="groupList">
+        <el-row class="h48 pt5 bg-white">
+            <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+            <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
+            <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+        </el-row>
         <el-row class="bg-white">
-            <el-col :span="5">
-                <el-row class="h48 pl15">
+                <!-- <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
@@ -10,19 +16,31 @@
                     <el-col :span="5">
                         <span class="fs12 open">+ 展开</span>
                     </el-col>
-                </el-row>
-
-                <div class="mt20 bgcolor smallBgcolor">
-                    <label>集团编码</label>
-                    <el-select  v-model="searchData.OuType">
-                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor smallBgcolor"><label>集团名称</label><el-input v-model="searchData.OuCode" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>集团全称</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
+                </el-row> -->
+                <el-col :span="6">
+                        <div class="mt20 bgcolor smallBgcolor">
+                            <label>集团编码</label>
+                            <el-select  v-model="searchData.OuType">
+                                <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                </el-option>
+                            </el-select>
+                        </div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="mt20 bgcolor smallBgcolor"><label>集团名称</label><el-input v-model="searchData.OuCode" placeholder="请录入单号"></el-input></div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="mt20 bgcolor smallBgcolor"><label>集团全称</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="mt20 bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
+                </el-col>
+        </el-row>
+        <el-row class="bg-white">
+            <el-col :span="6">    
                 <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+            </el-col>
+            <el-col :span="6">
                 <div class="bgcolor smallBgcolor">
                     <label>启用会计月份</label>
                     <el-select  v-model="searchData.OuType">
@@ -30,6 +48,8 @@
                         </el-option>
                     </el-select>
                 </div>
+            </el-col>
+            <el-col :span="6">
                 <div class="bgcolor smallBgcolor">
                     <label>本位币种</label>
                     <el-select  v-model="searchData.OuType">
@@ -37,25 +57,32 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor smallBgcolor"><label>行业</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>电话</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>传真</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>地址</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
-                <div class="bgcolor smallBgcolor lh-28"><label></label><el-checkbox class="w-auto"></el-checkbox>允许使用</div>
-                <div class="bgcolor smallBgcolor"><label></label><span class="search-btn" @click="SimpleSearch">查询</span></div>
             </el-col>
-
-            <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
-                    <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-                    <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-                    <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
-                </el-row>
-
-                <el-row class="pl10 pt10 pr10 pb10">
+            <el-col :span="6">
+                <div class="bgcolor smallBgcolor"><label>行业</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
+            </el-col>   
+        </el-row>
+        <el-row class="bg-white">
+            <el-col :span="6">
+                <div class="bgcolor smallBgcolor"><label>电话</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
+            </el-col>
+            <el-col :span="6">
+                <div class="bgcolor smallBgcolor"><label>传真</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+            </el-col>
+            <el-col :span="6">
+                <div class="bgcolor smallBgcolor"><label>地址</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+            </el-col>
+            <el-col :span="6">
+                <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+            </el-col>
+        </el-row>
+        <el-row class="bg-white">
+                <div class="bgcolor smallBgcolor lh-28"><label></label><el-checkbox class="w-auto"></el-checkbox>允许使用</div>
+                <!-- <div class="bgcolor smallBgcolor"><label></label><span class="search-btn" @click="SimpleSearch">查询</span></div> -->
+        </el-row>
+        <el-row class="bg-white">
+            <el-col :span='24' >
+                <el-row class="pl10 pt10 pr10 pb10 border-bottom">
                     <el-col :span='4' class="tree-container">
                         <el-tree
                         :data="componyTree"
@@ -66,18 +93,11 @@
                         @node-click="nodeClick">
                         </el-tree>
                     </el-col>
-
-                    <el-col :span='19' class="ml10">
+                    <el-col :span='19' class="ml10 border-left">
                         <el-table :data="tableData" border style="width: 100%" stripe @selection-change="handleSelectionChange"> ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="ouCode" label="启用时间"></el-table-column>
-                            <el-table-column prop="ouName" label="生效时间"></el-table-column>
-                            <el-table-column label="操作">
-                                 <template slot-scope="scope">
-                                    <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
-                                    <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="createdTime" label="启用时间"></el-table-column>
+                            <el-table-column prop="creationTime" label="生效时间"></el-table-column>
                         </el-table>  
                         <el-pagination
                         style="margin-top:20px;" 
@@ -94,8 +114,8 @@
         
     </div>
 </template>
-
-<script>
+	
+<script>  
     export default{
         name:'customerInfor',
         data(){
@@ -187,7 +207,7 @@
             },
             loadTableData(){//表格
                  let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/GroupManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){
@@ -320,15 +340,12 @@
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
-            see(row){
-                this.$store.state.url='/OuManage/OuManageSee/'+row.id
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            }
         },
     }
 </script>
 
 <style scoped>
+ @import '//at.alicdn.com/t/font_561828_j9pvj2d16altmx6r.css';
 .lh-28{
     line-height: 28px;
 }
@@ -342,6 +359,9 @@
 .bg-white{
     background: white;
     border-radius: 3px;
+}
+.border-bottom{
+    border: 1px solid #ececec;
 }
 .input-need{
     outline: none;

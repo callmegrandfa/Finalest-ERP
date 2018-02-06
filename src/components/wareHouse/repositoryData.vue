@@ -387,7 +387,7 @@
                 this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
                     console.log(res);
                     self.open('创建仓库成功','el-icon-circle-check','successERP');
-              })
+                 })
               self.createRepositoryParams = {
                     "ouId": '1',
                     "stockCode": "",
@@ -412,9 +412,9 @@
             //---创建------------------------------------------------
             createRepository:function(){//创建新仓库
                 let self = this;
-                console.log(self.createRepositoryParams)
+                // console.log(self.createRepositoryParams)
                 this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.open('创建仓库成功','el-icon-circle-check','successERP');
                     self.createReAddress(res.result);
                     self.goModify(res.result)
@@ -422,14 +422,14 @@
             },
             createReAddress:function(id){//创建新的仓库地址
                 let self = this;
-                console.log(id)
+                // console.log(id)
                 // self.createRepositoryAddressParams.stockId = id;
-                console.log(self.addList)
+                // console.log(self.addList)
                 if(self.addList.length>0){
                     for(let i in self.addList){
                         self.addList[i].stockId = id;
                         this.$axios.posts('api/services/app/StockAddressManagement/Create',self.addList[i]).then(function(res){
-                            console.log(res);
+                            // console.log(res);
                             self.open('创建仓库地址成功','el-icon-circle-check','successERP');
                         })
                     }
@@ -465,8 +465,9 @@
 
             handleDelete:function(index,id){//表格内删除操作
                 this.allList.splice(index,1);
+                this.addList.splice(index,1);
                 this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
-                console.log(res);
+                // console.log(res);
               })
             },
             //---open---back----清除--------------------------------------
@@ -481,7 +482,7 @@
                 });
             },
             goModify:function(id){
-                console.log(id)
+                // console.log(id)
                 this.$store.state.url='/repository/repositoryModify/'+id
                 // this.$store.state.url='/repository/default/repositoryModify/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
