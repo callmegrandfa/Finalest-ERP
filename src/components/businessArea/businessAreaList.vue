@@ -25,6 +25,7 @@
                     </el-tree>
                 </el-col>   
             </el-col>
+            
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5 pr10 pl5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
@@ -78,7 +79,37 @@
 
             </el-col>
         </el-row>
-        
+        <!-- dialog -->
+        <el-dialog title="新增" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
+            <!-- <div class="bgcolor smallBgcolor"><label>集团ID</label><el-input v-model="dialogData.groupId" placeholder=""></el-input></div> -->
+            <div class="bgcolor smallBgcolor">
+                <label>地区分类</label>
+                <el-select v-model="dialogData.areaType">
+                    <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder="">
+                    </el-option>
+                </el-select>
+            </div>
+            <!-- <div class="bgcolor smallBgcolor"><label>父级地区ID</label><el-input v-model="dialogData.areaParentId" placeholder=""></el-input></div> -->
+            <div class="bgcolor smallBgcolor"><label>地区代码</label><el-input v-model="dialogData.areaCode" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>地区名称</label><el-input v-model="dialogData.areaName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>地区全称</label><el-input v-model="dialogData.areaFullName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>全路径ID</label><el-input v-model="dialogData.areaFullPathId" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>全路径名称</label><el-input v-model="dialogData.areaFullPathName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input v-model="dialogData.manager" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor">
+                <label>启用状态</label>
+                <!-- <el-input v-model="dialogData.status" placeholder=""></el-input> -->
+                <el-select v-model="dialogData.status">
+                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
+                    </el-option>
+                </el-select>
+            </div>
+            <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" placeholder=""></el-input></div>
+            <div slot="footer" class="dialog-footer">
+                <button class="dialogBtn" @click="sendAjax">确 认</button>
+                <button class="dialogBtn" type="primary" @click="dialogFormVisible = true">取消</button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -88,6 +119,36 @@
         data(){
             return {
                 searchLeft:'',
+                dialogData:{
+                    // groupId (integer): 集团ID ,
+                    // areaType (integer): 地区分类(1.业务地区.2行政地区) ,
+                    // areaParentId (integer): 父级地区ID ,
+                    // areaCode (string): 地区代码 ,
+                    // areaName (string): 地区名称 ,
+                    // areaFullName (string): 地区全称 ,
+                    // areaFullPathId (string): 全路径ID ,
+                    // areaFullPathName (string): 全路径名称 ,
+                    // manager (string): 负责人 ,
+                    // status (integer): 启用状态 ,
+                    // remark (string): 备注
+                },//dialog数据
+                 areaTypes: [{//业务地区分类
+                    value:'1',
+                    label: '业务地区'
+                }, {
+                    value:'2',
+                    label: '行政地区'
+                }],
+                statuses:[//启用状态
+                    {
+                        value:'1',
+                        label: '启用'
+                    },
+                    {
+                        value:'2',
+                        label: '停用'
+                    },
+                ],
                 options: [{
                     basOuTypes: '1',
                     label: '1'
@@ -117,10 +178,9 @@
                     label: '9'
                     }],
                 tableData:[],
-
                 componyTree:  [
-                    {areaName:'xx',id:'1',items:[{areaName:'xxx',id:'2'}]},
-                    {areaName:'yy',id:'3',items:[{areaName:'yyy',id:'4'}]}
+                    // {areaName:'根目录',id:'0',items:[{areaName:'xxx',id:'2'}]},
+                    // {areaName:'yy',id:'3',items:[{areaName:'yyy',id:'4'}]}
                 ],
                 defaultProps: {
                     children: 'items',
@@ -141,12 +201,14 @@
                 tableLoading:true,
                 treeLoading:false,
                 Sorting:'',//table搜索
+                dialogFormVisible:false,
+                AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
             }
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
-                // _this.loadTree();
+                _this.loadTree();
              },
         mounted:function(){
             let _this=this;
@@ -201,7 +263,7 @@
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1})
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
@@ -342,21 +404,39 @@
                 if (btnNum==2){
                 e.target.id= data.id
                 let clickDom=$('#'+e.target.id);
-                // let x = e.clientX
-                // let y = e.clientY
+                let x = e.clientX
+                let y = e.clientY
+                let left=clickDom.offset().left;
                 clickDom.children('.TreeMenu').css({
                     display:'block',
+                    left:x-left+'px',
+                    top:'0px'
                 })
                 }
             },
             TreeAdd(event,node,data){
-
+                let _this=this;
+                _this.dialogFormVisible=true;
+                console.log(data)
+                _this.dialogData.groupId=data.groupId;//集团id
+                _this.dialogData.areaParentId=data.areaParentId;//父级id
             },
             TreeDel(event,node,data){
 
             },
             TreeModify(event,node,data){
-
+                let _this=this;
+                _this.dialogFormVisible=true;
+            },
+            sendAjax(){
+                let _this=this;
+                _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
+                .then(function(res){
+                    _this.dialogFormVisible=false;
+                    _this.loadTree()
+                },function(res){    
+                    
+                })
             },
             filterNode(value, data) {
                 if (!value) return true;
@@ -381,6 +461,31 @@
 
 <style scoped>
 
+.dialogBtn{
+    display: block;
+    float: left;
+    width: 50%;
+    height: 100%;
+    background-color: #fff;
+    color: #c9c9c9;
+    border: none;
+    border-top: 1px solid #c9c9c9;
+    outline: none;
+    cursor: pointer;
+}
+.dialogBtn:focus{
+    outline: none;
+}
+.dialog-footer .dialogBtn:first-child{
+   border-right: 1px solid #c9c9c9;
+}
+.dialog-footer{
+    padding:0;
+    height: 50px;
+}
+.dialogBtn:hover{
+     color: #6699FF;
+}
 .TreeMenu{
     position: absolute;
     right: 0;
@@ -446,5 +551,11 @@
 }
 .bAreaListForm .el-tree-node>.el-tree-node__children{
     overflow: visible!important;
+}
+.bAreaListForm .el-dialog__footer{
+    padding:0;
+}
+.bAreaListForm .areaDialog .bgcolor:first-child{
+    margin-top:15px;
 }
 </style>
