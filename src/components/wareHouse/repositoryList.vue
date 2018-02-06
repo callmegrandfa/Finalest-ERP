@@ -1,7 +1,7 @@
 <template>
   <div class="data-list-container">
       <el-row class="bg-white">
-            <el-col :class="[ifWidth?'w20':'w0']">
+            <el-col :class="[ifWidth?'w20':'w0']" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
