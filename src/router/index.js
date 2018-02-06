@@ -30,6 +30,12 @@ const customerList = () =>import(/* webpackChunkName: "group-customer" */'../com
 const customerDetail = () =>import('../components/customerInfor/customerDetail')
 const customerModify = () =>import('../components/customerInfor/customerModify')
 
+const account = () =>import(/* webpackChunkName: "group-customer" */'../components/account/account')
+const accountList = () =>import(/* webpackChunkName: "group-customer" */'../components/account/accountList')
+const accountDetail = () =>import('../components/account/accountDetail')
+const accountModify = () =>import('../components/account/accountModify')
+
+
 const currency = () =>import(/* webpackChunkName: "group-customer" */'../components/currency/currency')
 const currencyList = () =>import(/* webpackChunkName: "group-customer" */'../components/currency/currencyList')
 
@@ -167,6 +173,21 @@ children:[
       { path: '/customer/customerList/:id', component: customerList,name:'customerList' },
       { path: '/customer/customerDetail/:id', component: customerDetail,name:'customerDetail' },
       { path: '/customer/customerModify/:id', component: customerModify,name:'customerModify' },
+  ]},
+
+  { path: '/account', component: account,name:'account',redirect: function(){//客户管理
+    let name='account';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
+  },children:[  
+      { path: '/account/accountList/:id', component: accountList,name:'accountList' },
+      { path: '/account/accountDetail/:id', component: accountDetail,name:'accountDetail' },
+      { path: '/account/accountModify/:id', component: accountModify,name:'accountModify' },
   ]},
 
   { path: '/currency', component: currency,name:'currency',redirect: function(){//币种资料
