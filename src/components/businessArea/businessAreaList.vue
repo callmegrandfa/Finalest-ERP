@@ -36,8 +36,8 @@
                         <span class="btDetail">导出</span>
                     </button>
                     <div class="formSearch">
-                        <input type="text" class="inputForm" v-model="Sorting">
-                        <button @click="loadTableData">搜索</button>
+                        <input type="text" class="inputForm">
+                        <button>搜索</button>
                     </div>
                 </el-row>
 
@@ -439,8 +439,13 @@
                 _this.clearTreeData();
                 _this.isAdd=false;
                 _this.dialogFormVisible=true;
-                _this.dialogData=data;
-                
+                 _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
+                    .then(function(res){
+                        _this.dialogData=res.result;
+                        console.log(res)
+                    },function(res){    
+
+                    })
             },
             sendAjax(){
                 let _this=this;
