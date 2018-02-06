@@ -83,7 +83,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button class="erp_bt bt_excel" @click="openLeft">
+                    <button class="erp_bt bt_excel" @click="openLeft" v-show="!ifWidth">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_excel.png">
                         </div>
