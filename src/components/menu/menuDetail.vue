@@ -45,6 +45,7 @@
               </el-select>
             </div>
           </el-col>
+          <div class="bgcolor"><label>子系统</label><el-input placeholder="无字段"></el-input></div>
           <div class="bgcolor"><label>是否在最底层</label><el-checkbox class="w_auto" v-model="addData.moduleIsBottom"></el-checkbox></div>
             <el-col :span="24">
                 <div class="bgcolor longWidth">

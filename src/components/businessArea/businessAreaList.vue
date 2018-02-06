@@ -124,6 +124,8 @@
                     label: 'areaName',
                     id:'id'
                 },
+                TreeContextMenu:[//点击鼠标右键生成菜单
+                ],
                 pageIndex:0,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
@@ -316,14 +318,23 @@
             let btnNum = event.button;
                 if (btnNum==2)
                 {
-                // alert("您点击了鼠标右键！")
+                alert("您点击了鼠标右键！")
                 event.preventDefault()  
                 var x = event.clientX  
                 var y = event.clientY  
-                // this.entityTreeContextMenu.axios = {  
+                // this.TreeContextMenu.axios = {  
                 // x, y  
                 // }  
                 }
+            },
+            TreeAdd(event,node,data){
+
+            },
+            TreeDel(event,node,data){
+
+            },
+            TreeModify(event,node,data){
+
             },
             filterNode(value, data) {
                 if (!value) return true;
@@ -331,8 +342,13 @@
             },
             renderContent(h, { node, data, store }) {
                 return (
-                <span on-mousedown ={ (event) => this.whichButton(event,node, data) } style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-                    <span  >{node.label}</span>
+                <span class="TreeNode" on-mousedown ={ (event) => this.whichButton(event,node, data) } style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+                    <span>{node.label}</span>
+                    <div class="TreeMenu">
+                        <button on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
+                        <button on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
+                        <button on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
+                    </div>
                 </span>);
             }
         },
@@ -340,6 +356,12 @@
 </script>
 
 <style scoped>
+.TreeNode{
+    position: relative;
+}
+.TreeMenu{
+    display: none;
+}
 .formSearch{
     float: right;
 }
