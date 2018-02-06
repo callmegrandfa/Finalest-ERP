@@ -107,7 +107,7 @@
             <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" placeholder=""></el-input></div>
             <div slot="footer" class="dialog-footer">
                 <button class="dialogBtn" @click="sendAjax">确 认</button>
-                <button class="dialogBtn" type="primary" @click="dialogFormVisible = true">取消</button>
+                <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
             </div>
         </el-dialog>
     </div>
@@ -203,6 +203,7 @@
                 Sorting:'',//table搜索
                 dialogFormVisible:false,
                 AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
+                isAdd:true,//判断是增加还是修改
             }
         },
         created:function(){       
@@ -416,27 +417,53 @@
             },
             TreeAdd(event,node,data){
                 let _this=this;
+                _this.clearTreeData();
+                _this.isAdd=true;
                 _this.dialogFormVisible=true;
-                console.log(data)
                 _this.dialogData.groupId=data.groupId;//集团id
-                _this.dialogData.areaParentId=data.areaParentId;//父级id
+                _this.dialogData.areaParentId=data.id;//父级id
+                
             },
             TreeDel(event,node,data){
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
+                .then(function(res){
+                    _this.loadTree();
+                    _this.loadTableData();
+                },function(res){    
 
+                })
             },
             TreeModify(event,node,data){
                 let _this=this;
+                _this.clearTreeData();
+                _this.isAdd=false;
                 _this.dialogFormVisible=true;
+                _this.dialogData=data;
+                
             },
             sendAjax(){
                 let _this=this;
-                _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
-                .then(function(res){
-                    _this.dialogFormVisible=false;
-                    _this.loadTree()
-                },function(res){    
-                    
-                })
+                if(_this.isAdd){
+                    _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
+                    .then(function(res){
+                        _this.dialogFormVisible=false;
+                        _this.loadTree();
+                        _this.loadTableData();
+                    },function(res){    
+
+                    })
+                }else{
+                     _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
+                    .then(function(res){
+                        _this.dialogFormVisible=false;
+                        _this.loadTree();
+                        _this.loadTableData();
+                    },function(res){    
+
+                    })
+                }
+                
             },
             filterNode(value, data) {
                 if (!value) return true;
@@ -454,6 +481,10 @@
                         <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #3c6; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
                     </div>
                 </span>);
+            },
+            clearTreeData(){
+                let _this=this;
+                _this.dialogData={}
             }
         },
     }
