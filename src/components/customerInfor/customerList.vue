@@ -1,14 +1,14 @@
 <template>
     <div class="customer-infor-wrapper">
         <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :class="[ifWidth?'w20':'w0']" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
+                        <span class="fs12 open" @click="closeLeft">- 缩起</span>
                     </el-col>
                 </el-row>
 
@@ -68,11 +68,13 @@
                 </el-row>
 
                 <el-row style="text-align:center;">
-                    <span class="search-btn">查询</span>
+                    <div class="bgcolor smallBgcolor">
+                        <span class="search-btn">查询</span>
+                    </div>
                 </el-row>
             </el-col>
 
-            <el-col :span='19' class="border-left">
+            <el-col :class="[ifWidth?'w80':'w100']" class="border-left">
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_add" @click="goDetail">
                         <div class="btImg">
@@ -81,11 +83,11 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button class="erp_bt bt_excel">
+                    <button class="erp_bt bt_excel" @click="openLeft">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_excel.png">
                         </div>
-                        <span class="btDetail">Excel</span>
+                        <span class="btDetail">展开</span>
                     </button>
 
                     <button class="erp_bt bt_del" @click="delRow">
@@ -184,6 +186,7 @@
                 page:1,//当前页
                 eachPage:10,//一页显示的数量
                 multipleSelection: [],//复选框选中数据
+                ifWidth:true,//控制左侧搜索展开
             }
         },
         created:function(){
@@ -258,6 +261,17 @@
                 this.loadAllList();
             },
         //------------------------------------------------------------------
+
+        //---左侧搜索展开----------------------------------------------------
+        closeLeft:function(){
+            let self = this;
+            self.ifWidth = false;
+        },
+        openLeft:function(){
+            let self = this;
+            self.ifWidth = true;
+        },
+        //------------------------------------------------------------------
     }
 }
 </script>
@@ -327,6 +341,19 @@
 .fs12{
     font-size: 12px;
 }
+.w0{
+    width: 0px;
+}
+
+.w20{
+    width: 20%;
+}
+.w80{
+    width: 80%;
+}
+w100{
+    width: 100%;
+}
 .border1{
     border: 1px solid #cccccc;
     border-radius: 3px;
@@ -354,16 +381,6 @@
     line-height: 30px;
     background: rgba(242, 242, 242, 1);
     border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
     cursor: pointer;
 }
 .open{

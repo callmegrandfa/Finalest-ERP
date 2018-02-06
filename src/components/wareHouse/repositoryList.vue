@@ -1,14 +1,14 @@
 <template>
   <div class="data-list-container">
       <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :class="[ifWidth?'w20':'w0']" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
+                        <span class="fs12 open" @click="closeLeft">- 缩起</span>
                     </el-col>
                 </el-row>
 
@@ -46,16 +46,14 @@
                     </div>
                 </el-row>
 
-                <!-- <el-row>
-                    <div class="bgcolor"><label>仓库类型</label><el-input placeholder=""></el-input></div>
-                </el-row> -->
-
                 <el-row style="text-align:center;">
-                    <span class="search-btn" @click="searchList">查询</span>
+                    <div class="bgcolor smallBgcolor">
+                        <span class="search-btn" @click="searchList">查询</span>
+                    </div>
                 </el-row>
             </el-col>
 
-            <el-col :span='19' class="border-left">
+            <el-col :class="[ifWidth?'w80':'w100']" class="border-left">
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_add" @click="goDetail">
                         <div class="btImg">
@@ -64,11 +62,11 @@
                         <span class="btDetail">新增</span>
                     </button>
               
-                    <button class="erp_bt bt_print">
+                    <button class="erp_bt bt_print" @click="openLeft">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_print.png">
                         </div>
-                        <span class="btDetail">打印</span>
+                        <span class="btDetail">展开</span>
                     </button>
 
                     <button class="erp_bt bt_excel">
@@ -226,14 +224,21 @@
                 customClass:className
                 });
             },
-           
+           closeLeft:function(){
+               let self = this;
+               self.ifWidth = false;
+           },
+           openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+           },
         },
         data(){
             return{ 
                 allList:[],//获取所有的列表数据
                 total:'',//数据总条数
                 queryList:[],//将查询回来的数据保存为数组形式
-               
+
                 listById:'',//根据id获取的list
                
                 getAllParam:{
@@ -254,6 +259,7 @@
                 AreaCode:'',
 
                 ouValue:'',
+                ifWidth:true,
             }
         },
     }
@@ -265,17 +271,21 @@
     height: 100%;
     background:#EEF1F5;
 }
-.search-btn{
-    display: inline-block;
-    height: 30px;
-    width: 91px;
-    text-align: center;
-    border-radius: 3px;
-    line-height: 30px;
-    color: white;
-    background:rgba(130, 170, 252, 1);
-    cursor: pointer;
+
+.w0{
+    width: 0px;
 }
+
+.w20{
+    width: 20%;
+}
+.w80{
+    width: 80%;
+}
+w100{
+    width: 100%;
+}
+
 .bg-white{
     background:white;
     border-radius: 3px;
