@@ -24,7 +24,7 @@ EOF'''
     }
     stage('Depoly') {
       steps {
-        sh 'docker run -p -d 8084:80 --name=web_erp web_erp'
+        sh 'docker run -d -p 8084:80 --name=web_erp web_erp'
       }
     }
   }
