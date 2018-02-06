@@ -37,6 +37,10 @@ export default new vuex.Store({
             {name:'customerList',url:'/customer/customerList/:id',parent:'customer'},
             {name:'customerDetail',url:'/customer/customerDetail/:id',parent:'customer'},
 
+            {name:'account',url:'/account/accountList/:id',parent:'',default:'/account/accountList/:id'},//会计期间
+            {name:'accountList',url:'/account/accountList/:id',parent:'account'},
+            {name:'accountDetail',url:'/account/accountDetail/:id',parent:'account'},
+
             {name:'currency',url:'/currency/currencyList/:id',parent:'',default:'/customer/currencyList/:id'},//币种管理
             {name:'currencyList',url:'/currency/currencyList/:id',parent:'currency'},
 
