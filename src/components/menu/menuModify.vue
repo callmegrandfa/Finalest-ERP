@@ -1,5 +1,5 @@
 <template>
-    <div class="menuDetail">
+    <div class="menuModify">
         <el-row>
             <el-col :span="24">
                 <button @click="back" class="goBack"><i class="fa fa-angle-left" aria-hidden="true"></i> </button>
@@ -138,7 +138,7 @@
   export default({
     data(){
         return{
-            //isSave:true,//是否可以保存，不能保存就是修改
+            // isSave:true,//是否可以保存，不能保存就是修改
             menuCheck:true,
             dialogTableVisible:false,//控制对话框
             addData:{
@@ -181,6 +181,14 @@
             },
         }
     },
+    created:function(){
+        let _this=this;
+            _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
+            .then(function(res){
+                _this.addData=res.result;
+            },function(res){
+            })
+    },
     methods:{
         back(){
             this.$store.state.url='/menu/menuList/default'
@@ -202,25 +210,13 @@
         },
          save(){
             let _this=this;
-            // if(_this.isSave){
-                 _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
-                    // _this.isSave=false;
-                    _this.addData.id=res.result.id;
-                    _this.$store.state.url='/menu/menuModify/'+res.result.id
-                    _this.$router.push({path:_this.$store.state.url})
-                    _this.open('保存成功','el-icon-circle-check','successERP');
-                },function(res){
-                    _this.open('保存失败','el-icon-error','faildERP');
-                })
-            // }else{
-            //     console.log(_this.addData)
-            //      _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData).then(function(res){  
-            //         _this.isSave=false;
-            //         _this.open('修改成功','el-icon-circle-check','successERP');
-            //     },function(res){
-            //         _this.open('修改失败','el-icon-error','faildERP');
-            //     })
-            // }
+            _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
+            .then(function(res){
+                _this.open('修改成功','el-icon-circle-check','successERP');
+            },function(res){
+                _this.open('修改失败','el-icon-error','faildERP');
+            })
+            
         },
         saveAdd(){
              let _this=this;
@@ -348,11 +344,11 @@
 .dialog_r{
     background-color: #fff;
 }
- .menuDetail .el-row{
+ .menuModify .el-row{
     background-color: #fff;
     padding-top: 15px;
   }
- .menuDetail .goBack{
+ .menuModify .goBack{
      border: none;
      background-color: transparent; 
      color: #dcdcdc;
@@ -363,13 +359,13 @@
      height: 31px;
      width: 32px;
  }
- .menuDetail .bgcolor.moreWidth{
+ .menuModify .bgcolor.moreWidth{
      width: 505px;
  }
-  .menuDetail .bgcolor.moreWidth .el-input{
+  .menuModify .bgcolor.moreWidth .el-input{
       width: 423px;
   }
- .menuDetail .pageName{
+ .menuModify .pageName{
      display: block;
      float: left;
      height: 31px;
@@ -379,31 +375,31 @@
     font-style: normal;
     font-size: 18px;
  }
- .menuDetail .el-row:first-child{
+ .menuModify .el-row:first-child{
    padding: 7px 0;
    border-bottom: 1px solid #e4e4e4;
   }
-  .menuDetail .bgcolor .isGive{
+  .menuModify .bgcolor .isGive{
     display: block;
     float: left;
     height: 100%;
     line-height: 35px;
   }
-.menuDetail .bgcolor.longWidth{
+.menuModify .bgcolor.longWidth{
     width: 100%;
     height:auto;
     overflow: visible;
   }
- .menuDetail .bgcolor.longWidth .el-textarea{
+ .menuModify .bgcolor.longWidth .el-textarea{
    width: 423px;
    font-size: 12px;
  } 
  
- .menuDetail .bgcolor.longWidth .addZoo{
+ .menuModify .bgcolor.longWidth .addZoo{
    float: left;
    width: calc(100% - 82px)
  }
-.menuDetail .bgcolor.longWidth .add{
+.menuModify .bgcolor.longWidth .add{
     display: block;
     width: 35px;
     height: 35px;
@@ -417,10 +413,10 @@
     font-weight: bold;
     margin-bottom: 10px;
 }
-.menuDetail .bgcolor.longWidth .add:hover{
+.menuModify .bgcolor.longWidth .add:hover{
     background-color: #354052;
 }
-.menuDetail .bgcolor.longWidth .addRole{
+.menuModify .bgcolor.longWidth .addRole{
   display: inline-block;
   width: 66px;
   height: 35px;
@@ -432,13 +428,13 @@
   cursor: pointer;
   position: relative;
 }
-.menuDetail .bgcolor.longWidth .addRole i{
+.menuModify .bgcolor.longWidth .addRole i{
   position: absolute;
   right: -4px;
   top: -4px;
   color: #cccccc;
 }
-.menuDetail .bgcolor.longWidth .addRole:hover i{
+.menuModify .bgcolor.longWidth .addRole:hover i{
   color:#f66;
 }
 /* 右侧选项 */
@@ -497,10 +493,10 @@
 }
 </style>
 <style>
-.menuDetail .el-tree-node__content{
+.menuModify .el-tree-node__content{
     background-color:#F9F9F9;
 }
-.menuDetail .el-dialog__headerbtn{
+.menuModify .el-dialog__headerbtn{
     top:3px;
     font-size:50px;
 }

@@ -68,6 +68,7 @@ const billList = () =>import(/* webpackChunkName: "group-bill" */'../components/
 const menu = () =>import(/* webpackChunkName: "group-menu" */'../components/menu/menu')
 const menuDetail = () =>import('../components/menu/menuDetail')
 const menuList = () =>import(/* webpackChunkName: "group-menu" */'../components/menu/menuList')
+const menuModify = () =>import('../components/menu/menuModify')
 const addLangulage = () =>import('../components/menu/addLangulage')
 // 业务地区管理
 const businessArea = () =>import(/* webpackChunkName: "group-businessArea" */'../components/businessArea/businessArea')
@@ -268,6 +269,7 @@ children:[
   },children:[
       { path: '/menu/menuDetail/:id', component: menuDetail,name:'menuDetail' },
       { path: '/menu/menuList/:id', component: menuList,name:'menuList' },
+      { path: '/menu/menuModify/:id', component: menuModify,name:'menuModify' },
       { path: '/menu/addLangulage/:id', component: addLangulage,name:'addLangulage' },
   ]},
   { path: '/businessArea', component: businessArea,name:'businessArea',redirect: function(){//业务地区

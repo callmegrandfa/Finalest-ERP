@@ -319,111 +319,113 @@ export default({
         },
         save(){
             let _this=this;
-            if(_this.isSave){
+            // if(_this.isSave){
                  _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     //console.log(res)
-                    _this.addData=res.result;
-                     _this.addData={
-                        groupId:1,//集团ID
-                        ouCode: res.result.ouCode,//组织代码存在 
-                        ouName: res.result.ouName ,//组织名称存在
-                        foreignName: res.result.foreignName ,//外文名称
-                        mnemonic: res.result.mnemonic,//助记码
-                        ouParentid: res.result.ouParentid ,//上级组织ID存在
-                        accountPeriodId: res.result.accountPeriodId ,//会计期间ID
-                        baseCurrencyId: res.result.baseCurrencyId,//本位币种id存在
-                        companyOuId: res.result.companyOuId,//所属公司ID存在
-                        contactPerson: res.result.contactPerson ,//联系人存在
-                        phone: res.result.phone ,//电话存在
-                        address:res.result.address ,//地址存在
-                        areaId: res.result.areaId,//行政区域ID
-                        entityProperty : res.result.entityProperty,//实体属性
-                        status: res.result.status,//启用状态存在
-                        remark: res.result.remark ,//备注存在
-                        basOuTypes: [1,2,3,4,5,6],//组织职能
-                        isGroupCompany:res.result.isGroupCompany ,//
-                        ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
-                        legalPerson:res.result.legalPerson ,//法人代表
-                        companyStatus: res.result.companyStatus ,//公司启用状态
-                        regtime:res.result.regtime//公司成立时间
-                    };
-                    _this.auditInfo={
-                        id:res.result.id,
-                        lastModifierUserName:res.result.lastModifierUserName,
-                        isDeleted:res.result.isDeleted,
-                        deleterUserId:res.result.deleterUserId,
-                        deletionTime:res.result.deletionTime,
-                        lastModificationTime:res.result.lastModificationTime,
-                        lastModifierUserId:res.result.lastModifierUserId,
-                        creationTime:res.result.creationTime,
-                        creatorUserId:res.result.creatorUserId,
-                        isCompany : res.result.isCompany,//是否是法人公司
-                        isAdministration : res.result.isAdministration,//是否是行政
-                        isFinance: res.result.isFinance,//是否是财务
-                        isCapital :res.result.isCapital ,//是否是资金
-                        isPurchase :res.result.isPurchase ,//是否是采购
-                    }
+                    // _this.addData=res.result;
+                    //  _this.addData={
+                    //     groupId:1,//集团ID
+                    //     ouCode: res.result.ouCode,//组织代码存在 
+                    //     ouName: res.result.ouName ,//组织名称存在
+                    //     foreignName: res.result.foreignName ,//外文名称
+                    //     mnemonic: res.result.mnemonic,//助记码
+                    //     ouParentid: res.result.ouParentid ,//上级组织ID存在
+                    //     accountPeriodId: res.result.accountPeriodId ,//会计期间ID
+                    //     baseCurrencyId: res.result.baseCurrencyId,//本位币种id存在
+                    //     companyOuId: res.result.companyOuId,//所属公司ID存在
+                    //     contactPerson: res.result.contactPerson ,//联系人存在
+                    //     phone: res.result.phone ,//电话存在
+                    //     address:res.result.address ,//地址存在
+                    //     areaId: res.result.areaId,//行政区域ID
+                    //     entityProperty : res.result.entityProperty,//实体属性
+                    //     status: res.result.status,//启用状态存在
+                    //     remark: res.result.remark ,//备注存在
+                    //     basOuTypes: [1,2,3,4,5,6],//组织职能
+                    //     isGroupCompany:res.result.isGroupCompany ,//
+                    //     ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
+                    //     legalPerson:res.result.legalPerson ,//法人代表
+                    //     companyStatus: res.result.companyStatus ,//公司启用状态
+                    //     regtime:res.result.regtime//公司成立时间
+                    // };
+                    // _this.auditInfo={
+                    //     id:res.result.id,
+                    //     lastModifierUserName:res.result.lastModifierUserName,
+                    //     isDeleted:res.result.isDeleted,
+                    //     deleterUserId:res.result.deleterUserId,
+                    //     deletionTime:res.result.deletionTime,
+                    //     lastModificationTime:res.result.lastModificationTime,
+                    //     lastModifierUserId:res.result.lastModifierUserId,
+                    //     creationTime:res.result.creationTime,
+                    //     creatorUserId:res.result.creatorUserId,
+                    //     isCompany : res.result.isCompany,//是否是法人公司
+                    //     isAdministration : res.result.isAdministration,//是否是行政
+                    //     isFinance: res.result.isFinance,//是否是财务
+                    //     isCapital :res.result.isCapital ,//是否是资金
+                    //     isPurchase :res.result.isPurchase ,//是否是采购
+                    // }
                     
-                    _this.isSave=false;
+                    // _this.isSave=false;
+                    _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
+                    _this.$router.push({path:_this.$store.state.url})//点击切换路由OuManage
                     _this.open('保存成功','el-icon-circle-check','successERP');
                 },function(res){
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
-            }else{
-                _this.addData.id=_this.auditInfo.id;
-                 _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
-                    //console.log(res)
-                    _this.addData=res.result;
-                     _this.addData={
-                        groupId:1,//集团ID
-                        id:res.result.id,
-                        ouCode: res.result.ouCode,//组织代码存在 
-                        ouName: res.result.ouName ,//组织名称存在
-                        foreignName: res.result.foreignName ,//外文名称
-                        mnemonic: res.result.mnemonic,//助记码
-                        ouParentid: res.result.ouParentid ,//上级组织ID存在
-                        accountPeriodId: res.result.accountPeriodId ,//会计期间ID
-                        baseCurrencyId: res.result.baseCurrencyId,//本位币种id存在
-                        companyOuId: res.result.companyOuId,//所属公司ID存在
-                        contactPerson: res.result.contactPerson ,//联系人存在
-                        phone: res.result.phone ,//电话存在
-                        address:res.result.address ,//地址存在
-                        areaId: res.result.areaId,//行政区域ID
-                        entityProperty : res.result.entityProperty,//实体属性
-                        status: res.result.status,//启用状态存在
-                        remark: res.result.remark ,//备注存在
-                        basOuTypes: [0],//组织职能
-                        isGroupCompany:res.result.isGroupCompany ,//
-                        ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
-                        legalPerson:res.result.legalPerson ,//法人代表
-                        companyStatus: res.result.companyStatus ,//公司启用状态
-                        regtime:res.result.regtime//公司成立时间
-                    };
+            // }else{
+            //     _this.addData.id=_this.auditInfo.id;
+            //      _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
+            //         //console.log(res)
+            //         _this.addData=res.result;
+            //          _this.addData={
+            //             groupId:1,//集团ID
+            //             id:res.result.id,
+            //             ouCode: res.result.ouCode,//组织代码存在 
+            //             ouName: res.result.ouName ,//组织名称存在
+            //             foreignName: res.result.foreignName ,//外文名称
+            //             mnemonic: res.result.mnemonic,//助记码
+            //             ouParentid: res.result.ouParentid ,//上级组织ID存在
+            //             accountPeriodId: res.result.accountPeriodId ,//会计期间ID
+            //             baseCurrencyId: res.result.baseCurrencyId,//本位币种id存在
+            //             companyOuId: res.result.companyOuId,//所属公司ID存在
+            //             contactPerson: res.result.contactPerson ,//联系人存在
+            //             phone: res.result.phone ,//电话存在
+            //             address:res.result.address ,//地址存在
+            //             areaId: res.result.areaId,//行政区域ID
+            //             entityProperty : res.result.entityProperty,//实体属性
+            //             status: res.result.status,//启用状态存在
+            //             remark: res.result.remark ,//备注存在
+            //             basOuTypes: [0],//组织职能
+            //             isGroupCompany:res.result.isGroupCompany ,//
+            //             ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
+            //             legalPerson:res.result.legalPerson ,//法人代表
+            //             companyStatus: res.result.companyStatus ,//公司启用状态
+            //             regtime:res.result.regtime//公司成立时间
+            //         };
                     
-                    _this.isSave=false;
-                    _this.open('保存成功','el-icon-circle-check','successERP');
-                },function(res){
-                    _this.open('保存失败','el-icon-error','faildERP');
-                })
-            }
+            //         _this.isSave=false;
+            //         _this.open('保存成功','el-icon-circle-check','successERP');
+            //     },function(res){
+            //         _this.open('保存失败','el-icon-error','faildERP');
+            //     })
+            // }
         },
         saveAdd(){
              let _this=this;
-             if(_this.isSave){
+            //  if(_this.isSave){
                   _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     _this.open('保存并新增成功','el-icon-circle-check','successERP');
-                    _this.isSave=true;
+                    // _this.isSave=true;
                     _this.clearData();
                 },function(res){
                     _this.open('保存并新增失败','el-icon-error','faildERP');
                 })
-             }else{
-                  _this.open('保存并新增失败','el-icon-error','faildERP');
-             }
+            //  }else{
+            //       _this.open('保存并新增失败','el-icon-error','faildERP');
+            //  }
            
         },
         newAdd(){
-            this.isSave=true;
+            // this.isSave=true;
             this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },

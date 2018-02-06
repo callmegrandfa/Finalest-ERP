@@ -55,8 +55,8 @@
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small">修改</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="modify(scope.row)">修改</el-button> -->
+                                    <!-- <el-button type="text" size="small">修改</el-button> -->
+                                    <el-button type="text" size="small"  @click="modify(scope.row)">修改</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text" size="small"  @click="delThis(scope.row)">删除</el-button>
                                 </template>
@@ -294,11 +294,11 @@
                 
             },
             modify(row){
-                this.$store.state.url='/OuManage/OuManageModify/'+row.id
-                this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
+                this.$store.state.url='/menu/menuModify/'+row.id
+                this.$router.push({path:this.$store.state.url})
             },
             see(row){
-                this.$store.state.url='/OuManage/OuManageSee/'+row.id
+                this.$store.state.url='/menu/menuSee/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             delThis(row){//删除行

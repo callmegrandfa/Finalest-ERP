@@ -17,7 +17,7 @@
                     node-key="id"
                     default-expand-all
                     ref="tree"
-                    :expand-on-click-node="true"
+                    :expand-on-click-node="false"
                     :filter-node-method="filterNode"
                     @node-click="nodeClick"
                     :render-content="renderContent"
@@ -118,7 +118,10 @@
                     }],
                 tableData:[],
 
-                componyTree:  [],
+                componyTree:  [
+                    {areaName:'xx',id:'1',items:[{areaName:'xxx',id:'2'}]},
+                    {areaName:'yy',id:'3',items:[{areaName:'yyy',id:'4'}]}
+                ],
                 defaultProps: {
                     children: 'items',
                     label: 'areaName',
@@ -136,17 +139,30 @@
                 load:true,
                 totalItem:0,//总共有多少条消息
                 tableLoading:true,
-                treeLoading:true,
+                treeLoading:false,
                 Sorting:'',//table搜索
             }
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
-                _this.loadTree();
+                // _this.loadTree();
              },
         mounted:function(){
             let _this=this;
+            $('body').on('mousedown',function(e){
+                if(e.target.className=='TreeNode'|| e.target.className=='TreeMenuBtn' || e.target.className=='el-tree-node__content'){
+                    document.oncontextmenu=new Function("event.returnValue=false;");
+                }else{
+                    document.oncontextmenu=new Function("event.returnValue=true;");
+                }
+            })
+            $('body').children().not('.TreeMenuBtn').on('click',function(){
+                 $('.TreeMenu').css({
+                        display:'none'
+                    })
+            })
+            
         },  
          watch: {
             searchLeft(val) {
@@ -315,16 +331,22 @@
                 })
             },
             whichButton(event,node, data){
-            let btnNum = event.button;
-                if (btnNum==2)
-                {
-                alert("您点击了鼠标右键！")
-                event.preventDefault()  
-                var x = event.clientX  
-                var y = event.clientY  
-                // this.TreeContextMenu.axios = {  
-                // x, y  
-                // }  
+                let e = event || window.event;
+                let btnNum = e.button;
+                if(e.target.className=='TreeNode'){
+                    $('.TreeMenu').css({
+                        display:'none'
+                    })
+                }
+                // console.log(e.target)
+                if (btnNum==2){
+                e.target.id= data.id
+                let clickDom=$('#'+e.target.id);
+                // let x = e.clientX
+                // let y = e.clientY
+                clickDom.children('.TreeMenu').css({
+                    display:'block',
+                })
                 }
             },
             TreeAdd(event,node,data){
@@ -342,12 +364,14 @@
             },
             renderContent(h, { node, data, store }) {
                 return (
-                <span class="TreeNode" on-mousedown ={ (event) => this.whichButton(event,node, data) } style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-                    <span>{node.label}</span>
-                    <div class="TreeMenu">
-                        <button on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-                        <button on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-                        <button on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
+                <span class="TreeNode"
+                on-mousedown ={ (event) => this.whichButton(event,node, data) } 
+                style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;position: relative;">
+                    {node.label}
+                    <div class="TreeMenu" style="display:none;position: absolute;top: 0;right: 0;width: 60px;height: 80px;z-index:990">
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #33cccc; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #f55e6e; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #3c6; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
                     </div>
                 </span>);
             }
@@ -356,11 +380,18 @@
 </script>
 
 <style scoped>
-.TreeNode{
-    position: relative;
-}
+
 .TreeMenu{
-    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100px;
+    height: 100px;
+}
+.TreeMenu button{
+    display: block;
+    width: 100%;
+    height: calc(100% / 3);
 }
 .formSearch{
     float: right;
@@ -412,5 +443,8 @@
 .bAreaListForm .bAreaSearch .el-input__inner{
     height: 30px;
     border-radius: 30px;
+}
+.bAreaListForm .el-tree-node>.el-tree-node__children{
+    overflow: visible!important;
 }
 </style>

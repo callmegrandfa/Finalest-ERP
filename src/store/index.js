@@ -51,6 +51,7 @@ export default new vuex.Store({
             {name:'menu',url:'/menu/menuList/:id',parent:'',default:'/menu/menuList/:id'},//菜单管理
             {name:'menuDetail',url:'/menu/menuDetail/:id',parent:'menu'},
             {name:'menuList',url:'/menu/menuList/:id',parent:'menu'},
+            {name:'menuModify',url:'/menu/menuModify/:id',parent:'menu'},
             
             {name:'groupManage',url:'/groupManage/groupManageList/:id',parent:'',default:'/groupManage/groupManageList/:id'},//集团管理
             {name:'groupManageList',url:'/groupManage/groupManageList/:id',parent:'groupManage'},
