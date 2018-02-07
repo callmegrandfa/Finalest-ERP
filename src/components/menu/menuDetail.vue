@@ -13,7 +13,7 @@
             <div class="bgcolor"><label>图标</label><el-input v-model="addData.ico"  placeholder="请输入图标"></el-input></div>
             <div class="bgcolor"><label>功能模块ID全路径</label><el-input v-model="addData.moduleFullPathId"></el-input></div>
             <div class="bgcolor"><label>功能模块名称全路径</label><el-input v-model="addData.moduleFullPathName"></el-input></div>
-            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq"></el-input></div>
+            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq" type="number"></el-input></div>
             <div class="bgcolor">
                 <label>语言</label>
                 <el-input  placeholder="无字段">
@@ -29,14 +29,14 @@
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
-              <el-input v-model="addData.moduleParentId"></el-input>
-              <!-- <el-select v-model="addData.moduleParentId ">
-                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select> -->
+              <!-- <el-input v-model="addData.moduleParentId"></el-input> -->
+              <el-select v-model="addData.moduleParentId">
+                  <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
             </div>
             <div class="bgcolor moreWidth">
               <label>web地址</label>
-              <el-input v-model="addData.url"  placeholder="请输入菜单编码"></el-input>
+              <el-input v-model="addData.url"  placeholder="请输入web地址"></el-input>
             </div>
             <div class="bgcolor">
               <label>状态</label>
@@ -45,7 +45,12 @@
               </el-select>
             </div>
           </el-col>
-          <div class="bgcolor"><label>子系统</label><el-input placeholder="无字段"></el-input></div>
+          <div class="bgcolor">
+              <label>子系统</label>
+               <el-select v-model="valueContain" placeholder="无字段">
+                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
+              </el-select>
+              </div>
           <div class="bgcolor"><label>是否在最底层</label><el-checkbox class="w_auto" v-model="addData.moduleIsBottom"></el-checkbox></div>
             <el-col :span="24">
                 <div class="bgcolor longWidth">
@@ -142,18 +147,43 @@
             menuCheck:true,
             dialogTableVisible:false,//控制对话框
             addData:{
-                // "moduleParentId": 0,
-                // "moduleCode": "string",
-                // "moduleName": "仓库管理",
-                // "url": "string",
-                // "ico": "string",
-                // "systemId": 0,
+                // "moduleParentId": '1',
+                // "moduleCode": "",
+                // "moduleName": "",
+                // "url": "",
+                // "ico": "",
+                // "systemId": '',
                 // "moduleIsBottom": true,
-                // "moduleFullPathId": "string",
-                // "moduleFullPathName": "string",
-                // "seq": 0
+                // "moduleFullPathId": "",
+                // "moduleFullPathName": "",
+                // "seq": ''
             },
             valueContain:'',
+            ParentId: [{ 
+                value:'0',
+                label: '无'
+            },{ 
+                value:'5',
+                label: '常用功能'
+            },{ 
+                value:'6',
+                label: '租户管理(父)'
+            },{ 
+                value:'8',
+                label: '采购管理'
+            },{ 
+                value:'9',
+                label: '租户管理(子)'
+            },{ 
+                value:'10',
+                label: '集团管理(父)'
+            },{ 
+                value:'11',
+                label: '集团管理(子)'
+            },{ 
+                value:'12',
+                label: '组织管理'
+            }],
             contain: [{ 
                 valueContain:'1',
                 label: '腾讯'

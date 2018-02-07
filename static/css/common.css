@@ -812,3 +812,7 @@ end-placeholder="结束日期">
  -moz-transform: rotate(-90deg);	
 }
 
+/* loading */
+.el-loading-mask{
+  z-index: 900;
+}

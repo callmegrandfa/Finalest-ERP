@@ -480,10 +480,10 @@
                 on-mousedown ={ (event) => this.whichButton(event,node, data) } 
                 style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;position: relative;">
                     {node.label}
-                    <div class="TreeMenu" style="display:none;position: absolute;top: 0;right: 0;width: 60px;height: 80px;z-index:990">
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #33cccc; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #f55e6e; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #3c6; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
+                    <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;height: 80px;z-index:990">
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
                     </div>
                 </span>);
             },
