@@ -11,9 +11,9 @@
             <div class="bgcolor"><label>菜单编码</label><el-input v-model="addData.moduleCode"  placeholder="请输入菜单编码"></el-input></div>
             <div class="bgcolor"><label>菜单名称</label><el-input v-model="addData.moduleName"  placeholder="请输入菜单名称"></el-input></div>
             <div class="bgcolor"><label>图标</label><el-input v-model="addData.ico"  placeholder="请输入图标"></el-input></div>
-            <div class="bgcolor"><label>功能模块ID全路径</label><el-input v-model="addData.moduleFullPathId"></el-input></div>
-            <div class="bgcolor"><label>功能模块名称全路径</label><el-input v-model="addData.moduleFullPathName"></el-input></div>
-            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq" type="number"></el-input></div>
+            <div class="bgcolor"><label>功能模块ID全路径</label><el-input v-model="addData.moduleFullPathId" placeholder="功能模块ID全路径"></el-input></div>
+            <div class="bgcolor"><label>功能模块名称全路径</label><el-input v-model="addData.moduleFullPathName" placeholder="功能模块名称全路径"></el-input></div>
+            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq" type="number" placeholder="排序"></el-input></div>
             <div class="bgcolor">
                 <label>语言</label>
                 <el-input  placeholder="无字段">
@@ -22,7 +22,7 @@
             </div>
             <div class="bgcolor">
                 <label>系统ID</label>
-                <el-input v-model="addData.systemId"></el-input>
+                <el-input v-model="addData.systemId" placeholder="系统ID"></el-input>
                 <!-- <el-select v-model="addData.systemId" placeholder="请输入系统ID">
                   <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
               </el-select> -->
@@ -30,7 +30,7 @@
             <div class="bgcolor">
               <label>上级菜单</label>
               <!-- <el-input v-model="addData.moduleParentId"></el-input> -->
-              <el-select v-model="addData.moduleParentId">
+              <el-select v-model="addData.moduleParentId"  placeholder="上级菜单">
                   <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </div>
