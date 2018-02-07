@@ -55,7 +55,6 @@
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                    <!-- <el-button type="text" size="small">修改</el-button> -->
                                     <el-button type="text" size="small"  @click="modify(scope.row)">修改</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text" size="small"  @click="delThis(scope.row)">删除</el-button>
@@ -78,9 +77,6 @@
         </el-row>
         <!-- dialog -->
         <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
-            <!-- <div class="bgcolor smallBgcolor"><label>集团ID</label><el-input v-model="dialogData.groupId" placeholder=""></el-input></div> -->
-            <!-- <div class="bgcolor smallBgcolor"><label>父级地区ID</label><el-input v-model="dialogData.areaParentId" placeholder=""></el-input></div> -->
-            <!-- <div class="bgcolor smallBgcolor"><label>父级模块 ID</label><el-input v-model="dialogData.moduleParentId" placeholder=""></el-input></div> -->
             <div class="bgcolor smallBgcolor"><label>功能模块代码</label><el-input v-model="dialogData.moduleCode" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor"><label>功能模块名称</label><el-input v-model="dialogData.moduleName" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor"><label>Web地址</label><el-input v-model="dialogData.url" placeholder=""></el-input></div>

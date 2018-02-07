@@ -23,13 +23,9 @@
             <div class="bgcolor">
                 <label>系统ID</label>
                 <el-input v-model="addData.systemId" placeholder="系统ID"></el-input>
-                <!-- <el-select v-model="addData.systemId" placeholder="请输入系统ID">
-                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select> -->
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
-              <!-- <el-input v-model="addData.moduleParentId"></el-input> -->
               <el-select v-model="addData.moduleParentId"  placeholder="上级菜单">
                   <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>

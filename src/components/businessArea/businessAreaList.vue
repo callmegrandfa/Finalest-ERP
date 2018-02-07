@@ -88,7 +88,6 @@
                     </el-option>
                 </el-select>
             </div>
-            <!-- <div class="bgcolor smallBgcolor"><label>父级地区ID</label><el-input v-model="dialogData.areaParentId" placeholder=""></el-input></div> -->
             <div class="bgcolor smallBgcolor"><label>地区代码</label><el-input v-model="dialogData.areaCode" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor"><label>地区名称</label><el-input v-model="dialogData.areaName" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor"><label>地区全称</label><el-input v-model="dialogData.areaFullName" placeholder=""></el-input></div>
@@ -97,7 +96,6 @@
             <div class="bgcolor smallBgcolor"><label>负责人</label><el-input v-model="dialogData.manager" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor">
                 <label>启用状态</label>
-                <!-- <el-input v-model="dialogData.status" placeholder=""></el-input> -->
                 <el-select v-model="dialogData.status">
                     <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
