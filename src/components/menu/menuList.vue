@@ -17,7 +17,7 @@
                     node-key="id"
                     default-expand-all
                     ref="tree"
-                    :expand-on-click-node="true"
+                    :expand-on-click-node="false"
                     :filter-node-method="filterNode"
                     @node-click="nodeClick"
                     :render-content="renderContent"
@@ -76,7 +76,28 @@
 
             </el-col>
         </el-row>
-        
+        <!-- dialog -->
+        <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
+            <!-- <div class="bgcolor smallBgcolor"><label>集团ID</label><el-input v-model="dialogData.groupId" placeholder=""></el-input></div> -->
+            <!-- <div class="bgcolor smallBgcolor"><label>父级地区ID</label><el-input v-model="dialogData.areaParentId" placeholder=""></el-input></div> -->
+            <!-- <div class="bgcolor smallBgcolor"><label>父级模块 ID</label><el-input v-model="dialogData.moduleParentId" placeholder=""></el-input></div> -->
+            <div class="bgcolor smallBgcolor"><label>功能模块代码</label><el-input v-model="dialogData.moduleCode" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>功能模块名称</label><el-input v-model="dialogData.moduleName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>Web地址</label><el-input v-model="dialogData.url" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>图标</label><el-input v-model="dialogData.ico" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>系统 ID</label><el-input v-model="dialogData.systemId" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor">
+                <label>是否在最底层</label>
+                <el-checkbox v-model="dialogData.moduleIsBottom"></el-checkbox>
+            </div>
+            <div class="bgcolor smallBgcolor"><label>功能模块ID全路径</label><el-input v-model="dialogData.moduleFullPathId" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>功能模块名称全路径</label><el-input v-model="dialogData.moduleFullPathName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>排序</label><el-input v-model="dialogData.seq" placeholder=""></el-input></div>
+            <div slot="footer" class="dialog-footer">
+                <button class="dialogBtn" @click="sendAjax">确 认</button>
+                <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -115,7 +136,7 @@
                     label: '9'
                     }],
                 tableData:[],
-
+                dialogData:{},    
                 componyTree:  [],
                 defaultProps: {
                     children: 'childNodes',
@@ -134,6 +155,8 @@
                 tableLoading:true,
                 treeLoading:true,
                 Sorting:'',//table搜索
+                dialogFormVisible:false,
+                tittle:'',
             }
         },
         created:function(){       
@@ -171,7 +194,6 @@
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
-                    // console.log(_this.tableData)
                     },function(res){
                     _this.tableLoading=false;
                 })
@@ -181,7 +203,6 @@
                 _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
                 .then(function(res){
-                    console.log(res)
                     _this.componyTree=res
                     _this.treeLoading=false;
                },function(res){
@@ -204,9 +225,7 @@
                     _this.load=false
                     _this.tableData=res.result.basOus;
                     _this.tableLoading=false;
-                    console.log(res);
                 },function(res){
-                    console.log('err:'+res)
                     _this.tableLoading=false;
                 })
             },
@@ -216,7 +235,6 @@
             },
              handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
-                //console.log(val)
             },
             delRow(){
                 let _this=this;
@@ -230,68 +248,11 @@
                             _this.open('删除成功','el-icon-circle-check','successERP');
                         },function(res){
                             _this.open('删除失败','el-icon-error','faildERP');
-                            //console.log('err:'+res)
                         })
                     }
                 };
-
-                // if(_this.treeCheck.length>0){//tree
-                //     for(let i=0;i<_this.treeCheck.length;i++){
-                //         _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
-                //         .then(function(res){    
-                //           _this.loadTree();
-                //         },function(res){
-                //             console.log('err:'+res)
-                //         })
-                //     }
-                // }
-
             },
-            // checkChange(data,check){
-            //     let _this=this;
-            //     let add=false;
-            //     if(check){
-            //         _this.treeCheck.push(data.treeId);
-            //     }else{
-            //         for(let i=0;i<_this.treeCheck.length;i++){
-            //             if(_this.treeCheck[i]==data.treeId){
-            //                 _this.treeCheck.splice(i,1);
-            //             }
-            //         }
-            //     }
-            // },
             nodeClick(data){
-                //  let _this=this;
-                //  let flag=false;
-                //  if(_this.isClick.length>0){
-                //      for(let i=0;i<_this.isClick.length;i++){
-                //         if(_this.isClick[i]==data.treeId){
-                //             flag=false
-                //             break;
-                //         }else{
-                //             flag=true;
-                //         }
-                //     }
-                //  }else{
-                //      flag=true;
-                //  }
-                 
-                // //  console.log(flag)
-                //  if(data.treeId!=1&&flag){
-                //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
-                //     .then(function(res){
-                //         _this.isClick.push(data.treeId);
-                //         //console.log(res)
-                //         if(res.result.length>0){
-                //             for(let i=0;i<res.result.length;i++){
-                //                 let label=res.result[i].deptName;
-                //                 let treeId=res.result[i].id;
-                //                 let child={'treeId':treeId,'label':label,children:[]}
-                //                 data.children.push(child)
-                //             }
-                //         }
-                //     })
-                //  }
                 
             },
             modify(row){
@@ -310,18 +271,95 @@
                 },function(res){
                 })
             },
-            whichButton(event,node, data){
-            let btnNum = event.button;
-                if (btnNum==2)
-                {
-                // alert("您点击了鼠标右键！")
-                event.preventDefault()  
-                var x = event.clientX  
-                var y = event.clientY  
-                // this.entityTreeContextMenu.axios = {  
-                // x, y  
-                // }  
+             whichButton(event,node, data){
+                let e = event || window.event;
+                let btnNum = e.button;
+                if(e.target.className!='TreeMenuBtn'){
+                    $('.TreeMenu').css({
+                        display:'none'
+                    })
+                }else{
+                    return false;
                 }
+                if (btnNum==2){
+                e.target.id= data.id
+                let clickDom=$('#'+e.target.id);
+                let x = e.clientX
+                let y = e.clientY
+                let left=clickDom.offset().left;
+                clickDom.children('.TreeMenu').css({
+                    display:'block',
+                    left:x-left+'px',
+                    top:'0px'
+                })
+                $('.el-tree-node>.el-tree-node__children').css({
+                    overflow:'visible'
+                })
+                }
+            },
+            TreeAdd(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
+                let _this=this;
+                _this.tittle='新增';
+                _this.clearTreeData();
+                _this.isAdd=true;
+                _this.dialogFormVisible=true;
+                _this.dialogData.moduleParentId=data.id;//父级id
+                
+            },
+            TreeDel(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',{id:data.id})
+                .then(function(res){
+                    _this.loadTree();
+                    _this.loadTableData();
+                },function(res){    
+
+                })
+            },
+            TreeModify(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
+                let _this=this;
+                _this.clearTreeData();
+                _this.tittle='修改';
+                _this.isAdd=false;
+                _this.dialogFormVisible=true;
+                 _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:data.id})
+                    .then(function(res){
+                        _this.dialogData=res.result;
+                    },function(res){    
+
+                    })
+            },
+            sendAjax(){
+                let _this=this;
+                if(_this.isAdd){
+                    _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.dialogData)
+                    .then(function(res){
+                        _this.dialogFormVisible=false;
+                        _this.loadTree();
+                        _this.loadTableData();
+                    },function(res){    
+
+                    })
+                }else{
+                     _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.dialogData)
+                    .then(function(res){
+                        _this.dialogFormVisible=false;
+                        _this.loadTree();
+                        _this.loadTableData();
+                    },function(res){    
+
+                    })
+                }
+                
             },
             filterNode(value, data) {
                 if (!value) return true;
@@ -329,15 +367,51 @@
             },
             renderContent(h, { node, data, store }) {
                 return (
-                <span on-mousedown ={ (event) => this.whichButton(event,node, data) } style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-                    <span  >{node.label}</span>
+                <span class="TreeNode"
+                on-mousedown ={ (event) => this.whichButton(event,node, data) } 
+                style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;position: relative;">
+                    {node.label}
+                   <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
+                    </div>
                 </span>);
+            },
+            clearTreeData(){
+                let _this=this;
+                _this.dialogData={}
             }
         },
     }
 </script>
 
 <style scoped>
+.dialogBtn{
+    display: block;
+    float: left;
+    width: 50%;
+    height: 100%;
+    background-color: #fff;
+    color: #c9c9c9;
+    border: none;
+    border-top: 1px solid #c9c9c9;
+    outline: none;
+    cursor: pointer;
+}
+.dialogBtn:focus{
+    outline: none;
+}
+.dialog-footer .dialogBtn:first-child{
+   border-right: 1px solid #c9c9c9;
+}
+.dialog-footer{
+    padding:0;
+    height: 50px;
+}
+.dialogBtn:hover{
+     color: #6699FF;
+}
 .formSearch{
     float: right;
 }
@@ -388,5 +462,11 @@
 .menuListForm .bAreaSearch .el-input__inner{
     height: 30px;
     border-radius: 30px;
+}
+.menuListForm .el-dialog__footer{
+    padding:0;
+}
+.menuListForm .areaDialog .bgcolor:first-child{
+    margin-top:15px;
 }
 </style>

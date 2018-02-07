@@ -257,7 +257,7 @@
                   _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     _this.open('保存并新增成功','el-icon-circle-check','successERP');
                     // _this.isSave=true;
-                    _this.clearData();
+                    // _this.clearData();
                 },function(res){
                     _this.open('保存并新增失败','el-icon-error','faildERP');
                 })
@@ -268,51 +268,11 @@
         },
         newAdd(){
             // this.isSave=true;
-            this.clearData();
+            // this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },
         clearData(){
-            this.creatorUser=[];
-            this.auditInfo={
-                id:'',
-                lastModifierUser:'',
-                isDeleted:false,
-                deleterUserId:'',
-                deletionTime:'',
-                lastModificationTime:'',
-                lastModifierUserId:'',
-                creationTime:'',
-                creatorUserId:'',
-                isCompany : false,
-                isAdministration :false,
-                isFinance: false,
-                isCapital :false,
-                isPurchase :false,
-            };
-            this.addData={
-                groupId:1,//集团ID
-                ouCode: '',//组织代码存在 
-                ouName: '' ,//组织名称存在
-                foreignName: '' ,//外文名称
-                mnemonic: '',//助记码
-                ouParentid: '' ,//上级组织ID存在
-                accountPeriodId:'' ,//会计期间ID
-                baseCurrencyId: '',//本位币种id存在
-                companyOuId: '',//所属公司ID存在
-                contactPerson:'',//联系人存在
-                phone:'',//电话存在
-                address:'' ,//地址存在
-                areaId: '',//行政区域ID
-                entityProperty : '',//实体属性
-                status: '',//启用状态存在
-                remark: '' ,//备注存在
-                basOuTypes: [0],//组织职能
-                isGroupCompany:false ,//
-                ouCompanyParentid: '' ,//上级公司组织ID
-                legalPerson:'',//法人代表
-                companyStatus:'' ,//公司启用状态
-                regtime:''//公司成立时间
-            };
+           
         }
     
     }

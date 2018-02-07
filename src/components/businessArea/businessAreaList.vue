@@ -80,8 +80,7 @@
             </el-col>
         </el-row>
         <!-- dialog -->
-        <el-dialog title="新增" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
-            <!-- <div class="bgcolor smallBgcolor"><label>集团ID</label><el-input v-model="dialogData.groupId" placeholder=""></el-input></div> -->
+        <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             <div class="bgcolor smallBgcolor">
                 <label>地区分类</label>
                 <el-select v-model="dialogData.areaType">
@@ -203,6 +202,7 @@
                 dialogFormVisible:false,
                 AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
                 isAdd:true,//判断是增加还是修改
+                tittle:'',//模态框tittle
             }
         },
         created:function(){       
@@ -252,8 +252,7 @@
                 _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
                 .then(function(res){
-                  
-                    _this.componyTree=[{areaName:'根目录',id:'0',items:res.result}],
+                    _this.componyTree=res.result
                     _this.treeLoading=false;
                },function(res){
                    _this.treeLoading=false;
@@ -405,6 +404,7 @@
                     })
                 let _this=this;
                 _this.clearTreeData();
+                _this.tittle='新增';
                 _this.isAdd=true;
                 _this.dialogFormVisible=true;
                 _this.dialogData.groupId=data.groupId;//集团id
@@ -430,6 +430,7 @@
                     })
                 let _this=this;
                 _this.clearTreeData();
+                _this.tittle='修改';
                 _this.isAdd=false;
                 _this.dialogFormVisible=true;
                  _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
