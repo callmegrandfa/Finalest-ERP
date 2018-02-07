@@ -51,17 +51,21 @@
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
-                            <el-table-column prop="seq" label="序号"></el-table-column>
+                            <el-table-column prop="seq" label="序号">
+                                <template slot-scope="scope">
+                                    <span>{{scope.$index+1}}</span>
+                                </template>
+                            </el-table-column>
 
                             <el-table-column type="selection"></el-table-column>
 
-                            <el-table-column prop="ouId" label="会计年份"></el-table-column>
+                            <el-table-column prop="periodYear" label="会计年份"></el-table-column>
 
-                            <el-table-column prop="contact" label="期间个数"></el-table-column>
+                            <el-table-column prop="periodNum" label="期间个数"></el-table-column>
 
-                            <el-table-column prop="contactFullName" label="开始日期"></el-table-column>
+                            <el-table-column prop="beginDate" label="开始日期"></el-table-column>
 
-                            <el-table-column prop="contactName" label="结束日期"></el-table-column>
+                            <el-table-column prop="endDate" label="结束日期"></el-table-column>
 
                             <!-- <el-table-column prop="contactClassId" label="备注">
                                 <template slot-scope="scope">
@@ -75,6 +79,7 @@
                             </el-table-column> -->
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
+                                    <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
                                     <el-button v-on:click="handleDel(scope.row.id)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
@@ -152,7 +157,7 @@
         //---获取数据-------------------------------------------------------
             loadAllList:function(){//获取所有列表数据
                 let self = this;
-                this.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
+                this.$axios.gets('/api/services/app/Accperiod/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.result.items;
                     self.total = res.result.totalCount;
@@ -209,25 +214,12 @@
         //     },
         //-----------------------------------------------------------------
 
-        // --------------open----------------------------------------------
-            // open(tittle,iconClass,className) {
-            //     this.$notify({
-            //     position: 'bottom-right',
-            //     iconClass:iconClass,
-            //     title: tittle,
-            //     showClose: false,
-            //     duration: 3000,
-            //     customClass:className
-            //     });
-            // },
-        //------------------------------------------------------------------
-
         //---控制修改及分页--------------------------------------------------
             delRow:function(){//删除选中的项
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
                     for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:_this.multipleSelection[i].id})
+                        _this.$axios.deletes('/api/services/app/Accperiod/Delete',{id:_this.multipleSelection[i].id})
                         .then(function(res){
                             _this.loadAllList();
                             _this.open('删除成功','el-icon-circle-check','successERP');
@@ -275,7 +267,7 @@
             handleDel:function(id){//每行右边的删除
                 let self = this;
                 // self.addList.splice(index,1);
-                this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:id}).then(function(res){
+                this.$axios.deletes('/api/services/app/Accperiod/Delete',{id:id}).then(function(res){
                     console.log(res);
                     self.open('删除成功','el-icon-circle-check','successERP');
                     self.loadAllList();
@@ -287,6 +279,23 @@
             this.$store.state.url='/account/accountDetail/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
+        goModify:function(id){//点击跳转修改页modify
+            // this.$store.state.url='/customer/customerModify/default'
+            this.$store.state.url='/account/accountModify/'+id;
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        //------------------------------------------------------------------
+        // --------------open----------------------------------------------
+            open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
         //------------------------------------------------------------------
     }
 }

@@ -982,15 +982,15 @@ export default({
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         open(tittle,iconClass,className) {
-                this.$notify({
-                position: 'bottom-right',
-                iconClass:iconClass,
-                title: tittle,
-                showClose: false,
-                duration: 3000,
-                customClass:className
-                });
-            },
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
         //----------------------------------------------------------
         
     }

@@ -50,7 +50,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label><small>*</small>会计年份</label>
-                                <el-input placeholder="请录入会计年份" v-model="createAccountParams.stockCode"></el-input>
+                                <el-input placeholder="请录入会计年份" v-model="createAccountParams.periodYear"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -59,7 +59,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label><small>*</small>期间个数</label>
-                                <el-input placeholder="请录入期间个数" v-model="createAccountParams.stockFullName"></el-input>
+                                <el-input placeholder="请录入期间个数" v-model="createAccountParams.periodNum"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -70,7 +70,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>开始日期</label>
-                                <el-input placeholder="请录入开始日期" v-model="createAccountParams.stockName"></el-input>
+                                <el-input placeholder="请录入开始日期" v-model="createAccountParams.beginDate"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -79,7 +79,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>结束日期</label>
-                                <el-input placeholder="结束日期" v-model="createAccountParams.stockName"></el-input>
+                                <el-input placeholder="结束日期" v-model="createAccountParams.endDate"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -88,7 +88,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>备注</label>
-                                <el-input placeholder="请录入备注"></el-input>
+                                <el-input placeholder="请录入备注" v-model="createAccountParams.remark"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -270,15 +270,34 @@
 
                 value: '',
                 
-                createAccountParams:{//创建会计期间的参数                  
-                    "groupID": "1",
-                    "ouID": "2",
-                    "accperiodSchemeID": "1",
-                    "periodYear": 2,
-                    "periodNum": 2,
-                    "beginDate": "2018-02-06T02:30:24.814Z",
-                    "endDate": "2018-02-06T02:30:24.814Z",
-                    "remark": "ddd"
+                createAccountParams:{//创建会计期间参数
+                    "groupID": 1,
+                    "ouID": 1,
+                    "accperiodSchemeID": 1,
+                    "periodYear": '',
+                    "periodNum": '',
+                    "beginDate": "2018-02-07T02:52:59.933Z",
+                    "endDate": "2018-02-07T02:52:59.933Z",
+                    "remark": "",
+                    "accperiodContents": [
+                        {
+                        "groupID": 0,
+                        "ouID": 0,
+                        "accperiodId": 0,
+                        "periodMonth": 0,
+                        "effectiveStart": "2018-02-07T02:52:59.933Z",
+                        "effectiveEnd": "2018-02-07T02:52:59.933Z",
+                        "remark": "string",
+                        "isDeleted": true,
+                        "deletedBy": "string",
+                        "deletedTime": "2018-02-07T02:52:59.933Z",
+                        "modifiedBy": "string",
+                        "modifiedTime": "2018-02-07T02:52:59.933Z",
+                        "createdBy": "string",
+                        "createdTime": "2018-02-07T02:52:59.933Z",
+                        "id": 0
+                        }
+                    ]
                 },   
                 
                 options: [{
@@ -303,8 +322,7 @@
             //---保存------------------------------------------------
             save:function(){
                 let self = this;
-                self.createRepository();//创建新仓库
-
+                self.createAccount();//创建新仓库
             },
 
             saveAdd:function(){//创建新的仓库并且清除数据
@@ -313,16 +331,35 @@
                     console.log(res);
                     self.open('创建仓库成功','el-icon-circle-check','successERP');
                  })
-              self.createAccountParams = {
-                    "groupID": "1",
-                    "ouID": "2",
-                    "accperiodSchemeID": "1",
-                    "periodYear": 2,
+                self.createAccountParams = {
+                    "groupID": 1,
+                    "ouID": 2,
+                    "accperiodSchemeID": 2,
+                    "periodYear": 3,
                     "periodNum": 2,
-                    "beginDate": "2018-02-06T02:30:24.814Z",
-                    "endDate": "2018-02-06T02:30:24.814Z",
-                    "remark": "ddd"
-                } 
+                    "beginDate": "2018-02-07T01:18:54.606Z",
+                    "endDate": "2018-02-07T01:18:54.606Z",
+                    "remark": "yyy",
+                    "accperiodContents": [
+                        {
+                        "groupID": 1,
+                        "ouID": 1,
+                        "accperiodId": 1,
+                        "periodMonth": 6,
+                        "effectiveStart": "2018-02-07T01:18:54.606Z",
+                        "effectiveEnd": "2018-02-07T01:18:54.606Z",
+                        "remark": "xxx",
+                        "isDeleted": true,
+                        "deletedBy": "xyy",
+                        "deletedTime": "2018-02-07T01:18:54.606Z",
+                        "modifiedBy": "xyy",
+                        "modifiedTime": "2018-02-07T01:18:54.606Z",
+                        "createdBy": "xyy",
+                        "createdTime": "2018-02-07T01:18:54.606Z",
+                        "id": 4
+                        }
+                    ]
+                };
                 self.addList = [];
                 self.rows = [];
             },
@@ -332,11 +369,14 @@
             createAccount:function(){//创建会计期间
                 let self = this;
                 // console.log(self.createRepositoryParams)
-                this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createAccountParams).then(function(res){
-                    // console.log(res);
-                    self.open('创建仓库成功','el-icon-circle-check','successERP');
-                    self.createReAddress(res.result);
-                    self.goModify(res.result)
+                this.$axios.posts('/api/services/app/Accperiod/Create',self.createAccountParams).then(function(res){
+                    console.log(res);
+                    self.open('创建会计期间成功','el-icon-circle-check','successERP');
+                    // self.createReAddress(res.result);
+                    // self.goModify(res.result)
+                },function(res){
+                    console.log(res)
+                    self.open('创建失败','el-icon-error','faildERP')
                 })
             },
             createReAddress:function(id){//创建新的仓库地址
@@ -362,18 +402,7 @@
                 let self = this;
                 self.x++;
                 let newCol = 'newCol'+self.x;
-                self.rows.newCol ={
-                    groupId:'1',//集团ID
-                    stockId:'',//仓库ID
-                    addressId:'2',//地址ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
-                    remark:'',//备注
-                };
+                self.rows.newCol =self.createAccountParams;
                 self.allList.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
             },
