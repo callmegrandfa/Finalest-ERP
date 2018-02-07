@@ -212,27 +212,6 @@
              },
         mounted:function(){
             let _this=this;
-            $('body').on('mousedown',function(e){
-                if(e.target.className=='TreeNode'|| e.target.className=='TreeMenuBtn' || e.target.className=='el-tree-node__content'){
-                    document.oncontextmenu=new Function("event.returnValue=false;");
-                }else{
-                    document.oncontextmenu=new Function("event.returnValue=true;");
-                }
-            })
-            $('body').on('mousedown','.el-tree-node__expand-icon',function(e){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
-            })
-            $('body').children().not('.TreeMenuBtn').on('click',function(){
-                 $('.TreeMenu').css({
-                        display:'none'
-                    })
-                 $('.el-tree-node>.el-tree-node__children').css({
-                    overflow:'hidden'
-                })   
-            })
-            
         },  
          watch: {
             searchLeft(val) {
@@ -295,9 +274,7 @@
                     _this.load=false
                     _this.tableData=res.result.basOus;
                     _this.tableLoading=false;
-                    console.log(res);
                 },function(res){
-                    console.log('err:'+res)
                     _this.tableLoading=false;
                 })
             },
@@ -307,7 +284,6 @@
             },
              handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
-                //console.log(val)
             },
             delRow(){
                 let _this=this;
@@ -321,7 +297,6 @@
                             _this.open('删除成功','el-icon-circle-check','successERP');
                         },function(res){
                             _this.open('删除失败','el-icon-error','faildERP');
-                            //console.log('err:'+res)
                         })
                     }
                 };
@@ -332,7 +307,6 @@
                 //         .then(function(res){    
                 //           _this.loadTree();
                 //         },function(res){
-                //             console.log('err:'+res)
                 //         })
                 //     }
                 // }
@@ -367,12 +341,10 @@
                 //      flag=true;
                 //  }
                  
-                // //  console.log(flag)
                 //  if(data.treeId!=1&&flag){
                 //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
                 //     .then(function(res){
                 //         _this.isClick.push(data.treeId);
-                //         //console.log(res)
                 //         if(res.result.length>0){
                 //             for(let i=0;i<res.result.length;i++){
                 //                 let label=res.result[i].deptName;
@@ -404,12 +376,13 @@
             whichButton(event,node, data){
                 let e = event || window.event;
                 let btnNum = e.button;
-                if(e.target.className=='TreeNode'){
+                if(e.target.className!='TreeMenuBtn'){
                     $('.TreeMenu').css({
                         display:'none'
                     })
+                }else{
+                    return false;
                 }
-                // console.log(e.target)
                 if (btnNum==2){
                 e.target.id= data.id
                 let clickDom=$('#'+e.target.id);
@@ -424,13 +397,12 @@
                 $('.el-tree-node>.el-tree-node__children').css({
                     overflow:'visible'
                 })
-                }else{
-                    $('.el-tree-node>.el-tree-node__children').css({
-                        overflow:'hidden'
-                    })
                 }
             },
             TreeAdd(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
                 let _this=this;
                 _this.clearTreeData();
                 _this.isAdd=true;
@@ -440,6 +412,9 @@
                 
             },
             TreeDel(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
                 .then(function(res){
@@ -450,6 +425,9 @@
                 })
             },
             TreeModify(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
                 let _this=this;
                 _this.clearTreeData();
                 _this.isAdd=false;
@@ -457,7 +435,6 @@
                  _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
                     .then(function(res){
                         _this.dialogData=res.result;
-                        console.log(res)
                     },function(res){    
 
                     })

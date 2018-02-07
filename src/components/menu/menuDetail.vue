@@ -243,7 +243,6 @@
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
             // }else{
-            //     console.log(_this.addData)
             //      _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData).then(function(res){  
             //         _this.isSave=false;
             //         _this.open('修改成功','el-icon-circle-check','successERP');

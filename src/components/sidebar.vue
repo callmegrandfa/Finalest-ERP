@@ -21,12 +21,12 @@
             </ul>
         </li>
         <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1">
-            <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="item.ico" style="color:#fff"></i></span>
-            <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData">{{item.moduleName}}</a>
+            <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
+            <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
             <ul class="slidUl slid1">
                 <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
                     <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
-                    <a href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData">{{i.moduleName}}</a>
+                    <a href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{i.moduleName}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
                         <li class="three" v-for="it in i.childNodes">
@@ -143,7 +143,6 @@ export default {
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
             _this.childNodes=res;
-            console.log(res);
         },function(res){
 
         })
