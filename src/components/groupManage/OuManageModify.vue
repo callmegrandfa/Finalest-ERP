@@ -312,8 +312,7 @@ export default({
                 isFinance: res.result.isFinance,//是否是财务
                 isCapital :res.result.isCapital ,//是否是资金
                 isPurchase :res.result.isPurchase ,//是否是采购
-            }     
-            console.log( _this.addData)
+            }
         },function(res){
 
         })

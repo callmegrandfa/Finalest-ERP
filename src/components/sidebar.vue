@@ -20,158 +20,23 @@
                 </li>
             </ul>
         </li>
-        <li class="one" @mouseenter="enter1">
-            <span class="menuIcon"><img src="../../static/image/login/setting.png"></span>
-            <a class="oneA" href="javascript:;">系统管理</a>
+        <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1">
+            <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
+            <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
             <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel2" @mouseenter="enter2">
-                    <a href="javascript:;">{{i.name}}</a>
+                <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
+                    <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
+                    <a href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{i.moduleName}}</a>
                     <diV class="triangle"></diV>
                     <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                        <li class="three" v-for="it in i.childNodes">
+                            <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
+                            <a href="javascript:;" :menuId="it.id" :moduleParentId="it.moduleParentId" :menuUrl="it.url" :menuname="it.moduleName" @click="storageData">{{it.moduleName}}</a>
                         </li>
                     </ul>
                 </li>
             </ul>
         </li>
-        <li class="one" @mouseenter="enter1">
-            <span class="menuIcon"><img src="../../static/image/siderbar/基础资料.png"></span>
-            <a class="oneA" href="javascript:;">基础资料</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel3" @mouseenter="enter2">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li class="one">
-            <span class="menuIcon"><img src="../../static/image/siderbar/采购管理.png"></span>
-            <a class="oneA" href="javascript:;">采购管理</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel4">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li class="one" >
-            <span class="menuIcon"><img src="../../static/image/siderbar/批发管理.png"></span>
-            <a class="oneA" href="javascript:;">批发管理</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel5">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li class="one">
-            <span class="menuIcon"><img src="../../static/image/siderbar/零售管理.png"></span>
-            <a class="oneA" href="javascript:;">零售管理</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel6">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li class="one">
-            <span class="menuIcon"><img src="../../static/image/siderbar/库存管理.png"></span>
-            <a class="oneA" href="javascript:;">库存管理</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel7">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li class="one">
-            <span class="menuIcon"><img src="../../static/image/siderbar/会员管理.png"></span>
-            <a class="oneA" href="javascript:;">会员管理</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel8">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li class="one">
-            <span class="menuIcon"><img src="../../static/image/siderbar/电商管理.png"></span>
-            <a class="oneA" href="javascript:;">电商管理</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel9">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li class="one">
-            <span class="menuIcon"><img src="../../static/image/siderbar/应收应付.png"></span>
-            <a class="oneA" href="javascript:;">应收应付</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel10">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <!-- <li class="one" v-for="item in items" :menuId="item.id">
-            <span class="menuIcon" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData"><i :class="item.icon"></i></span>
-            <a class="oneA" href="javascript:;" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData">{{item.name}}</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in item.items">
-                    <span class="menuIcon" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData"><i :class="i.icon"></i></span>
-                    <a href="javascript:;" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.items">
-                            <span class="menuIcon" :parentId="item.parentId" :menuname="item.name" :menuUrl="item.url" @click="storageData"><i :class="i.icon"></i></span>
-                            <a href="javascript:;" :menuId="it.id" :parentId="it.parentId" :menuUrl="it.url" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li> -->
     </ul>
 </template>
 <script>
@@ -239,109 +104,12 @@ export default {
                     {name:'业务地区管理',address:'businessArea'},
                 ]
             }],
-        secondLevel2:[{
-            name:'基础资料',
-            thirdInfo:[
-            ]}],
-        secondLevel3:[{
-        name:'基础资料',
-        thirdInfo:[ 
-        ]}],
-        secondLevel4:[{
-        name:'基础资料',
-        thirdInfo:[
-        ]}],
-        secondLevel5:[{
-        name:'基础资料',
-        thirdInfo:[      
-        ]}],
-        secondLevel6:[{
-        name:'基础资料',
-        thirdInfo:[  
-        ]}],
-        secondLevel7:[],
-        secondLevel8:[{
-        name:'基础资料',
-        thirdInfo:[   
-        ]}],
-        secondLevel9:[{
-        name:'基础资料',
-        thirdInfo:[    
-        ]}],
-        secondLevel10:[{
-        name:'基础资料',
-        thirdInfo:[ 
-        ]}],
-        items:[]    
+            childNodes:[],//菜单数据
         // items:
         // [
         //     {
         //         name:'常用功能',
         //         src:'../../static/image/siderbar/常用功能.png',
-        //         secondLevel:[
-        //             {
-        //             name:'基础资料',
-        //             thirdInfo:[      
-        //                 {name:'业务组织(精简版)-详细',address:'detail'},                 
-        //                 {name:'数据资料短',address:'shortData'},
-        //                 {name:'数据资料长',address:'longData'},
-        //                 {name:'数据资料中',address:'midData'},   
-        //                 {name:'仓库数据列表',address:'repositoryList'},
-        //                 {name:'仓库资料',address:'repositoryData'},
-        //                 {name:'商品资料',address:'goodsData'},
-        //                 {name:'店铺数据列表',address:'storeData'},   
-        //                 {name:'店铺资料-基本信息',address:'storeBasicInfor'},
-        //                 {name:'客户资料-基本信息',address:'customerBasicInfor'},
-        //                 {name:'客户资料',address:'customerInfor'},
-        //                 {name:'现货采购订单-订单列表',address:'orderList'}, 
-        //                 {name:'现货采购订单-订单详情',address:'orderDetails'},
-        //                 {name:'集团管理',address:'OuManage'},
-        //                 {name:'供应商列表',address:'supplierList'},
-        //             ]
-        //         },{
-        //             name:'基础资料',
-        //             thirdInfo:[
-        //             ]
-        //         },{
-        //             name:'租户管理',
-        //             thirdInfo:[
-        //             ]
-        //         },{
-        //             name:'集团管理',
-        //              thirdInfo:[
-        //                 {name:'集团管理',address:'OuManage'},
-        //                 {name:'业务组织(精简版)-详细',address:'detail'},
-        //             ]
-        //         },{
-        //             name:'用户组',
-        //             thirdInfo:[
-        //                 {name:'用户资料-详细',address:'userInfoDetail'},
-        //             ]
-        //         }
-        //         ,{
-        //             name:'采购管理',
-        //             thirdInfo:[
-        //             ]
-        //         },{
-        //             name:'客户资料',
-        //             thirdInfo:[
-        //             ]
-        //         },{
-        //             name:'单据模板',
-        //             thirdInfo:[
-        //                 {name:'列表资料',address:'orderDetails'},
-        //                 {name:'单据-主多从模板',address:'orderList'},
-        //             ]
-        //         }]
-        //     }, {
-        //         name:'系统管理',
-        //         src:'../../static/image/siderbar/系统管理.png',
-        //         secondLevel:[
-        //             {
-        //             name:'公共基础资料',
-        //         }, {
-        //             name:'公共基础资料',
-        //         }]
         //     }, {
         //         name:'基础资料',
         //         src:'../../static/image/siderbar/基础资料.png',
@@ -372,13 +140,12 @@ export default {
     },
     created:function(){
         let _this=this;
-        // _this.$axios.gets('/api/services/app/Navigation/GetAllNavigationsForTree')
-        // .then(function(res){
-        //     _this.items=res.result.items;
-        //     console.log(res);
-        // },function(res){
+        _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
+        .then(function(res){
+            _this.childNodes=res;
+        },function(res){
 
-        // })
+        })
         
     },
     mounted:function(){
@@ -412,9 +179,9 @@ export default {
                     height:_this.$store.state.slidbarHeight-93+'px'
                 })
                 if($(this).height()<$(this).children('.three').length*50){
-                    $(this).css({width:'470px'})
+                    $(this).css({width:'470px',overflowY:'scroll'})
                 }else{
-                    $(this).css({width:'235px'})
+                    $(this).css({width:'235px',overflowY:'scroll'})
                 }
             })
         },
@@ -696,6 +463,28 @@ export default {
     background:#414e61;
 }
 .slid1::-webkit-scrollbar-resizer  {
+    background:#414e61;
+}
+
+.slid2::-webkit-scrollbar {
+    display: none;
+    width:10px;
+    height:10px;
+}
+.slid2::-webkit-scrollbar-button    {
+    background-color:#414e61;
+}
+.slid2::-webkit-scrollbar-track     {
+    background:#414e61;
+}
+.slid2::-webkit-scrollbar-thumb{
+    background:#000;
+    border-radius:4px;
+}
+.slid2::-webkit-scrollbar-corner {
+    background:#414e61;
+}
+.slid2::-webkit-scrollbar-resizer  {
     background:#414e61;
 }
 </style>

@@ -80,8 +80,7 @@
             </el-col>
         </el-row>
         <!-- dialog -->
-        <el-dialog title="新增" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
-            <!-- <div class="bgcolor smallBgcolor"><label>集团ID</label><el-input v-model="dialogData.groupId" placeholder=""></el-input></div> -->
+        <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             <div class="bgcolor smallBgcolor">
                 <label>地区分类</label>
                 <el-select v-model="dialogData.areaType">
@@ -89,7 +88,6 @@
                     </el-option>
                 </el-select>
             </div>
-            <!-- <div class="bgcolor smallBgcolor"><label>父级地区ID</label><el-input v-model="dialogData.areaParentId" placeholder=""></el-input></div> -->
             <div class="bgcolor smallBgcolor"><label>地区代码</label><el-input v-model="dialogData.areaCode" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor"><label>地区名称</label><el-input v-model="dialogData.areaName" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor"><label>地区全称</label><el-input v-model="dialogData.areaFullName" placeholder=""></el-input></div>
@@ -98,7 +96,6 @@
             <div class="bgcolor smallBgcolor"><label>负责人</label><el-input v-model="dialogData.manager" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor">
                 <label>启用状态</label>
-                <!-- <el-input v-model="dialogData.status" placeholder=""></el-input> -->
                 <el-select v-model="dialogData.status">
                     <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
@@ -179,8 +176,7 @@
                     }],
                 tableData:[],
                 componyTree:  [
-                    // {areaName:'根目录',id:'0',items:[{areaName:'xxx',id:'2'}]},
-                    // {areaName:'yy',id:'3',items:[{areaName:'yyy',id:'4'}]}
+                    // {areaName:'根目录',id:'0',items:[]},
                 ],
                 defaultProps: {
                     children: 'items',
@@ -204,6 +200,7 @@
                 dialogFormVisible:false,
                 AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
                 isAdd:true,//判断是增加还是修改
+                tittle:'',//模态框tittle
             }
         },
         created:function(){       
@@ -213,19 +210,6 @@
              },
         mounted:function(){
             let _this=this;
-            $('body').on('mousedown',function(e){
-                if(e.target.className=='TreeNode'|| e.target.className=='TreeMenuBtn' || e.target.className=='el-tree-node__content'){
-                    document.oncontextmenu=new Function("event.returnValue=false;");
-                }else{
-                    document.oncontextmenu=new Function("event.returnValue=true;");
-                }
-            })
-            $('body').children().not('.TreeMenuBtn').on('click',function(){
-                 $('.TreeMenu').css({
-                        display:'none'
-                    })
-            })
-            
         },  
          watch: {
             searchLeft(val) {
@@ -287,9 +271,7 @@
                     _this.load=false
                     _this.tableData=res.result.basOus;
                     _this.tableLoading=false;
-                    console.log(res);
                 },function(res){
-                    console.log('err:'+res)
                     _this.tableLoading=false;
                 })
             },
@@ -299,7 +281,6 @@
             },
              handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
-                //console.log(val)
             },
             delRow(){
                 let _this=this;
@@ -313,7 +294,6 @@
                             _this.open('删除成功','el-icon-circle-check','successERP');
                         },function(res){
                             _this.open('删除失败','el-icon-error','faildERP');
-                            //console.log('err:'+res)
                         })
                     }
                 };
@@ -324,7 +304,6 @@
                 //         .then(function(res){    
                 //           _this.loadTree();
                 //         },function(res){
-                //             console.log('err:'+res)
                 //         })
                 //     }
                 // }
@@ -359,12 +338,10 @@
                 //      flag=true;
                 //  }
                  
-                // //  console.log(flag)
                 //  if(data.treeId!=1&&flag){
                 //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
                 //     .then(function(res){
                 //         _this.isClick.push(data.treeId);
-                //         //console.log(res)
                 //         if(res.result.length>0){
                 //             for(let i=0;i<res.result.length;i++){
                 //                 let label=res.result[i].deptName;
@@ -396,12 +373,13 @@
             whichButton(event,node, data){
                 let e = event || window.event;
                 let btnNum = e.button;
-                if(e.target.className=='TreeNode'){
+                if(e.target.className!='TreeMenuBtn'){
                     $('.TreeMenu').css({
                         display:'none'
                     })
+                }else{
+                    return false;
                 }
-                // console.log(e.target)
                 if (btnNum==2){
                 e.target.id= data.id
                 let clickDom=$('#'+e.target.id);
@@ -413,11 +391,18 @@
                     left:x-left+'px',
                     top:'0px'
                 })
+                $('.el-tree-node>.el-tree-node__children').css({
+                    overflow:'visible'
+                })
                 }
             },
             TreeAdd(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
                 let _this=this;
                 _this.clearTreeData();
+                _this.tittle='新增';
                 _this.isAdd=true;
                 _this.dialogFormVisible=true;
                 _this.dialogData.groupId=data.groupId;//集团id
@@ -425,6 +410,9 @@
                 
             },
             TreeDel(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
                 .then(function(res){
@@ -435,14 +423,17 @@
                 })
             },
             TreeModify(event,node,data){
+                $('.TreeMenu').css({
+                        display:'none'
+                    })
                 let _this=this;
                 _this.clearTreeData();
+                _this.tittle='修改';
                 _this.isAdd=false;
                 _this.dialogFormVisible=true;
                  _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
                     .then(function(res){
                         _this.dialogData=res.result;
-                        console.log(res)
                     },function(res){    
 
                     })
@@ -480,10 +471,10 @@
                 on-mousedown ={ (event) => this.whichButton(event,node, data) } 
                 style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;position: relative;">
                     {node.label}
-                    <div class="TreeMenu" style="display:none;position: absolute;top: 0;right: 0;width: 60px;height: 80px;z-index:990">
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #33cccc; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #f55e6e; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: calc(100% / 3);border: none;background-color: #3c6; color:#fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
+                   <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
+                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
                     </div>
                 </span>);
             },
@@ -585,9 +576,9 @@
     height: 30px;
     border-radius: 30px;
 }
-.bAreaListForm .el-tree-node>.el-tree-node__children{
+/* .bAreaListForm .el-tree-node>.el-tree-node__children{
     overflow: visible!important;
-}
+} */
 .bAreaListForm .el-dialog__footer{
     padding:0;
 }

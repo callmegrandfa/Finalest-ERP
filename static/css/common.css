@@ -284,6 +284,9 @@
         float: left;
         margin-right: 2px;
       }
+      .erp_bt:hover{
+        opacity: 0.8;
+      }
       .bt_width{
         padding: 0 30px 0 10px;
       }
@@ -812,3 +815,7 @@ end-placeholder="结束日期">
  -moz-transform: rotate(-90deg);	
 }
 
+/* loading */
+.el-loading-mask{
+  z-index: 900;
+}

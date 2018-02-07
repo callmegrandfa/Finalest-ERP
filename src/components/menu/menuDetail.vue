@@ -11,9 +11,9 @@
             <div class="bgcolor"><label>菜单编码</label><el-input v-model="addData.moduleCode"  placeholder="请输入菜单编码"></el-input></div>
             <div class="bgcolor"><label>菜单名称</label><el-input v-model="addData.moduleName"  placeholder="请输入菜单名称"></el-input></div>
             <div class="bgcolor"><label>图标</label><el-input v-model="addData.ico"  placeholder="请输入图标"></el-input></div>
-            <div class="bgcolor"><label>功能模块ID全路径</label><el-input v-model="addData.moduleFullPathId"></el-input></div>
-            <div class="bgcolor"><label>功能模块名称全路径</label><el-input v-model="addData.moduleFullPathName"></el-input></div>
-            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq"></el-input></div>
+            <div class="bgcolor"><label>功能模块ID全路径</label><el-input v-model="addData.moduleFullPathId" placeholder="功能模块ID全路径"></el-input></div>
+            <div class="bgcolor"><label>功能模块名称全路径</label><el-input v-model="addData.moduleFullPathName" placeholder="功能模块名称全路径"></el-input></div>
+            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq" type="number" placeholder="排序"></el-input></div>
             <div class="bgcolor">
                 <label>语言</label>
                 <el-input  placeholder="无字段">
@@ -22,21 +22,17 @@
             </div>
             <div class="bgcolor">
                 <label>系统ID</label>
-                <el-input v-model="addData.systemId"></el-input>
-                <!-- <el-select v-model="addData.systemId" placeholder="请输入系统ID">
-                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select> -->
+                <el-input v-model="addData.systemId" placeholder="系统ID"></el-input>
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
-              <el-input v-model="addData.moduleParentId"></el-input>
-              <!-- <el-select v-model="addData.moduleParentId ">
-                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select> -->
+              <el-select v-model="addData.moduleParentId"  placeholder="上级菜单">
+                  <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
             </div>
             <div class="bgcolor moreWidth">
               <label>web地址</label>
-              <el-input v-model="addData.url"  placeholder="请输入菜单编码"></el-input>
+              <el-input v-model="addData.url"  placeholder="请输入web地址"></el-input>
             </div>
             <div class="bgcolor">
               <label>状态</label>
@@ -45,7 +41,12 @@
               </el-select>
             </div>
           </el-col>
-          <div class="bgcolor"><label>子系统</label><el-input placeholder="无字段"></el-input></div>
+          <div class="bgcolor">
+              <label>子系统</label>
+               <el-select v-model="valueContain" placeholder="无字段">
+                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
+              </el-select>
+              </div>
           <div class="bgcolor"><label>是否在最底层</label><el-checkbox class="w_auto" v-model="addData.moduleIsBottom"></el-checkbox></div>
             <el-col :span="24">
                 <div class="bgcolor longWidth">
@@ -142,18 +143,43 @@
             menuCheck:true,
             dialogTableVisible:false,//控制对话框
             addData:{
-                // "moduleParentId": 0,
-                // "moduleCode": "string",
-                // "moduleName": "仓库管理",
-                // "url": "string",
-                // "ico": "string",
-                // "systemId": 0,
+                // "moduleParentId": '1',
+                // "moduleCode": "",
+                // "moduleName": "",
+                // "url": "",
+                // "ico": "",
+                // "systemId": '',
                 // "moduleIsBottom": true,
-                // "moduleFullPathId": "string",
-                // "moduleFullPathName": "string",
-                // "seq": 0
+                // "moduleFullPathId": "",
+                // "moduleFullPathName": "",
+                // "seq": ''
             },
             valueContain:'',
+            ParentId: [{ 
+                value:'0',
+                label: '无'
+            },{ 
+                value:'5',
+                label: '常用功能'
+            },{ 
+                value:'6',
+                label: '租户管理(父)'
+            },{ 
+                value:'8',
+                label: '采购管理'
+            },{ 
+                value:'9',
+                label: '租户管理(子)'
+            },{ 
+                value:'10',
+                label: '集团管理(父)'
+            },{ 
+                value:'11',
+                label: '集团管理(子)'
+            },{ 
+                value:'12',
+                label: '组织管理'
+            }],
             contain: [{ 
                 valueContain:'1',
                 label: '腾讯'
@@ -213,7 +239,6 @@
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
             // }else{
-            //     console.log(_this.addData)
             //      _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData).then(function(res){  
             //         _this.isSave=false;
             //         _this.open('修改成功','el-icon-circle-check','successERP');
@@ -228,7 +253,7 @@
                   _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     _this.open('保存并新增成功','el-icon-circle-check','successERP');
                     // _this.isSave=true;
-                    _this.clearData();
+                    // _this.clearData();
                 },function(res){
                     _this.open('保存并新增失败','el-icon-error','faildERP');
                 })
@@ -239,51 +264,11 @@
         },
         newAdd(){
             // this.isSave=true;
-            this.clearData();
+            // this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },
         clearData(){
-            this.creatorUser=[];
-            this.auditInfo={
-                id:'',
-                lastModifierUser:'',
-                isDeleted:false,
-                deleterUserId:'',
-                deletionTime:'',
-                lastModificationTime:'',
-                lastModifierUserId:'',
-                creationTime:'',
-                creatorUserId:'',
-                isCompany : false,
-                isAdministration :false,
-                isFinance: false,
-                isCapital :false,
-                isPurchase :false,
-            };
-            this.addData={
-                groupId:1,//集团ID
-                ouCode: '',//组织代码存在 
-                ouName: '' ,//组织名称存在
-                foreignName: '' ,//外文名称
-                mnemonic: '',//助记码
-                ouParentid: '' ,//上级组织ID存在
-                accountPeriodId:'' ,//会计期间ID
-                baseCurrencyId: '',//本位币种id存在
-                companyOuId: '',//所属公司ID存在
-                contactPerson:'',//联系人存在
-                phone:'',//电话存在
-                address:'' ,//地址存在
-                areaId: '',//行政区域ID
-                entityProperty : '',//实体属性
-                status: '',//启用状态存在
-                remark: '' ,//备注存在
-                basOuTypes: [0],//组织职能
-                isGroupCompany:false ,//
-                ouCompanyParentid: '' ,//上级公司组织ID
-                legalPerson:'',//法人代表
-                companyStatus:'' ,//公司启用状态
-                regtime:''//公司成立时间
-            };
+           
         }
     
     }
