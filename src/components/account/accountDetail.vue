@@ -123,6 +123,7 @@
 
                     <el-table-column prop="" label="" >
                         <template slot-scope="scope">
+                            <!-- <span>{{scope.row}}</span> -->
                             <span>{{scope.$index+1}}</span>
                         </template>
                     </el-table-column>
@@ -132,7 +133,7 @@
                             <!-- <span>{{scope.$index%2}}</span> -->
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.contactPerson" 
+                                    v-model="scope.row.accperiodContents[0].periodMonth" 
                                     v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
@@ -142,7 +143,7 @@
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.phone" 
+                                    v-model="scope.row.accperiodContents[0].effectiveStart" 
                                     v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
@@ -152,7 +153,7 @@
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.completeAddress" 
+                                    v-model="scope.row.accperiodContents[0].effectiveEnd" 
                                     v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
@@ -162,7 +163,7 @@
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.transportMethodId" 
+                                    v-model="scope.row.accperiodContents[0].remark" 
                                     v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
@@ -171,14 +172,18 @@
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.logisticsCompany" 
+                                    v-model="scope.row.accperiodContents[0].modifiedBy" 
                                     v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
                     <el-table-column prop="isDefault" label="修改时间">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="allList[scope.$index].isDefault"></el-checkbox>
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.accperiodContents[0].modifiedTime" 
+                                    v-on:click='handleEdit(scope.$index)'
+                                    type="text"/>
                         </template>
                     </el-table-column>
                     <!-- <el-table-column label="操作">
@@ -279,26 +284,38 @@
                     "beginDate": "2018-02-07T02:52:59.933Z",
                     "endDate": "2018-02-07T02:52:59.933Z",
                     "remark": "",
-                    "accperiodContents": [
-                        {
-                        "groupID": 0,
-                        "ouID": 0,
-                        "accperiodId": 0,
-                        "periodMonth": 0,
-                        "effectiveStart": "2018-02-07T02:52:59.933Z",
-                        "effectiveEnd": "2018-02-07T02:52:59.933Z",
-                        "remark": "string",
-                        "isDeleted": true,
-                        "deletedBy": "string",
-                        "deletedTime": "2018-02-07T02:52:59.933Z",
-                        "modifiedBy": "string",
-                        "modifiedTime": "2018-02-07T02:52:59.933Z",
-                        "createdBy": "string",
-                        "createdTime": "2018-02-07T02:52:59.933Z",
-                        "id": 0
-                        }
-                    ]
+                    "accperiodContents": []
                 },   
+                // createAccountListParams:{//创建会计期间从表参数
+                    
+                //     "groupID": 1,
+                //     "ouID": 2,
+                //     "accperiodSchemeID": 3,
+                //     "periodYear": 0,
+                //     "periodNum": 0,
+                //     "beginDate": "2018-02-07T05:27:49.732Z",
+                //     "endDate": "2018-02-07T05:27:49.732Z",
+                //     "remark": "gggg",
+                //     "accperiodContents": [
+                //         {
+                //         "groupID": '',
+                //         "ouID": '',
+                //         "accperiodId": '',
+                //         "periodMonth": '',
+                //         "effectiveStart": "2018-02-07T05:27:49.732Z",
+                //         "effectiveEnd": "2018-02-07T05:27:49.732Z",
+                //         "remark": "",
+                //         "isDeleted": true,
+                //         "deletedBy": "xyy",
+                //         "deletedTime": "2018-02-07T05:27:49.732Z",
+                //         "modifiedBy": "",
+                //         "modifiedTime": "2018-02-07T05:27:49.732Z",
+                //         "createdBy": "xyy",
+                //         "createdTime": "2018-02-07T05:27:49.732Z",
+                //         "id":0
+                //         }
+                //     ]
+                // }, 
                 
                 options: [{
                     value: '1',
@@ -322,7 +339,7 @@
             //---保存------------------------------------------------
             save:function(){
                 let self = this;
-                self.createAccount();//创建新仓库
+                self.createAccount();//创建新会计期间
             },
 
             saveAdd:function(){//创建新的仓库并且清除数据
@@ -335,8 +352,8 @@
                     "groupID": 1,
                     "ouID": 2,
                     "accperiodSchemeID": 2,
-                    "periodYear": 3,
-                    "periodNum": 2,
+                    "periodYear": '',
+                    "periodNum": '',
                     "beginDate": "2018-02-07T01:18:54.606Z",
                     "endDate": "2018-02-07T01:18:54.606Z",
                     "remark": "yyy",
@@ -349,7 +366,7 @@
                         "effectiveStart": "2018-02-07T01:18:54.606Z",
                         "effectiveEnd": "2018-02-07T01:18:54.606Z",
                         "remark": "xxx",
-                        "isDeleted": true,
+                        "isDeleted": false,
                         "deletedBy": "xyy",
                         "deletedTime": "2018-02-07T01:18:54.606Z",
                         "modifiedBy": "xyy",
@@ -372,24 +389,33 @@
                 this.$axios.posts('/api/services/app/Accperiod/Create',self.createAccountParams).then(function(res){
                     console.log(res);
                     self.open('创建会计期间成功','el-icon-circle-check','successERP');
-                    // self.createReAddress(res.result);
-                    // self.goModify(res.result)
+                    self.createAccountList(res.id)
+                    self.goModify(res.id)
                 },function(res){
                     console.log(res)
                     self.open('创建失败','el-icon-error','faildERP')
                 })
             },
-            createReAddress:function(id){//创建新的仓库地址
+            createAccountList:function(id){//创建会计期间从表
                 let self = this;
                 // console.log(id)
                 // self.createRepositoryAddressParams.stockId = id;
                 // console.log(self.addList)
                 if(self.addList.length>0){
                     for(let i in self.addList){
-                        self.addList[i].stockId = id;
-                        this.$axios.posts('api/services/app/StockAddressManagement/Create',self.addList[i]).then(function(res){
+                        // self.addList[i].stockId = id;
+                        self.addList[i].groupID = self.createAccountParams.groupID;
+                        self.addList[i].ouID = self.createAccountParams.ouID;
+                        self.addList[i].accperiodSchemeID = self.createAccountParams.accperiodSchemeID;
+                        self.addList[i].beginDate = self.createAccountParams.beginDate;
+                        self.addList[i].endDate = self.createAccountParams.endDate;
+                        self.addList[i].periodYear = self.createAccountParams.periodYear;
+                        self.addList[i].periodNum = self.createAccountParams.periodNum;
+                        self.addList[i].remark = self.createAccountParams.remark;
+                        self.addList[i].accperiodContents[0].accperiodId = id
+                        this.$axios.posts('/api/services/app/Accperiod/Create',self.addList[i]).then(function(res){
                             // console.log(res);
-                            self.open('创建仓库地址成功','el-icon-circle-check','successERP');
+                            self.open('创建从表成功','el-icon-circle-check','successERP');
                         })
                     }
                 }
@@ -402,9 +428,36 @@
                 let self = this;
                 self.x++;
                 let newCol = 'newCol'+self.x;
-                self.rows.newCol =self.createAccountParams;
+                self.rows.newCol ={
+                    "groupID": 1,
+                    "ouID": 2,
+                    "accperiodSchemeID": 3,
+                    "periodYear": 0,
+                    "periodNum": 0,
+                    "beginDate": "2018-02-07T05:27:49.732Z",
+                    "endDate": "2018-02-07T05:27:49.732Z",
+                    "remark": "bbbb",
+                    "accperiodContents": [{
+                        "groupID": 1,
+                        "ouID": 2,
+                        "accperiodId": '',
+                        "periodMonth": '',
+                        "effectiveStart": "2018-02-07T05:27:49.732Z",
+                        "effectiveEnd": "2018-02-07T05:27:49.732Z",
+                        "remark": "",
+                        "isDeleted": false,
+                        "deletedBy": "神奇女侠",
+                        "deletedTime": "2018-02-07T05:27:49.732Z",
+                        "modifiedBy": "",
+                        "modifiedTime": "2018-02-07T05:27:49.732Z",
+                        "createdBy": "超人",
+                        "createdTime": "2018-02-07T05:27:49.732Z",
+                        "id":0
+                        }]
+                }
                 self.allList.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
+                console.log(self.rows)
             },
 
             handleEdit:function(index){//表格内编辑操作
