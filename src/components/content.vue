@@ -11,8 +11,8 @@
                         <ul id="routerBox">
                             <li v-for="(i,index) in count" :key="index" class="routerBtn addBtn">
                                 <!-- <router-link :to="{name:i.url,params:{id:i.params}}">{{i.name}}</router-link> -->
-                                <router-link :to="{name:i.url,params:{id:'default'}}">{{i.name}}</router-link>
-                                <span class="closes" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span>
+                                <router-link :to="{name:i.url,params:{id:'default'}}">{{i.name}}
+                                <span class="closes" :menuurl="i.url" @click="close" :name="i.name" :index="index">×</span></router-link>
                                 <!-- <i class="el-icon-error closes" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i> -->
                             </li>
                         </ul>
@@ -253,10 +253,9 @@ export default {
     width: 12px;
     height: 12px;
     position: absolute;
-    top: 3px;
+    top: 0px;
     right: 0;
-    color: #fff;
-    background-color: #f55e6e;
+    background-color: none;
     font-size: 14px;
     font-weight: bolder;
     text-align: center;
@@ -276,10 +275,20 @@ export default {
     font-size: 12px;
     text-decoration: none;
 }
-
-#window #routerBox .routerBtn a.active{
+#window #routerBox .routerBtn a:hover{
+	background: rgba(255,255,255,.3);
+}
+#window #routerBox .routerBtn a:hover .closes{
+	color: #fff;
+    background-color: #f55e6e;
+}
+#window #routerBox .routerBtn a.active {
     color: #33CCCC;
     background-color: #eef1f5;
+}
+#window #routerBox .routerBtn a.active .closes{
+    color: #fff;
+    background-color: #f55e6e;
 }
 .homePage a.active{
      color: #33CCCC;
