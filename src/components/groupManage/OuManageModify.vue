@@ -139,13 +139,13 @@
     <el-col :span="24" class="getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-input :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>修改人</label><el-input :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-input :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>启用日期</label><el-input :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>封存日期</label><el-input :disabled="true"></el-input></div>
-            <div class="bgcolor"><label>封存人</label><el-input :disabled="true"></el-input></div>
+            <div class="bgcolor"><label>创建人</label><el-input :disabled="true" v-model="auditInfo.creatorUserId"></el-input></div>
+            <div class="bgcolor"><label>创建时间</label><el-input :disabled="true" v-model="auditInfo.creationTime"></el-input></div>
+            <div class="bgcolor"><label>修改人</label><el-input :disabled="true" v-model="auditInfo.lastModifierUserId"></el-input></div>
+            <div class="bgcolor"><label>修改时间</label><el-input :disabled="true" v-model="auditInfo.lastModificationTime"></el-input></div>
+            <div class="bgcolor"><label>启用日期</label><el-input :disabled="true" v-model="auditInfo.creationTime"></el-input></div>
+            <div class="bgcolor"><label>封存日期</label><el-input :disabled="true" v-model="auditInfo.deletionTime"></el-input></div>
+            <div class="bgcolor"><label>封存人</label><el-input :disabled="true" v-model="auditInfo.deleterUserId"></el-input></div>
         </div>                                  
     </el-col>
 </el-row>                                                           
