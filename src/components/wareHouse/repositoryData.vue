@@ -457,6 +457,7 @@
                 };
                 self.allList.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
+                // console.log(self.rows)
             },
 
             handleEdit:function(index){//表格内编辑操作
