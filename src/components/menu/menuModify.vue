@@ -75,14 +75,13 @@
                         <span style="float:left;">添加功能</span>
                         <div class="double_bt">
                             <template v-if="menuCheck">
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="menuCheck=!menuCheck">已选功能</div>
+                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="showNodeadd">已选功能</div>
                                 <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}">未选功能</div>
                             </template>
                             <template v-else>
                                 <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选功能</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="menuCheck=!menuCheck">未选功能</div>
+                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选功能</div>
                             </template>
-                            
                         </div>
                     </template>
                     <el-col :span="6" class="dialog_ dialog_l">
@@ -95,21 +94,24 @@
                             <el-tree
                             :data="componyTree"
                             :props="defaultProps"
-                            node-key="treeId"
+                            node-key="id"
                             default-expand-all
-                            :expand-on-click-node="true">
+                            @node-click="nodeClick"
+                            :expand-on-click-node="false">
                             </el-tree>
                         </el-col>
                         
                     </el-col>
                     <el-col :span="18" class="dialog_ dialog_r">
-                        <button class="menu_item"><span class="menu_add">+</span>新增</button>
-                        <button class="menu_item"><span class="menu_add">+</span>删除</button>
-                        <button class="menu_item"><span class="menu_add">+</span>导入</button>
-                        <button class="menu_item"><span class="menu_add">+</span>导出</button>
-                        <button class="menu_item"><span class="menu_add">+</span>审核</button>
-                        <button class="menu_item"><span class="menu_add">+</span>修改</button>
-                        <button class="menu_item"><span class="menu_add">+</span>保存</button>
+                         <div class="menu_box" v-for="i in componyTree" :moduleName="i.displayName">
+                            <p>{{i.displayName}}</p>
+                            <div class="menu_item_wapper menu_item_add">
+                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button>
+                            </div>
+                            <div class="menu_item_wapper menu_item_del">
+                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
+                            </div>
+                        </div>
                         <el-col :span="24" class="load_more">
                             <button>加载更多</button>
                         </el-col>
@@ -120,9 +122,7 @@
                 <div class="bgcolor longWidth">
                     <label class="h_35"></label>
                     <div>
-                        <button class="addRole">导出<i class="el-icon-error"></i></button>
-                        <button class="addRole">审核<i class="el-icon-error"></i></button>
-                        <button class="addRole">添加<i class="el-icon-error"></i></button>
+                        <button class="addRole"  v-for="x in checked">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></button>
                     </div>
                 </div>
             </el-col>
@@ -198,35 +198,36 @@
                 valueContain:'2',
                 label: '阿里'
             }],
-            componyTree:  [{
-                treeId: 1,
-                label: '集团名',
-                children:[{
-                    treeId: 2,
-                    label: '测试1',
-                    children:[]
-                },
-                {
-                    treeId: 3,
-                    label: '测试2',
-                    children:[]
-                }]
-            }],
+            componyTree:  [],
             defaultProps: {
                 children: 'children',
-                label: 'label'
+                label: 'displayName'
             },
+            checked:[],//展示所有权限
+            nochecked:[],//
+            nodeName:'',
+            permissions:[]
         }
     },
     created:function(){
         let _this=this;
+        _this.loadPermission();
             _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
+                _this.checked=res.result.permissions;
                 _this.addData=res.result;
             },function(res){
             })
     },
     methods:{
+        loadPermission(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
+            .then(function(res){
+                _this.componyTree=res.items
+            },function(res){
+            })
+        },
         back(){
             this.$store.state.url='/menu/menuList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -247,13 +248,17 @@
         },
          save(){
             let _this=this;
+            // $.each(_this.checked,function(index,value){
+            //     _this.permissions.push(value.permissionName);
+            // })
+            _this.addData.permissions=_this.checked;//权限
+            console.log(_this.addData)
             _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
             .then(function(res){
                 _this.open('修改成功','el-icon-circle-check','successERP');
             },function(res){
                 _this.open('修改失败','el-icon-error','faildERP');
             })
-            
         },
         saveAdd(){
              let _this=this;
@@ -317,6 +322,97 @@
                 companyStatus:'' ,//公司启用状态
                 regtime:''//公司成立时间
             };
+        },
+        showNodeadd(){
+            let _this=this;
+            _this.menuCheck=!_this.menuCheck
+            $('.menu_item_add').css('display','block')
+            $('.menu_item_del').css('display','none')
+        },
+        showNodedel(){
+            let _this=this;
+            _this.menuCheck=!_this.menuCheck
+            $('.menu_item_add').css('display','none')
+            $('.menu_item_del').css('display','block')
+        },
+        nodeClick(data,event){
+            let _this=this;
+            _this.nodeName=data.displayName;
+             $('.menu_box').each(function(x){
+                if($(this).attr('moduleName')==_this.nodeName){
+                    $(this).css('display','block')
+                }else{
+                    $(this).css('display','none')
+                }
+            })
+        },
+        addPermission(x){
+            let _this=this;
+            $('.menu_item_add .menu_item').each(function(){
+                if($(this).attr('displayName')==x.displayName){
+                    $(this).css('display','none')
+                }
+            })
+            $('.menu_item_del .menu_item').each(function(){
+                if($(this).attr('displayName')==x.displayName){
+                    $(this).css('display','block')
+                }
+            })
+            let flag=false;
+            if(_this.nochecked.length<=0){
+                flag=true;
+            }else{
+                flag=false;
+                $.each(_this.nochecked,function(index,value){
+                    if(x==value){
+                        flag=false;
+                    }else{
+                        flag=true;
+                    }
+                })
+            }
+            $.each(_this.checked,function(index,value){
+                if(x==value){
+                    _this.checked.splice(index,1)
+                }
+            })
+            if(flag){
+                _this.nochecked.push(x);
+            }
+        },
+        delPermission(x){
+            let _this=this;
+            $('.menu_item_del .menu_item').each(function(){
+                if($(this).attr('displayName')==x.displayName){
+                    $(this).css('display','none')
+                }
+            })
+            $('.menu_item_add .menu_item').each(function(){
+                if($(this).attr('displayName')==x.displayName){
+                    $(this).css('display','block')
+                }
+            })
+            let flag=false;
+            if(_this.checked.length<=0){
+                flag=true;
+            }else{
+                flag=false;
+                $.each(_this.checked,function(index,value){
+                    if(x==value){
+                        flag=false;
+                    }else{
+                        flag=true;
+                    }
+                })
+            }
+            $.each(_this.nochecked,function(index,value){
+                if(x==value){
+                    _this.nochecked.splice(index,1)
+                }
+            })
+            if(flag){
+                _this.checked.push(x);
+            }
         }
     
     }
@@ -327,6 +423,25 @@
 
 
 <style scoped>
+.menu_box{
+    display: none;
+}
+.menu_item_wapper{
+    display: block;
+}
+.menu_item_del{
+    display: block;
+}
+.menu_item_add{
+    display: none;
+}
+.menu_item_del .menu_item{
+    display: block;
+}
+.menu_item_add .menu_item{
+    display: none;
+}
+
 .w_auto{
     width: auto;
 }
@@ -455,8 +570,7 @@
 }
 .menuModify .bgcolor.longWidth .addRole{
   display: inline-block;
-  width: 66px;
-  height: 35px;
+  padding: 10px 20px;
   background-color: #f2f2f2;
   border: none;
   border-radius: 3px;

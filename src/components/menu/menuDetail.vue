@@ -108,12 +108,7 @@
                             <div class="menu_item_wapper menu_item_del">
                                 <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
                             </div>
-                            
-                            <!-- <button class="menu_item" :class="{show : menuCheck}" v-for="x in nochecked" :moduleName="x.moduleName"><span class="menu_add" @click="addPermission(x)" >+</span>{{x.displayName}}</button>
-                            <button class="menu_item" :class="{show : !menuCheck}" v-for="x in checked" :moduleName="x.moduleName"><span class="menu_add" @click="delPermission(x)" style="line-height:20px" >-</span>{{x.displayName}}</button> -->
                         </div>
-                        <!-- <button v-if="menuCheck" class="menu_item" v-for="x in nochecked"><span class="menu_add" @click="addPermission(x)">+</span>{{x.displayName}}</button>
-                        <button v-if="!menuCheck" class="menu_item" v-for="x in checked"><span class="menu_add" @click="delPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button> -->
                         <el-col :span="24" class="load_more">
                             <button>加载更多</button>
                         </el-col>
@@ -256,26 +251,14 @@
             },
             checked:[],//展示所有权限
             nochecked:[],//
-            storeTreeData:[],
             nodeName:'',
+            permissions:[]
             
         }
     },
     created:function(){
         let _this=this;
         _this.loadPermission();
-    },
-    watch:{
-        checked:{
-            handler: function(val, oldVal) { 
-                // console.log(val)
-             },
-            deep: true,
-            immediate: true
-        }
-    },
-    computed:{
-        
     },
     methods:{
         loadPermission(){
@@ -307,12 +290,10 @@
         },
          save(){
             let _this=this;
-            let permissions=[];
-            $.each(_this.checked,function(index,value){
-                permissions.push(value.permissionName);
-            })
-            // console.log(_this.addData)
-            _this.addData.permissions=permissions;//权限
+            // $.each(_this.checked,function(index,value){
+            //     _this.permissions.push(value.permissionName);
+            // })
+            _this.addData.permissions=_this.checked;//权限
                  _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
                     _this.addData.id=res.result.id;
                     _this.$store.state.url='/menu/menuModify/'+res.result.id
@@ -584,8 +565,7 @@
 }
 .menuDetail .bgcolor.longWidth .addRole{
   display: inline-block;
-  width: 66px;
-  height: 35px;
+  padding: 10px 20px;
   background-color: #f2f2f2;
   border: none;
   border-radius: 3px;
