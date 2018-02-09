@@ -217,22 +217,22 @@
                     <div>
                         <div class="bgcolor">
                             <label>创建人</label>
-                            <el-input placeholder="创建人" v-model='allData.createdBy' disabled="disabled"></el-input>
+                            <el-input placeholder="创建人" v-model='accountData.createdBy' disabled="disabled"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>创建时间</label>
-                            <el-date-picker  type="date" v-model='allData.createdTime' placeholder="创建时间" disabled="disabled"></el-date-picker>
+                            <el-date-picker  type="date" v-model='accountData.createdTime' placeholder="创建时间" disabled="disabled"></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
                             <label>修改人</label>
-                            <el-input placeholder="修改人" v-model='allData.modifiedBy' disabled="disabled"></el-input>
+                            <el-input placeholder="修改人" v-model='accountData.modifiedBy' disabled="disabled"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>修改时间</label>
-                            <el-input placeholder="修改时间" v-model='allData.modifiedTime' disabled="disabled"></el-input>
+                            <el-input placeholder="修改时间" v-model='accountData.modifiedTime' disabled="disabled"></el-input>
                         </div>
                         <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
                         <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
@@ -257,15 +257,25 @@
             return {        
                 allData:'',//返回的所有信息
                 accountData:{//主表的信息
-                    "groupID": '',
-                    "ouID": '',
-                    "accperiodSchemeID": '',
-                    "periodYear": '',
-                    "periodNum": '',
-                    "beginDate": "",
-                    "endDate": "",
-                    "remark": "",
-                    "accperiodContents": []
+                    groupID: '',
+                    ouID: '',
+                    accperiodSchemeID: '',
+                    periodYear: '',
+                    periodNum: '',
+                    createdBy:'',
+                    createdTime:'',
+                    beginDate:'',
+                    deletedBy:'',
+                    deletedTime:'',
+                    endDate:'',
+                    modifiedBy:'',
+                    modifiedTime:'',
+                    isDeleted:false,
+                    id:'',
+                    beginDate: "",
+                    endDate: "",
+                    remark: "",
+                    accperiodContents: []
                 },   
                 accountList:[],//从表的信息
                 
@@ -347,14 +357,24 @@
                         self.accountData.beginDate = self.allData.beginDate;
                         self.accountData.endDate = self.allData.endDate;
                         self.accountData.remark = self.allData.remark;
+                        self.accountData.createdBy = self.allData.createdBy;
+                        self.accountData.createdTime = self.allData.createdTime;
+                        self.accountData.deletedBy = self.allData.deletedBy;
+                        self.accountData.deletedTime = self.allData.deletedTime;
+                        self.accountData.endDate = self.allData.endDate;
+                        self.accountData.id = self.allData.id;
+                        self.accountData.isDeleted = self.allData.isDeleted;
+                        self.accountData.modifiedBy = self.allData.modifiedBy;
+                        self.accountData.modifiedTime = self.allData.modifiedTime;
+                        self.accountData.isDeleted = self.allData.isDeleted;
                         
-
+console.log(self.accountData)
                         let beginDate = self.accountData.beginDate.split('.')[0].replace('T',' ');
                         self.accountData.beginDate = beginDate;
                         let endDate = self.accountData.endDate.split('.')[0].replace('T',' ');
                         self.accountData.endDate = endDate;
                         let modifiedTime = self.accountData.modifiedTime.split('.')[0].replace('T',' ');
-                        console.log(modifiedTime)
+                        // console.log(self.accountData)
                         self.accountData.modifiedTime = modifiedTime;
                         
                         self.accountList = self.allData.accperiodContents;
