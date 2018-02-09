@@ -1,6 +1,6 @@
 <template>
      <div class="data-wrapper b1">
-        <el-row class="bg-white pt10 pb10 bb1">
+        <el-row class="bg-white pt10 pb10 bb1 fixed">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                   <img src="../../../static/image/common/bt_back.png">
@@ -214,53 +214,30 @@
 
             <el-col :span="24" class="bg-white pb10">
                 <el-row class="pl10">
-                    <el-col :span="5" class="bg-white br3 h35 b1">
-                        <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>创建人</span>
-                            </el-col>
+                    <div>
+                        <div class="bgcolor">
+                            <label>创建人</label>
+                            <el-input placeholder="创建人" v-model='allData.createdBy' disabled="disabled"></el-input>
+                        </div>
 
-                            <el-col :span="15">
-                                <input class="input-need" type="text" disabled>
-                            </el-col>
-                        </el-row>
-                    </el-col>
+                        <div class="bgcolor">
+                            <label>创建时间</label>
+                            <el-date-picker  type="date" v-model='allData.createdTime' placeholder="创建时间" disabled="disabled"></el-date-picker>
+                        </div>
 
-                    <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                        <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>创建时间</span>
-                            </el-col>
+                        <div class="bgcolor">
+                            <label>修改人</label>
+                            <el-input placeholder="修改人" v-model='allData.modifiedBy' disabled="disabled"></el-input>
+                        </div>
 
-                            <el-col :span="15">
-                                <input class="input-need" type="text" disabled>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                        <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>修改人</span>
-                            </el-col>
-
-                            <el-col :span="15">
-                                <input class="input-need" type="text" disabled>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                        <el-row>
-                            <el-col :span="8" class="pl10">
-                                <span>修改时间</span>
-                            </el-col>
-
-                            <el-col :span="15">
-                                <input class="input-need" type="text" disabled>
-                            </el-col>
-                        </el-row>
-                    </el-col>
+                        <div class="bgcolor">
+                            <label>修改时间</label>
+                            <el-input placeholder="修改时间" v-model='allData.modifiedTime' disabled="disabled"></el-input>
+                        </div>
+                        <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
+                        <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
+                        <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+                    </div> 
                 </el-row>
             </el-col>
         </el-row>
@@ -360,7 +337,8 @@
                     this.$axios.gets('/api/services/app/Accperiod/GetByID',{id:self.$route.params.id}).then(function(res){
                         console.log(res);
                         self.allData = res.result;
-                        console.log(self.allData)
+
+                        // console.log(self.allData)
                         self.accountData.groupID = self.allData.groupID;
                         self.accountData.ouID = self.allData.ouID;
                         self.accountData.accperiodSchemeID = self.allData.accperiodSchemeID;
@@ -369,9 +347,24 @@
                         self.accountData.beginDate = self.allData.beginDate;
                         self.accountData.endDate = self.allData.endDate;
                         self.accountData.remark = self.allData.remark;
-                        console.log(self.accountData)
+                        
 
+                        let beginDate = self.accountData.beginDate.split('.')[0].replace('T',' ');
+                        self.accountData.beginDate = beginDate;
+                        let endDate = self.accountData.endDate.split('.')[0].replace('T',' ');
+                        self.accountData.endDate = endDate;
+                        let modifiedTime = self.accountData.modifiedTime.split('.')[0].replace('T',' ');
+                        console.log(modifiedTime)
+                        self.accountData.modifiedTime = modifiedTime;
+                        
                         self.accountList = self.allData.accperiodContents;
+                        // console.log(self.accountList)
+                        $.each(self.accountList,function(index,value){
+                            let effectiveStart = value.effectiveStart.slice(0,value.effectiveStart.indexOf('.')).replace('T',' ');
+                            self.accountList[index].effectiveStart = effectiveStart;
+                            let effectiveEnd = value.effectiveEnd.slice(0,value.effectiveEnd.indexOf('.')).replace('T',' ');
+                            self.accountList[index].effectiveEnd = effectiveEnd;
+                        })
                         // self.allList = res.result.items;
                     },function(res){
                         console.log('err'+res)
@@ -387,6 +380,8 @@
                 self.createAccountList();//创建从表
                 self.saveAccountModify();//保存主表的修改
                 self.saveAccountListModify();//保存从表的修改
+                console.log(self.updateList)
+                console.log(self.addList)
             },
 
             saveAdd:function(){//创建新的仓库并且清除数据
@@ -524,8 +519,8 @@
                         "ouID": self.allData.ouID,
                         "accperiodId": self.$route.params.id,
                         "periodMonth": '',
-                        "effectiveStart": "2018-02-07T05:27:49.732Z",
-                        "effectiveEnd": "2018-02-07T05:27:49.732Z",
+                        "effectiveStart": "",
+                        "effectiveEnd": "",
                         "remark": "",
                         "isDeleted": false,
                         "deletedBy": "xyy",

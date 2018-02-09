@@ -160,6 +160,12 @@
                 this.$axios.gets('/api/services/app/Accperiod/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.result.items;
+                    $.each(self.allList,function(index,value){
+                        let beginDate = value.beginDate.slice(0,value.beginDate.indexOf('.')).replace('T',' ');
+                        self.allList[index].beginDate = beginDate;
+                        let endDate = value.endDate.slice(0,value.endDate.indexOf('.')).replace('T',' ');
+                        self.allList[index].endDate = endDate;
+                    })
                     self.total = res.result.totalCount;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
                 },function(res){
