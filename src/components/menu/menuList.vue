@@ -364,7 +364,6 @@
             renderContent(h, { node, data, store }) {
                 return (
                 <span class="TreeNode"
-                on-mousedown ={ (event) => this.whichButton(event,node, data) } 
                 style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;position: relative;">
                     {node.label}
                    <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">

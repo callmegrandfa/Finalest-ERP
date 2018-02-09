@@ -372,6 +372,7 @@
             },
             whichButton(event,node, data){
                 let e = event || window.event;
+                console.log(e)
                 let btnNum = e.button;
                 if(e.target.className!='TreeMenuBtn'){
                     $('.TreeMenu').css({
