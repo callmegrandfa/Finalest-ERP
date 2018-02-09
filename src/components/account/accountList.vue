@@ -214,7 +214,7 @@
         //     },
         //-----------------------------------------------------------------
 
-        //---控制修改及分页--------------------------------------------------
+        //---控制删除及分页--------------------------------------------------
             delRow:function(){//删除选中的项
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
@@ -231,6 +231,7 @@
             },
             handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
+                console.log(this.multipleSelection)
             },
             handleCurrentChange:function(val){//获取当前页码
                 this.pageIndex=val;

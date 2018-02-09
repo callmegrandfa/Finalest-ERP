@@ -302,7 +302,7 @@
                 ifCan:true,//控制允许使用
 
                 value: '',//下拉框的值
-                
+                accountDataModify:'',
                
                 createAccountListParams:{//创建会计期间从表参数 
                     "groupID": '',
@@ -385,6 +385,7 @@
                 let self = this;
                 // self.createAccount();//创建新会计期间
                 self.createAccountList();//创建从表
+                self.saveAccountModify();//保存主表的修改
                 self.saveAccountListModify();//保存从表的修改
             },
 
@@ -428,7 +429,23 @@
             },
 
             saveAccountModify:function(){
-
+                let self = this;
+                self.accountDataModify = {
+                    id:self.$route.params.id,
+                    groupID: self.accountData.groupID,
+                    ouID: self.accountData.ouID,
+                    accperiodSchemeID: self.accountData.accperiodSchemeID,
+                    periodYear: self.accountData.periodYear,
+                    periodNum: self.accountData.periodNum,
+                    beginDate: self.accountData.beginDate,
+                    endDate: self.accountData.endDate,
+                    remark: self.accountData.remark,
+                    accperiodContents:[],
+                }
+                this.$axios.puts('/api/services/app/Accperiod/Update',self.accountDataModify).then(function(res){
+                    // console.log(res);
+                    // self.open('修改主表成功','el-icon-circle-check','successERP');
+                })
             },
             saveAccountListModify:function(){
                 let self = this;
@@ -539,7 +556,7 @@
             },
             handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
+                console.log(val)
             },
             handleChange:function(index,row){
                 let self = this;
@@ -569,7 +586,7 @@
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
                     for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:_this.multipleSelection[i].id})
+                        _this.$axios.deletes('/api/services/app/Accperiod/DeleteContent',{id:_this.multipleSelection[i].id})
                         .then(function(res){
                             _this.loadData();
                             _this.open('删除成功','el-icon-circle-check','successERP');
