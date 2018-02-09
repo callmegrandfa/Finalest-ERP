@@ -660,6 +660,8 @@
     v-model="valueDate"
     type="daterange"
     range-separator="to"
+    value-format="yyyy-MM-dd"
+    format="yyyy-MM-d"
     start-placeholder="开始日期"
     end-placeholder="结束日期">
     </el-date-picker>

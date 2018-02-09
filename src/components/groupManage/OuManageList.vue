@@ -57,7 +57,7 @@
                         :props="defaultProps"
                         node-key="treeId"
                         default-expand-all
-                        :expand-on-click-node="true"
+                        :expand-on-click-node="false"
                         @node-click="nodeClick">
                         </el-tree>
                     </el-col>
@@ -73,12 +73,12 @@
                         ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="ouCode" label="编码"></el-table-column>
-                            <el-table-column prop="ouName" label="名称"></el-table-column>
+                            <el-table-column prop="ouFullname" label="全称"></el-table-column>
                             <el-table-column prop="ouName" label="简称"></el-table-column>
                             <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
                             <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="creationTime" label="公司成立时间"></el-table-column>
+                            <el-table-column prop="createdTime" label="创建时间" width="160"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column prop="isCompany" label="公司">
                                 <template slot-scope="scope">
@@ -135,6 +135,7 @@
                     Status: '',//启用状态
                     OuType: '',//组织类型
                 },
+                tableSearchData:{},
                 options: [{
                     basOuTypes: '1',
                     label: '1'
@@ -180,8 +181,22 @@
                 isClick:[],
                 load:true,
                 totalItem:0,//总共有多少条消息
+                searchBtClick:false,
             }
         },
+        // watch:{
+        //     searchData:{  
+        //         handler:function(val,oldval){
+        //             let _this=this;
+        //             console.log(oldval)
+        //             if(_this.searchBtClick){
+        //                 _this.tableSearchData.name=val
+        //             }
+        //             console.log(_this.tableSearchData)  
+        //         },  
+        //         deep:true//对象内部的属性监听，也叫深度监听  
+        //     },
+        // },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
@@ -204,9 +219,10 @@
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
                      $.each( _this.tableData,function(index,value){//处理时间格式
-                       let creationTime=value.creationTime.slice(0,value.creationTime.indexOf(".")).replace("T"," ");
-                       _this.tableData[index].creationTime=creationTime;
+                       let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
+                       _this.tableData[index].createdTime=createdTime;
                     })
+                    console.log(res)
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
@@ -219,21 +235,6 @@
                 _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
                 .then(function(res){
-                    // let children=[];
-                    // if(res.result.length>0){
-                    //     for(let i=0;i<res.result.length;i++){
-                    //         let label=res.result[i].deptName;
-                    //         let treeId=res.result[i].id;
-                    //         let child={'treeId':treeId,'label':label,children:[]}
-                    //         children.push(child)
-                    //     }     
-                    // }
-                    // _this.componyTree=[{
-                    //     treeId: 1,
-                    //     label: 'erp',
-                    //     children:children
-                    //     }]
-
                         _this.componyTree=res.result;
                         _this.treeLoading=false;
                },function(res){
@@ -245,19 +246,29 @@
                  _this.page=val;
                  if(_this.load){
                      _this.loadTableData();
+                 }else{
+                     _this.SimpleSearch();
                  }
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
+                 _this.load=false;
+                 _this.searchBtClick=true;
                  _this.tableLoading=true;
+                 _this.searchData.SkipCount=(_this.page-1)*_this.oneItem;
+                 _this.searchData.MaxResultCount=_this.oneItem;
                 _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
                 .then(function(res){
-                    _this.load=false
-                    _this.tableData=res.result.basOus;
+                    console.log(res)         
+                    _this.totalItem=res.result.totalCount
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.tableData=res.result.items;
                     _this.tableLoading=false;
+                    _this.searchBtClick=false;
                 },function(res){
                     console.log('err:'+res)
                      _this.tableLoading=false;
+                     _this.searchBtClick=false;
                 })
             },
             goDetail(){
@@ -276,6 +287,8 @@
                         .then(function(res){
                             if(_this.load){
                                 _this.loadTableData();
+                            }else{
+                                _this.SimpleSearch();
                             }
                             
                             _this.open('删除成功','el-icon-circle-check','successERP');

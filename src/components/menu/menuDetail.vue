@@ -71,12 +71,12 @@
                         <span style="float:left;">添加功能</span>
                         <div class="double_bt">
                             <template v-if="menuCheck">
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="menuCheck=!menuCheck">已选功能</div>
+                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="showNodeadd">已选功能</div>
                                 <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}">未选功能</div>
                             </template>
                             <template v-else>
                                 <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选功能</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="menuCheck=!menuCheck">未选功能</div>
+                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选功能</div>
                             </template>
                             
                         </div>
@@ -91,21 +91,29 @@
                             <el-tree
                             :data="componyTree"
                             :props="defaultProps"
-                            node-key="treeId"
+                            node-key="id"
                             default-expand-all
-                            :expand-on-click-node="true">
+                            @node-click="nodeClick"
+                            :expand-on-click-node="false">
                             </el-tree>
                         </el-col>
                         
                     </el-col>
                     <el-col :span="18" class="dialog_ dialog_r">
-                        <button class="menu_item"><span class="menu_add">+</span>新增</button>
-                        <button class="menu_item"><span class="menu_add">+</span>删除</button>
-                        <button class="menu_item"><span class="menu_add">+</span>导入</button>
-                        <button class="menu_item"><span class="menu_add">+</span>导出</button>
-                        <button class="menu_item"><span class="menu_add">+</span>审核</button>
-                        <button class="menu_item"><span class="menu_add">+</span>修改</button>
-                        <button class="menu_item"><span class="menu_add">+</span>保存</button>
+                        <div class="menu_box" v-for="i in componyTree" :moduleName="i.displayName">
+                            <p>{{i.displayName}}</p>
+                            <div class="menu_item_wapper menu_item_add">
+                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button>
+                            </div>
+                            <div class="menu_item_wapper menu_item_del">
+                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
+                            </div>
+                            
+                            <!-- <button class="menu_item" :class="{show : menuCheck}" v-for="x in nochecked" :moduleName="x.moduleName"><span class="menu_add" @click="addPermission(x)" >+</span>{{x.displayName}}</button>
+                            <button class="menu_item" :class="{show : !menuCheck}" v-for="x in checked" :moduleName="x.moduleName"><span class="menu_add" @click="delPermission(x)" style="line-height:20px" >-</span>{{x.displayName}}</button> -->
+                        </div>
+                        <!-- <button v-if="menuCheck" class="menu_item" v-for="x in nochecked"><span class="menu_add" @click="addPermission(x)">+</span>{{x.displayName}}</button>
+                        <button v-if="!menuCheck" class="menu_item" v-for="x in checked"><span class="menu_add" @click="delPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button> -->
                         <el-col :span="24" class="load_more">
                             <button>加载更多</button>
                         </el-col>
@@ -116,9 +124,7 @@
                 <div class="bgcolor longWidth">
                     <label class="h_35"></label>
                     <div>
-                        <button class="addRole">导出<i class="el-icon-error"></i></button>
-                        <button class="addRole">审核<i class="el-icon-error"></i></button>
-                        <button class="addRole">添加<i class="el-icon-error"></i></button>
+                        <button class="addRole"  v-for="x in checked">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></button>
                     </div>
                 </div>
             </el-col>
@@ -140,7 +146,7 @@
     data(){
         return{
             //isSave:true,//是否可以保存，不能保存就是修改
-            menuCheck:true,
+            menuCheck:true,//未选功能，已选功能
             dialogTableVisible:false,//控制对话框
             addData:{
                 // "moduleParentId": '1',
@@ -188,26 +194,99 @@
                 label: '阿里'
             }],
             componyTree:  [{
-                treeId: 1,
-                label: '集团名',
-                children:[{
-                    treeId: 2,
-                    label: '测试1',
-                    children:[]
-                },
-                {
-                    treeId: 3,
-                    label: '测试2',
-                    children:[]
-                }]
-            }],
+      "permissionName": "",
+      "moduleName": "",
+      "displayName": "仓库管理",
+      "level": 0,
+      "children": [
+        {
+          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.CreateRepository",
+          "moduleName": "仓库管理",
+          "displayName": "新增",
+          "level": 0,
+          "children": null
+        },
+        {
+          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.DeleteRepository",
+          "moduleName": "仓库管理",
+          "displayName": "删除",
+          "level": 0,
+          "children": null
+        },
+        {
+          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.GetRepositoryList",
+          "moduleName": "仓库管理",
+          "displayName": "获取列表",
+          "level": 0,
+          "children": null
+        },
+        {
+          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.UpdateRepository",
+          "moduleName": "仓库管理",
+          "displayName": "编辑",
+          "level": 0,
+          "children": null
+        }
+      ]
+    },{
+      "permissionName": "",
+      "moduleName": "",
+      "displayName": "仓库管理1",
+      "level": 0,
+      "children": [
+        {
+          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.CreateRepository",
+          "moduleName": "仓库管理1",
+          "displayName": "新增1",
+          "level": 0,
+          "children": null
+        },
+        {
+          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.DeleteRepository",
+          "moduleName": "仓库管理1",
+          "displayName": "删除1",
+          "level": 0,
+          "children": null
+        },
+      ]
+    }],
             defaultProps: {
                 children: 'children',
-                label: 'label'
+                label: 'displayName'
             },
+            checked:[],//展示所有权限
+            nochecked:[],//
+            storeTreeData:[],
+            nodeName:'',
+            
         }
     },
+    created:function(){
+        let _this=this;
+        _this.loadPermission();
+    },
+    watch:{
+        checked:{
+            handler: function(val, oldVal) { 
+                // console.log(val)
+             },
+            deep: true,
+            immediate: true
+        }
+    },
+    computed:{
+        
+    },
     methods:{
+        loadPermission(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
+            .then(function(res){
+                _this.componyTree=res.items
+            },function(res){
+
+            })
+        },
         back(){
             this.$store.state.url='/menu/menuList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -228,9 +307,13 @@
         },
          save(){
             let _this=this;
-            // if(_this.isSave){
+            let permissions=[];
+            $.each(_this.checked,function(index,value){
+                permissions.push(value.permissionName);
+            })
+            // console.log(_this.addData)
+            _this.addData.permissions=permissions;//权限
                  _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
-                    // _this.isSave=false;
                     _this.addData.id=res.result.id;
                     _this.$store.state.url='/menu/menuModify/'+res.result.id
                     _this.$router.push({path:_this.$store.state.url})
@@ -238,39 +321,113 @@
                 },function(res){
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
-            // }else{
-            //      _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData).then(function(res){  
-            //         _this.isSave=false;
-            //         _this.open('修改成功','el-icon-circle-check','successERP');
-            //     },function(res){
-            //         _this.open('修改失败','el-icon-error','faildERP');
-            //     })
-            // }
         },
         saveAdd(){
              let _this=this;
-            //  if(_this.isSave){
                   _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     _this.open('保存并新增成功','el-icon-circle-check','successERP');
-                    // _this.isSave=true;
-                    // _this.clearData();
                 },function(res){
                     _this.open('保存并新增失败','el-icon-error','faildERP');
                 })
-            //  }else{
-            //       _this.open('保存并新增失败','el-icon-error','faildERP');
-            //  }
-           
         },
         newAdd(){
-            // this.isSave=true;
-            // this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },
         clearData(){
            
+        },
+        showNodeadd(){
+            let _this=this;
+            _this.menuCheck=!_this.menuCheck
+            $('.menu_item_add').css('display','block')
+            $('.menu_item_del').css('display','none')
+        },
+        showNodedel(){
+            let _this=this;
+            _this.menuCheck=!_this.menuCheck
+            $('.menu_item_add').css('display','none')
+            $('.menu_item_del').css('display','block')
+        },
+        nodeClick(data,event){
+            let _this=this;
+            _this.nodeName=data.displayName;
+             $('.menu_box').each(function(x){
+                if($(this).attr('moduleName')==_this.nodeName){
+                    $(this).css('display','block')
+                }else{
+                    $(this).css('display','none')
+                }
+            })
+        },
+        addPermission(x){
+            let _this=this;
+            $('.menu_item_add .menu_item').each(function(){
+                if($(this).attr('displayName')==x.displayName){
+                    $(this).css('display','none')
+                }
+            })
+            $('.menu_item_del .menu_item').each(function(){
+                if($(this).attr('displayName')==x.displayName){
+                    $(this).css('display','block')
+                }
+            })
+            let flag=false;
+            if(_this.nochecked.length<=0){
+                flag=true;
+            }else{
+                flag=false;
+                $.each(_this.nochecked,function(index,value){
+                    if(x==value){
+                        flag=false;
+                    }else{
+                        flag=true;
+                    }
+                })
+            }
+            $.each(_this.checked,function(index,value){
+                if(x==value){
+                    _this.checked.splice(index,1)
+                }
+            })
+            if(flag){
+                _this.nochecked.push(x);
+            }
+        },
+        delPermission(x){
+            let _this=this;
+            $('.menu_item_del .menu_item').each(function(){
+                if($(this).attr('displayName')==x.displayName){
+                    $(this).css('display','none')
+                }
+            })
+            $('.menu_item_add .menu_item').each(function(){
+                if($(this).attr('displayName')==x.displayName){
+                    $(this).css('display','block')
+                }
+            })
+            let flag=false;
+            if(_this.checked.length<=0){
+                flag=true;
+            }else{
+                flag=false;
+                $.each(_this.checked,function(index,value){
+                    if(x==value){
+                        flag=false;
+                    }else{
+                        flag=true;
+                    }
+                })
+            }
+            $.each(_this.nochecked,function(index,value){
+                if(x==value){
+                    _this.nochecked.splice(index,1)
+                }
+            })
+            if(flag){
+                _this.checked.push(x);
+            }
         }
-    
+
     }
 
   })
@@ -279,13 +436,33 @@
 
 
 <style scoped>
+.menu_box{
+    display: none;
+}
+.menu_item_wapper{
+    display: block;
+}
+.menu_item_del{
+    display: block;
+}
+.menu_item_add{
+    display: none;
+}
+.menu_item_del .menu_item{
+    display: block;
+}
+.menu_item_add .menu_item{
+    display: none;
+}
+
+
 .w_auto{
     width: auto;
 }
 .load_more{
-    position: absolute;
+    /* position: absolute;
     bottom: 40px;
-    left: 0;
+    left: 0; */
     text-align: center;
 }
 .load_more button{
@@ -456,6 +633,9 @@
     line-height: 24px;
     cursor: pointer;
 }
+.menu_add:hover{
+    opacity: 0.9;
+}
 /* 头部已选功能，未选功能 */
 .double_bt{
     width: 200px;
@@ -479,6 +659,9 @@
     background-color: #6699FF;
     color: #fff;
     
+}
+.show{
+    display: block;
 }
 </style>
 <style>

@@ -43,9 +43,9 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label>公司成立时间</label><el-date-picker v-model="addData.regtime" type="date" placeholder="请选择公司成立时间"></el-date-picker></div>
+                <div class="bgcolor"><label>公司成立时间</label><el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="addData.regtime" type="date" placeholder="请选择公司成立时间"></el-date-picker></div>
                 <div class="bgcolor">
-                    <label>本位币种</label>
+                    <label>本位币种id</label>
                     <el-select v-model="addData.baseCurrencyId">
                         <el-option v-for="item in money" :key="item.baseCurrencyId" :label="item.label" :value="item.baseCurrencyId" placeholder="请选择本位币种">
                         </el-option>
@@ -58,7 +58,7 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label>联系人</label><el-input v-model="addData.contactPerson " placeholder="请填入联系人"></el-input></div>
+                <div class="bgcolor"><label>联系人</label><el-input v-model="addData.contactPerson" placeholder="请填入联系人"></el-input></div>
                 <div class="bgcolor"><label>电话</label><el-input v-model="addData.phone" placeholder="请填入电话"></el-input></div>
                 <div class="bgcolor"><label>地址</label><el-input v-model="addData.address" placeholder="请填入地址"></el-input></div>
                 <div class="bgcolor"><label>备注</label><el-input v-model="addData.remark" placeholder="备注"></el-input></div>
@@ -69,6 +69,13 @@
                         </el-option>
                     </el-select>
                 </div>
+                <!-- <div class="bgcolor"><label>集团ID</label><el-input v-model="addData.groupId" placeholder=""></el-input></div>
+                <div class="bgcolor"><label>外文名称</label><el-input v-model="addData.foreignName" placeholder=""></el-input></div>
+                <div class="bgcolor"><label>助记码</label><el-input v-model="addData.mnemonic" placeholder=""></el-input></div>
+                <div class="bgcolor"><label>会计期间ID</label><el-input v-model="addData.accountPeriodId" placeholder=""></el-input></div>
+                <div class="bgcolor"><label>公司启用状态</label><el-input v-model="addData.companyStatus" placeholder=""></el-input></div>
+                <div class="bgcolor"><label>实体属性</label><el-input v-model="addData.entityProperty" placeholder=""></el-input></div>
+                <div class="bgcolor"><label>行政区域ID</label><el-input v-model="addData.areaId" placeholder=""></el-input></div> -->
             </el-col> 
         </el-row>
      </div>    
@@ -110,7 +117,7 @@
                             <el-col :span="22"  class="getPadding">
                                 <div class="bgcolor">
                                     <label>上级公司</label>
-                                    <el-select v-model="companys">
+                                    <el-select v-model="addData.ouCompanyParentid">
                                         <el-option v-for="item in preCompany" :key="item.valueCo" :label="item.label" :value="item.valueCo">
                                         </el-option>
                                     </el-select>
@@ -157,9 +164,9 @@ export default({
                 groupId:1,//集团ID
                 ouCode: '',//组织代码
                 ouName: '' ,//组织名称
-                foreignName: '默认' ,//外文名称
-                mnemonic: '默认' ,//助记码
-                ouParentid: 1 ,//上级组织ID
+                foreignName: 'good' ,//外文名称
+                mnemonic: 'sdd' ,//助记码
+                ouParentid: 0 ,//上级组织ID
                 accountPeriodId:1 ,//会计期间ID
                 baseCurrencyId: 1,//本位币种id
                 companyOuId: 1,//所属公司ID
@@ -170,12 +177,12 @@ export default({
                 entityProperty : 1 ,//实体属性
                 status: 1 ,//启用状态
                 remark: '' ,//备注
-                basOuTypes: [ 1,2,3,4,5,6 ],//组织职能
-                isGroupCompany:true ,//是否是法人公司
+                basOuTypes: [ 0,1,2,3,4,5,6],//组织职能
+                isGroupCompany: false,//是否是法人公司
                 ouCompanyParentid: 1 ,//上级公司组织ID
                 legalPerson: '',//法人代表
                 companyStatus: 0 ,//公司启用状态
-                regtime: '2018-01'//公司成立时间
+                regtime: ''//公司成立时间
             },
             ischeck:{isCheckCompany:true,//公司复选框初始选种状态
                     isCheckFinance:false,//财务复选框初始选种状态
@@ -461,7 +468,7 @@ export default({
                 phone:'',//电话存在
                 address:'' ,//地址存在
                 areaId: '',//行政区域ID
-                entityProperty : '',//实体属性
+                entityProperty : 1,//实体属性
                 status: '',//启用状态存在
                 remark: '' ,//备注存在
                 basOuTypes: [0],//组织职能
