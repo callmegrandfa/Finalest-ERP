@@ -345,7 +345,6 @@
                                             </el-table-column>
                                             <el-table-column prop="AttributeEncoding" label="SKU名称" width="100">
                                             </el-table-column>
-                                            </el-table-column>
                                             <el-table-column prop="startUsing" label="条码">
                                             </el-table-column>
                                             <el-table-column prop="startUsing1" label="颜色">
