@@ -1,6 +1,6 @@
 <template>
      <div class="data-wrapper b1">
-        <el-row class="bg-white pt10 pb10 bb1">
+        <el-row class="bg-white pt10 pb10 bb1 fixed">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                   <img src="../../../static/image/common/bt_back.png">
