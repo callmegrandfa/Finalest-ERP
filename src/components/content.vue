@@ -16,8 +16,7 @@
                                 <!-- <i class="el-icon-error closes" :menuurl="i.url" @click="close" :name="i.name" :index="index"></i> -->
                             </li>
                         </ul>
-                    </div>
-                    
+                    </div>  
                 </div>
                 <button class="goRight" @click="right">
                     <!-- <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> -->
