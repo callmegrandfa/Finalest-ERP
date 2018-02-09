@@ -103,10 +103,10 @@
                         <div class="menu_box" v-for="i in componyTree" :moduleName="i.displayName">
                             <p>{{i.displayName}}</p>
                             <div class="menu_item_wapper menu_item_add">
-                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button>
+                                <span class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</span>
                             </div>
                             <div class="menu_item_wapper menu_item_del">
-                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
+                                <span class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</span>
                             </div>
                         </div>
                         <el-col :span="24" class="load_more">
@@ -252,8 +252,6 @@
             checked:[],//展示所有权限
             nochecked:[],//
             nodeName:'',
-            permissions:[]
-            
         }
     },
     created:function(){
@@ -290,10 +288,7 @@
         },
          save(){
             let _this=this;
-            // $.each(_this.checked,function(index,value){
-            //     _this.permissions.push(value.permissionName);
-            // })
-            _this.addData.permissions=_this.checked;//权限
+            _this.addData.permissionDtos=_this.checked;//权限
                  _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
                     _this.addData.id=res.result.id;
                     _this.$store.state.url='/menu/menuModify/'+res.result.id
@@ -342,7 +337,9 @@
         },
         addPermission(x){
             let _this=this;
+            alert(1)
             $('.menu_item_add .menu_item').each(function(){
+                
                 if($(this).attr('displayName')==x.displayName){
                     $(this).css('display','none')
                 }
@@ -585,6 +582,7 @@
 }
 /* 右侧选项 */
 .menu_item{
+    text-align: center;
     display: block;
     width: 190px;
     height: 60px;
@@ -600,6 +598,7 @@
     margin-bottom: 15px;
 }
 .menu_add{
+    text-align: center;
     display: block;
     width: 24px;
     height: 24px;

@@ -8,22 +8,12 @@
             <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
         </el-row>
         <el-row class="bg-white">
-                <!-- <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <i class="el-icon-search"></i>
-                        <span>查询</span>
-                    </el-col>
-                    <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
-                    </el-col>
-                </el-row> -->
                 <el-col :span="6">
                         <div class="mt20 bgcolor smallBgcolor">
                             <label>集团编码</label>
-                            <el-select  v-model="searchData.OuType">
-                                <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
-                                </el-option>
-                            </el-select>
+                            <el-input  v-model="searchData.OuType">
+                               
+                            </el-input>
                         </div>
                 </el-col>
                 <el-col :span="6">
@@ -33,7 +23,7 @@
                     <div class="mt20 bgcolor smallBgcolor"><label>集团全称</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
                 </el-col>
                 <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
+                    <div class="mt20 bgcolor smallBgcolor"><label>会计方案</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
                 </el-col>
         </el-row>
         <el-row class="bg-white">
@@ -59,7 +49,7 @@
                 </div>
             </el-col>
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>行业</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属行业</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
             </el-col>   
         </el-row>
         <el-row class="bg-white">
@@ -70,7 +60,7 @@
                 <div class="bgcolor smallBgcolor"><label>传真</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
             </el-col>
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>地址</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>总部地址</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
             </el-col>
             <el-col :span="6">
                 <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
@@ -94,8 +84,20 @@
                         </el-tree>
                     </el-col>
                     <el-col :span='19' class="ml10 border-left">
-                        <el-table :data="tableData" border style="width: 100%" stripe @selection-change="handleSelectionChange"> ref="multipleTable">
-                            <el-table-column type="selection"></el-table-column>
+                        <el-table :data="tableData"  style="width: 100%" stripe @selection-change="handleSelectionChange" >
+                            <el-table-column type="expand">
+                                <template slot-scope="props">
+                                    <el-table :data="tableData5" :show-header="ifHeaderShow">
+                                        <el-table-column  prop="id">
+                                        </el-table-column>
+                                        <el-table-column>
+                                        </el-table-column>
+                                        <el-table-column>
+                                        </el-table-column>
+                                    </el-table>
+                                </template>
+                            </el-table-column>
+                            <el-table-column  label="系统&模块"></el-table-column>
                             <el-table-column prop="createdTime" label="启用时间"></el-table-column>
                             <el-table-column prop="creationTime" label="生效时间"></el-table-column>
                         </el-table>  
@@ -128,6 +130,24 @@
                     Status: '',//启用状态
                     OuType: '',//组织类型
                 },
+                ifHeaderShow:false,
+                tableData5: [{
+                    id: '12987122',
+                    name: '好滋好味鸡蛋仔',
+                    category: '江浙小吃、小吃零食',
+                    desc: '荷兰优质淡奶，奶香浓而不腻',
+                    address: '上海市普陀区真北路',
+                    shop: '王小虎夫妻店',
+                    shopId: '10333'
+                    }, {
+                    id: '12987123',
+                    name: '好滋好味鸡蛋仔',
+                    category: '江浙小吃、小吃零食',
+                    desc: '荷兰优质淡奶，奶香浓而不腻',
+                    address: '上海市普陀区真北路',
+                    shop: '王小虎夫妻店',
+                    shopId: '10333'
+                    }],
                 options: [{
                     basOuTypes: '1',
                     label: '1'

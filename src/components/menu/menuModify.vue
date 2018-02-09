@@ -106,10 +106,10 @@
                          <div class="menu_box" v-for="i in componyTree" :moduleName="i.displayName">
                             <p>{{i.displayName}}</p>
                             <div class="menu_item_wapper menu_item_add">
-                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button>
+                                <button class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button>
                             </div>
                             <div class="menu_item_wapper menu_item_del">
-                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
+                                <button class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
                             </div>
                         </div>
                         <el-col :span="24" class="load_more">
@@ -122,7 +122,7 @@
                 <div class="bgcolor longWidth">
                     <label class="h_35"></label>
                     <div>
-                        <button class="addRole"  v-for="x in checked">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></button>
+                        <button class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></button>
                     </div>
                 </div>
             </el-col>
@@ -206,18 +206,38 @@
             checked:[],//展示所有权限
             nochecked:[],//
             nodeName:'',
-            permissions:[]
         }
     },
     created:function(){
         let _this=this;
-        _this.loadPermission();
+        _this.loadPermission();   
             _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
-                _this.checked=res.result.permissions;
+                _this.checked=res.result.permissionDtos;
+                
+                
+                //    $('.menu_item_add .menu_item').each(function(){
+                //        $.each(_this.checked,function(index,value){
+                //             if($(this).attr('displayName')==value.displayName){
+                //                 $(this).css('display','none')
+                //             }
+                //        })     
+                //     })
+                //     $('.menu_item_del .menu_item').each(function(){
+                //         $.each(_this.checked,function(index,value){
+                //             if($(this).attr('displayName')==value.displayName){
+                //                 $(this).css('display','block')
+                //             }
+                //         })     
+                //     })
+                
                 _this.addData=res.result;
             },function(res){
             })
+       
+    },
+    mounted:function(){
+        let _this=this;
     },
     methods:{
         loadPermission(){
@@ -248,11 +268,7 @@
         },
          save(){
             let _this=this;
-            // $.each(_this.checked,function(index,value){
-            //     _this.permissions.push(value.permissionName);
-            // })
-            _this.addData.permissions=_this.checked;//权限
-            console.log(_this.addData)
+            _this.addData.permissionDtos=_this.checked;//权限
             _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
             .then(function(res){
                 _this.open('修改成功','el-icon-circle-check','successERP');
@@ -335,7 +351,7 @@
             $('.menu_item_add').css('display','none')
             $('.menu_item_del').css('display','block')
         },
-        nodeClick(data,event){
+        nodeClick(data){
             let _this=this;
             _this.nodeName=data.displayName;
              $('.menu_box').each(function(x){
@@ -345,16 +361,35 @@
                     $(this).css('display','none')
                 }
             })
+
+
+             $('.menu_item_add .menu_item').each(function(){
+                 let permissionName=$(this).attr('permissionName');
+                 for(let i=0;i<_this.checked.length;i++){
+                     if(permissionName==_this.checked[i].permissionName){
+                         $(this).css('display','block')
+                     }
+                 }
+            })
+            $('.menu_item_del .menu_item').each(function(){
+                 let permissionName=$(this).attr('permissionName');
+                 for(let i=0;i<_this.checked.length;i++){
+                     if(permissionName==_this.checked[i].permissionName){
+                       $(this).css('display','none')
+                     }
+                 }
+            })
+            
         },
         addPermission(x){
             let _this=this;
             $('.menu_item_add .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','none')
                 }
             })
             $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','block')
                 }
             })
@@ -383,12 +418,12 @@
         delPermission(x){
             let _this=this;
             $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','none')
                 }
             })
             $('.menu_item_add .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','block')
                 }
             })
