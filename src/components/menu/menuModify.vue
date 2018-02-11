@@ -106,15 +106,15 @@
                          <div class="menu_box" v-for="i in componyTree" :moduleName="i.displayName">
                             <p>{{i.displayName}}</p>
                             <div class="menu_item_wapper menu_item_add">
-                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button>
+                                <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="addPermission(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                             </div>
                             <div class="menu_item_wapper menu_item_del">
-                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
+                                <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="delPermission(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                             </div>
                         </div>
-                        <el-col :span="24" class="load_more">
+                        <!-- <el-col :span="24" class="load_more">
                             <button>加载更多</button>
-                        </el-col>
+                        </el-col> -->
                     </el-col>
                 </el-dialog>
             </el-col>
@@ -122,7 +122,7 @@
                 <div class="bgcolor longWidth">
                     <label class="h_35"></label>
                     <div>
-                        <button class="addRole"  v-for="x in checked">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></button>
+                        <a class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></a>
                     </div>
                 </div>
             </el-col>
@@ -131,7 +131,7 @@
                     <label class="h_35"></label>
                     <div>
                         <button @click="save" class="add_m_bt">提交</button>
-                        <button class="add_m_bt">返回</button>
+                        <button @click="back" class="add_m_bt">返回</button>
                     </div>
                 </div>
             </el-col>
@@ -206,18 +206,36 @@
             checked:[],//展示所有权限
             nochecked:[],//
             nodeName:'',
-            permissions:[]
+            allNode:[],
         }
     },
     created:function(){
         let _this=this;
-        _this.loadPermission();
             _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
-                _this.checked=res.result.permissions;
-                _this.addData=res.result;
+                if(res.result.permissionDtos!=null&&res.result.permissionDtos.length>0){
+                    _this.checked=res.result.permissionDtos;
+                }
+                _this.addData={
+                    "id": res.result.id,
+                    "moduleParentId": res.result.moduleParentId,
+                    "moduleCode": res.result.moduleCode,
+                    "moduleName": res.result.moduleName,
+                    "url": res.result.url,
+                    "ico": res.result.ico,
+                    "systemId": res.result.systemId,
+                    "moduleIsBottom": res.result.moduleIsBottom,
+                    "moduleFullPathId": res.result.moduleFullPathId,
+                    "moduleFullPathName": res.result.moduleFullPathName,
+                    "seq": res.result.seq,
+                }
+                _this.loadPermission();
             },function(res){
             })
+       
+    },
+    mounted:function(){
+        let _this=this;
     },
     methods:{
         loadPermission(){
@@ -225,6 +243,28 @@
             _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
             .then(function(res){
                 _this.componyTree=res.items
+            if(res.items.length>0){//获取所有的权限子节点，存储起来
+                for(let i=0;i<res.items.length;i++){
+                    if(res.items[i].children.length>0&&res.items[i].children!=null){
+                        for(let x=0;x<res.items[i].children.length;x++){
+                           _this.allNode.push(res.items[i].children[x])
+                        }
+                    }
+                }
+             }
+             _this.nochecked=_this.allNode;
+            if(_this.allNode.length>0){//获取未选中权限
+                for(let i=0;i<_this.allNode.length;i++){
+                    if(_this.checked.length>0){
+                        for(let x=0;x<_this.checked.length;x++){
+                            if(_this.allNode[i].permissionName==_this.checked[x].permissionName){
+                                 _this.nochecked.splice(i,1);
+                                // console.log(_this.nochecked)
+                            }
+                        }
+                    }
+                }
+            }
             },function(res){
             })
         },
@@ -248,11 +288,12 @@
         },
          save(){
             let _this=this;
-            // $.each(_this.checked,function(index,value){
-            //     _this.permissions.push(value.permissionName);
-            // })
-            _this.addData.permissions=_this.checked;//权限
-            console.log(_this.addData)
+            let permissions=[];
+            $.each(_this.checked,function(index,value){
+                permissions.push(value.permissionName)
+            })
+            _this.addData.permissions=permissions;
+            // _this.addData.permissionDtos=_this.checked;//权限
             _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
             .then(function(res){
                 _this.open('修改成功','el-icon-circle-check','successERP');
@@ -335,7 +376,7 @@
             $('.menu_item_add').css('display','none')
             $('.menu_item_del').css('display','block')
         },
-        nodeClick(data,event){
+        nodeClick(data){
             let _this=this;
             _this.nodeName=data.displayName;
              $('.menu_box').each(function(x){
@@ -345,16 +386,35 @@
                     $(this).css('display','none')
                 }
             })
+
+
+             $('.menu_item_add .menu_item').each(function(){
+                 let permissionName=$(this).attr('permissionName');
+                 for(let i=0;i<_this.checked.length;i++){
+                     if(permissionName==_this.checked[i].permissionName){
+                         $(this).css('display','block')
+                     }
+                 }
+            })
+            $('.menu_item_del .menu_item').each(function(){
+                 let permissionName=$(this).attr('permissionName');
+                 for(let i=0;i<_this.checked.length;i++){
+                     if(permissionName==_this.checked[i].permissionName){
+                       $(this).css('display','none')
+                     }
+                 }
+            })
+            
         },
         addPermission(x){
             let _this=this;
             $('.menu_item_add .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','none')
                 }
             })
             $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','block')
                 }
             })
@@ -364,18 +424,22 @@
             }else{
                 flag=false;
                 $.each(_this.nochecked,function(index,value){
-                    if(x==value){
+                    if(x.permissionName==value.permissionName){
                         flag=false;
                     }else{
                         flag=true;
                     }
                 })
             }
-            $.each(_this.checked,function(index,value){
-                if(x==value){
-                    _this.checked.splice(index,1)
+            if(_this.checked.length>0){
+                for(let i=0;i<_this.checked.length;i++){
+                    if(_this.checked[i].permissionName==x.permissionName){
+                        _this.checked.splice(i,1)
+                        break;
+                    }
                 }
-            })
+            }
+           
             if(flag){
                 _this.nochecked.push(x);
             }
@@ -383,12 +447,12 @@
         delPermission(x){
             let _this=this;
             $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','none')
                 }
             })
             $('.menu_item_add .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','block')
                 }
             })
@@ -398,18 +462,22 @@
             }else{
                 flag=false;
                 $.each(_this.checked,function(index,value){
-                    if(x==value){
+                    if(x.permissionName==value.permissionName){
                         flag=false;
                     }else{
                         flag=true;
                     }
                 })
             }
-            $.each(_this.nochecked,function(index,value){
-                if(x==value){
-                    _this.nochecked.splice(index,1)
+            if(_this.nochecked.length>0){
+                for(let i=0;i<_this.nochecked.length;i++){
+                    if(_this.nochecked[i].permissionName==x.permissionName){
+                        _this.nochecked.splice(i,1)
+                        break;
+                    }
                 }
-            })
+            }
+            
             if(flag){
                 _this.checked.push(x);
             }
@@ -590,6 +658,7 @@
 }
 /* 右侧选项 */
 .menu_item{
+    text-align: center;
     display: block;
     width: 190px;
     height: 60px;
@@ -605,6 +674,8 @@
     margin-bottom: 15px;
 }
 .menu_add{
+    border: none;
+    text-align: center;
     display: block;
     width: 24px;
     height: 24px;
@@ -613,7 +684,7 @@
     top: 16px;
     background-color: #69f;
     color: #fff;
-    font-size: 40px;
+    font-size:24px;
     border-radius: 50%;
     line-height: 24px;
     cursor: pointer;

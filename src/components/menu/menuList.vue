@@ -11,6 +11,7 @@
                 </el-col>
                 <el-col :span='24' class="tree-container" >
                     <el-tree
+                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
                     v-loading="treeLoading" 
                     :data="componyTree"
                     :props="defaultProps"
@@ -246,6 +247,7 @@
                             _this.open('删除失败','el-icon-error','faildERP');
                         })
                     }
+                    _this.loadTree();
                 };
             },
             nodeClick(data){
@@ -264,6 +266,7 @@
                 _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',{id:row.id})
                 .then(function(res){
                     _this.loadTableData();
+                    _this.loadTree();
                 },function(res){
                 })
             },
@@ -294,15 +297,17 @@
                 }
             },
             TreeAdd(event,node,data){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
+                // $('.TreeMenu').css({
+                //         display:'none'
+                //     })
                 let _this=this;
-                _this.tittle='新增';
-                _this.clearTreeData();
-                _this.isAdd=true;
-                _this.dialogFormVisible=true;
+                // _this.tittle='新增';
+                // _this.clearTreeData();
+                // _this.isAdd=true;
+                // _this.dialogFormVisible=true;
                 _this.dialogData.moduleParentId=data.id;//父级id
+                _this.$store.state.url='/menu/menuDetail/'+_this.dialogData.moduleParentId
+                _this.$router.push({path:this.$store.state.url})
                 
             },
             TreeDel(event,node,data){
@@ -319,20 +324,22 @@
                 })
             },
             TreeModify(event,node,data){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
+                // $('.TreeMenu').css({
+                //         display:'none'
+                //     })
                 let _this=this;
-                _this.clearTreeData();
-                _this.tittle='修改';
-                _this.isAdd=false;
-                _this.dialogFormVisible=true;
-                 _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:data.id})
-                    .then(function(res){
-                        _this.dialogData=res.result;
-                    },function(res){    
+                // _this.clearTreeData();
+                // _this.tittle='修改';
+                // _this.isAdd=false;
+                // _this.dialogFormVisible=true;
+                //  _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:data.id})
+                //     .then(function(res){
+                //         _this.dialogData=res.result;
+                //     },function(res){    
 
-                    })
+                //     })
+                 _this.$store.state.url='/menu/menuModify/'+data.id
+                _this.$router.push({path:this.$store.state.url})
             },
             sendAjax(){
                 let _this=this;
@@ -363,8 +370,7 @@
             },
             renderContent(h, { node, data, store }) {
                 return (
-                <span class="TreeNode"
-                on-mousedown ={ (event) => this.whichButton(event,node, data) } 
+                <span class="TreeNode" on-mousedown ={ (event) => this.whichButton(event,node, data) }
                 style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;position: relative;">
                     {node.label}
                    <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">

@@ -11,6 +11,7 @@
                 </el-col>
                 <el-col :span='24' class="tree-container" >
                     <el-tree
+                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                     v-loading="treeLoading" 
                     :data="componyTree"
                     :props="defaultProps"
@@ -372,6 +373,7 @@
             },
             whichButton(event,node, data){
                 let e = event || window.event;
+                console.log(e)
                 let btnNum = e.button;
                 if(e.target.className!='TreeMenuBtn'){
                     $('.TreeMenu').css({

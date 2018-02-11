@@ -103,15 +103,15 @@
                         <div class="menu_box" v-for="i in componyTree" :moduleName="i.displayName">
                             <p>{{i.displayName}}</p>
                             <div class="menu_item_wapper menu_item_add">
-                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button>
+                                <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="addPermission(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                             </div>
                             <div class="menu_item_wapper menu_item_del">
-                                <button class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
+                                <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="delPermission(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                             </div>
                         </div>
-                        <el-col :span="24" class="load_more">
+                        <!-- <el-col :span="24" class="load_more">
                             <button>加载更多</button>
-                        </el-col>
+                        </el-col> -->
                     </el-col>
                 </el-dialog>
             </el-col>
@@ -119,7 +119,7 @@
                 <div class="bgcolor longWidth">
                     <label class="h_35"></label>
                     <div>
-                        <button class="addRole"  v-for="x in checked">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></button>
+                        <a class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></a>
                     </div>
                 </div>
             </el-col>
@@ -128,7 +128,7 @@
                     <label class="h_35"></label>
                     <div>
                         <button @click="save" class="add_m_bt">提交</button>
-                        <button class="add_m_bt">返回</button>
+                        <button @click="back" class="add_m_bt">返回</button>
                     </div>
                 </div>
             </el-col>
@@ -143,18 +143,7 @@
             //isSave:true,//是否可以保存，不能保存就是修改
             menuCheck:true,//未选功能，已选功能
             dialogTableVisible:false,//控制对话框
-            addData:{
-                // "moduleParentId": '1',
-                // "moduleCode": "",
-                // "moduleName": "",
-                // "url": "",
-                // "ico": "",
-                // "systemId": '',
-                // "moduleIsBottom": true,
-                // "moduleFullPathId": "",
-                // "moduleFullPathName": "",
-                // "seq": ''
-            },
+            addData:{},
             valueContain:'',
             ParentId: [{ 
                 value:'0',
@@ -188,63 +177,7 @@
                 valueContain:'2',
                 label: '阿里'
             }],
-            componyTree:  [{
-      "permissionName": "",
-      "moduleName": "",
-      "displayName": "仓库管理",
-      "level": 0,
-      "children": [
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.CreateRepository",
-          "moduleName": "仓库管理",
-          "displayName": "新增",
-          "level": 0,
-          "children": null
-        },
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.DeleteRepository",
-          "moduleName": "仓库管理",
-          "displayName": "删除",
-          "level": 0,
-          "children": null
-        },
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.GetRepositoryList",
-          "moduleName": "仓库管理",
-          "displayName": "获取列表",
-          "level": 0,
-          "children": null
-        },
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.UpdateRepository",
-          "moduleName": "仓库管理",
-          "displayName": "编辑",
-          "level": 0,
-          "children": null
-        }
-      ]
-    },{
-      "permissionName": "",
-      "moduleName": "",
-      "displayName": "仓库管理1",
-      "level": 0,
-      "children": [
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.CreateRepository",
-          "moduleName": "仓库管理1",
-          "displayName": "新增1",
-          "level": 0,
-          "children": null
-        },
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.DeleteRepository",
-          "moduleName": "仓库管理1",
-          "displayName": "删除1",
-          "level": 0,
-          "children": null
-        },
-      ]
-    }],
+            componyTree:  [],
             defaultProps: {
                 children: 'children',
                 label: 'displayName'
@@ -252,12 +185,14 @@
             checked:[],//展示所有权限
             nochecked:[],//
             nodeName:'',
-            permissions:[]
-            
         }
     },
     created:function(){
         let _this=this;
+        if(_this.$route.params.id!='default'){
+            _this.addData.moduleParentId=_this.$route.params.id
+        }
+        
         _this.loadPermission();
     },
     methods:{
@@ -290,10 +225,12 @@
         },
          save(){
             let _this=this;
-            // $.each(_this.checked,function(index,value){
-            //     _this.permissions.push(value.permissionName);
-            // })
-            _this.addData.permissions=_this.checked;//权限
+            let permissions=[];
+            $.each(_this.checked,function(index,value){
+                permissions.push(value.permissionName)
+            })
+            _this.addData.permissions=permissions;
+            // _this.addData.permissionDtos=_this.checked;//权限
                  _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
                     _this.addData.id=res.result.id;
                     _this.$store.state.url='/menu/menuModify/'+res.result.id
@@ -343,12 +280,13 @@
         addPermission(x){
             let _this=this;
             $('.menu_item_add .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','none')
                 }
             })
             $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','block')
                 }
             })
@@ -377,12 +315,12 @@
         delPermission(x){
             let _this=this;
             $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','none')
                 }
             })
             $('.menu_item_add .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','block')
                 }
             })
@@ -585,6 +523,7 @@
 }
 /* 右侧选项 */
 .menu_item{
+    text-align: center;
     display: block;
     width: 190px;
     height: 60px;
@@ -600,6 +539,7 @@
     margin-bottom: 15px;
 }
 .menu_add{
+    text-align: center;
     display: block;
     width: 24px;
     height: 24px;
@@ -608,7 +548,7 @@
     top: 16px;
     background-color: #69f;
     color: #fff;
-    font-size: 40px;
+    font-size: 24px;
     border-radius: 50%;
     line-height: 24px;
     cursor: pointer;
