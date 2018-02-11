@@ -58,6 +58,9 @@ export default new vuex.Store({
 
             {name:'businessArea',url:'/businessArea/businessAreaList/:id',parent:'',default:'/businessArea/businessAreaList/:id'},//业务地区管理
             {name:'businessAreaList',url:'/businessArea/businessAreaList/:id',parent:'businessArea'},
+
+            {name:'department',url:'/department/departmentList/:id',parent:'',default:'/department/departmentList/:id'},//部门资料
+            {name:'departmentList',url:'/department/departmentList/:id',parent:'department'},
         ],
     },
     mutations: {

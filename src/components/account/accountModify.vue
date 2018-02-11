@@ -464,6 +464,7 @@ console.log(self.accountData)
             },
             saveAccountListModify:function(){
                 let self = this;
+                console.log(self.updateList)
                 if(self.updateList.length>0){
                     for(let i in self.updateList){
                         self.updateList[i]={
@@ -476,7 +477,23 @@ console.log(self.accountData)
                             periodYear:self.allData.periodYear,
                             periodNum:self.allData.periodNum,
                             remark:self.allData.remark,
-                            accperiodContents:[self.updateList[i]],
+                            accperiodContents:[{
+                                groupID: self.updateList[i].groupID,
+                                ouID: self.updateList[i].ouID,
+                                accperiodId: self.updateList[i].accperiodId,
+                                periodMonth: self.updateList[i].periodMonth,
+                                effectiveStart: self.updateList[i].effectiveStart,
+                                effectiveEnd: self.updateList[i].effectiveEnd,
+                                remark: self.updateList[i].remark,
+                                isDeleted: false,
+                                deletedBy: self.updateList[i].deletedBy,
+                                deletedTime: self.updateList[i].deletedTime,
+                                modifiedBy: self.updateList[i].modifiedBy,
+                                modifiedTime: self.updateList[i].modifiedTime,
+                                createdBy: self.updateList[i].createdBy,
+                                createdTime: self.updateList[i].createdTime,
+                                id: self.updateList[i].id
+                            }],
                         };
                         this.$axios.puts('/api/services/app/Accperiod/Update',self.updateList[i]).then(function(res){
                             // console.log(res);
@@ -549,7 +566,7 @@ console.log(self.accountData)
                         "modifiedTime": "2018-02-07T05:27:49.732Z",
                         "createdBy": "xyy",
                         "createdTime": "2018-02-07T05:27:49.732Z",
-                        "id":0
+                        "id":0//id为0是新增，为其他的是修改
                     };
                 self.accountList.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
@@ -574,26 +591,29 @@ console.log(self.accountData)
                 console.log(val)
             },
             handleChange:function(index,row){
+                console.log(row)
                 let self = this;
-                let flag = false;
-                if(self.updateList.length==0){
-                    flag = true;
-                }else if(self.updateList.length>=1){
-                    for(let i in self.updateList){
-                        if(row.id != self.updateList[i].id){
-                            flag = true;
-                            console.log(flag) 
-                        }else{
-                            flag= false;
-                            break;        
+                if(row.id!=0){
+                    let flag = false;
+                    if(self.updateList.length==0){
+                        flag = true;
+                    }else if(self.updateList.length>=1){
+                        for(let i in self.updateList){
+                            if(row.id != self.updateList[i].id){
+                                flag = true;
+                                console.log(flag) 
+                            }else{
+                                flag= false;
+                                break;        
+                            }
                         }
-                    }
-                };
+                    };
 
-                if(flag){
-                    self.updateList.push(row);
+                    if(flag){
+                        self.updateList.push(row);
+                    }
                     console.log(self.updateList)
-                }
+                }    
             },
             //------------------------------------------------------------
             //---多项删除--------------------------------------------------

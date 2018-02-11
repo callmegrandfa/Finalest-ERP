@@ -73,6 +73,9 @@ const addLangulage = () =>import('../components/menu/addLangulage')
 // 业务地区管理
 const businessArea = () =>import(/* webpackChunkName: "group-businessArea" */'../components/businessArea/businessArea')
 const businessAreaList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/businessArea/businessAreaList')
+// 部门资料
+const department = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/department')
+const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/departmentList')
 
 
 Vue.use(Router)
@@ -283,6 +286,18 @@ children:[
     }
   },children:[
       { path: '/businessArea/businessAreaList/:id', component: businessAreaList,name:'businessAreaList' },
+  ]},
+  { path: '/department', component: department,name:'department',redirect: function(){//部门资料
+    let name='department';
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          return activeRouter[i].url;
+          break;
+        }
+    }
+  },children:[
+      { path: '/department/departmentList/:id', component: departmentList,name:'departmentList' },
   ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
