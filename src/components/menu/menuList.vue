@@ -44,15 +44,20 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="systemId" label="系统"></el-table-column>
+                            <el-table-column prop="systemId" label="系统">
+                                <template slot-scope="scope">
+                                    <span style="color:#6699FF">{{scope.row.systemId}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="moduleCode" label="模块编码"></el-table-column>
                             <el-table-column prop="moduleName" label="模块名称"></el-table-column>
-                            <el-table-column prop="url" label="web地址"></el-table-column>
+                            <el-table-column prop="url" label="web地址">
+                                <template slot-scope="scope">
+                                    <span style="color:#33CCCC">{{scope.row.url}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="moduleParentId" label="上级菜单"></el-table-column>
                             <el-table-column label="状态（无字段）">
-                                <template slot-scope="scope">
-                                    <el-checkbox disabled></el-checkbox>
-                                </template>
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
