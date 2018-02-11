@@ -103,6 +103,11 @@ export default {
                 thirdInfo:[
                     {name:'业务地区管理',address:'businessArea'},
                 ]
+            },{
+                name:'部门资料',
+                thirdInfo:[
+                     {name:'部门资料',address:'department'}, 
+                ]
             }],
             childNodes:[],//菜单数据
         // items:
