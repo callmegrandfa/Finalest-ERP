@@ -30,6 +30,13 @@
             <div class="bgcolor">
               <label>上级菜单</label>
               <!-- <el-input v-model="addData.moduleParentId"></el-input> -->
+              <!-- <el-cascader
+                    placeholder="请选择"
+                    :options="treeData"
+                    :props="Props"
+                    filterable
+                    change-on-select
+                ></el-cascader> -->
               <el-select v-model="addData.moduleParentId" placeholder="上级菜单">
                   <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -47,9 +54,16 @@
           </el-col>
           <div class="bgcolor">
               <label>子系统</label>
-              <el-select v-model="valueContain" placeholder="无字段">
+              <el-cascader
+                placeholder="无字段"
+                :options="treeData"
+                :props="Props"
+                filterable
+                change-on-select
+                ></el-cascader>
+              <!-- <el-select v-model="valueContain" placeholder="无字段">
                 <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select>
+              </el-select> -->
             </div>
           <div class="bgcolor"><label>是否在最底层</label><el-checkbox class="w_auto" v-model="addData.moduleIsBottom"></el-checkbox></div>
             <el-col :span="24">
@@ -198,10 +212,17 @@
                 valueContain:'2',
                 label: '阿里'
             }],
-            componyTree:  [],
+            componyTree:[],
             defaultProps: {
                 children: 'children',
-                label: 'displayName'
+                label: 'displayName',
+                value:'permissionName'
+            },
+            treeData:[],
+            Props: {
+                children: 'childNodes',
+                value: 'id',
+                label:'moduleName'
             },
             checked:[],//展示所有权限
             nochecked:[],//
@@ -211,6 +232,7 @@
     },
     created:function(){
         let _this=this;
+            _this.loadParent()
             _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
                 if(res.result.permissionDtos!=null&&res.result.permissionDtos.length>0){
@@ -238,6 +260,15 @@
         let _this=this;
     },
     methods:{
+        loadParent(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
+            .then(function(res){
+                _this.treeData=res
+                console.log(_this.treeData)
+            },function(res){
+            })
+        },
         loadPermission(){
             let _this=this;
             _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
