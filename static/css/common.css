@@ -1,4 +1,11 @@
 
+/* 表单验证 */
+.tipsWrapper{
+  display: none;   
+}
+.display_block{
+  display: block;
+}
 .sideWidth
 /* dialog */
 .el-dialog{
@@ -57,6 +64,7 @@
     <label></label>
     <span class="search-btn">查询</span>
 </div> */
+
 .smallBgcolor .search-btn{
     text-align: center;
     font-size: 12px;
@@ -77,6 +85,9 @@
     float: left;
     overflow: hidden;
     margin-right: 5px;
+}
+.bgcolor .rebBorder .el-input__inner{
+  border-color: #f66;
 }
 .bgcolor .el-input__suffix{
   line-height: 35px;
@@ -130,7 +141,8 @@
 }
 .bgcolor .el-input input[disabled]{
     border-color:#c0c4cc;
-    background-color: #fff;
+    background-color: #f2f2f2;
+    cursor: unset;
 }
 
 /* datePicker日期控件 */
