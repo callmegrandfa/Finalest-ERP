@@ -284,7 +284,7 @@ export default({
         .then(function(res){ console.log(res)
             _this.addData={
                 id:res.result.id,
-                groupId:res.result.groupId,//集团ID
+                groupId:1,//集团ID
                 ouCode: res.result.ouCode,//组织代码存在 
                 ouName: res.result.ouName ,//组织名称存在
                 foreignName: res.result.foreignName ,//外文名称
