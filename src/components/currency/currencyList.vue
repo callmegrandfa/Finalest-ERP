@@ -68,7 +68,7 @@
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.currency_code" 
+                                            v-model="scope.row.currencyCode" 
                                             v-on:click="handleEdit(scope.$index,scope.row)"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
@@ -79,7 +79,7 @@
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.currency_name" 
+                                            v-model="scope.row.currencyName" 
                                             v-on:click="handleEdit(scope.$index,scope.row)"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
@@ -245,13 +245,16 @@
             
             if(self.updateList.length>0){
                 for(let i in self.updateList){
-                    this.$axios.puts('/api/services/app/CurrencyManagement/Update',self.updateList[i]).then(function(res){
+                    if(self.updateList[i].id!=''){
+                        this.$axios.puts('/api/services/app/CurrencyManagement/Update',self.updateList[i]).then(function(res){
                             console.log(res);
                             self.open('修改货币资料成功','el-icon-circle-check','successERP');
                             self.updateList = [];
-                        }),function(res){
-                        self.open('修改货币资料失败','el-icon-error','faildERP');
-                    };
+                            }),function(res){
+                                self.open('修改货币资料失败','el-icon-error','faildERP');
+                        };
+                    }
+                    
                 }
             }
         },
@@ -262,13 +265,14 @@
                 console.log(newCol)
                 console.log(self.rows)
                 self.rows.newCol ={
-                    "group_id": 1,
-                    "currencyCode": "",
-                    "currencyName": "",
-                    "increment": '',
-                    "seq": '',
-                    "status": '',
-                    "remark": ""
+                    id:'',
+                    group_id: 1,
+                    currencyCode: "",
+                    currencyName: "",
+                    increment: '',
+                    seq: '',
+                    status: '',
+                    remark: ""
                 };
                 self.allList.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);

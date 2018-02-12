@@ -44,24 +44,24 @@
 
                 <div class="bgcolor">
                     <label>编码</label>
-                    <el-input v-model="customerData.contact" placeholder="请录入编码"></el-input>
+                    <el-input v-model="customerData.contact" placeholder="请录入编码" @change='Modify()'></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label>名称</label>
-                    <el-input v-model="customerData.contactName" placeholder="请录入名称"></el-input>
+                    <el-input v-model="customerData.contactName" placeholder="请录入名称" @change='Modify()'></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label>全称</label>
-                    <el-input v-model="customerData.contactFullName" placeholder="请录入全称"></el-input>
+                    <el-input v-model="customerData.contactFullName" placeholder="请录入全称" @change='Modify()'></el-input>
                 </div>
 
                 <div class="bgcolor">
                     <label>助记码</label>
-                    <el-input v-model="customerData.mnemonic" placeholder="请录入助记码"></el-input>
+                    <el-input v-model="customerData.mnemonic" placeholder="请录入助记码" @change='Modify()'></el-input>
                 </div>
                     
 
@@ -101,7 +101,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>纳税登记号</label>
-                    <el-input v-model="customerData.taxCode" placeholder="请录入登记号"></el-input>
+                    <el-input v-model="customerData.taxCode" placeholder="请录入登记号" @change='Modify()'></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>业务地区区号</label>
@@ -123,16 +123,16 @@
                 </div>
                 <div class="bgcolor">
                     <label>法人代表</label>
-                    <el-input v-model="customerData.legalPerson" placeholder="请录入法人代表"></el-input>
+                    <el-input v-model="customerData.legalPerson" placeholder="请录入法人代表" @change='Modify()'></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>注册地址</label>
-                    <el-input v-model="customerData.regAddress" placeholder="请录入注册地址"></el-input>
+                    <el-input v-model="customerData.regAddress" placeholder="请录入注册地址" @change='Modify()'></el-input>
                 </div>
-                <div class="bgcolor"><label>负责人</label><el-input v-model="customerData.manager" placeholder="请填写负责人"></el-input></div>
-                <div class="bgcolor"><label>电话</label><el-input v-model="customerData.phone" placeholder="请填写电话"></el-input></div>
+                <div class="bgcolor"><label>负责人</label><el-input v-model="customerData.manager" placeholder="请填写负责人" @change='Modify()'></el-input></div>
+                <div class="bgcolor"><label>电话</label><el-input v-model="customerData.phone" placeholder="请填写电话" @change='Modify()'></el-input></div>
                 
-                <div class="bgcolor"><label>备注</label><el-input v-model="customerData.remark" placeholder="备注"></el-input></div>
+                <div class="bgcolor"><label>备注</label><el-input v-model="customerData.remark" placeholder="备注" @change='Modify()'></el-input></div>
             </el-col>
         </el-row>
      </div>
@@ -452,6 +452,7 @@ export default({
     data() {
         return{
             ifShow:true,
+            ifModify:false,//判断主表是否修改过
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -663,7 +664,10 @@ export default({
         //---保存数据---------------------------------------------
         saveModify:function(){
             let self = this;
-            self.saveCustomerModify();
+            if(self.ifModify){
+                self.saveCustomerModify();
+            }
+            
             self.saveBankModify();
             self.saveAddressModify();
             self.saveOuModify();
@@ -775,6 +779,10 @@ export default({
         //-------------------------------------------------------
 
         // ---控制表格编辑----------------------------------------
+        Modify:function(){//判断主表是否修改过
+            let self = this;
+            self.ifModify = true;
+        },
         handleBankEdit:function(index,row){//银行信息编辑
         
         },
