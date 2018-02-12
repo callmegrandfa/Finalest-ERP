@@ -102,10 +102,12 @@
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.manager') }}</div>
             <div class="bgcolor smallBgcolor">
                 <label>上级业务地区</label>
-                <el-select :class="{rebBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId">
+                
+                <el-select v-if="showParent" :class="{rebBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId">
                     <el-option v-for="item in areaParentId" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
                 </el-select>
+                <el-input v-else :class="{rebBorder : validation.hasError('dialogData.areaParentId')}"  v-model="dialogData.areaParentId" disabled="true"></el-input>
             </div>   
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaParentId') }}</div>
             <div class="bgcolor smallBgcolor"><label>备注</label><el-input :class="{rebBorder : validation.hasError('dialogData.remark')}"  v-model="dialogData.remark" placeholder=""></el-input></div>
@@ -225,6 +227,7 @@
                 AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
+                showParent:true,//上级组织单元是否可选
             }
         },
         validators: {
@@ -406,6 +409,7 @@
                 _this.clearTreeData();
                 _this.tittle='新增';
                 _this.isAdd=true;
+                _this.showParent=false;
                 _this.dialogFormVisible=true;
                 _this.dialogData.groupId=data.groupId;//集团id
                 _this.dialogData.areaParentId=data.id;//父级id
@@ -506,6 +510,7 @@
                 _this.clearTreeData();
                 _this.tittle='新增';
                 _this.isAdd=true;
+                _this.showParent=true;
                 _this.dialogFormVisible=true;
             }
         },
