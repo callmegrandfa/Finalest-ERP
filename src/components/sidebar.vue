@@ -238,6 +238,7 @@ export default {
                 thirdInfo:[
                     {name:'业务地区管理',address:'businessArea'},
                 ]
+<<<<<<< HEAD
             },
             {
                 name:'商品属性',
@@ -291,6 +292,15 @@ export default {
         thirdInfo:[ 
         ]}],
         items:[]    
+=======
+            },{
+                name:'部门资料',
+                thirdInfo:[
+                     {name:'部门资料',address:'department'}, 
+                ]
+            }],
+            childNodes:[],//菜单数据
+>>>>>>> 710102f2c425023c9eb26f6c24a8f4d3484623a0
         // items:
         // [
         //     {

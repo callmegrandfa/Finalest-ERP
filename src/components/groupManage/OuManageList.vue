@@ -221,8 +221,9 @@
                      $.each( _this.tableData,function(index,value){//处理时间格式
                        let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
                        _this.tableData[index].createdTime=createdTime;
+
                     })
-                    console.log(res)
+                    // console.log(res)
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;

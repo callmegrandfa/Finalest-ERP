@@ -8,12 +8,107 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div class="bgcolor"><label>菜单编码</label><el-input v-model="addData.moduleCode"  placeholder="请输入菜单编码"></el-input></div>
-            <div class="bgcolor"><label>菜单名称</label><el-input v-model="addData.moduleName"  placeholder="请输入菜单名称"></el-input></div>
-            <div class="bgcolor"><label>图标</label><el-input v-model="addData.ico"  placeholder="请输入图标"></el-input></div>
-            <div class="bgcolor"><label>功能模块ID全路径</label><el-input v-model="addData.moduleFullPathId" placeholder="功能模块ID全路径"></el-input></div>
-            <div class="bgcolor"><label>功能模块名称全路径</label><el-input v-model="addData.moduleFullPathName" placeholder="功能模块名称全路径"></el-input></div>
-            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq" type="number" placeholder="排序"></el-input></div>
+            <div class="tipsWrapper" name="moduleCode">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleCode')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleCode') }}</p>
+                </div>
+            </div>
+             <div class="tipsWrapper" name="moduleName">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleName')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleName') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="ico">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.ico')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.ico') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="moduleFullPathId">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleFullPathId')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleFullPathId') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="moduleFullPathName">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleFullPathName')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleFullPathName') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="seq">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.seq')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.seq') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="systemId">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.systemId')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.systemId') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="moduleParentId">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleParentId')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleParentId') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="url">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.url')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.url') }}</p>
+                </div>
+            </div>
+            
+
+            <div class="bgcolor">
+                <label>菜单编码</label>
+                <el-input 
+                class="moduleCode" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleCode')}" 
+                v-model="addData.moduleCode"  
+                placeholder="请输入菜单编码"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>菜单名称</label>
+                <el-input 
+                class="moduleName" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleName')}" 
+                v-model="addData.moduleName"  
+                placeholder="请输入菜单名称"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>图标</label>
+                <el-input 
+                class="ico" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.ico')}" 
+                v-model="addData.ico"  
+                placeholder="请输入图标"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>功能模块ID全路径</label>
+                <el-input 
+                class="moduleFullPathId" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleFullPathId')}" 
+                v-model="addData.moduleFullPathId" 
+                placeholder="功能模块ID全路径"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>功能模块名称全路径</label>
+                <el-input 
+                class="moduleFullPathName" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleFullPathName')}" 
+                v-model="addData.moduleFullPathName" 
+                placeholder="功能模块名称全路径"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>排序</label>
+                <el-input 
+                class="seq" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.seq')}" 
+                v-model="addData.seq" 
+                placeholder="排序"></el-input>
+            </div>
             <div class="bgcolor">
                 <label>语言</label>
                 <el-input  placeholder="无字段">
@@ -22,31 +117,63 @@
             </div>
             <div class="bgcolor">
                 <label>系统ID</label>
-                <el-input v-model="addData.systemId" placeholder="系统ID"></el-input>
+                <el-input 
+                class="systemId" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.systemId')}" 
+                v-model="addData.systemId" 
+                placeholder="系统ID"></el-input>
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
-              <el-select v-model="addData.moduleParentId"  placeholder="上级菜单">
-                  <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
+              <!-- <el-cascader
+                placeholder="试试搜索：指南"
+                :options="treeData"
+                :props="Props"
+                filterable
+                change-on-select
+            ></el-cascader> -->
+                <el-select 
+                class="moduleParentId" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleParentId')}" 
+                v-model="addData.moduleParentId"  
+                placeholder="上级菜单">
+                    <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
             </div>
             <div class="bgcolor moreWidth">
-              <label>web地址</label>
-              <el-input v-model="addData.url"  placeholder="请输入web地址"></el-input>
+                <label>web地址</label>
+                <el-input 
+                class="url" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.url')}" 
+                v-model="addData.url"  
+                placeholder="请输入web地址"></el-input>
             </div>
             <div class="bgcolor">
-              <label>状态</label>
-              <el-select v-model="valueContain" placeholder="无字段">
-                <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select>
+                <label>状态</label>
+                <el-input 
+                placeholder="无字段"></el-input>
+                <!-- <el-select 
+                placeholder="无字段">
+                    <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
+                </el-select> -->
             </div>
           </el-col>
           <div class="bgcolor">
               <label>子系统</label>
-               <el-select v-model="valueContain" placeholder="无字段">
+              <el-cascader
+                placeholder="无字段"
+                :options="treeData"
+                :props="Props"
+                filterable
+                change-on-select
+            ></el-cascader>
+               <!-- <el-select v-model="valueContain" placeholder="无字段">
                   <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select>
-              </div>
+              </el-select> -->
+          </div>
           <div class="bgcolor"><label>是否在最底层</label><el-checkbox class="w_auto" v-model="addData.moduleIsBottom"></el-checkbox></div>
             <el-col :span="24">
                 <div class="bgcolor longWidth">
@@ -103,15 +230,15 @@
                         <div class="menu_box" v-for="i in componyTree" :moduleName="i.displayName">
                             <p>{{i.displayName}}</p>
                             <div class="menu_item_wapper menu_item_add">
-                                <span class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</span>
+                                <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="addPermission(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                             </div>
                             <div class="menu_item_wapper menu_item_del">
-                                <span class="menu_item" v-for="x in i.children" :displayName="x.displayName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</span>
+                                <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="delPermission(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                             </div>
                         </div>
-                        <el-col :span="24" class="load_more">
+                        <!-- <el-col :span="24" class="load_more">
                             <button>加载更多</button>
-                        </el-col>
+                        </el-col> -->
                     </el-col>
                 </el-dialog>
             </el-col>
@@ -119,7 +246,7 @@
                 <div class="bgcolor longWidth">
                     <label class="h_35"></label>
                     <div>
-                        <button class="addRole"  v-for="x in checked">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></button>
+                        <a class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></a>
                     </div>
                 </div>
             </el-col>
@@ -128,7 +255,7 @@
                     <label class="h_35"></label>
                     <div>
                         <button @click="save" class="add_m_bt">提交</button>
-                        <button class="add_m_bt">返回</button>
+                        <button @click="back" class="add_m_bt">返回</button>
                     </div>
                 </div>
             </el-col>
@@ -144,16 +271,15 @@
             menuCheck:true,//未选功能，已选功能
             dialogTableVisible:false,//控制对话框
             addData:{
-                // "moduleParentId": '1',
-                // "moduleCode": "",
-                // "moduleName": "",
-                // "url": "",
-                // "ico": "",
-                // "systemId": '',
-                // "moduleIsBottom": true,
-                // "moduleFullPathId": "",
-                // "moduleFullPathName": "",
-                // "seq": ''
+                moduleCode:'',
+                moduleName:'',
+                ico:'',
+                moduleFullPathId:'',
+                moduleFullPathName:'',
+                seq:'',
+                systemId:'',
+                moduleParentId:'',
+                url:'',
             },
             valueContain:'',
             ParentId: [{ 
@@ -188,77 +314,79 @@
                 valueContain:'2',
                 label: '阿里'
             }],
-            componyTree:  [{
-      "permissionName": "",
-      "moduleName": "",
-      "displayName": "仓库管理",
-      "level": 0,
-      "children": [
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.CreateRepository",
-          "moduleName": "仓库管理",
-          "displayName": "新增",
-          "level": 0,
-          "children": null
-        },
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.DeleteRepository",
-          "moduleName": "仓库管理",
-          "displayName": "删除",
-          "level": 0,
-          "children": null
-        },
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.GetRepositoryList",
-          "moduleName": "仓库管理",
-          "displayName": "获取列表",
-          "level": 0,
-          "children": null
-        },
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.UpdateRepository",
-          "moduleName": "仓库管理",
-          "displayName": "编辑",
-          "level": 0,
-          "children": null
-        }
-      ]
-    },{
-      "permissionName": "",
-      "moduleName": "",
-      "displayName": "仓库管理1",
-      "level": 0,
-      "children": [
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.CreateRepository",
-          "moduleName": "仓库管理1",
-          "displayName": "新增1",
-          "level": 0,
-          "children": null
-        },
-        {
-          "permissionName": "HKERP.RepositoryManagement.StockManagementAppService.DeleteRepository",
-          "moduleName": "仓库管理1",
-          "displayName": "删除1",
-          "level": 0,
-          "children": null
-        },
-      ]
-    }],
+            componyTree:[],
             defaultProps: {
                 children: 'children',
-                label: 'displayName'
+                label: 'displayName',
+                value:'permissionName'
+            },
+            treeData:[],
+            Props: {
+                children: 'childNodes',
+                label: 'moduleName',
+                value:'id',
             },
             checked:[],//展示所有权限
             nochecked:[],//
             nodeName:'',
         }
     },
+     validators: {
+      'addData.moduleCode': function (value) {//菜单编码
+         return this.Validator.value(value).required().maxLength(50)
+      },
+      'addData.moduleName': function (value) {//菜单名称
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.ico': function (value) {//图标
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'addData.moduleFullPathId': function (value) {//功能模块ID全路径
+         return this.Validator.value(value).required().maxLength(2000);
+      },
+      'addData.moduleFullPathName': function (value) {//功能模块名称全路径
+         return this.Validator.value(value).required().maxLength(2000);
+      },
+      'addData.seq': function (value) {//排序
+          return this.Validator.value(value).required().integer();
+      },
+      'addData.systemId': function (value) {//系统ID
+         return this.Validator.value(value).required().integer();
+      },
+      'addData.moduleParentId': function (value) {//上级菜单
+          return this.Validator.value(value).required().integer();
+      },
+      'addData.url': function (value) {//web地址
+         return this.Validator.value(value).required().maxLength(1000);
+      }
+    },
     created:function(){
         let _this=this;
+        _this.loadParent()
+        if(_this.$route.params.id!='default'){
+            _this.addData.moduleParentId=_this.$route.params.id
+        }
+        
         _this.loadPermission();
     },
     methods:{
+        showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        loadParent(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
+            .then(function(res){
+                _this.treeData=res
+            },function(res){
+            })
+        },
         loadPermission(){
             let _this=this;
             _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
@@ -288,15 +416,27 @@
         },
          save(){
             let _this=this;
-            _this.addData.permissionDtos=_this.checked;//权限
-                 _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
-                    _this.addData.id=res.result.id;
-                    _this.$store.state.url='/menu/menuModify/'+res.result.id
-                    _this.$router.push({path:_this.$store.state.url})
-                    _this.open('保存成功','el-icon-circle-check','successERP');
-                },function(res){
-                    _this.open('保存失败','el-icon-error','faildERP');
-                })
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    let permissions=[];
+                    $.each(_this.checked,function(index,value){
+                        permissions.push(value.permissionName)
+                    })
+                    _this.addData.permissions=permissions;
+                    // _this.addData.permissionDtos=_this.checked;//权限
+                    _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
+                        _this.addData.id=res.result.id;
+                        _this.$store.state.url='/menu/menuModify/'+res.result.id
+                        _this.$router.push({path:_this.$store.state.url})
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });
+        
+            
         },
         saveAdd(){
              let _this=this;
@@ -337,15 +477,14 @@
         },
         addPermission(x){
             let _this=this;
-            alert(1)
             $('.menu_item_add .menu_item').each(function(){
                 
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','none')
                 }
             })
             $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','block')
                 }
             })
@@ -374,12 +513,12 @@
         delPermission(x){
             let _this=this;
             $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','none')
                 }
             })
             $('.menu_item_add .menu_item').each(function(){
-                if($(this).attr('displayName')==x.displayName){
+                if($(this).attr('permissionName')==x.permissionName){
                     $(this).css('display','block')
                 }
             })
@@ -414,6 +553,14 @@
 
 
 <style scoped>
+/*表单提示信息*/
+.menuDetail  .errorTips{
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
+.block{
+    display: none;
+}
 .menu_box{
     display: none;
 }
@@ -607,7 +754,7 @@
     top: 16px;
     background-color: #69f;
     color: #fff;
-    font-size: 40px;
+    font-size: 24px;
     border-radius: 50%;
     line-height: 24px;
     cursor: pointer;

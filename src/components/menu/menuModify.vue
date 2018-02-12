@@ -8,12 +8,107 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div class="bgcolor"><label>菜单编码</label><el-input v-model="addData.moduleCode"  placeholder="请输入菜单编码"></el-input></div>
-            <div class="bgcolor"><label>菜单名称</label><el-input v-model="addData.moduleName"  placeholder="请输入菜单名称"></el-input></div>
-            <div class="bgcolor"><label>图标</label><el-input v-model="addData.ico"  placeholder="请输入图标"></el-input></div>
-            <div class="bgcolor"><label>功能模块ID全路径</label><el-input v-model="addData.moduleFullPathId" placeholder="功能模块ID全路径"></el-input></div>
-            <div class="bgcolor"><label>功能模块名称全路径</label><el-input v-model="addData.moduleFullPathName" placeholder="功能模块名称全路径"></el-input></div>
-            <div class="bgcolor"><label>排序</label><el-input v-model="addData.seq" type="number" placeholder="排序"></el-input></div>
+            <div class="tipsWrapper" name="moduleCode">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleCode')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleCode') }}</p>
+                </div>
+            </div>
+             <div class="tipsWrapper" name="moduleName">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleName')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleName') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="ico">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.ico')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.ico') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="moduleFullPathId">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleFullPathId')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleFullPathId') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="moduleFullPathName">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleFullPathName')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleFullPathName') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="seq">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.seq')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.seq') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="systemId">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.systemId')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.systemId') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="moduleParentId">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleParentId')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleParentId') }}</p>
+                </div>
+            </div>
+            <div class="tipsWrapper" name="url">
+                <div class="errorTips" :class="{block : !validation.hasError('addData.url')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.url') }}</p>
+                </div>
+            </div>
+            
+
+            <div class="bgcolor">
+                <label>菜单编码</label>
+                <el-input 
+                class="moduleCode" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleCode')}" 
+                v-model="addData.moduleCode"  
+                placeholder="请输入菜单编码"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>菜单名称</label>
+                <el-input 
+                class="moduleName" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleName')}" 
+                v-model="addData.moduleName"  
+                placeholder="请输入菜单名称"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>图标</label>
+                <el-input 
+                class="ico" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.ico')}" 
+                v-model="addData.ico"  
+                placeholder="请输入图标"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>功能模块ID全路径</label>
+                <el-input 
+                class="moduleFullPathId" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleFullPathId')}" 
+                v-model="addData.moduleFullPathId" 
+                placeholder="功能模块ID全路径"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>功能模块名称全路径</label>
+                <el-input 
+                class="moduleFullPathName" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleFullPathName')}" 
+                v-model="addData.moduleFullPathName" 
+                placeholder="功能模块名称全路径"></el-input>
+            </div>
+            <div class="bgcolor">
+                <label>排序</label>
+                <el-input 
+                class="seq" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.seq')}" 
+                v-model="addData.seq" 
+                placeholder="排序"></el-input>
+            </div>
             <div class="bgcolor">
                 <label>语言</label>
                 <el-input  placeholder="无字段">
@@ -22,35 +117,63 @@
             </div>
             <div class="bgcolor">
                 <label>系统ID</label>
-                <el-input v-model="addData.systemId" placeholder="系统ID"></el-input>
-                <!-- <el-select v-model="addData.systemId" placeholder="请输入系统ID">
-                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select> -->
+                <el-input 
+                class="systemId" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.systemId')}" 
+                v-model="addData.systemId" 
+                placeholder="系统ID"></el-input>
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
-              <!-- <el-input v-model="addData.moduleParentId"></el-input> -->
-              <el-select v-model="addData.moduleParentId" placeholder="上级菜单">
-                  <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
+              <!-- <el-cascader
+                placeholder="试试搜索：指南"
+                :options="treeData"
+                :props="Props"
+                filterable
+                change-on-select
+            ></el-cascader> -->
+                <el-select 
+                class="moduleParentId" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleParentId')}" 
+                v-model="addData.moduleParentId"  
+                placeholder="上级菜单">
+                    <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
             </div>
             <div class="bgcolor moreWidth">
-              <label>web地址</label>
-              <el-input v-model="addData.url"  placeholder="web地址"></el-input>
+                <label>web地址</label>
+                <el-input 
+                class="url" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.url')}" 
+                v-model="addData.url"  
+                placeholder="请输入web地址"></el-input>
             </div>
             <div class="bgcolor">
-              <label>状态</label>
-              <el-select v-model="valueContain" placeholder="无字段">
-                <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select>
+                <label>状态</label>
+                <el-input 
+                placeholder="无字段"></el-input>
+                <!-- <el-select 
+                placeholder="无字段">
+                    <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
+                </el-select> -->
             </div>
           </el-col>
           <div class="bgcolor">
               <label>子系统</label>
-              <el-select v-model="valueContain" placeholder="无字段">
-                <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select>
-            </div>
+              <el-cascader
+                placeholder="无字段"
+                :options="treeData"
+                :props="Props"
+                filterable
+                change-on-select
+            ></el-cascader>
+               <!-- <el-select v-model="valueContain" placeholder="无字段">
+                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
+              </el-select> -->
+              </div>
           <div class="bgcolor"><label>是否在最底层</label><el-checkbox class="w_auto" v-model="addData.moduleIsBottom"></el-checkbox></div>
             <el-col :span="24">
                 <div class="bgcolor longWidth">
@@ -106,15 +229,15 @@
                          <div class="menu_box" v-for="i in componyTree" :moduleName="i.displayName">
                             <p>{{i.displayName}}</p>
                             <div class="menu_item_wapper menu_item_add">
-                                <button class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><span class="menu_add" @click="addPermission(x)" style="line-height:20px">-</span>{{x.displayName}}</button>
+                                <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="addPermission(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                             </div>
                             <div class="menu_item_wapper menu_item_del">
-                                <button class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><span class="menu_add" @click="delPermission(x)">+</span>{{x.displayName}}</button>
+                                <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="delPermission(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                             </div>
                         </div>
-                        <el-col :span="24" class="load_more">
+                        <!-- <el-col :span="24" class="load_more">
                             <button>加载更多</button>
-                        </el-col>
+                        </el-col> -->
                     </el-col>
                 </el-dialog>
             </el-col>
@@ -122,7 +245,7 @@
                 <div class="bgcolor longWidth">
                     <label class="h_35"></label>
                     <div>
-                        <button class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></button>
+                        <a class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></a>
                     </div>
                 </div>
             </el-col>
@@ -131,7 +254,7 @@
                     <label class="h_35"></label>
                     <div>
                         <button @click="save" class="add_m_bt">提交</button>
-                        <button class="add_m_bt">返回</button>
+                        <button @click="back" class="add_m_bt">返回</button>
                     </div>
                 </div>
             </el-col>
@@ -198,40 +321,75 @@
                 valueContain:'2',
                 label: '阿里'
             }],
-            componyTree:  [],
+            componyTree:[],
             defaultProps: {
                 children: 'children',
-                label: 'displayName'
+                label: 'displayName',
+                value:'permissionName'
+            },
+            treeData:[],
+            Props: {
+                children: 'childNodes',
+                value: 'id',
+                label:'moduleName'
             },
             checked:[],//展示所有权限
             nochecked:[],//
             nodeName:'',
+            allNode:[],
         }
+    },
+    validators: {
+      'addData.moduleCode': function (value) {//菜单编码
+         return this.Validator.value(value).required().maxLength(50)
+      },
+      'addData.moduleName': function (value) {//菜单名称
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.ico': function (value) {//图标
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'addData.moduleFullPathId': function (value) {//功能模块ID全路径
+         return this.Validator.value(value).required().maxLength(2000);
+      },
+      'addData.moduleFullPathName': function (value) {//功能模块名称全路径
+         return this.Validator.value(value).required().maxLength(2000);
+      },
+      'addData.seq': function (value) {//排序
+          return this.Validator.value(value).required().integer();
+      },
+      'addData.systemId': function (value) {//系统ID
+         return this.Validator.value(value).required().integer();
+      },
+      'addData.moduleParentId': function (value) {//上级菜单
+          return this.Validator.value(value).required().integer();
+      },
+      'addData.url': function (value) {//web地址
+         return this.Validator.value(value).required().maxLength(1000);
+      }
     },
     created:function(){
         let _this=this;
-        _this.loadPermission();   
+            _this.loadParent()
             _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
-                _this.checked=res.result.permissionDtos;
-                
-                
-                //    $('.menu_item_add .menu_item').each(function(){
-                //        $.each(_this.checked,function(index,value){
-                //             if($(this).attr('displayName')==value.displayName){
-                //                 $(this).css('display','none')
-                //             }
-                //        })     
-                //     })
-                //     $('.menu_item_del .menu_item').each(function(){
-                //         $.each(_this.checked,function(index,value){
-                //             if($(this).attr('displayName')==value.displayName){
-                //                 $(this).css('display','block')
-                //             }
-                //         })     
-                //     })
-                
-                _this.addData=res.result;
+                if(res.result.permissionDtos!=null&&res.result.permissionDtos.length>0){
+                    _this.checked=res.result.permissionDtos;
+                }
+                _this.addData={
+                    "id": res.result.id,
+                    "moduleParentId": res.result.moduleParentId,
+                    "moduleCode": res.result.moduleCode,
+                    "moduleName": res.result.moduleName,
+                    "url": res.result.url,
+                    "ico": res.result.ico,
+                    "systemId": res.result.systemId,
+                    "moduleIsBottom": res.result.moduleIsBottom,
+                    "moduleFullPathId": res.result.moduleFullPathId,
+                    "moduleFullPathName": res.result.moduleFullPathName,
+                    "seq": res.result.seq,
+                }
+                _this.loadPermission();
             },function(res){
             })
        
@@ -240,11 +398,49 @@
         let _this=this;
     },
     methods:{
+        showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        loadParent(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
+            .then(function(res){
+                _this.treeData=res
+            },function(res){
+            })
+        },
         loadPermission(){
             let _this=this;
             _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
             .then(function(res){
                 _this.componyTree=res.items
+            if(res.items.length>0){//获取所有的权限子节点，存储起来
+                for(let i=0;i<res.items.length;i++){
+                    if(res.items[i].children.length>0&&res.items[i].children!=null){
+                        for(let x=0;x<res.items[i].children.length;x++){
+                           _this.allNode.push(res.items[i].children[x])
+                        }
+                    }
+                }
+             }
+             _this.nochecked=_this.allNode;
+            if(_this.allNode.length>0){//获取未选中权限
+                for(let i=0;i<_this.allNode.length;i++){
+                    if(_this.checked.length>0){
+                        for(let x=0;x<_this.checked.length;x++){
+                            if(_this.allNode[i].permissionName==_this.checked[x].permissionName){
+                                 _this.nochecked.splice(i,1);
+                            }
+                        }
+                    }
+                }
+            }
             },function(res){
             })
         },
@@ -268,31 +464,35 @@
         },
          save(){
             let _this=this;
-            _this.addData.permissionDtos=_this.checked;//权限
-            _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
-            .then(function(res){
-                _this.open('修改成功','el-icon-circle-check','successERP');
-            },function(res){
-                _this.open('修改失败','el-icon-error','faildERP');
-            })
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    let permissions=[];
+                    $.each(_this.checked,function(index,value){
+                        permissions.push(value.permissionName)
+                    })
+                    _this.addData.permissions=permissions;
+                    // _this.addData.permissionDtos=_this.checked;//权限
+                    _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
+                    .then(function(res){
+                        _this.open('修改成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        _this.open('修改失败','el-icon-error','faildERP');
+                    })
+                }
+            })    
         },
         saveAdd(){
              let _this=this;
-            //  if(_this.isSave){
                   _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     _this.open('保存并新增成功','el-icon-circle-check','successERP');
-                    // _this.isSave=true;
                     _this.clearData();
                 },function(res){
                     _this.open('保存并新增失败','el-icon-error','faildERP');
                 })
-            //  }else{
-            //       _this.open('保存并新增失败','el-icon-error','faildERP');
-            //  }
            
         },
         newAdd(){
-            // this.isSave=true;
             this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },
@@ -399,18 +599,22 @@
             }else{
                 flag=false;
                 $.each(_this.nochecked,function(index,value){
-                    if(x==value){
+                    if(x.permissionName==value.permissionName){
                         flag=false;
                     }else{
                         flag=true;
                     }
                 })
             }
-            $.each(_this.checked,function(index,value){
-                if(x==value){
-                    _this.checked.splice(index,1)
+            if(_this.checked.length>0){
+                for(let i=0;i<_this.checked.length;i++){
+                    if(_this.checked[i].permissionName==x.permissionName){
+                        _this.checked.splice(i,1)
+                        break;
+                    }
                 }
-            })
+            }
+           
             if(flag){
                 _this.nochecked.push(x);
             }
@@ -433,18 +637,22 @@
             }else{
                 flag=false;
                 $.each(_this.checked,function(index,value){
-                    if(x==value){
+                    if(x.permissionName==value.permissionName){
                         flag=false;
                     }else{
                         flag=true;
                     }
                 })
             }
-            $.each(_this.nochecked,function(index,value){
-                if(x==value){
-                    _this.nochecked.splice(index,1)
+            if(_this.nochecked.length>0){
+                for(let i=0;i<_this.nochecked.length;i++){
+                    if(_this.nochecked[i].permissionName==x.permissionName){
+                        _this.nochecked.splice(i,1)
+                        break;
+                    }
                 }
-            })
+            }
+            
             if(flag){
                 _this.checked.push(x);
             }
@@ -458,6 +666,13 @@
 
 
 <style scoped>
+.block{
+    display: none;
+}
+.menuModify  .errorTips{
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
 .menu_box{
     display: none;
 }
@@ -625,6 +840,7 @@
 }
 /* 右侧选项 */
 .menu_item{
+    text-align: center;
     display: block;
     width: 190px;
     height: 60px;
@@ -640,6 +856,8 @@
     margin-bottom: 15px;
 }
 .menu_add{
+    border: none;
+    text-align: center;
     display: block;
     width: 24px;
     height: 24px;
@@ -648,7 +866,7 @@
     top: 16px;
     background-color: #69f;
     color: #fff;
-    font-size: 40px;
+    font-size:24px;
     border-radius: 50%;
     line-height: 24px;
     cursor: pointer;

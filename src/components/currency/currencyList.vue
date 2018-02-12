@@ -141,7 +141,7 @@
                             
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
-                                    <el-button v-on:click="handleDel(scope.row.id)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="handleDel(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -201,8 +201,8 @@
                 rows:[],//增行的数组
                 createParams:{
                     "group_id": 1,
-                    "currency_code": "",
-                    "currency_name": "",
+                    "currencyCode": "",
+                    "currencyName": "",
                     "increment": '',
                     "seq": '',
                     "status": '',
@@ -263,8 +263,8 @@
                 console.log(self.rows)
                 self.rows.newCol ={
                     "group_id": 1,
-                    "currency_code": "",
-                    "currency_name": "",
+                    "currencyCode": "",
+                    "currencyName": "",
                     "increment": '',
                     "seq": '',
                     "status": '',
@@ -339,13 +339,14 @@
                 }
                 
             },
-            handleDel:function(id){//每行右边的删除
+            handleDel:function(index,id){//每行右边的删除
                 let self = this;
-                // self.addList.splice(index,1);
+                self.allList.splice(index,1);
+                self.addList.splice(index,1);
                 this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:id}).then(function(res){
                     console.log(res);
                     self.open('删除成功','el-icon-circle-check','successERP');
-                    self.loadAllList();
+                    // self.loadAllList();
               })
             }
         //------------------------------------------------------------------

@@ -11,6 +11,7 @@
                 </el-col>
                 <el-col :span='24' class="tree-container" >
                     <el-tree
+                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                     v-loading="treeLoading" 
                     :data="componyTree"
                     :props="defaultProps"
@@ -29,6 +30,7 @@
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5 pr10 pl5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
                     <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_out">
@@ -83,25 +85,34 @@
         <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             <div class="bgcolor smallBgcolor">
                 <label>地区分类</label>
-                <el-select v-model="dialogData.areaType">
+                <el-select :class="{rebBorder : validation.hasError('dialogData.areaType')}" v-model="dialogData.areaType">
                     <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
                 </el-select>
             </div>
-            <div class="bgcolor smallBgcolor"><label>地区代码</label><el-input v-model="dialogData.areaCode" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>地区名称</label><el-input v-model="dialogData.areaName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>地区全称</label><el-input v-model="dialogData.areaFullName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>全路径ID</label><el-input v-model="dialogData.areaFullPathId" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>全路径名称</label><el-input v-model="dialogData.areaFullPathName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input v-model="dialogData.manager" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaType') }}</div>
+            <div class="bgcolor smallBgcolor"><label>地区代码</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaCode')}"  v-model="dialogData.areaCode" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaCode') }}</div>
+            <div class="bgcolor smallBgcolor"><label>地区名称</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaName')}"  v-model="dialogData.areaName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaName') }}</div>
+            <div class="bgcolor smallBgcolor"><label>地区全称</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaFullName')}"  v-model="dialogData.areaFullName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullName') }}</div>
+            <div class="bgcolor smallBgcolor"><label>全路径ID</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaFullPathId')}"  v-model="dialogData.areaFullPathId" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullPathId') }}</div>
+            <div class="bgcolor smallBgcolor"><label>全路径名称</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaFullPathName')}"  v-model="dialogData.areaFullPathName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullPathName') }}</div>
+            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input :class="{rebBorder : validation.hasError('dialogData.manager')}"  v-model="dialogData.manager" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.manager') }}</div>
             <div class="bgcolor smallBgcolor">
                 <label>启用状态</label>
-                <el-select v-model="dialogData.status">
+                <el-select :class="{rebBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
                     <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
                 </el-select>
             </div>
-            <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.status') }}</div>
+            <div class="bgcolor smallBgcolor"><label>备注</label><el-input :class="{rebBorder : validation.hasError('dialogData.remark')}"  v-model="dialogData.remark" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
             <div slot="footer" class="dialog-footer">
                 <button class="dialogBtn" @click="sendAjax">确 认</button>
                 <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
@@ -117,17 +128,17 @@
             return {
                 searchLeft:'',
                 dialogData:{
-                    // groupId (integer): 集团ID ,
-                    // areaType (integer): 地区分类(1.业务地区.2行政地区) ,
-                    // areaParentId (integer): 父级地区ID ,
-                    // areaCode (string): 地区代码 ,
-                    // areaName (string): 地区名称 ,
-                    // areaFullName (string): 地区全称 ,
-                    // areaFullPathId (string): 全路径ID ,
-                    // areaFullPathName (string): 全路径名称 ,
-                    // manager (string): 负责人 ,
-                    // status (integer): 启用状态 ,
-                    // remark (string): 备注
+                    groupId: '' ,
+                    areaType: '' ,
+                    areaParentId:'' ,
+                    areaCode:'',
+                    areaName: '' ,
+                    areaFullName: '' ,
+                    areaFullPathId: '' ,
+                    areaFullPathName: '' ,
+                    manager: '' ,
+                    status: '' ,
+                    remark: ''
                 },//dialog数据
                  areaTypes: [{//业务地区分类
                     value:'1',
@@ -203,6 +214,35 @@
                 tittle:'',//模态框tittle
             }
         },
+        validators: {
+       'dialogData.areaType': function (value) {//地区分类
+         return this.Validator.value(value).required().integer()
+      },
+      'dialogData.areaCode': function (value) {//地区代码
+         return this.Validator.value(value).required().maxLength(50)
+      },
+      'dialogData.areaName': function (value) {//地区名称
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'dialogData.areaFullName': function (value) {//地区全称
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'dialogData.areaFullPathId': function (value) {//全路径ID
+         return this.Validator.value(value).required().maxLength(1000);
+      },
+      'dialogData.areaFullPathName': function (value) {//全路径名称
+         return this.Validator.value(value).required().maxLength(1000);
+      },
+      'dialogData.manager': function (value) {//负责人
+          return this.Validator.value(value).required().maxLength(20);
+      },
+      'dialogData.status': function (value) {//启用状态
+         return this.Validator.value(value).required().integer();
+      },
+      'dialogData.remark': function (value) {//备注
+          return this.Validator.value(value).required().maxLength(200);
+      }
+    },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
@@ -297,62 +337,8 @@
                         })
                     }
                 };
-
-                // if(_this.treeCheck.length>0){//tree
-                //     for(let i=0;i<_this.treeCheck.length;i++){
-                //         _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
-                //         .then(function(res){    
-                //           _this.loadTree();
-                //         },function(res){
-                //         })
-                //     }
-                // }
-
             },
-            // checkChange(data,check){
-            //     let _this=this;
-            //     let add=false;
-            //     if(check){
-            //         _this.treeCheck.push(data.treeId);
-            //     }else{
-            //         for(let i=0;i<_this.treeCheck.length;i++){
-            //             if(_this.treeCheck[i]==data.treeId){
-            //                 _this.treeCheck.splice(i,1);
-            //             }
-            //         }
-            //     }
-            // },
             nodeClick(data){
-                //  let _this=this;
-                //  let flag=false;
-                //  if(_this.isClick.length>0){
-                //      for(let i=0;i<_this.isClick.length;i++){
-                //         if(_this.isClick[i]==data.treeId){
-                //             flag=false
-                //             break;
-                //         }else{
-                //             flag=true;
-                //         }
-                //     }
-                //  }else{
-                //      flag=true;
-                //  }
-                 
-                //  if(data.treeId!=1&&flag){
-                //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
-                //     .then(function(res){
-                //         _this.isClick.push(data.treeId);
-                //         if(res.result.length>0){
-                //             for(let i=0;i<res.result.length;i++){
-                //                 let label=res.result[i].deptName;
-                //                 let treeId=res.result[i].id;
-                //                 let child={'treeId':treeId,'label':label,children:[]}
-                //                 data.children.push(child)
-                //             }
-                //         }
-                //     })
-                //  }
-                
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
@@ -372,7 +358,6 @@
             },
             whichButton(event,node, data){
                 let e = event || window.event;
-                console.log(e)
                 let btnNum = e.button;
                 if(e.target.className!='TreeMenuBtn'){
                     $('.TreeMenu').css({
@@ -441,26 +426,30 @@
             },
             sendAjax(){
                 let _this=this;
-                if(_this.isAdd){
-                    _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
-                    .then(function(res){
-                        _this.dialogFormVisible=false;
-                        _this.loadTree();
-                        _this.loadTableData();
-                    },function(res){    
+                _this.$validate()
+                .then(function (success) {
+                    if (success) {
+                        if(_this.isAdd){
+                            _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
+                            .then(function(res){
+                                _this.dialogFormVisible=false;
+                                _this.loadTree();
+                                _this.loadTableData();
+                            },function(res){    
 
-                    })
-                }else{
-                     _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
-                    .then(function(res){
-                        _this.dialogFormVisible=false;
-                        _this.loadTree();
-                        _this.loadTableData();
-                    },function(res){    
+                            })
+                        }else{
+                            _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
+                            .then(function(res){
+                                _this.dialogFormVisible=false;
+                                _this.loadTree();
+                                _this.loadTableData();
+                            },function(res){    
 
-                    })
-                }
-                
+                            })
+                        }
+                    }    
+                })
             },
             filterNode(value, data) {
                 if (!value) return true;
@@ -481,14 +470,31 @@
             },
             clearTreeData(){
                 let _this=this;
-                _this.dialogData={}
+                _this.dialogData={
+                     groupId: '' ,
+                    areaType: '' ,
+                    areaParentId:'' ,
+                    areaCode:'',
+                    areaName: '' ,
+                    areaFullName: '' ,
+                    areaFullPathId: '' ,
+                    areaFullPathName: '' ,
+                    manager: '' ,
+                    status: '' ,
+                    remark: ''
+                }
+                _this.validation.reset();
             }
         },
     }
 </script>
 
 <style scoped>
-
+.error_tips{
+    height: 15px;
+    line-height: 15px;
+    color: #f66;
+}
 .dialogBtn{
     display: block;
     float: left;
@@ -585,5 +591,8 @@
 }
 .bAreaListForm .areaDialog .bgcolor:first-child{
     margin-top:15px;
+}
+.bAreaListForm .bgcolor{
+    margin-bottom: 0
 }
 </style>
