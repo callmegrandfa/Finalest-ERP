@@ -41,7 +41,7 @@
                         <span class="btDetail">保存</span>
                     </button>
 
-                    <button class="erp_bt bt_add">
+                    <button class="erp_bt bt_add" @click="addNew">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_add.png">
                         </div>
@@ -70,7 +70,7 @@
 
                 <el-row>
                     <el-col :span='24'>
-                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
+                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column label="序号">
                                  <template slot-scope="scope">
@@ -83,10 +83,10 @@
                             <el-table-column prop="deptParentName" label="上级部门"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
                             <el-table-column prop="status" label="允许使用"></el-table-column>
-                            <el-table-column prop='createdTime' label="创建时间"></el-table-column>
+                            <el-table-column prop='createdTime' width="180" label="创建时间"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                    <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
+                                    <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
                                 </template>
@@ -109,30 +109,19 @@
         <!-- dialog -->
         <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             
-            <div class="bgcolor smallBgcolor"><label>部门编码</label><el-input v-model="dialogData.areaCode" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>部门名称</label><el-input v-model="dialogData.areaName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input v-model="dialogData.manager" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>部门编码</label><el-input v-model="dialogData.deptCode" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>部门名称</label><el-input v-model="dialogData.deptName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input v-model="dialogData.director" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>电话</label><el-input v-model="dialogData.phone" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor">
                 <label>上级业务地区</label>
                 <el-select v-model="dialogData.areaType">
-                    <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder="">
-                    </el-option>
+                    <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder=""></el-option>
                 </el-select>
             </div>
-            <!-- <div class="bgcolor smallBgcolor"><label>地区全称</label><el-input v-model="dialogData.areaFullName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>全路径ID</label><el-input v-model="dialogData.areaFullPathId" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>全路径名称</label><el-input v-model="dialogData.areaFullPathName" placeholder=""></el-input></div> -->
-            
-            <!-- <div class="bgcolor smallBgcolor">
-                <label>启用状态</label>
-                <el-select v-model="dialogData.status">
-                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
-                    </el-option>
-                </el-select>
-            </div> -->
             <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" placeholder=""></el-input></div>
             <div slot="footer" class="dialog-footer">
-                <button class="dialogBtn" @click="sendAjax">确 认</button>
+                <button class="dialogBtn" @click="save">确认</button>
                 <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
             </div>
         </el-dialog>
@@ -145,19 +134,28 @@
         data(){
             return {
                 searchLeft:'',
-                dialogData:{
-                    // groupId (integer): 集团ID ,
-                    // areaType (integer): 地区分类(1.业务地区.2行政地区) ,
-                    // areaParentId (integer): 父级地区ID ,
-                    // areaCode (string): 地区代码 ,
-                    // areaName (string): 地区名称 ,
-                    // areaFullName (string): 地区全称 ,
-                    // areaFullPathId (string): 全路径ID ,
-                    // areaFullPathName (string): 全路径名称 ,
-                    // manager (string): 负责人 ,
-                    // status (integer): 启用状态 ,
-                    // remark (string): 备注
-                },//dialog数据
+                dialogData:{//dialog数据
+                    id:'',
+                    groupId:'',//集团ID
+                    ouId:'',//组织单元ID
+                    deptCode:'',//部门代码
+                    deptName:'',//部门名称
+                    director:'',//负责人
+                    phone:'',//电话
+                    deptParentid:'',//父部门id
+                    remark:'',//备注
+                    status:'',//启用状态
+                },
+                // id (integer, optional),
+                // groupId (integer): 集团ID ,
+                // ouId (integer): 组织单元ID ,
+                // deptCode (string): 部门代码 ,
+                // deptName (string): 部门名称 ,
+                // director (string): 负责人 ,
+                // phone (string): 电话 ,
+                // deptParentid (integer): 父部门id ,
+                // remark (string): 备注 ,
+                // status (integer): 启用状态
                  areaTypes: [{//业务地区分类
                     value:'1',
                     label: '业务地区'
@@ -281,6 +279,26 @@
             //---------------------------------------------------------------
 
             //---保存--------------------------------------------------------
+            save:function(){
+                let self = this;
+                if(self.dialogData.id!=''&&self.dialogData.id!=0){
+                    self.$axios.puts('/api/services/app/DeptManagement/Update',self.dialogData).then(function(res){
+                        self.dialogFormVisible=false;
+                        self.loadTableData();
+                        console.log('1')
+                    },function(res){    
+                        console.log('error')
+                    })
+                }else{
+                    self.$axios.posts('/api/services/app/DeptManagement/Create',self.dialogData).then(function(res){
+                        self.dialogFormVisible=false;
+                        self.loadTableData();
+                        console.log('2')
+                    },function(res){    
+                        console.log('error')
+                    })
+                }
+            },
             sendAjax(){
                 let _this=this;
                 if(_this.isAdd){
@@ -305,6 +323,51 @@
                 
             },
             //----------------------------------------------------------------
+            //---新增----------------------------------------------------------
+            addNew:function(){
+                let self = this;
+                self.tittle='新增';
+                self.dialogFormVisible = true;
+                
+                self.dialogData.groupId = self.tableData[0].groupId;
+                self.dialogData.ouId = self.tableData[0].ouId;
+                self.dialogData.deptParentid = self.tableData[0].deptParentid;
+                self.dialogData.status = self.tableData[0].status;
+                console.log(self.dialogData)
+            },
+            //----------------------------------------------------------------
+
+            //---修改---------------------------------------------------------
+            modify:function(row){
+                // console.log(row)
+                let self = this;
+
+                
+                // id (integer, optional),
+                // groupId (integer): 集团ID ,
+                // ouId (integer): 组织单元ID ,
+                // deptCode (string): 部门代码 ,
+                // deptName (string): 部门名称 ,
+                // director (string): 负责人 ,
+                // phone (string): 电话 ,
+                // deptParentid (integer): 父部门id ,
+                // remark (string): 备注 ,
+                // status (integer): 启用状态
+
+                self.tittle='修改';
+                self.dialogFormVisible = true;
+                self.dialogData.id = row.id;
+                self.dialogData.groupId = row.groupId;
+                self.dialogData.ouId = row.ouId;
+                self.dialogData.deptCode = row.deptCode;
+                self.dialogData.deptName = row.deptName;
+                self.dialogData.director = row.director;
+                self.dialogData.phone = row.phone;
+                self.dialogData.deptParentid = row.deptParentid;
+                self.dialogData.status = row.status;
+                console.log(self.dialogData)
+            },
+            //----------------------------------------------------------------
 
             //---控制编辑------分页--------------------------------------------
             handleCurrentChange(val) {//页码改变
@@ -321,6 +384,7 @@
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:row.id})
                 .then(function(res){
+                    _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
                 })
@@ -329,7 +393,7 @@
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
                     for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:_this.multipleSelection[i].id})
+                        _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.multipleSelection[i].id})
                         .then(function(res){
                             if(_this.load){
                                 _this.loadTableData();
@@ -377,18 +441,15 @@
                 customClass:className
                 });
             },
-            goDetail(){
-                this.$store.state.url='/OuManage/OuManageDetail/default'
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-            modify(row){
-                this.$store.state.url='/OuManage/OuManageModify/'+row.id
-                this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
-            },
-            see(row){
-                this.$store.state.url='/OuManage/OuManageSee/'+row.id
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
+            // goDetail(){
+            //     this.$store.state.url='/OuManage/OuManageDetail/default'
+            //     this.$router.push({path:this.$store.state.url})//点击切换路由
+            // },
+            
+            // see(row){
+            //     this.$store.state.url='/OuManage/OuManageSee/'+row.id
+            //     this.$router.push({path:this.$store.state.url})//点击切换路由
+            // },
             //-------------------------------------------------------------
             
             
@@ -450,7 +511,6 @@
                 _this.dialogFormVisible=true;
                 _this.dialogData.groupId=data.groupId;//集团id
                 _this.dialogData.areaParentId=data.id;//父级id
-                
             },
             TreeDel(event,node,data){
                 $('.TreeMenu').css({
