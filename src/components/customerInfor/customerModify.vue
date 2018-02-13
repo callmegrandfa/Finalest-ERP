@@ -688,6 +688,7 @@ export default({
 
             this.$axios.puts('/api/services/app/ContactManagement/Update',self.customerData).then(function(res){
                 self.open('修改客户信息成功','el-icon-circle-check','successERP');
+                self.ifModify = false;
             }),function(res){
                 self.open('修改失败','el-icon-error','faildERP');
             }

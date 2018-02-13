@@ -134,6 +134,9 @@
     height: 35px;
 }
 .smallBgcolor .el-input input{
+  height: 28px!important;
+}
+.smallBgcolor .el-input input[disabled]{
   height: 28px;
 }
 .el-input input:focus{
@@ -594,6 +597,9 @@
 }
 .faildERP{
   background-color: #f66;
+}
+.noticERP{
+  background-color: #e6a23c;
 }
 .el-notification{
   width: 300px;
