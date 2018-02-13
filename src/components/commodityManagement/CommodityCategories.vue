@@ -1,8 +1,7 @@
 <template>
-    <div class="customer-infor-wrapper" style="display: table;background:#fff;width:100%">
-        <div style="display: table-row;">
-        <div id="left-box" style="min-width:275px;width:275px;display: table-cell;">
-        <el-row class="bg-white">
+    <div class="customer-infor-wrapper" style="background:#fff;width:100%;float:left">
+        <div id="left-box" style="min-width:275px;width:275px;float:left">    
+            <el-row class="bg-white">
             <el-col :span="24">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
@@ -78,81 +77,85 @@
             </el-col>
             </el-row>
         </div>
-        <div class=" " style="display: table-cell;width:100%;">
-        <el-row >
-            <el-col :span="24" class="border-left" id="bg-white">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add" @click="storageData"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    
-                        <button class="erp_bt bt_del" @click="dell"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                  
-                        <button class="erp_bt bt_audit"><div class="btImg"><img src="../../../static/image/common/bt_audit.png"></div><span class="btDetail">审核</span></button>
-                 
-                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_in.png"></div><span class="btDetail">导入</span></button>
+        <div  id="cate">
+            <el-row >
 
-                   
-                        <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                 
-                        <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-
-                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                        <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                   
-                </el-row>
-
-                 <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span='4' class="tree-container">
-                        <el-tree :data="componyTree"></el-tree>
-                    </el-col>
-
-                    <el-col :xl="19" :lg="19" :md="13" :sm="13" :xs="13" class="ml10">
+                <el-col :span="24" class="border-left" id="bg-white">
+                    <el-row class="h48 pt5">
+                        <button class="erp_bt bt_add" @click="storageData"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                         
-                            
-                        <el-table :data="tableData" border style="width: 100%" class="text-center">
-                            <el-table-column prop="date" label="序号" width="60">
-                                
-                            </el-table-column>
-                            <el-table-column prop="name" label="" width="50">
-                                <template scope="scope">
-                                    <el-checkbox  ></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="address" label="上级类目">
-                            </el-table-column>
-                            <el-table-column prop="address5" label="类目名称">
-                            </el-table-column>
-                            <el-table-column prop="address2" label="类目编码">
-                            </el-table-column>
-                            <el-table-column prop="address3" label="状态" width="">
-                            </el-table-column>
-                            <el-table-column prop="address4" label="助记码">
-                            </el-table-column>
-                            
-                            <el-table-column prop="address6" label="服务类" width="">
-                                <template scope="scope">
-                                    <el-checkbox  ></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="address7" label="备注" width="">
-                            </el-table-column> 
-                            <el-table-column prop="address8" label="操作" width="">
-                            </el-table-column>
-                        </el-table>
-                    
+                            <button class="erp_bt bt_del" @click="dell"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                      
+                            <button class="erp_bt bt_audit"><div class="btImg"><img src="../../../static/image/common/bt_audit.png"></div><span class="btDetail">审核</span></button>
+                     
+                            <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_in.png"></div><span class="btDetail">导入</span></button>
 
-                    <el-pagination
-                     style="margin-top:20px;" 
-                     class="text-right" 
-                     background layout="total, prev, pager, next" 
-                     :page-count="totalPage" >
-                     </el-pagination>   
-                    </el-col> 
-                </el-row>
+                       
+                            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                     
+                            <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
 
-            </el-col>
-        </el-row> 
-        </div>
-        </div>  
-    </div>
+                            <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
+                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                   
+                    </el-row>
+
+                     <el-row class="  pb10">
+                            <div style="min-width:200px;width:200px;float:left;">
+                                <el-col :span='24' class="tree-container pl10 pt10">
+                                    <el-tree :data="componyTree"></el-tree>
+                                </el-col>
+                            </div>
+                            
+                            <div class="categ">
+                            <el-col :span="24" class="" >
+                                <div >
+                                    
+                                    <el-table :data="tableData" border style="width: 100%" class="text-center">
+                                    <el-table-column prop="date" label="序号" width="60">
+                                        
+                                    </el-table-column>
+                                     <el-table-column prop="name" label="" width="50">
+                                        <template scope="scope">
+                                            <el-checkbox  ></el-checkbox>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="address" label="上级类目">
+                                    </el-table-column>
+                                    <el-table-column prop="address5" label="类目名称">
+                                    </el-table-column>
+                                    <el-table-column prop="address2" label="类目编码">
+                                    </el-table-column>
+                                   <el-table-column prop="address3" label="状态" width="">
+                                    </el-table-column>
+                                    <el-table-column prop="address4" label="助记码">
+                                    </el-table-column>
+                                    
+                                     <el-table-column prop="address6" label="服务类" width="">
+                                        <template scope="scope">
+                                            <el-checkbox  ></el-checkbox>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="address7" label="备注" width="">
+                                    </el-table-column>  
+                                    <el-table-column prop="address8" label="操作" width="">
+                                    </el-table-column> 
+                                </el-table>
+                                <el-pagination
+                                 style="margin-top:20px;" 
+                                 class="text-right" 
+                                 background layout="total, prev, pager, next" 
+                                 :page-count="totalPage" >
+                                 </el-pagination>  
+                                </div>  
+                            </el-col> 
+                        </div>
+                        
+                    </el-row>
+
+                </el-col>
+            </el-row> 
+        </div>   
+    </div>     
 </template>
 
 <script>
@@ -192,8 +195,8 @@
 
                 value: '',
                 tableData: [{
-                                 date: '1',
-                                 name: '1',
+                                date: '1',
+                                name: '1',
                                 address: '鞋服',
                                 address2: '1',
                                 address3: '已提交',
@@ -203,16 +206,14 @@
                                 address7: '改姓可',
                                 address8: '查看',
                             }, {
-                                 date: '2',
+                                date: '2',
                                 name: '1',
                                 address: '母婴',
                                 address2: '2',
                                 address3: '不通过',
                                 address4: '日期',
-                                address5: '奶粉',
-                               
-                                address6: '',
-                               
+                                address5: '奶粉',    
+                                address6: '',          
                                 address7: '好用',
                                 address8: '查看',
                             }, {
@@ -268,13 +269,17 @@
             },
             packUp(){
                 let oleftBox=document.getElementById('left-box');
+                let ocate=document.getElementById('cate');
                 let Re=document.getElementById('refer');
                 oleftBox.style.display="none";
+                ocate.style.width="100%";
                 Re.style.display="block";
             },
             refer(){
+                let ocate=document.getElementById('cate');
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
+                ocate.style.width="calc(100% - 275px)";
                 oleftBox.style.display="block";
                 Re.style.display="none";
             },
@@ -435,6 +440,17 @@
 </style>
 
 <style>
+.el-tree{
+    background-color: transparent;
+}
+#cate{
+    width: calc(100% - 275px);
+    float: left;
+}
+.categ{
+    width: calc(100% - 200px);
+    float: left;
+}
 .bgcolor{
     width: 100%;
 }

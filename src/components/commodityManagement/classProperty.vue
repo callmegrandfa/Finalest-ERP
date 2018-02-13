@@ -1,7 +1,7 @@
 <template>
-    <div class="customer-infor-wrapper" style="display: table;background:#fff;width:100%">
-        <div style="display: table-row;">
-        <div id="left-box" style="min-width:275px;width:275px;display: table-cell;">
+    <div class="customer-infor-wrapper" style="background:#fff;width:100%;float:left;">
+        
+        <div id="left-box" style="min-width:275px;width:275px;float:left">
         <el-row class="bg-white">
             
                 <el-row class="h48 pl15">
@@ -111,7 +111,7 @@
         </el-row>    
         </div>
 
-        <div class=" " style="display: table-cell;width:100%;">
+        <div id="bgf" >
         <el-row >
             <el-col :span="24" class="border-left" id="bg-white">
                 <el-row class="h48 pt5">
@@ -125,210 +125,219 @@
                     <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                  
                 </el-row>
 
-                 <el-row class="pl10 pt10 pr10 pb10 shopclass">
-                    <el-col :span='4' class="tree-container shopclass">
-                        <el-tree :data="componyTree" class="shopclass"></el-tree>
-                    </el-col>
-
-                    <el-col :span='19' class="ml10">
-                        <el-row>
-                            <el-col :span="3" :xl="3" :lg="4" :md="5" :sm="5" :xs="5" class="lh40">
-                                商品类目
+                 <el-row class="shopclass">
+                    
+                        <div style="min-width:200px; width:200px;float:left;">
+                            <el-col :span='24' class="tree-container shopclass pt10 pl10">
+                                <el-tree :data="componyTree" class="shopclass"></el-tree>
                             </el-col>
-                            <el-col :span="21" :xl="21" :lg="20" :md="19" :sm="19" :xs="19" class="lh40">
-                                宝宝食品
-                            </el-col>
-                            <el-col  :xl="9" :lg="9" :md="13" :sm="12" :xs="12" class="lh40">
-                                <el-checkbox v-model="checked" class="ab">规格属性继承到子类目</el-checkbox>
-                            </el-col>
-                            <el-col  :xl="5" :lg="5" :md="11" :sm="12" :xs="12" class="lh40">
-                                <el-checkbox v-model="checked">唯一码管理</el-checkbox>
-                            </el-col>
-                            <el-col  :xl="5" :lg="5" :md="13" :sm="12" :xs="12" class="lh40">
-                                <el-checkbox v-model="checked">批次管理</el-checkbox>
-                            </el-col>
-                            <el-col  :xl="5" :lg="5" :md="11" :sm="12" :xs="12" class="lh40">
-                                <el-checkbox v-model="checked">保质期管理</el-checkbox>
-                                
-                            </el-col>
-                        </el-row>
-                    <div style="background:#fff">
-                            
-                        
-                        <el-row class="bm-pd10">
-
-                            <el-col :span="12">
-                                <span class="shop-title">
-                                    商品属性
-                                </span>
-                            </el-col>
-                            <el-col :span="12" >
-                                <span class="shop-sq" @click="ifShow = !ifShow" >收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
-                            </el-col>
-                        </el-row>
-                    <el-collapse-transition>
-                        <div v-show="ifShow">
-                        <el-row class="pl10 pr10 pb10">
-                            <el-col :span="12">
-                                <div class="left">
-                                    
-                                    <el-button type="success"><i class="el-icon-plus" style="margin-right:5px;"></i>选取</el-button>
-                                </div> 
-                            </el-col>
-                            <el-col :xl="6" :lg="8" :md="10" :sm="11" :xs="11" style="float:right">
-                                <div class="right">
-                                    <el-input placeholder="" v-model="input4">
-                                    <template slot="append">查询</template>
-                                  </el-input> 
-                                </div>
-                            </el-col>
-                        </el-row>
-                        <el-table :data="tableData" border style="width: 100%" class="text-center">
-                        <el-table-column prop="sequenceNumber" label="序号" width="60">
-                        </el-table-column>
-                        <el-table-column prop="AttributeEncoding" label="属性编码">
-                        </el-table-column>
-                        <el-table-column prop="attributeName" label="属性名称">
-                        </el-table-column>
-                        <el-table-column prop="startUsing" label="启用">
-                            <template scope="scope">
-                                <el-checkbox  ></el-checkbox>
-                            </template>
-                        </el-table-column>
-                      </el-table> 
                         </div>
-                    </el-collapse-transition>
-                      <el-row class="bm-pd10 mt10">
-
-                            <el-col :span="12">
-                                <span class="shop-title">
-                                    商品规格
-                                </span>
-                            </el-col>
-                            <el-col :span="12" >
-                                <span class="shop-sq" @click="ifShow1 = !ifShow1">收起<i class="el-icon-arrow-down" @click="ifShow1 = !ifShow1" :class="{rotate : !ifShow1}" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
-                            </el-col>
-                        </el-row>
-                    <el-collapse-transition> 
-                    <div v-show="ifShow1"> 
-                        <el-row class="pl10 pr10 pb10">
-                            <el-col :span="12">
-                                <div class="left">
+                    <div class="bgfc">
+                        
+                        <el-col :span='24' class="pt10 pl10" >
+                            <el-row >
+                                <el-col :span="3" :xl="3" :lg="4" :md="5" :sm="5" :xs="5" class="lh40">
+                                    商品类目
+                                </el-col>
+                                <el-col :span="21" :xl="21" :lg="20" :md="19" :sm="19" :xs="19" class="lh40">
+                                    宝宝食品
+                                </el-col>
+                                <el-col  :xl="9" :lg="9" :md="13" :sm="12" :xs="12" class="lh40">
+                                    <el-checkbox v-model="checked" class="ab">规格属性继承到子类目</el-checkbox>
+                                </el-col>
+                                <el-col  :xl="5" :lg="5" :md="11" :sm="12" :xs="12" class="lh40">
+                                    <el-checkbox v-model="checked1">唯一码管理</el-checkbox>
+                                </el-col>
+                                <el-col  :xl="5" :lg="5" :md="13" :sm="12" :xs="12" class="lh40">
+                                    <el-checkbox v-model="checked2">批次管理</el-checkbox>
+                                </el-col>
+                                <el-col  :xl="5" :lg="5" :md="11" :sm="12" :xs="12" class="lh40">
+                                    <el-checkbox v-model="checked3">保质期管理</el-checkbox>
                                     
-                                    <el-button type="success"><i class="el-icon-plus" style="margin-right:5px;"></i>选取</el-button>
+                                </el-col>
+                            </el-row>
+                            <div style="background:rgb(249,249,249)" class="pb10 pt10" >
+                                    
+                                
+                                <el-row class="bm-pd10" >
 
-                                </div> 
-                            </el-col>
-                            <el-col :xl="6" :lg="8" :md="10" :sm="11" :xs="11" style="float:right">
-                                <div class="right">
-                                    <el-input placeholder="" v-model="input4">
-                                    <template slot="append">查询</template>
-                                  </el-input> 
+                                    <el-col :span="12">
+                                        <span class="shop-title">
+                                            商品属性
+                                        </span>
+                                    </el-col>
+                                    <el-col :span="12" >
+                                        <span class="shop-sq" @click="ifShow = !ifShow" >收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
+                                    </el-col>
+                                </el-row>
+                            <el-collapse-transition >
+                                <div v-show="ifShow" >
+                                <el-row class="pl10 pr10 pb10">
+                                    <el-col :span="12">
+                                        <div class="left">
+                                            
+                                            <el-button type="success"><i class="el-icon-plus" style="margin-right:5px;"></i>选取</el-button>
+                                        </div> 
+                                    </el-col>
+                                    <el-col :xl="6" :lg="8" :md="10" :sm="11" :xs="11" style="float:right">
+                                        <div class="right">
+                                            <el-input placeholder="" v-model="input4">
+                                            <template slot="append">查询</template>
+                                          </el-input> 
+                                        </div>
+                                    </el-col>
+                                </el-row>
+                                <el-table :data="tableData" border style="width: 100%" class="text-center">
+                                <el-table-column   prop="sequenceNumber" label="序号" width="60">
+                                </el-table-column>
+                                <el-table-column prop="AttributeEncoding" label="属性编码">
+                                </el-table-column>
+                                <el-table-column prop="attributeName" label="属性名称">
+                                </el-table-column>
+                                <el-table-column prop="startUsing" label="启用">
+                                    <template scope="scope">
+                                        <el-checkbox  ></el-checkbox>
+                                    </template>
+                                </el-table-column>
+                              </el-table> 
                                 </div>
-                            </el-col>
-                        </el-row>
-                        <el-table
-                        :data="tableData"
-                        border
-                        style="width: 100%" class="text-center">
-                        <el-table-column
-                          prop="sequenceNumber1"
-                          label="序号"
-                          width="60">
-                        </el-table-column>
-                        <el-table-column
-                          prop="AttributeEncoding1"
-                          label="规格编码"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="attributeName1"
-                          label="规格名称">
-                        </el-table-column>
-                        <el-table-column
-                          prop="startUsing1"
-                          label="启用">
-                          <template scope="scope">
-                                <el-checkbox  ></el-checkbox>
-                            </template>
-                        </el-table-column>
-                      </el-table> 
-                    </div>  
-                    </el-collapse-transition>
+                            </el-collapse-transition>
+                        </div>
+                        <div style="background:rgb(249,249,249);margin-bottom:10px" class="pb10 ">
+                              <el-row class="bm-pd10 mt10">
 
-                        <el-row class="bm-pd10 mt10">
-                            <el-col :span="24">
-                                <span class="shop-title" style="border:none">
-                                    审计信息
-                                </span>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-row>
-                                    <el-col :span="8">
-                                        <div class="bgcolor smallBgcolor">
-                                                <label>创建人</label>
-                                       </div>
+                                    <el-col :span="12">
+                                        <span class="shop-title">
+                                            商品规格
+                                        </span>
                                     </el-col>
-                                    <el-col :span="14">
-                                        <div class="smallBgcolor">
-                                        <el-input placeholder=""></el-input>
+                                    <el-col :span="12" >
+                                        <span class="shop-sq" @click="ifShow1 = !ifShow1">收起<i class="el-icon-arrow-down" @click="ifShow1 = !ifShow1" :class="{rotate : !ifShow1}" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
+                                    </el-col>
+                                </el-row>
+                            <el-collapse-transition> 
+                            <div v-show="ifShow1"> 
+                                <el-row class="pl10 pr10 pb10">
+                                    <el-col :span="12">
+                                        <div class="left">
+                                            
+                                            <el-button type="success"><i class="el-icon-plus" style="margin-right:5px;"></i>选取</el-button>
+
+                                        </div> 
+                                    </el-col>
+                                    <el-col :xl="6" :lg="8" :md="10" :sm="11" :xs="11" style="float:right">
+                                        <div class="right">
+                                            <el-input placeholder="" v-model="input4">
+                                            <template slot="append">查询</template>
+                                          </el-input> 
                                         </div>
                                     </el-col>
                                 </el-row>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-row>
-                                    <el-col :span="8">
-                                        <div class="bgcolor smallBgcolor">
-                                                <label>创建时间</label>
-                                       </div>
-                                    </el-col>
-                                    <el-col :span="14">
-                                        <div class="smallBgcolor">
-                                        <el-input placeholder=""></el-input>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-row>
-                                    <el-col :span="8">
-                                        <div class="bgcolor smallBgcolor">
-                                                <label>修改人</label>
-                                       </div>
-                                    </el-col>
-                                    <el-col :span="14">
-                                        <div class="smallBgcolor">
-                                        <el-input placeholder=""></el-input>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-row>
-                                    <el-col :span="8">
-                                        <div class="bgcolor smallBgcolor">
-                                                <label>修改时间</label>
-                                       </div>
-                                    </el-col>
-                                    <el-col :span="14">
-                                        <div class="smallBgcolor">
-                                        <el-input placeholder=""></el-input>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                            </el-col>
-                        </el-row>
-                     </div> 
-                    </el-col> 
+                                <el-table
+                                :data="tableData"
+                                border
+                                style="width: 100%" class="text-center">
+                                <el-table-column
+                                  prop="sequenceNumber1"
+                                  label="序号"
+                                  width="60">
+                                </el-table-column>
+                                <el-table-column
+                                  prop="AttributeEncoding1"
+                                  label="规格编码"
+                                  >
+                                </el-table-column>
+                                <el-table-column
+                                  prop="attributeName1"
+                                  label="规格名称">
+                                </el-table-column>
+                                <el-table-column
+                                  prop="startUsing1"
+                                  label="启用">
+                                  <template scope="scope">
+                                        <el-checkbox  ></el-checkbox>
+                                    </template>
+                                </el-table-column>
+                              </el-table> 
+                            </div>  
+                            </el-collapse-transition>
+                        </div> 
+                        <div style="background:rgb(249,249,249);">
+                            <el-row class="bm-pd10 mt10">
+                                <el-col :span="24">
+                                    <span class="shop-title" style="border:none">
+                                        审计信息
+                                    </span>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-row>
+                                        <el-col :span="8">
+                                            <div class="bgcolor smallBgcolor">
+                                                    <label>创建人</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="14">
+                                            <div class="smallBgcolor">
+                                            <el-input placeholder=""></el-input>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-row>
+                                        <el-col :span="8">
+                                            <div class="bgcolor smallBgcolor">
+                                                    <label>创建时间</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="14">
+                                            <div class="smallBgcolor">
+                                            <el-input placeholder=""></el-input>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-row>
+                                        <el-col :span="8">
+                                            <div class="bgcolor smallBgcolor">
+                                                    <label>修改人</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="14">
+                                            <div class="smallBgcolor">
+                                            <el-input placeholder=""></el-input>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-row>
+                                        <el-col :span="8">
+                                            <div class="bgcolor smallBgcolor">
+                                                    <label>修改时间</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="14">
+                                            <div class="smallBgcolor">
+                                            <el-input placeholder=""></el-input>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+                        </div>
+                        </el-col>
+                        
+                   
+                    </div> 
                 </el-row>
 
             </el-col>
         </el-row>
-        </div>
-        </div>   
+        </div>  
     </div>
 </template>
 
@@ -341,6 +350,9 @@
                 ifShow1:true,
                 input4:'',
                 checked: true,
+                checked1: true,
+                checked2: true,
+                checked3: true,
                 try:{
                 "groupId": 2,
                 "stockId": 1,
@@ -428,8 +440,10 @@
         },
         mounted:function(){   
             let content1=document.getElementById('bg-white');//设置高度为全屏
+            //设置高度为全屏
             let height1=window.innerHeight-123;
             content1.style.minHeight=height1+'px';
+           
         },
         methods:{
            // shop(){
@@ -447,12 +461,16 @@
             packUp(){
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
+                let obgf=document.getElementById('bgf');
                 oleftBox.style.display="none";
+                obgf.style.width="100%";
                 Re.style.display="block";
             },
             refer(){
                 let oleftBox=document.getElementById('left-box');
+                let obgf=document.getElementById('bgf');
                 let Re=document.getElementById('refer');
+                obgf.style.width="calc(100% - 275px)";
                 oleftBox.style.display="block";
                 Re.style.display="none";
             },
@@ -645,6 +663,15 @@
 </style>
 
 <style>
+#bgf{
+    width: calc(100% - 275px);
+    float: left;
+}
+.bgfc{
+    width: calc(100% - 200px);
+    float: left;
+    background-color: rgba(238, 241, 245, 1);
+}
 .el-checkbox__input.is-checked+.el-checkbox__label{
     color: #606266;
 }

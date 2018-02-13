@@ -136,13 +136,19 @@
                 <el-row class="pl10 pr10">
 
                     <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6" style="margin-left:80px">
+                        
+                            
                         <div class="bgcolor smallBgcolor">
-                            <el-radio v-model="radio" label="1">系统属性</el-radio>
+                            <el-checkbox  >系统属性</el-checkbox>
+                        
+                        
+                            <!-- <el-radio v-model="radio" label="1">系统属性</el-radio> -->
                         </div>
                     </el-col>
                     <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
                         <div class="bgcolor smallBgcolor">
-                            <el-radio v-model="radio" label="2">必填</el-radio>
+                            <el-checkbox  >必填</el-checkbox>
+
                         </div>
                     </el-col>
                 </el-row>
