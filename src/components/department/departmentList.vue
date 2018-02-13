@@ -279,11 +279,10 @@
             //---保存--------------------------------------------------------
             save:function(){
                 let self = this;
-                if(self.dialogData.id!=''&&self.dialogData.id!=0){
+                if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
                     self.$axios.puts('/api/services/app/DeptManagement/Update',self.dialogData).then(function(res){
                         self.dialogFormVisible=false;
                         self.loadTableData();
-                        console.log('1')
                     },function(res){    
                         console.log('error')
                     })
@@ -291,35 +290,34 @@
                     self.$axios.posts('/api/services/app/DeptManagement/Create',self.dialogData).then(function(res){
                         self.dialogFormVisible=false;
                         self.loadTableData();
-                        console.log('2')
                     },function(res){    
                         console.log('error')
                     })
                 }
             },
-            sendAjax(){
-                let _this=this;
-                if(_this.isAdd){
-                    _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
-                    .then(function(res){
-                        _this.dialogFormVisible=false;
-                        _this.loadTree();
-                        _this.loadTableData();
-                    },function(res){    
+            // sendAjax(){
+            //     let _this=this;
+            //     if(_this.isAdd){
+            //         _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
+            //         .then(function(res){
+            //             _this.dialogFormVisible=false;
+            //             _this.loadTree();
+            //             _this.loadTableData();
+            //         },function(res){    
 
-                    })
-                }else{
-                     _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
-                    .then(function(res){
-                        _this.dialogFormVisible=false;
-                        _this.loadTree();
-                        _this.loadTableData();
-                    },function(res){    
+            //         })
+            //     }else{
+            //          _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
+            //         .then(function(res){
+            //             _this.dialogFormVisible=false;
+            //             _this.loadTree();
+            //             _this.loadTableData();
+            //         },function(res){    
 
-                    })
-                }
+            //         })
+            //     }
                 
-            },
+            // },
             //----------------------------------------------------------------
             //---新增----------------------------------------------------------
             addNew:function(){

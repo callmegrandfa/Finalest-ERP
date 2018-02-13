@@ -461,11 +461,12 @@
                 this.$axios.puts('/api/services/app/Accperiod/Update',self.accountDataModify).then(function(res){
                     // console.log(res);
                     self.open('修改主表成功','el-icon-circle-check','successERP');
+                    self.ifModify = false;
                 })
             },
             saveAccountListModify:function(){
                 let self = this;
-                console.log(self.updateList)
+                // console.log(self.updateList)
                 if(self.updateList.length>0){
                     for(let i in self.updateList){
                         self.updateList[i]={
