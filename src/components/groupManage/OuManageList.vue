@@ -238,9 +238,23 @@
                 .then(function(res){
                         _this.componyTree=res.result;
                         _this.treeLoading=false;
+                        _this.loadIcon()
                },function(res){
                    _this.treeLoading=false;
                })
+            },
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
             },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
