@@ -1,208 +1,209 @@
 <template>
-    <div class="customer-infor-wrapper" style="display: table;background:#fff;width:100%;">
-        <div style="display: table-row;">
-        <div id="left-box" style="min-width:275px;width:275px;display: table-cell;">
-        <el-row class="bg-white">
-            <el-col :span="24">
-                <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <i class="el-icon-search"></i>
-                        <span>查询</span>
-                    </el-col>
-                    <el-col :span="5">
-                        <span class="fs12 open" @click="packUp">+ 收起</span>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                <label >单位编码</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" style="margin-top:20px">
-                        <el-input placeholder=""></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label >单位名称</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" >
-                        <el-input placeholder=""></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor">
-                                <label><small>*</small>基本单位</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="bgcolor smallBgcolor" >
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
+    <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
+       
+        <div id="left-box" style="min-width:275px;width:275px;float:left;">
+	        <el-row class="bg-white">
+	            <el-col :span="24">
+	                <el-row class="h48 pl15">
+	                    <el-col :span="18">
+	                        <i class="el-icon-search"></i>
+	                        <span>查询</span>
+	                    </el-col>
+	                    <el-col :span="5">
+	                        <span class="fs12 open" @click="packUp">+ 收起</span>
+	                    </el-col>
+	                </el-row>
+	                <el-row>
+	                    <el-col :span="8">
+	                        <div class="bgcolor smallBgcolor" style="margin-top:20px">
+	                                <label >单位编码</label>
+	                       </div>
+	                    </el-col>
+	                    <el-col :span="14">
+	                        <div class="smallBgcolor" style="margin-top:20px">
+	                        <el-input placeholder=""></el-input>
+	                        </div>
+	                    </el-col>
+	                </el-row>
+	                <el-row>
+	                    <el-col :span="8">
+	                        <div class="bgcolor smallBgcolor" >
+	                                <label >单位名称</label>
+	                       </div>
+	                    </el-col>
+	                    <el-col :span="14">
+	                        <div class="smallBgcolor" >
+	                        <el-input placeholder=""></el-input>
+	                        </div>
+	                    </el-col>
+	                </el-row>
+	                <el-row>
+	                    <el-col :span="8">
+	                        <div class="bgcolor smallBgcolor">
+	                                <label><small>*</small>基本单位</label>
+	                       </div>
+	                    </el-col>
+	                    <el-col :span="14">
+	                        <div class="bgcolor smallBgcolor" >
+	                            <el-select  v-model="value" >
+	                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+	                            </el-option>
 
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor">
-                                <label><small>*</small>状态</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="bgcolor smallBgcolor" >
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
+	                            </el-select>
+	                        </div>
+	                    </el-col>
+	                </el-row>
+	                <el-row>
+	                    <el-col :span="8">
+	                        <div class="bgcolor smallBgcolor">
+	                                <label><small>*</small>状态</label>
+	                       </div>
+	                    </el-col>
+	                    <el-col :span="14">
+	                        <div class="bgcolor smallBgcolor" >
+	                            <el-select  v-model="value" >
+	                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+	                            </el-option>
 
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">&nbsp;</el-col>
-                    <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                        <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
-                    </el-col>
-                </el-row>
-            </el-col>
-            </el-row>
+	                            </el-select>
+	                        </div>
+	                    </el-col>
+	                </el-row>
+	                <el-row>
+	                    <el-col :span="8">&nbsp;</el-col>
+	                    <el-col style="text-align:center;margin-bottom:20px;" :span="14">
+	                        <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
+	                    </el-col>
+	                </el-row>
+	            </el-col>
+	        </el-row>
         </div>
-        <div class=" " style="display: table-cell;width:100%;background:#fff;">
-        <el-row >
-            <el-col :span="24" class="border-left">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">停用</span></button>
+        <div id="bgc">
+	        <el-row >
+	            <el-col :span="24" class="border-left">
+	                <el-row class="h48 pt5">
+	                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+	                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+	                    <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+	                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
+	                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">停用</span></button>
 
-                    <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                   
-                </el-row>
+	                    <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                   
+	                </el-row>
 
-                <el-row class="pr10 pb10">
-                    <el-col :span='4' class="tree-container pl10 pt10" id="bg-white">
-                        <el-tree :data="componyTree"></el-tree>
-                    </el-col>
+	                <el-row class="pb10">
+	                	<el-row style="float:left;width:200px;max-width:200px;">
+		                    <el-col :span='24' class="tree-container pl10 pt10" id="bg-white">
+		                        <el-tree :data="componyTree"></el-tree>
+		                    </el-col>
+	                	</el-row>
+		                <el-row class="bgd">
+		                    <el-col :span='24' >
+		                        
+		                        <el-row>
+		                            <el-col :xl="6" :lg="12" :md="20" :sm="11" :xs="11">
+		                                <el-col :span="8">
+		                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
+		                                            <label >单位编码</label>
+		                                   </div>
+		                                </el-col>
+		                                <el-col :span="15">
+		                                    <div class="smallBgcolor" style="margin-top:20px">
+		                                    <el-input placeholder=""></el-input>
+		                                    </div>
+		                                </el-col>
+		                            </el-col> 
+		                        </el-row>
+		                        <el-row>
+		                            <el-col :xl="6" :lg="12" :md="20" :sm="11" :xs="11">
+		                                <el-col :span="8">
+		                                    <div class="bgcolor smallBgcolor">
+		                                            <label >单位名称</label>
+		                                   </div>
+		                                </el-col>
+		                                <el-col :span="15">
+		                                    <div class="smallBgcolor">
+		                                    <el-input placeholder=""></el-input>
+		                                    </div>
+		                                </el-col>
+		                            </el-col> 
+		                        </el-row>
+		                        <el-row>
+		                            <el-col :xl="6" :lg="12" :md="20" :sm="24" :xs="24">
+		                                <el-col :span="8">
+		                                    <div class="bgcolor smallBgcolor" >
+		                                            <label>状态</label>
+		                                   </div>
+		                                </el-col>
+		                                <el-col :span="15">
+		                                    <div class="bgcolor smallBgcolor" >
+		                                        <el-select  v-model="value" >
+		                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+		                                        </el-option>
 
-                    <el-col :span='19' class="ml10">
-                        
-                        <el-row>
-                            <el-col :xl="6" :lg="12" :md="20" :sm="11" :xs="11">
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                            <label >单位编码</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="15">
-                                    <div class="smallBgcolor" style="margin-top:20px">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-col> 
-                        </el-row>
-                        <el-row>
-                            <el-col :xl="6" :lg="12" :md="20" :sm="11" :xs="11">
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor">
-                                            <label >单位名称</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="15">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-col> 
-                        </el-row>
-                        <el-row>
-                            <el-col :xl="6" :lg="12" :md="20" :sm="24" :xs="24">
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor" >
-                                            <label>状态</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="15">
-                                    <div class="bgcolor smallBgcolor" >
-                                        <el-select  v-model="value" >
-                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                        </el-option>
-
-                                        </el-select>
-                                    </div>
-                                </el-col>
-                            </el-col>
-                        </el-row>
-                           <el-row style="margin-bottom:20px;">
-                                <el-col :xl="2" :lg="2" :md="4" :sm="4" :xs="6">
-                                    &nbsp;
-                                </el-col>
-                               <el-col :span="5" class="lh40">
-                                    <el-checkbox v-model="checked">基本单位</el-checkbox>
-                                </el-col>
-                           </el-row> 
-                            
-                       
-                        <el-row class="bm-pd10">
-
-                            <el-col :span="12">
-                                <span class="shop-title">
-                                    多单位
-                                </span>
-                            </el-col>
-                        </el-row>
-                        <el-row class="pl10 pr10 pb10">
-                            <el-col :span="12">
-                                <div class="left">
-                                    <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">增行</span></button>
-                                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删行</span></button>
-                                    
-                                </div> 
-                            </el-col>
-                            <el-col :xl="6" :lg="8" :md="10" :sm="11" :xs="11" style="float:right">
-                                <div class="right">
-                                    <el-input placeholder="" v-model="input4">
-                                    <template slot="append">搜索</template>
-                                  </el-input> 
-                                </div>
-                            </el-col>
-                        </el-row>
-                        <el-row >   
-                            <el-table :data="tableData" border style="width: 100%">
-                                <el-table-column prop="sequenceNumber" label="序号" width="60">
-                                </el-table-column>
-                                <el-table-column prop="Number" label="" width="100">
-                                    <template scope="scope">
-                                        <el-checkbox  ></el-checkbox>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="AttributeEncoding" label="多单位">
-                                </el-table-column>
-                                <el-table-column prop="attributeName" label="系数">
-                                </el-table-column>
-                                <el-table-column prop="startUsing" label="备注">
-                                </el-table-column>
-                                <el-table-column prop="del" label="操作">
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
-                    </el-col>
-                </el-row>
-
-            </el-col>
-        </el-row>
-        </div>
+		                                        </el-select>
+		                                    </div>
+		                                </el-col>
+		                            </el-col>
+		                        </el-row>
+		                           <el-row style="margin-bottom:20px;" >
+		                                <el-col :xl="2" :lg="2" :md="4" :sm="4" :xs="6">
+		                                    &nbsp;
+		                                </el-col>
+		                               <el-col :span="5" class="lh40">
+		                                    <el-checkbox v-model="checked">基本单位</el-checkbox>
+		                                </el-col>
+		                           </el-row> 
+		                            
+		                       	<div style="background:rgb(249,249,249)" class="pt10 pb10">
+		                        <el-row class="bm-pd10">
+		                            <el-col :span="12">
+		                                <span class="shop-title">
+		                                    多单位
+		                                </span>
+		                            </el-col>
+		                        </el-row>
+		                        <el-row class="pl10 pr10 pb10">
+		                            <el-col :span="12">
+		                                <div class="left">
+		                                    <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">增行</span></button>
+		                                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删行</span></button>
+		                                    
+		                                </div> 
+		                            </el-col>
+		                            <el-col :xl="6" :lg="8" :md="10" :sm="11" :xs="11" style="float:right">
+		                                <div class="right">
+		                                    <el-input placeholder="" v-model="input4">
+		                                    <template slot="append">搜索</template>
+		                                  </el-input> 
+		                                </div>
+		                            </el-col>
+		                        </el-row>
+		                        <el-row >   
+		                            <el-table :data="tableData" border style="width: 100%">
+		                                <el-table-column prop="sequenceNumber" label="序号" width="60">
+		                                </el-table-column>
+		                                <el-table-column prop="Number" label="" width="100">
+		                                    <template scope="scope">
+		                                        <el-checkbox  ></el-checkbox>
+		                                    </template>
+		                                </el-table-column>
+		                                <el-table-column prop="AttributeEncoding" label="多单位">
+		                                </el-table-column>
+		                                <el-table-column prop="attributeName" label="系数">
+		                                </el-table-column>
+		                                <el-table-column prop="startUsing" label="备注">
+		                                </el-table-column>
+		                                <el-table-column prop="del" label="操作">
+		                                </el-table-column>
+		                            </el-table>
+		                        </el-row>
+		                    	</div>
+		                    </el-col>
+		                </el-row>
+	                </el-row>
+	            </el-col>
+	        </el-row>
         </div>
     </div>
 </template>
@@ -300,12 +301,16 @@
             packUp(){
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
+                let obgc=document.getElementById('bgc');
                 oleftBox.style.display="none";
+                obgc.style.width="100%";
                 Re.style.display="block";
             },
             refer(){
+                let obgc=document.getElementById('bgc');
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
+                obgc.style.width="calc(100% - 275px)";
                 oleftBox.style.display="block";
                 Re.style.display="none";
             },  
@@ -468,6 +473,15 @@
 </style>
 
 <style>
+.bgd{
+	float: left;
+	width: calc(100% - 200px);
+}
+#bgc{
+	float: left;
+	width: calc(100% - 275px);
+	background-color: #fff;
+}
 .pl10{
     padding-left: 10px;
 }

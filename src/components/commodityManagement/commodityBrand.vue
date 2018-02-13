@@ -1,147 +1,144 @@
 <template>
-    <div class="customer-infor-wrapper" style="display: table;background:#fff;width:100%;">
-        <div style="display: table-row;">
-        <div id="left-box" style="min-width:275px;width:275px;display: table-cell;background:#fff;">
-        <el-row class="bg-white" id="bg-white">
-            <el-col :span="24">
-                <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <i class="el-icon-search"></i>
-                        <span>查询</span>
-                    </el-col>
-                    <el-col :span="5">
-                        <span class="fs12 open" @click="packUp">+ 收起</span>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                <label>品牌编码</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" style="margin-top:20px">
-                        <el-input placeholder="请录入单号"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label>品牌名称(中文)</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" >
-                        <el-input placeholder="请录入单号"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label>品牌名称(英文)</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" >
-                        <el-input placeholder="请录入单号"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label>状态</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
+    <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
+        <div id="left-box" style="min-width:275px;width:275px;float:left;">
+            <el-row class="bg-white" >
+                <el-col :span="24">
+                    <el-row class="h48 pl15">
+                        <el-col :span="18">
+                            <i class="el-icon-search"></i>
+                            <span>查询</span>
+                        </el-col>
+                        <el-col :span="5">
+                            <span class="fs12 open" @click="packUp">+ 收起</span>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                    <label>品牌编码</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor" style="margin-top:20px">
+                            <el-input placeholder=""></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>品牌名称(中文)</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor" >
+                            <el-input placeholder=""></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>品牌名称(英文)</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor" >
+                            <el-input placeholder=""></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>状态</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="value" >
+                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
 
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">&nbsp;</el-col>
-                    <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                        <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
-                    </el-col>
-                </el-row>
-            </el-col>
-        </el-row>
+                                </el-select>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">&nbsp;</el-col>
+                        <el-col style="text-align:center;margin-bottom:20px;" :span="14">
+                            <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
         </div>
-        <div class=" " style="display: table-cell; height:100%;border-left:1px solid #e4e4e4">
-        <el-row style="width:100%;">
-            <el-col  class="border-left" :span="24" >
-                <el-row class="h48 pt5">
-        
-                        <button class="erp_bt bt_add" @click="storageData" ><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+        <div id="bgh">
+            <el-row style="width:100%;" >
+                <el-col id="bg-white"  class="border-left" :span="24" >
+                    <el-row class="h48 pt5">
+            
+                            <button class="erp_bt bt_add" @click="storageData" ><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                            
+                            <button class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
+                            <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+
+                            <button class="erp_bt bt_del" @click="dell"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+
+                       
+                            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                     
+                            <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
+
+                            <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
+                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>
                         
-                        <button class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
-                        <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+                                            
+                        
+                                          
+                    </el-row>
 
-                        <button class="erp_bt bt_del" @click="dell"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                     <el-row class="">
+                        
 
-                   
-                        <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                 
-                        <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-
-                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                        <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>
-                    
-                                        
-                    
-                                      
-                </el-row>
-
-                 <el-row class=" pt10 pr10 pb10">
-                    
-
-                    <el-col :span="23" class="ml10">
-                         <el-table :data="tableData" border style="width: 100%" class="text-center">
-                            <el-table-column prop="date" label="序号" width="60">
-                                
-                            </el-table-column>
-                            <el-table-column  prop="name" label="" width="50">
-                                <template scope="scope">
-                                    <el-checkbox  ></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="address" label="品牌编码">
-                            </el-table-column>
-                            <el-table-column prop="address2" label="品牌名称">
-                            </el-table-column>
-                            <el-table-column prop="address3" label="英文名称" width="">
-                            </el-table-column>
-                            <el-table-column prop="address4" label="备注">
-                            </el-table-column>
-                            <el-table-column prop="address5" label="状态">
-                            </el-table-column>
-                            <el-table-column prop="address6" label="创建人" width="">
-                                
-                            </el-table-column>
-                            <el-table-column prop="address7" label="创建时间" width="">
-                            </el-table-column> 
-                            <el-table-column prop="address8" label="操作" width="">
-                            </el-table-column>
-                        </el-table>
-                    <el-pagination
-                     style="margin-top:20px;" 
-                     class="text-right" 
-                     background layout="total, prev, pager, next" 
-                     :page-count="totalPage" >
-                     </el-pagination>   
-                    </el-col> 
-                </el-row>
-
-            </el-col>
-        </el-row>
-        </div>
+                        <el-col :span="24" class="">
+                             <el-table :data="tableData" border style="width: 100%" class="text-center">
+                                <el-table-column prop="date" label="序号" width="60">
+                                    
+                                </el-table-column>
+                                <el-table-column  prop="name" label="" width="50">
+                                    <template scope="scope">
+                                        <el-checkbox  ></el-checkbox>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="address" label="品牌编码">
+                                </el-table-column>
+                                <el-table-column prop="address2" label="品牌名称">
+                                </el-table-column>
+                                <el-table-column prop="address3" label="英文名称" width="">
+                                </el-table-column>
+                                <el-table-column prop="address4" label="备注">
+                                </el-table-column>
+                                <el-table-column prop="address5" label="状态">
+                                </el-table-column>
+                                <el-table-column prop="address6" label="创建人" width="">
+                                    
+                                </el-table-column>
+                                <el-table-column prop="address7" label="创建时间" width="">
+                                </el-table-column> 
+                                <el-table-column prop="address8" label="操作" width="">
+                                </el-table-column>
+                            </el-table>
+                        <el-pagination
+                         style="margin-top:20px;" 
+                         class="text-right" 
+                         background layout="total, prev, pager, next" 
+                         :page-count="totalPage" >
+                         </el-pagination>   
+                        </el-col> 
+                    </el-row>
+                </el-col>
+            </el-row>
         </div>   
     </div>
 </template>
@@ -288,19 +285,23 @@
                 }
 
             },
-            storageData(e){
-                this.$store.state.url='/commodity/commodityPropertyDetails/default'
-               this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
+            // storageData(e){
+            //     this.$store.state.url='/commodity/commodityPropertyDetails/default'
+            //    this.$router.push({path:this.$store.state.url})//点击切换路由
+            // },
             packUp(){
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
+                let obgh=document.getElementById('bgh');
                 oleftBox.style.display="none";
+                obgh.style.width="100%";
                 Re.style.display="block";
             },
             refer(){
+                let obgh=document.getElementById('bgh');
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
+                obgh.style.width="calc(100% - 275px)";
                 oleftBox.style.display="block";
                 Re.style.display="none";
             },
@@ -500,6 +501,11 @@
 </style>
 
 <style>
+#bgh{
+   float: left;
+   /*border-left: 1px solid #e4e4e4;*/
+   width: calc(100% - 275px); 
+}
 .bgcolor{
     width: 100%;
 }

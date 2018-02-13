@@ -1,7 +1,6 @@
 <template>
-    <div class="customer-infor-wrapper" style="display: table;background:#fff;width:100%">
-        <div style="display: table-row;">
-        <div id="left-box" style="min-width:275px;width:275px;display: table-cell;">
+    <div class="customer-infor-wrapper" style="background:#fff;width:100%;float:left">
+        <div id="left-box" style="min-width:275px;width:275px;float:left">
         <el-row class="bg-white" >
             <el-col :span="24">
                 <el-row class="h48 pl15">
@@ -95,7 +94,7 @@
             </el-col>
             </el-row>
         </div>
-        <div class=" " style="display: table-cell;width:100%">
+        <div id="bs" style="float:left;">
         <el-row  >
             <el-col :span="24" class="border-left"id="bg-white">
                 <el-row class="h48 pt5">
@@ -116,15 +115,17 @@
                         <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                 
                 </el-row>
 
-                 <el-row class="pl10 pt10 pr10 pb10">
+                 <el-row class="" style="position:relative">
                     
-
-                    <el-col :span="23" class="ml10">
-                        <el-table :data="tableData" border style="width: 100%" class="text-center">
-                            <el-table-column prop="date" label="序号" width="60">
+                    <div style="width:100%">
+                        
+                    <el-row>
+                    <el-col :span="24" class="" style="display">
+                        <el-table :data="tableData" border  class="text-center">
+                            <el-table-column prop="date" label="序号" >
                                 
                             </el-table-column>
-                            <el-table-column prop="name" label="" width="50">
+                            <el-table-column prop="name" label="" >
                                 <template scope="scope">
                                     <el-checkbox  ></el-checkbox>
                                 </template>
@@ -133,7 +134,7 @@
                             </el-table-column>
                             <el-table-column prop="address2" label="属性名称">
                             </el-table-column>
-                            <el-table-column prop="address3" label="状态" width="">
+                            <el-table-column prop="address3" label="状态" >
                             </el-table-column>
                             <el-table-column prop="address4" label="控件类型">
                             </el-table-column>
@@ -157,14 +158,16 @@
                      background layout="total, prev, pager, next" 
                      :page-count="totalPage"
                       >
-                     </el-pagination>   
-                    </el-col> 
+                     </el-pagination> 
+                      
+                    </el-col>
+                </el-row>
+                    </div>  
                 </el-row>
 
             </el-col>
         </el-row> 
-        </div>
-        </div>  
+        </div> 
     </div>
 </template>
 
@@ -306,14 +309,19 @@
             },
             packUp(){
                 let oleftBox=document.getElementById('left-box');
+                let obs=document.getElementById('bs');
                 let Re=document.getElementById('refer');
+
                 oleftBox.style.display="none";
                 Re.style.display="block";
+                obs.style.width="100%";
             },
             refer(){
+                let obs=document.getElementById('bs');
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
                 oleftBox.style.display="block";
+                obs.style.width="calc(100% - 275px)";
                 Re.style.display="none";
             },
             dell(){
@@ -481,6 +489,9 @@
 </style>
 
 <style>
+#bs{
+    width: calc(100% - 275px);
+}
 .bgcolor{
     width: 100%;
 }
