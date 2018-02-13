@@ -20,17 +20,93 @@
         <el-row>
                 <!--公司信息  -->
             <el-col :span="24" class="getPadding">
-                <div class="errorTips" :class="{block : show}">
-                    <p class="msgDetail">错误提示：名称不能为特殊字符</p>
-                    <div class="closeMsg" @click="show = !show"><i class="fa fa-times" aria-hidden="true"></i></div>
+                <div class="tipsWrapper" name="ouCode">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouCode')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouCode') }}</p>
+                    </div>
                 </div>
-                <div class="bgcolor">
+                <div class="tipsWrapper" name="ouName">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouName')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouName') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="ouParentid">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouParentid')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouParentid') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="regtime">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.regtime')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.regtime') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="baseCurrencyId">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.baseCurrencyId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.baseCurrencyId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="companyOuId">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.companyOuId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.companyOuId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contactPerson">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.contactPerson')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.contactPerson') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="phone">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.phone')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.phone') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="address">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.address')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.address') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="remark">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.remark')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.remark') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="status">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.status') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="ouCompanyParentid">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouCompanyParentid')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouCompanyParentid') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="legalPerson">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.legalPerson')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.legalPerson') }}</p>
+                    </div>
+                </div>
+                
+                
+                
+                <div class="bgcolor" >
                     <label>编码</label>
-                    <el-input v-model="addData.ouCode" placeholder="请录入编码"></el-input>
-                </div> 
+                    <el-input class="ouCode" 
+                    @focus="showErrprTips"
+                    :class="{rebBorder : validation.hasError('addData.ouCode')}" 
+                    v-model="addData.ouCode" 
+                    placeholder="请录入编码">
+                    </el-input>
+                </div>
+                
+               
                 <div class="bgcolor">
                         <label>名称</label>
-                    <el-input v-model="addData.ouName" placeholder="请录入手工单号"></el-input>
+                    <el-input class="ouName"
+                    @focus="showErrprTips"
+                     :class="{rebBorder : validation.hasError('addData.ouName')}"
+                     v-model="addData.ouName" 
+                     placeholder="请录入手工单号">
+                     </el-input>
                 </div>
                 <div class="bgcolor">
                     <label>全称</label>
@@ -38,34 +114,112 @@
                 </div>
                 <div class="bgcolor">
                     <label>上级业务单元</label>
-                    <el-select v-model="addData.ouParentid">
-                        <el-option v-for="item in higherUnit" :key="item.valueHigherUnit" :label="item.label" :value="item.valueHigherUnit">
+                    <el-select class="ouParentid"
+                    @focus="showErrprTips"
+                     :class="{rebBorder : validation.hasError('addData.ouParentid')}" 
+                     v-model="addData.ouParentid">
+                        <el-option 
+                        v-for="item in higherUnit" 
+                        :key="item.valueHigherUnit" 
+                        :label="item.label" 
+                        :value="item.valueHigherUnit">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label>公司成立时间</label><el-date-picker v-model="addData.regtime" type="date" placeholder="请选择公司成立时间"></el-date-picker></div>
                 <div class="bgcolor">
-                    <label>本位币种</label>
-                    <el-select v-model="addData.baseCurrencyId">
-                        <el-option v-for="item in money" :key="item.baseCurrencyId" :label="item.label" :value="item.baseCurrencyId" placeholder="请选择本位币种">
+                    <label>公司成立时间</label>
+                    <el-date-picker 
+                    class="regtime datepicker" 
+                    @focus="showErrprTips1"
+                    :class="{rebBorder : validation.hasError('addData.regtime')}"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd" 
+                    v-model="addData.regtime" 
+                    type="date" 
+                    placeholder="请选择公司成立时间"></el-date-picker>
+                </div>
+                <div class="bgcolor">
+                    <label>本位币种id</label>
+                    <el-select 
+                    class="baseCurrencyId" 
+                    @focus="showErrprTips"
+                    :class="{rebBorder : validation.hasError('addData.baseCurrencyId')}" 
+                    v-model="addData.baseCurrencyId">
+                        <el-option 
+                        v-for="item in money" 
+                        :key="item.baseCurrencyId" 
+                        :label="item.label" 
+                        :value="item.baseCurrencyId" 
+                        placeholder="请选择本位币种">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select v-model="addData.companyOuId">
-                        <el-option v-for="item in company" :key="item.valueCompany" :label="item.label" :value="item.valueCompany" placeholder="请选择所属公司">
+                    <el-select 
+                    class="companyOuId" 
+                    @focus="showErrprTips"
+                    :class="{rebBorder : validation.hasError('addData.companyOuId')}" 
+                    v-model="addData.companyOuId">
+                        <el-option 
+                        v-for="item in company" 
+                        :key="item.valueCompany" 
+                        :label="item.label" 
+                        :value="item.valueCompany" 
+                        placeholder="请选择所属公司">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label>联系人</label><el-input v-model="addData.contactPerson " placeholder="请填入联系人"></el-input></div>
-                <div class="bgcolor"><label>电话</label><el-input v-model="addData.phone" placeholder="请填入电话"></el-input></div>
-                <div class="bgcolor"><label>地址</label><el-input v-model="addData.address" placeholder="请填入地址"></el-input></div>
-                <div class="bgcolor"><label>备注</label><el-input v-model="addData.remark" placeholder="备注"></el-input></div>
+                <div class="bgcolor">
+                    <label>联系人</label>
+                    <el-input 
+                    class="contactPerson" 
+                    @focus="showErrprTips"
+                    :class="{rebBorder : validation.hasError('addData.contactPerson')}" 
+                    v-model="addData.contactPerson" 
+                    placeholder="请填入联系人">
+                    </el-input>
+                </div>
+                <div class="bgcolor">
+                    <label>电话</label>
+                    <el-input 
+                    class="phone" 
+                    @focus="showErrprTips"
+                    :class="{rebBorder : validation.hasError('addData.phone')}" 
+                    v-model="addData.phone" 
+                    placeholder="请填入电话"></el-input>
+                </div>
+                <div class="bgcolor">
+                    <label>地址</label>
+                    <el-input 
+                    class="address" 
+                    @focus="showErrprTips"
+                    :class="{rebBorder : validation.hasError('addData.address')}" 
+                    v-model="addData.address" 
+                    placeholder="请填入地址"></el-input>
+                </div>
+                <div class="bgcolor">
+                    <label>备注</label>
+                    <el-input 
+                    class="remark" 
+                    @focus="showErrprTips"
+                    :class="{rebBorder : validation.hasError('addData.remark')}" 
+                    v-model="addData.remark" 
+                    placeholder="备注"></el-input>
+                </div>
                 <div class="bgcolor">
                     <label>用户状态</label>
-                    <el-select v-model="addData.status">
-                        <el-option v-for="item in state" :key="item.valueState" :label="item.label" :value="item.valueState" placeholder="请选择用户状态">
+                    <el-select 
+                    class="status" 
+                    @focus="showErrprTips"
+                    :class="{rebBorder : validation.hasError('addData.status')}" 
+                    v-model="addData.status">
+                        <el-option 
+                        v-for="item in state" 
+                        :key="item.valueState" 
+                        :label="item.label" 
+                        :value="item.valueState" 
+                        placeholder="请选择用户状态">
                         </el-option>
                     </el-select>
                 </div>
@@ -78,9 +232,9 @@
     <el-col :span="24" class="getPadding"> <h4 class="h4">组织类型</h4></el-col>
     <el-col :span="22" class="getPadding"> 
         <el-col :span="6">  
-            <el-checkbox v-model="count.isCheckCompany" @change="checkCompany">公司</el-checkbox>
-            <el-checkbox v-model="count.isCheckFinance" @change="checkFinance">财务</el-checkbox>
-            <el-checkbox v-model="count.isCheckBusiness" @change="checkBusiness">业务</el-checkbox>
+            <el-checkbox v-model="count.isCheckCompany" @focus="checkCompany">公司</el-checkbox>
+            <el-checkbox v-model="count.isCheckFinance" @focus="checkFinance">财务</el-checkbox>
+            <el-checkbox v-model="count.isCheckBusiness" @focus="checkBusiness">业务</el-checkbox>
         </el-col>              
     </el-col>           
  </el-row> 
@@ -110,12 +264,30 @@
                             <el-col :span="22"  class="getPadding">
                                 <div class="bgcolor">
                                     <label>上级公司</label>
-                                    <el-select v-model="companys">
-                                        <el-option v-for="item in preCompany" :key="item.valueCo" :label="item.label" :value="item.valueCo">
+                                    <el-select 
+                                    class="ouCompanyParentid" 
+                                    @focus="showErrprTips"
+                                    :class="{rebBorder : validation.hasError('addData.ouCompanyParentid')}" 
+                                    v-model="addData.ouCompanyParentid">
+                                        <el-option 
+                                        v-for="item in preCompany" 
+                                        :key="item.valueCo" 
+                                        :label="item.label" 
+                                        :value="item.valueCo">
                                         </el-option>
                                     </el-select>
                                 </div>
-                                <div class="bgcolor"><label>法人代表</label><el-input v-model="addData.legalPerson" placeholder="请输入法人代表"></el-input></div>
+                                <div class="bgcolor">
+                                    <label>法人代表</label>
+                                    <el-input 
+                                    class="legalPerson" 
+                                    @focus="showErrprTips"
+                                    :class="{rebBorder 
+                                    : validation.hasError('addData.legalPerson')}"  
+                                    v-model="addData.legalPerson" 
+                                    placeholder="请输入法人代表">
+                                    </el-input>
+                                </div>
                                 
                             </el-col>
                          </div>
@@ -157,25 +329,25 @@ export default({
                 groupId:1,//集团ID
                 ouCode: '',//组织代码
                 ouName: '' ,//组织名称
-                foreignName: '默认' ,//外文名称
-                mnemonic: '默认' ,//助记码
-                ouParentid: 1 ,//上级组织ID
+                foreignName: 'good' ,//外文名称
+                mnemonic: 'sdd' ,//助记码
+                ouParentid: '' ,//上级组织ID
                 accountPeriodId:1 ,//会计期间ID
-                baseCurrencyId: 1,//本位币种id
-                companyOuId: 1,//所属公司ID
-                contactPerson: '默认' ,//联系人
+                baseCurrencyId: '',//本位币种id
+                companyOuId: '',//所属公司ID
+                contactPerson: '' ,//联系人
                 phone: '' ,//电话
                 address: '' ,//地址
                 areaId: 1 ,//行政区域ID
                 entityProperty : 1 ,//实体属性
-                status: 1 ,//启用状态
+                status: '' ,//启用状态
                 remark: '' ,//备注
-                basOuTypes: [ 1,2,3,4,5,6 ],//组织职能
-                isGroupCompany:true ,//是否是法人公司
-                ouCompanyParentid: 1 ,//上级公司组织ID
+                basOuTypes: [ 0,1,2,3,4,5,6],//组织职能
+                isGroupCompany: false,//是否是法人公司
+                ouCompanyParentid: '' ,//上级公司组织ID
                 legalPerson: '',//法人代表
                 companyStatus: 0 ,//公司启用状态
-                regtime: '2018-01'//公司成立时间
+                regtime: ''//公司成立时间
             },
             ischeck:{isCheckCompany:true,//公司复选框初始选种状态
                     isCheckFinance:false,//财务复选框初始选种状态
@@ -252,6 +424,47 @@ export default({
             isSave:true,//是否可以保存
         }
     },
+    validators: {
+      'addData.ouCode': function (value) {//编码
+         return this.Validator.value(value).required().maxLength(50)
+      },
+      'addData.ouName': function (value) {//名称
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.ouParentid': function (value) {//上级业务单元
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.regtime': function (value) {//公司成立时间
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.baseCurrencyId': function (value) {//本位币种id
+         return this.Validator.value(value).required().integer();
+      },
+      'addData.companyOuId': function (value) {//所属公司
+          return this.Validator.value(value).required().integer();
+      },
+      'addData.contactPerson': function (value) {//联系人
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.phone': function (value) {//电话
+          return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.address': function (value) {//地址
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'addData.remark': function (value) {//备注
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'addData.status': function (value) {//用户状态
+         return this.Validator.value(value).required().integer();
+      },
+      'addData.ouCompanyParentid': function (value) {//上级公司
+         return this.Validator.value(value).required().integer();
+      },
+      'addData.legalPerson': function (value) {//法人代表
+          return this.Validator.value(value).required().maxLength(50);
+      },
+    },
     watch:{
         ischeck: {
         handler: function (val, oldVal) { 
@@ -270,6 +483,25 @@ export default({
             },
     },         
     methods:{
+        showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+
+        },
+        showErrprTips1(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
         back(){
             this.$store.state.url='/OuManage/OuManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -285,7 +517,6 @@ export default({
             });
         },
          handleClick(tab, event) {
-            // console.log(tab, event);
         },
         checkFinance:function(e){
             
@@ -319,113 +550,30 @@ export default({
         },
         save(){
             let _this=this;
-            // if(_this.isSave){
-                 _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-                    //console.log(res)
-                    // _this.addData=res.result;
-                    //  _this.addData={
-                    //     groupId:1,//集团ID
-                    //     ouCode: res.result.ouCode,//组织代码存在 
-                    //     ouName: res.result.ouName ,//组织名称存在
-                    //     foreignName: res.result.foreignName ,//外文名称
-                    //     mnemonic: res.result.mnemonic,//助记码
-                    //     ouParentid: res.result.ouParentid ,//上级组织ID存在
-                    //     accountPeriodId: res.result.accountPeriodId ,//会计期间ID
-                    //     baseCurrencyId: res.result.baseCurrencyId,//本位币种id存在
-                    //     companyOuId: res.result.companyOuId,//所属公司ID存在
-                    //     contactPerson: res.result.contactPerson ,//联系人存在
-                    //     phone: res.result.phone ,//电话存在
-                    //     address:res.result.address ,//地址存在
-                    //     areaId: res.result.areaId,//行政区域ID
-                    //     entityProperty : res.result.entityProperty,//实体属性
-                    //     status: res.result.status,//启用状态存在
-                    //     remark: res.result.remark ,//备注存在
-                    //     basOuTypes: [1,2,3,4,5,6],//组织职能
-                    //     isGroupCompany:res.result.isGroupCompany ,//
-                    //     ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
-                    //     legalPerson:res.result.legalPerson ,//法人代表
-                    //     companyStatus: res.result.companyStatus ,//公司启用状态
-                    //     regtime:res.result.regtime//公司成立时间
-                    // };
-                    // _this.auditInfo={
-                    //     id:res.result.id,
-                    //     lastModifierUserName:res.result.lastModifierUserName,
-                    //     isDeleted:res.result.isDeleted,
-                    //     deleterUserId:res.result.deleterUserId,
-                    //     deletionTime:res.result.deletionTime,
-                    //     lastModificationTime:res.result.lastModificationTime,
-                    //     lastModifierUserId:res.result.lastModifierUserId,
-                    //     creationTime:res.result.creationTime,
-                    //     creatorUserId:res.result.creatorUserId,
-                    //     isCompany : res.result.isCompany,//是否是法人公司
-                    //     isAdministration : res.result.isAdministration,//是否是行政
-                    //     isFinance: res.result.isFinance,//是否是财务
-                    //     isCapital :res.result.isCapital ,//是否是资金
-                    //     isPurchase :res.result.isPurchase ,//是否是采购
-                    // }
-                    
-                    // _this.isSave=false;
+            _this.$validate()
+          .then(function (success) {
+            if (success) {
+                _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
                     _this.$router.push({path:_this.$store.state.url})//点击切换路由OuManage
                     _this.open('保存成功','el-icon-circle-check','successERP');
                 },function(res){
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
-            // }else{
-            //     _this.addData.id=_this.auditInfo.id;
-            //      _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
-            //         //console.log(res)
-            //         _this.addData=res.result;
-            //          _this.addData={
-            //             groupId:1,//集团ID
-            //             id:res.result.id,
-            //             ouCode: res.result.ouCode,//组织代码存在 
-            //             ouName: res.result.ouName ,//组织名称存在
-            //             foreignName: res.result.foreignName ,//外文名称
-            //             mnemonic: res.result.mnemonic,//助记码
-            //             ouParentid: res.result.ouParentid ,//上级组织ID存在
-            //             accountPeriodId: res.result.accountPeriodId ,//会计期间ID
-            //             baseCurrencyId: res.result.baseCurrencyId,//本位币种id存在
-            //             companyOuId: res.result.companyOuId,//所属公司ID存在
-            //             contactPerson: res.result.contactPerson ,//联系人存在
-            //             phone: res.result.phone ,//电话存在
-            //             address:res.result.address ,//地址存在
-            //             areaId: res.result.areaId,//行政区域ID
-            //             entityProperty : res.result.entityProperty,//实体属性
-            //             status: res.result.status,//启用状态存在
-            //             remark: res.result.remark ,//备注存在
-            //             basOuTypes: [0],//组织职能
-            //             isGroupCompany:res.result.isGroupCompany ,//
-            //             ouCompanyParentid: res.result.ouCompanyParentid ,//上级公司组织ID
-            //             legalPerson:res.result.legalPerson ,//法人代表
-            //             companyStatus: res.result.companyStatus ,//公司启用状态
-            //             regtime:res.result.regtime//公司成立时间
-            //         };
-                    
-            //         _this.isSave=false;
-            //         _this.open('保存成功','el-icon-circle-check','successERP');
-            //     },function(res){
-            //         _this.open('保存失败','el-icon-error','faildERP');
-            //     })
-            // }
+            }
+          });
+            
         },
         saveAdd(){
              let _this=this;
-            //  if(_this.isSave){
                   _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                     _this.open('保存并新增成功','el-icon-circle-check','successERP');
-                    // _this.isSave=true;
                     _this.clearData();
                 },function(res){
                     _this.open('保存并新增失败','el-icon-error','faildERP');
                 })
-            //  }else{
-            //       _this.open('保存并新增失败','el-icon-error','faildERP');
-            //  }
-           
         },
         newAdd(){
-            // this.isSave=true;
             this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },
@@ -461,7 +609,7 @@ export default({
                 phone:'',//电话存在
                 address:'' ,//地址存在
                 areaId: '',//行政区域ID
-                entityProperty : '',//实体属性
+                entityProperty : 1,//实体属性
                 status: '',//启用状态存在
                 remark: '' ,//备注存在
                 basOuTypes: [0],//组织职能

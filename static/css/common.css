@@ -1,4 +1,11 @@
 
+/* 表单验证 */
+.tipsWrapper{
+  display: none;   
+}
+.display_block{
+  display: block;
+}
 .sideWidth
 /* dialog */
 .el-dialog{
@@ -57,6 +64,7 @@
     <label></label>
     <span class="search-btn">查询</span>
 </div> */
+
 .smallBgcolor .search-btn{
     text-align: center;
     font-size: 12px;
@@ -77,6 +85,9 @@
     float: left;
     overflow: hidden;
     margin-right: 5px;
+}
+.bgcolor .rebBorder .el-input__inner{
+  border-color: #f66;
 }
 .bgcolor .el-input__suffix{
   line-height: 35px;
@@ -133,7 +144,8 @@
 }
 .bgcolor .el-input input[disabled]{
     border-color:#c0c4cc;
-    background-color: #fff;
+    background-color: #f2f2f2;
+    cursor: unset;
 }
 
 /* datePicker日期控件 */
@@ -167,6 +179,17 @@
 }
 .smallBgcolor .el-select{
   height: 28px;
+}
+/* 级联选择器 */
+.bgcolor .el-cascader{
+  line-height: 0;
+}
+.bgcolor .el-cascader__label{
+  font-size: 12px;
+  line-height: 35px;
+}
+.bgcolor .el-cascader-menu__item{
+  font-size: 12px;
 }
 /* 输入框 placeholder字体颜色*/
 ::-webkit-input-placeholder {
@@ -571,6 +594,9 @@
 .faildERP{
   background-color: #f66;
 }
+.noticERP{
+  background-color: #e6a23c;
+}
 .el-notification{
   width: 300px;
   height: 100px;
@@ -663,6 +689,8 @@
     v-model="valueDate"
     type="daterange"
     range-separator="to"
+    value-format="yyyy-MM-dd"
+    format="yyyy-MM-d"
     start-placeholder="开始日期"
     end-placeholder="结束日期">
     </el-date-picker>

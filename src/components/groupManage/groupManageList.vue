@@ -10,27 +10,27 @@
         <el-row class="bg-white">
                 <el-col :span="6">
                         <div class="mt20 bgcolor smallBgcolor">
-                            <label>集团编码</label><el-input v-model="tableData[0].groupCode"  :disabled="isEdit"  ></el-input>
+                            <label>集团编码</label><el-input v-model="tableData[0].groupCode"  :disabled="isEdit" @change="isUpdate()" ></el-input>
                         </div>
                 </el-col>
                 <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>集团名称</label><el-input :disabled="isEdit" v-model="tableData[0].groupName" ></el-input></div>
+                    <div class="mt20 bgcolor smallBgcolor"><label>集团名称</label><el-input :disabled="isEdit" v-model="tableData[0].groupName" @change="isUpdate()"></el-input></div>
                 </el-col>
                 <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>集团全称</label><el-input :disabled="isEdit" v-model="tableData[0].groupFullname"></el-input></div>
+                    <div class="mt20 bgcolor smallBgcolor"><label>集团全称</label><el-input :disabled="isEdit" v-model="tableData[0].groupFullname" @change="isUpdate()"></el-input></div>
                 </el-col>
                 <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>会计方案</label><el-input :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  ></el-input></div>
+                    <div class="mt20 bgcolor smallBgcolor"><label>会计方案</label><el-input :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  @change="isUpdate()"></el-input></div>
                 </el-col>
         </el-row>
         <el-row class="bg-white">
             <el-col :span="6">    
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input :disabled="isEdit" v-model="tableData[0].areaId_AreaName" ></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input :disabled="isEdit" v-model="tableData[0].areaId_AreaName" @change="isUpdate()"></el-input></div>
             </el-col>
             <el-col :span="6">
                 <div class="bgcolor smallBgcolor">
                     <label>启用会计月份</label>
-                    <el-select v-model="tableData[0].openAccperiodMonth"  :disabled="isEdit">
+                    <el-select v-model="tableData[0].openAccperiodMonth"  :disabled="isEdit" @change="isUpdate()">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
@@ -39,33 +39,33 @@
             <el-col :span="6">
                 <div class="bgcolor smallBgcolor">
                     <label>本位币种</label>
-                    <el-select v-model="tableData[0].currencyID"  :disabled="isEdit">
+                    <el-select v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
             </el-col>
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>所属行业</label><el-input :disabled="isEdit" v-model="tableData[0].industry" ></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属行业</label><el-input :disabled="isEdit" v-model="tableData[0].industry" @change="isUpdate()" ></el-input></div>
             </el-col>   
         </el-row>
         <el-row class="bg-white">
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>电话</label><el-input :disabled="isEdit" v-model="tableData[0].phone" ></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>电话</label><el-input :disabled="isEdit" v-model="tableData[0].phone" @change="isUpdate()"></el-input></div>
             </el-col>
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>传真</label><el-input :disabled="isEdit" v-model="tableData[0].fax" ></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>传真</label><el-input :disabled="isEdit" v-model="tableData[0].fax" @change="isUpdate()"></el-input></div>
             </el-col>
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>总部地址</label><el-input :disabled="isEdit" v-model="tableData[0].address" ></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>总部地址</label><el-input :disabled="isEdit" v-model="tableData[0].address" @change="isUpdate()"></el-input></div>
             </el-col>
-            
-                <div class="bgcolor smallBgcolor"><label>备注</label><el-input :disabled="isEdit" v-model="tableData[0].remark" ></el-input></div>
+            <el-col :span="6">
+                <div class="bgcolor smallBgcolor"><label>备注</label><el-input :disabled="isEdit" v-model="tableData[0].remark" @change="isUpdate()"></el-input></div>
             </el-col>
         </el-row>
         <el-row class="bg-white">
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor lh-28"><el-checkbox class="w-auto"></el-checkbox>允许使用</div>
+                <div class="bgcolor smallBgcolor lh-28"><el-checkbox class="w-auto" @change="isUpdate()"></el-checkbox>允许使用</div>
             </el-col>
                 <!-- <div class="bgcolor smallBgcolor"><label></label><span class="search-btn" @click="SimpleSearch">查询</span></div> -->
         </el-row>
@@ -199,7 +199,11 @@
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
+                update:false,
             }
+        },
+        watch:{
+
         },
         created:function(){       
                 let _this=this;
@@ -227,15 +231,26 @@
                 })
             },
             Update(){//修改
-                this.isEdit=!this.isEdit;
+                if(this.isEdit==true){
+                    this.isEdit=!this.isEdit;
+                } 
+            },
+            isUpdate(){//判断是否修改过信息
+                this.update=true;
             },
             Save(){
                 let _this=this;
-                _this.$axios.puts('/api/services/app/GroupManagement/Update',_this.tableData[0]).then(function(res){ 
-                    _this.open('修改成功','el-icon-circle-check','successERP');
-                    _this.isEdit=!_this.isEdit;
-                    },function(res){
-                })
+                if(_this.update){
+                    _this.$axios.puts('/api/services/app/GroupManagement/Update',_this.tableData[0]).then(function(res){ 
+                        _this.open('修改成功','el-icon-circle-check','successERP');
+                        _this.isEdit=!_this.isEdit;
+                        },function(res){
+                        _this.open('修改失败','el-icon-error','faildERP');
+                    });
+                    _this.update=false;
+                }else{
+                    _this.open('没有需要保存的项目','el-icon-warning','noticERP');
+                }
             },
             Cancel(){
                 if(this.isEdit==false){

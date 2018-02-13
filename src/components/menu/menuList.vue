@@ -11,6 +11,7 @@
                 </el-col>
                 <el-col :span='24' class="tree-container" >
                     <el-tree
+                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
                     v-loading="treeLoading" 
                     :data="componyTree"
                     :props="defaultProps"
@@ -43,15 +44,20 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="systemId" label="系统"></el-table-column>
+                            <el-table-column prop="systemId" label="系统">
+                                <template slot-scope="scope">
+                                    <span style="color:#6699FF">{{scope.row.systemId}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="moduleCode" label="模块编码"></el-table-column>
                             <el-table-column prop="moduleName" label="模块名称"></el-table-column>
-                            <el-table-column prop="url" label="web地址"></el-table-column>
+                            <el-table-column prop="url" label="web地址">
+                                <template slot-scope="scope">
+                                    <span style="color:#33CCCC">{{scope.row.url}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="moduleParentId" label="上级菜单"></el-table-column>
                             <el-table-column label="状态（无字段）">
-                                <template slot-scope="scope">
-                                    <el-checkbox disabled></el-checkbox>
-                                </template>
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
@@ -201,9 +207,23 @@
                 .then(function(res){
                     _this.componyTree=res
                     _this.treeLoading=false;
+                    _this.loadIcon()
                },function(res){
                    _this.treeLoading=false;
                })
+            },
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
             },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
@@ -246,6 +266,7 @@
                             _this.open('删除失败','el-icon-error','faildERP');
                         })
                     }
+                    _this.loadTree();
                 };
             },
             nodeClick(data){
@@ -264,6 +285,7 @@
                 _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',{id:row.id})
                 .then(function(res){
                     _this.loadTableData();
+                    _this.loadTree();
                 },function(res){
                 })
             },
@@ -294,15 +316,17 @@
                 }
             },
             TreeAdd(event,node,data){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
+                // $('.TreeMenu').css({
+                //         display:'none'
+                //     })
                 let _this=this;
-                _this.tittle='新增';
-                _this.clearTreeData();
-                _this.isAdd=true;
-                _this.dialogFormVisible=true;
+                // _this.tittle='新增';
+                // _this.clearTreeData();
+                // _this.isAdd=true;
+                // _this.dialogFormVisible=true;
                 _this.dialogData.moduleParentId=data.id;//父级id
+                _this.$store.state.url='/menu/menuDetail/'+_this.dialogData.moduleParentId
+                _this.$router.push({path:this.$store.state.url})
                 
             },
             TreeDel(event,node,data){
@@ -319,20 +343,22 @@
                 })
             },
             TreeModify(event,node,data){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
+                // $('.TreeMenu').css({
+                //         display:'none'
+                //     })
                 let _this=this;
-                _this.clearTreeData();
-                _this.tittle='修改';
-                _this.isAdd=false;
-                _this.dialogFormVisible=true;
-                 _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:data.id})
-                    .then(function(res){
-                        _this.dialogData=res.result;
-                    },function(res){    
+                // _this.clearTreeData();
+                // _this.tittle='修改';
+                // _this.isAdd=false;
+                // _this.dialogFormVisible=true;
+                //  _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:data.id})
+                //     .then(function(res){
+                //         _this.dialogData=res.result;
+                //     },function(res){    
 
-                    })
+                //     })
+                 _this.$store.state.url='/menu/menuModify/'+data.id
+                _this.$router.push({path:this.$store.state.url})
             },
             sendAjax(){
                 let _this=this;
@@ -363,9 +389,8 @@
             },
             renderContent(h, { node, data, store }) {
                 return (
-                <span class="TreeNode"
-                on-mousedown ={ (event) => this.whichButton(event,node, data) } 
-                style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;position: relative;">
+                <span class="TreeNode el-tree-node__label" on-mousedown ={ (event) => this.whichButton(event,node, data) }
+                style="flex: 1; display: flex; align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
                     {node.label}
                    <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
                         <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
