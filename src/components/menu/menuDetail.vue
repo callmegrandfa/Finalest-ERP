@@ -133,7 +133,7 @@
                 filterable
                 change-on-select
             ></el-cascader> -->
-                <el-select 
+                <el-select v-if="showParent" 
                 class="moduleParentId" 
                 @focus="showErrprTips"
                 :class="{rebBorder : validation.hasError('addData.moduleParentId')}" 
@@ -141,6 +141,14 @@
                 placeholder="上级菜单">
                     <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
+
+                <el-input v-else
+                class="moduleParentId" 
+                @focus="showErrprTips"
+                :class="{rebBorder : validation.hasError('addData.moduleParentId')}"
+                v-model="addData.moduleParentId" 
+                disabled></el-input>
+
             </div>
             <div class="bgcolor moreWidth">
                 <label>web地址</label>
@@ -329,6 +337,7 @@
             checked:[],//展示所有权限
             nochecked:[],//
             nodeName:'',
+            showParent:true,
         }
     },
      validators: {
@@ -364,7 +373,10 @@
         let _this=this;
         _this.loadParent()
         if(_this.$route.params.id!='default'){
+            _this.showParent=false;
             _this.addData.moduleParentId=_this.$route.params.id
+        }else{
+            _this.showParent=true;
         }
         
         _this.loadPermission();
