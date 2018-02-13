@@ -2,38 +2,35 @@
     <div class="groupList">
         <el-row class="h48 pt5 bg-white">
             <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-            <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
-            <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button v-on:click="Update()" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
+            <button v-on:click="Save()" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <button v-on:click="Cancel()" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
         </el-row>
         <el-row class="bg-white">
                 <el-col :span="6">
                         <div class="mt20 bgcolor smallBgcolor">
-                            <label>集团编码</label>
-                            <el-input  v-model="searchData.OuType">
-                               
-                            </el-input>
+                            <label>集团编码</label><el-input v-model="tableData[0].groupCode"  :disabled="isEdit"  ></el-input>
                         </div>
                 </el-col>
                 <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>集团名称</label><el-input v-model="searchData.OuCode" placeholder="请录入单号"></el-input></div>
+                    <div class="mt20 bgcolor smallBgcolor"><label>集团名称</label><el-input :disabled="isEdit" v-model="tableData[0].groupName" ></el-input></div>
                 </el-col>
                 <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>集团全称</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
+                    <div class="mt20 bgcolor smallBgcolor"><label>集团全称</label><el-input :disabled="isEdit" v-model="tableData[0].groupFullname"></el-input></div>
                 </el-col>
                 <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>会计方案</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
+                    <div class="mt20 bgcolor smallBgcolor"><label>会计方案</label><el-input :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  ></el-input></div>
                 </el-col>
         </el-row>
         <el-row class="bg-white">
             <el-col :span="6">    
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input :disabled="isEdit" v-model="tableData[0].areaId_AreaName" ></el-input></div>
             </el-col>
             <el-col :span="6">
                 <div class="bgcolor smallBgcolor">
                     <label>启用会计月份</label>
-                    <el-select  v-model="searchData.OuType">
+                    <el-select v-model="tableData[0].openAccperiodMonth"  :disabled="isEdit">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
@@ -42,32 +39,34 @@
             <el-col :span="6">
                 <div class="bgcolor smallBgcolor">
                     <label>本位币种</label>
-                    <el-select  v-model="searchData.OuType">
+                    <el-select v-model="tableData[0].currencyID"  :disabled="isEdit">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
             </el-col>
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>所属行业</label><el-input v-model="searchData.Name" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属行业</label><el-input :disabled="isEdit" v-model="tableData[0].industry" ></el-input></div>
             </el-col>   
         </el-row>
         <el-row class="bg-white">
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>电话</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>电话</label><el-input :disabled="isEdit" v-model="tableData[0].phone" ></el-input></div>
             </el-col>
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>传真</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>传真</label><el-input :disabled="isEdit" v-model="tableData[0].fax" ></el-input></div>
             </el-col>
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>总部地址</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>总部地址</label><el-input :disabled="isEdit" v-model="tableData[0].address" ></el-input></div>
             </el-col>
-            <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="searchData.AreaId" placeholder="请录入单号"></el-input></div>
+            
+                <div class="bgcolor smallBgcolor"><label>备注</label><el-input :disabled="isEdit" v-model="tableData[0].remark" ></el-input></div>
             </el-col>
         </el-row>
         <el-row class="bg-white">
-                <div class="bgcolor smallBgcolor lh-28"><label></label><el-checkbox class="w-auto"></el-checkbox>允许使用</div>
+            <el-col :span="6">
+                <div class="bgcolor smallBgcolor lh-28"><el-checkbox class="w-auto"></el-checkbox>允许使用</div>
+            </el-col>
                 <!-- <div class="bgcolor smallBgcolor"><label></label><span class="search-btn" @click="SimpleSearch">查询</span></div> -->
         </el-row>
         <el-row class="bg-white">
@@ -98,8 +97,8 @@
                                 </template>
                             </el-table-column>
                             <el-table-column  label="系统&模块"></el-table-column>
-                            <el-table-column prop="createdTime" label="启用时间"></el-table-column>
-                            <el-table-column prop="creationTime" label="生效时间"></el-table-column>
+                            <el-table-column prop="effectiveStart" label="启用时间"></el-table-column>
+                            <el-table-column prop="effectiveEnd" label="生效时间"></el-table-column>
                         </el-table>  
                         <el-pagination
                         style="margin-top:20px;" 
@@ -122,15 +121,8 @@
         name:'customerInfor',
         data(){
             return {
-                searchData:{
-                    OuCode: "",//编码
-                    Name: "",//名称
-                    CompanyOuId:'',//所属公司
-                    AreaId: '',//行政地区
-                    Status: '',//启用状态
-                    OuType: '',//组织类型
-                },
-                ifHeaderShow:false,
+                ifHeaderShow:false,//是否显示表头
+                isEdit:true,//是否可编辑
                 tableData5: [{
                     id: '12987122',
                     name: '好滋好味鸡蛋仔',
@@ -229,9 +221,27 @@
                  let _this=this;
                 _this.$axios.gets('/api/services/app/GroupManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
+                    console.log(_this.tableData);
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){
                 })
+            },
+            Update(){//修改
+                this.isEdit=!this.isEdit;
+            },
+            Save(){
+                let _this=this;
+                _this.$axios.puts('/api/services/app/GroupManagement/Update',_this.tableData[0]).then(function(res){ 
+                    _this.open('修改成功','el-icon-circle-check','successERP');
+                    _this.isEdit=!_this.isEdit;
+                    },function(res){
+                })
+            },
+            Cancel(){
+                if(this.isEdit==false){
+                    this.isEdit=!this.isEdit;
+                }
+                
             },
             loadTree(){
                 let _this=this;

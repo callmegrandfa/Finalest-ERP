@@ -123,6 +123,9 @@
     height: 35px;
 }
 .smallBgcolor .el-input input{
+  height: 28px!important;
+}
+.smallBgcolor .el-input input[disabled]{
   height: 28px;
 }
 .el-input input:focus{
