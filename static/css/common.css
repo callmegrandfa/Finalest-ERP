@@ -120,13 +120,13 @@
 }
 .bgcolor .el-input{
     display: block;
-    width: 168px;
+    width: calc(100% - 82px);
     height: 35px;
     float: left;
     font-size: 12px;
 }
 .smallBgcolor .el-input{
-    width: 168px;
+  width: calc(100% - 82px);
     height: 35px;
 }
 .bgcolor .el-input input{
@@ -170,7 +170,7 @@
 }
 .bgcolor .el-select{
     display: block;
-    width: 168px;
+    width: calc(100% - 82px);
     height: 35px;
     float: left;
 }
@@ -179,7 +179,11 @@
 }
 /* 级联选择器 */
 .bgcolor .el-cascader{
+  width:calc(100% - 82px);
   line-height: 0;
+}
+.bgcolor .el-cascader .el-input.el-input--suffix{
+  width: 100%;
 }
 .bgcolor .el-cascader__label{
   font-size: 12px;
@@ -700,7 +704,7 @@ end-placeholder="结束日期">
 </el-date-picker>
 </div>  */
 .rangeDate{
-  width: 168px;
+  width: calc(100% - 82px);
   height: 35px;
   float: left;
 }
@@ -710,7 +714,7 @@ end-placeholder="结束日期">
 .rangeDate .el-input__inner{
   padding: 0;
   margin: 0;
-  width: 168px;
+  width: 100%;
   height: 35px;
   border-color: #c0c4cc;
 }
