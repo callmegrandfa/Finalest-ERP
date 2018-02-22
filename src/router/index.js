@@ -76,7 +76,6 @@ const businessAreaList = () =>import(/* webpackChunkName: "group-businessArea" *
 // 部门资料
 const department = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/department')
 const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/departmentList')
-<<<<<<< HEAD
 // 商品属性
 const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
 const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
@@ -102,9 +101,6 @@ const classPropertyList= () =>import('../components/commodityManagement/classPro
 const commodityRecord= () =>import('../components/commodityManagement/commodityRecord')
 const Record= () =>import('../components/commodityManagement/Record')
 const commodityRecordDetails= () =>import('../components/commodityManagement/commodityRecordDetails')
-=======
-
->>>>>>> 710102f2c425023c9eb26f6c24a8f4d3484623a0
 
 Vue.use(Router)
 const routes = [
