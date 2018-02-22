@@ -52,7 +52,31 @@ export default new vuex.Store({
             {name:'menuDetail',url:'/menu/menuDetail/:id',parent:'menu'},
             {name:'menuList',url:'/menu/menuList/:id',parent:'menu'},
             {name:'menuModify',url:'/menu/menuModify/:id',parent:'menu'},
+
+            {name:'commodity',url:'/commodity/commodityProperty/:id',parent:'',default:'/commodity/commodityProperty/:id'},//商品属性
+            {name:'commodityProperty',url:'/commodity/commodityProperty/:id',parent:'menu'},
+            {name:'commodityPropertyDetails',url:'/commodity/commodityPropertyDetails/:id',parent:'commodity'},
             
+            {name:'commercial',url:'/commercial/commercialSpecification/:id',parent:'',default:'/commercial/commercialSpecification/:id'},//商品规格
+            {name:'commercialSpecification',url:'/commercial/commercialSpecification/:id',parent:'commercial'},
+            {name:'commercialSpecificationDetails',url:'/commercial/commercialSpecificationDetails/:id',parent:'commercial'},
+
+            {name:'commodityleimu',url:'/commodityleimu/CommodityCategories/:id',parent:'',default:'/commodityleimu/CommodityCategories/:id'},//商品类目
+            {name:'CommodityCategories',url:'/commodityleimu/CommodityCategories/:id',parent:'commodityleimu'},
+            {name:'CommodityCategoriesDetails',url:'/commodityleimu/CommodityCategoriesDetails/:id',parent:'commodityleimu'},
+
+            {name:'Property',url:'/Property/classProperty/:id',parent:'',default:'/Property/classProperty/:id'},//类目属性规格
+            {name:'classProperty',url:'/Property/classProperty/:id',parent:'Property'},
+            {name:'classPropertyDetails',url:'/Property/classPropertyDetails/:id',parent:'Property'},
+
+            {name:'specification',url:'/specification/specificationOfGoodsList/:id',parent:'',default:'/specification/specificationOfGoodsList/:id'},//商品规格组
+            {name:'specificationOfGoodsList',url:'/specification/specificationOfGoodsList/:id',parent:'specification'},
+            {name:'specificationOfGoodsDetails',url:'/specification/specificationOfGoodsDetails/:id',parent:'specification'},
+
+            {name:'Record',url:'/Record/commodityRecord/:id',parent:'',default:'/Record/commodityRecord/:id'},//商品档案
+            {name:'commodityRecord',url:'/Record/commodityRecord/:id',parent:'Record'},
+            {name:'commodityRecordDetails',url:'/Record/commodityRecordDetails/:id',parent:'Record'},
+
             {name:'groupManage',url:'/groupManage/groupManageList/:id',parent:'',default:'/groupManage/groupManageList/:id'},//集团管理
             {name:'groupManageList',url:'/groupManage/groupManageList/:id',parent:'groupManage'},
 

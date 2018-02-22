@@ -175,12 +175,17 @@
                                         <label>备注</label>
                                </div>
                             </el-col>
+<<<<<<< HEAD
+                            <el-col :span="15">
+=======
                             <el-col :span="13">
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                                 <div class="smallBgcolor">
                                 <el-input placeholder=""></el-input>
                                 </div>
                             </el-col>
                         </el-row>
+<<<<<<< HEAD
                     </el-col>
                 </el-row>
                 
@@ -212,6 +217,39 @@
                         </template>   
                     </el-col>
                 </el-row>
+=======
+                    </el-col>
+                </el-row>
+                
+                <el-row style="    background: rgb(249,249,249); padding-bottom:20px">
+                    <el-col :span="2">&nbsp;</el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">启用多单位</el-checkbox>
+                        </template>                       
+                    </el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">唯一代码管理</el-checkbox>
+                        </template>   
+                    </el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">批次管理</el-checkbox>
+                        </template>
+                    </el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">保质期管理</el-checkbox>
+                        </template>   
+                    </el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">是否套件</el-checkbox>
+                        </template>   
+                    </el-col>
+                </el-row>
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                 <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
                     <el-col :span="12">
                         <span class="shop-title">
@@ -225,7 +263,11 @@
                 <el-collapse-transition>
                         <div v-show="ifShow">
                 <el-row style=" background: rgb(249,249,249);">
+<<<<<<< HEAD
+                    <el-col :span="6" style="margin-top:20px">
+=======
                     <el-col :span="5" style="margin-top:20px">
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                         <el-row>
                             <el-col :span="8">
                                 <div class="bgcolor smallBgcolor">
@@ -281,7 +323,11 @@
                             </el-col>
                         </el-row>
                     </el-col>
+<<<<<<< HEAD
+                    <el-col :span="6" >
+=======
                     <el-col :span="5" >
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                         <el-row style="margin-bottom:20px;">
                             <el-col :span="8">
                                 <div class="bgcolor smallBgcolor">
@@ -345,7 +391,10 @@
                                             </el-table-column>
                                             <el-table-column prop="AttributeEncoding" label="SKU名称" width="100">
                                             </el-table-column>
+<<<<<<< HEAD
+=======
                                             </el-table-column>
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                                             <el-table-column prop="startUsing" label="条码">
                                             </el-table-column>
                                             <el-table-column prop="startUsing1" label="颜色">
@@ -399,7 +448,11 @@
                                                             <label>系列</label>
                                                    </div>
                                                 </el-col>
+<<<<<<< HEAD
+                                                <el-col :span="15">
+=======
                                                 <el-col :span="13">
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                                                     <div class="smallBgcolor">
                                                     <el-input placeholder=""></el-input>
                                                     </div>
@@ -413,7 +466,11 @@
                                                             <label>性别</label>
                                                    </div>
                                                 </el-col>
+<<<<<<< HEAD
+                                                <el-col :span="14">
+=======
                                                 <el-col :span="13">
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                                                     <div class="bgcolor smallBgcolor">
                                                         <el-select  v-model="value" >
                                                         <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
@@ -431,7 +488,11 @@
                                                             <label>季节</label>
                                                    </div>
                                                 </el-col>
+<<<<<<< HEAD
+                                                <el-col :span="14">
+=======
                                                 <el-col :span="13">
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                                                     <div class="bgcolor smallBgcolor">
                                                         <el-select  v-model="value" >
                                                         <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
@@ -463,7 +524,11 @@
                                                             <label>其他属性</label>
                                                    </div>
                                                 </el-col>
+<<<<<<< HEAD
+                                                <el-col :span="15">
+=======
                                                 <el-col :span="13">
+>>>>>>> 261397b38655438affdc775436e52efff32f5879
                                                     <div class="smallBgcolor">
                                                     <el-input placeholder=""></el-input>
                                                     </div>
