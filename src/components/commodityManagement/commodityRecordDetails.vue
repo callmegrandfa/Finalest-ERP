@@ -397,7 +397,6 @@
                                                </div>
                                             </el-col>
                                             <el-col :span="15">
-                                            <el-col :span="13">
                                                 <div class="smallBgcolor">
                                                 <el-input placeholder=""></el-input>
                                                 </div>
@@ -411,8 +410,7 @@
                                                         <label>性别</label>
                                                </div>
                                             </el-col>
-                                            <el-col :span="14">
-                                            <el-col :span="13">
+                                            <el-col :span="15">
                                                 <div class="bgcolor smallBgcolor">
                                                     <el-select  v-model="value" >
                                                     <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
@@ -430,8 +428,7 @@
                                                         <label>季节</label>
                                                </div>
                                             </el-col>
-                                            <el-col :span="14">
-                                            <el-col :span="13">
+                                            <el-col :span="15">
                                                 <div class="bgcolor smallBgcolor">
                                                     <el-select  v-model="value" >
                                                     <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
