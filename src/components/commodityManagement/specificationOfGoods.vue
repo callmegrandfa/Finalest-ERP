@@ -1,8 +1,7 @@
 <template>
-    <div class="customer-infor-wrapper" style="display: table;background:#fff;width:100%;">
-        <div style="display: table-row;">
-        <div id="left-box" style="min-width:275px;width:275px;display: table-cell;">
-        <el-row class="bg-white">
+    <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
+        <div id="left-box" style="min-width:275px;width:275px;float:left;">
+            <el-row class="bg-white">
             <el-col :span="24">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
@@ -79,64 +78,69 @@
             </el-col>
             </el-row>
         </div>
-        <div class=" " style="display: table-cell;width:100%;">
-        <el-row >
-            <el-col :span="24" class="border-left">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
-                        <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+        <div id="bgl">
+            <el-row >
+                <el-col :span="24" class="border-left" id="bg-white">
+                    <el-row class="h48 pt5">
+                        <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                        <button class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
+                            <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
 
-                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                  
-                </el-row>
+                        <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                        <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                        <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
+                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                  
+                    </el-row>
 
-                 <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span='4' class="tree-container">
-                        <el-tree :data="componyTree"></el-tree>
-                    </el-col>
+                     <el-row>
+                        <el-row class="tree">
+                            <el-col :span='24' class="tree-container">
+                                <el-tree :data="componyTree"></el-tree>
+                            </el-col>
+                        </el-row>
+                        <el-row class="watch pb10">
+                            <el-col :span="24" >
+                                <el-table :data="tableData" border style="width: 100%">
+                                    <el-table-column prop="date" label="序号" width="60">
+                                    </el-table-column>
+                                    <el-table-column prop="name" label="" width="50">
+                                        <template scope="scope">
+                                            <el-checkbox></el-checkbox>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="address" label="规格值编码">
+                                    </el-table-column>
+                                    <el-table-column prop="address1" label="规格值名称">
+                                    </el-table-column>
+                                    <el-table-column prop="address2" label="备注" width="100">
+                                    </el-table-column>
+                                    <el-table-column prop="address3" label="创建人">
+                                    </el-table-column>
+                                    <el-table-column prop="address4" label="创建时间">
+                                    </el-table-column>
+                                    <el-table-column prop="address5" label="修改人" width="100">
+                                    </el-table-column>
+                                    <el-table-column prop="address6" label="修改时间" width="">
+                                    </el-table-column>
+                                    <el-table-column prop="address7" label="操作" width="">
+                                    </el-table-column>
+                                </el-table>
+                            
 
-                    <el-col :xl="19" :lg="19" :md="13" :sm="13" :xs="13" class="ml10">
-                        <el-table :data="tableData" border style="width: 100%">
-                            <el-table-column prop="date" label="序号" width="60">
-                            </el-table-column>
-                            <el-table-column prop="name" label="" width="30">
-                            </el-table-column>
-                            <el-table-column prop="address" label="规格值编码">
-                            </el-table-column>
-                            <el-table-column prop="address1" label="规格值名称">
-                            </el-table-column>
-                            <el-table-column prop="address2" label="备注" width="100">
-                            </el-table-column>
-                            <el-table-column prop="address3" label="创建人">
-                            </el-table-column>
-                            <el-table-column prop="address4" label="创建时间">
-                            </el-table-column>
-                            <el-table-column prop="address5" label="修改人" width="100">
-                            </el-table-column>
-                            <el-table-column prop="address6" label="修改时间" width="">
-                            </el-table-column>
-                            <el-table-column prop="address7" label="操作" width="">
-                            </el-table-column>
-                        </el-table>
-                    
+                            <el-pagination
+                             style="margin-top:20px;" 
+                             class="text-right" 
+                             background layout="total, prev, pager, next" 
+                             
+                             :page-count="totalPage" >
+                             </el-pagination>   
+                        </el-col>
+                        </el-row> 
+                    </el-row>
 
-                    <el-pagination
-                     style="margin-top:20px;" 
-                     class="text-right" 
-                     background layout="total, prev, pager, next" 
-                     
-                     :page-count="totalPage" >
-                     </el-pagination>   
-                    </el-col> 
-                </el-row>
-
-            </el-col>
-        </el-row> 
+                </el-col>
+            </el-row> 
         </div>
-        </div>  
     </div>
 </template>
 
@@ -231,16 +235,25 @@
         created:function(){       
             
         },
+        mounted:function(){   
+            let content1=document.getElementById('bg-white');//设置高度为全屏
+            let height1=window.innerHeight-123;
+            content1.style.minHeight=height1+'px';
+        },
         methods:{
             packUp(){
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
+                let obgl=document.getElementById('bgl');
                 oleftBox.style.display="none";
+                obgl.style.width="100%";
                 Re.style.display="block";
             },
             refer(){
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
+                let obgl=document.getElementById('bgl');
+                obgl.style.width="calc(100% - 275px)";
                 oleftBox.style.display="block";
                 Re.style.display="none";
             }, 
@@ -394,6 +407,30 @@
 </style>
 
 <style>
+.el-checkbox__inner{
+    width: 16px;
+    height: 16px;
+    background: #f4f4f5;
+}
+.el-checkbox__inner::after{
+    left: 4px;
+    top: -2px;
+}
+
+.tree{
+    float: left;
+    width: 200px;
+}
+.watch{
+    float: left;
+    width: calc(100% - 200px);
+    background-color: #fff;
+}
+#bgl{
+    width: calc(100% - 275px);
+    float: left;
+    background-color: rgb(249,249,249);
+}
 .bgcolor{
     width: 100%;
 }

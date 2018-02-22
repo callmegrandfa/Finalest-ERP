@@ -109,7 +109,7 @@
 
                     <el-col :span="4" style="margin-left:80px">
                         <div class="bgcolor smallBgcolor">
-                            <el-radio v-model="radio" label="1">服务类（虚拟）</el-radio>
+                            <el-checkbox>服务类（虚拟）</el-checkbox>
                         </div>
                     </el-col>
                 </el-row>

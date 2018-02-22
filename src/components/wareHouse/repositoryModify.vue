@@ -48,7 +48,7 @@
               <el-row>
                   <div class="bgcolor">
                     <label>仓库编码</label>
-                    <el-input placeholder="请录入仓库编码" v-model="repositoryData.stockCode"></el-input>
+                    <el-input placeholder="请录入仓库编码" v-model="repositoryData.stockCode" @change="Modify()"></el-input>
                   </div>
               </el-row>
           </el-col>
@@ -57,7 +57,7 @@
               <el-row>
                   <div class="bgcolor">
                     <label>仓库名称</label>
-                    <el-input placeholder="请录入仓库名称" v-model="repositoryData.stockFullName"></el-input>
+                    <el-input placeholder="请录入仓库名称" v-model="repositoryData.stockFullName" @change="Modify()"></el-input>
                   </div>
               </el-row>
           </el-col>
@@ -66,7 +66,7 @@
               <el-row>
                   <div class="bgcolor">
                     <label>仓库简称</label>
-                    <el-input placeholder="请录入仓库简称" v-model="repositoryData.stockName"></el-input>
+                    <el-input placeholder="请录入仓库简称" v-model="repositoryData.stockName" @change="Modify()"></el-input>
                   </div>
               </el-row>
           </el-col>
@@ -77,7 +77,7 @@
               <el-row>
                   <div class="bgcolor">
                     <label>助记码</label>
-                    <el-input placeholder="请录入助记码" v-model="ouGet.mnemonic"></el-input>
+                    <el-input placeholder="请录入助记码" v-model="ouGet.mnemonic" @change="Modify()"></el-input>
                   </div>
               </el-row>
           </el-col>
@@ -101,7 +101,7 @@
               <el-row>
                   <div class="bgcolor">
                     <label>助记码</label>
-                    <el-input placeholder="请录入库存分类"></el-input>
+                    <el-input placeholder="请录入库存分类" @change="Modify()"></el-input>
                   </div>
               </el-row>
           </el-col>
@@ -144,7 +144,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>负责人</label>
-                                <el-input placeholder="请录入负责人" v-model="repositoryData.manager"></el-input>
+                                <el-input placeholder="请录入负责人" v-model="repositoryData.manager" @change="Modify()"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -153,7 +153,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>电话</label>
-                                <el-input placeholder="请录入电话" v-model="repositoryData.phone"></el-input>
+                                <el-input placeholder="请录入电话" v-model="repositoryData.phone" @change="Modify()"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -162,7 +162,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>Email</label>
-                                <el-input placeholder="请录入邮箱" v-model="repositoryData.email"></el-input>
+                                <el-input placeholder="请录入邮箱" v-model="repositoryData.email" @change="Modify()"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -173,7 +173,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>传真</label>
-                                <el-input placeholder="请录入传真" v-model="repositoryData.fax"></el-input>
+                                <el-input placeholder="请录入传真" v-model="repositoryData.fax" @change="Modify()"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -191,7 +191,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>备注</label>
-                                <el-input placeholder="请录入备注" v-model="repositoryData.remark"></el-input>
+                                <el-input placeholder="请录入备注" v-model="repositoryData.remark" @change="Modify()"></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -418,16 +418,20 @@
             //---修改完成保存----------------------------------------------
             saveModify:function(){//修改仓库信息保存
                 let self = this;
-                this.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
-                    console.log(res);
-                    self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-                })
+                if(self.ifModify){
+                    this.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
+                        console.log(res);
+                        self.open('修改仓库信息成功','el-icon-circle-check','successERP');
+                        self.ifModify = false;
+                    })
+                };
+                
 
                 if(self.updateList.length>0){
                     for(let i in self.updateList){
                         this.$axios.puts('/api/services/app/StockAddressManagement/Update',self.updateList[i]).then(function(res){
                             console.log(res);
-                            self.open('修改仓库信息成功','el-icon-circle-check','successERP');
+                            self.open('修改地址信息成功','el-icon-circle-check','successERP');
                             self.updateList = [];
                         })
                     }
@@ -531,6 +535,10 @@
                     self.open('删除仓库地址成功','el-icon-circle-check','successERP');
               })
             },
+            Modify:function(){
+                let self = this;
+                self.ifModify = true;
+            },
             //------------------------------------------------------------
 
             //---open-------数据清除--------路由跳转-----------------------
@@ -575,7 +583,7 @@
                 getRepositoryAddressParams:{
                    id:'',
                 }, 
-
+                ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制允许使用
                 // ifSave:-1,//保存按钮（是否可见）

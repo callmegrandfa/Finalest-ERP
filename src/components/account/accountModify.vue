@@ -37,9 +37,9 @@
                                 <label><small>*</small>会计方案{{value}}</label>
                                 <el-select v-model="value" placeholder="请选择会计方案">
                                     <el-option v-for="item in options"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -50,7 +50,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label><small>*</small>会计年份</label>
-                                <el-input placeholder="请录入会计年份" v-model="accountData.periodYear"></el-input>
+                                <el-input placeholder="请录入会计年份" v-model="accountData.periodYear" @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -59,7 +59,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label><small>*</small>期间个数</label>
-                                <el-input placeholder="请录入期间个数" v-model="accountData.periodNum"></el-input>
+                                <el-input placeholder="请录入期间个数" v-model="accountData.periodNum" @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -70,7 +70,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>开始日期</label>
-                                <el-input placeholder="请录入开始日期" v-model="accountData.beginDate"></el-input>
+                                <el-input placeholder="请录入开始日期" v-model="accountData.beginDate" @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -79,7 +79,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>结束日期</label>
-                                <el-input placeholder="结束日期" v-model="accountData.endDate"></el-input>
+                                <el-input placeholder="结束日期" v-model="accountData.endDate" @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -88,7 +88,7 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>备注</label>
-                                <el-input placeholder="请录入备注" v-model="accountData.remark"></el-input>
+                                <el-input placeholder="请录入备注" v-model="accountData.remark" @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -287,6 +287,7 @@
 
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制允许使用
+                ifModify:false,//判断主表是否修改过
 
                 value: '',//下拉框的值
                 accountDataModify:'',
@@ -368,7 +369,7 @@
                         self.accountData.modifiedTime = self.allData.modifiedTime;
                         self.accountData.isDeleted = self.allData.isDeleted;
                         
-console.log(self.accountData)
+                        console.log(self.accountData)
                         let beginDate = self.accountData.beginDate.split('.')[0].replace('T',' ');
                         self.accountData.beginDate = beginDate;
                         let endDate = self.accountData.endDate.split('.')[0].replace('T',' ');
@@ -398,10 +399,10 @@ console.log(self.accountData)
                 let self = this;
                 // self.createAccount();//创建新会计期间
                 self.createAccountList();//创建从表
-                self.saveAccountModify();//保存主表的修改
+                if(self.ifModify){
+                    self.saveAccountModify();//保存主表的修改
+                }
                 self.saveAccountListModify();//保存从表的修改
-                console.log(self.updateList)
-                console.log(self.addList)
             },
 
             saveAdd:function(){//创建新的仓库并且清除数据
@@ -456,15 +457,16 @@ console.log(self.accountData)
                     endDate: self.accountData.endDate,
                     remark: self.accountData.remark,
                     accperiodContents:[],
-                }
+                };
                 this.$axios.puts('/api/services/app/Accperiod/Update',self.accountDataModify).then(function(res){
                     // console.log(res);
-                    // self.open('修改主表成功','el-icon-circle-check','successERP');
+                    self.open('修改主表成功','el-icon-circle-check','successERP');
+                    self.ifModify = false;
                 })
             },
             saveAccountListModify:function(){
                 let self = this;
-                console.log(self.updateList)
+                // console.log(self.updateList)
                 if(self.updateList.length>0){
                     for(let i in self.updateList){
                         self.updateList[i]={
@@ -614,6 +616,10 @@ console.log(self.accountData)
                     }
                     console.log(self.updateList)
                 }    
+            },
+            Modify:function(){//判断主表是否修改过
+                let self = this;
+                self.ifModify = true;
             },
             //------------------------------------------------------------
             //---多项删除--------------------------------------------------

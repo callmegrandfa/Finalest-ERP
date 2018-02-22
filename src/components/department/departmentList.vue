@@ -11,7 +11,8 @@
                 </el-col>
 
                 <el-col :span='24' class="tree-container" >
-                    <el-tree v-loading="treeLoading" 
+                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                             v-loading="treeLoading" 
                              :data="componyTree"
                              :props="defaultProps"
                              node-key="id"
@@ -32,13 +33,6 @@
                             <img src="../../../static/image/common/bt_back.png">
                         </div>
                         <span class="btDetail">返回</span>
-                    </button>
-
-                    <button class="erp_bt bt_save">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_save.png">
-                        </div>
-                        <span class="btDetail">保存</span>
                     </button>
 
                     <button class="erp_bt bt_add" @click="addNew">
@@ -79,10 +73,10 @@
                             </el-table-column>
                             <el-table-column prop="deptCode" label="部门编码"></el-table-column>
                             <el-table-column prop="deptName" label="部门名称"></el-table-column>
-                            <el-table-column prop="manager" label="负责人"></el-table-column>
-                            <el-table-column prop="deptParentName" label="上级部门"></el-table-column>
-                            <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="status" label="允许使用"></el-table-column>
+                            <el-table-column prop="manager" label="负责人(无)"></el-table-column>
+                            <el-table-column prop="deptParentName" label="上级部门(null)"></el-table-column>
+                            <el-table-column prop="remark" label="备注(无)"></el-table-column>
+                            <el-table-column label="允许使用(无)"></el-table-column>
                             <el-table-column prop='createdTime' width="180" label="创建时间"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
@@ -92,14 +86,13 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-pagination
-                        style="margin-top:20px;" 
-                        class="text-right" 
-                        background layout="total,prev, pager, next,jumper" 
-                        @current-change="handleCurrentChange"
-                        :current-page="pageIndex"
-                        :page-size="oneItem"
-                        :total="totalItem">
+                        <el-pagination style="margin-top:20px;" 
+                                        class="text-right" 
+                                        background layout="total,prev, pager, next,jumper" 
+                                        @current-change="handleCurrentChange"
+                                        :current-page="pageIndex"
+                                        :page-size="oneItem"
+                                        :total="totalItem">
                         </el-pagination>   
                     </el-col>
                 </el-row>
@@ -120,6 +113,10 @@
                 </el-select>
             </div>
             <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor">
+                <label>允许使用</label>
+                <el-checkbox v-model="ifCan"></el-checkbox>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <button class="dialogBtn" @click="save">确认</button>
                 <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
@@ -134,6 +131,7 @@
         data(){
             return {
                 searchLeft:'',
+                ifCan:true,
                 dialogData:{//dialog数据
                     id:'',
                     groupId:'',//集团ID
@@ -238,7 +236,7 @@
         mounted:function(){
             let _this=this;
         },  
-         watch: {
+        watch: {
             searchLeft(val) {
                 this.$refs.tree.filter(val);
             }
@@ -281,11 +279,10 @@
             //---保存--------------------------------------------------------
             save:function(){
                 let self = this;
-                if(self.dialogData.id!=''&&self.dialogData.id!=0){
+                if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
                     self.$axios.puts('/api/services/app/DeptManagement/Update',self.dialogData).then(function(res){
                         self.dialogFormVisible=false;
                         self.loadTableData();
-                        console.log('1')
                     },function(res){    
                         console.log('error')
                     })
@@ -293,35 +290,34 @@
                     self.$axios.posts('/api/services/app/DeptManagement/Create',self.dialogData).then(function(res){
                         self.dialogFormVisible=false;
                         self.loadTableData();
-                        console.log('2')
                     },function(res){    
                         console.log('error')
                     })
                 }
             },
-            sendAjax(){
-                let _this=this;
-                if(_this.isAdd){
-                    _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
-                    .then(function(res){
-                        _this.dialogFormVisible=false;
-                        _this.loadTree();
-                        _this.loadTableData();
-                    },function(res){    
+            // sendAjax(){
+            //     let _this=this;
+            //     if(_this.isAdd){
+            //         _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
+            //         .then(function(res){
+            //             _this.dialogFormVisible=false;
+            //             _this.loadTree();
+            //             _this.loadTableData();
+            //         },function(res){    
 
-                    })
-                }else{
-                     _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
-                    .then(function(res){
-                        _this.dialogFormVisible=false;
-                        _this.loadTree();
-                        _this.loadTableData();
-                    },function(res){    
+            //         })
+            //     }else{
+            //          _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
+            //         .then(function(res){
+            //             _this.dialogFormVisible=false;
+            //             _this.loadTree();
+            //             _this.loadTableData();
+            //         },function(res){    
 
-                    })
-                }
+            //         })
+            //     }
                 
-            },
+            // },
             //----------------------------------------------------------------
             //---新增----------------------------------------------------------
             addNew:function(){

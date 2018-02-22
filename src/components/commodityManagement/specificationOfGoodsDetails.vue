@@ -1,105 +1,100 @@
 <template>
     <div class="group-management-wrapper">
-        <el-row class="bg-white">
+        <el-row >
 
-            <el-col :span='24' class="border-left">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
-                    <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <el-col :span='24'>
+                <div class="bg-white">
+                    <el-row class="h48 pt5">
+                        <button class="erp_bt bt_back" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                        <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
+                        <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
 
-                    <button class="erp_bt bt_save_add"><div class="btImg"><img src="../../../static/image/common/bt_save_add.png"></div><span class="btDetail">保存并新增</span></button>
-                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>                   
-                </el-row>
+                        <button class="erp_bt bt_save_add"><div class="btImg"><img src="../../../static/image/common/bt_save_add.png"></div><span class="btDetail">保存并新增</span></button>
+                        <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                        <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                        <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>                   
+                    </el-row>
 
-                <el-row class="pl10 pr10">
-                    <el-col :span="6">
-                        <el-row>
-                            <el-col :span="8">
-                                <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                        <label ><small>*</small>规格组编码</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="15">
-                                <div class="smallBgcolor" style="margin-top:20px">
-                                <el-input placeholder=""></el-input>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-row>
-                            <el-col :span="8">
-                                <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                        <label ><small>*</small>规格组名称</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="15">
-                                <div class="smallBgcolor" style="margin-top:20px">
-                                <el-input placeholder=""></el-input>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-row>
-                            <el-col :span="8">
-                                <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                        <label ><small>*</small>类目</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="15">
-                                <div class="smallBgcolor" style="margin-top:20px">
-                                <el-input placeholder=""></el-input>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-row>
-                            <el-col :span="8">
-                                <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                        <label><small>*</small>状态</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="15">
-                                <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                    <el-select  v-model="value" >
-                                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
+                    <el-row class="pl10 pr10">
+                        <el-col :span="6">
+                            <el-row>
+                                <el-col :span="8">
+                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                            <label ><small>*</small>规格组编码</label>
+                                   </div>
+                                </el-col>
+                                <el-col :span="13">
+                                    <div class="smallBgcolor" style="margin-top:20px">
+                                    <el-input placeholder=""></el-input>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-row>
+                                <el-col :span="8">
+                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                            <label ><small>*</small>规格组名称</label>
+                                   </div>
+                                </el-col>
+                                <el-col :span="13">
+                                    <div class="smallBgcolor" style="margin-top:20px">
+                                    <el-input placeholder=""></el-input>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-row>
+                                <el-col :span="8">
+                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                            <label ><small>*</small>类目</label>
+                                   </div>
+                                </el-col>
+                                <el-col :span="13">
+                                    <div class="smallBgcolor" style="margin-top:20px">
+                                    <el-input placeholder=""></el-input>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-row>
+                                <el-col :span="8">
+                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                            <label><small>*</small>状态</label>
+                                   </div>
+                                </el-col>
+                                <el-col :span="13">
+                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                        <el-select  v-model="value" >
+                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
 
-                                    </el-select>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                </el-row>
-                <el-row class="pl10  pr10">
-                    <el-col :span="6">
-                        <el-row>
-                            <el-col :span="8">
-                                <div class="bgcolor smallBgcolor">
-                                        <label ><small>*</small>备注</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="15" >
-                                <div class="smallBgcolor" style="width:650px;">
-                                <el-input placeholder=""></el-input>
-                                </div>
-                            </el-col>
-                        </el-row> 
-                    </el-col>
-                </el-row>
-                <el-row class="pl10 pr10">
-
-                    <el-col :span="4" style="margin-left:80px">
-                        <div class="bgcolor smallBgcolor">
-                            <el-radio v-model="radio" label="1">服务类（虚拟）</el-radio>
-                        </div>
-                    </el-col>
-                </el-row>
+                                        </el-select>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <el-row class="pl10  pr10">
+                        <el-col :span="6">
+                            <el-row>
+                                <el-col :span="8">
+                                    <div class="bgcolor smallBgcolor">
+                                            <label ><small></small>备注</label>
+                                   </div>
+                                </el-col>
+                                <el-col :span="13" >
+                                    <div class="smallBgcolor" >
+                                    <el-input placeholder=""></el-input>
+                                    </div>
+                                </el-col>
+                            </el-row> 
+                        </el-col>
+                    </el-row>
+                </div>
+                <div class="mt10 pb10" style="background:rgb(249,249,249)">
                     <el-row class="bm-pd10">
 
                             <el-col :span="12">
@@ -110,7 +105,7 @@
                             <el-col :span="12" >
                                 <span class="shop-sq" @click="ifShow = !ifShow" >收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
                             </el-col>
-                        </el-row>
+                    </el-row>
                     <el-collapse-transition>
                         <div v-show="ifShow">
                         <el-row class="pl10 pr10 pb10">
@@ -128,7 +123,7 @@
                                 </div>
                             </el-col>
                         </el-row>
-                        <div class="pl10 pr10">
+                        <div >
                             <el-table :data="tableData" border style="width: 100%" class="text-center ">
                             <el-table-column prop="sequenceNumber" label="序号" width="60">
                             </el-table-column>
@@ -146,6 +141,7 @@
                         
                         </div>
                     </el-collapse-transition>
+                </div>
                 <el-row class="pl10 pr10 pt10 pb10">
                     <el-col :span="24">
                         <h4>审计信息</h4>
@@ -157,7 +153,7 @@
                                         <label >创建人</label>
                                </div>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="13">
                                 <div class="smallBgcolor" style="margin-top:20px">
                                 <el-input placeholder=""></el-input>
                                 </div>
@@ -171,7 +167,7 @@
                                         <label >创建时间</label>
                                </div>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="13">
                                 <div class="smallBgcolor" style="margin-top:20px">
                                 <el-input placeholder=""></el-input>
                                 </div>
@@ -185,7 +181,7 @@
                                         <label >修改人</label>
                                </div>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="13">
                                 <div class="smallBgcolor" style="margin-top:20px">
                                 <el-input placeholder=""></el-input>
                                 </div>
@@ -199,7 +195,7 @@
                                         <label >修改时间</label>
                                </div>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="13">
                                 <div class="smallBgcolor" style="margin-top:20px">
                                 <el-input placeholder=""></el-input>
                                 </div>
@@ -268,6 +264,12 @@
 
                     }],
             }
+        },
+        methods:{
+            back(e){
+                this.$store.state.url='/specification/specificationOfGoodsList/default'
+               this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
         }
         
  }   
@@ -415,6 +417,33 @@
 </style>
 
 <style>
+.el-button--success{
+    background-color: rgb(51,204,204); 
+    padding: 7px 10px;
+    border-color: rgb(51,204,204);
+}
+.el-checkbox__inner{
+    width: 16px;
+    height: 16px;
+    background: #f4f4f5;
+}
+.el-checkbox__inner::after{
+    left: 4px;
+    top: -2px;
+}
+.el-input__inner{
+    
+    height: 30px;
+}
+.bgcolor{
+    width: 100%;
+}
+.el-input-group__append{
+    background-color: rgb(51,204,204);
+    color: #fff;
+    cursor: pointer;
+    border-color: rgb(51,204,204);
+}
 .bm-pd10{
     border-bottom: 1px solid #e4e4e4;
     margin: 10px 0;
