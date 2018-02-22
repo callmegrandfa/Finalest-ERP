@@ -26,7 +26,7 @@
                 <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder="请录入启用状态"></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
-                    <span class="search-btn" @click="SimpleSearch">查询</span>
+                    <span class="search-btn" @click="SimpleSearchClick">查询</span>
                     <span class="search-btn">高级搜索</span>
                 </div>
             </el-col>
@@ -135,6 +135,7 @@
                     Status: '',//启用状态
                     OuType: '',//组织类型
                 },
+                searchDataClick:{},
                 tableSearchData:{},
                 options: [{
                     basOuTypes: '1',
@@ -265,23 +266,33 @@
                      _this.SimpleSearch();
                  }
             },
-            SimpleSearch(){//简单搜索
-                 let _this=this;
+            SimpleSearchClick(){
+                let _this=this;
                  _this.load=false;
                  _this.searchBtClick=true;
                  _this.tableLoading=true;
-                 _this.searchData.SkipCount=(_this.page-1)*_this.oneItem;
-                 _this.searchData.MaxResultCount=_this.oneItem;
-                _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
-                .then(function(res){
-                    console.log(res)         
+                 _this.searchDataClick={
+                    OuCode:_this.searchData.OuCode,//编码
+                    Name: _this.searchData.Name,//名称
+                    CompanyOuId:_this.searchData.CompanyOuId,//所属公司
+                    AreaId: _this.searchData.AreaId,//行政地区
+                    Status: _this.searchData.Status,//启用状态
+                    OuType: _this.searchData.OuType,//组织类型
+                }
+                _this.SimpleSearch();
+            },
+            SimpleSearch(){//简单搜索
+                 let _this=this;
+                _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
+                 _this.searchDataClick.MaxResultCount=_this.oneItem;
+                _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchDataClick)
+                .then(function(res){      
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableData=res.result.items;
                     _this.tableLoading=false;
                     _this.searchBtClick=false;
                 },function(res){
-                    console.log('err:'+res)
                      _this.tableLoading=false;
                      _this.searchBtClick=false;
                 })

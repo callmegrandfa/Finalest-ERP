@@ -273,7 +273,7 @@ export default {
     display: block;
     width: 235px;
     top: 50px;
-    z-index:1000;
+    z-index:9999;
     left: 0;
     position: fixed;
     transition: all 0.5s;
