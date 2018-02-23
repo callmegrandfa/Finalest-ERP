@@ -34,7 +34,7 @@
                     </el-col>
                 </el-row>
                 <el-row style=" background: rgb(249,249,249);">
-                    <el-col :span="5"style="margin-top:20px">
+                    <el-col :span="5" style="margin-top:20px">
                          <el-row>
                             <el-col :span="8">
                                 <div class="bgcolor smallBgcolor" >
@@ -344,7 +344,6 @@
                                             <el-table-column prop="AttributeEncoding" label="SKU" width="100">
                                             </el-table-column>
                                             <el-table-column prop="AttributeEncoding" label="SKU名称" width="100">
-                                            </el-table-column>
                                             </el-table-column>
                                             <el-table-column prop="startUsing" label="条码">
                                             </el-table-column>
@@ -680,7 +679,6 @@
                             </el-col>
                         </el-row>
             </el-col>
-        </el-row>
         
     </div>
 </template>
