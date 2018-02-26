@@ -20,6 +20,9 @@
                             <el-table-column prop="address" label="属性编码">
                             </el-table-column>
                             <el-table-column prop="address2" label="属性名称">
+                                <template slot-scope="scope">
+                                    <el-button type="text"    >{{tableData[scope.$index].address2}}</el-button>
+                                </template>
                             </el-table-column>
                             <el-table-column prop="address3" label="状态" width="">
                             </el-table-column>
@@ -36,7 +39,7 @@
                             </el-table-column> 
                             <el-table-column prop="address8" label="操作" width="">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"   >查看</el-button>
+                                    <el-button type="text" size="small" @click="modify(scope.row)"  >查看</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -284,6 +287,10 @@ import Tree from '../../base/tree/tree'
             content1.style.minHeight=height1+'px';
         },
         methods:{
+            modify(row){
+                this.$store.state.url='/commodity/commodityPropertyDetails/'+row.address5;
+                this.$router.push({path:this.$store.state.url});
+            },
             btmlog:function(data){
                 let oleftBox=document.getElementById('left-box');
                 oleftBox.style.display="block";

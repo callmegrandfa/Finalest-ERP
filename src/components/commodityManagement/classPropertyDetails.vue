@@ -3,100 +3,9 @@
         <el-row >
             <el-col :span='24' >
                 <div style="margin-bottom:15px" class="bg-white">
-                    <el-row class="h48 pt5">
-                        <button class="erp_bt bt_back" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                        <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_audit.png"></div><span class="btDetail">审核</span></button>                    
-                    </el-row>
+                    <btm :date="bottonbox" > </btm>
                     <el-row>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="7">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                            <label><small>*</small>上级类目</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor" style="margin-top:20px">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6" style="margin-top:20px">
-                            <el-row>
-                                <el-col :span="7">
-                                    <div class="bgcolor smallBgcolor" >
-                                            <label><small>*</small>类目编码</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6" style="margin-top:20px">
-                            <el-row>
-                                <el-col :span="7">
-                                    <div class="bgcolor smallBgcolor" >
-                                            <label><small>*</small>属性名称</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="7">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                            <label>助记码</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                        <el-select  v-model="value" >
-                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                        </el-option>
-
-                                        </el-select>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="7">
-                                    <div class="bgcolor smallBgcolor">
-                                            <label>修改人</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="7">
-                                    <div class="bgcolor smallBgcolor">
-                                            <label>备注</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
+                        <textbox :data="textboxipt"></textbox>
                     </el-row>
                 </div>
                  <el-row class="">
@@ -202,7 +111,8 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-col :span="6">
+                            <textbox :data="textboxipt1"></textbox>
+                            <!-- <el-col :span="6">
                                 <el-row>
                                     <el-col :span="8">
                                         <div class="bgcolor smallBgcolor">
@@ -257,7 +167,7 @@
                                         </div>
                                     </el-col>
                                 </el-row>
-                            </el-col>
+                            </el-col> -->
                         </el-row>
                     </div> 
                      
@@ -270,6 +180,8 @@
 </template>
 
 <script>
+import Btm from '../../base/btm/btm'
+import Textbox from '../../base/textbox/textbox'
     export default{
         name:'customerInfor',
         data(){
@@ -289,6 +201,78 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
+                textboxipt1:[{
+                    must: '',
+                    title: '创建人',
+                    place: ''                
+                },{
+                    must: '',
+                    title: '创建时间',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '修改人',
+                    place: ''                                
+                },{
+                    must: '',
+                    title: '修改时间',
+                    place: ''                 
+                }],
+                bottonbox:{
+                    url: '/Property/classProperty',
+                   botton:[{
+                    class: 'erp_bt bt_back',
+                    imgsrc: '../../../static/image/common/bt_back.png',
+                    text: '返回'
+                },{
+                    class: 'erp_bt bt_save',
+                    imgsrc: '../../../static/image/common/bt_save.png',
+                    text: '保存'
+                },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/bt_audit.png',
+                    text: '审核'
+                }]},
+                textboxipt:[{
+                    must: '*',
+                    title: '上级类目',
+                    place: '1223'                
+                },{
+                    must: '*',
+                    title: '类目编码',
+                    place: '1223'                 
+                },{
+                    must: '*',
+                    title: '属性名称',
+                    place: '1223'                 
+                },{
+                    must: '',
+                    title: '助记码',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '修改人',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '备注',
+                    place: ''                 
+                }],
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -331,12 +315,13 @@
                 
         },
         methods:{
-        back(){//点击新增跳转
-            this.$store.state.url='/Property/classProperty/default'
-            this.$router.push({path:this.$store.state.url})//点击切换路由
+        
+        },
+        components:{
+            Btm,
+            Textbox
         }
     }
-}
 </script>
 
 <style scoped>
