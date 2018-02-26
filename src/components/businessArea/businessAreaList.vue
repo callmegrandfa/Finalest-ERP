@@ -82,39 +82,39 @@
         <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             <!-- <div class="bgcolor smallBgcolor">
                 <label>地区分类</label>
-                <el-select :class="{rebBorder : validation.hasError('dialogData.areaType')}" v-model="dialogData.areaType">
+                <el-select :class="{redBorder : validation.hasError('dialogData.areaType')}" v-model="dialogData.areaType">
                     <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
                 </el-select>
             </div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaType') }}</div> -->
-            <div class="bgcolor smallBgcolor"><label>业务地区编码</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaCode')}"  v-model="dialogData.areaCode" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>业务地区编码</label><el-input :class="{redBorder : validation.hasError('dialogData.areaCode')}"  v-model="dialogData.areaCode" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaCode') }}</div>
-            <div class="bgcolor smallBgcolor"><label>业务地区名称</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaName')}"  v-model="dialogData.areaName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>业务地区名称</label><el-input :class="{redBorder : validation.hasError('dialogData.areaName')}"  v-model="dialogData.areaName" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaName') }}</div>
-            <!-- <div class="bgcolor smallBgcolor"><label>业务地区全称</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaFullName')}"  v-model="dialogData.areaFullName" placeholder=""></el-input></div>
+            <!-- <div class="bgcolor smallBgcolor"><label>业务地区全称</label><el-input :class="{redBorder : validation.hasError('dialogData.areaFullName')}"  v-model="dialogData.areaFullName" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullName') }}</div>
-            <div class="bgcolor smallBgcolor"><label>全路径ID</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaFullPathId')}"  v-model="dialogData.areaFullPathId" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>全路径ID</label><el-input :class="{redBorder : validation.hasError('dialogData.areaFullPathId')}"  v-model="dialogData.areaFullPathId" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullPathId') }}</div>
-            <div class="bgcolor smallBgcolor"><label>全路径名称</label><el-input :class="{rebBorder : validation.hasError('dialogData.areaFullPathName')}"  v-model="dialogData.areaFullPathName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>全路径名称</label><el-input :class="{redBorder : validation.hasError('dialogData.areaFullPathName')}"  v-model="dialogData.areaFullPathName" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullPathName') }}</div> -->
-            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input :class="{rebBorder : validation.hasError('dialogData.manager')}"  v-model="dialogData.manager" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input :class="{redBorder : validation.hasError('dialogData.manager')}"  v-model="dialogData.manager" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.manager') }}</div>
             <div class="bgcolor smallBgcolor">
                 <label>上级业务地区</label>
                 
-                <el-select v-if="showParent" :class="{rebBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId">
+                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId">
                     <el-option v-for="item in areaParentId" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
                 </el-select>
-                <el-input v-else :class="{rebBorder : validation.hasError('dialogData.areaParentId')}"  v-model="dialogData.areaParentId" disabled></el-input>
+                <el-input v-else :class="{redBorder : validation.hasError('dialogData.areaParentId')}"  v-model="dialogData.areaParentId" disabled></el-input>
             </div>   
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaParentId') }}</div>
-            <div class="bgcolor smallBgcolor"><label>备注</label><el-input :class="{rebBorder : validation.hasError('dialogData.remark')}"  v-model="dialogData.remark" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>备注</label><el-input :class="{redBorder : validation.hasError('dialogData.remark')}"  v-model="dialogData.remark" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
             <div class="bgcolor smallBgcolor">
                 <label>允许使用</label>
-                <el-select :class="{rebBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
+                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
                     <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
                 </el-select>
@@ -364,6 +364,7 @@
                         .then(function(res){
                             if(_this.load){
                                 _this.loadTableData();
+                                _this.loadTree();
                             }
                             _this.open('删除成功','el-icon-circle-check','successERP');
                         },function(res){
@@ -450,7 +451,7 @@
                 let _this=this;
                 _this.clearTreeData();
                 _this.tittle='修改';
-                _this.isAdd=true;
+                _this.isAdd=false;
                 _this.dialogFormVisible=true;
                  _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
                     .then(function(res){

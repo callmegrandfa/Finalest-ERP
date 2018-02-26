@@ -54,20 +54,20 @@ export default {
         _this.$store.state.slidbarHeight=$(window).height();
 
         $('.menu').css({height:_this.$store.state.slidbarHeight-43+'px'})
-        if($('.menu').height()<$('.menu').children('.one').length*50){
-            $('.menu').css({overflowY:'scroll'})
-        }else{
-            $('.menu').css({overflowY:'hidden'})
-        }   
+        // if($('.menu').height()<$('.menu').children('.one').length*50){
+        //     $('.menu').css({overflowY:'scroll'})
+        // }else{
+        //     $('.menu').css({overflowY:'hidden'})
+        // }   
         $('.slid1').each(function(){
             $(this).css({
                 height:_this.$store.state.slidbarHeight-93+'px'
             })
-            if($(this).height()<$(this).children('.two').length*50){
-                $(this).css({overflowY:'scroll'})
-            }else{
-                $(this).css({overflowY:'hidden'})
-            }
+            // if($(this).height()<$(this).children('.two').length*50){
+            //     $(this).css({overflowY:'scroll'})
+            // }else{
+            //     $(this).css({overflowY:'hidden'})
+            // }
         })
         $('.slid2').each(function(x){
             $(this).css({

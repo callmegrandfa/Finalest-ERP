@@ -86,7 +86,7 @@
     overflow: hidden;
     margin-right: 5px;
 }
-.bgcolor .rebBorder .el-input__inner{
+.bgcolor .redBorder .el-input__inner{
   border-color: #f66;
 }
 .bgcolor .el-input__suffix{
