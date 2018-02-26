@@ -107,6 +107,7 @@
                         <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
                     </el-col>
                 </el-row>
+            </el-col>
         </el-row>    
         </div>
 
