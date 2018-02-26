@@ -7,7 +7,7 @@
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
-                        <span>查询 </span>
+                        <span>查询</span>
                     </el-col>
                     <el-col :span="5">
                         <span class="fs12 open" @click="packUp">+ 收起</span>
