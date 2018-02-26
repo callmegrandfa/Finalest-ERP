@@ -1,138 +1,19 @@
 <template>
-    <div class="customer-infor-wrapper" style="display: table;background:#fff;width:100%;">
-        <div style="display: table-row;">
-        <div id="left-box" style="min-width:275px;width:275px;display: table-cell;background:#fff;">
-        <el-row class="bg-white" id="bg-white">
-            <el-col :span="24">
-                <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <i class="el-icon-search"></i>
-                        <span>查询</span>
-                    </el-col>
-                    <el-col :span="5">
-                        <span class="fs12 open" @click="packUp">+ 收起</span>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                <label>属性编码</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" style="margin-top:20px">
-                        <el-input placeholder="请录入单号"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label>属性名称</label>
-                       </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" >
-                        <el-input placeholder="请录入单号"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label>控件类型</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label>必填</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label>状态</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">&nbsp;</el-col>
-                    <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                        <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
-                    </el-col>
-                </el-row>
-            </el-col>
-        </el-row>
-        </div>
-        <div class=" " style="display: table-cell; width:100%;height:100%;border-left:1px solid #e4e4e4">
+    <div class="customer-infor-wrapper" style="background:#fff;width:100%;float:left">
+        <query :data="querychend"  v-on:listquery="querylog"></query>
+        <div id="cp" style="float:left">
         <el-row style="">
-            <el-col :xl="4" :lg="4" :md="4" :sm="4" :xs="4" class="tree-container">
-                <el-tree :data="componyTree"></el-tree>
-            </el-col>
-            <el-col  class="border-left" :span="20">
-                <el-row class="h48 pt5">
-        
-                        <button class="erp_bt bt_add" @click="storageData" ><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    
-                        <button class="erp_bt bt_del" @click="dell"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                  
-                        <button class="erp_bt bt_audit"><div class="btImg"><img src="../../../static/image/common/bt_audit.png"></div><span class="btDetail">审核</span></button>
-                 
-                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_in.png"></div><span class="btDetail">导入</span></button>
-
-                   
-                        <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                 
-                        <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-
-                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                        <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>
-                    
-                                        
-                    
-                                      
-                </el-row>
-
-                 <el-row class=" pt10 pr10 pb10">
-                    
-
+            <el-col  class="border-left" :span="24" id="bg-white">
+                <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                <tree :datc="componyTree"></tree>
+                 <el-row class="table-width pt10 pr10 pb10" style="float:left">
                     <el-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24" class="ml10">
                          <el-table :data="tableData" border style="width: 100%" class="text-center">
                             <el-table-column prop="date" label="序号" width="60">
                                 
                             </el-table-column>
                             <el-table-column  prop="name" label="" width="50">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox  ></el-checkbox>
                                 </template>
                             </el-table-column>
@@ -147,13 +28,16 @@
                             <el-table-column prop="address5" label="显示顺序">
                             </el-table-column>
                             <el-table-column prop="address6" label="必填" width="">
-                                <template scope="scope">
+                                <template slot-scope="scope">
                                     <el-checkbox  ></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="address7" label="备注" width="">
                             </el-table-column> 
                             <el-table-column prop="address8" label="操作" width="">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"   >查看</el-button>
+                                </template>
                             </el-table-column>
                         </el-table>
                     <el-pagination
@@ -167,12 +51,14 @@
 
             </el-col>
         </el-row>
-        </div>
         </div>   
     </div>
 </template>
 
 <script>
+import Query from '../../base/query/query'
+import Btm from '../../base/btm/btm'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -189,7 +75,104 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-
+                bottonbox:{
+                    url: '/commodity/commodityPropertyDetails',
+                   botton:[{
+                    class: 'erp_bt bt_add',
+                    imgsrc: '../../../static/image/common/bt_add.png',
+                    text: '新增'
+                },{
+                    class: 'erp_bt bt_del',
+                    imgsrc: '../../../static/image/common/bt_del.png',
+                    text: '删除'
+                },{
+                    class: 'erp_bt bt_audit',
+                    imgsrc: '../../../static/image/common/bt_audit.png',
+                    text: '审核'
+                },{
+                    class: 'erp_bt bt_in',
+                    imgsrc: '../../../static/image/common/bt_in.png',
+                    text: '导入'
+                },{
+                    class: 'erp_bt bt_out',
+                    imgsrc: '../../../static/image/common/bt_inOut.png',
+                    text: '导出'
+                },{
+                    class: 'erp_bt bt_version',
+                    imgsrc: '../../../static/image/common/bt_start.png',
+                    text: '启用'
+                },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/bt_stop.png',
+                    text: '停用'
+                }]},
+                querychend:{
+                demand:[{
+                    must: '',
+                    title: '属性编码',
+                    place: '请录入单号'                
+                },{
+                    must: '',
+                    title: '属性名称',
+                    place: '请录入单号'                 
+                },{
+                    must: '',
+                    title: '控件类型',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '必填',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '状态',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                }]},
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -218,7 +201,7 @@
                                 address5: '1',
                                 address6: '',
                                 address7: '改姓可',
-                                address8: '查看',
+                                address8: '',
                             }, {
                                  date:'0', 
                                 name: '1',
@@ -230,7 +213,7 @@
                                 address6: '好用',
                                
                                 address7: '好用',
-                                address8: '查看',
+                                address8: '',
                             }, {
                                  date:'',
                                 name: '1',
@@ -242,7 +225,7 @@
                                 address6: '',
                                 
                                 address7: '不好用',
-                                address8: '查看',
+                                address8: '',
                             }, {
                                  date:'0',
                                 name: '1',
@@ -254,7 +237,7 @@
                                 address5: '4',
                                 address6: '',
                                 address7: '',
-                                address8: '查看',
+                                address8: '',
                         }],
 
                     componyTree: [{
@@ -301,6 +284,24 @@
             content1.style.minHeight=height1+'px';
         },
         methods:{
+            btmlog:function(data){
+                let oleftBox=document.getElementById('left-box');
+                oleftBox.style.display="block";
+                let ocate= document.getElementById('cp')
+                ocate.style.width="calc(100% - 275px)";
+            },
+            querylog:function(data){
+                let _this=this;
+                if(data){
+                    let ocate= document.getElementById('cp')
+                    ocate.style.width="100%";
+                    _this.bottonbox.botton.push({
+                        class: 'erp_bt bt_auxiliary',
+                        imgsrc: '../../../static/image/common/bt_stop.png',
+                        text: '查询'
+                    })
+                }
+            },
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
@@ -363,8 +364,12 @@
                 
 
             }
+        },
+        components:{
+            Query,
+            Btm,
+            Tree
         }
-       
 
         
 
@@ -526,6 +531,12 @@
 </style>
 
 <style>
+#cp{
+    width: calc(100% - 275px);
+}
+.table-width{
+    width: calc(100% - 200px);
+}
 .bgcolor{
     width: 100%;
 }
