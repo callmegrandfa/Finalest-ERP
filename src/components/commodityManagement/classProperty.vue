@@ -67,7 +67,7 @@
                                     <el-table-column prop="attributeName" label="属性名称">
                                     </el-table-column>
                                     <el-table-column prop="startUsing" label="启用">
-                                        <template scope="scope">
+                                        <template slot-scope="scope">
                                             <el-checkbox  ></el-checkbox>
                                         </template>
                                     </el-table-column>
@@ -126,7 +126,7 @@
                                     <el-table-column
                                       prop="startUsing1"
                                       label="启用">
-                                      <template scope="scope">
+                                      <template slot-scope="scope">
                                             <el-checkbox  ></el-checkbox>
                                         </template>
                                     </el-table-column>
