@@ -150,6 +150,18 @@
 
 /* datePicker日期控件 */
 /* <div class="bgcolor"><label><small>*</small>交货日期</label><el-date-picker v-model="" type="date" placeholder=""></el-date-picker></div> */
+table .el-date-editor.el-input{
+  width:100%;
+}
+table .el-input--prefix .el-input__inner{
+  border: none;
+  background-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+}
+table .el-input__icon{
+  display: none;
+}
 .bgcolor .el-date-editor .el-input__prefix{
     right: 5px;
     left: auto;
