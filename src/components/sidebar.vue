@@ -1,49 +1,69 @@
 <template>
+
    <ul class="slidUl menu" :class="{menuActive : $store.state.show}">
-        <li class="one">
-            <span class="menuIcon"><img src="../../static/image/siderbar/版本动态.png" alt="版本动态"></span>
-            <a class="oneA" href="javascript:;">版本动态</a>
-            <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
-        </li>
-        <li class="one" @mouseenter="enter1">
-            <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
-            <a class="oneA" href="javascript:;">测试</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in secondLevel1" @mouseenter="enter2">
-                    <a href="javascript:;">{{i.name}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.thirdInfo">
-                            <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+       <vue-scroll :ops="ops">
+            <li class="one">
+                <span class="menuIcon"><img src="../../static/image/siderbar/版本动态.png" alt="版本动态"></span>
+                <a class="oneA" href="javascript:;">版本动态</a>
+                <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
+            </li>
+            <li class="one" @mouseenter="enter1">
+                <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
+                <a class="oneA" href="javascript:;">测试</a>
+                <ul class="slidUl slid1">
+                    <vue-scroll :ops="ops">
+                        <li class="two" v-for="i in secondLevel1" @mouseenter="enter2">
+                            <a href="javascript:;">{{i.name}}</a>
+                            <diV class="triangle"></diV> 
+                            <ul class="slidUl slid2" >
+                                <vue-scroll :ops="ops">
+                                <li class="three" v-for="it in i.thirdInfo">
+                                    <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                                </li>
+                                </vue-scroll> 
+                            </ul>
                         </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1">
-            <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
-            <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
-            <ul class="slidUl slid1">
-                <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
-                    <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
-                    <a href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{i.moduleName}}</a>
-                    <diV class="triangle"></diV>
-                    <ul class="slidUl slid2" >
-                        <li class="three" v-for="it in i.childNodes">
+                    </vue-scroll> 
+                </ul>
+            </li>
+            <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1">
+                <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
+                <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
+                <ul class="slidUl slid1">
+                    <vue-scroll :ops="ops">
+                        <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
                             <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
-                            <a href="javascript:;" :menuId="it.id" :moduleParentId="it.moduleParentId" :menuUrl="it.url" :menuname="it.moduleName" @click="storageData">{{it.moduleName}}</a>
+                            <a href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{i.moduleName}}</a>
+                            <diV class="triangle"></diV>
+                            <ul class="slidUl slid2" >
+                                <vue-scroll :ops="ops">
+                                    <li class="three" v-for="it in i.childNodes">
+                                        <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
+                                        <a href="javascript:;" :menuId="it.id" :moduleParentId="it.moduleParentId" :menuUrl="it.url" :menuname="it.moduleName" @click="storageData">{{it.moduleName}}</a>
+                                    </li>
+                                </vue-scroll> 
+                            </ul>
                         </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
+                    </vue-scroll>     
+                </ul>
+            </li>
+        </vue-scroll> 
     </ul>
+
 </template>
 <script>
 export default {
   name: 'appsiderbar',
   data(){
     return{
+         ops: {
+            vRail: {
+                width: '0'
+            },
+            hRail: {
+                height: '0',
+            },
+        },
         secondLevel1:[{
                 name:'租户管理',
                 thirdInfo:[
@@ -110,36 +130,6 @@ export default {
                 ]
             }],
             childNodes:[],//菜单数据
-        // items:
-        // [
-        //     {
-        //         name:'常用功能',
-        //         src:'../../static/image/siderbar/常用功能.png',
-        //     }, {
-        //         name:'基础资料',
-        //         src:'../../static/image/siderbar/基础资料.png',
-        //     }, {
-        //         name:'采购管理',
-        //         src:'../../static/image/siderbar/采购管理.png',
-        //     }, {
-        //         name:'批发管理',
-        //         src:'../../static/image/siderbar/批发管理.png',
-        //     }, {
-        //         name:'零售管理',
-        //         src:'../../static/image/siderbar/零售管理.png',
-        //     }, {
-        //         name:'库存管理',
-        //         src:'../../static/image/siderbar/库存管理.png',
-        //     }, {
-        //         name:'会员管理',
-        //         src:'../../static/image/siderbar/会员管理.png',
-        //     }, {
-        //         name:'电商管理',
-        //         src:'../../static/image/siderbar/电商管理.png',
-        //     }, {
-        //         name:'应收应付',
-        //         src:'../../static/image/siderbar/应收应付.png',
-        //     }]
         }
         
     },
@@ -157,11 +147,11 @@ export default {
         let _this=this;
         _this.$store.state.slidbarHeight=$(window).height();
         $('.menu').css({height:_this.$store.state.slidbarHeight-43+'px'})
-        if($('.menu').height()<$('.menu').children('.one').length*50){
-            $('.menu').css({overflowY:'scroll'})
-        }else{
-            $('.menu').css({overflowY:'hidden'})
-        }
+        // if($('.menu').height()<$('.menu').children('.one').length*50){
+        //     $('.menu').css({overflowY:'scroll'})
+        // }else{
+        //     $('.menu').css({overflowY:'hidden'})
+        // }
     },
     methods:{
         enter1:function(){
@@ -170,11 +160,11 @@ export default {
                 $(this).css({
                     height:_this.$store.state.slidbarHeight-93+'px'
                 })
-                if($(this).height()<$(this).children('.two').length*50){
-                    $(this).css({overflowY:'scroll'})
-                }else{
-                    $(this).css({overflowY:'hidden'})
-                }
+                // if($(this).height()<$(this).children('.two').length*50){
+                //     $(this).css({overflowY:'scroll'})
+                // }else{
+                //     $(this).css({overflowY:'hidden'})
+                // }
             })
         },
         enter2: function(){
@@ -183,10 +173,10 @@ export default {
                 $(this).css({
                     height:_this.$store.state.slidbarHeight-93+'px'
                 })
-                if($(this).height()<$(this).children('.three').length*50){
-                    $(this).css({width:'470px',overflowY:'scroll'})
+                if($(this).height()<$(this).children('.vueScroll').children('.vueScrollPanel').children('.scrollContent').children('li.three').length*50){
+                    $(this).css({width:'470px'})
                 }else{
-                    $(this).css({width:'235px',overflowY:'scroll'})
+                    $(this).css({width:'235px'})
                 }
             })
         },
@@ -249,10 +239,10 @@ export default {
     display: none;
 }
 .slidUl:not(.slid2){
-    transition: width 0.5s;
+    /* transition: width 0.5s;
     -moz-transition: width 0.5s;
     -webkit-transition: width 0.5s;
-    -o-transition: width 0.5s; 
+    -o-transition: width 0.5s;  */
 }
 .menuIcon{
     display: block;
@@ -333,7 +323,7 @@ export default {
     height: 21px;
 }
 .one .versionInfo{
-    z-index: 1000;
+    z-index: 9999;
     font-size: 12px;
     color: #fff;
     background-color:#f66;
@@ -427,7 +417,7 @@ export default {
     border-right: 10px solid #414e61;
     border-bottom: 10px solid transparent;
 }
-.menu::-webkit-scrollbar {
+/* .menu::-webkit-scrollbar {
     display: none;
     width:10px;
     height:10px;
@@ -491,5 +481,5 @@ export default {
 }
 .slid2::-webkit-scrollbar-resizer  {
     background:#414e61;
-}
+} */
 </style>

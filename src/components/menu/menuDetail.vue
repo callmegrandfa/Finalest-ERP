@@ -60,7 +60,7 @@
                 <el-input 
                 class="moduleCode" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.moduleCode')}" 
+                :class="{redBorder : validation.hasError('addData.moduleCode')}" 
                 v-model="addData.moduleCode"  
                 placeholder="请输入菜单编码"></el-input>
             </div>
@@ -69,7 +69,7 @@
                 <el-input 
                 class="moduleName" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.moduleName')}" 
+                :class="{redBorder : validation.hasError('addData.moduleName')}" 
                 v-model="addData.moduleName"  
                 placeholder="请输入菜单名称"></el-input>
             </div>
@@ -78,7 +78,7 @@
                 <el-input 
                 class="ico" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.ico')}" 
+                :class="{redBorder : validation.hasError('addData.ico')}" 
                 v-model="addData.ico"  
                 placeholder="请输入图标"></el-input>
             </div>
@@ -87,7 +87,7 @@
                 <el-input 
                 class="moduleFullPathId" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.moduleFullPathId')}" 
+                :class="{redBorder : validation.hasError('addData.moduleFullPathId')}" 
                 v-model="addData.moduleFullPathId" 
                 placeholder="功能模块ID全路径"></el-input>
             </div>
@@ -96,7 +96,7 @@
                 <el-input 
                 class="moduleFullPathName" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.moduleFullPathName')}" 
+                :class="{redBorder : validation.hasError('addData.moduleFullPathName')}" 
                 v-model="addData.moduleFullPathName" 
                 placeholder="功能模块名称全路径"></el-input>
             </div>
@@ -105,7 +105,7 @@
                 <el-input 
                 class="seq" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.seq')}" 
+                :class="{redBorder : validation.hasError('addData.seq')}" 
                 v-model="addData.seq" 
                 placeholder="排序"></el-input>
             </div>
@@ -120,7 +120,7 @@
                 <el-input 
                 class="systemId" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.systemId')}" 
+                :class="{redBorder : validation.hasError('addData.systemId')}" 
                 v-model="addData.systemId" 
                 placeholder="系统ID"></el-input>
             </div>
@@ -136,7 +136,7 @@
                 <el-select v-if="showParent" 
                 class="moduleParentId" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.moduleParentId')}" 
+                :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                 v-model="addData.moduleParentId"  
                 placeholder="上级菜单">
                     <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -145,7 +145,7 @@
                 <el-input v-else
                 class="moduleParentId" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.moduleParentId')}"
+                :class="{redBorder : validation.hasError('addData.moduleParentId')}"
                 v-model="addData.moduleParentId" 
                 disabled></el-input>
 
@@ -155,7 +155,7 @@
                 <el-input 
                 class="url" 
                 @focus="showErrprTips"
-                :class="{rebBorder : validation.hasError('addData.url')}" 
+                :class="{redBorder : validation.hasError('addData.url')}" 
                 v-model="addData.url"  
                 placeholder="请输入web地址"></el-input>
             </div>
@@ -451,18 +451,24 @@
             
         },
         saveAdd(){
-             let _this=this;
-                  _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-                    _this.open('保存并新增成功','el-icon-circle-check','successERP');
-                },function(res){
-                    _this.open('保存并新增失败','el-icon-error','faildERP');
-                })
+            let _this=this;
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                        _this.open('保存并新增成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        _this.open('保存并新增失败','el-icon-error','faildERP');
+                    })
+                }
+            });
         },
         newAdd(){
             this.open('新增成功','el-icon-circle-check','successERP');
+            this.validation.reset();
         },
         clearData(){
-           
+           this.validation.reset();
         },
         showNodeadd(){
             let _this=this;

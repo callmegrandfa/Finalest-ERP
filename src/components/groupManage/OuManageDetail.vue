@@ -565,21 +565,27 @@ export default({
             
         },
         saveAdd(){
-             let _this=this;
-                  _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-                    _this.open('保存并新增成功','el-icon-circle-check','successERP');
-                    _this.clearData();
-                },function(res){
-                    _this.open('保存并新增失败','el-icon-error','faildERP');
-                })
+            let _this=this;
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                        _this.open('保存并新增成功','el-icon-circle-check','successERP');
+                        _this.clearData();
+                    },function(res){
+                        _this.open('保存并新增失败','el-icon-error','faildERP');
+                    })
+                }
+            });        
         },
         newAdd(){
             this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },
         clearData(){
-            this.creatorUser=[];
-            this.auditInfo={
+            let _this=this;
+            _this.creatorUser=[];
+            _this.auditInfo={
                 id:'',
                 lastModifierUser:'',
                 isDeleted:false,
@@ -595,7 +601,7 @@ export default({
                 isCapital :false,
                 isPurchase :false,
             };
-            this.addData={
+            _this.addData={
                 groupId:1,//集团ID
                 ouCode: '',//组织代码存在 
                 ouName: '' ,//组织名称存在
@@ -619,6 +625,7 @@ export default({
                 companyStatus:'' ,//公司启用状态
                 regtime:''//公司成立时间
             };
+            _this.validation.reset();
         }
     }
 

@@ -1,115 +1,20 @@
 <template>
     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
-        <div id="left-box" style="min-width:275px;width:275px;float:left;">
-            <el-row class="bg-white" >
-                <el-col :span="24">
-                    <el-row class="h48 pl15">
-                        <el-col :span="18">
-                            <i class="el-icon-search"></i>
-                            <span>查询</span>
-                        </el-col>
-                        <el-col :span="5">
-                            <span class="fs12 open" @click="packUp">+ 收起</span>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                    <label>品牌编码</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="smallBgcolor" style="margin-top:20px">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>品牌名称(中文)</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="smallBgcolor" >
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>品牌名称(英文)</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="smallBgcolor" >
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>状态</label>
-                            </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">&nbsp;</el-col>
-                        <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                            <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>
-        </div>
+        <query :data="querychend" v-on:listquery="querylog" ></query>  
         <div id="bgh">
             <el-row style="width:100%;" >
                 <el-col id="bg-white"  class="border-left" :span="24" >
-                    <el-row class="h48 pt5">
-            
-                            <button class="erp_bt bt_add" @click="storageData" ><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                            
-                            <button class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
-                            <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-
-                            <button class="erp_bt bt_del" @click="dell"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-
-                       
-                            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                     
-                            <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-
-                            <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>
-                        
-                                            
-                        
-                                          
-                    </el-row>
-
+                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                      <el-row class="">
                         
 
                         <el-col :span="24" class="">
-                             <el-table :data="tableData" border style="width: 100%" class="text-center">
+                             <el-table  @selection-change="handleSelectionChange" :data="tableData" border style="width: 100%" class="text-center">
                                 <el-table-column prop="date" label="序号" width="60">
                                     
                                 </el-table-column>
-                                <el-table-column  prop="name" label="" width="50">
-                                    <template scope="scope">
-                                        <el-checkbox  ></el-checkbox>
-                                    </template>
+                                <el-table-column  type="selection" label="" width="50">
+                                    
                                 </el-table-column>
                                 <el-table-column prop="address" label="品牌编码">
                                 </el-table-column>
@@ -127,6 +32,9 @@
                                 <el-table-column prop="address7" label="创建时间" width="">
                                 </el-table-column> 
                                 <el-table-column prop="address8" label="操作" width="">
+                                    <template slot-scope="scope">
+                                        <el-button type="text" size="small"   >删除</el-button>
+                                    </template>
                                 </el-table-column>
                             </el-table>
                         <el-pagination
@@ -144,6 +52,8 @@
 </template>
 
 <script>
+import Query from '../../base/query/query'
+import Btm from '../../base/btm/btm'
     export default{
         name:'customerInfor',
         data(){
@@ -160,7 +70,71 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-
+                bottonbox:{
+                    url: '/commodityleimu/CommodityCategoriesDetails',
+                   botton:[{
+                    class: 'erp_bt bt_add',
+                    imgsrc: '../../../static/image/common/bt_add.png',
+                    text: '新增'
+                },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/u470.png',
+                    text: '取消'
+                },{
+                    class: 'erp_bt bt_save',
+                    imgsrc: '../../../static/image/common/bt_save.png',
+                    text: '保存'
+                },{
+                    class: 'erp_bt bt_del',
+                    imgsrc: '../../../static/image/common/bt_del.png',
+                    text: '删除'
+                },{
+                    class: 'erp_bt bt_out',
+                    imgsrc: '../../../static/image/common/bt_inOut.png',
+                    text: '导出'
+                },{
+                    class: 'erp_bt bt_version',
+                    imgsrc: '../../../static/image/common/bt_start.png',
+                    text: '启用'
+                },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/bt_stop.png',
+                    text: '停用'
+                }]},
+                querychend:{
+                    up:'',
+                    demand:[{
+                    must: '',
+                    title: '品牌编码',
+                    place: ''                
+                },{
+                    must: '',
+                    title: '品牌名称(中文)',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '品牌名称(英文)',
+                    place: ''                 
+                },{
+                    must: '*',
+                    title: '状态',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                }]},
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -233,20 +207,14 @@
                         children: [{
                             label: '材质',
                             children: [{
-                            // label: '材质',
                             label: '洗涤方式'
-                            }
-                            ],
+                            }],
                         },
                             {
                              label: '款式',
                              children: [{
-                            
                             }] 
                             }],
-                        
-
-                        
                         }],
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
@@ -272,6 +240,24 @@
             content1.style.minHeight=height1+'px';
         },
         methods:{
+            btmlog:function(data){
+                let oleftBox=document.getElementById('left-box');
+                oleftBox.style.display="block";
+                let ocate= document.getElementById('bgh')
+                ocate.style.width="calc(100% - 275px)";
+            },
+            querylog:function(data){
+                let _this=this;
+                if(data){
+                    let ocate= document.getElementById('bgh')
+                    ocate.style.width="100%";
+                    _this.bottonbox.botton.push({
+                        class: 'erp_bt bt_auxiliary',
+                        imgsrc: '../../../static/image/common/bt_stop.png',
+                        text: '查询'
+                    })
+                }
+            },
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
@@ -279,67 +265,20 @@
                     console.log(res)
                 })
             },
+            handleSelectionChange(val) {//点击复选框选中的数据
+                this.multipleSelection = val;
+            },
             datashop(){
                 for(var i=0;i<this.tableData.length;i++){
                     this.tableData[i].date=i+1;
                 }
 
             },
-            // storageData(e){
-            //     this.$store.state.url='/commodity/commodityPropertyDetails/default'
-            //    this.$router.push({path:this.$store.state.url})//点击切换路由
-            // },
-            packUp(){
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                let obgh=document.getElementById('bgh');
-                oleftBox.style.display="none";
-                obgh.style.width="100%";
-                Re.style.display="block";
-            },
-            refer(){
-                let obgh=document.getElementById('bgh');
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                obgh.style.width="calc(100% - 275px)";
-                oleftBox.style.display="block";
-                Re.style.display="none";
-            },
-            dell(){
-                let ocheck=document.getElementsByClassName('el-table_1_column_2');
-                let oTh=[];
-                let aa=[];
-                let bb=[];
-                for(var i=0;i<ocheck.length;i++){
-                  oTh.push(ocheck[i].children[0].children[0]);
-                 
-                }//获取全部的复选框
-                oTh.splice(0,1);
-                for(var i=0;i<oTh.length;i++){
-
-                    if(oTh[i].getAttribute("aria-checked")=='true'){
-                        aa.push(oTh[i]);
-                        oTh[i].children[0].classList.remove("is-checked")
-                    }     
-                }//找到当前选中的复选框
-                for(var i=0;i<aa.length;i++){
-                    bb.push(parseInt(aa[i].parentNode.parentNode.parentNode.children[0].children[0].innerHTML)-1)      
-                }//找到当前选择的复选框的序号
-                for(var i=0;i<bb.length;i++){
-                    
-                    this.tableData.splice(bb[i]-[i],1);
-                    for(var j=0;j<this.tableData.length;j++){
-                        this.tableData[j].date=j+1;
-                    }
-                    
-                    
-                }
-                
-                
-
-            }
+        },
+        components:{
+            Query,
+            Btm
         }
-       
 
         
 

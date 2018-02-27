@@ -7,68 +7,45 @@
             <button v-on:click="Cancel()" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
         </el-row>
-        <el-row class="bg-white">
-                <el-col :span="6">
-                        <div class="mt20 bgcolor smallBgcolor">
-                            <label>集团编码</label><el-input v-model="tableData[0].groupCode"  :disabled="isEdit" @change="isUpdate()" ></el-input>
-                        </div>
-                </el-col>
-                <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>集团名称</label><el-input :disabled="isEdit" v-model="tableData[0].groupName" @change="isUpdate()"></el-input></div>
-                </el-col>
-                <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>集团全称</label><el-input :disabled="isEdit" v-model="tableData[0].groupFullname" @change="isUpdate()"></el-input></div>
-                </el-col>
-                <el-col :span="6">
-                    <div class="mt20 bgcolor smallBgcolor"><label>会计方案</label><el-input :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  @change="isUpdate()"></el-input></div>
-                </el-col>
-        </el-row>
-        <el-row class="bg-white">
-            <el-col :span="6">    
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input :disabled="isEdit" v-model="tableData[0].areaId_AreaName" @change="isUpdate()"></el-input></div>
-            </el-col>
-            <el-col :span="6">
-                <div class="bgcolor smallBgcolor">
+        <el-row class="bg-white pt20">
+                <div class="bgcolor">
+                    <label>集团编码</label><el-input v-model="tableData[0].groupCode"  :disabled="isEdit" @change="isUpdate()" ></el-input>
+                </div>
+                <div class="bgcolor">
+                    <label>集团名称</label><el-input :disabled="isEdit" v-model="tableData[0].groupName" @change="isUpdate()"></el-input>
+                    </div>
+                <div class="bgcolor">
+                    <label>集团全称</label><el-input :disabled="isEdit" v-model="tableData[0].groupFullname" @change="isUpdate()"></el-input>
+                </div>
+                <div class="bgcolor">
+                    <label>会计方案</label><el-input :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  @change="isUpdate()"></el-input>
+                </div>
+                <div class="bgcolor"><label>行政地区</label><el-input :disabled="isEdit" v-model="tableData[0].areaId_AreaName" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor">
                     <label>启用会计月份</label>
                     <el-select v-model="tableData[0].openAccperiodMonth"  :disabled="isEdit" @change="isUpdate()">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-            </el-col>
-            <el-col :span="6">
-                <div class="bgcolor smallBgcolor">
+                <div class="bgcolor">
                     <label>本位币种</label>
                     <el-select v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-            </el-col>
-            <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>所属行业</label><el-input :disabled="isEdit" v-model="tableData[0].industry" @change="isUpdate()" ></el-input></div>
-            </el-col>   
+                <div class="bgcolor"><label>所属行业</label><el-input :disabled="isEdit" v-model="tableData[0].industry" @change="isUpdate()" ></el-input></div>
+                <div class="bgcolor"><label>电话</label><el-input :disabled="isEdit" v-model="tableData[0].phone" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor"><label>传真</label><el-input :disabled="isEdit" v-model="tableData[0].fax" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor"><label>总部地址</label><el-input :disabled="isEdit" v-model="tableData[0].address" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor"><label>备注</label><el-input :disabled="isEdit" v-model="tableData[0].remark" @change="isUpdate()"></el-input></div>
         </el-row>
-        <el-row class="bg-white">
+        <!-- <el-row class="bg-white">
             <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>电话</label><el-input :disabled="isEdit" v-model="tableData[0].phone" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor lh-28"><el-checkbox class="w-auto" @change="isUpdate()"></el-checkbox>允许使用</div>
             </el-col>
-            <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>传真</label><el-input :disabled="isEdit" v-model="tableData[0].fax" @change="isUpdate()"></el-input></div>
-            </el-col>
-            <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>总部地址</label><el-input :disabled="isEdit" v-model="tableData[0].address" @change="isUpdate()"></el-input></div>
-            </el-col>
-            <el-col :span="6">
-                <div class="bgcolor smallBgcolor"><label>备注</label><el-input :disabled="isEdit" v-model="tableData[0].remark" @change="isUpdate()"></el-input></div>
-            </el-col>
-        </el-row>
-        <el-row class="bg-white">
-            <el-col :span="6">
-                <div class="bgcolor smallBgcolor lh-28"><el-checkbox class="w-auto" @change="isUpdate()"></el-checkbox>允许使用</div>
-            </el-col>
-                <!-- <div class="bgcolor smallBgcolor"><label></label><span class="search-btn" @click="SimpleSearch">查询</span></div> -->
-        </el-row>
+        </el-row> -->
         <el-row class="bg-white">
             <el-col :span='24' >
                 <el-row class="pl10 pt10 pr10 pb10 border-bottom">
@@ -109,10 +86,8 @@
                         </el-pagination>   
                     </el-col>
                 </el-row>
-
             </el-col>
-        </el-row>
-        
+        </el-row> 
     </div>
 </template>
 	
@@ -225,6 +200,12 @@
                  let _this=this;
                 _this.$axios.gets('/api/services/app/GroupManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
+                     $.each(_this.tableData,function(index,value){
+                        let effectiveStart = value.effectiveStart.slice(0,value.effectiveStart.indexOf('.')).replace('T',' ');
+                        _this.tableData[index].effectiveStart = effectiveStart;
+                        let effectiveEnd = value.effectiveEnd.slice(0,value.effectiveEnd.indexOf('.')).replace('T',' ');
+                        _this.tableData[index].effectiveEnd = effectiveEnd;
+                    })
                     console.log(_this.tableData);
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){

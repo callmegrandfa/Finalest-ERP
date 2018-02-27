@@ -105,7 +105,7 @@ export default {
                     flag=true;
                 }else{//temporary不为空
                     for(var i=0;i<temporaryLogin.length;i++){
-                        if(temporaryLogin[i].name==_this.login.userNameOrEmailAddress){//相同页签
+                        if(temporaryLogin[i].name==_this.login.userNameOrEmailAddress){//相同用户登录
                             flag=false;
                             break;
                         }else{
