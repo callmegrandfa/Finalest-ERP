@@ -30,21 +30,21 @@
 
         <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
-                <el-row>
+                <el-row class="bg-white pt10">
                     <el-col :span="24">
                         <div class="tipsWrapper" name="ouCode">
                             <div class="errorTips" :class="{block : !validation.hasError('addData.ouCode')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouCode') }}</p>
                             </div>
                         </div>
-                        <div class="tipsWrapper" name="ouName">
+                        <div class="tipsWrapper" name="periodYear">
                             <div class="errorTips" :class="{block : !validation.hasError('createAccountParams.periodYear')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createAccountParams.periodYear') }}</p>
                             </div>
                         </div>
-                        <div class="tipsWrapper" name="ouParentid">
-                            <div class="errorTips" :class="{block : !validation.hasError('addData.ouParentid')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouParentid') }}</p>
+                        <div class="tipsWrapper" name="periodNum">
+                            <div class="errorTips" :class="{block : !validation.hasError('createAccountParams.periodNum')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createAccountParams.periodNum') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="regtime">
@@ -57,78 +57,67 @@
                                 <p class="msgDetail">错误提示：{{ validation.firstError('addData.baseCurrencyId') }}</p>
                             </div>
                         </div>
-                        <div class="tipsWrapper" name="companyOuId">
-                            <div class="errorTips" :class="{block : !validation.hasError('addData.companyOuId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.companyOuId') }}</p>
+                        <div class="tipsWrapper" name="remark">
+                            <div class="errorTips" :class="{block : !validation.hasError('createAccountParams.remark')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createAccountParams.remark') }}</p>
                             </div>
                         </div>
-                    </el-col>
-                </el-row>
 
-                <el-row class="bg-white pt10 ft12 pr10">
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label><small>*</small>会计方案{{value}}</label>
-                                <el-select v-model="value" 
-                                           placeholder="请选择会计方案"
-                                           :class="{redBorder : validation.hasError('addData.ouParentid')}"
-                                           @focus="showErrprTips">
-                                    <el-option v-for="item in options"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </el-row>
-                    </el-col>
+                        <div class="bgcolor">
+                            <label><small>*</small>会计方案{{value}}</label>
+                            <el-select v-model="value" 
+                                        placeholder="请选择会计方案"
+                                        :class="{redBorder : validation.hasError('addData.ouParentid')}"
+                                        @focus="showErrprTips">
+                                <el-option v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
 
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label><small>*</small>会计年份</label>
-                                <el-input placeholder="请录入会计年份" v-model="createAccountParams.periodYear"></el-input>
-                            </div>
-                        </el-row>
-                    </el-col>
+                        <div class="bgcolor">
+                            <label><small>*</small>会计年份</label>
+                            <el-input placeholder="请录入会计年份" 
+                                      @focus="showErrprTips"
+                                      class="periodYear"
+                                      :class="{redBorder : validation.hasError('createAccountParams.periodYear')}"
+                                      v-model="createAccountParams.periodYear"></el-input>
+                        </div>
 
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label><small>*</small>期间个数</label>
-                                <el-input placeholder="请录入期间个数" v-model="createAccountParams.periodNum"></el-input>
-                            </div>
-                        </el-row>
-                    </el-col>
-                </el-row>
-
-                <el-row class="bg-white ft12 pr10">
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>开始日期</label>
-                                <el-input placeholder="请录入开始日期" v-model="createAccountParams.beginDate"></el-input>
-                            </div>
-                        </el-row>
+                        <div class="bgcolor">
+                            <label><small>*</small>期间个数</label>
+                            <el-input placeholder="请录入期间个数" 
+                                      @focus="showErrprTips"
+                                      class="periodNum"
+                                      :class="{redBorder : validation.hasError('createAccountParams.periodNum')}"
+                                      v-model="createAccountParams.periodNum"></el-input>
+                        </div>
+       
                     </el-col>
 
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>结束日期</label>
-                                <el-input placeholder="结束日期" v-model="createAccountParams.endDate"></el-input>
-                            </div>
-                        </el-row>
-                    </el-col>
+                    <el-col :span="24" class="pt10">
+                        <div class="bgcolor">
+                            <label>开始日期</label>
+                            <el-input placeholder="请录入开始日期" v-model="createAccountParams.beginDate"></el-input>
+                        </div>
 
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>备注</label>
-                                <el-input placeholder="请录入备注" v-model="createAccountParams.remark"></el-input>
-                            </div>
-                        </el-row>
+                        <div class="bgcolor">
+                            <label>结束日期</label>
+                            <el-input placeholder="结束日期" v-model="createAccountParams.endDate"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>备注</label>
+                            <el-input placeholder="请录入备注" 
+                                      v-model="createAccountParams.remark"
+                                      @focus="showErrprTips"
+                                      class="remark"
+                                      :class="{redBorder : validation.hasError('createAccountParams.remark')}"></el-input>
+                        </div>    
+
+
                     </el-col>
 
                     <el-col :span="24" class="mt10 mb10 pl40">
@@ -336,40 +325,22 @@
             }
         },
         validators: {
-            'addData.ouCode': function (value) {//编码
-                return this.Validator.value(value).required().maxLength(50)
-            },
+            // 'addData.ouCode': function (value) {//编码
+            //     return this.Validator.value(value).required().maxLength(50)
+            // },
             'createAccountParams.periodYear': function (value) {//会计年份
                 return this.Validator.value(value).required().maxLength(50);
             },
-            'addData.ouParentid': function (value) {//上级业务单元
+            'createAccountParams.periodNum': function (value) {//上级业务单元
                 return this.Validator.value(value).required().maxLength(50);
             },
-            'addData.regtime': function (value) {//公司成立时间
-                return this.Validator.value(value).required().maxLength(50);
-            },
-            'addData.baseCurrencyId': function (value) {//本位币种id
+            // 'addData.regtime': function (value) {//公司成立时间
+            //     return this.Validator.value(value).required().maxLength(50);
+            // },
+            'createAccountParams.remark': function (value) {//备注
                 return this.Validator.value(value).required().integer();
             },
             'addData.companyOuId': function (value) {//所属公司
-                return this.Validator.value(value).required().integer();
-            },
-            'addData.contactPerson': function (value) {//联系人
-                return this.Validator.value(value).required().maxLength(50);
-            },
-            'addData.phone': function (value) {//电话
-                return this.Validator.value(value).required().maxLength(50);
-            },
-            'addData.address': function (value) {//地址
-                return this.Validator.value(value).required().maxLength(200);
-            },
-            'addData.remark': function (value) {//备注
-                return this.Validator.value(value).required().maxLength(200);
-            },
-            'addData.status': function (value) {//用户状态
-                return this.Validator.value(value).required().integer();
-            },
-            'addData.ouCompanyParentid': function (value) {//上级公司
                 return this.Validator.value(value).required().integer();
             },
             'addData.legalPerson': function (value) {//法人代表
@@ -377,6 +348,28 @@
             },
         },
         methods:{
+            //-------------------------------------------------
+            showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                // console.log($(e.target).parent('.el-input'))
+                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                        
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTips1(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.$el).hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            //------------------------------------------------------
             //---保存------------------------------------------------
             save:function(){
                 let self = this;
@@ -385,9 +378,9 @@
 
             saveAdd:function(){//创建新的仓库并且清除数据
                 let self = this;
-                this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createAccountParams).then(function(res){
+                this.$axios.posts('/api/services/app/Accperiod/Create',self.createAccountParams).then(function(res){
                     console.log(res);
-                    self.open('创建仓库成功','el-icon-circle-check','successERP');
+                    self.open('创建会计期间成功','el-icon-circle-check','successERP');
                  })
                 self.createAccountParams = {
                     "groupID": 1,
@@ -677,63 +670,10 @@ input::-webkit-input-placeholder{
 }
 </style>
 <style>
-/* 重写checkbox */
-.data-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.data-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
+.block{
+      display: none;
+  }
 
-/* 重写el-table样式 */
-.data-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.data-wrapper .el-table td{
-    padding: 3px 0;
-}
-.data-wrapper .el-table__body{
-    text-align: center;
-}
-.data-wrapper .el-table .cell{
-    padding-left:0px;
-    padding-right:0px;
-}
-/* 重写el-pagination样式 */
-
-
-.data-wrapper .text-right{
-    text-align: right;
-}
-.mt-10{
-    margin-top: 10px;
-}
 </style>
 
 
