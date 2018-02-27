@@ -108,7 +108,7 @@ const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: login,name:'login' },
   { path: '/register', component: register,name:'register' },
-  { path: '/index', component: index,name:'index',
+  { path: '/index', component: index,name:'index',redirect: '/home',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
     store.commit('username');    
     if(store.state.username!=null){
@@ -119,7 +119,6 @@ const routes = [
         let names=[];
         for(let i=0;i<store.state.username.length;i++){
             let name=store.state.username[i].name;
-            console.log(name)
             names.push(name);
           }
         if(store.state.alerts){
@@ -449,33 +448,30 @@ const  router=new Router({
   routes
 })
 router.beforeEach((to, from, next) => {
- 
   store.commit('slidbarData');
   if(from.name=='login'){//如果用户登录，清楚缓存
     store.state.Alive=false;
   }else{
     store.state.Alive=true;
   } 
-    
-  let ActiveRouter=store.state.ActiveRouter
   if(store.accessToken!=''){
     document.title = to.name
     let activeRouter=store.state.activeRouter;
     let parent='';
     let url='';
     for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==to.name){
-          parent=activeRouter[i].parent;
-          url=activeRouter[i].url;
-          break
-        }
+      if(activeRouter[i].name==to.name){
+        parent=activeRouter[i].parent;
+        url=activeRouter[i].url;
+        break
+      }
     }
     for(let i=0;i<activeRouter.length;i++){
       if(activeRouter[i].name==parent){
         activeRouter[i].url=url
         break
       }
-  }
+    }
   } 
    next()
 })

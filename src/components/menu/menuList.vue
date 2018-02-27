@@ -383,6 +383,12 @@
                 }
                 
             },
+            showTable(event,node,data){
+                let _this=this;
+                _this.tableData=[];
+                _this.tableData.push(data)
+                _this.totalItem=_this.tableData.length;
+            },
             filterNode(value, data) {
                 if (!value) return true;
                  return data.moduleName.indexOf(value) !== -1;
@@ -390,6 +396,7 @@
             renderContent(h, { node, data, store }) {
                 return (
                 <span class="TreeNode el-tree-node__label" on-mousedown ={ (event) => this.whichButton(event,node, data) }
+                on-click={ (event) => this.showTable(event,node, data) }
                 style="flex: 1; display: flex; align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
                     {node.label}
                    <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
