@@ -37,9 +37,9 @@
                                 <label><small>*</small>会计方案{{value}}</label>
                                 <el-select v-model="value" placeholder="请选择会计方案">
                                     <el-option v-for="item in options"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
+                                               :key="item.value"
+                                               :label="item.label"
+                                               :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -50,7 +50,9 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label><small>*</small>会计年份</label>
-                                <el-input placeholder="请录入会计年份" v-model="accountData.periodYear" @change='Modify()'></el-input>
+                                <el-input placeholder="请录入会计年份" 
+                                          v-model="accountData.periodYear" 
+                                          @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -59,7 +61,9 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label><small>*</small>期间个数</label>
-                                <el-input placeholder="请录入期间个数" v-model="accountData.periodNum" @change='Modify()'></el-input>
+                                <el-input placeholder="请录入期间个数" 
+                                          v-model="accountData.periodNum" 
+                                          @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -70,7 +74,9 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>开始日期</label>
-                                <el-input placeholder="请录入开始日期" v-model="accountData.beginDate" @change='Modify()'></el-input>
+                                <el-input placeholder="请录入开始日期" 
+                                          v-model="accountData.beginDate" 
+                                          @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -79,7 +85,9 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>结束日期</label>
-                                <el-input placeholder="结束日期" v-model="accountData.endDate" @change='Modify()'></el-input>
+                                <el-input placeholder="结束日期" 
+                                          v-model="accountData.endDate" 
+                                          @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -88,7 +96,9 @@
                         <el-row>
                             <div class="bgcolor">
                                 <label>备注</label>
-                                <el-input placeholder="请录入备注" v-model="accountData.remark" @change='Modify()'></el-input>
+                                <el-input placeholder="请录入备注" 
+                                          v-model="accountData.remark" 
+                                          @change='Modify()'></el-input>
                             </div>
                         </el-row>
                     </el-col>
@@ -217,22 +227,31 @@
                     <div>
                         <div class="bgcolor">
                             <label>创建人</label>
-                            <el-input placeholder="创建人" v-model='accountData.createdBy' disabled="disabled"></el-input>
+                            <el-input placeholder="创建人" 
+                                      v-model='accountData.createdBy' 
+                                      disabled="disabled"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>创建时间</label>
-                            <el-date-picker  type="date" v-model='accountData.createdTime' placeholder="创建时间" disabled="disabled"></el-date-picker>
+                            <el-date-picker  type="date" 
+                                             v-model='accountData.createdTime' 
+                                             placeholder="创建时间" 
+                                             disabled="disabled"></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
                             <label>修改人</label>
-                            <el-input placeholder="修改人" v-model='accountData.modifiedBy' disabled="disabled"></el-input>
+                            <el-input placeholder="修改人" 
+                                      v-model='accountData.modifiedBy' 
+                                      disabled="disabled"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>修改时间</label>
-                            <el-input placeholder="修改时间" v-model='accountData.modifiedTime' disabled="disabled"></el-input>
+                            <el-input placeholder="修改时间" 
+                                      v-model='accountData.modifiedTime' 
+                                      disabled="disabled"></el-input>
                         </div>
                         <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
                         <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>

@@ -1,6 +1,6 @@
 <template>
-     <div class="data-wrapper b1">
-        <el-row class="bg-white pt10 pb10 bb1 fixed">
+     <div class="data-wrapper">
+        <el-row class="bg-white pt5 pb5 bb1 fixed">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                   <img src="../../../static/image/common/bt_back.png">
@@ -30,12 +30,50 @@
 
         <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
+                <el-row>
+                    <el-col :span="24">
+                        <div class="tipsWrapper" name="ouCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('addData.ouCode')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouCode') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="ouName">
+                            <div class="errorTips" :class="{block : !validation.hasError('createAccountParams.periodYear')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createAccountParams.periodYear') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="ouParentid">
+                            <div class="errorTips" :class="{block : !validation.hasError('addData.ouParentid')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouParentid') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="regtime">
+                            <div class="errorTips" :class="{block : !validation.hasError('addData.regtime')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.regtime') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="baseCurrencyId">
+                            <div class="errorTips" :class="{block : !validation.hasError('addData.baseCurrencyId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.baseCurrencyId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="companyOuId">
+                            <div class="errorTips" :class="{block : !validation.hasError('addData.companyOuId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.companyOuId') }}</p>
+                            </div>
+                        </div>
+                    </el-col>
+                </el-row>
+
                 <el-row class="bg-white pt10 ft12 pr10">
                     <el-col :span="5">
                         <el-row>
                             <div class="bgcolor">
                                 <label><small>*</small>会计方案{{value}}</label>
-                                <el-select v-model="value" placeholder="请选择会计方案">
+                                <el-select v-model="value" 
+                                           placeholder="请选择会计方案"
+                                           :class="{redBorder : validation.hasError('addData.ouParentid')}"
+                                           @focus="showErrprTips">
                                     <el-option v-for="item in options"
                                                 :key="item.value"
                                                 :label="item.label"
@@ -207,29 +245,14 @@
             <el-col :span="24" class="bg-white pb10">
                 <el-row class="pl10">        
                     <div>
-                        <div class="bgcolor">
-                            <label>创建人</label>
-                            <el-input placeholder="创建人" v-model='accountData.createdBy' disabled="disabled"></el-input>
-                        </div>
-
-                        <div class="bgcolor">
-                            <label>创建时间</label>
-                            <el-date-picker  type="date" v-model='accountData.createdTime' placeholder="创建时间" disabled="disabled"></el-date-picker>
-                        </div>
-
-                        <div class="bgcolor">
-                            <label>修改人</label>
-                            <el-input placeholder="修改人" v-model='accountData.modifiedBy' disabled="disabled"></el-input>
-                        </div>
-
-                        <div class="bgcolor">
-                            <label>修改时间</label>
-                            <el-input placeholder="修改时间" v-model='accountData.modifiedTime' disabled="disabled"></el-input>
-                        </div>
-                        <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-                        <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-                        <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
-                    </div> 
+                        <div class="bgcolor"><label>创建人</label><el-input :disabled="true"></el-input></div>
+                        <div class="bgcolor"><label>创建时间</label><el-input :disabled="true"></el-input></div>
+                        <div class="bgcolor"><label>修改人</label><el-input :disabled="true"></el-input></div>
+                        <div class="bgcolor"><label>修改时间</label><el-input :disabled="true"></el-input></div>
+                        <!-- <div class="bgcolor"><label>启用日期</label><el-input :disabled="true"></el-input></div> -->
+                        <!-- <div class="bgcolor"><label>封存日期</label><el-input :disabled="true"></el-input></div> -->
+                        <!-- <div class="bgcolor"><label>封存人</label><el-input :disabled="true"></el-input></div> -->
+                    </div>
                 </el-row>
             </el-col>
         </el-row>
@@ -311,6 +334,47 @@
                     label: '北京烤鸭'
                 }],
             }
+        },
+        validators: {
+            'addData.ouCode': function (value) {//编码
+                return this.Validator.value(value).required().maxLength(50)
+            },
+            'createAccountParams.periodYear': function (value) {//会计年份
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addData.ouParentid': function (value) {//上级业务单元
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addData.regtime': function (value) {//公司成立时间
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addData.baseCurrencyId': function (value) {//本位币种id
+                return this.Validator.value(value).required().integer();
+            },
+            'addData.companyOuId': function (value) {//所属公司
+                return this.Validator.value(value).required().integer();
+            },
+            'addData.contactPerson': function (value) {//联系人
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addData.phone': function (value) {//电话
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addData.address': function (value) {//地址
+                return this.Validator.value(value).required().maxLength(200);
+            },
+            'addData.remark': function (value) {//备注
+                return this.Validator.value(value).required().maxLength(200);
+            },
+            'addData.status': function (value) {//用户状态
+                return this.Validator.value(value).required().integer();
+            },
+            'addData.ouCompanyParentid': function (value) {//上级公司
+                return this.Validator.value(value).required().integer();
+            },
+            'addData.legalPerson': function (value) {//法人代表
+                return this.Validator.value(value).required().maxLength(50);
+            },
         },
         methods:{
             //---保存------------------------------------------------
@@ -529,6 +593,12 @@
 }
 .pb10{
     padding-bottom: 10px;
+}
+.pt5{
+    padding-top: 5px;
+}
+.pb5{
+    padding-bottom: 5px;
 }
 .pr10{
     padding-right: 10px;

@@ -102,21 +102,40 @@
         <!-- dialog -->
         <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             
-            <div class="bgcolor smallBgcolor"><label>部门编码</label><el-input v-model="dialogData.deptCode" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>部门名称</label><el-input v-model="dialogData.deptName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input v-model="dialogData.director" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>电话</label><el-input v-model="dialogData.phone" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>部门编码</label><el-input :class="{redBorder : validation.hasError('dialogData.deptCode')}" v-model="dialogData.deptCode" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptCode') }}</div>
+            
+            <div class="bgcolor smallBgcolor"><label>部门名称</label><el-input :class="{redBorder : validation.hasError('dialogData.deptName')}" v-model="dialogData.deptName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptName') }}</div>
+            
+            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input :class="{redBorder : validation.hasError('dialogData.director')}" v-model="dialogData.director" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.director') }}</div>
+            
+            <div class="bgcolor smallBgcolor"><label>电话</label><el-input :class="{redBorder : validation.hasError('dialogData.phone')}" v-model="dialogData.phone" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.phone') }}</div>
+            
             <div class="bgcolor smallBgcolor">
                 <label>上级业务地区</label>
-                <el-select v-model="dialogData.areaType">
-                    <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder=""></el-option>
+
+                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.deptParentid')}" v-model="dialogData.deptParentid">
+                    <el-option v-for="item in deptParentid" :key="item.value" :label="item.label" :value="item.value" placeholder=""></el-option>
                 </el-select>
+                <el-input v-else :class="{redBorder : validation.hasError('dialogData.deptParentid')}"  v-model="dialogData.deptParentid" disabled></el-input>
             </div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptParentid') }}</div>
+            
             <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
+            
             <div class="bgcolor smallBgcolor">
                 <label>允许使用</label>
-                <el-checkbox v-model="ifCan"></el-checkbox>
+                <!-- <el-checkbox v-model="ifCan"></el-checkbox> -->
+                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
+                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择">
+                    </el-option>
+                </el-select>
             </div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.status') }}</div>
             <div slot="footer" class="dialog-footer">
                 <button class="dialogBtn" @click="save">确认</button>
                 <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
@@ -154,7 +173,7 @@
                 // deptParentid (integer): 父部门id ,
                 // remark (string): 备注 ,
                 // status (integer): 启用状态
-                 areaTypes: [{//业务地区分类
+                 deptParentid: [{//业务地区分类
                     value:'1',
                     label: '业务地区'
                 }, {
@@ -226,6 +245,7 @@
                 AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
+                showParent:true,//上级组织单元是否可选
             }
         },
         created:function(){       
@@ -235,7 +255,27 @@
              },
         mounted:function(){
             let _this=this;
-        },  
+        }, 
+        validators: {
+            'dialogData.deptCode':function(value){//部门编码
+                return this.Validator.value(value).required().maxLength(50)
+            },
+            'dialogData.deptName':function(value){//部门名称
+                return this.Validator.value(value).required().maxLength(50)
+            },
+            'dialogData.director': function (value) {//负责人
+                return this.Validator.value(value).required().maxLength(20);
+            },
+            'dialogData.phone': function (value) {//电话
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'dialogData.deptParentid': function (value) {//上级业务地区
+                return this.Validator.value(value).required().integer();
+            },
+            'dialogData.remark': function (value) {//备注
+                return this.Validator.value(value).required().maxLength(200);
+            },
+        }, 
         watch: {
             searchLeft(val) {
                 this.$refs.tree.filter(val);
@@ -279,21 +319,26 @@
             //---保存--------------------------------------------------------
             save:function(){
                 let self = this;
-                if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
-                    self.$axios.puts('/api/services/app/DeptManagement/Update',self.dialogData).then(function(res){
-                        self.dialogFormVisible=false;
-                        self.loadTableData();
-                    },function(res){    
-                        console.log('error')
-                    })
-                }else{
-                    self.$axios.posts('/api/services/app/DeptManagement/Create',self.dialogData).then(function(res){
-                        self.dialogFormVisible=false;
-                        self.loadTableData();
-                    },function(res){    
-                        console.log('error')
-                    })
-                }
+                self.$validate().then(function(success){
+                    if(success){
+                        if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
+                            self.$axios.puts('/api/services/app/DeptManagement/Update',self.dialogData).then(function(res){
+                                self.dialogFormVisible=false;
+                                self.loadTableData();
+                            },function(res){    
+                                console.log('error')
+                            })
+                        }else{
+                            self.$axios.posts('/api/services/app/DeptManagement/Create',self.dialogData).then(function(res){
+                                self.dialogFormVisible=false;
+                                self.loadTableData();
+                                self.clearAddDate();
+                            },function(res){    
+                                console.log('error')
+                            })
+                        }
+                    }
+                })
             },
             // sendAjax(){
             //     let _this=this;
@@ -319,6 +364,23 @@
                 
             // },
             //----------------------------------------------------------------
+            //---清除数据--------------------------------------------------
+            clearAddDate:function(){//清除新增数据
+                let self = this;
+                self.dialogData={//dialog数据
+                    id:'',
+                    groupId:'1',//集团ID
+                    ouId:'1',//组织单元ID
+                    deptCode:'',//部门代码
+                    deptName:'',//部门名称
+                    director:'',//负责人
+                    phone:'',//电话
+                    deptParentid:'',//父部门id
+                    remark:'',//备注
+                    status:'',//启用状态
+                }
+            },
+            //----------------------------------------------------------------
             //---新增----------------------------------------------------------
             addNew:function(){
                 let self = this;
@@ -327,8 +389,8 @@
                 
                 self.dialogData.groupId = self.tableData[0].groupId;
                 self.dialogData.ouId = self.tableData[0].ouId;
-                self.dialogData.deptParentid = self.tableData[0].deptParentid;
-                self.dialogData.status = self.tableData[0].status;
+                // self.dialogData.deptParentid = self.tableData[0].deptParentid;
+                // self.dialogData.status = self.tableData[0].status;
                 console.log(self.dialogData)
             },
             //----------------------------------------------------------------
@@ -498,8 +560,8 @@
             //---树形操作-----------------------------------------------
             TreeAdd(event,node,data){
                 $('.TreeMenu').css({
-                        display:'none'
-                    })
+                    display:'none'
+                })
                 let _this=this;
                 _this.clearTreeData();
                 _this.tittle='新增';
@@ -510,8 +572,8 @@
             },
             TreeDel(event,node,data){
                 $('.TreeMenu').css({
-                        display:'none'
-                    })
+                    display:'none'
+                })
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
                 .then(function(res){
@@ -523,8 +585,8 @@
             },
             TreeModify(event,node,data){
                 $('.TreeMenu').css({
-                        display:'none'
-                    })
+                    display:'none'
+                })
                 let _this=this;
                 _this.clearTreeData();
                 _this.tittle='修改';
@@ -590,7 +652,11 @@
 </script>
 
 <style scoped>
-
+.error_tips{
+    height: 15px;
+    line-height: 15px;
+    color: #f66;
+}
 .dialogBtn{
     display: block;
     float: left;
@@ -687,5 +753,8 @@
 }
 .data-wrapper .areaDialog .bgcolor:first-child{
     margin-top:15px;
+}
+.data-wrapper .bgcolor{
+    margin-bottom: 0
 }
 </style>
