@@ -11,7 +11,7 @@
                             
                             <el-col :span='24' class="pt10 pl10" >
                                 <el-row >
-                                    <el-col :span="3" :xl="3" :lg="4" :md="5" :sm="5" :xs="5" class="lh40">
+                                    <el-col :span="3"  :xl="3" :lg="4" :md="5" :sm="5" :xs="5" class="lh40">
                                         商品类目
                                     </el-col>
                                     <el-col :span="21" :xl="21" :lg="20" :md="19" :sm="19" :xs="19" class="lh40">
