@@ -7,7 +7,7 @@
 </template>
 <script type="text/javascript">
 	export default{
-		props: ['date'],
+		props: ['date'], 
 		data(){
 			return{
 				stop:'',
