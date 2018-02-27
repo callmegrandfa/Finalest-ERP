@@ -4,95 +4,9 @@
 
             <el-col :span='24'>
                 <div class="bg-white">
-                    <el-row class="h48 pt5">
-                        <button class="erp_bt bt_back" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                        <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
-                        <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-
-                        <button class="erp_bt bt_save_add"><div class="btImg"><img src="../../../static/image/common/bt_save_add.png"></div><span class="btDetail">保存并新增</span></button>
-                        <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                        <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                        <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>                   
-                    </el-row>
-
-                    <el-row class="pl10 pr10">
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                            <label ><small>*</small>规格组编码</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor" style="margin-top:20px">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                            <label ><small>*</small>规格组名称</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor" style="margin-top:20px">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                            <label ><small>*</small>类目</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor" style="margin-top:20px">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                            <label><small>*</small>状态</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                        <el-select  v-model="value" >
-                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                        </el-option>
-
-                                        </el-select>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                    </el-row>
-                    <el-row class="pl10  pr10">
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor">
-                                            <label ><small></small>备注</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13" >
-                                    <div class="smallBgcolor" >
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row> 
-                        </el-col>
-                    </el-row>
+                    <btm :date="bottonbox" > </btm>
+                    <textbox :data="textboxipt"></textbox>
+                    
                 </div>
                 <div class="mt10 pb10" style="background:rgb(249,249,249)">
                     <el-row class="bm-pd10">
@@ -142,11 +56,12 @@
                         </div>
                     </el-collapse-transition>
                 </div>
-                <el-row class="pl10 pr10 pt10 pb10">
-                    <el-col :span="24">
+                <el-row class="pl10 pr10 pt10 pb10" style="background-color:#fff">
+                    <el-col :span="24" style="margin-bottom:30px;">
                         <h4>审计信息</h4>
                     </el-col>
-                    <el-col :span="6">
+                    <textbox :data="textboxipt1"></textbox>
+                    <!-- <el-col :span="6">
                         <el-row>
                             <el-col :span="8">
                                 <div class="bgcolor smallBgcolor" style="margin-top:20px">
@@ -201,7 +116,7 @@
                                 </div>
                             </el-col>
                         </el-row>
-                    </el-col>
+                    </el-col> -->
                 </el-row>
             </el-col>
         </el-row>
@@ -210,6 +125,8 @@
 </template>
 
 <script>
+import Btm from '../../base/btm/btm'
+import Textbox from '../../base/textbox/textbox'
     export default{
         name:'customerInfor',
         data(){
@@ -218,6 +135,90 @@
                 ifShow1:true,
                 input4:'',
                 radio:'1',
+                textboxipt1:[{
+                    must: '',
+                    title: '创建人',
+                    place: ''                
+                },{
+                    must: '',
+                    title: '创建时间',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '修改人',
+                    place: ''                                
+                },{
+                    must: '',
+                    title: '修改时间',
+                    place: ''                 
+                }],
+                bottonbox:{
+                    url: '/specification/specificationOfGoodsList',
+                   botton:[{
+                    class: 'erp_bt bt_back',
+                    imgsrc: '../../../static/image/common/bt_back.png',
+                    text: '返回'
+                },{
+                    class: 'erp_bt bt_modify',
+                    imgsrc: '../../../static/image/common/bt_modify.png',
+                    text: '修改'
+                },{
+                    class: 'erp_bt bt_save',
+                    imgsrc: '../../../static/image/common/bt_save.png',
+                    text: '保存'
+                },{
+                    class: 'erp_bt bt_save_add',
+                    imgsrc: '../../../static/image/common/bt_save_add.png',
+                    text: '保存并新增'
+                },{
+                    class: 'erp_bt bt_add',
+                    imgsrc: '../../../static/image/common/bt_add.png',
+                    text: '新增'
+                },{
+                    class: 'erp_bt bt_del',
+                    imgsrc: '../../../static/image/common/bt_del.png',
+                    text: '删除'
+                },{
+                    class: 'erp_bt bt_version',
+                    imgsrc: '../../../static/image/common/bt_start.png',
+                    text: '启用'
+                }]},
+                textboxipt:[{
+                    must: '*',
+                    title: '规格组编码',
+                    place: ''                
+                },{
+                    must: '*',
+                    title: '规格组名称',
+                    place: ''                 
+                },{
+                    must: '*',
+                    title: '类目',
+                    place: ''                 
+                },{
+                    must: '*',
+                    title: '状态',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '备注',
+                    place: '1223'                 
+                }],
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -270,8 +271,11 @@
                 this.$store.state.url='/specification/specificationOfGoodsList/default'
                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
+        },
+        components:{
+            Btm,
+            Textbox
         }
-        
  }   
 </script>
 

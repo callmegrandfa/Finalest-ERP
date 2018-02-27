@@ -1,137 +1,13 @@
 <template>
     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%">
-        <div id="left-box" style="min-width:275px;width:275px;float:left;">
-            <el-row class="bg-white">
-                
-                    <el-row class="h48 pl15">
-                        <el-col :span="18">
-                            <i class="el-icon-search"></i>
-                            <span>查询</span>
-                        </el-col>
-                        <el-col :span="5">
-                            <span class="fs12 open" @click="packUp">+ 收起</span>
-                        </el-col>
-                    </el-row>
-                     <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                    <label>商品类目</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="smallBgcolor" style="margin-top:20px">
-                            <el-input placeholder="请录入单号"></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>继承到子类目</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>统一码管理</label>
-                            </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>批次管理</label>
-                            </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>保质期管理</label>
-                            </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>状态</label>
-                            </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">&nbsp;</el-col>
-                        <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                            <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>    
-        </div>
-
+        <query :data="querychend" v-on:listquery="querylog" ></query>
         <div id="bgx">
             <el-row >
                 <el-col :span="24" class="border-left" id="bg-white">
-                    <el-row class="h48 pt5">
-                        <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                        <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>
-                        <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button> 
-                        <button class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
-                        <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                  
-                    </el-row>
-
+                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                      <el-row class="shopclass">
-                        <el-row class="tree">
-                            <el-col :span='24' class="tree-container shopclass">
-                                <el-tree :data="componyTree" class="shopclass"></el-tree>
-                            </el-col>
-                        </el-row>
+                        <tree :datc="componyTree"></tree>
+                        
                         <el-row class="watch" style="background-color:rgba(238,241,245,1)">
                             <el-col :span='24' >
                                 <el-row class="ml10">
@@ -185,15 +61,15 @@
                                                     </div>
                                                 </el-col>
                                             </el-row>
-                                            <el-table :data="tableData" border style="width: 100%" class="text-center">
+                                            <el-table :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%" class="text-center">
                                             <el-table-column prop="sequenceNumber" label="序号" width="60">
                                             </el-table-column>
                                             <el-table-column prop="AttributeEncoding" label="属性编码">
                                             </el-table-column>
                                             <el-table-column prop="attributeName" label="属性名称">
                                             </el-table-column>
-                                            <el-table-column prop="startUsing" label="启用">
-                                                <template scope="scope">
+                                            <el-table-column   prop="startUsing" label="启用">
+                                                <template slot-scope="scope">
                                                     <el-checkbox  ></el-checkbox>
                                                 </template>
                                             </el-table-column>
@@ -230,28 +106,15 @@
                                                         </div>
                                                     </el-col>
                                                 </el-row>
-                                                <el-table
-                                                :data="tableData"
-                                                border
-                                                style="width: 100%" class="text-center">
-                                                <el-table-column
-                                                  prop="sequenceNumber1"
-                                                  label="序号"
-                                                  width="60">
+                                                <el-table :data="tableData" border style="width: 100%" class="text-center">
+                                                <el-table-column prop="sequenceNumber1" label="序号" width="60">
                                                 </el-table-column>
-                                                <el-table-column
-                                                  prop="AttributeEncoding1"
-                                                  label="规格编码"
-                                                  >
+                                                <el-table-column prop="AttributeEncoding1" label="规格编码" >
                                                 </el-table-column>
-                                                <el-table-column
-                                                  prop="attributeName1"
-                                                  label="规格名称">
+                                                <el-table-column prop="attributeName1" label="规格名称">
                                                 </el-table-column>
-                                                <el-table-column
-                                                  prop="startUsing1"
-                                                  label="启用">
-                                                  <template scope="scope">
+                                                <el-table-column prop="startUsing1" label="启用">
+                                                  <template slot-scope="scope">
                                                         <el-checkbox  ></el-checkbox>
                                                     </template>
                                                 </el-table-column>
@@ -338,6 +201,9 @@
 </template>
 
 <script>
+import Query from '../../base/query/query'
+import Btm from '../../base/btm/btm'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -358,7 +224,131 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-
+                querychend:{
+                    up:'',
+                    demand:[{
+                    must: '',
+                    title: '商品类目',
+                    place: ''                
+                },{
+                    must: '',
+                    title: '继承到子类目',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '统一码管理',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '批次管理',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '保质期管理',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '状态',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                }]},
+                bottonbox:{
+                    url: '/commodityleimu/CommodityCategoriesDetails',
+                   botton:[{
+                    class: 'erp_bt bt_out',
+                    imgsrc: '../../../static/image/common/bt_inOut.png',
+                    text: '导出'
+                },{
+                    class: 'erp_bt bt_version',
+                    imgsrc: '../../../static/image/common/bt_start.png',
+                    text: '启用'
+                },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/bt_stop.png',
+                    text: '停用'
+                },{
+                    class: 'erp_bt bt_save',
+                    imgsrc: '../../../static/image/common/bt_save.png',
+                    text: '保存'
+                },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/u470.png',
+                    text: '取消'
+                }]},
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -437,34 +427,34 @@
             content1.style.minHeight=height1+'px';
         },
         methods:{
-           // shop(){
-           //      setTimeout(function(){
-           //          let ab=document.getElementsByClassName('el-input-group__append');
-           //          ab[0].style.background="blue";
-           //          ab[1].style.background="blue";
-           //  },0)
-            
-           // },
-           storageData(e){
-                this.$store.state.url='/Property/classPropertyDetails/default'
-               this.$router.push({path:this.$store.state.url})//点击切换路由
+            handleSelectionChange(val) {//点击复选框选中的数据
+               
+
             },
-            packUp(){
+            btmlog:function(data){
                 let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                oleftBox.style.display="none";
-                Re.style.display="block";
-            },
-            refer(){
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
                 oleftBox.style.display="block";
-                Re.style.display="none";
+                let ocate= document.getElementById('bgx')
+                ocate.style.width="calc(100% - 275px)";
             },
-            dell(){
-                let ocheck=document.getElementsByClassName('is-checked');
-            }
+            querylog:function(data){
+                let _this=this;
+                if(data){
+                    let ocate= document.getElementById('bgx')
+                    ocate.style.width="100%";
+                    _this.bottonbox.botton.push({
+                        class: 'erp_bt bt_auxiliary',
+                        imgsrc: '../../../static/image/common/bt_stop.png',
+                        text: '查询'
+                    })
+                }
+            },
         },
+        components:{
+            Query,
+            Btm,
+            Tree
+        }
         
     }
 </script>
