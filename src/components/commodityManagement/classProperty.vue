@@ -7,11 +7,10 @@
                     <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                      <el-row class="shopclass">
                         <tree :datc="componyTree"></tree> 
-                        <div class="bgfc">
-                            
+                        <div class="bgfc">  
                             <el-col :span='24' class="pt10 pl10" >
                                 <el-row >
-                                    <el-col :span="3"  :xl="3" :lg="4" :md="5" :sm="5" :xs="5" class="lh40">
+                                    <el-col :span="3" :xl="3" :lg="4" :md="5" :sm="5" :xs="5" class="lh40">
                                         商品类目
                                     </el-col>
                                     <el-col :span="21" :xl="21" :lg="20" :md="19" :sm="19" :xs="19" class="lh40">
@@ -27,13 +26,11 @@
                                         <el-checkbox v-model="checked2">批次管理</el-checkbox>
                                     </el-col>
                                     <el-col  :xl="5" :lg="5" :md="11" :sm="12" :xs="12" class="lh40">
-                                        <el-checkbox v-model="checked3">保质期管理</el-checkbox>
-                                        
+                                        <el-checkbox v-model="checked3">保质期管理</el-checkbox> 
                                     </el-col>
                                 </el-row>
                                 <div style="background:rgb(249,249,249)" class="pb10 pt10" >     
                                     <el-row class="bm-pd10" >
-
                                         <el-col :span="12">
                                             <span class="shop-title">
                                                 商品属性
@@ -67,7 +64,7 @@
                                     <el-table-column prop="attributeName" label="属性名称">
                                     </el-table-column>
                                     <el-table-column prop="startUsing" label="启用">
-                                        <template slot-scope="scope">
+                                        <template scope="scope">
                                             <el-checkbox  ></el-checkbox>
                                         </template>
                                     </el-table-column>
@@ -77,7 +74,6 @@
                             </div>
                             <div style="background:rgb(249,249,249);margin-bottom:10px" class="pb10 ">
                                   <el-row class="bm-pd10 mt10">
-
                                         <el-col :span="12">
                                             <span class="shop-title">
                                                 商品规格
@@ -91,10 +87,8 @@
                                 <div v-show="ifShow1"> 
                                     <el-row class="pl10 pr10 pb10">
                                         <el-col :span="12">
-                                            <div class="left">
-                                                
+                                            <div class="left">    
                                                 <el-button type="success"><i class="el-icon-plus" style="margin-right:5px;"></i>选取</el-button>
-
                                             </div> 
                                         </el-col>
                                         <el-col :xl="6" :lg="8" :md="10" :sm="11" :xs="11" style="float:right">
@@ -105,28 +99,16 @@
                                             </div>
                                         </el-col>
                                     </el-row>
-                                    <el-table
-                                    :data="tableData"
-                                    border
+                                    <el-table :data="tableData" border
                                     style="width: 100%" class="text-center">
-                                    <el-table-column
-                                      prop="sequenceNumber1"
-                                      label="序号"
-                                      width="60">
+                                    <el-table-column prop="sequenceNumber1" label="序号" width="60">
                                     </el-table-column>
-                                    <el-table-column
-                                      prop="AttributeEncoding1"
-                                      label="规格编码"
-                                      >
+                                    <el-table-column prop="AttributeEncoding1" label="规格编码" >
                                     </el-table-column>
-                                    <el-table-column
-                                      prop="attributeName1"
-                                      label="规格名称">
+                                    <el-table-column prop="attributeName1" label="规格名称">
                                     </el-table-column>
-                                    <el-table-column
-                                      prop="startUsing1"
-                                      label="启用">
-                                      <template slot-scope="scope">
+                                    <el-table-column prop="startUsing1" label="启用">
+                                      <template scope="scope">
                                             <el-checkbox  ></el-checkbox>
                                         </template>
                                     </el-table-column>
@@ -464,23 +446,8 @@ import Tree from '../../base/tree/tree'
 
 <style scoped>
 
-.text-center{
-    text-align: center;
-}
-.smallBgcolor .el-select{
-    width: 100% !important ;
-    margin-left: 10px;
-    
-}
-.erp_bt{
-    padding: 0 8px !important;    
-}
-.bt_audit{
-    background-color: rgb(225,153,51);
-}
-.bt_in{
-    background-color: rgb(130,170,252);
-}
+
+
 .bgcolor label{
     width: 100% !important ;
     margin-right: 0; 
@@ -493,16 +460,10 @@ import Tree from '../../base/tree/tree'
     margin-right: 10px;
     margin-left: 10px;
 }
-.bgcolor{
-    overflow:  visible; 
-}
 .shopclass{
     background: rgba(251, 252, 253, 1);
 }
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
+
 .bg-white{
     background: white;
     border-radius: 3px;
@@ -535,44 +496,11 @@ import Tree from '../../base/tree/tree'
     border-bottom: 1px solid #e4e4e4;
     margin: 10px 0;
 }
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
-}
-.h48{
-    height: 48px;
-    line-height: 48px;
-    border-bottom: 1px solid #E4E4E4;
-}
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
 .pl10{
     padding-left: 10px;
 }
-.pl15{
-    padding-left: 15px;
-}
 .pt10{
     padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
 }
 .pb10{
     padding-bottom: 10px;
@@ -580,69 +508,9 @@ import Tree from '../../base/tree/tree'
 .pr10{
     padding-right: 10px;
 }
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
-}
 .border-left{
     border-left: 1px solid #E4E4E4;
 }
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    font-size: 12px;
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
-</style>
-
-<style>
 #bgf{
     width: calc(100% - 275px);
     float: left;
@@ -652,9 +520,10 @@ import Tree from '../../base/tree/tree'
     float: left;
     background-color: rgba(238, 241, 245, 1);
 }
-.el-checkbox__input.is-checked+.el-checkbox__label{
-    color: #606266;
-}
+</style>
+
+<style>
+
 .el-input-group__append{
     background-color: rgb(51,204,204);
     color: #fff;
@@ -670,9 +539,6 @@ import Tree from '../../base/tree/tree'
     padding: 7px 10px;
     border-color: rgb(51,204,204);
 }
-.bgcolor{
-    width: 100%;
-}
 .el-checkbox__inner{
     width: 16px;
     height: 16px;
@@ -681,74 +547,5 @@ import Tree from '../../base/tree/tree'
 .el-checkbox__inner::after{
     left: 4px;
     top: -2px;
-}
-.el-table__header-wrapper .el-table__header th{
-    white-space: nowrap;
-    overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.shop-sq i.rotate{
-     transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg); 
- }
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
-/* 重写checkbox */
-.tenant-management-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.tenant-management-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
-
-/* 重写el-table样式 */
-.group-management-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.group-management-wrapper .el-table td{
-    padding: 3px 0;
-}
-.group-management-wrapper .el-table__body{
-    text-align: center;
 }
 </style>
