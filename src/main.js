@@ -15,7 +15,7 @@ Vue.use(ElementUI);
 Vue.use(SimpleVueValidation);
 Vue.use(vuescroll);
 Vue.prototype.$axios = axios;
-Vue.prototype.Validator  = SimpleVueValidation.Validator;;
+Vue.prototype.Validator  = SimpleVueValidation.Validator;
 SimpleVueValidation.extendTemplates({//表单验证全局配置
   error: '错误.',
   required: '必填',

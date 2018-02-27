@@ -101,7 +101,15 @@ const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'
 // const commodityRecord= () =>import('../components/commodityManagement/commodityRecord')
 // const Record= () =>import('../components/commodityManagement/Record')
 // const commodityRecordDetails= () =>import('../components/commodityManagement/commodityRecordDetails')
-
+const redirectRouter=function(routerName) {//重定向
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==routerName){
+          return activeRouter[i].url;
+          break;
+        }
+    }
+  }
 Vue.use(Router)
 const routes = [
   { path: '*', component: page404},
@@ -168,14 +176,7 @@ children:[
   { path: '/longData', component: longData,name:'longData' },
   { path: '/midData', component: midData,name:'midData' },
   { path: '/repository', component: repository,name:'repository',redirect: function(){//仓库管理
-    let name='repository';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('repository')
   },children:[
       { path: '/repository/repositoryList/:id', component: repositoryList,name:'repositoryList' },
       { path: '/repository/repositoryData/:id', component: repositoryData,name:'repositoryData' }, 
@@ -187,14 +188,7 @@ children:[
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
 
   { path: '/customer', component: customer,name:'customer',redirect: function(){//客户管理
-    let name='customer';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('customer')
   },children:[  
       { path: '/customer/customerList/:id', component: customerList,name:'customerList' },
       { path: '/customer/customerDetail/:id', component: customerDetail,name:'customerDetail' },
@@ -202,14 +196,7 @@ children:[
   ]},
 
   { path: '/account', component: account,name:'account',redirect: function(){//客户管理
-    let name='account';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('account')
   },children:[  
       { path: '/account/accountList/:id', component: accountList,name:'accountList' },
       { path: '/account/accountDetail/:id', component: accountDetail,name:'accountDetail' },
@@ -217,67 +204,31 @@ children:[
   ]},
 
   { path: '/currency', component: currency,name:'currency',redirect: function(){//币种资料
-    let name='currency';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('currency')
   },children:[  
       { path: '/currency/currencyList/:id', component: currencyList,name:'currencyList' },
   ]},
 
   { path: '/order', component: order,name:'order',redirect: function(){//采购管理
-    let name='order';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('order')
   },children:[
       { path: '/order/orderDetails/:id', component: orderDetails,name:'orderDetails' },
       { path: '/order/orderList/:id', component: orderList,name:'orderList' },
   ]},
 
   { path: '/bill', component: bill,name:'bill',redirect: function(){//单据开单模板
-    let name='bill';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('bill')
   },children:[
       { path: '/bill/billDetails/:id', component: billDetails,name:'billDetails' },
       { path: '/bill/billList/:id', component: billList,name:'billList' },
   ]},
   { path: '/groupManage', component: groupManage,name:'groupManage',redirect: function(){//集团管理
-    let name='groupManage';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('groupManage')
   },children:[
       { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
   { path: '/OuManage', component: OuManage,name:'OuManage',redirect: function(){//组织管理
-    let name='OuManage';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('OuManage')
   },children:[
       { path: '/OuManage/OuManageSee/:id', component: OuManageSee,name:'OuManageSee' },
       { path: '/OuManage/OuManageModify/:id', component: OuManageModify,name:'OuManageModify' },
@@ -285,14 +236,7 @@ children:[
       { path: '/OuManage/OuManageList/:id', component: OuManageList,name:'OuManageList' },
   ]},
   { path: '/menu', component: menu,name:'menu',redirect: function(){//菜单管理
-    let name='menu';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('menu')
   },children:[
       { path: '/menu/menuDetail/:id', component: menuDetail,name:'menuDetail' },
       { path: '/menu/menuList/:id', component: menuList,name:'menuList' },
@@ -411,26 +355,12 @@ children:[
   // ]},
 
   { path: '/businessArea', component: businessArea,name:'businessArea',redirect: function(){//业务地区
-    let name='businessArea';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('businessArea')
   },children:[
       { path: '/businessArea/businessAreaList/:id', component: businessAreaList,name:'businessAreaList' },
   ]},
   { path: '/department', component: department,name:'department',redirect: function(){//部门资料
-    let name='department';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('department')
   },children:[
       { path: '/department/departmentList/:id', component: departmentList,name:'departmentList' },
   ]},
