@@ -310,9 +310,23 @@
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
+                    _this.loadIcon();
                },function(res){
                    _this.treeLoading=false;
                })
+            },
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
             },
             //---------------------------------------------------------------
 
@@ -605,10 +619,11 @@
             },
             renderContent(h, { node, data, store }) {
                 return (
-                <span class="TreeNode"
+                <span class="TreeNode el-tree-node__label"
                 on-mousedown ={ (event) => this.whichButton(event,node, data) } 
-                style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;position: relative;">
-                    {node.label}
+                on-click={ (event) => this.showTable(event,node, data) }
+                style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
+                  {node.label}
                    <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
                         <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
                         <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
