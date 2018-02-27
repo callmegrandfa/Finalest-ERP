@@ -1,12 +1,10 @@
 <template>
     <div class="group-management-wrapper">
         <el-row class="bg-white">
-
             <el-col :span='24' class="border-left">
                <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                <textbox :data="textboxipt"></textbox>
                 <el-row class="pl10 pr10">
-
                     <el-col :span="7" style="margin-left:98px">
                         <div class="bgcolor smallBgcolor">
                             <el-checkbox>服务类（虚拟）</el-checkbox>
@@ -20,8 +18,7 @@
                     <textbox :data="textboxipt1"></textbox>
                 </el-row>
             </el-col>
-        </el-row>
-        
+        </el-row> 
     </div>
 </template>
 
@@ -134,60 +131,15 @@ import Textbox from '../../base/textbox/textbox'
 </script>
 
 <style scoped>
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
-
-.bgcolor{
-    overflow:  visible; 
-}
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
 .bg-white{
     background: white;
     border-radius: 3px;
 }
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
-}
-.h48{
-    height: 48px;
-    line-height: 48px;
-    border-bottom: 1px solid #E4E4E4;
-}
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
 .pl10{
     padding-left: 10px;
 }
-.pl15{
-    padding-left: 15px;
-}
 .pt10{
     padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
 }
 .pb10{
     padding-bottom: 10px;
@@ -200,13 +152,10 @@ import Textbox from '../../base/textbox/textbox'
 </style>
 
 <style>
-.bgcolor{
-    width: 100%; 
-}
 /* 重写checkbox */
 .el-checkbox__inner{
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius:50% !important; 
 }
 .el-checkbox__inner::after{
@@ -219,7 +168,7 @@ import Textbox from '../../base/textbox/textbox'
     height: 11px;
     left: 4px;
     position: absolute;
-    top: 0px;
+    top: -2px;
     -webkit-transform: rotate(45deg) scaleY(0);
     transform: rotate(45deg) scaleY(0);
     width: 6px;
@@ -229,13 +178,5 @@ import Textbox from '../../base/textbox/textbox'
     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
     -webkit-transform-origin: center;
     transform-origin: center;
-}
-
-
-.group-management-wrapper .el-table td{
-    padding: 3px 0;
-}
-.group-management-wrapper .el-table__body{
-    text-align: center;
 }
 </style>

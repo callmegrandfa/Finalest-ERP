@@ -9,13 +9,9 @@
                     </el-row>
                 </div>
                  <el-row class="">
-                    <el-col :span='24' class=" " style="">
-                        
+                    <el-col :span='24' class=" " style="">  
                     <div style="background:rgb(249,249,249)" class="pb10">
-                            
-                        
                         <el-row class="bm-pd10">
-
                             <el-col :span="12">
                                 <span class="shop-title">
                                     商品属性
@@ -29,8 +25,7 @@
                             <div v-show="ifShow">
                                 <el-row class="pl10 pr10 pb10">
                                     <el-col :span="12">
-                                        <div class="left">
-                                            
+                                        <div class="left">    
                                             <el-button type="success"><i class="el-icon-plus" style="margin-right:5px;"></i>选取</el-button>
                                         </div> 
                                     </el-col>
@@ -112,65 +107,8 @@
                         </el-row>
                         <el-row>
                             <textbox :data="textboxipt1"></textbox>
-                            <!-- <el-col :span="6">
-                                <el-row>
-                                    <el-col :span="8">
-                                        <div class="bgcolor smallBgcolor">
-                                                <label>创建人</label>
-                                       </div>
-                                    </el-col>
-                                    <el-col :span="14">
-                                        <div class="smallBgcolor">
-                                        <el-input placeholder=""></el-input>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                            </el-col>
-                            <el-col :span="6">
-                                <el-row>
-                                    <el-col :span="8">
-                                        <div class="bgcolor smallBgcolor">
-                                                <label>创建时间</label>
-                                       </div>
-                                    </el-col>
-                                    <el-col :span="14">
-                                        <div class="smallBgcolor">
-                                        <el-input placeholder=""></el-input>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                            </el-col>
-                            <el-col :span="6">
-                                <el-row>
-                                    <el-col :span="8">
-                                        <div class="bgcolor smallBgcolor">
-                                                <label>修改人</label>
-                                       </div>
-                                    </el-col>
-                                    <el-col :span="14">
-                                        <div class="smallBgcolor">
-                                        <el-input placeholder=""></el-input>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                            </el-col>
-                            <el-col :span="6">
-                                <el-row>
-                                    <el-col :span="8">
-                                        <div class="bgcolor smallBgcolor">
-                                                <label>修改时间</label>
-                                       </div>
-                                    </el-col>
-                                    <el-col :span="14">
-                                        <div class="smallBgcolor">
-                                        <el-input placeholder=""></el-input>
-                                        </div>
-                                    </el-col>
-                                </el-row>
-                            </el-col> -->
                         </el-row>
                     </div> 
-                     
                     </el-col> 
                 </el-row>
 
@@ -325,29 +263,6 @@ import Textbox from '../../base/textbox/textbox'
 </script>
 
 <style scoped>
-.smallBgcolor .el-select{
-    width: 100% !important ;
-    margin-left: 10px;
-}
-.bgcolor label{
-    width: 100% !important ;
-    margin-right: 0; 
-}
-.smallBgcolor .el-input--suffix{
-    width: 100% !important ;
-}
-.smallBgcolor .el-input{
-    width: 100% !important ;
-    margin-left: 10px;
-}
-
-.bgcolor{
-    overflow:  visible; 
-}
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
 .bg-white{
     background: white;
     border-radius: 3px;
@@ -396,99 +311,17 @@ import Textbox from '../../base/textbox/textbox'
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
 .pl10{
     padding-left: 10px;
 }
-.pl15{
-    padding-left: 15px;
-}
 .pt10{
     padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
 }
 .pb10{
     padding-bottom: 10px;
 }
 .pr10{
     padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
-}
-.border-left{
-    border-left: 1px solid #E4E4E4;
-}
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    font-size: 12px;
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
 }
 </style>
 
@@ -501,83 +334,5 @@ import Textbox from '../../base/textbox/textbox'
 .el-checkbox__inner::after{
     left: 4px;
     top: -2px;
-}
-.bgcolor{
-    width: 100%;
-}
-.el-checkbox__input.is-checked+.el-checkbox__label{
-    color: #606266;
-}
-.el-input-group__append{
-    background-color: rgb(51,204,204);
-    color: #fff;
-    cursor: pointer;
-    border-color: rgb(51,204,204);
-}
-.el-input__inner{
-    
-    height: 30px;
-}
-.el-button--success{
-    background-color: rgb(51,204,204); 
-    padding: 7px 10px;
-    border-color: rgb(51,204,204);
-}
-.shop-sq i.rotate{
-     transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg); 
- }
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
-/* 重写checkbox */
-.tenant-management-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.tenant-management-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
-
-/* 重写el-table样式 */
-.group-management-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.group-management-wrapper .el-table td{
-    padding: 3px 0;
-}
-.group-management-wrapper .el-table__body{
-    text-align: center;
 }
 </style>

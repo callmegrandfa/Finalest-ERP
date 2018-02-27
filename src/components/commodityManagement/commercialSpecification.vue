@@ -348,53 +348,16 @@
     }
 </script>
 
-<style scoped>
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
-}
-.pl15{
-    padding-left: 15px;
-}
-.pt10{
-    padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
+<style scoped> 
 .border-left{
     border-left: 1px solid #E4E4E4;
+}
+#bs{
+    width: calc(100% - 275px);
 }
 </style>
 
 <style>
-#bs{
-    width: calc(100% - 275px);
-}
-.bgcolor{
-    width: 100%;
-}
 .el-checkbox__inner{
     width: 16px;
     height: 16px;

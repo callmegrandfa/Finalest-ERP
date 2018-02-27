@@ -322,55 +322,10 @@ import Tree from '../../base/tree/tree'
                 }
 
             },
-            storageData(e){
-                this.$store.state.url='/commodity/commodityPropertyDetails/default'
-               this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-            packUp(){
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                oleftBox.style.display="none";
-                Re.style.display="block";
-            },
-            refer(){
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                oleftBox.style.display="block";
-                Re.style.display="none";
-            },
-            dell(){
-                let ocheck=document.getElementsByClassName('el-table_1_column_2');
-                let oTh=[];
-                let aa=[];
-                let bb=[];
-                for(var i=0;i<ocheck.length;i++){
-                  oTh.push(ocheck[i].children[0].children[0]);
-                 
-                }//获取全部的复选框
-                oTh.splice(0,1);
-                for(var i=0;i<oTh.length;i++){
-
-                    if(oTh[i].getAttribute("aria-checked")=='true'){
-                        aa.push(oTh[i]);
-                        oTh[i].children[0].classList.remove("is-checked")
-                    }     
-                }//找到当前选中的复选框
-                for(var i=0;i<aa.length;i++){
-                    bb.push(parseInt(aa[i].parentNode.parentNode.parentNode.children[0].children[0].innerHTML)-1)      
-                }//找到当前选择的复选框的序号
-                for(var i=0;i<bb.length;i++){
-                    
-                    this.tableData.splice(bb[i]-[i],1);
-                    for(var j=0;j<this.tableData.length;j++){
-                        this.tableData[j].date=j+1;
-                    }
-                    
-                    
-                }
+            
                 
                 
 
-            }
         },
         components:{
             Query,
@@ -384,244 +339,31 @@ import Tree from '../../base/tree/tree'
 </script>
 
 <style scoped>
-.smallBgcolor .el-select{
-    width: 100% !important ;
-    margin-left: 10px;
-    
-}
-.bt_audit{
-    background-color: rgb(225,153,51);
-}
-.bt_in{
-    background-color: rgb(130,170,252);
-}
-.bgcolor label{
-    width: 100% !important ;
-    margin-right: 0; 
-}
-.smallBgcolor .el-input--suffix{
-    width: 100% !important ;
-}
-.smallBgcolor .el-input{
-    width: 100% !important ;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-.bgcolor{
-    overflow:  visible; 
-}
-.shopclass{
-    background: rgba(251, 252, 253, 1);
-}
-.erp_bt{
-    padding: 0 8px !important;    
-}
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
-.bt_audit{
-    background-color: rgb(225,153,51);
-}
-.bt_in{
-    background-color: rgb(130,170,252);
-}
-.bg-white{
-    background: white;
-    border-radius: 3px;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
-}
-.h48{
-    height: 48px;
-    line-height: 48px;
-    border-bottom: 1px solid #E4E4E4;
-}
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
-
 .ml10{
     margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
-}
-.pl15{
-    padding-left: 15px;
 }
 .pt10{
     padding-top: 10px;
 }
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
-}
 .border-left{
     border-left: 1px solid #E4E4E4;
 }
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    font-size: 12px;
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
-</style>
-
-<style>
 #cp{
     width: calc(100% - 275px);
 }
 .table-width{
     width: calc(100% - 200px);
 }
-.bgcolor{
-    width: 100%;
-}
-.el-table__header-wrapper .el-table__header th{
-    white-space: nowrap;
-    overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
+</style>
+
+<style>
 .el-checkbox__inner{
-    width: 16px;
-    height: 16px;
-    background: #f4f4f5;
+    width: 16px ;
+    height: 16px ;
+    background: #f4f4f5 ;
 }
 .el-checkbox__inner::after{
-    left: 4px;
-    top: -2px;
-}
-.text-left{
-    text-align: left;
-}
-.text-center{
-    text-align: center;
-}
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
-/* 重写checkbox */
-.tenant-management-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.tenant-management-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
-
-/* 重写el-table样式 */
-.group-management-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.group-management-wrapper .el-table td{
-    padding: 3px 0;
-}
-.group-management-wrapper .el-table__body{
-    text-align: center;
+    left: 4px ;
+    top: -2px ;
 }
 </style>

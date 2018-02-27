@@ -285,92 +285,15 @@ import Btm from '../../base/btm/btm'
 </script>
 
 <style scoped>
-.customer-infor-wrapper{
-    display: flex;
-    display: -webkit-flex; 
-    width: 100%;
-}
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
-.smallBgcolor .el-select{
-    width: 100% !important ;
-    margin-left: 10px;
-}
-.bgcolor label{
-    width: 100% !important ;
-    margin-right: 0; 
-}
-.smallBgcolor .el-input--suffix{
-    width: 100% !important ;
-}
-.smallBgcolor .el-input{
-    width: 100% !important ;
-    margin-left: 10px;
-}
-
-.bgcolor{
-    overflow:  visible; 
-}
-.bt_save{
-    background-color: rgb(0,204,255);
-}
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.bt_audit{
-    background-color: rgb(225,153,51);
-}
-.bt_in{
-    background-color: rgb(130,170,252);
-}
-.bt_save_add{
-    background-color: rgb(22,155,213);
-}
-.bg-white{
-    background: white;
-    border-radius: 3px;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
-}
-.h48{
-    height: 48px;
-    line-height: 48px;
-    border-bottom: 1px solid #E4E4E4;
-}
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
 }
 .pl10{
     padding-left: 10px;
 }
-.pl15{
-    padding-left: 15px;
-}
 .pt10{
     padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
 }
 .pb10{
     padding-bottom: 10px;
@@ -378,67 +301,8 @@ import Btm from '../../base/btm/btm'
 .pr10{
     padding-right: 10px;
 }
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-}
 .border-left{
     border-left: 1px solid #E4E4E4;
-}
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
-.text-right{
-    text-align: right;
 }
 </style>
 
@@ -448,8 +312,8 @@ import Btm from '../../base/btm/btm'
     float: left;
 }
 .el-checkbox__inner{
-    width: 16px !important;
-    height: 16px !important;
+    width: 16px;
+    height: 16px;
     background: #f4f4f5;
 }
 .el-checkbox__inner::after{
@@ -459,63 +323,5 @@ import Btm from '../../base/btm/btm'
 .bgcolor{
     width: 100%;
 }
-.customer-infor-wrapper .el-input input{
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
-/* 重写checkbox */
-.customer-infor-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.customer-infor-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
 
-/* 重写el-table样式 */
-.customer-infor-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.customer-infor-wrapper .el-table td{
-    padding: 3px 0;
-}
-.customer-infor-wrapper .el-table__body{
-    text-align: center;
-}
-/* 重写el-pagination样式 */
-/* .customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-} */
-/* .customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-} */
-/* .customer-infor-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-}  */
 </style>
