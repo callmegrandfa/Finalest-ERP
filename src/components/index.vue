@@ -36,13 +36,6 @@ export default {
               display:'none'
           })
     })
-    // .on('mousedown',function(e){//业务地区管理，树形图
-    //     if(e.target.className=='TreeNode'|| e.target.className=='TreeMenuBtn' || e.target.className=='el-tree-node__content'){
-    //         document.oncontextmenu=new Function("event.returnValue=false;");
-    //     }else{
-    //         document.oncontextmenu=new Function("event.returnValue=true;");
-    //     }
-    // })
 
       _this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
       let content=document.getElementById('contents');//设置高度为全屏
