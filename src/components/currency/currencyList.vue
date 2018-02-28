@@ -235,6 +235,7 @@
                     this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.addList[i]).then(function(res){         
                         self.open('创建货币资料成功','el-icon-circle-check','successERP');
                         console.log(res)
+                        self.loadAllList()
                     }),function(res){
                         self.open('创建货币资料失败','el-icon-error','faildERP');
                     };
@@ -247,6 +248,8 @@
                         this.$axios.puts('/api/services/app/CurrencyManagement/Update',self.updateList[i]).then(function(res){
                             console.log(res);
                             self.open('修改货币资料成功','el-icon-circle-check','successERP');
+                            self.loadAllList()
+                            self.ar = [];
                             self.updateList = [];
                             }),function(res){
                                 self.open('修改货币资料失败','el-icon-error','faildERP');
