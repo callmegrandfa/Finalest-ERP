@@ -85,6 +85,10 @@ export default new vuex.Store({
 
             {name:'department',url:'/department/departmentList/:id',parent:'',default:'/department/departmentList/:id'},//部门资料
             {name:'departmentList',url:'/department/departmentList/:id',parent:'department'},
+            
+            {name:'user',url:'/user/userList/:id',parent:'',default:'/user/userList/:id'},//部门资料
+            {name:'userList',url:'/user/userList/:id',parent:'user'},
+            {name:'userDetail',url:'/user/userDetail/:id',parent:'user'},
         ],
     },
     mutations: {
