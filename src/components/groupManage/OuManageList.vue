@@ -133,7 +133,6 @@
 
 <script>
     export default{
-        name:'customerInfor',
         data(){
             return {
                 tableLoading:false,
