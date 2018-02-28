@@ -32,11 +32,6 @@
             <div v-show="ifShow" class="bb1">
                 <el-row class="bg-white pt10">
                     <el-col :span="24">
-                        <div class="tipsWrapper" name="ouCode">
-                            <div class="errorTips" :class="{block : !validation.hasError('addData.ouCode')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouCode') }}</p>
-                            </div>
-                        </div>
                         <div class="tipsWrapper" name="periodYear">
                             <div class="errorTips" :class="{block : !validation.hasError('createAccountParams.periodYear')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createAccountParams.periodYear') }}</p>
@@ -47,16 +42,6 @@
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createAccountParams.periodNum') }}</p>
                             </div>
                         </div>
-                        <div class="tipsWrapper" name="regtime">
-                            <div class="errorTips" :class="{block : !validation.hasError('addData.regtime')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.regtime') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="baseCurrencyId">
-                            <div class="errorTips" :class="{block : !validation.hasError('addData.baseCurrencyId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('addData.baseCurrencyId') }}</p>
-                            </div>
-                        </div>
                         <div class="tipsWrapper" name="remark">
                             <div class="errorTips" :class="{block : !validation.hasError('createAccountParams.remark')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createAccountParams.remark') }}</p>
@@ -64,7 +49,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label><small>*</small>会计方案{{value}}</label>
+                            <label>会计方案{{value}}</label>
                             <el-select v-model="value" 
                                         placeholder="请选择会计方案"
                                         :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -325,30 +310,18 @@
             }
         },
         validators: {
-            // 'addData.ouCode': function (value) {//编码
-            //     return this.Validator.value(value).required().maxLength(50)
-            // },
             'createAccountParams.periodYear': function (value) {//会计年份
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).required().integer();
             },
-            'createAccountParams.periodNum': function (value) {//上级业务单元
-                return this.Validator.value(value).required().maxLength(50);
+            'createAccountParams.periodNum': function (value) {//会计个数
+                return this.Validator.value(value).required().integer();
             },
-            // 'addData.regtime': function (value) {//公司成立时间
-            //     return this.Validator.value(value).required().maxLength(50);
-            // },
             'createAccountParams.remark': function (value) {//备注
-                return this.Validator.value(value).required().integer();
-            },
-            'addData.companyOuId': function (value) {//所属公司
-                return this.Validator.value(value).required().integer();
-            },
-            'addData.legalPerson': function (value) {//法人代表
                 return this.Validator.value(value).required().maxLength(50);
             },
         },
         methods:{
-            //-------------------------------------------------
+            //---提示错误----------------------------------------------
             showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 // console.log($(e.target).parent('.el-input'))
@@ -671,9 +644,12 @@ input::-webkit-input-placeholder{
 </style>
 <style>
 .block{
-      display: none;
-  }
-
+    display: none;
+}
+.data-wrapper .errorTips{
+    margin-bottom: 10px;
+    /* margin-top: -10px; */
+}
 </style>
 
 
