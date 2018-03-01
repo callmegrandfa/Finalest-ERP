@@ -28,14 +28,14 @@
             
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5 pr10 pl5">
-                    <button class="erp_bt bt_back">
+                    <button class="erp_bt bt_save" @click="saveValue">
                         <div class="btImg">
-                            <img src="../../../static/image/common/bt_back.png">
+                        <img src="../../../static/image/common/bt_save.png">
                         </div>
-                        <span class="btDetail">返回</span>
+                        <span class="btDetail">保存</span>
                     </button>
 
-                    <button class="erp_bt bt_add" @click="addNew">
+                    <button class="erp_bt bt_add" @click="addCol">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_add.png">
                         </div>
@@ -273,7 +273,9 @@
                 dialogFormVisible:false,
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
-                // showParent:true,//上级组织单元是否可选
+                x:0,//增行的下标
+                rows:[],//增行的数组
+                addList:[],//新增上传的数组
             }
         },
         created:function(){       
@@ -382,29 +384,20 @@
                     }
                 })
             },
-            // sendAjax(){
-            //     let _this=this;
-            //     if(_this.isAdd){
-            //         _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
-            //         .then(function(res){
-            //             _this.dialogFormVisible=false;
-            //             _this.loadTree();
-            //             _this.loadTableData();
-            //         },function(res){    
-
-            //         })
-            //     }else{
-            //          _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
-            //         .then(function(res){
-            //             _this.dialogFormVisible=false;
-            //             _this.loadTree();
-            //             _this.loadTableData();
-            //         },function(res){    
-
-            //         })
-            //     }
-                
-            // },
+            saveValue:function(){//保存值表的修改和新增
+                let self = this;
+                if(self.addList.length>0){
+                    for(let i in self.addList){
+                        self.$axios.posts('/api/services/app/DictItemManagement/Create',self.addList[i]).then(function(res){
+                            self.loadTree();
+                            self.open('创建字典系统值成功','el-icon-circle-check','successERP');
+                            self.addList = [];
+                        },function(res){    
+                            console.log('error')
+                        })
+                    }
+                }
+            },
             //----------------------------------------------------------------
             //---清除数据--------------------------------------------------
             clearAddDate:function(){//清除新增数据
@@ -424,9 +417,26 @@
             },
             //----------------------------------------------------------------
             //---新增系统字典值----------------------------------------------------------
-            addNew:function(){
+            addCol:function(){//增行
                 let self = this;
-                // self.tableData
+                self.x++;
+                let newCol = 'newCol'+self.x;
+                self.rows.newCol = {
+                        groupId: 1,
+                        dictId: 1,
+                        itemName: "",
+                        itemCode: "",
+                        itemValue: "test",
+                        seq: '',
+                        remark: "",
+                        status: '',
+                        isSystem: true
+                    };
+                self.tableData.unshift(self.rows.newCol);
+                self.addList.unshift(self.rows.newCol);
+                // console.log(self.rows)
+                // console.log(self.accountList)
+                // console.log(self.addList)
             },
             //----------------------------------------------------------------
 
@@ -461,9 +471,9 @@
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
             },
-            delThis(row){//删除行
+            delThis(row){//删除字典值行
                 let _this=this;
-                _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:row.id})
+                _this.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:row.id})
                 .then(function(res){
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
