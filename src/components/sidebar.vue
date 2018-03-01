@@ -82,9 +82,14 @@ export default {
                     {name:'菜单管理',address:'menu'},
                 ]
             },{
-                name:'用户组',
+                name:'用户管理',
                 thirdInfo:[
                     {name:'用户资料',address:'user'},
+                ]
+            },{
+                name:'角色管理',
+                thirdInfo:[
+                    {name:'角色资料',address:'role'},
                 ]
             },{
                 name:'采购管理',
