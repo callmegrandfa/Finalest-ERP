@@ -21,6 +21,7 @@ const repositoryData = () =>import('../components/wareHouse/repositoryData')
 const repositoryModify = () =>import('../components/wareHouse/repositoryModify')
 
 const supplierEdit = () =>import('../components/supplierData/supplierEdit')
+const supplierList = () =>import('../components/supplierData/supplierList')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
@@ -44,11 +45,16 @@ const order = () =>import(/* webpackChunkName: "group-order" */'../components/pu
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
 
-const supplierList = () =>import('../components/supplierData/supplierList')
 //用户管理
-const user = () =>import('../components/user/user')
-const userList = () =>import('../components/user/userList')
+const user = () =>import(/* webpackChunkName: "group-user" */'../components/user/user')
+const userList = () =>import(/* webpackChunkName: "group-user" */'../components/user/userList')
 const userDetail = () =>import('../components/user/userDetail')
+const userModify = () =>import('../components/user/userModify')
+//角色管理
+const role = () =>import(/* webpackChunkName: "group-role" */'../components/role/role')
+const roleList = () =>import(/* webpackChunkName: "group-role" */'../components/role/roleList')
+const roleDetail = () =>import('../components/role/roleDetail')
+const roleModify = () =>import('../components/role/roleModify')
 
 const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
 const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
@@ -378,6 +384,14 @@ children:[
   },children:[
       { path: '/user/userList/:id', component: userList,name:'userList' },
       { path: '/user/userDetail/:id', component: userDetail,name:'userDetail' },
+      { path: '/user/userModify/:id', component: userModify,name:'userModify' },
+  ]},
+  { path: '/role', component: role,name:'role',redirect: function(){//用户资料
+    return redirectRouter('role')
+  },children:[
+      { path: '/role/roleList/:id', component: roleList,name:'roleList' },
+      { path: '/role/roleDetail/:id', component: roleDetail,name:'roleDetail' },
+      { path: '/role/roleModify/:id', component: roleModify,name:'roleModify' },
   ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },

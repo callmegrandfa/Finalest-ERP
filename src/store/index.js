@@ -89,9 +89,15 @@ export default new vuex.Store({
             {name:'dictionary',url:'/dictionary/dictionaryList/:id',parent:'',default:'/dictionary/dictionaryList/:id'},//系统字典
             {name:'dictionaryList',url:'/dictionary/dictionaryList/:id',parent:'dictionary'},
             
-            {name:'user',url:'/user/userList/:id',parent:'',default:'/user/userList/:id'},//部门资料
+            {name:'user',url:'/user/userList/:id',parent:'',default:'/user/userList/:id'},//用户资料
             {name:'userList',url:'/user/userList/:id',parent:'user'},
             {name:'userDetail',url:'/user/userDetail/:id',parent:'user'},
+            {name:'userModify',url:'/user/userModify/:id',parent:'user'},
+
+            {name:'role',url:'/role/roleList/:id',parent:'',default:'/role/roleList/:id'},//角色资料
+            {name:'roleList',url:'/role/roleList/:id',parent:'role'},
+            {name:'roleDetail',url:'/role/roleDetail/:id',parent:'role'},
+            {name:'roleModify',url:'/role/roleModify/:id',parent:'role'},
         ],
     },
     mutations: {

@@ -195,19 +195,6 @@
                 searchBtClick:false,
             }
         },
-        // watch:{
-        //     searchData:{  
-        //         handler:function(val,oldval){
-        //             let _this=this;
-        //             console.log(oldval)
-        //             if(_this.searchBtClick){
-        //                 _this.tableSearchData.name=val
-        //             }
-        //             console.log(_this.tableSearchData)  
-        //         },  
-        //         deep:true//对象内部的属性监听，也叫深度监听  
-        //     },
-        // },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
