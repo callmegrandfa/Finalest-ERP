@@ -88,6 +88,10 @@ export default new vuex.Store({
 
             {name:'dictionary',url:'/dictionary/dictionaryList/:id',parent:'',default:'/dictionary/dictionaryList/:id'},//系统字典
             {name:'dictionaryList',url:'/dictionary/dictionaryList/:id',parent:'dictionary'},
+            
+            {name:'user',url:'/user/userList/:id',parent:'',default:'/user/userList/:id'},//部门资料
+            {name:'userList',url:'/user/userList/:id',parent:'user'},
+            {name:'userDetail',url:'/user/userDetail/:id',parent:'user'},
         ],
     },
     mutations: {

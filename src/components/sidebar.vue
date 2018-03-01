@@ -84,9 +84,7 @@ export default {
             },{
                 name:'用户组',
                 thirdInfo:[
-                    {name:'用户组-列表',address:'userList'},
-                    {name:'用户资料-列表',address:'userDataList'},
-                    {name:'用户资料-详细',address:'userInfoDetail'},
+                    {name:'用户资料',address:'user'},
                 ]
             },{
                 name:'采购管理',

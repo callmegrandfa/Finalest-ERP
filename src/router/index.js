@@ -45,9 +45,10 @@ const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
 
 const supplierList = () =>import('../components/supplierData/supplierList')
-const userInfoDetail = () =>import('../components/user/userInfoDetail')
+//用户管理
+const user = () =>import('../components/user/user')
 const userList = () =>import('../components/user/userList')
-const userDataList = () =>import('../components/user/userDataList')
+const userDetail = () =>import('../components/user/userDetail')
 
 const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
 const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
@@ -372,10 +373,13 @@ children:[
   },children:[
       { path: '/dictionary/dictionaryList/:id', component: dictionaryList,name:'dictionaryList' },
   ]},
+  { path: '/user', component: user,name:'user',redirect: function(){//用户资料
+    return redirectRouter('user')
+  },children:[
+      { path: '/user/userList/:id', component: userList,name:'userList' },
+      { path: '/user/userDetail/:id', component: userDetail,name:'userDetail' },
+  ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
-  { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
-  { path: '/userList/:id', component: userList,name:'userList' },
-  { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
   { path: '/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
   { path: '/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
 ]}

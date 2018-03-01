@@ -1,5 +1,5 @@
 <template>
-    <div class="user-list-wrapper">
+    <div class="userList">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
@@ -8,96 +8,118 @@
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        
-                            <span class="fs12 open">+ 展开</span>
-                        
+                        <span class="fs12 open">+ 展开</span>
                     </el-col>
                 </el-row>
 
-                <el-row class="mt20 pl15 h30">
-                    <el-col :span="5" class="fs12">
-                        <span>用户组编码</span>
-                    </el-col>
-                    <el-col :span="15" class="fs12 border1 pl10">
-                        <el-select v-model="value" placeholder="请选择用户组编码">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>用户组名称</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入用户组名称">
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>所属组织</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入所属组织">
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt20" style="text-align:center;">
-                    <span class="search-btn">查询</span>
-                </el-row>
+                <!-- <div class="mt20 bgcolor smallBgcolor">
+                    <label><small>*</small>组织类型</label>
+                    <el-select  v-model="searchData.OuType">
+                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        </el-option>
+                    </el-select>
+                </div> -->
+                <div class="mt20 bgcolor smallBgcolor"><label>用户编码</label><el-input v-model="searchData.UserCode" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>用户名称</label><el-input v-model="searchData.DisplayName" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>用户组</label><el-input v-model="searchData.UserGroupId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属组织</label><el-input v-model="searchData.OuId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>身份类型</label><el-input v-model="searchData.UserType" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>语种</label><el-input v-model="searchData.LanguageId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>认证类型</label><el-input v-model="searchData.AuthType" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>状态</label><el-input v-model="searchData.Status" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>关联角色</label><el-input v-model="searchData.RoleId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor">
+                    <label></label>
+                    <span class="search-btn" @click="SimpleSearchClick">查询</span>
+                </div>
             </el-col>
 
-            <el-col :span='19'>
+            <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button class="erp_bt bt_add" @click="storageData"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div><span class="btDetail">辅助功能</span></button>
+                    <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+                    <button class="erp_bt bt_out bt_width">
+                        <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
+                        <span class="btDetail">导出</span>
+                        <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                    </button>
+                    <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_version.png"></div><span class="btDetail">生成版本</span></button>
+                    <button class="erp_bt bt_auxiliary bt_width">
+                        <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
+                        <span class="btDetail">辅助功能</span>
+                        <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                    </button>                
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span="24">
-                        <el-table :data="tableData" border style="width: 100%" stripe>
-                            <el-table-column prop="ifAction" label="操作">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="organization" label="所属组织" ></el-table-column>
-                            <el-table-column prop="cusCode" label="客户编码"></el-table-column>
-                            <el-table-column prop="cusName" label="客户名称"></el-table-column>
-                            <el-table-column prop="cusCall" label="客户简称"></el-table-column>
-                            <el-table-column prop="cusType" label="客户分类"></el-table-column>
-                            <el-table-column prop="cusNature" label="客户性质"></el-table-column>
-                            <el-table-column prop="ifSupply" label="供应">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifSupply" ></el-checkbox>
-                                </template>
-                            </el-table-column>   
-                            <el-table-column prop="wareHouse" label="对应财务组织"></el-table-column>
-                            <el-table-column prop="ifAllow" label="允许使用">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAllow" ></el-checkbox>
-                                </template>
-                            </el-table-column>
-                    </el-table> 
 
-                    <el-row>
-                            <el-col :span='10'>
-                                <span style="display:inline-block;margin-top:20px;">记录 40，当前第 1 页，共 4 页</span>
-                            </el-col>
-                            <el-col :span='14'>
-                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
-                            </el-col>
-                        </el-row> 
+                    <el-col :span='24'>
+                        <el-table 
+                        v-loading="tableLoading"
+                        :data="tableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe 
+                        @selection-change="handleSelectionChange" 
+                        ref="multipleTable">
+                            <el-table-column type="selection"></el-table-column>
+                            <el-table-column label="序号">
+                                 <template slot-scope="scope">
+                                    {{scope.$index+1}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                            <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                            <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
+                            <el-table-column prop="userGroupName" label="所属用户组"></el-table-column>
+                            <el-table-column prop="OuId" label="所属组织"></el-table-column>
+                            <el-table-column prop="userType" label="身份类型"></el-table-column>
+                            <el-table-column prop="languageId" label="语种"></el-table-column>
+                            <el-table-column prop="AuthType" label="认证类型"></el-table-column>
+                            <el-table-column prop="Status" label="状态"></el-table-column>
+                            <el-table-column label="有效日期" width="270">
+                                <template slot-scope="scope">
+                                    <div class="halfWidth left">
+                                        <el-date-picker
+                                        format="yyyy.MM.dd"
+                                        v-model="tableData[scope.$index].createdTime " 
+                                        type="datetime" 
+                                        readonly
+                                        align="center"
+                                        placeholder="无数据"></el-date-picker>
+                                    </div>
+                                    <span>-</span>
+                                    <div class="halfWidth right">
+                                        <el-date-picker 
+                                        format="yyyy.MM.dd" class="halfWidth"
+                                        v-model="tableData[scope.$index].deletedTime" 
+                                        type="datetime" 
+                                        readonly
+                                        align="center"
+                                        placeholder="无数据"></el-date-picker>
+                                    </div>    
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="RoleId" label="关联角色"></el-table-column>
+                            <el-table-column label="操作">
+                                 <template slot-scope="scope">
+                                     <el-button type="text" size="small">删除</el-button>
+                                    <el-button type="text" size="small"  @click="modify(scope.row)" >查看</el-button>
+                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total,prev, pager, next,jumper" 
+                        @current-change="handleCurrentChange"
+                        :current-page="pageIndex"
+                        :page-size="oneItem"
+                        :total="totalItem">
+                        </el-pagination>   
                     </el-col>
                 </el-row>
 
@@ -109,187 +131,184 @@
 
 <script>
     export default{
-        name:'userList',
         data(){
             return {
-                try:{
-                "groupId": 2,
-                "stockId": 1,
-                "addressId": 8,
-                "completeAddress": "str33ing",
-                "transportMethodId": 1,
-                "contactPerson": "stri55ng",
-                "phone": "18200326666",
-                "logisticsCompany": "str55ing",
-                "isDefault": true,
-                "remark": "st54ring"
+                tableLoading:false,
+                treeLoading:false,
+                searchData:{
+                    OuCode: "",//编码
+                    Name: "",//名称
+                    CompanyOuId:'',//所属公司
+                    AreaId: '',//行政地区
+                    Status: '',//启用状态
+                    OuType: '',//组织类型
                 },
-
+                searchDataClick:{},
+                tableSearchData:{},
                 options: [{
-                    value: '选项1',
-                    label: '仓库'
+                    basOuTypes: '1',
+                    label: '1'
                     }, {
-                    value: '选项2',
-                    label: '地址'
+                    basOuTypes: '2',
+                    label: '2'
                     }, {
-                    value: '选项3',
-                    label: '总部'
+                    basOuTypes: '3',
+                    label: '3'
                     }, {
-                    value: '选项4',
-                    label: '总部2'
+                    basOuTypes: '4',
+                    label: '4'
                     }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
+                    basOuTypes: '5',
+                    label: '5'
+                    }, {
+                    basOuTypes: '6',
+                    label: '6'
+                    }, {
+                    basOuTypes: '7',
+                    label: '7'
+                    }, {
+                    basOuTypes: '8',
+                    label: '8'
+                    }, {
+                    basOuTypes: '9',
+                    label: '9'
                     }],
+                tableData:[],
 
-                value: '',
-                tableData: [{
-                    ifAction:true,
-                    organization: '组织',
-                    cusCode: '客户编码',
-                    cusName: '客户名称',
-                    cusCall: '客户简称',
-                    cusType:'客户分类',
-                    cusNature:'客户性质',
-                    ifSupply:true,
-                     wareHouse:'对应财务组织',
-                    ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }, {
-                        ifAction:true,
-                        organization: '组织',
-                        cusCode: '客户编码',
-                        cusName: '客户名称',
-                        cusCall: '客户简称',
-                        cusType:'客户分类',
-                        cusNature:'客户性质',
-                        ifSupply:true,
-                        wareHouse:'对应财务组织',
-                        ifAllow:true,
-                    }],
-
-                    pageIndex:-1,//分页的当前页码
-			        totalPage:20,//当前分页总数
+                componyTree:  [],
+                defaultProps: {
+                    children: 'items',
+                    label: 'deptName',
+                    id:'id'
+                },
+                pageIndex:1,//分页的当前页码
+                totalPage:0,//当前分页总数
+                oneItem:10,//每页有多少条信息
+                multipleSelection: [],//复选框选中数据
+                page:1,//当前页
+                treeCheck:[],
+                isClick:[],
+                load:true,
+                totalItem:0,//总共有多少条消息
+                searchBtClick:false,
             }
         },
-        created:function(){
-            
-            
-        },
+        created:function(){       
+                let _this=this;
+                _this.loadTableData();
+             },
         methods:{
-
-            switch(){
+             open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            loadTableData(){//表格
+                let _this=this;
+                _this.tableLoading=true
+                _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                    console.log(res)
+                    _this.tableData=res.result.items;
+                    _this.totalItem=res.result.totalCount
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.tableLoading=false;
+                    },function(res){
+                    _this.tableLoading=false;
+                })
+            },
+            handleCurrentChange(val) {//页码改变
+                 let _this=this;
+                 _this.page=val;
+                 if(_this.load){
+                     _this.loadTableData();
+                 }else{
+                     _this.SimpleSearch();
+                 }
+            },
+            SimpleSearchClick(){
+                let _this=this;
+                 _this.load=false;
+                 _this.searchBtClick=true;
+                 _this.tableLoading=true;
+                 _this.searchDataClick={
+                    UserGroupId:_this.searchData.UserGroupId,//
+                    UserCode: _this.searchData.UserCode,//
+                    DisplayName:_this.searchData.DisplayName,//
+                    OuId: _this.searchData.OuId,//
+                    UserType: _this.searchData.UserType,//
+                    LanguageId: _this.searchData.LanguageId,//
+                    AuthType: _this.searchData.OuType,
+                    Status: _this.searchData.Status,
+                    RoleId: _this.searchData.RoleId,
+                    Sorting: _this.searchData.Sorting,
+                }
+                _this.SimpleSearch();
+            },
+            SimpleSearch(){//简单搜索
+                 let _this=this;
+                _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
+                 _this.searchDataClick.MaxResultCount=_this.oneItem;
+                _this.$axios.gets('/api/services/app/User/GetAll',_this.searchDataClick)
+                .then(function(res){      
+                    console.log(res)
+                    _this.totalItem=res.result.totalCount
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.tableData=res.result.items;
+                    _this.tableLoading=false;
+                    _this.searchBtClick=false;
+                },function(res){
+                     _this.tableLoading=false;
+                     _this.searchBtClick=false;
+                })
+            },
+            goDetail(){
+                this.$store.state.url='/user/userDetail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
-
-            storageData(e){//点击新增跳转
-                var flag=false;
-                var slidbarData=this.$store.state.slidbarData;//储存页签数组
-                let name = '用户资料-列表';
-                if(slidbarData.length==0){//slidbarData为空
-                    flag=true;
-                }else{//slidbarData不为空
-                    for(var i=0;i<slidbarData.length;i++){
-                        if(slidbarData[i].name==name){//相同页签
-                            flag=false;
-                            break;
-                        }else{
-                        flag=true;
-                        }
-                    }
-                }
-                //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
-                var pushItem={'name':'用户资料-列表','url':'userDataList','params':'default'}
-                this.$store.state.url='/userDataList/default';//储存当前url
-                if(flag){
-                    slidbarData.push(pushItem);
-                }
-        
-                this.switch();
-                
+             handleSelectionChange(val) {//点击复选框选中的数据
+                this.multipleSelection = val;
             },
-
+            delRow(){
+                let _this=this;
+                if(_this.multipleSelection.length>0){//表格
+                    for(let i=0;i<_this.multipleSelection.length;i++){
+                        _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
+                        .then(function(res){
+                            if(_this.load){
+                                _this.loadTableData();
+                            }else{
+                                _this.SimpleSearch();
+                            }
+                            _this.open('删除成功','el-icon-circle-check','successERP');
+                        },function(res){
+                            _this.open('删除失败','el-icon-error','faildERP');
+                        })
+                    }
+                };
+            },
+            modify(row){
+                this.$store.state.url='/OuManage/OuManageModify/'+row.id
+                this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
+            },
+            see(row){
+                this.$store.state.url='/OuManage/OuManageSee/'+row.id
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            }
         },
     }
 </script>
 
 <style scoped>
+.halfWidth{
+    display: inline-block;
+    width: calc(50% - 10px)
+}
+
 .store-data-wrapper{
     width: 100%;
     height: auto;
@@ -358,6 +377,10 @@
     border: 1px solid #999999;
     border-radius: 3px;
 }
+.border-left{
+    border-left: 1px solid #E4E4E4;
+    min-height: 498px;
+}
 .btn{
     display: inline-block;
     width: 100%;
@@ -379,16 +402,6 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.search-btn{
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
 .open{
     display: inline-block;
     width: 49px;
@@ -402,37 +415,17 @@
 </style>
 
 <style>
-.user-list-wrapper .el-input input{
+.tenant-management-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
 }
-/* 重写checkbox */
-.user-list-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
+.userList .el-button+.el-button{
+    margin-left: 0;
 }
-.user-list-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
+
+.halfWidth.left input{
+    text-align: right;
 }
 </style>
