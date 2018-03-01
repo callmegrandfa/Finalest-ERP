@@ -65,22 +65,78 @@
                 <el-row>
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column label="序号">
+                            <el-table-column prop="seq" label="序号">
                                  <template slot-scope="scope">
-                                    {{scope.$index+1}}
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.seq"
+                                            @change='handleChange(scope.$index,scope.row)'
+                                            type="text"/>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="deptCode" label="部门编码"></el-table-column>
-                            <el-table-column prop="deptName" label="部门名称"></el-table-column>
-                            <el-table-column prop="manager" label="负责人(无)"></el-table-column>
-                            <el-table-column prop="deptParentName" label="上级部门(null)"></el-table-column>
-                            <el-table-column prop="remark" label="备注(无)"></el-table-column>
-                            <el-table-column label="允许使用(无)"></el-table-column>
-                            <el-table-column prop='createdTime' width="180" label="创建时间"></el-table-column>
+
+                            <el-table-column type="selection"></el-table-column>
+
+                            <el-table-column prop="itemCode" label="编码">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.itemCode"
+                                            @change='handleChange(scope.$index,scope.row)'
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="itemName" label="名称">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.itemName"
+                                            @change='handleChange(scope.$index,scope.row)'
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="manager" label="系统默认">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableLoading"></el-checkbox>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.status"
+                                            @change='handleChange(scope.$index,scope.row)'
+                                            type="text"/>
+                                </template>
+                                
+                            </el-table-column>
+
+                            <el-table-column prop="remark" label="备注">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.remark"
+                                            @change='handleChange(scope.$index,scope.row)'
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            
+                            <el-table-column prop='createdTime' width="180" label="时间">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.currencyCode"
+                                            @change='handleChange(scope.$index,scope.row)'
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
+                                    <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
                                 </template>
@@ -102,40 +158,18 @@
         <!-- dialog -->
         <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             
-            <div class="bgcolor smallBgcolor"><label>部门编码</label><el-input :class="{redBorder : validation.hasError('dialogData.deptCode')}" v-model="dialogData.deptCode" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptCode') }}</div>
+            <div class="bgcolor smallBgcolor"><label>字典编码</label><el-input :class="{redBorder : validation.hasError('dialogData.dictCode')}" v-model="dialogData.dictCode" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.dictCode') }}</div>
             
-            <div class="bgcolor smallBgcolor"><label>部门名称</label><el-input :class="{redBorder : validation.hasError('dialogData.deptName')}" v-model="dialogData.deptName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptName') }}</div>
+            <div class="bgcolor smallBgcolor"><label>字典名称</label><el-input :class="{redBorder : validation.hasError('dialogData.dictName')}" v-model="dialogData.dictName" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.dictName') }}</div>
             
-            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input :class="{redBorder : validation.hasError('dialogData.director')}" v-model="dialogData.director" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.director') }}</div>
+            <div class="bgcolor smallBgcolor"><label>排序</label><el-input :class="{redBorder : validation.hasError('dialogData.seq')}" v-model="dialogData.seq" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.seq') }}</div>
             
-            <div class="bgcolor smallBgcolor"><label>电话</label><el-input :class="{redBorder : validation.hasError('dialogData.phone')}" v-model="dialogData.phone" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.phone') }}</div>
-            
-            <div class="bgcolor smallBgcolor">
-                <label>上级业务地区</label>
-
-                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.deptParentid')}" v-model="dialogData.deptParentid">
-                    <el-option v-for="item in deptParentid" :key="item.value" :label="item.label" :value="item.value" placeholder=""></el-option>
-                </el-select>
-                <el-input v-else :class="{redBorder : validation.hasError('dialogData.deptParentid')}"  v-model="dialogData.deptParentid" disabled></el-input>
-            </div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptParentid') }}</div>
-            
-            <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>备注</label><el-input :class="{redBorder : validation.hasError('dialogData.remark')}" v-model="dialogData.remark" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
-            
-            <div class="bgcolor smallBgcolor">
-                <label>允许使用</label>
-                <!-- <el-checkbox v-model="ifCan"></el-checkbox> -->
-                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
-                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.status') }}</div>
+               
             <div slot="footer" class="dialog-footer">
                 <button class="dialogBtn" @click="save">确认</button>
                 <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
@@ -152,16 +186,21 @@
                 searchLeft:'',
                 ifCan:true,
                 dialogData:{//dialog数据
-                    id:'',
-                    groupId:'',//集团ID
-                    ouId:'',//组织单元ID
-                    deptCode:'',//部门代码
-                    deptName:'',//部门名称
-                    director:'',//负责人
-                    phone:'',//电话
-                    deptParentid:'',//父部门id
+                    dictCode:'',//字典编码 
+                    dictName:'',//字典名称
+                    seq:'',//排序
                     remark:'',//备注
-                    status:'',//启用状态
+                },
+                valueData:{//创建字典值的参数
+                    groupId: 0,
+                    dictId: 0,
+                    itemName: "string",
+                    itemCode: "string",
+                    itemValue: "string",
+                    seq: 0,
+                    remark: "string",
+                    status: 0,
+                    isSystem: true
                 },
                  deptParentid: [{//业务地区分类
                     value:'1',
@@ -213,8 +252,8 @@
                     // {areaName:'根目录',id:'0',items:[]},
                 ],
                 defaultProps: {
-                    children: 'items',
-                    label: 'areaName',
+                    children: 'children',
+                    label: 'dictName',
                     id:'id'
                 },
                 TreeContextMenu:[//点击鼠标右键生成菜单
@@ -232,10 +271,9 @@
                 treeLoading:false,
                 Sorting:'',//table搜索
                 dialogFormVisible:false,
-                AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
-                showParent:true,//上级组织单元是否可选
+                // showParent:true,//上级组织单元是否可选
             }
         },
         created:function(){       
@@ -247,19 +285,13 @@
             let _this=this;
         }, 
         validators: {
-            'dialogData.deptCode':function(value){//部门编码
+            'dialogData.dictCode':function(value){//字典编码
                 return this.Validator.value(value).required().maxLength(50)
             },
-            'dialogData.deptName':function(value){//部门名称
+            'dialogData.dictName':function(value){//字典名称
                 return this.Validator.value(value).required().maxLength(50)
             },
-            'dialogData.director': function (value) {//负责人
-                return this.Validator.value(value).required().maxLength(20);
-            },
-            'dialogData.phone': function (value) {//电话
-                return this.Validator.value(value).required().maxLength(50);
-            },
-            'dialogData.deptParentid': function (value) {//上级业务地区
+            'dialogData.seq': function (value) {//排序
                 return this.Validator.value(value).required().integer();
             },
             'dialogData.remark': function (value) {//备注
@@ -277,9 +309,10 @@
             loadTableData(){//表格
                  let _this=this;
                  _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/DeptManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+                    // console.log(res)
                     _this.tableData = res.result.items;
-                    console.log(_this.tableData)
+                    // console.log(_this.tableData)
                      $.each( _this.tableData,function(index,value){//处理时间格式
                         if(value.createdTime&&value.createdTime!=''){
                             let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
@@ -296,10 +329,11 @@
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+                _this.$axios.gets('/api/services/app/DictManagement/GetDictionaryTree')
                 .then(function(res){
                     console.log(res)
-                    _this.componyTree=res.result
+                    _this.componyTree=res.result;
+                    // console.log(_this.componyTree)
                     _this.treeLoading=false;
                     _this.loadIcon();
                },function(res){
@@ -324,20 +358,23 @@
             //---保存--------------------------------------------------------
             save:function(){
                 let self = this;
+                console.log(self.dialogData)
                 self.$validate().then(function(success){
                     if(success){
                         if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
-                            self.$axios.puts('/api/services/app/DeptManagement/Update',self.dialogData).then(function(res){
+                            self.$axios.puts('/api/services/app/DictManagement/Update',self.dialogData).then(function(res){
                                 self.dialogFormVisible=false;
-                                self.loadTableData();
+                                // self.loadTableData();
+                                self.loadTree();
                             },function(res){    
                                 console.log('error')
                             })
                         }else{
-                            self.$axios.posts('/api/services/app/DeptManagement/Create',self.dialogData).then(function(res){
+                            self.$axios.posts('/api/services/app/DictManagement/Create',self.dialogData).then(function(res){
                                 self.dialogFormVisible=false;
-                                self.loadTableData();
-                                self.clearAddDate();
+                                self.loadTree();
+                                // self.loadTableData();
+                                // self.clearAddDate();
                             },function(res){    
                                 console.log('error')
                             })
@@ -386,17 +423,10 @@
                 }
             },
             //----------------------------------------------------------------
-            //---新增----------------------------------------------------------
+            //---新增系统字典值----------------------------------------------------------
             addNew:function(){
                 let self = this;
-                self.tittle='新增';
-                self.dialogFormVisible = true;
-                
-                self.dialogData.groupId = self.tableData[0].groupId;
-                self.dialogData.ouId = self.tableData[0].ouId;
-                // self.dialogData.deptParentid = self.tableData[0].deptParentid;
-                // self.dialogData.status = self.tableData[0].status;
-                console.log(self.dialogData)
+                // self.tableData
             },
             //----------------------------------------------------------------
 
@@ -404,18 +434,6 @@
             modify:function(row){
                 // console.log(row)
                 let self = this;
-
-                
-                // id (integer, optional),
-                // groupId (integer): 集团ID ,
-                // ouId (integer): 组织单元ID ,
-                // deptCode (string): 部门代码 ,
-                // deptName (string): 部门名称 ,
-                // director (string): 负责人 ,
-                // phone (string): 电话 ,
-                // deptParentid (integer): 父部门id ,
-                // remark (string): 备注 ,
-                // status (integer): 启用状态
 
                 self.tittle='修改';
                 self.dialogFormVisible = true;
@@ -564,16 +582,16 @@
             },
             //---树形操作-----------------------------------------------
             TreeAdd(event,node,data){
+                // console.log(data)
                 $('.TreeMenu').css({
                     display:'none'
                 })
                 let _this=this;
-                _this.clearTreeData();
+                // _this.clearTreeData();
                 _this.tittle='新增';
                 _this.isAdd=true;
                 _this.dialogFormVisible=true;
-                _this.dialogData.groupId=data.groupId;//集团id
-                _this.dialogData.areaParentId=data.id;//父级id
+                _this.dialogData.id=data.id;
             },
             TreeDel(event,node,data){
                 $('.TreeMenu').css({
@@ -611,8 +629,7 @@
             renderContent(h, { node, data, store }) {
                 return (
                 <span class="TreeNode el-tree-node__label"
-                on-mousedown ={ (event) => this.whichButton(event,node, data) } 
-                on-click={ (event) => this.showTable(event,node, data) }
+                on-mousedown ={ (event) => this.whichButton(event,node, data) }
                 style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
                   {node.label}
                    <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">

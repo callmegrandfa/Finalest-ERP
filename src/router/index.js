@@ -76,6 +76,9 @@ const businessAreaList = () =>import(/* webpackChunkName: "group-businessArea" *
 // 部门资料
 const department = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/department')
 const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/departmentList')
+// 系统字典
+const dictionary = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionary')
+const dictionaryList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionaryList')
 // 商品属性
 const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
 const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
@@ -363,6 +366,11 @@ children:[
     return redirectRouter('department')
   },children:[
       { path: '/department/departmentList/:id', component: departmentList,name:'departmentList' },
+  ]},
+  { path: '/dictionary', component: dictionary,name:'dictionary',redirect: function(){//系统字典
+    return redirectRouter('dictionary')
+  },children:[
+      { path: '/dictionary/dictionaryList/:id', component: dictionaryList,name:'dictionaryList' },
   ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
   { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },

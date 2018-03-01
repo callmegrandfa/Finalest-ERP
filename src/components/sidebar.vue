@@ -119,6 +119,11 @@ export default {
                      {name:'仓库资料',address:'repository'}, 
                 ]
             },{
+                name:'系统字典',
+                thirdInfo:[
+                     {name:'系统字典',address:'dictionaryList'}, 
+                ]
+            },{
                 name:'业务地区',
                 thirdInfo:[
                     {name:'业务地区管理',address:'businessArea'},
