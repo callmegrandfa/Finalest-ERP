@@ -36,13 +36,6 @@ export default {
               display:'none'
           })
     })
-    // .on('mousedown',function(e){//业务地区管理，树形图
-    //     if(e.target.className=='TreeNode'|| e.target.className=='TreeMenuBtn' || e.target.className=='el-tree-node__content'){
-    //         document.oncontextmenu=new Function("event.returnValue=false;");
-    //     }else{
-    //         document.oncontextmenu=new Function("event.returnValue=true;");
-    //     }
-    // })
 
       _this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
       let content=document.getElementById('contents');//设置高度为全屏
@@ -53,21 +46,11 @@ export default {
         content.style.minHeight=he+'px';
         _this.$store.state.slidbarHeight=$(window).height();
 
-        $('.menu').css({height:_this.$store.state.slidbarHeight-43+'px'})
-        if($('.menu').height()<$('.menu').children('.one').length*50){
-            $('.menu').css({overflowY:'scroll'})
-        }else{
-            $('.menu').css({overflowY:'hidden'})
-        }   
+        $('.menu').css({height:_this.$store.state.slidbarHeight-43+'px'}) 
         $('.slid1').each(function(){
             $(this).css({
                 height:_this.$store.state.slidbarHeight-93+'px'
             })
-            if($(this).height()<$(this).children('.two').length*50){
-                $(this).css({overflowY:'scroll'})
-            }else{
-                $(this).css({overflowY:'hidden'})
-            }
         })
         $('.slid2').each(function(x){
             $(this).css({
@@ -82,23 +65,23 @@ export default {
     }
 
       $(window).scroll(function(){
-        if($(window).scrollTop()>14){
+        if($(window).scrollTop()>61){
           if(!_this.$store.state.show){
             $('.fixed').css({
               position:'fixed',
               top:'93px',
-              zIndex:'999',
+              zIndex:'998',
               width:'calc(100% - 265px)',
               transition: 'width 0s'
-            })
+            }).next('div').css({marginTop:$('.fixed').height()})
           }else{
              $('.fixed').css({
               position:'fixed',
               top:'93px',
-              zIndex:'999',
+              zIndex:'998',
               width:'calc(100% - 80px)',
               transition: 'width 0s'
-            })
+            }).next('div').css({marginTop:$('.fixed').height()})
           }
           _this.$store.commit('go1');
         }else{
@@ -107,7 +90,7 @@ export default {
             top:'0',
             width:'100%',
             transition: 'width 0s'
-          })
+          }).next('div').css({marginTop:0})
           _this.$store.commit('go2');
         }
       })

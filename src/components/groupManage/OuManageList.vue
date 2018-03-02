@@ -78,7 +78,18 @@
                             <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
                             <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="createdTime" label="创建时间" width="160"></el-table-column>
+                            <el-table-column prop="createdTime" label="创建时间" width="160">
+                                <template slot-scope="scope">
+                                    <el-date-picker 
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm:ss" 
+                                    v-model="tableData[scope.$index].createdTime" 
+                                    type="datetime" 
+                                    readonly
+                                    align="center"
+                                    placeholder="无数据"></el-date-picker>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column prop="isCompany" label="公司">
                                 <template slot-scope="scope">
@@ -122,7 +133,6 @@
 
 <script>
     export default{
-        name:'customerInfor',
         data(){
             return {
                 tableLoading:false,
@@ -185,19 +195,6 @@
                 searchBtClick:false,
             }
         },
-        // watch:{
-        //     searchData:{  
-        //         handler:function(val,oldval){
-        //             let _this=this;
-        //             console.log(oldval)
-        //             if(_this.searchBtClick){
-        //                 _this.tableSearchData.name=val
-        //             }
-        //             console.log(_this.tableSearchData)  
-        //         },  
-        //         deep:true//对象内部的属性监听，也叫深度监听  
-        //     },
-        // },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
@@ -219,12 +216,11 @@
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
-                     $.each( _this.tableData,function(index,value){//处理时间格式
-                       let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
-                       _this.tableData[index].createdTime=createdTime;
+                    //  $.each( _this.tableData,function(index,value){//处理时间格式
+                    //    let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
+                    //    _this.tableData[index].createdTime=createdTime;
 
-                    })
-                    // console.log(res)
+                    // })
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;

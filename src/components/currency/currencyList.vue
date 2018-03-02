@@ -53,10 +53,10 @@
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column label="序号">
                                 <template slot-scope="scope">
+                                    <img v-show='scope.$index==ar[scope.$index]' class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.seq" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
+                                            v-model="scope.row.seq"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -68,8 +68,7 @@
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.currencyCode" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
+                                            v-model="scope.row.currencyCode"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -80,7 +79,6 @@
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.currencyName" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -90,8 +88,7 @@
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.increment" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
+                                            v-model="scope.row.increment"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -101,8 +98,7 @@
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.status" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
+                                            v-model="scope.row.status"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -113,7 +109,6 @@
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.remark" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -208,6 +203,9 @@
                     "status": '',
                     "remark": ""
                 },
+                redShow:false,//判斷修改过的表格左上角红标
+                redIndex:'',
+                ar:[],
             }
         },
         created:function(){
@@ -237,6 +235,7 @@
                     this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.addList[i]).then(function(res){         
                         self.open('创建货币资料成功','el-icon-circle-check','successERP');
                         console.log(res)
+                        self.loadAllList()
                     }),function(res){
                         self.open('创建货币资料失败','el-icon-error','faildERP');
                     };
@@ -249,6 +248,8 @@
                         this.$axios.puts('/api/services/app/CurrencyManagement/Update',self.updateList[i]).then(function(res){
                             console.log(res);
                             self.open('修改货币资料成功','el-icon-circle-check','successERP');
+                            self.loadAllList()
+                            self.ar = [];
                             self.updateList = [];
                             }),function(res){
                                 self.open('修改货币资料失败','el-icon-error','faildERP');
@@ -316,20 +317,42 @@
                 this.page = val;
                 this.loadAllList();
             },
-            handleEdit:function(index,row){//表格内编辑操作
+            // handleEdit:function(index,row){//表格内编辑操作
                 
                 
-            },
+            // },
             handleChange:function(index,row){
                 let self = this;
+                // console.log(index)
+                let map = false;
+                if(self.ar.length==0){//修改后表格前红标
+                    self.ar.push(index)
+                }else if(self.ar.length>=1){
+                    for(let i in self.ar){
+                        if(index!=self.ar[i]){
+                            map = true;
+                        }else{
+                            map = false;
+                            break;
+                        }
+                    }
+                }
+                if(map){
+                    self.ar.push(index)
+                    self.ar.sort();
+                    console.log(self.ar)
+                }
+                self.redIndex = index;
+
+
                 let flag = false;
-                if(self.updateList.length==0){
+                if(self.updateList.length==0){//修改过的数据
                     flag = true;
                 }else if(self.updateList.length>=1){
                     for(let i in self.updateList){
                         if(row.id != self.updateList[i].id){
                             flag = true;
-                            console.log(flag) 
+                            // console.log(flag) 
                         }else{
                             flag= false;
                             break;        
@@ -366,13 +389,6 @@
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.input-need{
-    border:none;
-    outline: none;
-    width: 100%;
-    height: 23px;
-    line-height: 23px;
 }
 .h48{
     height: 48px;
@@ -472,59 +488,8 @@
 .text-right{
     text-align: right;
 }
-.input-bgw{
-    background: white;
-    text-align: center;
-}
-.input-bgp{
-    background: #FAFAFA;
-    text-align: center;
-}
 </style>
 
 <style>
-/* 重写checkbox */
-.infor-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.infor-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
 
-/* 重写el-table样式 */
-.infor-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.infor-wrapper .el-table td{
-    padding: 3px 0;
-}
-.infor-wrapper .el-table__body{
-    text-align: center;
-}
 </style>

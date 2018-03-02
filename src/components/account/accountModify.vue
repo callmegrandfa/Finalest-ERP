@@ -31,66 +31,82 @@
         <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
                 <el-row class="bg-white pt10 ft12 pr10">
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label><small>*</small>会计方案{{value}}</label>
-                                <el-select v-model="value" placeholder="请选择会计方案">
-                                    <el-option v-for="item in options"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                    </el-option>
-                                </el-select>
+                    <el-col :span="24">
+                        <div class="tipsWrapper" name="periodYear">
+                            <div class="errorTips" :class="{block : !validation.hasError('accountData.periodYear')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('accountData.periodYear') }}</p>
                             </div>
-                        </el-row>
+                        </div>
+                        <div class="tipsWrapper" name="periodNum">
+                            <div class="errorTips" :class="{block : !validation.hasError('accountData.periodNum')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('accountData.periodNum') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="remark">
+                            <div class="errorTips" :class="{block : !validation.hasError('accountData.remark')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('accountData.remark') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bgcolor">
+                            <label>会计方案{{value}}</label>
+                            <el-select v-model="value" 
+                                       placeholder="请选择会计方案"
+                                       :class="{redBorder : validation.hasError('addData.ouParentid')}"
+                                       @focus="showErrprTips">
+                                <el-option v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        
+                        <div class="bgcolor">
+                            <label><small>*</small>会计年份</label>
+                            <el-input placeholder="请录入会计年份" 
+                                      @focus="showErrprTips"
+                                      class="periodYear"
+                                      :class="{redBorder : validation.hasError('accountData.periodYear')}"
+                                      v-model="accountData.periodYear" 
+                                      @change='Modify()'></el-input>
+                        </div>
+                        
+                    
+                        <div class="bgcolor">
+                            <label><small>*</small>期间个数</label>
+                            <el-input placeholder="请录入期间个数" 
+                                      @focus="showErrprTips"
+                                      class="periodNum"
+                                      :class="{redBorder : validation.hasError('accountData.periodNum')}"
+                                      v-model="accountData.periodNum" 
+                                      @change='Modify()'></el-input>
+                        </div>
                     </el-col>
+                    <el-col :span="24">
+                        <div class="bgcolor">
+                            <label>开始日期</label>
+                            <el-input placeholder="请录入开始日期" 
+                                        v-model="accountData.beginDate" 
+                                        @change='Modify()'></el-input>
+                        </div>
 
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label><small>*</small>会计年份</label>
-                                <el-input placeholder="请录入会计年份" v-model="accountData.periodYear" @change='Modify()'></el-input>
-                            </div>
-                        </el-row>
-                    </el-col>
+                        <div class="bgcolor">
+                            <label>结束日期</label>
+                            <el-input placeholder="结束日期" 
+                                        v-model="accountData.endDate" 
+                                        @change='Modify()'></el-input>
+                        </div>
 
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label><small>*</small>期间个数</label>
-                                <el-input placeholder="请录入期间个数" v-model="accountData.periodNum" @change='Modify()'></el-input>
-                            </div>
-                        </el-row>
-                    </el-col>
-                </el-row>
-
-                <el-row class="bg-white ft12 pr10">
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>开始日期</label>
-                                <el-input placeholder="请录入开始日期" v-model="accountData.beginDate" @change='Modify()'></el-input>
-                            </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>结束日期</label>
-                                <el-input placeholder="结束日期" v-model="accountData.endDate" @change='Modify()'></el-input>
-                            </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>备注</label>
-                                <el-input placeholder="请录入备注" v-model="accountData.remark" @change='Modify()'></el-input>
-                            </div>
-                        </el-row>
+                        <div class="bgcolor">
+                            <label>备注</label>
+                            <el-input placeholder="请录入备注" 
+                                      @focus="showErrprTips"
+                                      class="remark"
+                                      :class="{redBorder : validation.hasError('accountData.remark')}"
+                                      v-model="accountData.remark" 
+                                      @change='Modify()'></el-input>
+                        </div>
                     </el-col>
 
                     <el-col :span="24" class="mt10 mb10 pl40">
@@ -217,22 +233,31 @@
                     <div>
                         <div class="bgcolor">
                             <label>创建人</label>
-                            <el-input placeholder="创建人" v-model='accountData.createdBy' disabled="disabled"></el-input>
+                            <el-input placeholder="创建人" 
+                                      v-model='accountData.createdBy' 
+                                      disabled="disabled"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>创建时间</label>
-                            <el-date-picker  type="date" v-model='accountData.createdTime' placeholder="创建时间" disabled="disabled"></el-date-picker>
+                            <el-date-picker  type="date" 
+                                             v-model='accountData.createdTime' 
+                                             placeholder="创建时间" 
+                                             disabled="disabled"></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
                             <label>修改人</label>
-                            <el-input placeholder="修改人" v-model='accountData.modifiedBy' disabled="disabled"></el-input>
+                            <el-input placeholder="修改人" 
+                                      v-model='accountData.modifiedBy' 
+                                      disabled="disabled"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>修改时间</label>
-                            <el-input placeholder="修改时间" v-model='accountData.modifiedTime' disabled="disabled"></el-input>
+                            <el-input placeholder="修改时间" 
+                                      v-model='accountData.modifiedTime' 
+                                      disabled="disabled"></el-input>
                         </div>
                         <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
                         <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
@@ -340,7 +365,40 @@
                 }],
             }
         },
+        validators: {
+            'accountData.periodYear': function (value) {//会计年份
+                return this.Validator.value(value).required().integer();
+            },
+            'accountData.periodNum': function (value) {//会计个数
+                return this.Validator.value(value).required().integer();
+            },
+            'accountData.remark': function (value) {//备注
+                return this.Validator.value(value).required().maxLength(50);
+            },
+        },
         methods:{
+            //---提示错误----------------------------------------------
+            showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                // console.log($(e.target).parent('.el-input'))
+                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                        
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTips1(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.$el).hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            //------------------------------------------------------
             //---加载数据--------------------------------------------
             loadData:function(){
                 let self = this;
@@ -796,62 +854,13 @@ input::-webkit-input-placeholder{
 }
 </style>
 <style>
-/* 重写checkbox */
-.data-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.data-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
 
-/* 重写el-table样式 */
-.data-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
+.block{
+    display: none;
 }
-.data-wrapper .el-table td{
-    padding: 3px 0;
-}
-.data-wrapper .el-table__body{
-    text-align: center;
-}
-.data-wrapper .el-table .cell{
-    padding-left:0px;
-    padding-right:0px;
-}
-/* 重写el-pagination样式 */
-
-
-.data-wrapper .text-right{
-    text-align: right;
-}
-.mt-10{
-    margin-top: 10px;
+.data-wrapper .errorTips{
+    margin-bottom: 10px;
+    /* margin-top: -10px; */
 }
 </style>
 

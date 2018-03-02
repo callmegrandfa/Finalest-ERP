@@ -1,5 +1,5 @@
 <template>
-    <div class="userList">
+    <div class="roleList">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-row class="h48 pl15">
@@ -19,15 +19,10 @@
                         </el-option>
                     </el-select>
                 </div> -->
-                <div class="mt20 bgcolor smallBgcolor"><label>用户编码</label><el-input v-model="searchData.UserCode" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>用户名称</label><el-input v-model="searchData.DisplayName" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>用户组</label><el-input v-model="searchData.UserGroupId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属组织</label><el-input v-model="searchData.OuId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>身份类型</label><el-input v-model="searchData.UserType" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>语种</label><el-input v-model="searchData.LanguageId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>认证类型</label><el-input v-model="searchData.AuthType" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>状态</label><el-input v-model="searchData.Status" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>关联角色</label><el-input v-model="searchData.RoleId" placeholder=""></el-input></div>
+                <div class="mt20 bgcolor smallBgcolor"><label>角色编码</label><el-input v-model="searchData.roleCode" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>角色名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属组织</label><el-input v-model="searchData.ouId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>上级用户组(无字段)</label><el-input v-model="searchData.UserType" placeholder="无字段"></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -66,39 +61,20 @@
                                     {{scope.$index+1}}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="userCode" label="用户编码"></el-table-column>
-                            <el-table-column prop="displayName" label="用户名称"></el-table-column>
-                            <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
-                            <el-table-column prop="userGroupName" label="所属用户组"></el-table-column>
-                            <el-table-column prop="OuId" label="所属组织"></el-table-column>
-                            <el-table-column prop="userType" label="身份类型"></el-table-column>
-                            <el-table-column prop="languageId" label="语种"></el-table-column>
-                            <el-table-column prop="AuthType" label="认证类型"></el-table-column>
-                            <el-table-column prop="Status" label="状态"></el-table-column>
-                            <el-table-column label="有效日期" width="270">
+                            <el-table-column prop="roleCode" label="角色编码"></el-table-column>
+                            <el-table-column prop="displayName" label="角色名称"></el-table-column>
+                            <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column label="创建时间(无字段)" width="160">
                                 <template slot-scope="scope">
-                                    <div class="halfWidth left">
-                                        <el-date-picker
-                                        format="yyyy.MM.dd"
-                                        v-model="tableData[scope.$index].createdTime " 
-                                        type="datetime" 
-                                        readonly
-                                        align="center"
-                                        placeholder="无数据"></el-date-picker>
-                                    </div>
-                                    <span>-</span>
-                                    <div class="halfWidth right">
-                                        <el-date-picker 
-                                        format="yyyy.MM.dd" class="halfWidth"
-                                        v-model="tableData[scope.$index].deletedTime" 
-                                        type="datetime" 
-                                        readonly
-                                        align="center"
-                                        placeholder="无数据"></el-date-picker>
-                                    </div>    
+                                    <el-date-picker
+                                    format="yyyy.MM.dd"
+                                    v-model="tableData[scope.$index].createdTime " 
+                                    type="datetime" 
+                                    readonly
+                                    align="center"></el-date-picker>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="RoleId" label="关联角色"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
                                      <el-button type="text" size="small"  @click="delThis(scope.row)">删除</el-button>
@@ -207,7 +183,7 @@
             loadTableData(){//表格
                 let _this=this;
                 _this.tableLoading=true
-                _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     console.log(res)
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
@@ -232,24 +208,20 @@
                  _this.searchBtClick=true;
                  _this.tableLoading=true;
                  _this.searchDataClick={
-                    UserGroupId:_this.searchData.UserGroupId,//
-                    UserCode: _this.searchData.UserCode,//
-                    DisplayName:_this.searchData.DisplayName,//
-                    OuId: _this.searchData.OuId,//
-                    UserType: _this.searchData.UserType,//
-                    LanguageId: _this.searchData.LanguageId,//
-                    AuthType: _this.searchData.OuType,
-                    Status: _this.searchData.Status,
-                    RoleId: _this.searchData.RoleId,
-                    Sorting: _this.searchData.Sorting,
+                    roleCode:_this.searchData.roleCode,//
+                    displayName: _this.searchData.displayName,//
+                    ouId: _this.searchData.ouId,//
+                    status: _this.searchData.status,
+                    sorting:'',
                 }
                 _this.SimpleSearch();
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
-                _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
+                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
-                _this.$axios.gets('/api/services/app/User/GetAll',_this.searchDataClick)
+                 console.log(_this.searchDataClick)
+                _this.$axios.gets('/api/services/app/Role/GetAll',_this.searchDataClick)
                 .then(function(res){
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
@@ -262,7 +234,7 @@
                 })
             },
             goDetail(){
-                this.$store.state.url='/user/userDetail/default'
+                this.$store.state.url='/role/roleDetail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
              handleSelectionChange(val) {//点击复选框选中的数据
@@ -287,12 +259,12 @@
                 };
             },
             see(row){
-                this.$store.state.url='/user/userModify/'+row.id
+                this.$store.state.url='/role/roleModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             delThis(row){//删除行
                 let _this=this;
-                _this.$axios.deletes('/api/services/app/User/Delete',{id:row.id})
+                _this.$axios.deletes('/api/services/app/Role/Delete',{id:row.id})
                 .then(function(res){
                     _this.loadTableData();
                 },function(res){
@@ -303,11 +275,6 @@
 </script>
 
 <style scoped>
-.halfWidth{
-    display: inline-block;
-    width: calc(50% - 10px)
-}
-
 .store-data-wrapper{
     width: 100%;
     height: auto;
@@ -420,14 +387,8 @@
     line-height: 30px;
     padding-left: 0;
 }
-.userList .el-button+.el-button{
+.roleList .el-button+.el-button{
     margin-left: 0;
 }
 
-.halfWidth.left input{
-    text-align: right;
-}
-.halfWidth.right input{
-    text-align: left;
-}
 </style>

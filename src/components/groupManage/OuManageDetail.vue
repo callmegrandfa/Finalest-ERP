@@ -92,7 +92,7 @@
                     <label>编码</label>
                     <el-input class="ouCode" 
                     @focus="showErrprTips"
-                    :class="{rebBorder : validation.hasError('addData.ouCode')}" 
+                    :class="{redBorder : validation.hasError('addData.ouCode')}" 
                     v-model="addData.ouCode" 
                     placeholder="请录入编码">
                     </el-input>
@@ -103,7 +103,7 @@
                         <label>名称</label>
                     <el-input class="ouName"
                     @focus="showErrprTips"
-                     :class="{rebBorder : validation.hasError('addData.ouName')}"
+                     :class="{redBorder : validation.hasError('addData.ouName')}"
                      v-model="addData.ouName" 
                      placeholder="请录入手工单号">
                      </el-input>
@@ -116,7 +116,7 @@
                     <label>上级业务单元</label>
                     <el-select class="ouParentid"
                     @focus="showErrprTips"
-                     :class="{rebBorder : validation.hasError('addData.ouParentid')}" 
+                     :class="{redBorder : validation.hasError('addData.ouParentid')}" 
                      v-model="addData.ouParentid">
                         <el-option 
                         v-for="item in higherUnit" 
@@ -131,7 +131,7 @@
                     <el-date-picker 
                     class="regtime datepicker" 
                     @focus="showErrprTips1"
-                    :class="{rebBorder : validation.hasError('addData.regtime')}"
+                    :class="{redBorder : validation.hasError('addData.regtime')}"
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd" 
                     v-model="addData.regtime" 
@@ -143,7 +143,7 @@
                     <el-select 
                     class="baseCurrencyId" 
                     @focus="showErrprTips"
-                    :class="{rebBorder : validation.hasError('addData.baseCurrencyId')}" 
+                    :class="{redBorder : validation.hasError('addData.baseCurrencyId')}" 
                     v-model="addData.baseCurrencyId">
                         <el-option 
                         v-for="item in money" 
@@ -159,7 +159,7 @@
                     <el-select 
                     class="companyOuId" 
                     @focus="showErrprTips"
-                    :class="{rebBorder : validation.hasError('addData.companyOuId')}" 
+                    :class="{redBorder : validation.hasError('addData.companyOuId')}" 
                     v-model="addData.companyOuId">
                         <el-option 
                         v-for="item in company" 
@@ -175,7 +175,7 @@
                     <el-input 
                     class="contactPerson" 
                     @focus="showErrprTips"
-                    :class="{rebBorder : validation.hasError('addData.contactPerson')}" 
+                    :class="{redBorder : validation.hasError('addData.contactPerson')}" 
                     v-model="addData.contactPerson" 
                     placeholder="请填入联系人">
                     </el-input>
@@ -185,7 +185,7 @@
                     <el-input 
                     class="phone" 
                     @focus="showErrprTips"
-                    :class="{rebBorder : validation.hasError('addData.phone')}" 
+                    :class="{redBorder : validation.hasError('addData.phone')}" 
                     v-model="addData.phone" 
                     placeholder="请填入电话"></el-input>
                 </div>
@@ -194,7 +194,7 @@
                     <el-input 
                     class="address" 
                     @focus="showErrprTips"
-                    :class="{rebBorder : validation.hasError('addData.address')}" 
+                    :class="{redBorder : validation.hasError('addData.address')}" 
                     v-model="addData.address" 
                     placeholder="请填入地址"></el-input>
                 </div>
@@ -203,7 +203,7 @@
                     <el-input 
                     class="remark" 
                     @focus="showErrprTips"
-                    :class="{rebBorder : validation.hasError('addData.remark')}" 
+                    :class="{redBorder : validation.hasError('addData.remark')}" 
                     v-model="addData.remark" 
                     placeholder="备注"></el-input>
                 </div>
@@ -212,7 +212,7 @@
                     <el-select 
                     class="status" 
                     @focus="showErrprTips"
-                    :class="{rebBorder : validation.hasError('addData.status')}" 
+                    :class="{redBorder : validation.hasError('addData.status')}" 
                     v-model="addData.status">
                         <el-option 
                         v-for="item in state" 
@@ -267,7 +267,7 @@
                                     <el-select 
                                     class="ouCompanyParentid" 
                                     @focus="showErrprTips"
-                                    :class="{rebBorder : validation.hasError('addData.ouCompanyParentid')}" 
+                                    :class="{redBorder : validation.hasError('addData.ouCompanyParentid')}" 
                                     v-model="addData.ouCompanyParentid">
                                         <el-option 
                                         v-for="item in preCompany" 
@@ -282,7 +282,7 @@
                                     <el-input 
                                     class="legalPerson" 
                                     @focus="showErrprTips"
-                                    :class="{rebBorder 
+                                    :class="{redBorder 
                                     : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
                                     placeholder="请输入法人代表">
@@ -565,21 +565,27 @@ export default({
             
         },
         saveAdd(){
-             let _this=this;
-                  _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-                    _this.open('保存并新增成功','el-icon-circle-check','successERP');
-                    _this.clearData();
-                },function(res){
-                    _this.open('保存并新增失败','el-icon-error','faildERP');
-                })
+            let _this=this;
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                        _this.open('保存并新增成功','el-icon-circle-check','successERP');
+                        _this.clearData();
+                    },function(res){
+                        _this.open('保存并新增失败','el-icon-error','faildERP');
+                    })
+                }
+            });        
         },
         newAdd(){
             this.clearData();
             this.open('新增成功','el-icon-circle-check','successERP');
         },
         clearData(){
-            this.creatorUser=[];
-            this.auditInfo={
+            let _this=this;
+            _this.creatorUser=[];
+            _this.auditInfo={
                 id:'',
                 lastModifierUser:'',
                 isDeleted:false,
@@ -595,7 +601,7 @@ export default({
                 isCapital :false,
                 isPurchase :false,
             };
-            this.addData={
+            _this.addData={
                 groupId:1,//集团ID
                 ouCode: '',//组织代码存在 
                 ouName: '' ,//组织名称存在
@@ -619,6 +625,7 @@ export default({
                 companyStatus:'' ,//公司启用状态
                 regtime:''//公司成立时间
             };
+            _this.validation.reset();
         }
     }
 
