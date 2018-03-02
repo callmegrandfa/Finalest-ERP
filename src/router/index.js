@@ -108,7 +108,7 @@ const classPropertyList= () =>import('../components/commodityManagement/classPro
 const commodityRecord= () =>import('../components/commodityManagement/commodityRecord')
 const Record= () =>import('../components/commodityManagement/Record')
 const commodityRecordDetails= () =>import('../components/commodityManagement/commodityRecordDetails')
-const redirectRouter=function(routerName) {//重定向
+let redirectRouter=function(routerName) {//重定向
     let activeRouter=store.state.activeRouter;
     for(let i=0;i<activeRouter.length;i++){
         if(activeRouter[i].name==routerName){

@@ -168,8 +168,13 @@ table .el-input--prefix .el-input__inner{
   padding-left: 0;
   padding-right: 0;
   text-align: center;
+  height: 32px;
 }
 table .el-input__icon{
+  display: none;
+}
+.bgcolor .el-date-editor.is-disabled .el-input__prefix,
+.bgcolor .el-date-editor.is-disabled .el-input__suffix{
   display: none;
 }
 .bgcolor .el-date-editor .el-input__prefix{
