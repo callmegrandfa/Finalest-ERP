@@ -75,18 +75,13 @@ const orderList = () =>
 
 const supplierList = () =>
     import ('../components/supplierData/supplierList')
-    //用户管理
-const user = () =>
-    import ('../components/user/user')
-const userList = () =>
-    import ('../components/user/userList')
-const userDetail = () =>
-    import ('../components/user/userDetail')
-
-const tenantManagement = () =>
-    import ('../components/tenantManagement/tenantManagement')
-const tenantManagementAdd = () =>
-    import ('../components/tenantManagement/tenantManagementAdd')
+    // const userInfoDetail = () =>import('../components/user/userInfoDetail')
+    // const userList = () =>import('../components/user/userList')
+    // const userDataList = () =>import('../components/user/userDataList')
+    //租户管理
+    // const tenant = () =>import('../components/tenantManagement/tenant')
+    // const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
+    // const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
     //集团管理
 const groupManage = () =>
     import ( /* webpackChunkName: "group-group" */ '../components/groupManage/groupManage')
@@ -181,9 +176,10 @@ const Record = () =>
 const commodityRecordDetails = () =>
     import ('../components/commodityManagement/commodityRecordDetails')
 const staff = () =>
-    import ('../components/staffInfo/staff') //职员资料
+    import ('../components/staffInfo/staff')
 const staffList = () =>
     import ('../components/staffInfo/staffList')
+
 const redirectRouter = function(routerName) { //重定向
     let activeRouter = store.state.activeRouter;
     for (let i = 0; i < activeRouter.length; i++) {
@@ -531,6 +527,8 @@ const routes = [
                 ]
             },
 
+
+
             {
                 path: '/businessArea',
                 component: businessArea,
@@ -553,43 +551,51 @@ const routes = [
                     { path: '/department/departmentList/:id', component: departmentList, name: 'departmentList' },
                 ]
             },
-            {
-                path: '/user',
-                component: user,
-                name: 'user',
-                redirect: function() { //用户资料
-                    return redirectRouter('user')
-                },
-                children: [
-                    { path: '/user/userList/:id', component: userList, name: 'userList' },
-                    { path: '/user/userDetail/:id', component: userDetail, name: 'userDetail' },
-                ]
-            },
             { path: '/supplierList/:id', component: supplierList, name: 'supplierList' },
-            { path: '/tenantManagement/:id', component: tenantManagement, name: 'tenantManagement' },
-            { path: '/tenantManagementAdd/:id', component: tenantManagementAdd, name: 'tenantManagementAdd' },
+            // { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
+            // { path: '/userList/:id', component: userList,name:'userList' },
+            // { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
 
+            // { path: '/tenant', component: tenant,name:'tenant',redirect: function(){//租户管理
+            //   let name='tenant';
+            //   let activeRouter=store.state.activeRouter;
+
+            //   for(let i=0;i<activeRouter.length;i++){
+            //       if(activeRouter[i].name==name){
+
+            //         return activeRouter[i].url;
+
+            //         break;
+            //       }
+            //   }
+            // },children:[
+            //     { path: '/tenant/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
+            //     { path: '/tenant/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
+            // ]},
             {
                 path: '/staff',
                 component: staff,
                 name: 'staff',
-                redirect: function() { //职员资料
+                redirect: function() { //职员资料组
                     let name = 'staff';
+
                     let activeRouter = store.state.activeRouter;
 
                     for (let i = 0; i < activeRouter.length; i++) {
+                        console.log(activeRouter[i].name)
                         if (activeRouter[i].name == name) {
+
                             return activeRouter[i].url;
+
                             break;
                         }
                     }
                 },
                 children: [
                     { path: '/staff/staffList/:id', component: staffList, name: 'staffList' },
-                    // { path: '/staff/commodityRecordDetails/:id', component: commodityRecordDetails, name: 'commodityRecordDetails' },
+                    // { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails, name: 'commodityRecordDetails' },
                 ]
             },
-
         ]
     }
 ]

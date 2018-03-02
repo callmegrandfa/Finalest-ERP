@@ -7,7 +7,132 @@
 	            	<btm :date="bottonbox"> </btm>
 	                <el-row class="pb10">
 	                	 <div id="bg-white" style="background-color: rgba(251, 252, 253, 1);">
-                            <router-view></router-view>           
+
+                            
+                             <el-col :span='24'>
+               
+                                <el-row class="pl10 pt10 pr10 pb10">
+                                    <el-col :span="24">
+                                        <el-table :data="allList" border style="width: 100%" stripe="true" highlight-current-row="true" fit="false" @selection-change="handleSelectionChange">
+                                            <el-table-column type="selection"></el-table-column>
+                                            <el-table-column label="序号">
+                                                <template slot-scope="scope">
+                                                    <img v-show='scope.$index==ar[scope.$index]' class="abimg" src="../../../static/image/content/redremind.png"/>
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.seq"
+                                                            @change='handleChange(scope.$index,scope.row)'
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+
+                                            
+
+                                            <el-table-column prop="ouId" label="职员编码">
+                                                <template slot-scope="scope">
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.currencyCode"
+                                                            @change='handleChange(scope.$index,scope.row)'
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+
+                                            <el-table-column prop="contact" label="职员名称">
+                                                <template slot-scope="scope">
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.currencyName" 
+                                                            @change='handleChange(scope.$index,scope.row)'
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+
+                                            <el-table-column prop="contactFullName" label="手机号码">
+                                                <template slot-scope="scope">
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.increment"
+                                                            @change='handleChange(scope.$index,scope.row)'
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+
+                                            <el-table-column prop="contactName" label="所属部门">
+                                                <template slot-scope="scope">
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.status"
+                                                            @change='handleChange(scope.$index,scope.row)'
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+
+                                            <el-table-column prop="contactClassId" label="性别">
+                                                <template slot-scope="scope">
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.remark" 
+                                                            @change='handleChange(scope.$index,scope.row)'
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+
+                                            <el-table-column prop="contactWorkPropertyId" label="生日">
+                                                <template slot-scope="scope">
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.createBy" 
+                                                            disabled
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+
+                                            <el-table-column prop="ficaOuId" label="职员类型">
+                                                <template slot-scope="scope">
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.createTime" 
+                                                            disabled
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+
+                                             <el-table-column prop="ficaOuId" label="所属店铺">
+                                                <template slot-scope="scope">
+                                                    <input class="input-need" 
+                                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                            v-model="scope.row.createTime" 
+                                                            disabled
+                                                            type="text"/>
+                                                </template>
+                                            </el-table-column>
+                                            
+                                            <el-table-column label="操作">
+                                                <template slot-scope="scope">
+                                                    <el-button v-on:click="handleDel(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+
+                                        <el-row>
+                                            <el-col :span='6'>
+                                                <div style="margin-top:20px;" class="ml10">
+                                                        记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
+                                                </div>
+                                                
+                                            </el-col>
+                                            <el-col :span="18">
+                                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                                            </el-col>
+                                        </el-row>
+                                        
+                                    </el-col>
+                                </el-row>
+
+                            </el-col>  
+
+
                          </div> 
 	                </el-row>
 	            </el-col>
@@ -39,6 +164,29 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
+                 allList:[],//所有数据列表
+                updateList:[],//修改的数据
+                addList:[],//新增的数据
+                multipleSelection: [],//复选框选中数据
+                pageIndex:-1,//分页的当前页码
+                totalPage:0,//当前分页总数
+                total:'',//数据总条数
+                page:1,//当前页
+                eachPage:10,//一页显示的数量
+                x:0,//增行的下标
+                rows:[],//增行的数组
+                createParams:{
+                    "group_id": 1,
+                    "currencyCode": "",
+                    "currencyName": "",
+                    "increment": '',
+                    "seq": '',
+                    "status": '',
+                    "remark": ""
+                },
+                redShow:false,//判斷修改过的表格左上角红标
+                redIndex:'',
+                ar:[],
                 options:[{
                     value: '选项1',
                     label: '仓库'

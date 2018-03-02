@@ -598,14 +598,13 @@
     display: none;
 }
 
-
+.load_more{
+    text-align: center;
+}
 .w_auto{
     width: auto;
 }
 .load_more{
-    /* position: absolute;
-    bottom: 40px;
-    left: 0; */
     text-align: center;
 }
 .load_more button{
@@ -815,5 +814,8 @@
 .menuDetail .el-dialog__headerbtn{
     top:3px;
     font-size:50px;
+}
+.menuDetail .el-dialog__body{
+  padding: 0;
 }
 </style>

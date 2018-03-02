@@ -82,9 +82,14 @@ export default {
                     {name:'菜单管理',address:'menu'},
                 ]
             },{
-                name:'用户组',
+                name:'用户管理',
                 thirdInfo:[
                     {name:'用户资料',address:'user'},
+                ]
+            },{
+                name:'角色管理',
+                thirdInfo:[
+                    {name:'角色资料',address:'role'},
                 ]
             },{
                 name:'采购管理',
@@ -115,6 +120,11 @@ export default {
                 name:'仓库资料',
                 thirdInfo:[
                      {name:'仓库资料',address:'repository'}, 
+                ]
+            },{
+                name:'系统字典',
+                thirdInfo:[
+                     {name:'系统字典',address:'dictionaryList'}, 
                 ]
             },{
                 name:'业务地区',

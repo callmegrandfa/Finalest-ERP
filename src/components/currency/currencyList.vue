@@ -325,7 +325,7 @@
                 let self = this;
                 // console.log(index)
                 let map = false;
-                if(self.ar.length==0){
+                if(self.ar.length==0){//修改后表格前红标
                     self.ar.push(index)
                 }else if(self.ar.length>=1){
                     for(let i in self.ar){
@@ -346,7 +346,7 @@
 
 
                 let flag = false;
-                if(self.updateList.length==0){
+                if(self.updateList.length==0){//修改过的数据
                     flag = true;
                 }else if(self.updateList.length>=1){
                     for(let i in self.updateList){
@@ -389,13 +389,6 @@
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.input-need{
-    border:none;
-    outline: none;
-    width: 100%;
-    height: 23px;
-    line-height: 23px;
 }
 .h48{
     height: 48px;
@@ -495,67 +488,8 @@
 .text-right{
     text-align: right;
 }
-.input-bgw{
-    background: white;
-    text-align: center;
-}
-.input-bgp{
-    background: #FAFAFA;
-    text-align: center;
-}
 </style>
 
 <style>
-/* 重写checkbox */
-.infor-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.infor-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
 
-/* 重写el-table样式 */
-.infor-wrapper .el-table td{
-    position: relative;
-}
-.infor-wrapper .abimg{
-    position: absolute;
-    left: 0;
-    top:0;
-}
-.infor-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.infor-wrapper .el-table td{
-    padding: 3px 0;
-}
-.infor-wrapper .el-table__body{
-    text-align: center;
-}
 </style>

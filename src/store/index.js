@@ -89,10 +89,10 @@ export default new vuex.Store({
             { name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' }, //职员资料
             { name: 'staffList', url: '/staff/staffList/:id', parent: 'staff' },
 
-            { name: 'user', url: '/user/userList/:id', parent: '', default: '/user/userList/:id' }, //部门资料
-            { name: 'userList', url: '/user/userList/:id', parent: 'user' },
-            { name: 'userDetail', url: '/user/userDetail/:id', parent: 'user' },
-        ],
+            // { name: 'user', url: '/user/userList/:id', parent: '', default: '/user/userList/:id' }, //部门资料
+            // { name: 'userList', url: '/user/userList/:id', parent: 'user' },
+            // { name: 'userDetail', url: '/user/userDetail/:id', parent: 'user' },
+        ]
     },
     mutations: {
         go(state) { //控制slidebar显示隐藏

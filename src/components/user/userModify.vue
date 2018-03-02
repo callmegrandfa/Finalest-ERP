@@ -12,26 +12,26 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div class="tipsWrapper" name="userCode">
+            <!-- <div class="tipsWrapper" name="userCode">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.userCode')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.userCode') }}</p>
                 </div>
-            </div>
-             <div class="tipsWrapper" name="displayName">
+            </div> -->
+             <!-- <div class="tipsWrapper" name="displayName">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.displayName')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.displayName') }}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="tipsWrapper" name="phoneNumber">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.phoneNumber')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.phoneNumber') }}</p>
                 </div>
             </div>
-            <div class="tipsWrapper" name="email">
+            <!-- <div class="tipsWrapper" name="email">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.email')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.email') }}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="tipsWrapper" name="userGroupId">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.userGroupId')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.userGroupId') }}</p>
@@ -68,18 +68,18 @@
               <el-input 
               class="userCode" 
               @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData.userCode')}" 
+              :class="{redBorder : validation.hasError('addData1.userCode')}" 
               v-model="addData.userCode" 
-              placeholder=""></el-input>
+              placeholder="无字段"></el-input>
             </div>
             <div class="bgcolor">
               <label><small>*</small>用户名称</label>
               <el-input 
               class="displayName" 
               @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData.displayName')}" 
+              :class="{redBorder : validation.hasError('addData1.displayName')}" 
               v-model="addData.displayName"  
-              placeholder=""></el-input>
+              placeholder="无字段"></el-input>
             </div>
             <div class="bgcolor">
               <label><small>*</small>手机号码</label>
@@ -95,9 +95,9 @@
               <el-input 
               class="email" 
               @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData.email')}"
+              :class="{redBorder : validation.hasError('addData1.email')}"
               v-model="addData.email"  
-              placeholder=""></el-input>
+              placeholder="无字段"></el-input>
             </div>
             <div class="bgcolor">
               <label><small>*</small>所属用户组</label>
@@ -176,7 +176,7 @@
             <div class="bgcolor longWidth">
               <label>备注</label>
               <el-input
-              class="remark" 
+               class="remark" 
                @focus="showErrprTipsTextArea"
                :class="{redBorder : validation.hasError('addData.remark')}"
                 v-model="addData.remark"
@@ -295,10 +295,10 @@
             label: '2'
          }],
         addData:{
-          "userCode": "",
-          "displayName": "",
+        //   "userCode": "",
+        //   "displayName": "",
           "phoneNumber": "",
-          "email": "",
+        //   "email": "",
           "userGroupId": "",
           "ouId": "",
           "status": "",
@@ -307,6 +307,11 @@
           "isReg": false,
           "remark": "",
           "roleCodes": []
+        },
+        addData1:{
+            "userCode": "",
+            "displayName": "",
+            "email": "暂字段",
         },
         tableLoading:false,
         tableData:[],
@@ -318,21 +323,23 @@
         totalItem:0,//总共有多少条消息
         checked:[],//已关联角色
         nochecked:[],//未关联角色
+        allNode:[],//所有角色
+        checkedRoleCode:[],
       }
     },
      validators: {
-      'addData.userCode': function (value) {//用户编码
-         return this.Validator.value(value).required().maxLength(50)
-      },
-      'addData.displayName': function (value) {//用户名称
-         return this.Validator.value(value).required().maxLength(50);
-      },
+    //   'addData.userCode': function (value) {//用户编码
+    //      return this.Validator.value(value).required().maxLength(50)
+    //   },
+    //   'addData.displayName': function (value) {//用户名称
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
       'addData.phoneNumber': function (value) {//手机号码
          return this.Validator.value(value).required().maxLength(20);
       },
-      'addData.email': function (value) {//邮箱
-         return this.Validator.value(value).required().maxLength(200);
-      },
+    //   'addData.email': function (value) {//邮箱
+    //      return this.Validator.value(value).required().maxLength(200);
+    //   },
       'addData.userGroupId': function (value) {//所属用户组
          return this.Validator.value(value).required().integer();
       },
@@ -354,9 +361,40 @@
     },
     created:function(){       
       let _this=this;
+      _this.getData();  
       _this.loadTableData();
     },
     methods: {
+       getData(){
+           let _this=this;
+           _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
+           .then(function(res){
+               
+               _this.addData={
+                    "phoneNumber": res.result.phoneNumber,
+                    "userGroupId": 1,//get接口无字段
+                    "ouId": res.result.ouId,
+                    "status": res.result.status,
+                    "userType": res.result.userType,
+                    "languageId":res.result.languageId,
+                    "isReg": res.result.isReg,
+                    "remark": res.result.remark,
+                    "roleCodes": res.result.roleCodes,
+                    "id": _this.$route.params.id
+                }
+                _this.addData1={
+                    "userCode": "",
+                    "displayName": "",
+                    "email": "暂字段",
+                }
+                if(res.result.roleCodes.length>0 && res.result.roleCodes.length){
+                    _this.checkedRoleCode=res.result.roleCodes;
+                }
+                
+           },function(res){
+
+           })
+       }, 
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
               if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
@@ -395,8 +433,20 @@
               _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
               _this.tableLoading=false;
               $.each(_this.tableData,function(index,value){
-                _this.nochecked.push(value)
+                _this.allNode.push(value)//获取所有角色
               })
+              _this.nochecked=_this.allNode;
+              if(_this.allNode.length>0 && _this.checkedRoleCode.length>0){
+                  for(let i=0;i<_this.allNode.length;i++){
+                        for(let x=0;x<_this.checkedRoleCode.length;x++){
+                            if(_this.checkedRoleCode[x]==_this.allNode[i].roleCode){
+                                let item=_this.allNode[i]
+                                _this.checked.push(item)//获取已选中的角色
+                                _this.nochecked.splice(i,1);//未选中角色
+                            }
+                        }
+                    }
+                }
               },function(res){
               _this.tableLoading=false;
           })
@@ -413,7 +463,7 @@
         let _this=this;
         if(_this.multipleSelection.length>0){//表格
             for(let i=0;i<_this.multipleSelection.length;i++){
-                _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
+                _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.multipleSelection[i].id})
                 .then(function(res){
                     _this.loadTableData();
                     _this.open('删除成功','el-icon-circle-check','successERP');
@@ -433,7 +483,7 @@
       },
       delThis(row){//删除行
           let _this=this;
-          _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:row.id})
+          _this.$axios.deletes('/api/services/app/Role/Delete',{id:row.id})
           .then(function(res){
               _this.loadTableData();
           },function(res){
@@ -508,9 +558,8 @@
                     $.each(_this.checked,function(index,value){
                         roles.push(value.roleCode)
                     })
-                    
                     _this.addData.roleCodes=roles;
-                    _this.$axios.posts('/api/services/app/User/Create',_this.addData)
+                    _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
                         _this.addData.id=res.result.id;
                         _this.$store.state.url='/user/userModify/'+res.result.id
@@ -578,16 +627,18 @@
     margin-bottom: 10px;
 }
 .userDetail .bgcolor.longWidth .addRole{
-  display: inline-block;
-  width: 66px;
-  height: 35px;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  margin-right: 10px;
-  cursor: pointer;
-  position: relative;
+    text-align: center;
+    line-height: 35px;
+    display: inline-block;
+    width: 66px;
+    height: 35px;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    position: relative;
 }
 .userDetail .bgcolor.longWidth .add:hover{
     background-color: #354052;

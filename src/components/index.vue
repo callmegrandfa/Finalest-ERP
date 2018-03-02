@@ -65,23 +65,23 @@ export default {
     }
 
       $(window).scroll(function(){
-        if($(window).scrollTop()>14){
+        if($(window).scrollTop()>61){
           if(!_this.$store.state.show){
             $('.fixed').css({
               position:'fixed',
               top:'93px',
-              zIndex:'999',
+              zIndex:'998',
               width:'calc(100% - 265px)',
               transition: 'width 0s'
-            })
+            }).next('div').css({marginTop:$('.fixed').height()})
           }else{
              $('.fixed').css({
               position:'fixed',
               top:'93px',
-              zIndex:'999',
+              zIndex:'998',
               width:'calc(100% - 80px)',
               transition: 'width 0s'
-            })
+            }).next('div').css({marginTop:$('.fixed').height()})
           }
           _this.$store.commit('go1');
         }else{
@@ -90,7 +90,7 @@ export default {
             top:'0',
             width:'100%',
             transition: 'width 0s'
-          })
+          }).next('div').css({marginTop:0})
           _this.$store.commit('go2');
         }
       })
