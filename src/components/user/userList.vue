@@ -75,7 +75,7 @@
                             <el-table-column prop="languageId" label="语种"></el-table-column>
                             <el-table-column prop="AuthType" label="认证类型"></el-table-column>
                             <el-table-column prop="Status" label="状态"></el-table-column>
-                            <el-table-column label="有效日期" width="270">
+                            <el-table-column label="有效日期" width="200">
                                 <template slot-scope="scope">
                                     <div class="halfWidth left">
                                         <el-date-picker
@@ -296,8 +296,8 @@
                 .then(function(res){
                     _this.loadTableData();
                 },function(res){
-            })
-      },
+                })
+             },
         },
     }
 </script>

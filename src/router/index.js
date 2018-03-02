@@ -87,41 +87,40 @@ const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'
 const dictionary = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionary')
 const dictionaryList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionaryList')
 // 商品属性
-// const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
-// const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
-// const commodity = () =>import('../components/commodityManagement/commodity')
-// const commercial = () =>import('../components/commodityManagement/commercial')
-// const commodityleimu = () =>import('../components/commodityManagement/commodityleimu')
-// const Property = () =>import('../components/commodityManagement/Property')
-// const commercialSpecification= () =>import('../components/commodityManagement/commercialSpecification')
-// const commercialSpecificationDetails= () =>import('../components/commodityManagement/commercialSpecificationDetails')
-// const CommodityCategories= () =>import('../components/commodityManagement/CommodityCategories')
-// const CommodityCategoriesDetails= () =>import('../components/commodityManagement/CommodityCategoriesDetails')
-// const classProperty= () =>import('../components/commodityManagement/classProperty')
-// const classPropertyDetails= () =>import('../components/commodityManagement/classPropertyDetails')
-// const unitOfMeasurement= () =>import('../components/commodityManagement/unitOfMeasurement')
- const commodityBrand= () =>import('../components/commodityManagement/commodityBrand')
-// const commodityClassHeading= () =>import('../components/commodityManagement/commodityClassHeading')
-// const commodityAttribute= () =>import('../components/commodityManagement/commodityAttribute')
-// const specificationOfGoods= () =>import('../components/commodityManagement/specificationOfGoods')
-// const specification= () =>import('../components/commodityManagement/specification')
-// const specificationOfGoodsList= () =>import('../components/commodityManagement/specificationOfGoodsList')
-// const specificationOfGoodsDetails= () =>import('../components/commodityManagement/specificationOfGoodsDetails')
-// const classPropertyList= () =>import('../components/commodityManagement/classPropertyList')
-// const commodityRecord= () =>import('../components/commodityManagement/commodityRecord')
-// const Record= () =>import('../components/commodityManagement/Record')
-// const commodityRecordDetails= () =>import('../components/commodityManagement/commodityRecordDetails')
-
-Vue.use(Router)
-let redirectRouter=function(routerName){
-  let activeRouter=store.state.activeRouter;
-  for(let i=0;i<activeRouter.length;i++){
-    if(activeRouter[i].name==routerName){
-      return activeRouter[i].url
-      break
+const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
+const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
+const commodity = () =>import('../components/commodityManagement/commodity')
+const commercial = () =>import('../components/commodityManagement/commercial')
+const commodityleimu = () =>import('../components/commodityManagement/commodityleimu')
+const Property = () =>import('../components/commodityManagement/Property')
+const commercialSpecification= () =>import('../components/commodityManagement/commercialSpecification')
+const commercialSpecificationDetails= () =>import('../components/commodityManagement/commercialSpecificationDetails')
+const CommodityCategories= () =>import('../components/commodityManagement/CommodityCategories')
+const CommodityCategoriesDetails= () =>import('../components/commodityManagement/CommodityCategoriesDetails')
+const classProperty= () =>import('../components/commodityManagement/classProperty')
+const classPropertyDetails= () =>import('../components/commodityManagement/classPropertyDetails')
+const unitOfMeasurement= () =>import('../components/commodityManagement/unitOfMeasurement')
+const commodityBrand= () =>import('../components/commodityManagement/commodityBrand')
+const commodityClassHeading= () =>import('../components/commodityManagement/commodityClassHeading')
+const commodityAttribute= () =>import('../components/commodityManagement/commodityAttribute')
+const specificationOfGoods= () =>import('../components/commodityManagement/specificationOfGoods')
+const specification= () =>import('../components/commodityManagement/specification')
+const specificationOfGoodsList= () =>import('../components/commodityManagement/specificationOfGoodsList')
+const specificationOfGoodsDetails= () =>import('../components/commodityManagement/specificationOfGoodsDetails')
+const classPropertyList= () =>import('../components/commodityManagement/classPropertyList')
+const commodityRecord= () =>import('../components/commodityManagement/commodityRecord')
+const Record= () =>import('../components/commodityManagement/Record')
+const commodityRecordDetails= () =>import('../components/commodityManagement/commodityRecordDetails')
+let redirectRouter=function(routerName) {//重定向
+    let activeRouter=store.state.activeRouter;
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==routerName){
+          return activeRouter[i].url;
+          break;
+        }
     }
   }
-}
+Vue.use(Router)
 const routes = [
   { path: '*', component: page404},
   { path: '/', redirect: '/login' },

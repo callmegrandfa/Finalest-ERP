@@ -216,11 +216,6 @@
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;
-                    //  $.each( _this.tableData,function(index,value){//处理时间格式
-                    //    let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
-                    //    _this.tableData[index].createdTime=createdTime;
-
-                    // })
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;

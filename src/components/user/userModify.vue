@@ -12,26 +12,26 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <!-- <div class="tipsWrapper" name="userCode">
+            <div class="tipsWrapper" name="userCode">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.userCode')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.userCode') }}</p>
                 </div>
-            </div> -->
-             <!-- <div class="tipsWrapper" name="displayName">
+            </div>
+             <div class="tipsWrapper" name="displayName">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.displayName')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.displayName') }}</p>
                 </div>
-            </div> -->
+            </div>
             <div class="tipsWrapper" name="phoneNumber">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.phoneNumber')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.phoneNumber') }}</p>
                 </div>
             </div>
-            <!-- <div class="tipsWrapper" name="email">
+            <div class="tipsWrapper" name="email">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.email')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.email') }}</p>
                 </div>
-            </div> -->
+            </div>
             <div class="tipsWrapper" name="userGroupId">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.userGroupId')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.userGroupId') }}</p>
@@ -68,7 +68,7 @@
               <el-input 
               class="userCode" 
               @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData1.userCode')}" 
+              :class="{redBorder : validation.hasError('addData.userCode')}" 
               v-model="addData.userCode" 
               placeholder="无字段"></el-input>
             </div>
@@ -77,7 +77,7 @@
               <el-input 
               class="displayName" 
               @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData1.displayName')}" 
+              :class="{redBorder : validation.hasError('addData.displayName')}" 
               v-model="addData.displayName"  
               placeholder="无字段"></el-input>
             </div>
@@ -95,7 +95,7 @@
               <el-input 
               class="email" 
               @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData1.email')}"
+              :class="{redBorder : validation.hasError('addData.email')}"
               v-model="addData.email"  
               placeholder="无字段"></el-input>
             </div>
@@ -105,6 +105,7 @@
               class="userGroupId" 
               @focus="showErrprTips"
               :class="{redBorder : validation.hasError('addData.userGroupId')}"
+              placeholder="无字段"
               v-model="addData.userGroupId">
                   <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -196,35 +197,33 @@
               </div>
             </div>
             <el-dialog :visible.sync="dialogTableVisible">
-                    <template slot="title">
-                        <span style="float:left;">选取角色</span>
-                        <div class="double_bt">
-                            <template v-if="menuCheck">
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="showNodeadd">已选角色</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}">未选角色</div>
-                            </template>
-                            <template v-else>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选角色</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选角色</div>
-                            </template>
-                            
-                        </div>
-                    </template>
-                    <el-col :span="24">
-                        <!-- <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
-                        <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span> -->
-                        <div class="menu_item_wapper menu_item_add">
-                            <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
-                        </div>
-                        <div class="menu_item_wapper menu_item_del">
-                            <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
-                        </div>
-                        <!-- <el-col :span="24" class="load_more">
-                            <button>加载更多</button>
-                        </el-col> -->
-                    </el-col>
-                </el-dialog>
-          </el-col>
+                <template slot="title">
+                    <span style="float:left;">选取角色</span>
+                    <div class="double_bt">
+                        <template v-if="menuCheck">
+                            <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="showNodeadd">已选角色</div>
+                            <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}">未选角色</div>
+                        </template>
+                        <template v-else>
+                            <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选角色</div>
+                            <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选角色</div>
+                        </template>
+                        
+                    </div>
+                </template>
+                <el-col :span="24">
+                    <div class="menu_item_wapper menu_item_add">
+                        <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
+                    </div>
+                    <div class="menu_item_wapper menu_item_del">
+                        <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
+                    </div>
+                    <!-- <el-col :span="24" class="load_more">
+                        <button>加载更多</button>
+                    </el-col> -->
+                </el-col>
+            </el-dialog>
+        </el-col>
 
           <el-col :span='24'>
             <div class="bgcolor longWidth">
@@ -295,10 +294,10 @@
             label: '2'
          }],
         addData:{
-        //   "userCode": "",
-        //   "displayName": "",
+          "userCode": "",
+          "displayName": "",
           "phoneNumber": "",
-        //   "email": "",
+          "email": "",
           "userGroupId": "",
           "ouId": "",
           "status": "",
@@ -308,11 +307,11 @@
           "remark": "",
           "roleCodes": []
         },
-        addData1:{
-            "userCode": "",
-            "displayName": "",
-            "email": "暂字段",
-        },
+        // addData1:{
+        //     "userCode": "",
+        //     "displayName": "",
+        //     "email": "暂字段",
+        // },
         tableLoading:false,
         tableData:[],
         pageIndex:1,//分页的当前页码
@@ -328,18 +327,18 @@
       }
     },
      validators: {
-    //   'addData.userCode': function (value) {//用户编码
-    //      return this.Validator.value(value).required().maxLength(50)
-    //   },
-    //   'addData.displayName': function (value) {//用户名称
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
+      'addData.userCode': function (value) {//用户编码
+         return this.Validator.value(value).required().maxLength(50)
+      },
+      'addData.displayName': function (value) {//用户名称
+         return this.Validator.value(value).required().maxLength(50);
+      },
       'addData.phoneNumber': function (value) {//手机号码
          return this.Validator.value(value).required().maxLength(20);
       },
-    //   'addData.email': function (value) {//邮箱
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
+      'addData.email': function (value) {//邮箱
+         return this.Validator.value(value).required().maxLength(200);
+      },
       'addData.userGroupId': function (value) {//所属用户组
          return this.Validator.value(value).required().integer();
       },
@@ -369,24 +368,9 @@
            let _this=this;
            _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
            .then(function(res){
-               
-               _this.addData={
-                    "phoneNumber": res.result.phoneNumber,
-                    "userGroupId": 1,//get接口无字段
-                    "ouId": res.result.ouId,
-                    "status": res.result.status,
-                    "userType": res.result.userType,
-                    "languageId":res.result.languageId,
-                    "isReg": res.result.isReg,
-                    "remark": res.result.remark,
-                    "roleCodes": res.result.roleCodes,
-                    "id": _this.$route.params.id
-                }
-                _this.addData1={
-                    "userCode": "",
-                    "displayName": "",
-                    "email": "暂字段",
-                }
+                _this.addData= res.result
+                _this.addData.userGroupId='';
+                _this.addData.email='';
                 if(res.result.roleCodes.length>0 && res.result.roleCodes.length){
                     _this.checkedRoleCode=res.result.roleCodes;
                 }
@@ -673,8 +657,7 @@
 }
 .menu_btn_active{
     background-color: #6699FF;
-    color: #fff;
-    
+    color: #fff; 
 }
 .show{
     display: block;
