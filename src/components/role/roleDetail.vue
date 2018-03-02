@@ -96,6 +96,7 @@
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
+                        <a class="addRole"  v-for="x in roleChecked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
                         <!-- dialog -->
                         <el-dialog :visible.sync="dialogRole" class="dialogRole">
                             <template slot="title">
@@ -344,6 +345,8 @@ export default({
             dialogRole_menuCheck:true,
             roleChecked:[],
             roleNochecked:[],
+            roleAllNode:[],//所有角色
+            checkedRoleCode:[],//只有当用户修改时此数据不为空，新增页面永远为空，存储用户已经选中所有信息
 // -------------分配组织-------------------
             ouTableData:[],//分配组织数据
             ouPageIndex:1,//分页的当前页码
@@ -364,6 +367,10 @@ export default({
             fnTableLoading:true,
             dialogFn:false,
             dialogFn_menuCheck:true,
+            roleChecked:[],
+            roleNochecked:[],
+            roleAllNode:[],//所有权限
+            checkedFnCode:[],
 // -------------tree-------------------
             fnTreeLoading:true,
             fnTreeData:[],
@@ -383,6 +390,22 @@ export default({
       _this.fnLoadTree();
     },
     methods:{
+        getRoleData(){
+           let _this=this;
+           _this.$axios.gets('/api/services/app/Role/Get',{id:_this.$route.params.id})
+           .then(function(res){
+                _this.addData= res.result
+                if(res.result.userCodes.length>0 && res.result.userCodes.length){
+                    _this.checkedRoleCode=res.result.userCodes;
+                }
+                if(res.result.permissions.length>0 && res.result.permissions.length){
+                    _this.checkedFnCode=res.result.permissions;
+                }
+                
+           },function(res){
+
+           })
+       }, 
         delThisRole(row){//关联用户 删除
             let _this=this;
             _this.$axios.deletes('/api/services/app/User/Delete',{id:row.id})
@@ -413,6 +436,21 @@ export default({
                 _this.roleTotalItem=res.result.totalCount
                 _this.roleTotalPage=Math.ceil(res.result.totalCount/_this.roleOneItem);
                 _this.roleTableLoading=false;
+                $.each(_this.roletableData,function(index,value){
+                    _this.roleAllNode.push(value)//获取所有角色
+                })
+                _this.roleNochecked=_this.roleAllNode;
+                if(_this.roleAllNode.length>0 && _this.checkedRoleCode.length>0){
+                    for(let i=0;i<_this.roleAllNode.length;i++){
+                            for(let x=0;x<_this.checkedRoleCode.length;x++){
+                                if(_this.checkedRoleCode[x]==_this.roleAllNode[i].roleCode){
+                                    let item=_this.roleAllNode[i]
+                                    _this.roleChecked.push(item)//获取已选中的角色
+                                    _this.roleNochecked.splice(i,1);//未选中角色
+                                }
+                            }
+                        }
+                }
                 },function(res){
                 _this.roleTableLoading=false;
             })
@@ -942,19 +980,6 @@ export default({
       width: 423px;
   }
 
-
-.addRole{
-  display: inline-block;
-  padding: 1px 5px;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  margin-right: 10px;
-  cursor: pointer;
-  position: relative;
-}
-
 .menu_btn_active{
     background-color: #6699FF;
     color: #fff; 
@@ -1034,10 +1059,40 @@ export default({
 .menu_add:hover{
     opacity: 0.9;
 }
+.addRole{
+    text-align: center;
+    line-height: 35px;
+    display: inline-block;
+    width: 66px;
+    height: 35px;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    position: relative;
+}
+.addRole i{
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  color: #cccccc;
+}
+.addRole:hover i{
+  color:#f66;
+}
   </style>
   
   <style>
   .roleDetail .el-tab-pane .bt_add{
       margin-bottom:15px;
   }
+  .roleDetail .el-dialog__headerbtn{
+    top:3px;
+    font-size:50px;
+}
+.roleDetail .el-dialog__body{
+  overflow: hidden;
+}
   </style>
