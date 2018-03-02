@@ -83,6 +83,9 @@ const businessAreaList = () =>import(/* webpackChunkName: "group-businessArea" *
 // 部门资料
 const department = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/department')
 const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/departmentList')
+// 系统字典
+const dictionary = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionary')
+const dictionaryList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionaryList')
 // 商品属性
 const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
 const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
@@ -251,115 +254,115 @@ children:[
       { path: '/menu/addLangulage/:id', component: addLangulage,name:'addLangulage' },
   ]},
 
-  { path: '/commodity', component: commodity,name:'commodity',redirect: function(){//商品属性
-    let name='commodity';
-    let activeRouter=store.state.activeRouter;
+  // { path: '/commodity', component: commodity,name:'commodity',redirect: function(){//商品属性
+  //   let name='commodity';
+  //   let activeRouter=store.state.activeRouter;
 
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
+  //   for(let i=0;i<activeRouter.length;i++){
+  //       if(activeRouter[i].name==name){
           
-          return activeRouter[i].url;
+  //         return activeRouter[i].url;
 
-          break;
-        }
-    }
-  },children:[
-      { path: '/commodity/commodityProperty/:id', component: commodityProperty,name:'commodityProperty' },
-      { path: '/commodity/commodityPropertyDetails/:id', component: commodityPropertyDetails,name:'commodityPropertyDetails' },
-  ]},
+  //         break;
+  //       }
+  //   }
+  // },children:[
+  //     { path: '/commodity/commodityProperty/:id', component: commodityProperty,name:'commodityProperty' },
+  //     { path: '/commodity/commodityPropertyDetails/:id', component: commodityPropertyDetails,name:'commodityPropertyDetails' },
+  // ]},
 
-  { path: '/commercial', component: commercial,name:'commercial',redirect: function(){//商品规格
-    let name='commercial';
-    let activeRouter=store.state.activeRouter;
+  // { path: '/commercial', component: commercial,name:'commercial',redirect: function(){//商品规格
+  //   let name='commercial';
+  //   let activeRouter=store.state.activeRouter;
 
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
+  //   for(let i=0;i<activeRouter.length;i++){
+  //       if(activeRouter[i].name==name){
           
-          return activeRouter[i].url;
+  //         return activeRouter[i].url;
 
-          break;
-        }
-    }
-  },children:[
-      { path: '/commercial/commercialSpecification/:id', component: commercialSpecification,name:'commercialSpecification' },
-      { path: '/commercial/commercialSpecificationDetails/:id', component: commercialSpecificationDetails,name:'commercialSpecificationDetails' },
-  ]},
+  //         break;
+  //       }
+  //   }
+  // },children:[
+  //     { path: '/commercial/commercialSpecification/:id', component: commercialSpecification,name:'commercialSpecification' },
+  //     { path: '/commercial/commercialSpecificationDetails/:id', component: commercialSpecificationDetails,name:'commercialSpecificationDetails' },
+  // ]},
 
-  { path: '/Property', component: Property,name:'Property',redirect: function(){//商品规格
-    let name='Property';
-    let activeRouter=store.state.activeRouter;
+  // { path: '/Property', component: Property,name:'Property',redirect: function(){//商品规格
+  //   let name='Property';
+  //   let activeRouter=store.state.activeRouter;
 
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
+  //   for(let i=0;i<activeRouter.length;i++){
+  //       if(activeRouter[i].name==name){
           
-          return activeRouter[i].url;
+  //         return activeRouter[i].url;
 
-          break;
-        }
-    }
-  },children:[
-      { path: '/Property/classProperty/:id', component: classProperty,name:'classProperty' },
-      { path: '/Property/classPropertyDetails/:id', component: classPropertyDetails,name:'classPropertyDetails' },
-  ]},
+  //         break;
+  //       }
+  //   }
+  // },children:[
+  //     { path: '/Property/classProperty/:id', component: classProperty,name:'classProperty' },
+  //     { path: '/Property/classPropertyDetails/:id', component: classPropertyDetails,name:'classPropertyDetails' },
+  // ]},
 
-  { path: '/commodityleimu', component: commodityleimu,name:'commodityleimu',redirect: function(){//商品规格
-    let name='commodityleimu';
-    let activeRouter=store.state.activeRouter;
+  // { path: '/commodityleimu', component: commodityleimu,name:'commodityleimu',redirect: function(){//商品规格
+  //   let name='commodityleimu';
+  //   let activeRouter=store.state.activeRouter;
 
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
+  //   for(let i=0;i<activeRouter.length;i++){
+  //       if(activeRouter[i].name==name){
           
-          return activeRouter[i].url;
+  //         return activeRouter[i].url;
 
-          break;
-        }
-    }
-  },children:[
-      { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories,name:'CommodityCategories' },
-      { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails,name:'CommodityCategoriesDetails' },
-  ]},
+  //         break;
+  //       }
+  //   }
+  // },children:[
+  //     { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories,name:'CommodityCategories' },
+  //     { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails,name:'CommodityCategoriesDetails' },
+  // ]},
 
-  { path: '/unitOfMeasurement/:id', component: unitOfMeasurement,name:'unitOfMeasurement' },//计量单位
-  { path: '/commodityBrand/:id', component: commodityBrand,name:'commodityBrand' },//商品品牌
-  { path: '/commodityClassHeading/:id', component: commodityClassHeading,name:'commodityClassHeading' },//商品类目
-  { path: '/commodityAttribute/:id', component: commodityAttribute,name:'commodityAttribute' },//商品属性
-  { path: '/specificationOfGoods/:id', component: specificationOfGoods,name:'specificationOfGoods' },//商品规格
+  // { path: '/unitOfMeasurement/:id', component: unitOfMeasurement,name:'unitOfMeasurement' },//计量单位
+   { path: '/commodityBrand/:id', component: commodityBrand,name:'commodityBrand' },//商品品牌
+  // { path: '/commodityClassHeading/:id', component: commodityClassHeading,name:'commodityClassHeading' },//商品类目
+  // { path: '/commodityAttribute/:id', component: commodityAttribute,name:'commodityAttribute' },//商品属性
+  // { path: '/specificationOfGoods/:id', component: specificationOfGoods,name:'specificationOfGoods' },//商品规格
 
-  { path: '/specification', component: specification,name:'specification',redirect: function(){//商品规格组
-    let name='specification';
-    let activeRouter=store.state.activeRouter;
+  // { path: '/specification', component: specification,name:'specification',redirect: function(){//商品规格组
+  //   let name='specification';
+  //   let activeRouter=store.state.activeRouter;
 
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
+  //   for(let i=0;i<activeRouter.length;i++){
+  //       if(activeRouter[i].name==name){
           
-          return activeRouter[i].url;
+  //         return activeRouter[i].url;
 
-          break;
-        }
-    }
-  },children:[
-      { path: '/specification/specificationOfGoodsList/:id', component: specificationOfGoodsList,name:'specificationOfGoodsList' },
-      { path: '/specification/specificationOfGoodsDetails/:id', component: specificationOfGoodsDetails,name:'specificationOfGoodsDetails' },
-  ]},
+  //         break;
+  //       }
+  //   }
+  // },children:[
+  //     { path: '/specification/specificationOfGoodsList/:id', component: specificationOfGoodsList,name:'specificationOfGoodsList' },
+  //     { path: '/specification/specificationOfGoodsDetails/:id', component: specificationOfGoodsDetails,name:'specificationOfGoodsDetails' },
+  // ]},
 
-  { path: '/classPropertyList/:id', component: classPropertyList,name:'classPropertyList' },//类目属性规格-树列表
+  // { path: '/classPropertyList/:id', component: classPropertyList,name:'classPropertyList' },//类目属性规格-树列表
 
-  { path: '/Record', component: Record,name:'Record',redirect: function(){//商品规格组
-    let name='Record';
-    let activeRouter=store.state.activeRouter;
+  // { path: '/Record', component: Record,name:'Record',redirect: function(){//商品规格组
+  //   let name='Record';
+  //   let activeRouter=store.state.activeRouter;
 
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
+  //   for(let i=0;i<activeRouter.length;i++){
+  //       if(activeRouter[i].name==name){
           
-          return activeRouter[i].url;
+  //         return activeRouter[i].url;
 
-          break;
-        }
-    }
-  },children:[
-      { path: '/Record/commodityRecord/:id', component: commodityRecord,name:'commodityRecord' },
-      { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails,name:'commodityRecordDetails' },
-  ]},
+  //         break;
+  //       }
+  //   }
+  // },children:[
+  //     { path: '/Record/commodityRecord/:id', component: commodityRecord,name:'commodityRecord' },
+  //     { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails,name:'commodityRecordDetails' },
+  // ]},
 
   { path: '/businessArea', component: businessArea,name:'businessArea',redirect: function(){//业务地区
     return redirectRouter('businessArea')
@@ -370,6 +373,11 @@ children:[
     return redirectRouter('department')
   },children:[
       { path: '/department/departmentList/:id', component: departmentList,name:'departmentList' },
+  ]},
+  { path: '/dictionary', component: dictionary,name:'dictionary',redirect: function(){//系统字典
+    return redirectRouter('dictionary')
+  },children:[
+      { path: '/dictionary/dictionaryList/:id', component: dictionaryList,name:'dictionaryList' },
   ]},
   { path: '/user', component: user,name:'user',redirect: function(){//用户资料
     return redirectRouter('user')

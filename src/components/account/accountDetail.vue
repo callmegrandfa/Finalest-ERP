@@ -105,10 +105,10 @@
 
                     </el-col>
 
-                    <el-col :span="24" class="mt10 mb10 pl40">
-                        <template>
-                            <el-checkbox v-model="ifCan">允许使用</el-checkbox>
-                        </template>
+                    <el-col :span="3" class="mt10 mb10 pl80">
+                        <div>
+                            <span class="makeMonth">生成会计月份</span>
+                        </div>
                     </el-col>
                 </el-row>
                 
@@ -536,8 +536,8 @@
 .pl10{
     padding-left: 10px;
 }
-.pl40{
-    padding-left: 40px;
+.pl80{
+    padding-left: 80px;
 }
 .ml15{
     margin-left: 15px;
@@ -640,6 +640,18 @@ input:-ms-input-placeholder{
 
 input::-webkit-input-placeholder{
     color: rgba(0, 0, 0, 0.349019607843137);
+}
+.makeMonth{
+    display: inline-block;
+    height: 35px;
+    line-height: 35px;
+    background: #00CA7A;
+    color: white;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
 }
 </style>
 <style>
