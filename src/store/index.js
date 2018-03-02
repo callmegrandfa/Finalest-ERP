@@ -73,6 +73,10 @@ export default new vuex.Store({
             {name:'specificationOfGoodsList',url:'/specification/specificationOfGoodsList/:id',parent:'specification'},
             {name:'specificationOfGoodsDetails',url:'/specification/specificationOfGoodsDetails/:id',parent:'specification'},
 
+            {name:'tenant',url:'/tenant/tenantManagement/:id',parent:'',default:'/tenant/tenantManagement/:id'},//租户管理
+            {name:'tenantManagement',url:'/tenant/tenantManagement/:id',parent:'tenant'},
+            {name:'tenantManagementAdd',url:'/tenant/tenantManagementAdd/:id',parent:'tenant'},
+            
             {name:'Record',url:'/Record/commodityRecord/:id',parent:'',default:'/Record/commodityRecord/:id'},//商品档案
             {name:'commodityRecord',url:'/Record/commodityRecord/:id',parent:'Record'},
             {name:'commodityRecordDetails',url:'/Record/commodityRecordDetails/:id',parent:'Record'},
