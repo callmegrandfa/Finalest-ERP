@@ -142,6 +142,11 @@ export default {
                     {name:'类目属性规格(平台)列表',address:'classPropertyList'},
                     {name:'商品档案',address:'Record'},
                 ]
+            },{
+                name:'职员资料',
+                thirdInfo:[
+                    {name:'职员资料',address:'staff'}
+                ]
             }],
             childNodes:[],//菜单数据
         }
