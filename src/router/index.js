@@ -21,6 +21,7 @@ const repositoryData = () =>import('../components/wareHouse/repositoryData')
 const repositoryModify = () =>import('../components/wareHouse/repositoryModify')
 
 const supplierEdit = () =>import('../components/supplierData/supplierEdit')
+const supplierList = () =>import('../components/supplierData/supplierList')
 const goodsData = () =>import('../components/goodsData/goodsData')
 const storeData = () =>import('../components/storeInformation/storeData')
 const storeBasicInfor = () =>import('../components/storeInformation/storeBasicInfor')
@@ -44,10 +45,16 @@ const order = () =>import(/* webpackChunkName: "group-order" */'../components/pu
 const orderDetails = () =>import('../components/purchaseOrder/orderDetails')
 const orderList = () =>import(/* webpackChunkName: "group-order" */'../components/purchaseOrder/orderList')
 
-const supplierList = () =>import('../components/supplierData/supplierList')
-const userInfoDetail = () =>import('../components/user/userInfoDetail')
-const userList = () =>import('../components/user/userList')
-const userDataList = () =>import('../components/user/userDataList')
+//用户管理
+const user = () =>import(/* webpackChunkName: "group-user" */'../components/user/user')
+const userList = () =>import(/* webpackChunkName: "group-user" */'../components/user/userList')
+const userDetail = () =>import('../components/user/userDetail')
+const userModify = () =>import('../components/user/userModify')
+//角色管理
+const role = () =>import(/* webpackChunkName: "group-role" */'../components/role/role')
+const roleList = () =>import(/* webpackChunkName: "group-role" */'../components/role/roleList')
+const roleDetail = () =>import('../components/role/roleDetail')
+const roleModify = () =>import('../components/role/roleModify')
 
 const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
 const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
@@ -76,6 +83,9 @@ const businessAreaList = () =>import(/* webpackChunkName: "group-businessArea" *
 // 部门资料
 const department = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/department')
 const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/departmentList')
+// 系统字典
+const dictionary = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionary')
+const dictionaryList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionaryList')
 // 商品属性
 // const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
 // const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
@@ -108,7 +118,7 @@ const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: login,name:'login' },
   { path: '/register', component: register,name:'register' },
-  { path: '/index', component: index,name:'index',
+  { path: '/index', component: index,name:'index',redirect: '/home',
   beforeEnter: (to, from, next) => {//如果未登录,index路由包括其子路由会自动跳转/login
     store.commit('username');    
     if(store.state.username!=null){
@@ -119,7 +129,6 @@ const routes = [
         let names=[];
         for(let i=0;i<store.state.username.length;i++){
             let name=store.state.username[i].name;
-            console.log(name)
             names.push(name);
           }
         if(store.state.alerts){
@@ -169,14 +178,7 @@ children:[
   { path: '/longData', component: longData,name:'longData' },
   { path: '/midData', component: midData,name:'midData' },
   { path: '/repository', component: repository,name:'repository',redirect: function(){//仓库管理
-    let name='repository';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('repository')
   },children:[
       { path: '/repository/repositoryList/:id', component: repositoryList,name:'repositoryList' },
       { path: '/repository/repositoryData/:id', component: repositoryData,name:'repositoryData' }, 
@@ -188,14 +190,7 @@ children:[
   { path: '/storeBasicInfor/:id', component: storeBasicInfor,name:'storeBasicInfor' },
 
   { path: '/customer', component: customer,name:'customer',redirect: function(){//客户管理
-    let name='customer';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('customer')
   },children:[  
       { path: '/customer/customerList/:id', component: customerList,name:'customerList' },
       { path: '/customer/customerDetail/:id', component: customerDetail,name:'customerDetail' },
@@ -203,14 +198,7 @@ children:[
   ]},
 
   { path: '/account', component: account,name:'account',redirect: function(){//客户管理
-    let name='account';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('account')
   },children:[  
       { path: '/account/accountList/:id', component: accountList,name:'accountList' },
       { path: '/account/accountDetail/:id', component: accountDetail,name:'accountDetail' },
@@ -218,67 +206,31 @@ children:[
   ]},
 
   { path: '/currency', component: currency,name:'currency',redirect: function(){//币种资料
-    let name='currency';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('currency')
   },children:[  
       { path: '/currency/currencyList/:id', component: currencyList,name:'currencyList' },
   ]},
 
   { path: '/order', component: order,name:'order',redirect: function(){//采购管理
-    let name='order';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('order')
   },children:[
       { path: '/order/orderDetails/:id', component: orderDetails,name:'orderDetails' },
       { path: '/order/orderList/:id', component: orderList,name:'orderList' },
   ]},
 
   { path: '/bill', component: bill,name:'bill',redirect: function(){//单据开单模板
-    let name='bill';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('bill')
   },children:[
       { path: '/bill/billDetails/:id', component: billDetails,name:'billDetails' },
       { path: '/bill/billList/:id', component: billList,name:'billList' },
   ]},
   { path: '/groupManage', component: groupManage,name:'groupManage',redirect: function(){//集团管理
-    let name='groupManage';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('groupManage')
   },children:[
       { path: '/groupManage/groupManageList/:id', component: groupManageList,name:'groupManageList' },
   ]},
   { path: '/OuManage', component: OuManage,name:'OuManage',redirect: function(){//组织管理
-    let name='OuManage';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('OuManage')
   },children:[
       { path: '/OuManage/OuManageSee/:id', component: OuManageSee,name:'OuManageSee' },
       { path: '/OuManage/OuManageModify/:id', component: OuManageModify,name:'OuManageModify' },
@@ -286,14 +238,7 @@ children:[
       { path: '/OuManage/OuManageList/:id', component: OuManageList,name:'OuManageList' },
   ]},
   { path: '/menu', component: menu,name:'menu',redirect: function(){//菜单管理
-    let name='menu';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('menu')
   },children:[
       { path: '/menu/menuDetail/:id', component: menuDetail,name:'menuDetail' },
       { path: '/menu/menuList/:id', component: menuList,name:'menuList' },
@@ -412,33 +357,35 @@ children:[
   // ]},
 
   { path: '/businessArea', component: businessArea,name:'businessArea',redirect: function(){//业务地区
-    let name='businessArea';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('businessArea')
   },children:[
       { path: '/businessArea/businessAreaList/:id', component: businessAreaList,name:'businessAreaList' },
   ]},
   { path: '/department', component: department,name:'department',redirect: function(){//部门资料
-    let name='department';
-    let activeRouter=store.state.activeRouter;
-    for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==name){
-          return activeRouter[i].url;
-          break;
-        }
-    }
+    return redirectRouter('department')
   },children:[
       { path: '/department/departmentList/:id', component: departmentList,name:'departmentList' },
   ]},
+  { path: '/dictionary', component: dictionary,name:'dictionary',redirect: function(){//系统字典
+    return redirectRouter('dictionary')
+  },children:[
+      { path: '/dictionary/dictionaryList/:id', component: dictionaryList,name:'dictionaryList' },
+  ]},
+  { path: '/user', component: user,name:'user',redirect: function(){//用户资料
+    return redirectRouter('user')
+  },children:[
+      { path: '/user/userList/:id', component: userList,name:'userList' },
+      { path: '/user/userDetail/:id', component: userDetail,name:'userDetail' },
+      { path: '/user/userModify/:id', component: userModify,name:'userModify' },
+  ]},
+  { path: '/role', component: role,name:'role',redirect: function(){//用户资料
+    return redirectRouter('role')
+  },children:[
+      { path: '/role/roleList/:id', component: roleList,name:'roleList' },
+      { path: '/role/roleDetail/:id', component: roleDetail,name:'roleDetail' },
+      { path: '/role/roleModify/:id', component: roleModify,name:'roleModify' },
+  ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
-  { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
-  { path: '/userList/:id', component: userList,name:'userList' },
-  { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
   { path: '/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
   { path: '/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
 ]}
@@ -449,33 +396,30 @@ const  router=new Router({
   routes
 })
 router.beforeEach((to, from, next) => {
- 
   store.commit('slidbarData');
   if(from.name=='login'){//如果用户登录，清楚缓存
     store.state.Alive=false;
   }else{
     store.state.Alive=true;
   } 
-    
-  let ActiveRouter=store.state.ActiveRouter
   if(store.accessToken!=''){
     document.title = to.name
     let activeRouter=store.state.activeRouter;
     let parent='';
     let url='';
     for(let i=0;i<activeRouter.length;i++){
-        if(activeRouter[i].name==to.name){
-          parent=activeRouter[i].parent;
-          url=activeRouter[i].url;
-          break
-        }
+      if(activeRouter[i].name==to.name){
+        parent=activeRouter[i].parent;
+        url=activeRouter[i].url;
+        break
+      }
     }
     for(let i=0;i<activeRouter.length;i++){
       if(activeRouter[i].name==parent){
         activeRouter[i].url=url
         break
       }
-  }
+    }
   } 
    next()
 })

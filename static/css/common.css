@@ -13,7 +13,7 @@
   border-radius: 10px;
 }
 .el-dialog__body{
-  padding: 0;
+  background-color: #fff;
 }
 .el-dialog__header{
   border-bottom: 1px solid #F9F9F9;
@@ -55,6 +55,11 @@
 .text-right{
   text-align: right;
 }
+.bgcolor .el-pagination__jump .el-input{
+  width: 50px;
+  float: none;
+  display: inline-block;
+}
 /* elementUI表单控件 */
 /* input输入框 */
 /* <div class="bgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  
@@ -86,7 +91,10 @@
     overflow: hidden;
     margin-right: 5px;
 }
-.bgcolor .rebBorder .el-input__inner{
+.bgcolor .redBorder .el-input__inner{
+  border-color: #f66;
+}
+.bgcolor .redBorder textarea{
   border-color: #f66;
 }
 .bgcolor .el-input__suffix{
@@ -98,7 +106,7 @@
   margin-left: auto;
   margin-right: auto;
 }
-.bgcolor label{
+.bgcolor>label{
     margin-right: 10px; 
     text-align: right;
     line-height:35px;
@@ -111,10 +119,10 @@
     font-weight: 400;
     font-style: normal;
 }
-.smallBgcolor label{
+.smallBgcolor>label{
   line-height:28px;
 }
-.bgcolor label small{
+.bgcolor>label small{
     color: #FF669B;
     margin-right: 2px;
 }
@@ -125,6 +133,7 @@
     float: left;
     font-size: 12px;
 }
+
 .smallBgcolor .el-input{
   width: calc(100% - 82px);
     height: 35px;
@@ -150,6 +159,19 @@
 
 /* datePicker日期控件 */
 /* <div class="bgcolor"><label><small>*</small>交货日期</label><el-date-picker v-model="" type="date" placeholder=""></el-date-picker></div> */
+table .el-date-editor.el-input{
+  width:100%;
+}
+table .el-input--prefix .el-input__inner{
+  border: none;
+  background-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+}
+table .el-input__icon{
+  display: none;
+}
 .bgcolor .el-date-editor .el-input__prefix{
     right: 5px;
     left: auto;
@@ -735,7 +757,7 @@ end-placeholder="结束日期">
 }
 .rangeDate input.el-range-input{
   width: 73px;
-  top:-2px;
+  top:-1px;
   height: 31px;
   position: relative;
   margin: 0;
@@ -853,4 +875,21 @@ end-placeholder="结束日期">
 /* loading */
 .el-loading-mask{
   z-index: 900;
+}
+
+/* 表格 */
+.input-bgw{
+  background: white;
+  text-align: center;
+}
+.input-bgp{
+  background: #FAFAFA;
+  text-align: center;
+}
+.input-need{
+  border:none;
+  outline: none;
+  width: 100%;
+  height: 23px;
+  line-height: 23px;
 }

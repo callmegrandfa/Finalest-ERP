@@ -8,9 +8,19 @@
 	    				<span>消息提醒：</span>
 	    			</div>
 	    			<div class="left indent relative" style="height:21px;width:300px;">
-	    				<div class="absolute" id="seamlessScroll">
-	    					<p >采购订单<strong>2</strong>其他信息</p>
-	    					<p >采购订单<strong>2</strong>其他信息</p>
+	    				<div class="absolute" id="seamlessScroll" style="">
+	    					<div>
+	    						<p >采购订单<strong>2</strong>其他信息</p>
+	    					</div>
+	    					<div>
+	    						<p >采购订单<strong>1</strong>其他信息</p>
+	    					</div>
+	    					<div>
+	    						<p >采购订单<strong>2</strong>其他信息</p>
+	    					</div>
+	    					<div>
+	    						<p >采购订单<strong>1</strong>其他信息</p>
+	    					</div>
 	    				</div>
 	    				
 	    			</div>
@@ -136,20 +146,42 @@
             this.myscroll();     
     },
 	methods:{
+
 		myscroll(){
+
 			let ws=document.getElementById('seamlessScroll');
-			let wschind=ws.getElementsByTagName('p');
-			let time='';
-			let sum=0;
-			let ac=wschind[0].offsetHeight;
+			let wschind=ws.getElementsByTagName('div');
+			let q=0;
 			setInterval(function(){
-				if(sum>wschind.length-2){
-					sum=0;
+				q++;
+				if(q==wschind.length){
+					ws.style.transition= 'all .3s linear';
+					ws.style.transform="translate3d(0,"+(-q*21)+"px, 0)";
+					setTimeout(function(){
+						ws.style.transition= 'all 0s linear';
+						ws.style.transform="translate3d(0,"+(-21)+"px, 0)";
+					},0)
+				
+					q=1;
+					
 				}else{
-					sum++;
+					ws.style.transition= 'all .3s linear';
+					ws.style.transform="translate3d(0,"+(-q*21)+"px, 0)";
 				}
-				ws.style.top=sum*(-ac)+'px';
-			},2000)
+				
+			},1000)
+
+			// let time='';
+			// let sum=0;
+			// let ac=wschind[0].offsetHeight;
+			// setInterval(function(){
+			// 	if(sum>wschind.length-2){
+			// 		sum=0;
+			// 	}else{
+			// 		sum++;
+			// 	}
+			// 	ws.style.top=sum*(-ac)+'px';
+			// },2000)
 		},
 		myCanas(){
 			let c=document.getElementsByClassName('mycanvas');
@@ -353,5 +385,16 @@
 	.name span:nth-child(8){
 		top: 10px;
 		left: 8px;
+	}
+</style>
+<style type="text/css">
+	#seamlessScroll{
+		-webkit-transition: all .5s linear;
+    	transition: all .5s linear;
+	    -webkit-transform: translate3d(0, 0px, 0); 
+	    transform: translate3d(0, 0px, 0);
+	}
+	#seamlessScroll div{
+		height:21px;
 	}
 </style>

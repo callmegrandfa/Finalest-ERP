@@ -167,6 +167,8 @@
 </template>
 
 <script>
+import Query from '../../base/query/query'
+import Btm from '../../base/btm/btm'
     export default{
         name:'customerInfor',
         data(){
@@ -256,6 +258,24 @@
             }
         },
         methods:{
+            btmlog:function(data){
+                let oleftBox=document.getElementById('left-box');
+                oleftBox.style.display="block";
+                let ocate= document.getElementById('bgh')
+                ocate.style.width="calc(100% - 275px)";
+            },
+            querylog:function(data){
+                let _this=this;
+                if(data){
+                    let ocate= document.getElementById('bgh')
+                    ocate.style.width="100%";
+                    _this.bottonbox.botton.push({
+                        class: 'erp_bt bt_auxiliary',
+                        imgsrc: '../../../static/image/common/bt_stop.png',
+                        text: '查询'
+                    })
+                }
+            },
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
@@ -378,56 +398,10 @@
                 Re.style.display="none";
             },
         }
-       
-
-        
-
     }
 </script>
 
 <style scoped>
-.smallBgcolor .el-select{
-    width: 100% !important ;
-    margin-left: 10px;
-    
-}
-.bt_audit{
-    background-color: rgb(225,153,51);
-}
-.bt_in{
-    background-color: rgb(130,170,252);
-}
-.bgcolor label{
-    width: 100% !important ;
-    margin-right: 0; 
-}
-.smallBgcolor .el-input--suffix{
-    width: 100% !important ;
-}
-.smallBgcolor .el-input{
-    width: 100% !important ;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-.bgcolor{
-    overflow:  visible; 
-}
-.shopclass{
-    background: rgba(251, 252, 253, 1);
-}
-.erp_bt{
-    padding: 0 8px !important;    
-}
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
-.bt_audit{
-    background-color: rgb(225,153,51);
-}
-.bt_in{
-    background-color: rgb(130,170,252);
-}
 .bg-white{
     background: white;
     border-radius: 3px;
@@ -460,17 +434,8 @@
 .pl10{
     padding-left: 10px;
 }
-.pl15{
-    padding-left: 15px;
-}
 .pt10{
     padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
 }
 .pb10{
     padding-bottom: 10px;
@@ -478,89 +443,16 @@
 .pr10{
     padding-right: 10px;
 }
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
-}
 .border-left{
     border-left: 1px solid #E4E4E4;
 }
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    font-size: 12px;
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
+#bgh{
+   float: left;
+   width: calc(100% - 275px); 
 }
 </style>
 
 <style>
-#bgh{
-   float: left;
-   /*border-left: 1px solid #e4e4e4;*/
-   width: calc(100% - 275px); 
-}
-.bgcolor{
-    width: 100%;
-}
-.el-table__header-wrapper .el-table__header th{
-    white-space: nowrap;
-    overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
 .el-checkbox__inner{
     width: 16px;
     height: 16px;

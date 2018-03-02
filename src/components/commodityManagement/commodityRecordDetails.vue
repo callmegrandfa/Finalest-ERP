@@ -1,690 +1,294 @@
 <template>
     <div class="customer-infor-wrapper">
-        <el-col :span='24' class="border-left">
-            <el-row class="h48 pt5">
-                <button class="erp_bt bt_back" @click="back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
-                <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-                <button class="erp_bt bt_save_add"><div class="btImg"><img src="../../../static/image/common/bt_save_add.png"></div><span class="btDetail">保存并新增</span></button>
-                <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_audit.png"></div><span class="btDetail">审核</span></button> 
-                
-                
-            </el-row>
-            <el-row style="background:#fff">
-               <el-col :span="5">
-                    <el-row class="pt20" >
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label><small>*</small>类目</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="15">
-                            <div class="bgcolor smallBgcolor" >
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>
-            <el-row style=" background: rgb(249,249,249);">
-                <el-col :span="5" style="margin-top:20px">
-                     <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label><small>*</small>商品编码</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="15">
-                            <div class="smallBgcolor" >
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style="margin-top:20px">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label><small>*</small>商品名称</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="smallBgcolor" >
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style="margin-top:20px">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>品牌</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style="margin-top:20px">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label><small>*</small>单位</label>
-                            </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="5" style="">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>商品条码</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="15">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style="">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>助记码</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style=""> 
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>上市时间</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style=""> 
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label><small>*</small>单位</label>
-                            </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="5" style="margin-bottom:20px"> 
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>体质期</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="15">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style="margin-bottom:20px"> 
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>备注</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="15">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>
-            <el-row style="    background: rgb(249,249,249); padding-bottom:20px">
-                <el-col :span="2">&nbsp;</el-col>
-                <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+            <el-col :span='24' class="border-left">
+                <btm :date="bottonbox" > </btm>
+                <el-row style="background:#fff">
+                    <textbox :data="textboxipt4"></textbox>
+                </el-row>
+                <el-row style=" background: rgb(249,249,249);">
+                    <textbox :data="textboxipt"></textbox>
+                </el-row>
+                <el-row style="    background: rgb(249,249,249); padding-bottom:20px">
+                    <el-col :span="2">&nbsp;</el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">启用多单位</el-checkbox>
+                        </template>                       
+                    </el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">唯一代码管理</el-checkbox>
+                        </template>   
+                    </el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">批次管理</el-checkbox>
+                        </template>
+                    </el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">保质期管理</el-checkbox>
+                        </template>   
+                    </el-col>
+                    <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
+                        <template>
+                            <el-checkbox v-model="checked">是否套件</el-checkbox>
+                        </template>   
+                    </el-col>
+                </el-row>
+                <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
+                    <el-col :span="12">
+                        <span class="shop-title">
+                            商品价格
+                        </span>
+                    </el-col>
+                    <el-col :span="12" >
+                        <span class="shop-sq" @click="ifShow = !ifShow">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
+                    </el-col>
+                </el-row>
+                <el-collapse-transition>
+                        <div v-show="ifShow">
+                <el-row style=" background: rgb(249,249,249);">
+                    <textbox :data="textboxipt1"></textbox>
+                </el-row>
+            </div>
+        </el-collapse-transition>
+                <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
+                    <el-col :span="12">
+                        <span class="shop-title">
+                            商品规格
+                        </span>
+                    </el-col>
+                    <el-col :span="12" >
+                        <span class="shop-sq" @click="ifShow1 = !ifShow1">收起<i @click="ifShow1 = !ifShow1" :class="{rotate : !ifShow1}"  class="el-icon-arrow-down" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
+                    </el-col>
+                </el-row>
+                <el-collapse-transition> 
+                    <div v-show="ifShow1"> 
+                        <el-row class="pl10 pt10 pr10 pb10" style=" background: rgb(249,249,249);">
+                            <el-col :span="24">
+                                <el-table :data="tableData" border style="width: 100%">
+                                    <el-table-column prop="sequenceNumber" label="序号" width="60">
+                                    </el-table-column>
+                                    <el-table-column prop="AttributeEncoding" label="规格编码" width="120">
+                                    </el-table-column>
+                                    <el-table-column prop="AttributeEncoding" label="规格" width="120">
+                                    </el-table-column>
+                                    <el-table-column prop="startUsing" label="规格组" width="120">
+                                    </el-table-column>
+                                    <el-table-column prop="startUsing1" label="规格名称">
+                                    </el-table-column>
+                                  </el-table>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </el-collapse-transition>
+                <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
+                    <span class="shop-sq" style="position:absolute;
+                    right:0;top:0;z-index:999" @click="ifShow2 = !ifShow2">收起<i @click="ifShow2 = !ifShow2" :class="{rotate : !ifShow2}" class="el-icon-arrow-down" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
                     <template>
-                        <el-checkbox v-model="checked">启用多单位</el-checkbox>
-                    </template>                       
-                </el-col>
-                <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
-                    <template>
-                        <el-checkbox v-model="checked">唯一代码管理</el-checkbox>
-                    </template>   
-                </el-col>
-                <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
-                    <template>
-                        <el-checkbox v-model="checked">批次管理</el-checkbox>
+                      <el-tabs v-model="activeName" @tab-click="handleClick">
+                        <el-tab-pane label="SKU" name="first">
+                            <el-collapse-transition> 
+                                <div v-show="ifShow2"> 
+                                    <el-row class="pl10 pt10 pr10 pb10" style=" background: rgb(249,249,249);">
+                                        <el-col :span="24">
+                                            <el-table :data="tableData1" border style="width: 100%">
+                                            <el-table-column prop="sequenceNumber" label="序号" width="60">
+                                            </el-table-column>
+                                            <el-table-column prop="AttributeEncoding" label="SKU" width="100">
+                                            </el-table-column>
+                                            <el-table-column prop="AttributeEncoding" label="SKU名称" width="100">
+                                            </el-table-column>
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing" label="条码">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing1" label="颜色">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing2" label="尺码">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing3" label="单位">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing4" label="进货价">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing5" label="零售价">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing6" label="批发价">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing7" label="会员价">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing8" label="折扣率">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing9" label="允许使用">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing10" label="备注">
+                                            </el-table-column>
+                                          </el-table>    
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </el-collapse-transition>
+                        </el-tab-pane>
+                        <el-tab-pane label="商品属性" name="second">
+                            <el-collapse-transition> 
+                                <div v-show="ifShow2"> 
+                                    <el-row style=" background: rgb(249,249,249);">
+                                        <textbox :data="textboxipt2"></textbox>
+                                    </el-row>
+                                </div>
+                            </el-collapse-transition>
+                        </el-tab-pane>
+                        <el-tab-pane label="图片" name="third">
+                            <el-collapse-transition> 
+                                <div v-show="ifShow2">  
+                                    <!-- <span>图片一</span> -->
+                                    <el-row style="text-align:center">
+                                        <el-col :span="3">
+                                            <el-upload
+                                              class="upload-demo"
+                                              action="https://jsonplaceholder.typicode.com/posts/"
+                                              :on-preview="handlePreview"
+                                              :on-remove="handleRemove"
+                                              :file-list="fileList2"
+                                              list-type="picture">
+                                              <el-button size="small" type="primary">点击上传</el-button>
+                                              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <el-upload
+                                              class="upload-demo"
+                                              action="https://jsonplaceholder.typicode.com/posts/"
+                                              :on-preview="handlePreview"
+                                              :on-remove="handleRemove"
+                                              :file-list="fileList2"
+                                              list-type="picture">
+                                              <el-button size="small" type="primary">点击上传</el-button>
+                                              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <el-upload
+                                              class="upload-demo"
+                                              action="https://jsonplaceholder.typicode.com/posts/"
+                                              :on-preview="handlePreview"
+                                              :on-remove="handleRemove"
+                                              :file-list="fileList2"
+                                              list-type="picture">
+                                              <el-button size="small" type="primary">点击上传</el-button>
+                                              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <el-upload
+                                              class="upload-demo"
+                                              action="https://jsonplaceholder.typicode.com/posts/"
+                                              :on-preview="handlePreview"
+                                              :on-remove="handleRemove"
+                                              :file-list="fileList2"
+                                              list-type="picture">
+                                              <el-button size="small" type="primary">点击上传</el-button>
+                                              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <el-upload
+                                              class="upload-demo"
+                                              action="https://jsonplaceholder.typicode.com/posts/"
+                                              :on-preview="handlePreview"
+                                              :on-remove="handleRemove"
+                                              :file-list="fileList2"
+                                              list-type="picture">
+                                              <el-button size="small" type="primary">点击上传</el-button>
+                                              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <el-upload
+                                              class="upload-demo"
+                                              action="https://jsonplaceholder.typicode.com/posts/"
+                                              :on-preview="handlePreview"
+                                              :on-remove="handleRemove"
+                                              :file-list="fileList2"
+                                              list-type="picture">
+                                              <el-button size="small" type="primary">点击上传</el-button>
+                                              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <el-upload
+                                              class="upload-demo"
+                                              action="https://jsonplaceholder.typicode.com/posts/"
+                                              :on-preview="handlePreview"
+                                              :on-remove="handleRemove"
+                                              :file-list="fileList2"
+                                              list-type="picture">
+                                              <el-button size="small" type="primary">点击上传</el-button>
+                                              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <el-upload
+                                              class="upload-demo"
+                                              action="https://jsonplaceholder.typicode.com/posts/"
+                                              :on-preview="handlePreview"
+                                              :on-remove="handleRemove"
+                                              :file-list="fileList2"
+                                              list-type="picture">
+                                              <el-button size="small" type="primary">点击上传</el-button>
+                                              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                    </el-row>
+                                    
+                                </div>
+                            </el-collapse-transition>
+                        </el-tab-pane>
+                        <el-tab-pane label="使用组织" name="fourth">
+                            <el-collapse-transition> 
+                                <div v-show="ifShow2"> 
+                                    <el-row class="pl10 pt10 pr10 pb10" style=" background: rgb(249,249,249);">
+                                        <el-col :span="24">
+                                            <el-table :data="tableData4" border style="width: 100%">
+                                            <el-table-column prop="sequenceNumber" label="序号" width="60">
+                                            </el-table-column>
+                                            <el-table-column prop="AttributeEncoding" label="业务组织">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing" label="上市日期">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing1" label="备注">
+                                            </el-table-column>
+                                            <el-table-column prop="startUsing2" label="允许使用">
+                                            </el-table-column>
+                                          </el-table>    
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </el-collapse-transition>
+                        </el-tab-pane>
+
+                      </el-tabs>
                     </template>
-                </el-col>
-                <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
-                    <template>
-                        <el-checkbox v-model="checked">保质期管理</el-checkbox>
-                    </template>   
-                </el-col>
-                <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6">
-                    <template>
-                        <el-checkbox v-model="checked">是否套件</el-checkbox>
-                    </template>   
-                </el-col>
-            </el-row>
-            <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
-                <el-col :span="12">
-                    <span class="shop-title">
-                        商品价格
-                    </span>
-                </el-col>
-                <el-col :span="12" >
-                    <span class="shop-sq" @click="ifShow = !ifShow">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
-                </el-col>
-            </el-row>
-            <el-collapse-transition>
-                    <div v-show="ifShow">
-            <el-row style=" background: rgb(249,249,249);">
-                <el-col :span="6" style="margin-top:20px">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>进货价</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="15">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style="margin-top:20px">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>批发价</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style="margin-top:20px">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>会员价</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" style="margin-top:20px">
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>零售价</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="13">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="6" >
-                    <el-row style="margin-bottom:20px;">
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor">
-                                    <label>折扣率</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="15">
-                            <div class="smallBgcolor">
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>
-        </div>
-    </el-collapse-transition>
-            <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
-                <el-col :span="12">
-                    <span class="shop-title">
-                        商品规格
-                    </span>
-                </el-col>
-                <el-col :span="12" >
-                    <span class="shop-sq" @click="ifShow1 = !ifShow1">收起<i @click="ifShow1 = !ifShow1" :class="{rotate : !ifShow1}"  class="el-icon-arrow-down" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
-                </el-col>
-            </el-row>
-            <el-collapse-transition> 
-                <div v-show="ifShow1"> 
-                    <el-row class="pl10 pt10 pr10 pb10" style=" background: rgb(249,249,249);">
-                        <el-col :span="24">
-                            <el-table :data="tableData" border style="width: 100%">
-                                <el-table-column prop="sequenceNumber" label="序号" width="60">
-                                </el-table-column>
-                                <el-table-column prop="AttributeEncoding" label="规格编码" width="120">
-                                </el-table-column>
-                                <el-table-column prop="AttributeEncoding" label="规格" width="120">
-                                </el-table-column>
-                                <el-table-column prop="startUsing" label="规格组" width="120">
-                                </el-table-column>
-                                <el-table-column prop="startUsing1" label="规格名称">
-                                </el-table-column>
-                              </el-table>
-                        </el-col>
-                    </el-row>
-                </div>
-            </el-collapse-transition>
-            <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
-                <span class="shop-sq" style="position:absolute;
-                right:0;top:0;z-index:999" @click="ifShow2 = !ifShow2">收起<i @click="ifShow2 = !ifShow2" :class="{rotate : !ifShow2}" class="el-icon-arrow-down" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
-                <template>
-                  <el-tabs v-model="activeName" @tab-click="handleClick">
-                    <el-tab-pane label="SKU" name="first">
-                        <el-collapse-transition> 
-                            <div v-show="ifShow2"> 
-                                <el-row class="pl10 pt10 pr10 pb10" style=" background: rgb(249,249,249);">
-                                    <el-col :span="24">
-                                        <el-table :data="tableData1" border style="width: 100%">
-                                        <el-table-column prop="sequenceNumber" label="序号" width="60">
-                                        </el-table-column>
-                                        <el-table-column prop="AttributeEncoding" label="SKU" width="100">
-                                        </el-table-column>
-                                        <el-table-column prop="AttributeEncoding" label="SKU名称" width="100">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing" label="条码">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing1" label="颜色">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing2" label="尺码">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing3" label="单位">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing4" label="进货价">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing5" label="零售价">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing6" label="批发价">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing7" label="会员价">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing8" label="折扣率">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing9" label="允许使用">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing10" label="备注">
-                                        </el-table-column>
-                                      </el-table>    
-                                    </el-col>
-                                </el-row>
-                            </div>
-                        </el-collapse-transition>
-                    </el-tab-pane>
-                    <el-tab-pane label="商品属性" name="second">
-                        <el-collapse-transition> 
-                            <div v-show="ifShow2"> 
-                                <el-row style=" background: rgb(249,249,249);">
-                                    <el-col :span="5" style="margin-top:20px">
-                                        <el-row>
-                                            <el-col :span="8">
-                                                <div class="bgcolor smallBgcolor">
-                                                        <label>品类</label>
-                                               </div>
-                                            </el-col>
-                                            <el-col :span="15">
-                                                <div class="smallBgcolor">
-                                                <el-input placeholder=""></el-input>
-                                                </div>
-                                            </el-col>
-                                        </el-row>
-                                    </el-col>
-                                    <el-col :span="6" style="margin-top:20px">
-                                        <el-row>
-                                            <el-col :span="8">
-                                                <div class="bgcolor smallBgcolor">
-                                                        <label>系列</label>
-                                               </div>
-                                            </el-col>
-                                            <el-col :span="15">
-                                            <el-col :span="13">
-                                                <div class="smallBgcolor">
-                                                <el-input placeholder=""></el-input>
-                                                </div>
-                                            </el-col>
-                                        </el-row>
-                                    </el-col>
-                                    <el-col :span="6" style="margin-top:20px">
-                                        <el-row>
-                                            <el-col :span="8">
-                                                <div class="bgcolor smallBgcolor">
-                                                        <label>性别</label>
-                                               </div>
-                                            </el-col>
-                                            <el-col :span="14">
-                                            <el-col :span="13">
-                                                <div class="bgcolor smallBgcolor">
-                                                    <el-select  v-model="value" >
-                                                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                                    </el-option>
-
-                                                    </el-select>
-                                                </div>
-                                            </el-col>
-                                        </el-row>
-                                    </el-col>
-                                    <el-col :span="6" style="margin-top:20px">
-                                        <el-row>
-                                            <el-col :span="8">
-                                                <div class="bgcolor smallBgcolor">
-                                                        <label>季节</label>
-                                               </div>
-                                            </el-col>
-                                            <el-col :span="14">
-                                            <el-col :span="13">
-                                                <div class="bgcolor smallBgcolor">
-                                                    <el-select  v-model="value" >
-                                                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                                    </el-option>
-
-                                                    </el-select>
-                                                </div>
-                                            </el-col>
-                                        </el-row>
-                                    </el-col>
-                                    <el-col :span="5" >
-                                        <el-row style="margin-bottom:20px;">
-                                            <el-col :span="8">
-                                                <div class="bgcolor smallBgcolor">
-                                                        <label>年份</label>
-                                               </div>
-                                            </el-col>
-                                            <el-col :span="15">
-                                                <div class="smallBgcolor">
-                                                <el-input placeholder=""></el-input>
-                                                </div>
-                                            </el-col>
-                                        </el-row>
-                                    </el-col>
-                                    <el-col :span="6" >
-                                        <el-row style="margin-bottom:20px;">
-                                            <el-col :span="8">
-                                                <div class="bgcolor smallBgcolor">
-                                                        <label>其他属性</label>
-                                               </div>
-                                            </el-col>
-                                            <el-col :span="15">
-                                            <el-col :span="13">
-                                                <div class="smallBgcolor">
-                                                <el-input placeholder=""></el-input>
-                                                </div>
-                                            </el-col>
-                                        </el-row>
-                                    </el-col>
-                                </el-row>
-                            </div>
-                        </el-collapse-transition>
-                    </el-tab-pane>
-                    <el-tab-pane label="图片" name="third">
-                        <el-collapse-transition> 
-                            <div v-show="ifShow2">  
-                                <!-- <span>图片一</span> -->
-                                <el-row style="text-align:center">
-                                    <el-col :span="3">
-                                        <el-upload
-                                          class="upload-demo"
-                                          action="https://jsonplaceholder.typicode.com/posts/"
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList2"
-                                          list-type="picture">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>
-                                    </el-col>
-                                    <el-col :span="3">
-                                        <el-upload
-                                          class="upload-demo"
-                                          action="https://jsonplaceholder.typicode.com/posts/"
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList2"
-                                          list-type="picture">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>
-                                    </el-col>
-                                    <el-col :span="3">
-                                        <el-upload
-                                          class="upload-demo"
-                                          action="https://jsonplaceholder.typicode.com/posts/"
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList2"
-                                          list-type="picture">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>
-                                    </el-col>
-                                    <el-col :span="3">
-                                        <el-upload
-                                          class="upload-demo"
-                                          action="https://jsonplaceholder.typicode.com/posts/"
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList2"
-                                          list-type="picture">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>
-                                    </el-col>
-                                    <el-col :span="3">
-                                        <el-upload
-                                          class="upload-demo"
-                                          action="https://jsonplaceholder.typicode.com/posts/"
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList2"
-                                          list-type="picture">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>
-                                    </el-col>
-                                    <el-col :span="3">
-                                        <el-upload
-                                          class="upload-demo"
-                                          action="https://jsonplaceholder.typicode.com/posts/"
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList2"
-                                          list-type="picture">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>
-                                    </el-col>
-                                    <el-col :span="3">
-                                        <el-upload
-                                          class="upload-demo"
-                                          action="https://jsonplaceholder.typicode.com/posts/"
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList2"
-                                          list-type="picture">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>
-                                    </el-col>
-                                    <el-col :span="3">
-                                        <el-upload
-                                          class="upload-demo"
-                                          action="https://jsonplaceholder.typicode.com/posts/"
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList2"
-                                          list-type="picture">
-                                          <el-button size="small" type="primary">点击上传</el-button>
-                                          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>
-                                    </el-col>
-                                </el-row>
-                                
-                            </div>
-                        </el-collapse-transition>
-                    </el-tab-pane>
-                    <el-tab-pane label="使用组织" name="fourth">
-                        <el-collapse-transition> 
-                            <div v-show="ifShow2"> 
-                                <el-row class="pl10 pt10 pr10 pb10" style=" background: rgb(249,249,249);">
-                                    <el-col :span="24">
-                                        <el-table :data="tableData4" border style="width: 100%">
-                                        <el-table-column prop="sequenceNumber" label="序号" width="60">
-                                        </el-table-column>
-                                        <el-table-column prop="AttributeEncoding" label="业务组织">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing" label="上市日期">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing1" label="备注">
-                                        </el-table-column>
-                                        <el-table-column prop="startUsing2" label="允许使用">
-                                        </el-table-column>
-                                      </el-table>    
-                                    </el-col>
-                                </el-row>
-                            </div>
-                        </el-collapse-transition>
-                    </el-tab-pane>
-
-                  </el-tabs>
-                </template>
-                <!-- <el-col :span="12">
-                    <span class="shop-title">
-                        商品属性
-                    </span>
-                </el-col>
-                <el-col :span="12" >
-                    <span class="shop-sq" @click="ifShow2 = !ifShow2">收起<i @click="ifShow2 = !ifShow2" :class="{rotate : !ifShow2}" class="el-icon-arrow-down" style="width:15px;height:15px;margin-left:10px;color:#888;"></i></span>
-                </el-col> -->
-            </el-row>
-            <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
-                        <el-col :span="24" class="pb10">
-                            <span class="shop-title" style="border:none">
-                                审计信息
-                            </span>
-                        </el-col>
-                    </el-row>
-            <el-row style=" background: rgb(249,249,249);" class="pt20">
-                        <el-col :span="5">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor">
-                                            <label>创建人</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="15">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor">
-                                            <label>创建时间</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor">
-                                            <label>修改人</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-row>
-                                <el-col :span="8">
-                                    <div class="bgcolor smallBgcolor">
-                                            <label>修改时间</label>
-                                   </div>
-                                </el-col>
-                                <el-col :span="13">
-                                    <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                    </el-row>
-        </el-col>        
+                </el-row>
+                <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
+                    <el-col :span="24" class="pb10">
+                        <span class="shop-title" style="border:none">
+                            审计信息
+                        </span>
+                    </el-col>
+                </el-row>
+                <el-row style=" background: rgb(249,249,249);" class="pt20">
+                    <textbox :data="textboxipt3"></textbox>
+                </el-row>
+            </el-col>
+        </el-row>
+        
     </div>
 </template>
 
 <script>
+import Btm from '../../base/btm/btm'
+import Textbox from '../../base/textbox/textbox'
     export default{
         name:'customerInfor',
         data(){
@@ -708,7 +312,221 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-
+                textboxipt4:[{
+                    must: '*',
+                    title: '类目',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },],
+                textboxipt:[{
+                    must: '*',
+                    title: '商品编码',
+                    place: ''                
+                },{
+                    must: '*',
+                    title: '商品名称',
+                    place: ''                 
+                },{
+                    must: '*',
+                    title: '品牌',
+                    place: ''                 
+                },{
+                    must: '*',
+                    title: '单位',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '商品条码',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '助记码',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '上市时间',
+                    place: ''                 
+                },{
+                    must: '*',
+                    title: '单位',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '体质期',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '备注',
+                    place: ''                 
+                }],
+                textboxipt2:[{
+                    must: '',
+                    title: '品类',
+                    place: ''                
+                },{
+                    must: '',
+                    title: '系列',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '性别',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '季节',
+                    options:[{
+                    value: '选项1',
+                    label: '仓库'
+                    }, {
+                    value: '选项2',
+                    label: '地址'
+                    }, {
+                    value: '选项3',
+                    label: '总部'
+                    }, {
+                    value: '选项4',
+                    label: '总部2'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }]                
+                },{
+                    must: '',
+                    title: '年份',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '其他属性',
+                    place: ''                 
+                }],
+                textboxipt1:[{
+                    must: '',
+                    title: '进货价',
+                    place: ''                
+                },{
+                    must: '',
+                    title: '批发价',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '会员价',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '零售价',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '折扣率',
+                    place: ''                 
+                }],
+                textboxipt3:[{
+                    must: '',
+                    title: '创建人',
+                    place: ''                
+                },{
+                    must: '',
+                    title: '创建时间',
+                    place: ''                 
+                },{
+                    must: '',
+                    title: '修改人',
+                    place: ''                                
+                },{
+                    must: '',
+                    title: '修改时间',
+                    place: ''                 
+                }],
+                bottonbox:{
+                    url: '/Record/commodityRecord',
+                   botton:[{
+                    class: 'erp_bt bt_back',
+                    imgsrc: '../../../static/image/common/bt_back.png',
+                    text: '返回'
+                },{
+                    class: 'erp_bt bt_modify',
+                    imgsrc: '../../../static/image/common/bt_modify.png',
+                    text: '修改'
+                },{
+                    class: 'erp_bt bt_save',
+                    imgsrc: '../../../static/image/common/bt_save.png',
+                    text: '保存'
+                },{
+                    class: 'erp_bt bt_save_add',
+                    imgsrc: '../../../static/image/common/bt_save_add.png',
+                    text: '保存并新增'
+                },{
+                    class: 'erp_bt bt_add',
+                    imgsrc: '../../../static/image/common/bt_save_add.png',
+                    text: '新增'
+                },{
+                    class: 'erp_bt bt_del',
+                    imgsrc: '../../../static/image/common/bt_del.png',
+                    text: '删除'
+                },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/bt_audit.png',
+                    text: '审核'
+                }]},
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -884,138 +702,36 @@
             },
 
         },
+        components:{
+            Btm,
+            Textbox
+        }
     }
 </script>
 
 <style scoped>
-
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
-.smallBgcolor .el-select{
-    width: 100% !important ;
-    margin-left: 10px;
-}
-.bgcolor label{
-    width: 100% !important ;
-    margin-right: 0; 
-}
-.smallBgcolor .el-input--suffix{
-    width: 100% !important ;
-}
-.smallBgcolor .el-input{
-    width: 100% !important ;
-    margin-left: 10px;
-}
-
-.bgcolor{
-    overflow:  visible; 
-}
-.bt_save{
-    background-color: rgb(0,204,255);
-}
 .bg-white{
     background: white;
     border-radius: 3px;
 }
-.bt_save_add{
-    background-color: rgb(22,155,213);
-}
-.shouqi{
-    padding-right: 20px;
-}
-.erp_bt .btImg1{
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    top: 10px;
-    right: 7px;
-}
-.erp_bt .btImg1 img{
-    max-width: 100%;
-    max-height: 100%;
-}
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.right{
-    float: right;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
-}
-.h48{
-    height: 48px;
-    line-height: 48px;
-    border-bottom: 1px solid #E4E4E4;
-}
-.mt5{
-    margin-top: 5px;
 }
 .mt10{
     margin-top: 10px;
 }
-.mt20{
-    margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
 .pl10{
     padding-left: 10px;
 }
-.pl15{
-    padding-left: 15px;
-}
 .pt10{
     padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
 }
 .pb10{
     padding-bottom: 10px;
 }
 .pr10{
     padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-}
-.border-left{
-    border-left: 1px solid #E4E4E4;
-}
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
 }
 .shop-title{
     float: left;
@@ -1037,39 +753,6 @@
     color: #000;
     cursor: pointer;
 }
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
-.text-right{
-    text-align: right;
-}
 </style>
 
 <style>
@@ -1079,24 +762,6 @@
 
 .bm-pd10{
     border-bottom: 1px solid #e4e4e4;
-}
-.shop-sq i.rotate{
-     transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg); 
- }
-.bgcolor{
-    width: 100%;
-}
-.content,.whiteBg,.customer-infor-wrapper{
-    float: left;
-}
-.customer-infor-wrapper .el-input input{
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
 }
 /* 重写checkbox */
 .customer-infor-wrapper .el-checkbox__inner{
@@ -1126,33 +791,4 @@
     -webkit-transform-origin: center;
     transform-origin: center;
 }
-.contents[data-v-ff98478e]{
-    float: left;
-}
-/* 重写el-table样式 */
-.customer-infor-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.customer-infor-wrapper .el-table td{
-    padding: 3px 0;
-}
-.customer-infor-wrapper .el-table__body{
-    text-align: center;
-}
-/* 重写el-pagination样式 */
-/* .customer-infor-wrapper .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
-    border-radius: 50%;
-} */
-/* .customer-infor-wrapper .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 130px;
-} */
-/* .customer-infor-wrapper .el-input--suffix .el-input__inner{
-    padding-right: 0;
-}  */
 </style>
