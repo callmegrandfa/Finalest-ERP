@@ -25,7 +25,7 @@
     	</div>
     	<div class="home-content">
 	    	<el-row>
-	    		<el-col :span="6" v-for="item in items" class="home-content-box">
+	    		<el-col :span="6" v-for="item in items" :key="item.namber" class="home-content-box">
 	    			<div class="d1">
 	    				<h4>{{item.title}}</h4>
 	    				<p>{{item.namber}}<span style="font-size:14px">{{item.unit}}</span></p>

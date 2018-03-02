@@ -15,24 +15,24 @@
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                                    <label>品牌编码</label>
+                            <label>品牌编码</label>
                            </div>
                         </el-col>
                         <el-col :span="14">
                             <div class="smallBgcolor" style="margin-top:20px">
-                            <el-input placeholder=""></el-input>
+                            <el-input placeholder="" v-model="searchItem.BrandCode"></el-input>
                             </div>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" >
-                                    <label>品牌名称(中文)</label>
+                            <label>品牌名称(中文)</label>
                            </div>
                         </el-col>
                         <el-col :span="14">
                             <div class="smallBgcolor" >
-                            <el-input placeholder=""></el-input>
+                            <el-input placeholder="" v-model="searchItem.BrandName"></el-input>
                             </div>
                         </el-col>
                     </el-row>
@@ -51,15 +51,14 @@
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" >
-                                    <label>状态</label>
+                            <label>状态</label>
                             </div>
                         </el-col>
                         <el-col :span="14">
                             <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
+                                <el-select  v-model="searchItem.Status" >
+                                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                    </el-option>
                                 </el-select>
                             </div>
                         </el-col>
@@ -67,7 +66,7 @@
                     <el-row>
                         <el-col :span="8">&nbsp;</el-col>
                         <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                            <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
+                            <span class="search-btn" style="float:left;margin-left:10px;" @click="search()">查询</span>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -76,63 +75,87 @@
         <div id="bgh">
             <el-row style="width:100%;" >
                 <el-col id="bg-white"  class="border-left" :span="24" >
-                    <el-row class="h48 pt5">
-            
-                            <button class="erp_bt bt_add" @click="storageData" ><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                            
-                            <button class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
-                            <button class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-
-                            <button class="erp_bt bt_del" @click="dell"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-
-                       
-                            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
-                     
+                    <el-row class="h48 pt5">         
+                            <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
+                            <button v-show="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
+                            <button class="erp_bt bt_save" @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+                            <button class="erp_bt bt_del" @click="delBatch"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>                    
                             <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-
                             <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>
-                        
-                                            
-                        
-                                          
+                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                   
                     </el-row>
-
                      <el-row class="">
-                        
-
                         <el-col :span="24" class="">
-                             <el-table :data="tableData" border style="width: 100%" class="text-center">
-                                <el-table-column prop="date" label="序号" width="60">
-                                    
+                             <el-table :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
+                                <el-table-column
+                                    type="selection"
+                                    width="55">
                                 </el-table-column>
-                                <el-table-column  prop="name" label="" width="50">
-                                    <template scope="scope">
-                                        <el-checkbox  ></el-checkbox>
+                                <el-table-column prop="seq" label="序号" width="60">               
+                                </el-table-column>
+                                <el-table-column prop="brandCode" label="品牌编码">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                                v-model="scope.row.brandCode" 
+                                                @change="update"
+                                                type="text"/>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="address" label="品牌编码">
+                                <el-table-column prop="brandName" label="品牌名称">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                                v-model="scope.row.brandName" 
+                                                 @change="update"
+                                                type="text"/>
+                                    </template>
                                 </el-table-column>
-                                <el-table-column prop="address2" label="品牌名称">
+                                <el-table-column prop="" label="英文名称" width="">
                                 </el-table-column>
-                                <el-table-column prop="address3" label="英文名称" width="">
+                                <el-table-column prop="remark" label="备注">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                                v-model="scope.row.remark" 
+                                                 @change="update"
+                                                type="text"/>
+                                    </template>
                                 </el-table-column>
-                                <el-table-column prop="address4" label="备注">
+                                <el-table-column prop="status" label="状态">
+                                    <template slot-scope="scope">
+                                        <el-select  v-model="scope.row.status"  @change="update" >
+                                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </template>
                                 </el-table-column>
-                                <el-table-column prop="address5" label="状态">
+                                <el-table-column prop="createdBy" label="创建人" width="">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                                v-model="scope.row.createdBy" 
+                                                 @change="update"
+                                                type="text"/>
+                                    </template>                                   
                                 </el-table-column>
-                                <el-table-column prop="address6" label="创建人" width="">
-                                    
-                                </el-table-column>
-                                <el-table-column prop="address7" label="创建时间" width="">
+                                <el-table-column prop="createdTime" label="创建时间">
+                                    <template slot-scope="scope">
+                                        <el-date-picker
+                                            v-model="scope.row.createdTime"
+                                            readonly
+                                            type="date">
+                                        </el-date-picker>
+                                    </template>
                                 </el-table-column> 
-                                <el-table-column prop="address8" label="操作" width="">
+                                <el-table-column prop="" label="操作" width="">
+                                    <template slot-scope="scope">
+                                        <el-button v-on:click="handleDel(scope.row)" type="text" size="small">删除</el-button>
+                                    </template>
                                 </el-table-column>
                             </el-table>
                         <el-pagination
                          style="margin-top:20px;" 
                          class="text-right" 
                          background layout="total, prev, pager, next" 
+                         @current-change="handleCurrentChange"
                          :page-count="totalPage" >
                          </el-pagination>   
                         </el-col> 
@@ -160,97 +183,50 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-
+                searchItem:{
+                    BrandCode:'',//品牌编码
+                    BrandName:'',//品牌名称
+                    Status:'',//状态
+                }, 
+                isCancel:false,//取消按钮是否可见
+                isUpdate:false,//是否进行修改
                 options: [{
-                    value: '选项1',
-                    label: '仓库'
+                    value:"",
+                    label: '全部'
                     }, {
-                    value: '选项2',
-                    label: '地址'
+                    value: 0,
+                    label: '禁用'
                     }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
+                    value: 1,
+                    label: '启用'
                     }],
-
                 value: '',
-                tableData: [{
-                                 date:'0',
-                                 name: '1',
-                                address: '1',
-                                address2: '耐克',
-                                address3: 'Nike',
-                                address4: '',
-                                address5: '以启用',
-                                address6: '创建人',
-                                address7: '创建时间',
-                                address8: '删除',
-                            }, {
-                                 date:'0', 
-                                name: '',
-                                address: '',
-                                address2: '',
-                                address3: '',
-                                address4: '',
-                                address5: '',
-                                address6: '',
-                               
-                                address7: '',
-                                address8: '删除',
-                            }, {
-                                 date:'',
-                                name: '',
-                                address: '',
-                                address2: '',
-                                address3: '',
-                                address4: '',
-                                address5: '',
-                                address6: '',
-                                
-                                address7: '',
-                                address8: '删除',
-                            }, {
-                                 date:'0',
-                                name: '',
-                                address: '',
-                                address2: '',
-                                address3: '',
-                                address4: '',
-                                
-                                address5: '',
-                                address6: '',
-                                address7: '',
-                                address8: '删除',
-                        }],
-
-                    componyTree: [{
-                        label: '商品属性',
+                tableData:[],
+                SelectionChange:[],
+                addArray:[],//新增集合
+                idArray:{
+                    ids:[]
+                },
+                componyTree: [{
+                    label: '商品属性',
+                    children: [{
+                        label: '材质',
                         children: [{
-                            label: '材质',
+                        // label: '材质',
+                        label: '洗涤方式'
+                        }
+                        ],
+                    },
+                        {
+                            label: '款式',
                             children: [{
-                            // label: '材质',
-                            label: '洗涤方式'
-                            }
-                            ],
-                        },
-                            {
-                             label: '款式',
-                             children: [{
-                            
-                            }] 
-                            }],
                         
-
-                        
-                        }],
+                        }] 
+                        }],                   
+                    }],
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
-                oneItem:10,//每页有多少条信息
+                eachPage:10,//每页有多少条信息
                 multipleSelection: [],//复选框选中数据
                 page:1,//当前页
                 treeCheck:[],
@@ -263,7 +239,7 @@
             }
         },
         created:function(){
-            this.datashop();
+            //this.datashop();
             this.loadTableData();
         },
         mounted:function(){   
@@ -271,24 +247,120 @@
             let height1=window.innerHeight-123;
             content1.style.minHeight=height1+'px';
         },
+        watch:{
+            isUpdate:function(val){
+                if(val==true){
+                    this.isCancel=true
+                }
+                
+            }
+        },
         methods:{
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){
-                    console.log(res)
+                _this.$axios.gets('/api/services/app/BrandManagement/GetAll',{SkipCount:(_this.page-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
+                    _this.tableData=res.result.items;
+                    let countPage=res.result.totalCount;
+                    _this.totalPage = Math.ceil(countPage/_this.eachPage)
+                  
                 })
             },
-            datashop(){
-                for(var i=0;i<this.tableData.length;i++){
-                    this.tableData[i].date=i+1;
-                }
-
+            handleCurrentChange:function(val){//获取当前页码,分页
+                this.pageIndex=val;
+                this.page = val;
+                this.loadTableData();
             },
-            // storageData(e){
-            //     this.$store.state.url='/commodity/commodityPropertyDetails/default'
-            //    this.$router.push({path:this.$store.state.url})//点击切换路由
-            // },
+            open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            //获取当前时间
+            GetDateTime: function () {
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            },
+            addCol(){//新增
+                let newcol={
+                    "groupId":0,
+                    "brandCode":"" ,
+                    "brandName":"" ,
+                    "status":"" ,
+                    "remark": "" ,
+                    "remark2":"" ,
+                    "statusTValue":1,
+                    "createdBy":this.$store.state.name,
+                    "createdTime":this.GetDateTime(),
+                    "seq":Math.max.apply(Math,this.tableData.map(function(o){return Number(o.seq);}))+1
+                };
+                this.isUpdate=true;
+                this.tableData.push(newcol);
+                this.addArray.push(newcol);
+            },
+            handleDel(row){//行内删除
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
+                    _this.loadTableData();
+                    _this.open('删除成功','el-icon-circle-check','successERP');              
+                })
+                //this.tableData.splice(index,1);
+            },
+            search(){//按条件查询
+                let _this=this;
+                _this.$axios.gets('/api/services/app/BrandManagement/GetData',_this.searchItem).then(function(res){
+                    _this.tableData=res.result;                   
+                })
+            },
+            update(){
+                this.isUpdate=true;
+            },
+            cancel(){//数据恢复到初始化状态
+                this.loadTableData();
+                this.isCancel=false;
+                this.isUpdate=false;
+            },
+            handleSelectionChange(val){//多选操作
+                this.SelectionChange=val;
+            },
+            delBatch(){//批量删除
+                for(var i in this.SelectionChange){
+                    this.idArray.ids.push(this.SelectionChange[i].id)
+                }
+                let _this=this;
+                if(this.idArray.ids.length>0){
+                    _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
+                        _this.loadTableData();
+                        _this.open('删除成功','el-icon-circle-check','successERP');    
+                    })
+                }
+            },
+            save(){
+                let _this=this;              
+                _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',_this.addArray).then(function(res){
+                    _this.loadTableData();
+                    _this.open('添加商品品牌成功','el-icon-circle-check','successERP');    
+                });
+                
+            },                           
             packUp(){
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
@@ -305,39 +377,6 @@
                 oleftBox.style.display="block";
                 Re.style.display="none";
             },
-            dell(){
-                let ocheck=document.getElementsByClassName('el-table_1_column_2');
-                let oTh=[];
-                let aa=[];
-                let bb=[];
-                for(var i=0;i<ocheck.length;i++){
-                  oTh.push(ocheck[i].children[0].children[0]);
-                 
-                }//获取全部的复选框
-                oTh.splice(0,1);
-                for(var i=0;i<oTh.length;i++){
-
-                    if(oTh[i].getAttribute("aria-checked")=='true'){
-                        aa.push(oTh[i]);
-                        oTh[i].children[0].classList.remove("is-checked")
-                    }     
-                }//找到当前选中的复选框
-                for(var i=0;i<aa.length;i++){
-                    bb.push(parseInt(aa[i].parentNode.parentNode.parentNode.children[0].children[0].innerHTML)-1)      
-                }//找到当前选择的复选框的序号
-                for(var i=0;i<bb.length;i++){
-                    
-                    this.tableData.splice(bb[i]-[i],1);
-                    for(var j=0;j<this.tableData.length;j++){
-                        this.tableData[j].date=j+1;
-                    }
-                    
-                    
-                }
-                
-                
-
-            }
         }
        
 
@@ -398,6 +437,7 @@
     border:none;
     width: 100%;
     height: 28px;
+    text-align: center;
 }
 .h48{
     height: 48px;
@@ -585,5 +625,24 @@
 }
 .group-management-wrapper .el-table__body{
     text-align: center;
+}
+/* 日期控件 */
+table .el-date-editor.el-input{
+    width:100%;
+}
+table .el-input--prefix .el-input__inner{
+    border:none;
+    background-color:transparent;
+    padding-left:0;
+    padding-right:0;
+}
+table .el-input__icon{
+    display:none;
+}
+/* 表格内编辑下拉框样式重构 */
+table .el-input__inner{
+    height: 28px;
+    text-align:center;
+    border:none;
 }
 </style>

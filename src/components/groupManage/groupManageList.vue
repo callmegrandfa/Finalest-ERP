@@ -544,4 +544,7 @@
 .groupList .el-table__body{
     text-align: center;
 }
+.bgcolor .el-input input{
+    height: 35px!important;
+}
 </style>
