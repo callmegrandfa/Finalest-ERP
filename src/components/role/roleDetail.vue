@@ -49,19 +49,19 @@
                 </div> -->
                 <div class="bgcolor">
                     <label><small>*</small>角色编码</label>
-                    <el-input v-model="addData.roleCode" placeholder="请录入角色编码"></el-input>
+                    <el-input v-model="addData.roleCode" placeholder=""></el-input>
                 </div> 
 
 
                 <div class="bgcolor">
                     <label><small>*</small>角色名称</label>
-                    <el-input v-model="addData.displayName" placeholder="请输入角色名称"></el-input>
+                    <el-input v-model="addData.displayName" placeholder=""></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label><small>*</small>所属组织</label>
-                    <el-select v-model="addData.ouId" placeholder="请选择所属组织">
+                    <el-select v-model="addData.ouId" placeholder="">
                         <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
                     </el-select>
                 </div>
@@ -69,7 +69,7 @@
 
                 <div class="bgcolor">
                     <label><small>*</small>状态</label>
-                    <el-select v-model="addData.status" placeholder="请选择状态">
+                    <el-select v-model="addData.status" placeholder="">
                         <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
                     </el-select>
                 </div>
@@ -77,7 +77,7 @@
                     <label>备注</label>
                     <el-input 
                     v-model="addData.remark"
-                    placeholder="备注"></el-input>
+                    placeholder=""></el-input>
                 </div>
             </el-col>
         </el-row>
@@ -393,7 +393,7 @@ export default({
         getRoleData(){
            let _this=this;
            _this.$axios.gets('/api/services/app/Role/Get',{id:_this.$route.params.id})
-           .then(function(res){
+           .then(function(res){console.log(res.result)
                 _this.addData= res.result
                 if(res.result.userCodes.length>0 && res.result.userCodes.length){
                     _this.checkedRoleCode=res.result.userCodes;
@@ -432,6 +432,7 @@ export default({
             _this.roleTableLoading=true
             _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:(_this.rolePage-1)*_this.roleOneItem,MaxResultCount:_this.roleOneItem})
             .then(function(res){
+                _this.roleNochecked=[]  
                 _this.roletableData=res.result.items;
                 _this.roleTotalItem=res.result.totalCount
                 _this.roleTotalPage=Math.ceil(res.result.totalCount/_this.roleOneItem);
@@ -440,17 +441,22 @@ export default({
                     _this.roleAllNode.push(value)//获取所有角色
                 })
                 _this.roleNochecked=_this.roleAllNode;
-                if(_this.roleAllNode.length>0 && _this.checkedRoleCode.length>0){
-                    for(let i=0;i<_this.roleAllNode.length;i++){
-                            for(let x=0;x<_this.checkedRoleCode.length;x++){
-                                if(_this.checkedRoleCode[x]==_this.roleAllNode[i].roleCode){
-                                    let item=_this.roleAllNode[i]
-                                    _this.roleChecked.push(item)//获取已选中的角色
-                                    _this.roleNochecked.splice(i,1);//未选中角色
-                                }
-                            }
-                        }
-                }
+                if(_this.roleChecked.length>0){
+                    _this.roleNochecked=_this.uniqueArrayRole(_this.allNode,_this.roleChecked)
+                }else{
+                    _this.roleNochecked=_this.roleAllNode
+                }    
+                // if(_this.roleAllNode.length>0 && _this.checkedRoleCode.length>0){
+                //     for(let i=0;i<_this.roleAllNode.length;i++){
+                //             for(let x=0;x<_this.checkedRoleCode.length;x++){
+                //                 if(_this.checkedRoleCode[x]==_this.roleAllNode[i].roleCode){
+                //                     let item=_this.roleAllNode[i]
+                //                     _this.roleChecked.push(item)//获取已选中的角色
+                //                     _this.roleNochecked.splice(i,1);//未选中角色
+                //                 }
+                //             }
+                //         }
+                // }
                 },function(res){
                 _this.roleTableLoading=false;
             })
@@ -588,6 +594,23 @@ export default({
             if(flag){
                 _this.roleChecked.push(x);
             }
+        },
+        uniqueArrayRole(array1, array2){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i].roleCode == array2[j]) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
+                }
+            }
+            return result;
         },
         //---创建完成后刷新页面获取数据----------------------------------
         loadData:function(){

@@ -62,7 +62,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleCode')}" 
                 v-model="addData.moduleCode"  
-                placeholder="请输入菜单编码"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>菜单名称</label>
@@ -71,7 +71,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleName')}" 
                 v-model="addData.moduleName"  
-                placeholder="请输入菜单名称"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>图标</label>
@@ -80,7 +80,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.ico')}" 
                 v-model="addData.ico"  
-                placeholder="请输入图标"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>功能模块ID全路径</label>
@@ -89,7 +89,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleFullPathId')}" 
                 v-model="addData.moduleFullPathId" 
-                placeholder="功能模块ID全路径"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>功能模块名称全路径</label>
@@ -98,7 +98,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleFullPathName')}" 
                 v-model="addData.moduleFullPathName" 
-                placeholder="功能模块名称全路径"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>排序</label>
@@ -107,7 +107,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.seq')}" 
                 v-model="addData.seq" 
-                placeholder="排序"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>语言</label>
@@ -122,7 +122,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.systemId')}" 
                 v-model="addData.systemId" 
-                placeholder="系统ID"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
@@ -138,7 +138,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                 v-model="addData.moduleParentId"  
-                placeholder="上级菜单">
+                placeholder="">
                     <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
 
@@ -157,7 +157,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.url')}" 
                 v-model="addData.url"  
-                placeholder="请输入web地址"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>状态</label>
@@ -218,7 +218,7 @@
                     </template>
                     <el-col :span="6" class="dialog_ dialog_l">
                         <el-col :span="24">
-                            <el-input placeholder="请输入内容" class="menu_search">
+                            <el-input placeholder="" class="menu_search">
                                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
                             </el-input>
                         </el-col>
@@ -725,15 +725,18 @@
     background-color: #354052;
 }
 .menuDetail .bgcolor.longWidth .addRole{
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  margin-right: 10px;
-  cursor: pointer;
-  position: relative;
+  text-align: center;
+    line-height: 35px;
+    display: inline-block;
+    width: 66px;
+    height: 35px;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    position: relative;
 }
 .menuDetail .bgcolor.longWidth .addRole i{
   position: absolute;

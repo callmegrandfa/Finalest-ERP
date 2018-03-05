@@ -80,12 +80,14 @@ const addLangulage = () =>import('../components/menu/addLangulage')
 // 业务地区管理
 const businessArea = () =>import(/* webpackChunkName: "group-businessArea" */'../components/businessArea/businessArea')
 const businessAreaList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/businessArea/businessAreaList')
+const businessAreaDetail= () =>import('../components/businessArea/businessAreaDetail')
+const businessAreaModify= () =>import('../components/businessArea/businessAreaModify')
 // 部门资料
-const department = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/department')
-const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/department/departmentList')
+const department = () =>import(/* webpackChunkName: "group-department" */'../components/department/department')
+const departmentList = () =>import(/* webpackChunkName: "group-department" */'../components/department/departmentList')
 // 系统字典
-const dictionary = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionary')
-const dictionaryList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionaryList')
+const dictionary = () =>import(/* webpackChunkName: "group-dictionary" */'../components/dictionary/dictionary')
+const dictionaryList = () =>import(/* webpackChunkName: "group-dictionary" */'../components/dictionary/dictionaryList')
 // 商品属性
 const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
 const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
@@ -368,6 +370,8 @@ children:[
     return redirectRouter('businessArea')
   },children:[
       { path: '/businessArea/businessAreaList/:id', component: businessAreaList,name:'businessAreaList' },
+      { path: '/businessArea/businessAreaDetail/:id', component: businessAreaDetail,name:'businessAreaDetail' },
+      { path: '/businessArea/businessAreaModify/:id', component: businessAreaModify,name:'businessAreaModify' },
   ]},
   { path: '/department', component: department,name:'department',redirect: function(){//部门资料
     return redirectRouter('department')
