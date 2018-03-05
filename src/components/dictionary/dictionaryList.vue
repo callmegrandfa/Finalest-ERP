@@ -1,7 +1,7 @@
 <template>
     <div class="data-wrapper">
         <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :span="5" class="border-right">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-input placeholder="搜索..."
                               v-model="searchLeft" 
@@ -11,8 +11,7 @@
                 </el-col>
 
                 <el-col :span='24' class="tree-container" >
-                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                             v-loading="treeLoading" 
+                    <el-tree v-loading="treeLoading" 
                              :data="componyTree"
                              :props="defaultProps"
                              node-key="id"
@@ -20,13 +19,15 @@
                              ref="tree"
                              :expand-on-click-node="false"
                              :filter-node-method="filterNode"
-                             @node-click="nodeClick"
-                             :render-content="renderContent">
+                             @node-click="nodeClick">
+                             <!-- oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" -->
+                             
+                             <!-- :render-content="renderContent" -->
                     </el-tree>
                 </el-col>   
             </el-col>
             
-            <el-col :span='19' class="border-left">
+            <el-col :span='19'>
                 <el-row class="h48 pt5 pr10 pl5">
                     <button class="erp_bt bt_save" @click="saveValue">
                         <div class="btImg">
@@ -62,19 +63,10 @@
                     </div>
                 </el-row>
 
-                <el-row>
+                <el-row class="data-table">
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
-                            <el-table-column prop="seq" label="序号">
-                                 <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.seq"
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
+                            
                             <el-table-column type="selection"></el-table-column>
 
                             <el-table-column prop="itemCode" label="编码">
@@ -82,6 +74,13 @@
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.itemCode"
+                                            v-if="scope.row.isSystem==true"
+                                            disabled
+                                            type="text"/>
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.itemCode"
+                                            v-else
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -92,6 +91,13 @@
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.itemName"
+                                            v-if="scope.row.isSystem"
+                                            disabled
+                                            type="text"/>     
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.itemName"
+                                            v-else
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -99,17 +105,36 @@
 
                             <el-table-column prop="manager" label="系统默认">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="tableLoading"></el-checkbox>
+                                    <el-checkbox v-model="scope.row.isSystem" disabled v-if="scope.row.isSystem"></el-checkbox>
+                                    <el-checkbox v-model="scope.row.isSystem" disabled v-else></el-checkbox>
                                 </template>
                             </el-table-column>
 
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
+                                    <el-select  v-model="scope.row.status" v-if="scope.row.isSystem==true" disabled >
+                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value" @click="aa">
+                                        </el-option>
+                                    </el-select>
+
+                                    <el-select  v-model="scope.row.status" v-else @change="handleChange(scope.$index,scope.row)" >
+                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value" @click="aa">
+                                        </el-option>
+                                    </el-select>
+
+
+                                    <!-- <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.status"
+                                            v-if="scope.row.isSystem==true"
+                                            disabled
+                                            type="text"/>
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.status"
+                                            v-else
                                             @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
+                                            type="text"/>         -->
                                 </template>
                                 
                             </el-table-column>
@@ -119,6 +144,13 @@
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.remark"
+                                            v-if="scope.row.isSystem==true"
+                                            disabled
+                                            type="text"/>
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.remark"
+                                            v-else
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -129,6 +161,13 @@
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.currencyCode"
+                                            v-if="scope.row.isSystem==true"
+                                            disabled
+                                            type="text"/>
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.currencyCode"
+                                            v-else
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -138,7 +177,7 @@
                                  <template slot-scope="scope">
                                     <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
+                                    <el-button type="text" size="small"  @click="confirmDel(scope.row)" >删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -156,7 +195,7 @@
             </el-col>
         </el-row>
         <!-- dialog -->
-        <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
+        <!-- <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             
             <div class="bgcolor smallBgcolor"><label>字典编码</label><el-input :class="{redBorder : validation.hasError('dialogData.dictCode')}" v-model="dialogData.dictCode" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.dictCode') }}</div>
@@ -174,7 +213,7 @@
                 <button class="dialogBtn" @click="save">确认</button>
                 <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
             </div>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 
@@ -184,23 +223,22 @@
         data(){
             return {
                 searchLeft:'',
-                ifCan:true,
-                dialogData:{//dialog数据
-                    dictCode:'',//字典编码 
-                    dictName:'',//字典名称
-                    seq:'',//排序
-                    remark:'',//备注
-                },
+                // dialogData:{//dialog数据
+                //     dictCode:'',//字典编码 
+                //     dictName:'',//字典名称
+                //     seq:'',//排序
+                //     remark:'',//备注
+                // },
                 valueData:{//创建字典值的参数
                     groupId: 0,
                     dictId: 0,
-                    itemName: "string",
-                    itemCode: "string",
-                    itemValue: "string",
+                    itemName: "",
+                    itemCode: "",
+                    itemValue: "test",
                     seq: 0,
-                    remark: "string",
+                    remark: "",
                     status: 0,
-                    isSystem: true
+                    isSystem: false
                 },
                  deptParentid: [{//业务地区分类
                     value:'1',
@@ -219,33 +257,15 @@
                         label: '停用'
                     },
                 ],
-                options: [{
-                    basOuTypes: '1',
-                    label: '1'
+                 options: [{
+                    value:"",
+                    label: '全部'
                     }, {
-                    basOuTypes: '2',
-                    label: '2'
+                    value: 0,
+                    label: '禁用'
                     }, {
-                    basOuTypes: '3',
-                    label: '3'
-                    }, {
-                    basOuTypes: '4',
-                    label: '4'
-                    }, {
-                    basOuTypes: '5',
-                    label: '5'
-                    }, {
-                    basOuTypes: '6',
-                    label: '6'
-                    }, {
-                    basOuTypes: '7',
-                    label: '7'
-                    }, {
-                    basOuTypes: '8',
-                    label: '8'
-                    }, {
-                    basOuTypes: '9',
-                    label: '9'
+                    value: 1,
+                    label: '启用'
                     }],
                 tableData:[],
                 componyTree:  [
@@ -276,6 +296,8 @@
                 x:0,//增行的下标
                 rows:[],//增行的数组
                 addList:[],//新增上传的数组
+                updateList:[],//修改过的数组
+                dictId:'',//点击左侧树形保存当前的dictId
             }
         },
         created:function(){       
@@ -286,32 +308,32 @@
         mounted:function(){
             let _this=this;
         }, 
-        validators: {
-            'dialogData.dictCode':function(value){//字典编码
-                return this.Validator.value(value).required().maxLength(50)
-            },
-            'dialogData.dictName':function(value){//字典名称
-                return this.Validator.value(value).required().maxLength(50)
-            },
-            'dialogData.seq': function (value) {//排序
-                return this.Validator.value(value).required().integer();
-            },
-            'dialogData.remark': function (value) {//备注
-                return this.Validator.value(value).required().maxLength(200);
-            },
-        }, 
+        // validators: {
+        //     'dialogData.dictCode':function(value){//字典编码
+        //         return this.Validator.value(value).required().maxLength(50)
+        //     },
+        //     'dialogData.dictName':function(value){//字典名称
+        //         return this.Validator.value(value).required().maxLength(50)
+        //     },
+        //     'dialogData.seq': function (value) {//排序
+        //         return this.Validator.value(value).required().integer();
+        //     },
+        //     'dialogData.remark': function (value) {//备注
+        //         return this.Validator.value(value).required().maxLength(200);
+        //     },
+        // }, 
         watch: {
             searchLeft(val) {
                 this.$refs.tree.filter(val);
             }
         },
         methods:{
-            
+            aa:function(){console.log(123)},
             //---数据加载---------------------------------------------------
             loadTableData(){//表格
                  let _this=this;
                  _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     // console.log(res)
                     _this.tableData = res.result.items;
                     // console.log(_this.tableData)
@@ -385,13 +407,26 @@
                 })
             },
             saveValue:function(){//保存值表的修改和新增
+                
                 let self = this;
                 if(self.addList.length>0){
                     for(let i in self.addList){
                         self.$axios.posts('/api/services/app/DictItemManagement/Create',self.addList[i]).then(function(res){
-                            self.loadTree();
                             self.open('创建字典系统值成功','el-icon-circle-check','successERP');
                             self.addList = [];
+                            self.loadTableData();
+                        },function(res){    
+                            console.log('error')
+                        })
+                    }
+                }
+
+                if(self.updateList.length>0){
+                    for(let i in self.updateList){
+                        self.$axios.puts('/api/services/app/DictItemManagement/Update',self.updateList[i]).then(function(res){
+                            self.open('修改字典系统值成功','el-icon-circle-check','successERP');
+                            self.updateList = [];
+                            self.loadTableData();
                         },function(res){    
                             console.log('error')
                         })
@@ -419,24 +454,26 @@
             //---新增系统字典值----------------------------------------------------------
             addCol:function(){//增行
                 let self = this;
-                self.x++;
-                let newCol = 'newCol'+self.x;
-                self.rows.newCol = {
-                        groupId: 1,
-                        dictId: 1,
-                        itemName: "",
-                        itemCode: "",
-                        itemValue: "test",
-                        seq: '',
-                        remark: "",
-                        status: '',
-                        isSystem: true
-                    };
-                self.tableData.unshift(self.rows.newCol);
-                self.addList.unshift(self.rows.newCol);
-                // console.log(self.rows)
-                // console.log(self.accountList)
-                // console.log(self.addList)
+                if(self.dictId!=''){
+                    self.x++;
+                    let newCol = 'newCol'+self.x;
+                    self.rows.newCol = {
+                            groupId: 1,
+                            dictId: self.dictId,
+                            itemName: "",
+                            itemCode: "",
+                            itemValue: 0,
+                            seq: 0,
+                            remark: "",
+                            status: '',
+                            isSystem: false,
+                        };
+                    self.tableData.unshift(self.rows.newCol);
+                    self.addList.unshift(self.rows.newCol);
+                    // console.log(self.rows)
+                }else{
+                    alert('未选择字典')
+                }
             },
             //----------------------------------------------------------------
 
@@ -461,6 +498,31 @@
             //----------------------------------------------------------------
 
             //---控制编辑------分页--------------------------------------------
+            handleChange:function(index,row){
+                let self = this;
+                console.log(row)
+                if(row.id!=0&&row.id!=''){
+                    let flag = false;
+                    if(self.updateList.length==0){
+                        flag = true;
+                    }else if(self.updateList.length>=1){
+                        for(let i in self.updateList){
+                            if(row.id != self.updateList[i].id){
+                                flag = true;
+                                console.log(flag) 
+                            }else{
+                                flag= false;
+                                break;        
+                            }
+                        }
+                    };
+
+                    if(flag){
+                        self.updateList.push(row);
+                    }
+                    console.log(self.updateList)
+                }  
+            },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                  _this.page=val;
@@ -470,6 +532,26 @@
             },
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
+            },
+            confirmDel(row) {
+                let self = this;
+                this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    self.delThis(row);
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             delThis(row){//删除字典值行
                 let _this=this;
@@ -484,7 +566,7 @@
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
                     for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.multipleSelection[i].id})
+                        _this.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:_this.multipleSelection[i].id})
                         .then(function(res){
                             if(_this.load){
                                 _this.loadTableData();
@@ -559,126 +641,116 @@
             //     }
             // },
             nodeClick:function(data){
-                //  let _this=this;
-                //  let flag=false;
-                //  if(_this.isClick.length>0){
-                //      for(let i=0;i<_this.isClick.length;i++){
-                //         if(_this.isClick[i]==data.treeId){
-                //             flag=false
-                //             break;
-                //         }else{
-                //             flag=true;
-                //         }
-                //     }
-                //  }else{
-                //      flag=true;
-                //  }
-                 
-                //  if(data.treeId!=1&&flag){
-                //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
-                //     .then(function(res){
-                //         _this.isClick.push(data.treeId);
-                //         if(res.result.length>0){
-                //             for(let i=0;i<res.result.length;i++){
-                //                 let label=res.result[i].deptName;
-                //                 let treeId=res.result[i].id;
-                //                 let child={'treeId':treeId,'label':label,children:[]}
-                //                 data.children.push(child)
-                //             }
-                //         }
-                //     })
-                //  }
+                let self = this;
+                console.log(data)
+                self.dictId = data.id;
+                self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id}).then(function(res){ 
+                    // console.log(data.id)
+                    // console.log(res.result.length)
+                    self.tableData = res.result;
+                    //  $.each(self.tableData,function(index,value){//处理时间格式
+                    //     if(value.createdTime&&value.createdTime!=''){
+                    //         let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
+                    //         self.tableData[index].createdTime=createdTime;
+                    //     } 
+                    // })
+                    self.totalItem=res.result.length
+                    // self.totalPage=Math.ceil(res.result.totalCount/self.oneItem);
+                    // self.tableLoading=false;
+                    },function(res){
+                    self.tableLoading=false;
+                })
                 
             },
             //---树形操作-----------------------------------------------
-            TreeAdd(event,node,data){
-                // console.log(data)
-                $('.TreeMenu').css({
-                    display:'none'
-                })
-                let _this=this;
-                // _this.clearTreeData();
-                _this.tittle='新增';
-                _this.isAdd=true;
-                _this.dialogFormVisible=true;
-                _this.dialogData.id=data.id;
-            },
-            TreeDel(event,node,data){
-                $('.TreeMenu').css({
-                    display:'none'
-                })
-                let _this=this;
-                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
-                .then(function(res){
-                    _this.loadTree();
-                    _this.loadTableData();
-                },function(res){    
+            // TreeAdd(event,node,data){
+            //     // console.log(data)
+            //     $('.TreeMenu').css({
+            //         display:'none'
+            //     })
+            //     let _this=this;
+            //     // _this.clearTreeData();
+            //     _this.tittle='新增';
+            //     _this.isAdd=true;
+            //     _this.dialogFormVisible=true;
+            //     _this.dialogData.id=data.id;
+            // },
+            // TreeDel(event,node,data){
+            //     $('.TreeMenu').css({
+            //         display:'none'
+            //     })
+            //     let _this=this;
+            //     _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
+            //     .then(function(res){
+            //         _this.loadTree();
+            //         _this.loadTableData();
+            //     },function(res){    
 
-                })
-            },
-            TreeModify(event,node,data){
-                $('.TreeMenu').css({
-                    display:'none'
-                })
-                let _this=this;
-                _this.clearTreeData();
-                _this.tittle='修改';
-                _this.isAdd=false;
-                _this.dialogFormVisible=true;
-                 _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
-                    .then(function(res){
-                        _this.dialogData=res.result;
-                    },function(res){    
+            //     })
+            // },
+            // TreeModify(event,node,data){
+            //     $('.TreeMenu').css({
+            //         display:'none'
+            //     })
+            //     let _this=this;
+            //     _this.clearTreeData();
+            //     _this.tittle='修改';
+            //     _this.isAdd=false;
+            //     _this.dialogFormVisible=true;
+            //      _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
+            //         .then(function(res){
+            //             _this.dialogData=res.result;
+            //         },function(res){    
 
-                    })
-            },
+            //         })
+            // },
             filterNode(value, data) {
                 if (!value) return true;
-                 return data.areaName.indexOf(value) !== -1;
+                 return data.dictName.indexOf(value) !== -1;
             },
-            renderContent(h, { node, data, store }) {
-                return (
-                <span class="TreeNode el-tree-node__label"
-                on-mousedown ={ (event) => this.whichButton(event,node, data) }
-                style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
-                  {node.label}
-                   <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
-                    </div>
-                </span>);
-            },
-            whichButton(event,node, data){
-                let e = event || window.event;
-                let btnNum = e.button;
-                if(e.target.className!='TreeMenuBtn'){
-                    $('.TreeMenu').css({
-                        display:'none'
-                    })
-                }else{
-                    return false;
-                }
-                if (btnNum==2){
-                e.target.id= data.id
-                let clickDom=$('#'+e.target.id);
-                let x = e.clientX
-                let y = e.clientY
-                let left=clickDom.offset().left;
-                clickDom.children('.TreeMenu').css({
-                    display:'block',
-                    left:x-left+'px',
-                    top:'0px'
-                })
-                $('.el-tree-node>.el-tree-node__children').css({
-                    overflow:'visible'
-                })
-                }
-            },
-            clearTreeData(){
-                let _this=this;
-                _this.dialogData={}
-            }
+            // renderContent(h, { node, data, store }) {
+            //     return (
+            //     <span class="TreeNode el-tree-node__label"
+            //     on-mousedown ={ (event) => this.whichButton(event,node, data) }
+            //     style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
+            //       {node.label}
+            //        <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
+            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
+            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
+            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
+            //         </div>
+            //     </span>);
+            // },
+            // whichButton(event,node, data){
+            //     let e = event || window.event;
+            //     let btnNum = e.button;
+            //     if(e.target.className!='TreeMenuBtn'){
+            //         $('.TreeMenu').css({
+            //             display:'none'
+            //         })
+            //     }else{
+            //         return false;
+            //     }
+            //     if (btnNum==2){
+            //     e.target.id= data.id
+            //     let clickDom=$('#'+e.target.id);
+            //     let x = e.clientX
+            //     let y = e.clientY
+            //     let left=clickDom.offset().left;
+            //     clickDom.children('.TreeMenu').css({
+            //         display:'block',
+            //         left:x-left+'px',
+            //         top:'0px'
+            //     })
+            //     $('.el-tree-node>.el-tree-node__children').css({
+            //         overflow:'visible'
+            //     })
+            //     }
+            // },
+            // clearTreeData(){
+            //     let _this=this;
+            //     _this.dialogData={}
+            // }
             //-------------------------------------------------------------------       
         },
     }
@@ -754,8 +826,8 @@
 .pt5{
     padding-top: 5px;
 }
-.border-left{
-    border-left: 1px solid #E4E4E4;
+.border-right{
+    border-right: 1px solid #E4E4E4;
     min-height: 380px;
 }
 .open{
@@ -789,5 +861,10 @@
 }
 .data-wrapper .bgcolor{
     margin-bottom: 0
+}
+.data-table .el-input__inner{
+    height: 28px;
+    text-align:center;
+    border:none;
 }
 </style>

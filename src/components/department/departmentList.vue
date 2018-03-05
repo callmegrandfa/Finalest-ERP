@@ -66,11 +66,6 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column label="序号">
-                                 <template slot-scope="scope">
-                                    {{scope.$index+1}}
-                                </template>
-                            </el-table-column>
                             <el-table-column prop="deptCode" label="部门编码"></el-table-column>
                             <el-table-column prop="deptName" label="部门名称"></el-table-column>
                             <el-table-column prop="manager" label="负责人(无)"></el-table-column>
