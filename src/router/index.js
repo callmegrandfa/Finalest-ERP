@@ -56,6 +56,8 @@ const roleList = () =>import(/* webpackChunkName: "group-role" */'../components/
 const roleDetail = () =>import('../components/role/roleDetail')
 const roleModify = () =>import('../components/role/roleModify')
 
+//租户管理
+const tenant = () =>import('../components/tenantManagement/tenant')
 const tenantManagement = () =>import('../components/tenantManagement/tenantManagement')
 const tenantManagementAdd = () =>import('../components/tenantManagement/tenantManagementAdd')
 //集团管理
@@ -398,8 +400,23 @@ children:[
       { path: '/role/roleModify/:id', component: roleModify,name:'roleModify' },
   ]},
   { path: '/supplierList/:id', component: supplierList,name:'supplierList' },
-  { path: '/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
-  { path: '/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
+
+  { path: '/tenant', component: tenant,name:'tenant',redirect: function(){//租户管理
+    let name='tenant';
+    let activeRouter=store.state.activeRouter;
+
+    for(let i=0;i<activeRouter.length;i++){
+        if(activeRouter[i].name==name){
+          
+          return activeRouter[i].url;
+
+          break;
+        }
+    }
+  },children:[
+      { path: '/tenant/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
+      { path: '/tenant/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
+  ]},
 ]}
 ]
 const  router=new Router({

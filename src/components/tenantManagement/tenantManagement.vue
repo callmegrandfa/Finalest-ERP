@@ -1,69 +1,14 @@
 <template>
-    <div class="tenant-management-wrapper">
-        <el-row class="bg-white">
-            <el-col :span="5">
-                <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <i class="el-icon-search"></i>
-                        <span>查询</span>
-                    </el-col>
-                    <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
-                    </el-col>
-                </el-row>
+    <div class="tenant-management-wrapper" style="background:#fff;width:100%;">
+        
+        <el-row  id="pbu"  class="border-left">
+            <el-col :span='24' >
+                <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                <el-row class="pt10  table-width" >
 
-                <el-row class="mt20 pl15 h30">
-                    <el-col :span="5" class="fs12">
-                        <span>租户</span>
-                    </el-col>
-                    <el-col :span="15" class="fs12 border1 pl10">
-                        <input type="text" class="input-need" placeholder="请录入租户">                    
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt10 pl15 h30 fs12">
-                    <el-col :span="5">
-                        <span>行政区域</span>
-                    </el-col>
-                    <el-col :span="15" class="border1 pl10">
-                        <el-select v-model="value" placeholder="请选择行政区域">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                </el-row>
-
-                <el-row class="mt20" style="text-align:center;">
-                    <span class="search-btn">查询</span>
-                </el-row>
-            </el-col>
-
-            <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
-                    <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
-                    <button class="erp_bt bt_excel"><div class="btImg"><img src="../../../static/image/common/bt_excel.png"></div><span class="btDetail">Excel</span></button>
-                    <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                    <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>                    
-                </el-row>
-
-                <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span='4' class="tree-container">
-                        <el-tree :data="componyTree" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-                    </el-col>
-
-                    <el-col :span='19' class="ml10">
-                        <el-table :data="tableData" border style="width: 100%" stripe>
-                            <el-table-column prop="ifAction" label="操作">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].ifAction" ></el-checkbox>
-                                </template>
+                    <el-col :span='24' class="">
+                        <el-table :data="tableData" @selection-change="handleSelectionChange"  border style="width: 100%" stripe>
+                            <el-table-column type="selection" label="操作">
                             </el-table-column>
                             <el-table-column prop="tenantCode" label="租户编码" ></el-table-column>
                             <el-table-column prop="tenantName" label="租户名称"></el-table-column>
@@ -71,8 +16,13 @@
                             <el-table-column prop="data" label="启用年月"></el-table-column>
                             <el-table-column prop="area" label="行政地区"></el-table-column>
                             <el-table-column prop="status" label="当前状态"></el-table-column>
+                            <el-table-column  label="当前状态">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small" @click="modify(scope.row)"  >查看</el-button>
+                                </template>
+                            </el-table-column>
                         </el-table>  
-                        <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>   
+                        <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" ></el-pagination>   
                     </el-col>
                 </el-row>
 
@@ -83,6 +33,9 @@
 </template>
 
 <script>
+import Query from '../../base/query/query'
+import Btm from '../../base/btm/btm'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -99,24 +52,33 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-
-                options: [{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }],
-
+                bottonbox:{
+                    url: '/tenant/tenantManagementAdd',
+                   botton:[{
+                    class: 'erp_bt bt_add',
+                    imgsrc: '../../../static/image/common/bt_add.png',
+                    text: '新增'
+                },{
+                    class: 'erp_bt bt_del',
+                    imgsrc: '../../../static/image/common/bt_del.png',
+                    text: '删除'
+                },{
+                    class: 'erp_bt bt_print',
+                    imgsrc: '../../../static/image/common/bt_modify.png',
+                    text: '打印'
+                },{
+                    class: 'erp_bt bt_excel',
+                    imgsrc: '../../../static/image/common/bt_excel.png',
+                    text: 'Excel'
+                },{
+                    class: 'erp_bt bt_version',
+                    imgsrc: '../../../static/image/common/bt_start.png',
+                    text: '启用'
+                },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/bt_stop.png',
+                    text: '停用'
+                }]},
                 value: '',
                 tableData: [{
                     ifAction:true,
@@ -192,51 +154,37 @@
                         status:'当前状态',
                     }],
 
-                    componyTree: [{
-                        label: '一级 1',
-                        children: [{
-                            label: '二级 1-1',
-                            children: [{
-                            label: '三级 1-1-1'
-                            }]
-                        }]
-                        }, {
-                        label: '一级 2',
-                        children: [{
-                            label: '二级 2-1',
-                            children: [{
-                            label: '三级 2-1-1'
-                            }]
-                        }, {
-                            label: '二级 2-2',
-                            children: [{
-                            label: '三级 2-2-1'
-                            }]
-                        }]
-                        }, {
-                        label: '一级 3',
-                        children: [{
-                            label: '二级 3-1',
-                            children: [{
-                            label: '三级 3-1-1'
-                            }]
-                        }, {
-                            label: '二级 3-2',
-                            children: [{
-                            label: '三级 3-2-1'
-                            }]
-                        }]
-                        }],
-
                     pageIndex:-1,//分页的当前页码
 			        totalPage:20,//当前分页总数
             }
         },
         created:function(){
-            
+            let _this=this;
+            _this.loadTableData();
             
         },
+        mounted:function(){   
+            let content1=document.getElementById('pbu');//设置高度为全屏
+            let height1=window.innerHeight-123;
+            content1.style.minHeight=height1+'px';
+        },
         methods:{
+            handleSelectionChange(val) {//点击复选框选中的数据
+            },
+            loadTableData(){//表格
+                 let _this=this;
+                 _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/Tenant/GetAll').then(function(res){ 
+                    console.log(res)
+                })
+            },
+            modify(row){
+                this.$store.state.url='/commodity/commodityPropertyDetails/'+row.address5;
+                this.$router.push({path:this.$store.state.url});
+            },
+            btmlog:function(data){
+                               
+            },
             test:function(){
                 // console.log(this.try)
                 this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
@@ -254,6 +202,11 @@
             },
 
         },
+        components:{
+            Query,
+            Btm,
+            Tree
+        }
     }
 </script>
 
@@ -373,12 +326,12 @@
 </style>
 
 <style>
-.tenant-management-wrapper .el-input input{
+/*.tenant-management-wrapper .el-input input{
     border:none;
     height: 30px;
     line-height: 30px;
     padding-left: 0;
-}
+}*/
 /* 重写checkbox */
 .tenant-management-wrapper .el-checkbox__inner{
     width: 24px;
