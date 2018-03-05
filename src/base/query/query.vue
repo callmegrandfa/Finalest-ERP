@@ -12,7 +12,7 @@
                     </el-col>
                 </el-row>
                 <div style="margin-top:20px">
-                    <el-row v-for="item in data.demand">
+                    <el-row v-for="item in data.demand" :key="item.place">
                         <el-col :span="8" >
                             <div class="bgcolor smallBgcolor">
                                 <label><small>{{item.must}}</small>{{item.title}}</label>

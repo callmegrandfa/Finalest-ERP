@@ -1,168 +1,130 @@
 <template>
     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
-        <div id="left-box" style="min-width:275px;width:275px;float:left;">
-            <el-row class="bg-white" >
-                <el-col :span="24">
-                    <el-row class="h48 pl15">
-                        <el-col :span="18">
-                            <i class="el-icon-search"></i>
-                            <span>查询</span>
-                        </el-col>
-                        <el-col :span="5">
-                            <span class="fs12 open" @click="packUp">+ 收起</span>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                            <label>品牌编码</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="smallBgcolor" style="margin-top:20px">
-                            <el-input placeholder="" v-model="searchItem.BrandCode"></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                            <label>品牌名称(中文)</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="smallBgcolor" >
-                            <el-input placeholder="" v-model="searchItem.BrandName"></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                                    <label>品牌名称(英文)</label>
-                           </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="smallBgcolor" >
-                            <el-input placeholder=""></el-input>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" >
-                            <label>状态</label>
-                            </div>
-                        </el-col>
-                        <el-col :span="14">
-                            <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="searchItem.Status" >
-                                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">&nbsp;</el-col>
-                        <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                            <span class="search-btn" style="float:left;margin-left:10px;" @click="search()">查询</span>
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>
-        </div>
-        <div id="bgh">
-            <el-row style="width:100%;" >
-                <el-col id="bg-white"  class="border-left" :span="24" >
-                    <el-row class="h48 pt5">         
-                            <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
-                            <button v-show="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
-                            <button class="erp_bt bt_save" @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-                            <button class="erp_bt bt_del" @click="delBatch"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>                    
-                            <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                            <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                   
-                    </el-row>
-                     <el-row class="">
-                        <el-col :span="24" class="">
-                             <el-table :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
-                                <el-table-column
-                                    type="selection"
-                                    width="55">
-                                </el-table-column>
-                                <el-table-column prop="seq" label="序号" width="60">               
-                                </el-table-column>
-                                <el-table-column prop="brandCode" label="品牌编码">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                                v-model="scope.row.brandCode" 
+        <el-row class="bg-white" >
+            <el-col :span="5">
+                <el-row class="h48 pl15">
+                    <el-col :span="18">
+                        <i class="el-icon-search"></i>
+                        <span>查询</span>
+                    </el-col>
+                    <el-col :span="5">
+                        <span class="fs12 open" @click="packUp">+ 收起</span>
+                    </el-col>
+                </el-row>
+                <div class="bgcolor smallBgcolor mt20">
+                    <label>品牌编码</label>
+                    <el-input v-model="searchItem.BrandCode"></el-input>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>品牌名称(中文)</label>
+                    <el-input v-model="searchItem.BrandName"></el-input>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>品牌名称(英文)</label>
+                    <el-input ></el-input>
+                </div>
+               <div class="mt20 bgcolor smallBgcolor">
+                    <label>状态</label>
+                    <el-select  v-model="searchItem.Status">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <el-row>
+                    <el-col :span="8">&nbsp;</el-col>
+                    <el-col style="text-align:center;margin-bottom:20px;" :span="14">
+                        <span class="search-btn" style="float:left;margin-left:10px;" @click="search()">查询</span>
+                    </el-col>
+                </el-row>
+            </el-col>       
+            <el-col id="bg-white"  class="border-left" :span="19" >
+                <el-row class="h48 pt5">         
+                        <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
+                        <button v-show="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
+                        <button class="erp_bt bt_save" @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+                        <button class="erp_bt bt_del" @click="delBatch"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                        <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>                    
+                        <button class="erp_bt bt_version"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
+                        <button class="erp_bt bt_auxiliary"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
+                        <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                   
+                </el-row>
+                    <el-row class="">
+                    <el-col :span="24" class="">
+                            <el-table :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
+                            <el-table-column
+                                type="selection"
+                                width="55">
+                            </el-table-column>
+                            <el-table-column prop="seq" label="序号" width="60">               
+                            </el-table-column>
+                            <el-table-column prop="brandCode" label="品牌编码">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            v-model="scope.row.brandCode" 
+                                            @change="update"
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="brandName" label="品牌名称">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            v-model="scope.row.brandName" 
                                                 @change="update"
-                                                type="text"/>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="brandName" label="品牌名称">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                                v-model="scope.row.brandName" 
-                                                 @change="update"
-                                                type="text"/>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="" label="英文名称" width="">
-                                </el-table-column>
-                                <el-table-column prop="remark" label="备注">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                                v-model="scope.row.remark" 
-                                                 @change="update"
-                                                type="text"/>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="status" label="状态">
-                                    <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.status"  @change="update" >
-                                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="createdBy" label="创建人" width="">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                                v-model="scope.row.createdBy" 
-                                                 @change="update"
-                                                type="text"/>
-                                    </template>                                   
-                                </el-table-column>
-                                <el-table-column prop="createdTime" label="创建时间">
-                                    <template slot-scope="scope">
-                                        <el-date-picker
-                                            v-model="scope.row.createdTime"
-                                            readonly
-                                            type="date">
-                                        </el-date-picker>
-                                    </template>
-                                </el-table-column> 
-                                <el-table-column prop="" label="操作" width="">
-                                    <template slot-scope="scope">
-                                        <el-button v-on:click="handleDel(scope.row)" type="text" size="small">删除</el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        <el-pagination
-                         style="margin-top:20px;" 
-                         class="text-right" 
-                         background layout="total, prev, pager, next" 
-                         @current-change="handleCurrentChange"
-                         :page-count="totalPage" >
-                         </el-pagination>   
-                        </el-col> 
-                    </el-row>
-                </el-col>
-            </el-row>
-        </div>   
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="" label="英文名称" width="">
+                            </el-table-column>
+                            <el-table-column prop="remark" label="备注">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            v-model="scope.row.remark" 
+                                                @change="update"
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <el-select  v-model="scope.row.status"  @change="update" >
+                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="createdBy" label="创建人" width="">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            v-model="scope.row.createdBy" 
+                                                @change="update"
+                                            type="text"/>
+                                </template>                                   
+                            </el-table-column>
+                            <el-table-column prop="createdTime" label="创建时间">
+                                <template slot-scope="scope">
+                                    <el-date-picker
+                                        v-model="scope.row.createdTime"
+                                        readonly
+                                        type="date">
+                                    </el-date-picker>
+                                </template>
+                            </el-table-column> 
+                            <el-table-column prop="" label="操作" width="">
+                                <template slot-scope="scope">
+                                    <el-button v-on:click="handleDel(scope.row)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total, prev, pager, next" 
+                        @current-change="handleCurrentChange"
+                        :page-count="totalPage" >
+                        </el-pagination>   
+                    </el-col> 
+                </el-row>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -193,9 +155,6 @@ import Btm from '../../base/btm/btm'
                 isCancel:false,//取消按钮是否可见
                 isUpdate:false,//是否进行修改
                 options: [{
-                    value:"",
-                    label: '全部'
-                    }, {
                     value: 0,
                     label: '禁用'
                     }, {
@@ -434,8 +393,14 @@ import Btm from '../../base/btm/btm'
 .pl10{
     padding-left: 10px;
 }
+.pt5{
+    padding-top: 5px;
+}
 .pt10{
     padding-top: 10px;
+}
+.pl15{
+    padding-left: 15px;
 }
 .pb10{
     padding-bottom: 10px;
@@ -446,9 +411,32 @@ import Btm from '../../base/btm/btm'
 .border-left{
     border-left: 1px solid #E4E4E4;
 }
+.fs12{
+    font-size: 12px;
+}
 #bgh{
    float: left;
    width: calc(100% - 275px); 
+}
+.search-btn{
+    display: inline-block;
+    width: 87px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    background: #4A6997;
+    color: white;
+    cursor: pointer;
+}
+.open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
 }
 </style>
 
