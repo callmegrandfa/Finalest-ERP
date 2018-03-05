@@ -45,19 +45,7 @@ axios.interceptors.request.use((config) => {
 //         })
 //     })
 //   }
-//   export function gets(url) {
-//     return new Promise((resolve, reject) => {
-//       axios.get(url)
-//         .then(response => {
-//           resolve(response.data);
-//         }, err => {
-//           reject(err);
-//         })
-//         .catch((error) => {
-//           reject(error)
-//         })
-//     })
-//   }
+
 //业务方法
   export default {
     posts(url, params) {
@@ -112,5 +100,4 @@ axios.interceptors.request.use((config) => {
           })
       })
     },
-    
   }

@@ -62,7 +62,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleCode')}" 
                 v-model="addData.moduleCode"  
-                placeholder="请输入菜单编码"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>菜单名称</label>
@@ -71,7 +71,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleName')}" 
                 v-model="addData.moduleName"  
-                placeholder="请输入菜单名称"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>图标</label>
@@ -80,7 +80,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.ico')}" 
                 v-model="addData.ico"  
-                placeholder="请输入图标"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>功能模块ID全路径</label>
@@ -89,7 +89,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleFullPathId')}" 
                 v-model="addData.moduleFullPathId" 
-                placeholder="功能模块ID全路径"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>功能模块名称全路径</label>
@@ -98,7 +98,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleFullPathName')}" 
                 v-model="addData.moduleFullPathName" 
-                placeholder="功能模块名称全路径"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>排序</label>
@@ -107,7 +107,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.seq')}" 
                 v-model="addData.seq" 
-                placeholder="排序"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>语言</label>
@@ -122,7 +122,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.systemId')}" 
                 v-model="addData.systemId" 
-                placeholder="系统ID"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
@@ -138,7 +138,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                 v-model="addData.moduleParentId"  
-                placeholder="上级菜单">
+                placeholder="">
                     <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </div>
@@ -149,7 +149,7 @@
                 @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.url')}" 
                 v-model="addData.url"  
-                placeholder="请输入web地址"></el-input>
+                placeholder=""></el-input>
             </div>
             <div class="bgcolor">
                 <label>状态</label>
@@ -209,7 +209,7 @@
                     </template>
                     <el-col :span="6" class="dialog_ dialog_l">
                         <el-col :span="24">
-                            <el-input placeholder="请输入内容" class="menu_search">
+                            <el-input placeholder="" class="menu_search">
                                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
                             </el-input>
                         </el-col>
@@ -415,11 +415,29 @@
             },function(res){
             })
         },
+        uniqueArray(array1, array2){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i].permissionName == array2[j].permissionName) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
+                }
+            }
+            return result;
+        },
         loadPermission(){
             let _this=this;
             _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
             .then(function(res){
                 _this.componyTree=res.items
+                _this.nochecked=[]
             if(res.items.length>0){//获取所有的权限子节点，存储起来
                 for(let i=0;i<res.items.length;i++){
                     if(res.items[i].children.length>0&&res.items[i].children!=null){
@@ -429,17 +447,10 @@
                     }
                 }
              }
-             _this.nochecked=_this.allNode;
             if(_this.allNode.length>0){//获取未选中权限
-                for(let i=0;i<_this.allNode.length;i++){
-                    if(_this.checked.length>0){
-                        for(let x=0;x<_this.checked.length;x++){
-                            if(_this.allNode[i].permissionName==_this.checked[x].permissionName){
-                                 _this.nochecked.splice(i,1);
-                            }
-                        }
-                    }
-                }
+                _this.nochecked=_this.uniqueArray(_this.allNode,_this.checked);
+            }else{
+                _this.nochecked=_this.allNode
             }
             },function(res){
             })

@@ -2,7 +2,7 @@
 <template>
     <el-row class="h48 pt5">
     		<div class="ml5" style="float:left" v-for="item in date.botton">
-    			<button :class="item.class" @click="selectItem(item)"><div class="btImg"><img :src="item.imgsrc"></div><span class="btDetail">{{item.text}}</span></button>
+    			<button :class="item.class" @click="selectItem(item)"><div class="btImg"><img  :src="item.imgsrc"></div><span :class="String(item.imgsrc)" class="btDetail">{{item.text}}</span></button>
     		</div>                   
     </el-row>
 </template>
@@ -23,18 +23,23 @@
 	    		let _this=this;
 	    		if(item.text=='查询'){
 	    			_this.date.botton.pop();
-	    			_this.stop=true;
+	    			_this.stop='查询';
                 	this.$emit('listbtm', _this.stop)
-	    		}
-	    		if(item.class=='erp_bt bt_add'|| item.class=='erp_bt bt_back'){
+	    		}else if(item.class=='erp_bt bt_add'|| item.class=='erp_bt bt_back'){
 	    			this.$store.state.url=`${this.date.url}/default`
            		    this.$router.push({path:this.$store.state.url})//点击切换路由
+	    		}else if(item.text == '保存'){
+	    			_this.stop='保存';
+	    			this.$emit('listbtm', _this.stop)
 	    		}
 	    	}
 	    }
 	}
 </script>
 <style scoped>
+	.false{
+		padding: 0;
+	}
 	.h48{
 	    height: 48px;
 	    line-height: 48px;
@@ -57,5 +62,11 @@
 	}
 	.bt_save_add{
 	    background-color: rgb(22,155,213);
+	}
+	.bt_interposition{
+		background-color: rgb(102,153,255)
+	}
+	.bt_eraseline{
+		background-color: rgb(255,102,0);
 	}
 </style>

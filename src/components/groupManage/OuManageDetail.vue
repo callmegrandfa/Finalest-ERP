@@ -92,9 +92,9 @@
                     <label>编码</label>
                     <el-input class="ouCode" 
                     @focus="showErrprTips"
+                    placeholder=" "
                     :class="{redBorder : validation.hasError('addData.ouCode')}" 
-                    v-model="addData.ouCode" 
-                    placeholder="请录入编码">
+                    v-model="addData.ouCode">
                     </el-input>
                 </div>
                 
@@ -102,10 +102,10 @@
                 <div class="bgcolor">
                         <label>名称</label>
                     <el-input class="ouName"
+                    placeholder=" "
                     @focus="showErrprTips"
                      :class="{redBorder : validation.hasError('addData.ouName')}"
-                     v-model="addData.ouName" 
-                     placeholder="请录入手工单号">
+                     v-model="addData.ouName" >
                      </el-input>
                 </div>
                 <div class="bgcolor">
@@ -116,6 +116,7 @@
                     <label>上级业务单元</label>
                     <el-select class="ouParentid"
                     @focus="showErrprTips"
+                    placeholder=" "
                      :class="{redBorder : validation.hasError('addData.ouParentid')}" 
                      v-model="addData.ouParentid">
                         <el-option 
@@ -136,11 +137,11 @@
                     value-format="yyyy-MM-dd" 
                     v-model="addData.regtime" 
                     type="date" 
-                    placeholder="请选择公司成立时间"></el-date-picker>
+                    placeholder=" "></el-date-picker>
                 </div>
                 <div class="bgcolor">
                     <label>本位币种id</label>
-                    <el-select 
+                    <el-select placeholder=" "
                     class="baseCurrencyId" 
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.baseCurrencyId')}" 
@@ -150,13 +151,13 @@
                         :key="item.baseCurrencyId" 
                         :label="item.label" 
                         :value="item.baseCurrencyId" 
-                        placeholder="请选择本位币种">
+                        >
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select 
+                    <el-select placeholder=" "
                     class="companyOuId" 
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.companyOuId')}" 
@@ -166,7 +167,7 @@
                         :key="item.valueCompany" 
                         :label="item.label" 
                         :value="item.valueCompany" 
-                        placeholder="请选择所属公司">
+                        >
                         </el-option>
                     </el-select>
                 </div>
@@ -177,7 +178,7 @@
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.contactPerson')}" 
                     v-model="addData.contactPerson" 
-                    placeholder="请填入联系人">
+                    placeholder=" ">
                     </el-input>
                 </div>
                 <div class="bgcolor">
@@ -187,7 +188,7 @@
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.phone')}" 
                     v-model="addData.phone" 
-                    placeholder="请填入电话"></el-input>
+                    placeholder=" "></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>地址</label>
@@ -196,7 +197,7 @@
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.address')}" 
                     v-model="addData.address" 
-                    placeholder="请填入地址"></el-input>
+                    placeholder=" "></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>备注</label>
@@ -205,11 +206,11 @@
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.remark')}" 
                     v-model="addData.remark" 
-                    placeholder="备注"></el-input>
+                    placeholder=" "></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>用户状态</label>
-                    <el-select 
+                    <el-select placeholder=" "
                     class="status" 
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.status')}" 
@@ -219,7 +220,7 @@
                         :key="item.valueState" 
                         :label="item.label" 
                         :value="item.valueState" 
-                        placeholder="请选择用户状态">
+                        >
                         </el-option>
                     </el-select>
                 </div>
@@ -265,6 +266,7 @@
                                 <div class="bgcolor">
                                     <label>上级公司</label>
                                     <el-select 
+                                    placeholder=" "
                                     class="ouCompanyParentid" 
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('addData.ouCompanyParentid')}" 
@@ -285,7 +287,7 @@
                                     :class="{redBorder 
                                     : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
-                                    placeholder="请输入法人代表">
+                                    placeholder=" ">
                                     </el-input>
                                 </div>
                                 

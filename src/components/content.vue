@@ -44,16 +44,12 @@ export default {
   data(){
       return{
           x:0,
+          go:document.getElementById('routerBox').offsetWidth / 10
       }
   },
   methods:{
       right:function(){
-          let left;
-          if(document.getElementById('longWidth').style.left!=''){
-              left=parseInt(document.getElementById('longWidth').style.left);
-          }else{
-              left=0
-          }
+        let left=parseInt($('#longWidth').css('left'))
         let width=document.getElementById('routerBox').offsetWidth;
         if(left-this.go+width<0){
             // alert('已到尽头')
@@ -63,7 +59,7 @@ export default {
         }
       },
       left:function(){
-        let left=parseInt(document.getElementById('longWidth').style.left);
+        let left=parseInt($('#longWidth').css('left'));
         if(left<0){
             this.x+=this.go;
             document.getElementById('longWidth').style.left=this.x+'px';

@@ -27,7 +27,7 @@
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.phoneNumber') }}</p>
                 </div>
             </div>
-            <div class="tipsWrapper" name="email">
+            <!-- <div class="tipsWrapper" name="email">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.email')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.email') }}</p>
                 </div>
@@ -36,7 +36,7 @@
                 <div class="errorTips" :class="{block : !validation.hasError('addData.userGroupId')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.userGroupId') }}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="tipsWrapper" name="ouId">
                 <div class="errorTips" :class="{block : !validation.hasError('addData.ouId')}">
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouId') }}</p>
@@ -144,7 +144,7 @@
               <label><small>*</small>有效时间</label>
                <div class="rangeDate">
                   <el-date-picker
-                  v-model="time"
+                  v-model="rangeDate"
                   type="daterange"
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd" 
@@ -218,14 +218,14 @@
                     <div class="menu_item_wapper menu_item_del">
                         <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                     </div>
-                    <!-- <el-col :span="24" class="load_more">
+                    <el-col :span="24" class="load_more" :class="{display_block : isLoadMore}">
                         <button>加载更多</button>
-                    </el-col> -->
+                    </el-col>
                 </el-col>
             </el-dialog>
         </el-col>
 
-          <el-col :span='24'>
+          <!-- <el-col :span='24'>
             <div class="bgcolor longWidth">
                 <label>&nbsp;</label>
                 <el-table 
@@ -251,7 +251,6 @@
                           <template slot-scope="scope">
                             <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
                             <el-button type="text" size="small"  @click="modify(scope.row)" >查看</el-button>
-                            <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                         </template>
                     </el-table-column>
                 </el-table>
@@ -265,7 +264,7 @@
                     :total="totalItem">
                 </el-pagination>   
             </div>
-          </el-col>
+          </el-col> -->
 
       </el-row>
   </div>
@@ -277,11 +276,8 @@
       return{
         dialogTableVisible:false,//控制对话框
         menuCheck:true,//未选功能，已选功能
-         valueDate:'',
          check:false,//是否授权
-         date:'',//有效时间
-         value:'',
-         time:'',
+         isLoadMore:false,
          contain: 
          [{ 
             value:0,
@@ -305,13 +301,9 @@
           "languageId": "",
           "isReg": false,
           "remark": "",
-          "roleCodes": []
+          "roleCodes": [],
         },
-        // addData1:{
-        //     "userCode": "",
-        //     "displayName": "",
-        //     "email": "暂字段",
-        // },
+        rangeDate:[],//有效时间
         tableLoading:false,
         tableData:[],
         pageIndex:1,//分页的当前页码
@@ -324,6 +316,11 @@
         nochecked:[],//未关联角色
         allNode:[],//所有角色
         checkedRoleCode:[],
+        
+        rolePageIndex:1,//分页的当前页码
+        rolePage:0,//当前页
+        roleOneItem:10,//每页有多少条信息
+        roleTotalItem:0,//总共有多少条消息
       }
     },
      validators: {
@@ -336,12 +333,12 @@
       'addData.phoneNumber': function (value) {//手机号码
          return this.Validator.value(value).required().maxLength(20);
       },
-      'addData.email': function (value) {//邮箱
-         return this.Validator.value(value).required().maxLength(200);
-      },
-      'addData.userGroupId': function (value) {//所属用户组
-         return this.Validator.value(value).required().integer();
-      },
+    //   'addData.email': function (value) {//邮箱
+    //      return this.Validator.value(value).required().maxLength(200);
+    //   },
+    //   'addData.userGroupId': function (value) {//所属用户组
+    //      return this.Validator.value(value).required().integer();
+    //   },
       'addData.ouId': function (value) {//所属组织
           return this.Validator.value(value).required().integer();
       },
@@ -360,20 +357,48 @@
     },
     created:function(){       
       let _this=this;
-      _this.getData();  
-      _this.loadTableData();
+      _this.getData();
+      _this.GetRoles();
+    //   _this.loadTableData();
+      
     },
     methods: {
+        GetRoles(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id})
+           .then(function(resp){
+                _this.roleTotalItem=resp.result.totalCount;//暂时未用到
+                _this.checked=resp.result.items;
+                _this.loadTableData()
+           },function(resp){
+
+           })
+        },
        getData(){
            let _this=this;
            _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
            .then(function(res){
-                _this.addData= res.result
-                _this.addData.userGroupId='';
-                _this.addData.email='';
-                if(res.result.roleCodes.length>0 && res.result.roleCodes.length){
-                    _this.checkedRoleCode=res.result.roleCodes;
+                _this.addData= {
+                    "userCode": res.result.userCode,
+                    "displayName": res.result.displayName,
+                    "phoneNumber": res.result.phoneNumber,
+                    "ouId": res.result.ouId,
+                    "status": res.result.status,
+                    "userType": res.result.userType,
+                    "languageId": res.result.languageId,
+                    "isReg": res.result.isReg,
+                    "remark": res.result.remark,
+                    "roleCodes": res.result.roleCodes,
+                    "id": res.result.id,
                 }
+                if(res.result.effectiveStart && res.result.effectiveEnd){
+                    _this.rangeDate=[res.result.effectiveStart,res.result.effectiveEnd]
+                }
+                
+                // console.log(res.result)
+                // if(res.result.roleCodes.length>0 && res.result.roleCodes.length){
+                //     _this.checkedRoleCode=res.result.roleCodes;
+                // }
                 
            },function(res){
 
@@ -407,29 +432,38 @@
           customClass:className
           });
       },
+     uniqueArray(array1, array2){//求差集
+        var result = [];
+        for(var i = 0; i < array1.length; i++){
+            var item = array1[i];
+            var repeat = false;
+            for (var j = 0; j < array2.length; j++) {
+                if (array1[i].id == array2[j].id) {//唯一key
+                    repeat = true;
+                    break;
+                }
+            }
+            if (!repeat) {
+                result.push(item);
+            }
+        }
+        return result;
+    },
       loadTableData(){//表格
           let _this=this;
           _this.tableLoading=true
           _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
           .then(function(res){ 
-              _this.tableData=res.result.items;
+              _this.nochecked=[]  
+            //   _this.tableData=res.result.items;
               _this.totalItem=res.result.totalCount
               _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
               _this.tableLoading=false;
-              $.each(_this.tableData,function(index,value){
-                _this.allNode.push(value)//获取所有角色
-              })
-              _this.nochecked=_this.allNode;
-              if(_this.allNode.length>0 && _this.checkedRoleCode.length>0){
-                  for(let i=0;i<_this.allNode.length;i++){
-                        for(let x=0;x<_this.checkedRoleCode.length;x++){
-                            if(_this.checkedRoleCode[x]==_this.allNode[i].roleCode){
-                                let item=_this.allNode[i]
-                                _this.checked.push(item)//获取已选中的角色
-                                _this.nochecked.splice(i,1);//未选中角色
-                            }
-                        }
-                    }
+              _this.allNode=res.result.items
+                if(_this.checked.length>0){
+                    _this.nochecked=_this.uniqueArray(_this.allNode,_this.checked)
+                }else{
+                    _this.nochecked=_this.allNode
                 }
               },function(res){
               _this.tableLoading=false;
@@ -543,11 +577,14 @@
                         roles.push(value.roleCode)
                     })
                     _this.addData.roleCodes=roles;
+                    _this.addData.effectiveStart=_this.rangeDate[0];
+                    _this.addData.effectiveEnd=_this.rangeDate[1];
                     _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
-                        _this.addData.id=res.result.id;
-                        _this.$store.state.url='/user/userModify/'+res.result.id
-                        _this.$router.push({path:_this.$store.state.url})
+                        _this.checkedRoleCode=[]
+                        $.each(_this.checked,function(index,val){
+                            _this.checkedRoleCode.push(val.roleCode)
+                        })
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         _this.open('保存失败','el-icon-error','faildERP');
