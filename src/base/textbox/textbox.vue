@@ -15,9 +15,8 @@
 	            <el-col :span="14" v-else>
 	                <div class="bgcolor smallBgcolor">
 	                    <el-select  v-model="item.value" >
-	                    <el-option  v-for="item in item.options" :key="item.value" :label="item.label" :value="item.value">
+	                    <el-option  v-for="(item,index) in item.options" :key="index" :label="item.label" :value="item.value">
 	                    </el-option>
-
 	                    </el-select>
 	                </div>
 	            </el-col>
