@@ -56,11 +56,6 @@
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column label="序号">
-                                 <template slot-scope="scope">
-                                    {{scope.$index+1}}
-                                </template>
-                            </el-table-column>
                             <el-table-column prop="roleCode" label="角色编码"></el-table-column>
                             <el-table-column prop="displayName" label="角色名称"></el-table-column>
                             <el-table-column prop="ouId" label="所属组织"></el-table-column>

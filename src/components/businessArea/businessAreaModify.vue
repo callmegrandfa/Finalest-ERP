@@ -142,6 +142,7 @@
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
                         <el-input 
+                        v-model="addData.createdBy"
                         disabled
                         ></el-input>
                     </div>
@@ -153,10 +154,11 @@
                     <div class="bgcolor longWidth">
                         <label>创建时间</label>
                         <el-date-picker
+                        v-model="addData.createdTime    "
                         type="date"
                         disabled
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd">
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                         </el-date-picker>
                     </div>
                 </div>    
@@ -240,7 +242,6 @@
         _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:_this.$route.params.id})
         .then(function(res){
             _this.addData=res.result;
-            console.log(res.result)
         },function(res){    
 
         })  
