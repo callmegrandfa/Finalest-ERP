@@ -53,7 +53,7 @@
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column label="序号">
                                 <template slot-scope="scope">
-                                    <img v-show='scope.$index==ar[scope.$index]' class="abimg" src="../../../static/image/content/redremind.png"/>
+                                    <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.seq"
@@ -191,6 +191,7 @@
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
                 page:1,//当前页
+                pagex:1,//前一页
                 eachPage:10,//一页显示的数量
                 x:0,//增行的下标
                 rows:[],//增行的数组
@@ -310,25 +311,30 @@
             handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
             },
-            handleCurrentChange:function(val){//获取当前页码
-                this.pageIndex=val;
-                console.log(val)
-                this.page = val;
-                this.loadAllList();
+            handleCurrentChange:function(val){//获取点击页码
+                let self = this;
+                if(self.updateList.length==0){
+                    this.pageIndex=val;
+                    console.log(val)
+                    this.page = val;
+                    this.loadAllList();
+                    console.log(self.page)
+                }else if(self.updateList.length>0){
+                    self.page = self.pagex;
+                    console.log(self.page)
+                    alert('您有修改未保存')
+                }
+                
             },
-            // handleEdit:function(index,row){//表格内编辑操作
-                
-                
-            // },
             handleChange:function(index,row){
                 let self = this;
                 // console.log(index)
                 let map = false;
                 if(self.ar.length==0){//修改后表格前红标
-                    self.ar.push(index)
+                    self.ar.push(row.id)
                 }else if(self.ar.length>=1){
                     for(let i in self.ar){
-                        if(index!=self.ar[i]){
+                        if(row.id!=self.ar[i]){
                             map = true;
                         }else{
                             map = false;
@@ -337,11 +343,11 @@
                     }
                 }
                 if(map){
-                    self.ar.push(index)
-                    self.ar.sort();
+                    self.ar.push(row.id)
+                    // self.ar.sort();
                     console.log(self.ar)
                 }
-                self.redIndex = index;
+                // self.redIndex = index;
 
 
                 let flag = false;

@@ -14,16 +14,16 @@
 
                 <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select  v-model="searchData.OuType">
+                    <el-select  v-model="searchData.OuType" placeholder="">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder="请录入编码"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder="请录入名称"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder="请录入所属公司"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder="请录入行政地区"></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder="请录入启用状态"></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -87,7 +87,7 @@
                                     type="datetime" 
                                     readonly
                                     align="center"
-                                    placeholder="无数据"></el-date-picker>
+                                    placeholder=""></el-date-picker>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>

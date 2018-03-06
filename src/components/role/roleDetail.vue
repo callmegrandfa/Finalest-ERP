@@ -49,19 +49,19 @@
                 </div> -->
                 <div class="bgcolor">
                     <label><small>*</small>角色编码</label>
-                    <el-input v-model="addData.roleCode" placeholder="请录入角色编码"></el-input>
+                    <el-input v-model="addData.roleCode" placeholder=""></el-input>
                 </div> 
 
 
                 <div class="bgcolor">
                     <label><small>*</small>角色名称</label>
-                    <el-input v-model="addData.displayName" placeholder="请输入角色名称"></el-input>
+                    <el-input v-model="addData.displayName" placeholder=""></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label><small>*</small>所属组织</label>
-                    <el-select v-model="addData.ouId" placeholder="请选择所属组织">
+                    <el-select v-model="addData.ouId" placeholder="">
                         <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
                     </el-select>
                 </div>
@@ -69,7 +69,7 @@
 
                 <div class="bgcolor">
                     <label><small>*</small>状态</label>
-                    <el-select v-model="addData.status" placeholder="请选择状态">
+                    <el-select v-model="addData.status" placeholder="">
                         <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
                     </el-select>
                 </div>
@@ -77,7 +77,7 @@
                     <label>备注</label>
                     <el-input 
                     v-model="addData.remark"
-                    placeholder="备注"></el-input>
+                    placeholder=""></el-input>
                 </div>
             </el-col>
         </el-row>
@@ -89,17 +89,18 @@
             <el-col :span="24">
                <el-tabs v-model="activeName">
 <!-- - - - - - - - - - - - - - - - - - - - 关联用户- - - - - - - - - - - - - - - - - - - - -  -->
-                    <el-tab-pane label="关联用户" name="bank" class="getPadding" style="z-index:-10">
+                    <el-tab-pane label="关联用户" name="role" class="getPadding" style="z-index:-10">
                         <button class="erp_bt bt_add"  @click="dialogRole = true">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
+                        <a class="addRole"  v-for="x in roleChecked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
                         <!-- dialog -->
                         <el-dialog :visible.sync="dialogRole" class="dialogRole">
                             <template slot="title">
-                                <span style="float:left;">选取角色</span>
+                                <span style="float:left;">选取用户</span>
                                 <div class="double_bt">
                                     <template v-if="dialogRole_menuCheck">
                                         <div class="menu_btn_choose" :class="{menu_btn_active : !dialogRole_menuCheck}" @click="dialogRole_nodeAdd">已选用户</div>
@@ -129,11 +130,6 @@
                         border 
                         style="width: 100%" 
                         stripe>
-                           <el-table-column label="序号">
-                                 <template slot-scope="scope">
-                                    {{scope.$index+1}}
-                                </template>
-                            </el-table-column>
 
                             <el-table-column prop="userCode" label="用户编码"></el-table-column>
 
@@ -160,25 +156,47 @@
                         </el-pagination>   
                     </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - 分配组织- - - - - - - - - - - - - - - - - - - - -  -->
-                    <el-tab-pane label="分配组织" name="address" class="getPadding" style="z-index:-1000">
-                        <button class="erp_bt bt_add" @click="addColbank">
+                    <el-tab-pane label="分配组织" name="ou" class="getPadding" style="z-index:-1000">
+                        <button class="erp_bt bt_add" @click="dialogOu = true">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
-                        
+                        <!-- dialog -->
+                        <el-dialog :visible.sync="dialogOu" class="dialogOu">
+                            <template slot="title">
+                                <span>关联组织（业务组织+部门）</span>
+                            </template>
+                            <el-col :span="12">
+                                <el-tree
+                                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                                v-loading="fnTreeLoading" 
+                                :data="fnTreeData"
+                                :props="defaultProps"
+                                node-key="id"
+                                default-expand-all
+                                ref="tree"
+                                :expand-on-click-node="false"
+                                >
+                            </el-tree>
+                            </el-col>
+                            <el-col :span="12">
+                                
+                            </el-col>
+                            <span slot="footer" class="dialog-footer">
+                                <el-button>刷 新</el-button>
+                                <el-button>取 消</el-button>
+                                <el-button type="primary">确 定</el-button>
+                            </span>
+                        </el-dialog>
+                        <!-- dialog -->
                         <el-table 
                         v-loading="ouTableLoading"
                         :data="ouTableData" 
                         border 
                         style="width: 100%" 
                         stripe>
-                            <el-table-column label="序号">
-                                 <template slot-scope="scope">
-                                    {{scope.$index+1}}
-                                </template>
-                            </el-table-column>
 
                             <el-table-column prop="ouCode" label="组织编码"></el-table-column>
 
@@ -208,15 +226,87 @@
                         </el-pagination>   
                     </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - 分配功能- - - - - - - - - - - - - - - - - - - - -  -->
-                    <el-tab-pane label="分配功能" name="organization" class="getPadding" style="z-index:-1000">
+                    <el-tab-pane label="分配功能" name="fn" class="getPadding" style="z-index:-1000">
                         <el-col :span="24">
-                            <button class="erp_bt bt_add" @click="addColbank">
+                            <button class="erp_bt bt_add" @click="dialogFn = true">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">选取</span>
                             </button>
                         </el-col>
+
+                        <!-- dialogFn -->
+                        <el-dialog :visible.sync="dialogFn">
+                            <template slot="title">
+                                <span style="float:left;">添加功能</span>
+                                <div class="double_bt">
+                                    <template v-if="dialogFn_menuCheck">
+                                        <div class="menu_btn_choose" :class="{menu_btn_active : !dialogFn_menuCheck}" @click="dialogFn_nodeAdd">已选功能</div>
+                                        <div class="menu_btn_choose" :class="{menu_btn_active : dialogFn_menuCheck}">可选功能</div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="menu_btn_choose" :class="{menu_btn_active : !dialogFn_menuCheck}">已选功能</div>
+                                        <div class="menu_btn_choose" :class="{menu_btn_active : dialogFn_menuCheck}" @click="dialogFn_nodeDel">可选功能</div>
+                                    </template>
+                                </div>
+                            </template>
+                            <el-col :span="6" class="dialog_ dialog_l">
+                                <el-col :span="24">
+                                    <el-tabs v-model="fnActiveName">
+                                        <el-tab-pane label="按职责" name="duty" class="getPadding" style="z-index:-10">  
+                                            <el-tree
+                                                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                                                v-loading="fnTreeLoading" 
+                                                :data="fnTreeData"
+                                                :props="defaultProps"
+                                                node-key="id"
+                                                default-expand-all
+                                                ref="tree"
+                                                :expand-on-click-node="false"
+                                                @node-click="fnNodeClick">
+                                            </el-tree>  
+                                        </el-tab-pane>
+                                        <el-tab-pane label="按功能" name="function" class="getPadding" style="z-index:-10">
+                                        </el-tab-pane>            
+                                    </el-tabs>    
+                                </el-col>
+                            </el-col>
+                            <el-col :span="18" class="dialog_ dialog_r">
+                                <el-table 
+                                v-loading="fnTableLoading"
+                                :data="fnTableData" 
+                                border 
+                                style="width: 100%" 
+                                stripe>
+
+                                    <el-table-column prop="moduleName" label="模块名称"></el-table-column>
+
+                                    <el-table-column prop="permissionDtos" label="功能名称">
+                                        <template slot-scope="scope">
+                                            <a class="addRole" v-for="i in fnTableData[scope.$index].permissionDtos">{{i.displayName}}</a>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                                <el-pagination
+                                style="margin-top:20px;" 
+                                class="text-right" 
+                                background layout="total,prev, pager, next,jumper" 
+                                @current-change="fnHandleCurrentChange"
+                                :current-page="fnPageIndex"
+                                :page-size="fnOneItem"
+                                :total="fnTotalItem">
+                                </el-pagination>      
+                            </el-col>
+                            <span slot="footer" class="dialog-footer">
+                                <el-button>刷 新</el-button>
+                                <el-button>取 消</el-button>
+                                <el-button type="primary">确 定</el-button>
+                            </span>
+                            
+                        </el-dialog>
+                        <!-- dialogFn -->
+
                         <!-- tree -->
                         <el-col :span="5">
                             <el-tree
@@ -231,25 +321,28 @@
                                 @node-click="fnNodeClick">
                             </el-tree>
                         </el-col>
-                        <!-- table -->
+                        <!-- tree -->
                         <el-col :span="19">
+                            <!-- table -->
                             <el-table 
                             v-loading="fnTableLoading"
                             :data="fnTableData" 
                             border 
                             style="width: 100%" 
                             stripe>
-                                <el-table-column label="序号">
-                                    <template slot-scope="scope">
-                                        {{scope.$index+1}}
-                                    </template>
-                                </el-table-column>
 
                                 <el-table-column type="selection"></el-table-column>
 
                                 <el-table-column prop="moduleName" label="模块名称"></el-table-column>
 
-                                <el-table-column label="功能名称">
+                                <el-table-column prop="permissionDtos" label="功能名称">
+
+                                    <!-- <el-table-column v-for="i in moduleList" :label="i">
+                                        <template slot-scope="scope">
+                                            <el-checkbox v-if="x.displayName == i" v-for="x in fnTableData[scope.$index].permissionDtos" checked disabled></el-checkbox>
+                                            
+                                        </template>
+                                    </el-table-column> -->
                                     <template slot-scope="scope">
                                         <a class="addRole" v-for="i in fnTableData[scope.$index].permissionDtos">{{i.displayName}}</a>
                                     </template>
@@ -263,6 +356,9 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
+                            <!-- table -->
+
+
                             <el-pagination
                             style="margin-top:20px;" 
                             class="text-right" 
@@ -300,6 +396,7 @@ export default({
     data() {
         return{
             ifShow:true, 
+            moduleList:['新增','删除','修改'],
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -321,7 +418,7 @@ export default({
                 label: '选项3'
             }],
 
-            activeName: 'bank',//tabs标签页默认激活name
+            activeName: 'role',//tabs标签页默认激活name
 
             addData:{
                 "ouId": "",
@@ -344,6 +441,8 @@ export default({
             dialogRole_menuCheck:true,
             roleChecked:[],
             roleNochecked:[],
+            roleAllNode:[],//所有角色
+            checkedRoleCode:[],//只有当用户修改时此数据不为空，新增页面永远为空，存储用户已经选中所有信息
 // -------------分配组织-------------------
             ouTableData:[],//分配组织数据
             ouPageIndex:1,//分页的当前页码
@@ -364,6 +463,11 @@ export default({
             fnTableLoading:true,
             dialogFn:false,
             dialogFn_menuCheck:true,
+            roleChecked:[],
+            roleNochecked:[],
+            roleAllNode:[],//所有权限
+            checkedFnCode:[],
+            fnActiveName:'duty',
 // -------------tree-------------------
             fnTreeLoading:true,
             fnTreeData:[],
@@ -383,6 +487,22 @@ export default({
       _this.fnLoadTree();
     },
     methods:{
+        getRoleData(){
+           let _this=this;
+           _this.$axios.gets('/api/services/app/Role/Get',{id:_this.$route.params.id})
+           .then(function(res){console.log(res.result)
+                _this.addData= res.result
+                if(res.result.userCodes.length>0 && res.result.userCodes.length){
+                    _this.checkedRoleCode=res.result.userCodes;
+                }
+                if(res.result.permissions.length>0 && res.result.permissions.length){
+                    _this.checkedFnCode=res.result.permissions;
+                }
+                
+           },function(res){
+
+           })
+       }, 
         delThisRole(row){//关联用户 删除
             let _this=this;
             _this.$axios.deletes('/api/services/app/User/Delete',{id:row.id})
@@ -409,10 +529,31 @@ export default({
             _this.roleTableLoading=true
             _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:(_this.rolePage-1)*_this.roleOneItem,MaxResultCount:_this.roleOneItem})
             .then(function(res){
+                _this.roleNochecked=[]  
                 _this.roletableData=res.result.items;
                 _this.roleTotalItem=res.result.totalCount
                 _this.roleTotalPage=Math.ceil(res.result.totalCount/_this.roleOneItem);
                 _this.roleTableLoading=false;
+                $.each(_this.roletableData,function(index,value){
+                    _this.roleAllNode.push(value)//获取所有角色
+                })
+                _this.roleNochecked=_this.roleAllNode;
+                if(_this.roleChecked.length>0){
+                    _this.roleNochecked=_this.uniqueArrayRole(_this.allNode,_this.roleChecked)
+                }else{
+                    _this.roleNochecked=_this.roleAllNode
+                }    
+                // if(_this.roleAllNode.length>0 && _this.checkedRoleCode.length>0){
+                //     for(let i=0;i<_this.roleAllNode.length;i++){
+                //             for(let x=0;x<_this.checkedRoleCode.length;x++){
+                //                 if(_this.checkedRoleCode[x]==_this.roleAllNode[i].roleCode){
+                //                     let item=_this.roleAllNode[i]
+                //                     _this.roleChecked.push(item)//获取已选中的角色
+                //                     _this.roleNochecked.splice(i,1);//未选中角色
+                //                 }
+                //             }
+                //         }
+                // }
                 },function(res){
                 _this.roleTableLoading=false;
             })
@@ -434,11 +575,27 @@ export default({
             let _this=this;
             _this.fnTableLoading=true
             _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:(_this.fnPage-1)*_this.fnOneItem,MaxResultCount:_this.fnOneItem})
-            .then(function(res){ 
+            .then(function(res){
                 _this.fnTableData=res.result.items;
                 _this.fnTotalItem=res.result.totalCount
                 _this.fnTotalPage=Math.ceil(res.result.totalCount/_this.fnOneItem);
                 _this.fnTableLoading=false;
+                $.each(_this.fnTableData,function(index,val){
+                    val.permissionDtos=
+                    [{
+                        children:null,
+                        displayName:"新增",
+                        level:0,
+                        moduleName:"联系人管理",
+                        permissionName:"HKERP.SystemManagement.ContactManagement.ContactManagementAppService.Create"
+                    },{
+                        children:null,
+                        displayName:"修改",
+                        level:0,
+                        moduleName:"联系人管理",
+                        permissionName:"HKERP.SystemManagement.ContactManagement.ContactManagementAppService.Update"
+                    },]
+                })
                 },function(res){
                 _this.fnTableLoading=false;
             })
@@ -487,6 +644,20 @@ export default({
         fnNodeClick(data){
             let _this=this;
             _this.fnTableData=[];
+            data.permissionDtos=
+            [{
+                children:null,
+                displayName:"新增",
+                level:0,
+                moduleName:"联系人管理",
+                permissionName:"HKERP.SystemManagement.ContactManagement.ContactManagementAppService.Create"
+            },{
+                children:null,
+                displayName:"修改",
+                level:0,
+                moduleName:"联系人管理",
+                permissionName:"HKERP.SystemManagement.ContactManagement.ContactManagementAppService.Update"
+            },]
             _this.fnTableData.push(data)
             _this.fnTotalItem=_this.fnTableData.length;
         },
@@ -502,6 +673,18 @@ export default({
             _this.dialogRole_menuCheck=!_this.dialogRole_menuCheck
             $('.dialogRole .menu_item_add').css('display','none')
             $('.dialogRole .menu_item_del').css('display','block')
+        },
+        dialogFn_nodeAdd(){
+            let _this=this;
+            _this.dialogFn_menuCheck=!_this.dialogFn_menuCheck
+            $('.dialogFn .menu_item_add').css('display','block')
+            $('.dialogFn .menu_item_del').css('display','none')
+        },
+        dialogFn_nodeDel(){
+            let _this=this;
+            _this.dialogFn_menuCheck=!_this.dialogFn_menuCheck
+            $('.dialogFn .menu_item_add').css('display','none')
+            $('.dialogFn .menu_item_del').css('display','block')
         },
         addRole(x){
             let _this=this;
@@ -550,6 +733,23 @@ export default({
             if(flag){
                 _this.roleChecked.push(x);
             }
+        },
+        uniqueArrayRole(array1, array2){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i].roleCode == array2[j]) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
+                }
+            }
+            return result;
         },
         //---创建完成后刷新页面获取数据----------------------------------
         loadData:function(){
@@ -942,19 +1142,6 @@ export default({
       width: 423px;
   }
 
-
-.addRole{
-  display: inline-block;
-  padding: 1px 5px;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  margin-right: 10px;
-  cursor: pointer;
-  position: relative;
-}
-
 .menu_btn_active{
     background-color: #6699FF;
     color: #fff; 
@@ -1034,10 +1221,55 @@ export default({
 .menu_add:hover{
     opacity: 0.9;
 }
+.addRole{
+    text-align: center;
+    line-height: 35px;
+    display: inline-block;
+    width: 66px;
+    height: 35px;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    position: relative;
+}
+.addRole i{
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  color: #cccccc;
+}
+.addRole:hover i{
+  color:#f66;
+}
+
+.dialog_{
+    min-height: 540px;
+    padding: 15px 20px;
+    position: relative;
+}
+.dialog_l{
+    background-color: #F9F9F9;
+}
+.dialog_r{
+    background-color: #fff;
+}
   </style>
   
   <style>
   .roleDetail .el-tab-pane .bt_add{
       margin-bottom:15px;
   }
+  .roleDetail .el-dialog__headerbtn{
+    top:3px;
+    font-size:50px;
+}
+.roleDetail .el-dialog__body{
+  overflow: hidden;
+}
+.roleDetail .el-tree-node__content{
+    background-color: #F9F9F9;
+}
   </style>

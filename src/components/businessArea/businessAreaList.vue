@@ -29,7 +29,7 @@
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5 pr10 pl5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button @click="newadds" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                    <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_out">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
@@ -44,18 +44,25 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column label="序号">
-                                 <template slot-scope="scope">
-                                    {{scope.$index+1}}
-                                </template>
-                            </el-table-column>
                             <el-table-column prop="areaCode" label="业务地区编码"></el-table-column>
                             <el-table-column prop="areaName" label="业务地区名称"></el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="areaParentId" label="上级业务地区"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="status" label="允许使用"></el-table-column>
-                            <el-table-column label="创建时间(无字段)"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="createdBy" label="创建人"></el-table-column>
+                            <el-table-column label="创建时间">
+                                <template slot-scope="scope">
+                                    <el-date-picker 
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd" 
+                                    v-model="tableData[scope.$index].createdTime" 
+                                    type="datetime" 
+                                    readonly
+                                    align="center"
+                                    placeholder=""></el-date-picker>
+                                </template>
+                            </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
                                     <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
@@ -292,12 +299,6 @@
                  _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
                     _this.tableData=res.result.items;
-                     $.each( _this.tableData,function(index,value){//处理时间格式
-                     if(value.creationTime&&value.creationTime!=''){
-                        let creationTime=value.creationTime.slice(0,value.creationTime.indexOf(".")).replace("T"," ");
-                        _this.tableData[index].creationTime=creationTime;
-                     } 
-                    })
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
@@ -350,7 +351,7 @@
                 })
             },
             goDetail(){
-                this.$store.state.url='/OuManage/OuManageDetail/default'
+                this.$store.state.url='/businessArea/businessAreaDetail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
              handleSelectionChange(val) {//点击复选框选中的数据
@@ -488,11 +489,16 @@
                 })
             },
             showTable(event,node,data){
-                // console.log(data.id)
                 let _this=this;
-                _this.tableData=[];
-                _this.tableData.push(data)
-                _this.totalItem=_this.tableData.length;
+                 _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{id:data.id})
+                .then(function(res){
+                    _this.tableData=res.result;
+                    _this.totalItem=res.result.length;
+                    _this.tableLoading=false;
+                    },function(res){
+                    _this.tableLoading=false;
+                })
             },
             filterNode(value, data) {
                 if (!value) return true;

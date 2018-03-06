@@ -61,11 +61,6 @@
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column label="序号">
-                                 <template slot-scope="scope">
-                                    {{scope.$index+1}}
-                                </template>
-                            </el-table-column>
                             <el-table-column prop="userCode" label="用户编码"></el-table-column>
                             <el-table-column prop="displayName" label="用户名称"></el-table-column>
                             <el-table-column prop="phoneNumber" label="手机号"></el-table-column>

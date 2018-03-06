@@ -3,7 +3,7 @@ import router from '../router'
 import axios from 'axios'
 import qs from 'qs'
 
-axios.defaults.timeout = 5000;
+axios.defaults.timeout =50000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 axios.defaults.baseURL = 'http://192.168.100.107:8082';
 //console.log(store.state.accessToken)
@@ -45,19 +45,7 @@ axios.interceptors.request.use((config) => {
 //         })
 //     })
 //   }
-//   export function gets(url) {
-//     return new Promise((resolve, reject) => {
-//       axios.get(url)
-//         .then(response => {
-//           resolve(response.data);
-//         }, err => {
-//           reject(err);
-//         })
-//         .catch((error) => {
-//           reject(error)
-//         })
-//     })
-//   }
+
 //业务方法
   export default {
     posts(url, params) {
@@ -112,5 +100,4 @@ axios.interceptors.request.use((config) => {
           })
       })
     },
-    
   }

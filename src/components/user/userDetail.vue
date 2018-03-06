@@ -103,6 +103,7 @@
               <label><small>*</small>所属用户组</label>
               <el-select 
               class="userGroupId" 
+              placeholder=""
               @focus="showErrprTips"
               :class="{redBorder : validation.hasError('addData.userGroupId')}"
               v-model="addData.userGroupId">
@@ -113,6 +114,7 @@
               <label><small>*</small>所属组织</label>
               <el-select 
               class="ouId" 
+              placeholder=""
               @focus="showErrprTips"
               :class="{redBorder : validation.hasError('addData.ouId')}"
               v-model="addData.ouId">
@@ -123,6 +125,7 @@
               <label><small>*</small>身份类型</label>
               <el-select 
               class="userType" 
+              placeholder=""
               @focus="showErrprTips"
               :class="{redBorder : validation.hasError('addData.userType')}"
               v-model="addData.userType">
@@ -133,6 +136,7 @@
               <label><small>*</small>语种</label>
               <el-select 
               class="languageId" 
+              placeholder=""
               @focus="showErrprTips"
               :class="{redBorder : validation.hasError('addData.languageId')}"
               v-model="addData.languageId">
@@ -143,13 +147,13 @@
               <label><small>*</small>有效时间</label>
                <div class="rangeDate">
                   <el-date-picker
-                  v-model="time"
+                  v-model="rangeDate"
                   type="daterange"
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd" 
                   range-separator="to"
-                  start-placeholder="无字段"
-                  end-placeholder="无字段">
+                  start-placeholder=""
+                  end-placeholder="">
                   </el-date-picker>
               </div>
             </div>
@@ -157,6 +161,7 @@
               <label>状态</label>
               <el-select 
               class="status" 
+              placeholder=""
               @focus="showErrprTips"
               :class="{redBorder : validation.hasError('addData.status')}"
               v-model="addData.status">
@@ -182,7 +187,7 @@
                 v-model="addData.remark"
                 type="textarea"
                 :autosize="{ minRows: 4, maxRows: 10}"
-                placeholder="请输入内容">
+                placeholder="">
               </el-input>
             </div>
           </el-col>
@@ -226,7 +231,7 @@
                 </el-dialog>
           </el-col>
 
-          <el-col :span='24'>
+          <!-- <el-col :span='24'>
             <div class="bgcolor longWidth">
                 <label>&nbsp;</label>
                 <el-table 
@@ -252,7 +257,6 @@
                           <template slot-scope="scope">
                             <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
                             <el-button type="text" size="small"  @click="modify(scope.row)" >查看</el-button>
-                            <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                         </template>
                     </el-table-column>
                 </el-table>
@@ -266,7 +270,7 @@
                     :total="totalItem">
                 </el-pagination>   
             </div>
-          </el-col>
+          </el-col> -->
 
       </el-row>
   </div>
@@ -278,11 +282,7 @@
       return{
         dialogTableVisible:false,//控制对话框
         menuCheck:true,//未选功能，已选功能
-         valueDate:'',
          check:false,//是否授权
-         date:'',//有效时间
-         value:'',
-         time:'',
          contain: 
          [{ 
             value:0,
@@ -308,6 +308,7 @@
           "remark": "",
           "roleCodes": []
         },
+        rangeDate:[],//有效时间
         tableLoading:false,
         tableData:[],
         pageIndex:1,//分页的当前页码
@@ -390,13 +391,11 @@
           _this.tableLoading=true
           _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
           .then(function(res){ 
-              _this.tableData=res.result.items;
+            //   _this.tableData=res.result.items;
               _this.totalItem=res.result.totalCount
               _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
               _this.tableLoading=false;
-              $.each(_this.tableData,function(index,value){
-                _this.nochecked.push(value)
-              })
+              _this.nochecked=res.result.items;
               },function(res){
               _this.tableLoading=false;
           })
@@ -413,10 +412,10 @@
         let _this=this;
         if(_this.multipleSelection.length>0){//表格
             for(let i=0;i<_this.multipleSelection.length;i++){
-                _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
+                _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.multipleSelection[i].id})
                 .then(function(res){
-                    _this.loadTableData();
                     _this.open('删除成功','el-icon-circle-check','successERP');
+                    _this.loadTableData();
                 },function(res){
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
@@ -433,8 +432,9 @@
       },
       delThis(row){//删除行
           let _this=this;
-          _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:row.id})
+          _this.$axios.deletes('/api/services/app/Role/Delete',{id:row.id})
           .then(function(res){
+              _this.open('删除成功','el-icon-circle-check','successERP');
               _this.loadTableData();
           },function(res){
           })
@@ -508,8 +508,9 @@
                     $.each(_this.checked,function(index,value){
                         roles.push(value.roleCode)
                     })
-                    
                     _this.addData.roleCodes=roles;
+                    _this.addData.effectiveStart=_this.rangeDate[0];
+                    _this.addData.effectiveEnd=_this.rangeDate[1];
                     _this.$axios.posts('/api/services/app/User/Create',_this.addData)
                     .then(function(res){
                         _this.addData.id=res.result.id;
@@ -578,6 +579,8 @@
     margin-bottom: 10px;
 }
 .userDetail .bgcolor.longWidth .addRole{
+  text-align: center;
+  line-height: 35px;
   display: inline-block;
   width: 66px;
   height: 35px;
