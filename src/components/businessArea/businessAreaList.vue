@@ -50,8 +50,8 @@
                             <el-table-column prop="areaParentId" label="上级业务地区"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
                             <el-table-column prop="status" label="状态"></el-table-column>
-                            <el-table-column label="创建人"></el-table-column>
-                            <el-table-column label="创建时间(无字段)">
+                            <el-table-column prop="createdBy" label="创建人"></el-table-column>
+                            <el-table-column label="创建时间">
                                 <template slot-scope="scope">
                                     <el-date-picker 
                                     format="yyyy-MM-dd"
@@ -489,11 +489,16 @@
                 })
             },
             showTable(event,node,data){
-                // console.log(data.id)
                 let _this=this;
-                _this.tableData=[];
-                _this.tableData.push(data)
-                _this.totalItem=_this.tableData.length;
+                 _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{id:data.id})
+                .then(function(res){
+                    _this.tableData=res.result;
+                    _this.totalItem=res.result.length;
+                    _this.tableLoading=false;
+                    },function(res){
+                    _this.tableLoading=false;
+                })
             },
             filterNode(value, data) {
                 if (!value) return true;
