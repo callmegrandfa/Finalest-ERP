@@ -504,10 +504,12 @@
                         endTime.push(endmonth+'.'+endday);
                         self.addCol(startTime[0],endTime[0]);
                     }else if(self.monthNum>1){//多条月份数据时，则要判断月份和日期
-                        if(beginmonth<=10){//&&beginmonth ==12月份小于等于10的，要添0，且判断每月的天数
-                            if(beginmonth ==1&&beginmonth ==3&&beginmonth ==5&&beginmonth ==7&&beginmonth ==8&&beginmonth ==10){
-                                
+                        if(beginmonth<10){//&&beginmonth ==10&&beginmonth ==12月份小于等于10的，要添0，且判断每月的天数
+                            if(beginmonth ==1&&beginmonth ==3&&beginmonth ==5&&beginmonth ==7&&beginmonth ==8){
+                                beginmonth = 0+ beginmonth;
                             }
+                        }else if(beginmonth>=10){
+                            
                         }
                     }
                     
