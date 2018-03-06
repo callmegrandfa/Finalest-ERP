@@ -51,7 +51,7 @@
                         <div class="bgcolor">
                             <label>会计方案{{value}}</label>
                             <el-select v-model="value" 
-                                        placeholder="请选择会计方案"
+                                        placeholder=""
                                         :class="{redBorder : validation.hasError('addData.ouParentid')}"
                                         @focus="showErrprTips">
                                 <el-option v-for="item in options"
