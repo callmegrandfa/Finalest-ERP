@@ -87,30 +87,30 @@ const departmentList = () =>import(/* webpackChunkName: "group-businessArea" */'
 const dictionary = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionary')
 const dictionaryList = () =>import(/* webpackChunkName: "group-businessArea" */'../components/dictionary/dictionaryList')
 // 商品属性
-const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
-const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
-const commodity = () =>import('../components/commodityManagement/commodity')
-const commercial = () =>import('../components/commodityManagement/commercial')
-const commodityleimu = () =>import('../components/commodityManagement/commodityleimu')
-const Property = () =>import('../components/commodityManagement/Property')
-const commercialSpecification= () =>import('../components/commodityManagement/commercialSpecification')
-const commercialSpecificationDetails= () =>import('../components/commodityManagement/commercialSpecificationDetails')
-const CommodityCategories= () =>import('../components/commodityManagement/CommodityCategories')
-const CommodityCategoriesDetails= () =>import('../components/commodityManagement/CommodityCategoriesDetails')
-const classProperty= () =>import('../components/commodityManagement/classProperty')
-const classPropertyDetails= () =>import('../components/commodityManagement/classPropertyDetails')
-const unitOfMeasurement= () =>import('../components/commodityManagement/unitOfMeasurement')
-const commodityBrand= () =>import('../components/commodityManagement/commodityBrand')
-const commodityClassHeading= () =>import('../components/commodityManagement/commodityClassHeading')
-const commodityAttribute= () =>import('../components/commodityManagement/commodityAttribute')
-const specificationOfGoods= () =>import('../components/commodityManagement/specificationOfGoods')
-const specification= () =>import('../components/commodityManagement/specification')
-const specificationOfGoodsList= () =>import('../components/commodityManagement/specificationOfGoodsList')
-const specificationOfGoodsDetails= () =>import('../components/commodityManagement/specificationOfGoodsDetails')
-const classPropertyList= () =>import('../components/commodityManagement/classPropertyList')
-const commodityRecord= () =>import('../components/commodityManagement/commodityRecord')
-const Record= () =>import('../components/commodityManagement/Record')
-const commodityRecordDetails= () =>import('../components/commodityManagement/commodityRecordDetails')
+// const commodityProperty= () =>import('../components/commodityManagement/commodityProperty')
+// const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
+// const commodity = () =>import('../components/commodityManagement/commodity')
+// const commercial = () =>import('../components/commodityManagement/commercial')
+// const commodityleimu = () =>import('../components/commodityManagement/commodityleimu')
+// const Property = () =>import('../components/commodityManagement/Property')
+// const commercialSpecification= () =>import('../components/commodityManagement/commercialSpecification')
+// const commercialSpecificationDetails= () =>import('../components/commodityManagement/commercialSpecificationDetails')
+// const CommodityCategories= () =>import('../components/commodityManagement/CommodityCategories')
+//const CommodityCategoriesDetails= () =>import('../components/commodityManagement/CommodityCategoriesDetails')
+// const classProperty= () =>import('../components/commodityManagement/classProperty')
+// const classPropertyDetails= () =>import('../components/commodityManagement/classPropertyDetails')
+// const unitOfMeasurement= () =>import('../components/commodityManagement/unitOfMeasurement')
+ const commodityBrand= () =>import('../components/commodityManagement/commodityBrand')
+ const commodityClassHeading= () =>import('../components/commodityManagement/commodityClassHeading')
+// const commodityAttribute= () =>import('../components/commodityManagement/commodityAttribute')
+// const specificationOfGoods= () =>import('../components/commodityManagement/specificationOfGoods')
+// const specification= () =>import('../components/commodityManagement/specification')
+// const specificationOfGoodsList= () =>import('../components/commodityManagement/specificationOfGoodsList')
+// const specificationOfGoodsDetails= () =>import('../components/commodityManagement/specificationOfGoodsDetails')
+// const classPropertyList= () =>import('../components/commodityManagement/classPropertyList')
+// const commodityRecord= () =>import('../components/commodityManagement/commodityRecord')
+// const Record= () =>import('../components/commodityManagement/Record')
+// const commodityRecordDetails= () =>import('../components/commodityManagement/commodityRecordDetails')
 let redirectRouter=function(routerName) {//重定向
     let activeRouter=store.state.activeRouter;
     for(let i=0;i<activeRouter.length;i++){
@@ -248,12 +248,11 @@ children:[
   { path: '/menu', component: menu,name:'menu',redirect: function(){//菜单管理
     return redirectRouter('menu')
   },children:[
-      { path: '/menu/menuDetail/:id', component: menuDetail,name:'menuDetail' },
+      { path: '/menu/menuDetail/:id', component: menuDetail,name:'menuDetail'},
       { path: '/menu/menuList/:id', component: menuList,name:'menuList' },
       { path: '/menu/menuModify/:id', component: menuModify,name:'menuModify' },
       { path: '/menu/addLangulage/:id', component: addLangulage,name:'addLangulage' },
   ]},
-
   // { path: '/commodity', component: commodity,name:'commodity',redirect: function(){//商品属性
   //   let name='commodity';
   //   let activeRouter=store.state.activeRouter;
@@ -324,7 +323,7 @@ children:[
 
   // { path: '/unitOfMeasurement/:id', component: unitOfMeasurement,name:'unitOfMeasurement' },//计量单位
    { path: '/commodityBrand/:id', component: commodityBrand,name:'commodityBrand' },//商品品牌
-  // { path: '/commodityClassHeading/:id', component: commodityClassHeading,name:'commodityClassHeading' },//商品类目
+   { path: '/commodityClassHeading/:id', component: commodityClassHeading,name:'commodityClassHeading' },//商品类目
   // { path: '/commodityAttribute/:id', component: commodityAttribute,name:'commodityAttribute' },//商品属性
   // { path: '/specificationOfGoods/:id', component: specificationOfGoods,name:'specificationOfGoods' },//商品规格
 
