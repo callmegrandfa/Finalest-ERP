@@ -27,7 +27,7 @@
                 </el-col>   
             </el-col>
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5 pr10 pl5">
+                <el-row class="h48 pt5 pr10">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -188,7 +188,9 @@
             loadTableData(){//表格
                  let _this=this;
                  _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',
+                {SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting})
+                .then(function(res){ 
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
@@ -228,7 +230,6 @@
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                  _this.page=val;
-
                  if(_this.load){
                      _this.loadTableData();
                  }

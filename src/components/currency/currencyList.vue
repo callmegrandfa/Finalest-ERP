@@ -164,7 +164,7 @@
 
 <script>
     export default{
-        name:'currencyList',
+        name:'currencyList', 
         data(){
             return {
                 allList:[],//所有数据列表
@@ -209,8 +209,7 @@
             }
         },
         created:function(){
-            this.loadAllList();
-            
+            this.loadAllList();            
         },
         methods:{
         //---获取数据-------------------------------------------------------
@@ -382,112 +381,112 @@
 </script>
 
 <style scoped>
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
-.bg-white{
-    background: white;
-    border-radius: 3px;
-}
-.h48{
-    height: 48px;
-    line-height: 48px;
-    border-bottom: 1px solid #E4E4E4;
-}
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
+    .store-data-wrapper{
+        width: 100%;
+        height: auto;
+    }
+    .bg-white{
+        background: white;
+        border-radius: 3px;
+    }
+    .h48{
+        height: 48px;
+        line-height: 48px;
+        border-bottom: 1px solid #E4E4E4;
+    }
+    .mt5{
+        margin-top: 5px;
+    }
+    .mt10{
+        margin-top: 10px;
+    }
+    .mt20{
+        margin-top: 20px;
+    }
 
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
-}
-.pl15{
-    padding-left: 15px;
-}
-.pt10{
-    padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-}
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
-.text-right{
-    text-align: right;
-}
+    .ml10{
+        margin-left: 10px;
+    }
+    .pl10{
+        padding-left: 10px;
+    }
+    .pl15{
+        padding-left: 15px;
+    }
+    .pt10{
+        padding-top: 10px;
+    }
+    .pt5{
+        padding-top: 5px;
+    }
+    .pt20{
+        padding-top: 20px;
+    }
+    .pb10{
+        padding-bottom: 10px;
+    }
+    .pr10{
+        padding-right: 10px;
+    }
+    .h30{
+        height: 30px;
+        line-height: 30px;
+    }
+    .fs14{
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.349019607843137);
+    }
+    .fs12{
+        font-size: 12px;
+    }
+    .border1{
+        border: 1px solid #cccccc;
+        border-radius: 3px;
+    }
+    .btn{
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        background: rgba(130, 170, 252, 1);
+        color: white;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .rbtn{
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        background: rgba(242, 242, 242, 1);
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .search-btn{
+        display: inline-block;
+        width: 87px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 3px;
+        background: #4A6997;
+        color: white;
+        cursor: pointer;
+    }
+    .open{
+        display: inline-block;
+        width: 49px;
+        height: 22px;
+        line-height: 22px;
+        border: 1px solid #cccccc;
+        color: #cccccc;
+        text-align: center;
+        cursor: pointer;
+    }
+    .text-right{
+        text-align: right;
+    }
 </style>
 
 <style>

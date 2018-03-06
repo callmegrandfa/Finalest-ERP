@@ -85,12 +85,28 @@
                     <el-col :span="24" class="pt10">
                         <div class="bgcolor">
                             <label>开始日期</label>
-                            <el-input placeholder="请录入开始日期" v-model="createAccountParams.beginDate"></el-input>
+                            <el-date-picker 
+                            class="beginDate datepicker" 
+                            @focus="showErrprTips1"
+                            :class="{redBorder : validation.hasError('createAccountParams.beginDate')}"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd" 
+                            v-model="createAccountParams.beginDate" 
+                            type="date" 
+                            placeholder="开始日期"></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
                             <label>结束日期</label>
-                            <el-input placeholder="结束日期" v-model="createAccountParams.endDate"></el-input>
+                            <el-date-picker 
+                            class="beginDate datepicker" 
+                            @focus="showErrprTips1"
+                            :class="{redBorder : validation.hasError('createAccountParams.endDate')}"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd" 
+                            v-model="createAccountParams.endDate" 
+                            type="date" 
+                            placeholder="结束日期"></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
@@ -106,7 +122,7 @@
                     </el-col>
 
                     <el-col :span="3" class="mt10 mb10 pl80">
-                        <div>
+                        <div @click="createMonth">
                             <span class="makeMonth">生成会计月份</span>
                         </div>
                     </el-col>
@@ -241,6 +257,8 @@
         data(){
             return {
                 allList:[],
+                monthNum:'',//生成的月份条数
+                monthRow:[],//生成的月份数组
                 x:0,//增行的下标
                 rows:[],//增行的数组
                 addList:[],//新增上传的数组
@@ -255,8 +273,8 @@
                     "accperiodSchemeID": 1,
                     "periodYear": '',
                     "periodNum": '',
-                    "beginDate": "2018-02-07T02:52:59.933Z",
-                    "endDate": "2018-02-07T02:52:59.933Z",
+                    "beginDate": "",
+                    "endDate": "",
                     "remark": "",
                     "accperiodContents": []
                 },   
@@ -428,10 +446,78 @@
                 }
                 
             },
+            createMonth:function(){//生成月份
+                let self = this;
+                console.log(self.createAccountParams.beginDate)
+                if(self.createAccountParams.beginDate!=''&&self.createAccountParams.endDate!=''){
+                    // 2018-03-05  2018-05-10
+                    let beginmonth = self.createAccountParams.beginDate.split('-')[1].split('');
+                    if(beginmonth[0]==0){
+                        beginmonth = beginmonth[1]
+                    }else{
+                        beginmonth = beginmonth[0]+beginmonth[1]
+                    }
+                    // console.log(beginmonth)
+                    let beginday = self.createAccountParams.beginDate.split('-')[2].split('');
+                    if(beginday[0]==0){
+                        beginday = beginday[1]
+                    }else{
+                        beginday = beginday[0]+beginday[1]
+                    }
+                    // console.log(beginday)
+
+                    let endmonth = self.createAccountParams.endDate.split('-')[1].split('');
+                    if(endmonth[0]==0){
+                        endmonth = endmonth[1]
+                    }else{
+                        endmonth = endmonth[0]+endmonth[1]
+                    }
+                    // console.log(endmonth)
+                    let endday = self.createAccountParams.endDate.split('-')[2].split('');
+                    if(endday[0]==0){
+                        endday = endday[1]
+                    }else{
+                        endday = endday[0]+endday[1]
+                    }
+                    // console.log(endday)
+                    self.monthNum = (endmonth - beginmonth)+1;
+                    console.log(self.monthNum)
+                    //  monthNum:'',//生成的月份条数
+                    // monthRow:[],//生成的月份数组
+                    let ar = [];
+                    let startTime = [];//展示的新增开始月份
+                    let endTime = [];//展示的新增结束月份
+                    if(self.monthNum==1){//如果只生成一条月份，均为当月
+                        if(beginmonth<10){
+                            beginmonth = 0+beginmonth;
+                        };
+                        if(beginday<10){
+                            beginday = 0+beginday;
+                        };
+                        startTime.push(beginmonth+'.'+beginday);
+                        if(endmonth<10){
+                            endmonth = 0+endmonth;
+                        }
+                        if(endday<10){
+                            endday = 0+endday;
+                        };
+                        endTime.push(endmonth+'.'+endday);
+                        self.addCol(startTime[0],endTime[0]);
+                    }else if(self.monthNum>1){//多条月份数据时，则要判断月份和日期
+                        if(beginmonth<=10){//&&beginmonth ==12月份小于等于10的，要添0，且判断每月的天数
+                            if(beginmonth ==1&&beginmonth ==3&&beginmonth ==5&&beginmonth ==7&&beginmonth ==8&&beginmonth ==10){
+                                
+                            }
+                        }
+                    }
+                    
+                }
+
+            },
             //-------------------------------------------------------
           
             //---表格编辑--------------------------------------------
-            addCol:function(){//增行
+            addCol:function(startTime,endTime){//增行
                 let self = this;
                 self.x++;
                 let newCol = 'newCol'+self.x;
@@ -449,8 +535,8 @@
                         "ouID": 2,
                         "accperiodId": '',
                         "periodMonth": '',
-                        "effectiveStart": "2018-02-07T05:27:49.732Z",
-                        "effectiveEnd": "2018-02-07T05:27:49.732Z",
+                        "effectiveStart": startTime,
+                        "effectiveEnd": endTime,
                         "remark": "",
                         "isDeleted": false,
                         "deletedBy": "神奇女侠",

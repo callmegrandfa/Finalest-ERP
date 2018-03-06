@@ -67,8 +67,7 @@ export default {
         secondLevel1:[{
                 name:'租户管理',
                 thirdInfo:[
-                    {name:'租户管理',address:'tenantManagement'},
-                    {name:'租户管理-添加',address:'tenantManagementAdd'},
+                    {name:'租户管理',address:'tenant'},
                 ]
             },{
                 name:'集团管理',

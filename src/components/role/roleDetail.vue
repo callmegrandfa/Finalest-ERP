@@ -49,19 +49,19 @@
                 </div> -->
                 <div class="bgcolor">
                     <label><small>*</small>角色编码</label>
-                    <el-input placeholder="请录入角色编码"></el-input>
+                    <el-input v-model="addData.roleCode" placeholder="请录入角色编码"></el-input>
                 </div> 
 
 
                 <div class="bgcolor">
                     <label><small>*</small>角色名称</label>
-                    <el-input placeholder="请输入角色名称"></el-input>
+                    <el-input v-model="addData.displayName" placeholder="请输入角色名称"></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label><small>*</small>所属组织</label>
-                    <el-select v-model="createContactParams.contactWorkPropertyId" placeholder="请选择所属组织">
+                    <el-select v-model="addData.ouId" placeholder="请选择所属组织">
                         <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
                     </el-select>
                 </div>
@@ -69,13 +69,15 @@
 
                 <div class="bgcolor">
                     <label><small>*</small>状态</label>
-                    <el-select v-model="createContactParams.contactWorkPropertyId" placeholder="请选择状态">
+                    <el-select v-model="addData.status" placeholder="请选择状态">
                         <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor moreWidth">
                     <label>备注</label>
-                    <el-input v-model="createContactParams.remark" placeholder="备注"></el-input>
+                    <el-input 
+                    v-model="addData.remark"
+                    placeholder="备注"></el-input>
                 </div>
             </el-col>
         </el-row>
@@ -88,90 +90,74 @@
                <el-tabs v-model="activeName">
 <!-- - - - - - - - - - - - - - - - - - - - 关联用户- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="关联用户" name="bank" class="getPadding" style="z-index:-10">
-                        <button class="erp_bt bt_add" @click="addColbank">
+                        <button class="erp_bt bt_add"  @click="dialogRole = true">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
-                        <el-table :data="bankData" stripe border style="width: 100%">
-                            <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.settlementCurrencyId" 
-                                        type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                        <!-- dialog -->
+                        <el-dialog :visible.sync="dialogRole" class="dialogRole">
+                            <template slot="title">
+                                <span style="float:left;">选取角色</span>
+                                <div class="double_bt">
+                                    <template v-if="dialogRole_menuCheck">
+                                        <div class="menu_btn_choose" :class="{menu_btn_active : !dialogRole_menuCheck}" @click="dialogRole_nodeAdd">已选用户</div>
+                                        <div class="menu_btn_choose" :class="{menu_btn_active : dialogRole_menuCheck}">未选用户</div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="menu_btn_choose" :class="{menu_btn_active : !dialogRole_menuCheck}">已选用户</div>
+                                        <div class="menu_btn_choose" :class="{menu_btn_active : dialogRole_menuCheck}" @click="dialogRole_nodeDel">未选用户</div>
+                                    </template>
+                                </div>
+                            </template>
+                            <el-col :span="24">
+                                <div class="menu_item_wapper menu_item_add">
+                                    <span class="menu_item" v-for="x in roleChecked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
+                                </div>
+                                <div class="menu_item_wapper menu_item_del">
+                                    <span class="menu_item" v-for="x in roleNochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
+                                </div>
+                                <!-- <el-col :span="24" class="load_more">
+                                    <button>加载更多</button>
+                                </el-col> -->
+                            </el-col>
+                        </el-dialog>
+                        <el-table 
+                        v-loading="roleTableLoading"
+                        :data="roletableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe>
+                           <el-table-column label="序号">
+                                 <template slot-scope="scope">
+                                    {{scope.$index+1}}
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="accountNo" label="银行账号" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.accountNo" 
-                                        type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="userCode" label="用户编码"></el-table-column>
 
-                            <el-table-column prop="accountName" label="银行账户" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.accountName" 
-                                        type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="displayName" label="用户名称"></el-table-column>
 
-                            <el-table-column prop="openingBank" label="开户银行" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.openingBank" 
-                                        type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="ouId" label="所属组织"></el-table-column>
 
-                            <el-table-column prop="contactPerson" label="联系人" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
-                                        type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="phone" label="联系电话" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.phone" 
-                                        type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="ifDefault" label="默认">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="bankData[scope.$index].ifDefault"></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label='操作'>
-                                <template slot-scope="scope" >
-                                    <el-button v-on:click="handleBankDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                             <el-table-column label="操作">
+                                 <template slot-scope="scope">
+                                     <el-button type="text" size="small"  @click="delThisRole(scope.row)">删除</el-button>
+                                    <el-button type="text" size="small"  @click="seeThisRole(scope.row)" >查看</el-button>
+                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                 </template>
                             </el-table-column>
                         </el-table>
+                        <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total,prev, pager, next,jumper" 
+                        @current-change="roleHandleCurrentChange"
+                        :current-page="rolePageIndex"
+                        :page-size="roleOneItem"
+                        :total="roleTotalItem">
+                        </el-pagination>   
                     </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - 分配组织- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="分配组织" name="address" class="getPadding" style="z-index:-1000">
@@ -182,210 +168,124 @@
                             <span class="btDetail">选取</span>
                         </button>
                         
-                
-                        <el-table :data="addressData" stripe border style="width: 100%">
-                            <el-table-column prop="addressType" label="地址类型" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.addressType" 
-                                        type="text"    
-                                        @change='handleAddressChange(scope.$index,scope.row)'
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                        <el-table 
+                        v-loading="ouTableLoading"
+                        :data="ouTableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe>
+                            <el-table-column label="序号">
+                                 <template slot-scope="scope">
+                                    {{scope.$index+1}}
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="completeAddress" label="供货地址" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.addressType" 
-                                        type="text"    
-                                        @change='handleAddressChange(scope.$index,scope.row)'
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="ouCode" label="组织编码"></el-table-column>
 
-                            <el-table-column prop="completeAddress" label="省" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.completeAddress" 
-                                        type="text"    
-                                        @change='handleAddressChange(scope.$index,scope.row)'
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="basOuTypes" label="组织类型"></el-table-column>
 
-                            <el-table-column prop="id" label="市" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.id" 
-                                        type="text"    
-                                        @change='handleAddressChange(scope.$index,scope.row)'
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="createdBy" label="授权人"></el-table-column>
 
-                            <el-table-column prop="phone" label="区" width="180">
+                            <el-table-column label="授权时间">
                                 <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.phone" 
-                                        type="text"    
-                                        @change='handleAddressChange(scope.$index,scope.row)'
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="contactPerson" label="联系人" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
-                                        type="text"    
-                                        @change='handleAddressChange(scope.$index,scope.row)'
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="contactPerson" label="联系电话" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
-                                        type="text"    
-                                        @change='handleAddressChange(scope.$index,scope.row)'
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="ifDefault" label="默认">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="addressData[scope.$index].ifDefault"></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label='操作'>
-                                <template slot-scope="scope" >
-                                    <el-button v-on:click="handleAddressDelete(scope.$index)" type="text" size="small">删除</el-button>
+                                    <el-date-picker
+                                    v-model="ouTableData[scope.$index].createdTime"
+                                    format="yyyy.MM.dd"
+                                    type="datetime" 
+                                    readonly
+                                    align="center"></el-date-picker>
                                 </template>
                             </el-table-column>
                         </el-table>
+                        <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total,prev, pager, next,jumper" 
+                        @current-change="ouHandleCurrentChange"
+                        :current-page="ouPageIndex"
+                        :page-size="ouOneItem"
+                        :total="ouTotalItem">
+                        </el-pagination>   
                     </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - 分配功能- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="分配功能" name="organization" class="getPadding" style="z-index:-1000">
-                        <button class="erp_bt bt_add" @click="addColbank">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_add.png">
-                            </div>
-                            <span class="btDetail">选取</span>
-                        </button>
-                        
-                
-                        <el-table :data="ouData" stripe border style="width: 100%">
-                            <el-table-column prop="addressType" label="地址类型" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.addressType" 
-                                        type="text"    
-                                        @change='handleOuChange(scope.$index,scope.row)'
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                        <el-col :span="24">
+                            <button class="erp_bt bt_add" @click="addColbank">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_add.png">
+                                </div>
+                                <span class="btDetail">选取</span>
+                            </button>
+                        </el-col>
+                        <!-- tree -->
+                        <el-col :span="5">
+                            <el-tree
+                                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                                v-loading="fnTreeLoading" 
+                                :data="fnTreeData"
+                                :props="defaultProps"
+                                node-key="id"
+                                default-expand-all
+                                ref="tree"
+                                :expand-on-click-node="false"
+                                @node-click="fnNodeClick">
+                            </el-tree>
+                        </el-col>
+                        <!-- table -->
+                        <el-col :span="19">
+                            <el-table 
+                            v-loading="fnTableLoading"
+                            :data="fnTableData" 
+                            border 
+                            style="width: 100%" 
+                            stripe>
+                                <el-table-column label="序号">
+                                    <template slot-scope="scope">
+                                        {{scope.$index+1}}
+                                    </template>
+                                </el-table-column>
 
-                            <el-table-column prop="completeAddress" label="供货地址" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.addressType" 
-                                        type="text"    
-                                        @change='handleOuChange(scope.$index,scope.row)'
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                                <el-table-column type="selection"></el-table-column>
 
-                            <el-table-column prop="completeAddress" label="省" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.completeAddress" 
-                                        type="text"    
-                                        @change='handleOuChange(scope.$index,scope.row)'
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/>  
-                                </template>
-                            </el-table-column>
+                                <el-table-column prop="moduleName" label="模块名称"></el-table-column>
 
-                            <el-table-column prop="id" label="市" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.id" 
-                                        type="text"    
-                                        @change='handleOuChange(scope.$index,scope.row)'
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/>  
-                                </template>
-                            </el-table-column>
+                                <el-table-column label="功能名称">
+                                    <template slot-scope="scope">
+                                        <a class="addRole" v-for="i in fnTableData[scope.$index].permissionDtos">{{i.displayName}}</a>
+                                    </template>
+                                </el-table-column>
 
-                            <el-table-column prop="phone" label="区" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.phone" 
-                                        type="text"    
-                                        @change='handleOuChange(scope.$index,scope.row)'
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="contactPerson" label="联系人" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
-                                        type="text"    
-                                        @change='handleOuChange(scope.$index,scope.row)'
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/>  
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="contactPerson" label="联系电话" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
-                                        type="text"    
-                                        @change='handleOuChange(scope.$index,scope.row)'
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="ifDefault" label="默认">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="ouData[scope.$index].ifDefault"></el-checkbox>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column label='操作'>
-                                <template slot-scope="scope" >
-                                    <el-button v-on:click="handleOuDelete(scope.$index)" type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button type="text" size="small"  @click="delThisFn(scope.row)">删除</el-button>
+                                        <!-- <el-button type="text" size="small"  @click="seeThisRole(scope.row)" >查看</el-button> -->
+                                        <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <el-pagination
+                            style="margin-top:20px;" 
+                            class="text-right" 
+                            background layout="total,prev, pager, next,jumper" 
+                            @current-change="fnHandleCurrentChange"
+                            :current-page="fnPageIndex"
+                            :page-size="fnOneItem"
+                            :total="fnTotalItem">
+                            </el-pagination>       
+                        </el-col>
                     </el-tab-pane>
                 </el-tabs>
             </el-col>
         </div>
-    </el-row>    
+    </el-row>
  <el-row>
     <el-col :span="22" class="auditInformation getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="创建人" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="创建时间" disabled="disabled"></el-date-picker></div>
-            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="修改人" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="修改时间" disabled="disabled"></el-date-picker></el-input></div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" disabled="disabled"></el-input></div>
+            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" disabled="disabled"></el-input></div>
+            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" disabled="disabled"></el-date-picker></div>
             <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
             <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
             <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
@@ -399,8 +299,7 @@
 export default({
     data() {
         return{
-            ifShow:true,
-            showCompany:false,//初始默认公司计信息状态展开  
+            ifShow:true, 
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -410,28 +309,6 @@ export default({
                 finishTime:"",
                 finishName:"",
             },
-
-            ou: [{//所属组织
-                    ou:'1',
-                    label: '恒康'
-                }, {
-                    ou:'2',
-                    label: '恒大'
-                }, {
-                    ou:'3',
-                    label: '361度'
-                }],
-
-            customerType:[{//客户类型
-                valueCustomerType:'1',
-                label: '选项1'
-            }, {
-                valueCustomerType:'2',
-                label:'选项2' 
-            }, {
-                valueCustomerType:'3',
-                label:'选项3' 
-            }],
 
             customerNature:[{//客户性质
                 valueNature:'1',
@@ -444,151 +321,236 @@ export default({
                 label: '选项3'
             }],
 
-            customerGrade:[{//客户等级
-                valueGrade:'1',
-                label: '选项1'
-            }, {
-                valueGrade:'2',
-                label: '选项2'
-            }, {
-                valueGrade:'3',
-                label: '选项3'
-            }],
-
-            sort:[{//客户类型
-                valueSort:'选项1',
-                label: '1'
-            }, {
-                valueSort:'选项2',
-                label: '2'
-            }, {
-                valueSort:'选项3',
-                label: '3'
-            }],
-            
-            ficaOu :[{//对应财务组织
-                valueFinance:'1',
-                label: '选项1'
-            }, {
-                valueFinance:'2',
-                label: '选项2'
-            }, {
-                valueFinance:'3',
-                label: '选项3'
-            }],
-
-            opArea:[{//业务地区
-                valueAreaBusiness:'1',
-                label: '选项1'
-            }, {
-                valueAreaBusiness:'2',
-                label: '选项2'
-            }, {
-                valueAreaBusiness:'3',
-                label: '选项3'
-            }],
-
-            country :[{//国家/地区
-                valueCountry:'1',
-                label: '选项1'
-            }, {
-                valueCountry:'2',
-                label: '选项2'
-            }, {
-                valueCountry:'3',
-                label: '选项3'
-            }],
-            adArea :[{//行政地区
-                adArea:'1',
-                label: '选项1'
-            }, {
-                adArea:'2',
-                label: '选项2'
-            }, {
-                adArea:'3',
-                label: '选项3'
-            }],
             activeName: 'bank',//tabs标签页默认激活name
-            supplier:true,//同为供应商
-            credit :true,//信用管理
 
-            createContactParams:{//创建客户资料参数
-                'groupId':1,//集团Id
-                'ouId':'',//组织单元id
-                'contact':'',//供应商编码
-                'contactName':'',//客户名称
-                'contactFullName':'',//供应商全称
-                'mnemonic':'',//助记码
-                'contactClassId':'',//客户分类
-                'contactWorkPropertyId':'',//客户性质
-                'contactGradeId':'',//客户/供应商等级ID,
-                'isSupplier':0,//是否为供应商
-                'isCustomer':0,//是否客户
-                'ficaOuId':'',//财务组织单元 ID
-                'taxCode':'',//纳税登记号
-                'opAreaId':'',//业务地区
-                'adAreaId':'',//行政地区
-                'legalPerson':'',//法人代表
-                'regAddress':'',// 注册地址
-                'manager':'',//负责人
-                'phone':'',//电话
-                'remark':'',//备注
-                'creditMgt':true,//信用管理
-                },
-
-            createBankParams:{//创建银行的参数
-                "groupId": 1,
-                "contactId":'',
-                "settlementCurrencyId": '',
-                "accountNo": "",
-                "accountName": "",
-                "openingBank": '',
-                "contactPerson": '',
-                "phone": '',
-                "isDefault": true
-            },    
-
-            createAddressParams:{//创建地址的参数
-                "groupId": 1,
-                "contactId": '',
-                "addressType": '',
-                "addressId": '',
-                "completeAddress": "",
-                "contactPerson": "",
-                "phone": "",
-                "isDefault": true
+            addData:{
+                "ouId": "",
+                "roleCode": "",
+                "displayName": "",
+                "status": "",
+                "remark": "",
+                "permissions": [],
+                "userCodes": []
             },
-            
-            createOuParams:{//创建组织参数
-                "groupId": 1,
-                "contactId": '',
-                "ouId": '',
-                "transport_method_id": '',
-                "is_default": true
+// -------------关联用户-------------------
+            roletableData:[],//关联用户数据
+            rolePageIndex:1,//分页的当前页码
+            roleTotalPage:0,//当前分页总数
+            roleOneItem:10,//每页有多少条信息
+            rolePage:1,//当前页
+            roleTotalItem:0,//总共有多少条消息
+            roleTableLoading:true,
+            dialogRole:false,
+            dialogRole_menuCheck:true,
+            roleChecked:[],
+            roleNochecked:[],
+// -------------分配组织-------------------
+            ouTableData:[],//分配组织数据
+            ouPageIndex:1,//分页的当前页码
+            ouTotalPage:0,//当前分页总数
+            ouOneItem:10,//每页有多少条信息
+            ouPage:1,//当前页
+            ouTotalItem:0,//总共有多少条消息
+            ouTableLoading:true,
+            dialogOu:false,
+// -------------分配功能-------------------
+            fnTableData:[],//分配功能数据
+            fnTableData:[],//分配组织数据
+            fnPageIndex:1,//分页的当前页码
+            fnTotalPage:0,//当前分页总数
+            fnOneItem:10,//每页有多少条信息
+            fnPage:1,//当前页
+            fnTotalItem:0,//总共有多少条消息
+            fnTableLoading:true,
+            dialogFn:false,
+            dialogFn_menuCheck:true,
+// -------------tree-------------------
+            fnTreeLoading:true,
+            fnTreeData:[],
+            defaultProps: {
+                children: 'childNodes',
+                label: 'moduleName',
+                id:'id',
             },
-            bankData:[],//银行数据列表，开始为空
-            updataBankList:[],//需要修改的银行信息
-            addBankList:[],//需要添加的银行信息
 
-            addressData:[],//地址数据列表，开始为空
-            updataAddressList:[],//修改的银行信息
-            addAddressList:[],//需要添加的地址信息
-
-            ouData:[],//组织数据列表，开始为空
-            updataOuList:[],//修改的组织信息
-            addOuList:[],//需要添加的组织信息
-
-            x:0,
-            y:0,
-            z:0,
-            xrows:[],
-            yrows:[],
-            zrows:[],
-            backId:'',
-            customerData:'',//根据id获得的客户信息
         }
     },
+    created () {
+      let _this=this;
+      _this.loadRoleTable();
+      _this.loadOuTable();
+      _this.loadFnTable();
+      _this.fnLoadTree();
+    },
     methods:{
+        delThisRole(row){//关联用户 删除
+            let _this=this;
+            _this.$axios.deletes('/api/services/app/User/Delete',{id:row.id})
+            .then(function(res){
+                _this.loadRoleTable();
+            },function(res){
+            })
+        },
+        seeThisRole(row){//关联用户 查看
+            this.$store.state.url='/user/userModify/'+row.id
+            this.$router.push({path:this.$store.state.url})
+        },
+        delThisFn(row){//分配功能 删除
+            let _this=this;
+            _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',{id:row.id})
+            .then(function(res){
+                _this.loadFnTable();
+                _this.fnLoadTree();
+            },function(res){
+            })
+        },
+        loadRoleTable(){//获取关联用户数据
+            let _this=this;
+            _this.roleTableLoading=true
+            _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:(_this.rolePage-1)*_this.roleOneItem,MaxResultCount:_this.roleOneItem})
+            .then(function(res){
+                _this.roletableData=res.result.items;
+                _this.roleTotalItem=res.result.totalCount
+                _this.roleTotalPage=Math.ceil(res.result.totalCount/_this.roleOneItem);
+                _this.roleTableLoading=false;
+                },function(res){
+                _this.roleTableLoading=false;
+            })
+        },
+        loadOuTable(){//获取分配组织数据
+            let _this=this;
+            _this.ouTableLoading=true
+            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:_this.ouOneItem})
+            .then(function(res){ 
+                _this.ouTableData=res.result.items;
+                _this.ouTotalItem=res.result.totalCount
+                _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
+                _this.ouTableLoading=false;
+                },function(res){
+                _this.ouTableLoading=false;
+            })
+        },
+        loadFnTable(){//获取分配功能数据
+            let _this=this;
+            _this.fnTableLoading=true
+            _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:(_this.fnPage-1)*_this.fnOneItem,MaxResultCount:_this.fnOneItem})
+            .then(function(res){ 
+                _this.fnTableData=res.result.items;
+                _this.fnTotalItem=res.result.totalCount
+                _this.fnTotalPage=Math.ceil(res.result.totalCount/_this.fnOneItem);
+                _this.fnTableLoading=false;
+                },function(res){
+                _this.fnTableLoading=false;
+            })
+        },
+        roleHandleCurrentChange(val){//页码改变
+            let _this=this;
+            _this.rolePage=val;
+            _this.loadRoleTable();
+        },
+        ouHandleCurrentChange(val){//页码改变
+            let _this=this;
+            _this.ouPage=val;
+            _this.loadOuTable();
+        },
+        fnHandleCurrentChange(val){//页码改变
+            let _this=this;
+            _this.fnPage=val;
+            _this.loadFnTable();
+        },
+
+        fnLoadTree(){
+            let _this=this;
+            _this.fnTreeLoading=true;
+            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
+            .then(function(res){
+                _this.fnTreeData=res
+                _this.fnTreeLoading=false;
+                _this.loadIcon()
+            },function(res){
+                _this.fnTreeLoading=false;
+            })
+        },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        fnNodeClick(data){
+            let _this=this;
+            _this.fnTableData=[];
+            _this.fnTableData.push(data)
+            _this.fnTotalItem=_this.fnTableData.length;
+        },
+
+        dialogRole_nodeAdd(){
+            let _this=this;
+            _this.dialogRole_menuCheck=!_this.dialogRole_menuCheck
+            $('.dialogRole .menu_item_add').css('display','block')
+            $('.dialogRole .menu_item_del').css('display','none')
+        },
+        dialogRole_nodeDel(){
+            let _this=this;
+            _this.dialogRole_menuCheck=!_this.dialogRole_menuCheck
+            $('.dialogRole .menu_item_add').css('display','none')
+            $('.dialogRole .menu_item_del').css('display','block')
+        },
+        addRole(x){
+            let _this=this;
+            let flag=false;
+            if(_this.roleNochecked.length<=0){
+                flag=true;
+            }else{
+                flag=false;
+                $.each(_this.roleNochecked,function(index,value){
+                    if(x==value){
+                        flag=false;
+                    }else{
+                        flag=true;
+                    }
+                })
+            }
+            $.each(_this.roleChecked,function(index,value){
+                if(x==value){
+                    _this.roleChecked.splice(index,1)
+                }
+            })
+            if(flag){
+                _this.roleNochecked.push(x);
+            }
+        },
+        delRole(x){
+            let _this=this;
+            let flag=false;
+            if(_this.roleChecked.length<=0){
+                flag=true;
+            }else{
+                flag=false;
+                $.each(_this.roleChecked,function(index,value){
+                    if(x==value){
+                        flag=false;
+                    }else{
+                        flag=true;
+                    }
+                })
+            }
+            $.each(_this.roleNochecked,function(index,value){
+                if(x==value){
+                    _this.roleNochecked.splice(index,1)
+                }
+            })
+            if(flag){
+                _this.roleChecked.push(x);
+            }
+        },
         //---创建完成后刷新页面获取数据----------------------------------
         loadData:function(){
             let self = this;
@@ -850,17 +812,6 @@ export default({
                 console.log(self.updataOuList)
             }
         },
-        handleOuDelete:function(index){//地址表格内删除操作
-            let self = this;
-            self.ouData.splice(index,1);
-            self.addOuList.splice(index,1);
-            // this.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:row.id}).then(function(res){
-            //     console.log(res);
-            //     self.open('删除地址资料成功','el-icon-circle-check','successERP');
-            // }),function(res){
-            //     self.open('删除地址资料失败','el-icon-error','faildERP');
-            // };
-        },
         //------------------------------------------------------------
 
         //---控制跳转------------------------------------------------
@@ -984,5 +935,109 @@ export default({
     background-color: #ececec;
 }
 
+.roleDetail .bgcolor.moreWidth{
+     width: 505px;
+ }
+  .roleDetail .bgcolor.moreWidth .el-input{
+      width: 423px;
+  }
+
+
+.addRole{
+  display: inline-block;
+  padding: 1px 5px;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.menu_btn_active{
+    background-color: #6699FF;
+    color: #fff; 
+}
+/* 头部已选功能，未选功能 */
+.double_bt{
+    width: 200px;
+    height: 30px;
+    border: 1px solid #6699FF;
+    color: #6699FF;
+    background-color: transparent;
+    font-size: 12px;
+    border-radius: 3px;
+    margin: auto;
+}
+.menu_btn_choose{
+    width: 100px;
+    height: 30px;
+    float: left;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+}
+.menu_btn_active{
+    background-color: #6699FF;
+    color: #fff; 
+}
+.show{
+    display: block;
+}
+.menu_box{
+    display: none;
+}
+.menu_item_wapper{
+    display: block;
+}
+.menu_item_del{
+    display: block;
+}
+.menu_item_add{
+    display: none;
+}
+.load_more{
+    text-align: center;
+}
+.menu_item{
+    text-align: center;
+    display: block;
+    width: 190px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 13px;
+    color: #666666;
+    position: relative;
+    float: left;
+    margin-right: 20px;
+    border: 1px solid #33CCCC;
+    border-radius: 5px;
+    background-color: transparent;
+    margin-bottom: 15px;
+}
+.menu_add{
+    text-align: center;
+    display: block;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: -12.5px;
+    top: 16px;
+    background-color: #69f;
+    color: #fff;
+    font-size: 24px;
+    border-radius: 50%;
+    line-height: 24px;
+    cursor: pointer;
+}
+.menu_add:hover{
+    opacity: 0.9;
+}
   </style>
   
+  <style>
+  .roleDetail .el-tab-pane .bt_add{
+      margin-bottom:15px;
+  }
+  </style>
