@@ -6,7 +6,15 @@
                 <el-col :span="24" class="border-left" id="bg-white" style="background-color:rgb(249,249,249)">
                     <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                      <el-row>
-                        <tree :datc="componyTree"></tree> 
+                        <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
+                             :data="classTree"
+                             :props="defaultProps"
+                             node-key="id"
+                             default-expand-all
+                             ref="tree"
+                             :expand-on-click-node="false"
+                             :filter-node-method="filterNode">
+                        </el-tree>
                         <el-row class="biao pb10" style="background:#fff">
                             <el-col :span="24" >
                                 <el-table :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
@@ -161,6 +169,14 @@ import Tree from '../../base/tree/tree'
                     }],
 
                 value: '',
+                classTree:  [//类目tree
+                    // {areaName:'根目录',id:'0',items:[]},
+                ],
+                defaultProps: {
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
                 tableData: [{
                                  date: '1',
                                  name: '1',
@@ -243,7 +259,7 @@ import Tree from '../../base/tree/tree'
             content1.style.minHeight=height1+'px';
         },
         created:function(){       
-           
+           this.loadTree();
         },
         methods:{
             handleSelectionChange(val) {//点击复选框选中的数据
@@ -267,6 +283,32 @@ import Tree from '../../base/tree/tree'
                 }
             },
 
+        },
+        loadTree(){//获取tree data
+                let _this=this;
+                _this.treeLoading=true;
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+                .then(function(res){
+                    console.log(res)
+                    _this.componyTree=res.result
+                    _this.treeLoading=false;
+                    _this.loadIcon();
+               },function(res){
+                   _this.treeLoading=false;
+               })
+            },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
         },
         components:{
             Query,
