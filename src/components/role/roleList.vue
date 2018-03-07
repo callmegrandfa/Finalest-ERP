@@ -15,14 +15,33 @@
                 <!-- <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
                     <el-select  v-model="searchData.OuType">
-                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div> -->
                 <div class="mt20 bgcolor smallBgcolor"><label>角色编码</label><el-input v-model="searchData.roleCode" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>角色名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属组织</label><el-input v-model="searchData.ouId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>上级用户组(无字段)</label><el-input v-model="searchData.UserType" placeholder="无字段"></el-input></div>
+                <div class="bgcolor smallBgcolor">
+                    <label>所属组织</label>
+                    <!-- <el-input v-model="searchData.ouId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.ouId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>上级用户组(无字段)</label>
+                    <el-select  v-model="searchData.UserType" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -33,7 +52,7 @@
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                    <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
                     <button class="erp_bt bt_out bt_width">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
@@ -72,7 +91,7 @@
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                     <el-button type="text" size="small"  @click="delThis(scope.row)">删除</el-button>
+                                     <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
                                     <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                 </template>
@@ -113,32 +132,32 @@
                 searchDataClick:{},
                 tableSearchData:{},
                 options: [{
-                    basOuTypes: '1',
-                    label: '1'
+                    value: '1',
+                    label: '选项1'
                     }, {
-                    basOuTypes: '2',
-                    label: '2'
+                    value: '2',
+                    label: '选项2'
                     }, {
-                    basOuTypes: '3',
-                    label: '3'
+                    value: '3',
+                    label: '选项3'
                     }, {
-                    basOuTypes: '4',
-                    label: '4'
+                    value: '4',
+                    label: '选项4'
                     }, {
-                    basOuTypes: '5',
-                    label: '5'
+                    value: '5',
+                    label: '选项5'
                     }, {
-                    basOuTypes: '6',
-                    label: '6'
+                    value: '6',
+                    label: '选项6'
                     }, {
-                    basOuTypes: '7',
-                    label: '7'
+                    value: '7',
+                    label: '选项7'
                     }, {
-                    basOuTypes: '8',
-                    label: '8'
+                    value: '8',
+                    label: '选项8'
                     }, {
-                    basOuTypes: '9',
-                    label: '9'
+                    value: '9',
+                    label: '选项9'
                     }],
                 tableData:[],
 
@@ -235,32 +254,57 @@
              handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
             },
-            delRow(){
+            confirm(){
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            if(_this.load){
-                                _this.loadTableData();
-                            }else{
-                                _this.SimpleSearch();
-                            }
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }
-                };
+                    _this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                    }).then(() => {//确认
+                        _this.delRow()
+                    }).catch(() => {//取消
+                    });
+                }   
+            },
+            delRow(){
+                let _this=this;
+                for(let i=0;i<_this.multipleSelection.length;i++){
+                    _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
+                    .then(function(res){
+                        if(_this.load){
+                            _this.loadTableData();
+                        }else{
+                            _this.SimpleSearch();
+                        }
+                        _this.open('删除成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        _this.open('删除失败','el-icon-error','faildERP');
+                    })
+                }
             },
             see(row){
                 this.$store.state.url='/role/roleModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
+            confirmDelThis(row){
+                let _this=this;
+                _this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {//确认
+                    _this.delThis(row)
+                }).catch(() => {//取消
+                });
+            },
             delThis(row){//删除行
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/Role/Delete',{id:row.id})
                 .then(function(res){
+                    _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
             })

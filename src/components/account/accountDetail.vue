@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>会计方案{{value}}</label>
+                            <label>会计方案</label>
                             <el-select v-model="value" 
                                         placeholder=""
                                         :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -64,7 +64,7 @@
 
                         <div class="bgcolor">
                             <label><small>*</small>会计年份</label>
-                            <el-input placeholder="请录入会计年份" 
+                            <el-input placeholder="" 
                                       @focus="showErrprTips"
                                       class="periodYear"
                                       :class="{redBorder : validation.hasError('createAccountParams.periodYear')}"
@@ -73,7 +73,7 @@
 
                         <div class="bgcolor">
                             <label><small>*</small>期间个数</label>
-                            <el-input placeholder="请录入期间个数" 
+                            <el-input placeholder="" 
                                       @focus="showErrprTips"
                                       class="periodNum"
                                       :class="{redBorder : validation.hasError('createAccountParams.periodNum')}"
@@ -93,7 +93,7 @@
                             value-format="yyyy-MM-dd" 
                             v-model="createAccountParams.beginDate" 
                             type="date" 
-                            placeholder="开始日期"></el-date-picker>
+                            placeholder=""></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
@@ -106,12 +106,12 @@
                             value-format="yyyy-MM-dd" 
                             v-model="createAccountParams.endDate" 
                             type="date" 
-                            placeholder="结束日期"></el-date-picker>
+                            placeholder=""></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
                             <label>备注</label>
-                            <el-input placeholder="请录入备注" 
+                            <el-input placeholder="" 
                                       v-model="createAccountParams.remark"
                                       @focus="showErrprTips"
                                       class="remark"
@@ -342,16 +342,23 @@
             //---提示错误----------------------------------------------
             showErrprTips(e){
                 $('.tipsWrapper').each(function(){
-                // console.log($(e.target).parent('.el-input'))
                     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')
-                        
                     }else{
                         $(this).removeClass('display_block')
                     }
                 })
             },
-            showErrprTips1(e){
+            showErrprTipsSelect(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsRangedate(e){
                 $('.tipsWrapper').each(function(){
                     if($(e.$el).hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')
@@ -359,6 +366,15 @@
                         $(this).removeClass('display_block')
                     }
                 })
+            },
+            showErrprTipsTextArea(e){
+                    $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                    })
             },
             //------------------------------------------------------
             //---保存------------------------------------------------

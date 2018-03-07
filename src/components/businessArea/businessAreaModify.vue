@@ -61,7 +61,7 @@
                 
                 
             </el-col>
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>业务地区名称</label>
@@ -74,7 +74,7 @@
                 </div>    
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>负责人</label>
@@ -88,7 +88,7 @@
                 </div>   
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>上级业务地区</label>
@@ -97,14 +97,17 @@
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
                         v-model="addData.areaParentId">
-                            <el-option v-for="item in contains" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <el-option v-for="item in contains" :key="item.value" :label="item.label" :value="item.value">
+                                <span style="float: left">{{ item.label }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.areaParentId') }}</div>
                 </div>   
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>备注</label>
@@ -121,7 +124,7 @@
                 </div>       
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
@@ -130,14 +133,17 @@
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
                         v-model="addData.status">
-                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                                <span style="float: left">{{ item.label }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
@@ -149,7 +155,7 @@
                 </div>    
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建时间</label>
@@ -185,10 +191,10 @@
             label: '无'
          },{ 
             value:1,
-            label: '1'
+            label: '选项1'
          }, {
             value:2,
-            label: '2'
+            label: '选项2'
          }],
         addData:{
         "groupId": 1,
@@ -249,22 +255,31 @@
     methods: {
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
             })
         },
-      showErrprTipsTextArea(e){
+        showErrprTipsSelect(e){
             $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
             })
-      },
+        },
+        showErrprTipsRangedate(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
       open(tittle,iconClass,className) {
           this.$notify({
           position: 'bottom-right',

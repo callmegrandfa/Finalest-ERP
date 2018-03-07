@@ -119,7 +119,7 @@
             </div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptParentid') }}</div>
             
-            <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" placeholder=""></el-input></div>
+            <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" :class="{redBorder : validation.hasError('dialogData.remark')}" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
             
             <div class="bgcolor smallBgcolor">

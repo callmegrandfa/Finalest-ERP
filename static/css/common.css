@@ -6,6 +6,9 @@
 .display_block{
   display: block;
 }
+.block{
+  display: none;
+}
 .sideWidth
 /* dialog */
 .el-dialog{
@@ -91,6 +94,9 @@
     float: left;
     overflow: hidden;
     margin-right: 5px;
+}
+.bgcolor .redBorder.el-date-editor{
+  border-color: #f66;
 }
 .bgcolor .redBorder .el-input__inner{
   border-color: #f66;
@@ -901,6 +907,6 @@ end-placeholder="结束日期">
 }
 .abimg{
   position: absolute;
-  left: 0;
+  left: -48px;
   top: 0;
 }

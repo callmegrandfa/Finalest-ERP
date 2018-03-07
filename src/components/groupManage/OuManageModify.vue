@@ -115,14 +115,16 @@
                 <div class="bgcolor">
                     <label>上级业务单元</label>
                     <el-select class="ouParentid"
-                    @focus="showErrprTips"
+                    @focus="showErrprTipsSelect"
                      :class="{redBorder : validation.hasError('addData.ouParentid')}" 
                      v-model="addData.ouParentid">
                         <el-option 
                         v-for="item in higherUnit" 
-                        :key="item.valueHigherUnit" 
+                        :key="item.value" 
                         :label="item.label" 
-                        :value="item.valueHigherUnit">
+                        :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -130,7 +132,7 @@
                     <label>公司成立时间</label>
                     <el-date-picker 
                     class="regtime datepicker" 
-                    @focus="showErrprTips1"
+                    @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.regtime')}"
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd" 
@@ -142,15 +144,17 @@
                     <label>本位币种id</label>
                     <el-select 
                     class="baseCurrencyId" 
-                    @focus="showErrprTips"
+                    @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.baseCurrencyId')}" 
                     v-model="addData.baseCurrencyId">
                         <el-option 
                         v-for="item in money" 
-                        :key="item.baseCurrencyId" 
+                        :key="item.value" 
                         :label="item.label" 
-                        :value="item.baseCurrencyId" 
+                        :value="item.value" 
                         placeholder="请选择本位币种">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -158,15 +162,17 @@
                     <label>所属公司</label>
                     <el-select 
                     class="companyOuId" 
-                    @focus="showErrprTips"
+                    @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.companyOuId')}" 
                     v-model="addData.companyOuId">
                         <el-option 
                         v-for="item in company" 
-                        :key="item.valueCompany" 
+                        :key="item.value" 
                         :label="item.label" 
-                        :value="item.valueCompany" 
+                        :value="item.value" 
                         placeholder="请选择所属公司">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -211,15 +217,17 @@
                     <label>用户状态</label>
                     <el-select 
                     class="status" 
-                    @focus="showErrprTips"
+                    @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.status')}" 
                     v-model="addData.status">
                         <el-option 
                         v-for="item in state" 
-                        :key="item.valueState" 
+                        :key="item.value" 
                         :label="item.label" 
-                        :value="item.valueState" 
+                        :value="item.value" 
                         placeholder="请选择用户状态">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -274,14 +282,16 @@
                                     <label>上级公司</label>
                                     <el-select 
                                     class="ouCompanyParentid" 
-                                    @focus="showErrprTips"
+                                    @focus="showErrprTipsSelect"
                                     :class="{redBorder : validation.hasError('addData.ouCompanyParentid')}" 
                                     v-model="addData.ouCompanyParentid">
                                         <el-option 
                                         v-for="item in preCompany" 
-                                        :key="item.valueCo" 
+                                        :key="item.value" 
                                         :label="item.label" 
-                                        :value="item.valueCo">
+                                        :value="item.value">
+                                            <span style="float: left">{{ item.label }}</span>
+                                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -364,68 +374,68 @@ export default({
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
             higherUnit: [{//上级单元数据
-                valueHigherUnit: '0',
+                value: '0',
                 label: '361度'
             }, {
-                valueHigherUnit: '1',
+                value: '1',
                 label: '恒康'
             }, {
-                valueHigherUnit: '2',
+                value: '2',
                 label: '红旗连锁'
             }],
             money: [{//本位币种
-                baseCurrencyId:'0',
+                value:'0',
                 label: 'RMB'
             }, {
-                baseCurrencyId:'1',
+                value:'1',
                 label: '美元'
             }, {
-                baseCurrencyId:'2',
+                value:'2',
                 label: '英镑'
             },{
-                baseCurrencyId:'3',
+                value:'3',
                 label: '日元'
             }, {
-                baseCurrencyId:'4',
+                value:'4',
                 label: '韩元'
             }, {
-                baseCurrencyId:'5',
+                value:'5',
                 label: '越南盾'
             },{
-                baseCurrencyId:'6',
+                value:'6',
                 label: '泰铢'
             }, {
-                baseCurrencyId:'7',
+                value:'7',
                 label: '港币'
             }, {
-                baseCurrencyId:'8',
+                value:'8',
                 label: '银元'
             }],
             company: [{ //   所属公司数据
-                valueCompany:'0',
+                value:'0',
                 label: '0'
             }, {
-                valueCompany:'1',
+                value:'1',
                 label: '1'
             }, {
-                valueCompany:'2',
+                value:'2',
                 label: '2'
             }],
             preCompany: [{ //   上级公司
-                valueCo:0,
+                value:0,
                 label: '0'
             }, {
-                valueCo:1,
+                value:1,
                 label: '1'
             }, {
-                valueCo:2,
+                value:2,
                 label: '2'
             }],
             state: [{ //启用状态数据
-                valueState:'0',
+                value:'0',
                 label: '启用'
             }, {
-                valueState:'1',
+                value:'1',
                 label: '停用'
             }],
             isSave:true,//是否可以保存
@@ -511,7 +521,7 @@ export default({
                 entityProperty :1,//实体属性 '未返回字段'
                 status: res.result.status,//启用状态存在
                 remark: res.result.remark ,//备注存在
-                basOuTypes:[0],//组织职能
+                basOuTypes:res.result.basOuTypes,//组织职能
                 isGroupCompany:true ,//'未返回字段'
                 ouCompanyParentid: 0 ,//上级公司组织ID '未返回字段'
                 legalPerson:'ad' ,//法人代表 '未返回字段'
@@ -546,9 +556,17 @@ export default({
                     $(this).removeClass('display_block')
                 }
             })
-
         },
-        showErrprTips1(e){
+        showErrprTipsSelect(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsRangedate(e){
             $('.tipsWrapper').each(function(){
                 if($(e.$el).hasClass($(this).attr('name'))){
                     $(this).addClass('display_block')
@@ -557,6 +575,15 @@ export default({
                 }
             })
         },
+      showErrprTipsTextArea(e){
+            $('.tipsWrapper').each(function(){
+              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                  $(this).addClass('display_block')
+              }else{
+                  $(this).removeClass('display_block')
+              }
+            })
+      },
         back(){
             this.$store.state.url='/OuManage/OuManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -669,7 +696,7 @@ export default({
                 entityProperty : '',//实体属性
                 status: '',//启用状态存在
                 remark: '' ,//备注存在
-                basOuTypes: [0],//组织职能
+                basOuTypes: [],//组织职能
                 isGroupCompany:false ,//
                 ouCompanyParentid: '' ,//上级公司组织ID
                 legalPerson:'',//法人代表

@@ -51,7 +51,7 @@
                         <div class="bgcolor">
                             <label>会计方案{{value}}</label>
                             <el-select v-model="value" 
-                                       placeholder="请选择会计方案"
+                                       placeholder=""
                                        :class="{redBorder : validation.hasError('addData.ouParentid')}"
                                        @focus="showErrprTips">
                                 <el-option v-for="item in options"
@@ -64,7 +64,7 @@
                         
                         <div class="bgcolor">
                             <label><small>*</small>会计年份</label>
-                            <el-input placeholder="请录入会计年份" 
+                            <el-input placeholder="" 
                                       @focus="showErrprTips"
                                       class="periodYear"
                                       :class="{redBorder : validation.hasError('accountData.periodYear')}"
@@ -75,7 +75,7 @@
                     
                         <div class="bgcolor">
                             <label><small>*</small>期间个数</label>
-                            <el-input placeholder="请录入期间个数" 
+                            <el-input placeholder="" 
                                       @focus="showErrprTips"
                                       class="periodNum"
                                       :class="{redBorder : validation.hasError('accountData.periodNum')}"
@@ -86,21 +86,21 @@
                     <el-col :span="24">
                         <div class="bgcolor">
                             <label>开始日期</label>
-                            <el-input placeholder="请录入开始日期" 
+                            <el-input placeholder="" 
                                         v-model="accountData.beginDate" 
                                         @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>结束日期</label>
-                            <el-input placeholder="结束日期" 
+                            <el-input placeholder="" 
                                         v-model="accountData.endDate" 
                                         @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>备注</label>
-                            <el-input placeholder="请录入备注" 
+                            <el-input placeholder="" 
                                       @focus="showErrprTips"
                                       class="remark"
                                       :class="{redBorder : validation.hasError('accountData.remark')}"
@@ -379,17 +379,24 @@
         methods:{
             //---提示错误----------------------------------------------
             showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                // console.log($(e.target).parent('.el-input'))
+                $('.tipsWrapper').each(function(){
                     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')
-                        
                     }else{
                         $(this).removeClass('display_block')
                     }
                 })
             },
-            showErrprTips1(e){
+            showErrprTipsSelect(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsRangedate(e){
                 $('.tipsWrapper').each(function(){
                     if($(e.$el).hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')
@@ -397,6 +404,15 @@
                         $(this).removeClass('display_block')
                     }
                 })
+            },
+            showErrprTipsTextArea(e){
+                    $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                    })
             },
             //------------------------------------------------------
             //---加载数据--------------------------------------------

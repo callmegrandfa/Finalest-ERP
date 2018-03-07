@@ -88,7 +88,7 @@ export default {
   },
   methods:{
       switch(url){
-            this.$router.push({name:url});//点击切换路由
+            this.$router.push(url);//点击切换路由
         },
       loginAjax:function(){
           let _this=this;
@@ -133,7 +133,7 @@ export default {
             }) 
       },
       goRegister:function(){
-          this.switch('/register');
+          this.$router.push('/register');//点击切换路由
       }
    },
 }
