@@ -18,8 +18,6 @@
                         <el-row class="biao pb10" style="background:#fff">
                             <el-col :span="24" >
                                 <el-table :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
-                                    <el-table-column prop="date" label="序号" width="60">
-                                    </el-table-column>
                                     <el-table-column type="selection" label="" width="50">
                                     </el-table-column>
                                     <el-table-column prop="address" label="上级类目">
