@@ -224,7 +224,7 @@
                     </el-select>
                 </div>
                 <div class="bgcolor">
-                    <label>客户类型{{createContactParams.isCustomer}}</label>
+                    <label>客户类型</label>
                     <el-select v-model='createContactParams.isCustomer'
                                placeholder=""
                                class="isCustomer"
@@ -273,7 +273,7 @@
                 <div class="bgcolor">
                     <!-- 创建参数中没有 -->
                     <label>国家/地区</label>
-                    <el-select placeholder="">
+                    <el-select placeholder="" v-model='ctest'>
                         <el-option v-for="item in country" 
                                    :key="item.valueCountry" 
                                    :label="item.label" 
@@ -724,13 +724,13 @@ export default({
 
             customerType:[{//客户类型
                 valueCustomerType:'1',
-                label: '选项1'
+                label: '客户类型1'
             }, {
                 valueCustomerType:'2',
-                label:'选项2' 
+                label:'客户类型2' 
             }, {
                 valueCustomerType:'3',
-                label:'选项3' 
+                label:'客户类型3' 
             }],
 
             customerNature:[{//客户性质
@@ -768,26 +768,26 @@ export default({
             
             ficaOu :[{//对应财务组织
                 valueFinance:'1',
-                label: '选项1'
+                label: '财务组织1'
             }, {
                 valueFinance:'2',
-                label: '选项2'
+                label: '财务组织2'
             }, {
                 valueFinance:'3',
-                label: '选项3'
+                label: '财务组织3'
             }],
 
             opArea:[{//业务地区
                 valueAreaBusiness:'1',
-                label: '选项1'
+                label: '业务地区1'
             }, {
                 valueAreaBusiness:'2',
-                label: '选项2'
+                label: '业务地区2'
             }, {
                 valueAreaBusiness:'3',
-                label: '选项3'
+                label: '业务地区3'
             }],
-
+            ctest:'1',
             country :[{//国家/地区
                 valueCountry:'1',
                 label: '选项1'
@@ -972,15 +972,15 @@ export default({
                 }
             })
         },
-      showErrprTipsTextArea(e){
-            $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
-            })
-      },
+        showErrprTipsTextArea(e){
+                $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+                })
+        },
         //-------------------------------------------------------------
         //---创建完成后刷新页面获取数据----------------------------------
         loadData:function(){
