@@ -51,7 +51,7 @@
                         <div class="bgcolor">
                             <label>会计方案{{value}}</label>
                             <el-select v-model="value" 
-                                        placeholder="请选择会计方案"
+                                        placeholder=""
                                         :class="{redBorder : validation.hasError('addData.ouParentid')}"
                                         @focus="showErrprTips">
                                 <el-option v-for="item in options"
@@ -341,7 +341,7 @@
         methods:{
             //---提示错误----------------------------------------------
             showErrprTips(e){
-            $('.tipsWrapper').each(function(){
+                $('.tipsWrapper').each(function(){
                 // console.log($(e.target).parent('.el-input'))
                     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')
