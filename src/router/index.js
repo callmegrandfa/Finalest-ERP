@@ -179,6 +179,14 @@ const commodityClassHeading = () =>
     // const commodityRecord= () =>import('../components/commodityManagement/commodityRecord')
     // const Record= () =>import('../components/commodityManagement/Record')
     // const commodityRecordDetails= () =>import('../components/commodityManagement/commodityRecordDetails')
+
+const staff = () =>
+    import ('../components/staffInfo/staff')
+const staffList = () =>
+    import ('../components/staffInfo/staffList')
+const staffDetail = () =>
+    import ('../components/staffInfo/staffDetail')
+
 let redirectRouter = function(routerName) { //重定向
     let activeRouter = store.state.activeRouter;
     for (let i = 0; i < activeRouter.length; i++) {
@@ -571,30 +579,30 @@ const routes = [
             //     { path: '/tenant/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
             //     { path: '/tenant/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
             // ]},
-            // {
-            //     path: '/staff',
-            //     component: staff,
-            //     name: 'staff',
-            //     redirect: function() { //职员资料组
-            //         let name = 'staff';
+            {
+                path: '/staff',
+                component: staff,
+                name: 'staff',
+                redirect: function() { //职员资料组
+                    let name = 'staff';
 
-            //         let activeRouter = store.state.activeRouter;
+                    let activeRouter = store.state.activeRouter;
 
-            //         for (let i = 0; i < activeRouter.length; i++) {
-            //             console.log(activeRouter[i].name)
-            //             if (activeRouter[i].name == name) {
+                    for (let i = 0; i < activeRouter.length; i++) {
+                        console.log(activeRouter[i].name)
+                        if (activeRouter[i].name == name) {
 
-            //                 return activeRouter[i].url;
+                            return activeRouter[i].url;
 
-            //                 break;
-            //             }
-            //         }
-            //     },
-            //     children: [
-            //         { path: '/staff/staffList/:id', component: staffList, name: 'staffList' },
-            //         { path: '/staff/staffDetail/:id', component: staffDetail, name: 'staffDetail' },
-            //     ]
-            // },
+                            break;
+                        }
+                    }
+                },
+                children: [
+                    { path: '/staff/staffList/:id', component: staffList, name: 'staffList' },
+                    { path: '/staff/staffDetail/:id', component: staffDetail, name: 'staffDetail' },
+                ]
+            },
         ]
     },
     { path: '*', component: page404 },
