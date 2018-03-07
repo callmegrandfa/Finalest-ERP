@@ -16,6 +16,8 @@
                     <label><small>*</small>组织类型</label>
                     <el-select  v-model="searchData.OuType" placeholder="">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -148,32 +150,32 @@
                 searchDataClick:{},
                 tableSearchData:{},
                 options: [{
-                    basOuTypes: '1',
-                    label: '1'
+                    value: '1',
+                    label: '选项1'
                     }, {
-                    basOuTypes: '2',
-                    label: '2'
+                    value: '2',
+                    label: '选项2'
                     }, {
-                    basOuTypes: '3',
-                    label: '3'
+                    value: '3',
+                    label: '选项3'
                     }, {
-                    basOuTypes: '4',
-                    label: '4'
+                    value: '4',
+                    label: '选项4'
                     }, {
-                    basOuTypes: '5',
-                    label: '5'
+                    value: '5',
+                    label: '选项5'
                     }, {
-                    basOuTypes: '6',
-                    label: '6'
+                    value: '6',
+                    label: '选项6'
                     }, {
-                    basOuTypes: '7',
-                    label: '7'
+                    value: '7',
+                    label: '选项7'
                     }, {
-                    basOuTypes: '8',
-                    label: '8'
+                    value: '8',
+                    label: '选项8'
                     }, {
-                    basOuTypes: '9',
-                    label: '9'
+                    value: '9',
+                    label: '选项9'
                     }],
                 tableData:[],
 

@@ -62,7 +62,11 @@
                     <p class="msgDetail">错误提示：{{ validation.firstError('addData.remark') }}</p>
                 </div>
             </div>
-
+            <div class="tipsWrapper" name="dateRange">
+                <div class="errorTips" :class="{block : !validation.hasError('dateRange')}">
+                    <p class="msgDetail">错误提示：{{ validation.firstError('dateRange') }}</p>
+                </div>
+            </div>
             <div class="bgcolor"><label>
               <small>*</small>用户编码</label>
               <el-input 
@@ -103,48 +107,62 @@
               <label><small>*</small>所属用户组</label>
               <el-select 
               class="userGroupId" 
-              @focus="showErrprTips"
+              @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.userGroupId')}"
               placeholder="无字段"
               v-model="addData.userGroupId">
-                  <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                      <span style="float: left">{{ item.label }}</span>
+                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                  </el-option>
               </el-select>
             </div>
             <div class="bgcolor">
               <label><small>*</small>所属组织</label>
               <el-select 
               class="ouId" 
-              @focus="showErrprTips"
+              @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.ouId')}"
               v-model="addData.ouId">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                    <span style="float: left">{{ item.label }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                </el-option>
               </el-select>
             </div>
             <div class="bgcolor">
               <label><small>*</small>身份类型</label>
               <el-select 
               class="userType" 
-              @focus="showErrprTips"
+              @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.userType')}"
               v-model="addData.userType">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                    <span style="float: left">{{ item.label }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                </el-option>
               </el-select>
             </div>
             <div class="bgcolor">
               <label><small>*</small>语种</label>
               <el-select 
               class="languageId" 
-              @focus="showErrprTips"
+              @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.languageId')}"
               v-model="addData.languageId">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                    <span style="float: left">{{ item.label }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                </el-option>
               </el-select>
             </div>
             <div class="bgcolor">
               <label><small>*</small>有效时间</label>
                <div class="rangeDate">
                   <el-date-picker
-                  v-model="rangeDate"
+                  v-model="dateRange"
+                  class="dateRange"
+                  @focus="showErrprTipsRangedate"
                   type="daterange"
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd" 
@@ -158,10 +176,13 @@
               <label>状态</label>
               <el-select 
               class="status" 
-              @focus="showErrprTips"
+              @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.status')}"
               v-model="addData.status">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                    <span style="float: left">{{ item.label }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                </el-option>
               </el-select>
             </div>
           </el-col>
@@ -281,13 +302,13 @@
          contain: 
          [{ 
             value:0,
-            label: '0'
+            label: '选项1'
          },{ 
             value:1,
-            label: '1'
+            label: '选项2'
          }, {
             value:2,
-            label: '2'
+            label: '选项3'
          }],
         addData:{
           "userCode": "",
@@ -303,7 +324,7 @@
           "remark": "",
           "roleCodes": [],
         },
-        rangeDate:[],//有效时间
+        dateRange:[],//有效时间
         tableLoading:false,
         tableData:[],
         pageIndex:1,//分页的当前页码
@@ -353,6 +374,9 @@
       },
       'addData.remark': function (value) {//备注
          return this.Validator.value(value).required().maxLength(200);
+      },
+      'dateRange':function(value){
+          return this.Validator.value(value).required();
       }
     },
     created:function(){       
@@ -392,7 +416,7 @@
                     "id": res.result.id,
                 }
                 if(res.result.effectiveStart && res.result.effectiveEnd){
-                    _this.rangeDate=[res.result.effectiveStart,res.result.effectiveEnd]
+                    _this.dateRange=[res.result.effectiveStart,res.result.effectiveEnd]
                 }
                 
                 // console.log(res.result)
@@ -406,11 +430,29 @@
        }, 
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsSelect(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsRangedate(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
             })
         },
       showErrprTipsTextArea(e){
@@ -577,8 +619,8 @@
                         roles.push(value.roleCode)
                     })
                     _this.addData.roleCodes=roles;
-                    _this.addData.effectiveStart=_this.rangeDate[0];
-                    _this.addData.effectiveEnd=_this.rangeDate[1];
+                    _this.addData.effectiveStart=_this.dateRange[0];
+                    _this.addData.effectiveEnd=_this.dateRange[1];
                     _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
                         _this.checkedRoleCode=[]

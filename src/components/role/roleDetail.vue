@@ -62,7 +62,10 @@
                 <div class="bgcolor">
                     <label><small>*</small>所属组织</label>
                     <el-select v-model="addData.ouId" placeholder="">
-                        <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
+                        <el-option v-for="item in customerNature" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
                     </el-select>
                 </div>
 
@@ -70,7 +73,10 @@
                 <div class="bgcolor">
                     <label><small>*</small>状态</label>
                     <el-select v-model="addData.status" placeholder="">
-                        <el-option v-for="item in customerNature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
+                        <el-option v-for="item in customerNature" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor moreWidth">
@@ -408,13 +414,13 @@ export default({
             },
 
             customerNature:[{//客户性质
-                valueNature:'1',
+                value:'1',
                 label: '选项1'
             }, {
-                valueNature:'2',
+                value:'2',
                 label: '选项2'
             }, {
-                valueNature:'3',
+                value:'3',
                 label: '选项3'
             }],
 
