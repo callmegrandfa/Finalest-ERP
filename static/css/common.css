@@ -6,6 +6,9 @@
 .display_block{
   display: block;
 }
+.block{
+  display: none;
+}
 .sideWidth
 /* dialog */
 .el-dialog{

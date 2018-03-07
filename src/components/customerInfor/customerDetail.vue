@@ -135,7 +135,7 @@
                                placeholder=""
                                class="ouId"
                                :class="{redBorder : validation.hasError('createContactParams.ouId')}"
-                               @focus="showErrprTips">
+                               @focus="showErrprTipsSelect">
                         <el-option v-for="item in ou" 
                                    :key="item.value" 
                                    :label="item.label" 
@@ -188,7 +188,7 @@
                                placeholder=""
                                class="contactClassId"
                                :class="{redBorder : validation.hasError('createContactParams.contactClassId')}"
-                               @focus="showErrprTips">
+                               @focus="showErrprTipsSelect">
                         <el-option v-for="item in customerType" 
                                    :key="item.valueCustomerType" 
                                    :label="item.label" 
@@ -202,7 +202,7 @@
                                placeholder=""
                                class="contactWorkPropertyId"
                                :class="{redBorder : validation.hasError('createContactParams.contactWorkPropertyId')}"
-                               @focus="showErrprTips">
+                               @focus="showErrprTipsSelect">
                         <el-option v-for="item in customerNature" 
                                    :key="item.valueNature" 
                                    :label="item.label" 
@@ -216,7 +216,7 @@
                                placeholder=""
                                class="contactGradeId"
                                :class="{redBorder : validation.hasError('createContactParams.contactGradeId')}"
-                               @focus="showErrprTips">
+                               @focus="showErrprTipsSelect">
                         <el-option v-for="item in customerGrade" 
                                    :key="item.valueGrade" 
                                    :label="item.label" 
@@ -229,7 +229,7 @@
                                placeholder=""
                                class="isCustomer"
                                :class="{redBorder : validation.hasError('createContactParams.isCustomer')}"
-                               @focus="showErrprTips">
+                               @focus="showErrprTipsSelect">
                         <el-option v-for="item in sort" 
                                    :key="item.valueSort" 
                                    :label="item.label" 
@@ -242,7 +242,7 @@
                                placeholder=""
                                class="ficaOuId"
                                :class="{redBorder : validation.hasError('createContactParams.ficaOuId')}"
-                               @focus="showErrprTips">
+                               @focus="showErrprTipsSelect">
                         <el-option v-for="item in ficaOu" 
                                    :key="item.valueFinance" 
                                    :label="item.label" 
@@ -255,7 +255,7 @@
                               placeholder=""
                               @focus="showErrprTips"
                               class="taxCode"
-                              :class="{redBorder : validation.hasError('createAccountParams.taxCode')}"></el-input>
+                              :class="{redBorder : validation.hasError('createContactParams.taxCode')}"></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>业务地区区号</label>
@@ -263,7 +263,7 @@
                                class="opAreaId"
                                placeholder=""
                                :class="{redBorder : validation.hasError('createContactParams.opAreaId')}"
-                               @focus="showErrprTips">
+                               @focus="showErrprTipsSelect">
                         <el-option v-for="item in opArea" 
                                    :key="item.valueAreaBusiness" 
                                    :label="item.label" 
@@ -285,7 +285,7 @@
                     <el-select v-model="createContactParams.adAreaId" 
                                placeholder=""
                                :class="{redBorder : validation.hasError('createContactParams.adAreaId')}"
-                               @focus="showErrprTips">
+                               @focus="showErrprTipsSelect">
                         <el-option v-for="item in adArea" 
                                    :key="item.adArea" 
                                    :label="item.label" 
@@ -930,7 +930,7 @@ export default({
         'createContactParams.legalPerson': function (value) {//法人代表
             return this.Validator.value(value).required().maxLength(50);
         },
-        'createContactParams.manager': function (value) {//注册地址
+        'createContactParams.regAddress': function (value) {//注册地址
             return this.Validator.value(value).required().maxLength(50);
         },
         'createContactParams.manager': function (value) {//负责人
@@ -947,16 +947,23 @@ export default({
         //---提示错误----------------------------------------------
         showErrprTips(e){
             $('.tipsWrapper').each(function(){
-                // console.log($(e.target).parent('.el-input'))
-                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                        
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
-            },
-        showErrprTips1(e){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsSelect(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsRangedate(e){
             $('.tipsWrapper').each(function(){
                 if($(e.$el).hasClass($(this).attr('name'))){
                     $(this).addClass('display_block')
@@ -965,6 +972,15 @@ export default({
                 }
             })
         },
+      showErrprTipsTextArea(e){
+            $('.tipsWrapper').each(function(){
+              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                  $(this).addClass('display_block')
+              }else{
+                  $(this).removeClass('display_block')
+              }
+            })
+      },
         //-------------------------------------------------------------
         //---创建完成后刷新页面获取数据----------------------------------
         loadData:function(){
@@ -997,35 +1013,40 @@ export default({
         //---保存数据--------------------------------------------------       
         save:function(){//点击保存创建客户资料
             let self = this;
+            self.$validate().then(function(success){
+                if(success){
+                    this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
+                        // console.log(res);
+                        self.open('创建客户资料成功','el-icon-circle-check','successERP');
+                        // console.log(res.result.id);
+                        self.backId = res.result.id;
+                        self.createBankParams.contactId = res.result.id;
+                        // console.log(self.createBankParams.contactId)
+                        // console.log(self.createBankParams)
+                        for(let i in self.addBankList){
+                            self.addBankList[i].contactId = res.result.id;
+                        }
+                        self.createBank();
+                        
+                        for(let i in self.addAddressList){
+                            self.addAddressList[i].contactId = res.result.id;
+                        }
+                        self.createBank();
+
+                        for(let i in self.addOuList){
+                            self.addOuList[i].contactId = res.result.id;
+                        }
+                        self.createOu();
+
+                        self.goModify(self.backId);
+                    },function(res){
+                        console.log(res)
+                        self.open('创建失败','el-icon-error','faildERP')
+                    });
+                }
+            })
             console.log(self.createContactParams)
-            this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
-                    // console.log(res);
-                    self.open('创建客户资料成功','el-icon-circle-check','successERP');
-                    // console.log(res.result.id);
-                    self.backId = res.result.id;
-                    self.createBankParams.contactId = res.result.id;
-                    // console.log(self.createBankParams.contactId)
-                    // console.log(self.createBankParams)
-                    for(let i in self.addBankList){
-                        self.addBankList[i].contactId = res.result.id;
-                    }
-                    self.createBank();
-                    
-                    for(let i in self.addAddressList){
-                        self.addAddressList[i].contactId = res.result.id;
-                    }
-                    self.createBank();
-
-                    for(let i in self.addOuList){
-                        self.addOuList[i].contactId = res.result.id;
-                    }
-                    self.createOu();
-
-                    self.goModify(self.backId);
-              },function(res){
-                  console.log(res)
-                  self.open('创建失败','el-icon-error','faildERP')
-              });
+            
 
         },
         //---------------------------------------------------------
@@ -1264,6 +1285,9 @@ export default({
   </script>
 
   <style>
+  .block{
+    display: none;
+}
   .customerBasicForm{
       font-family: 'microsoft yahei';
   }
