@@ -137,9 +137,9 @@
                                :class="{redBorder : validation.hasError('createContactParams.ouId')}"
                                @focus="showErrprTips">
                         <el-option v-for="item in ou" 
-                                   :key="item.ou" 
+                                   :key="item.value" 
                                    :label="item.label" 
-                                   :value="item.ou"></el-option>
+                                   :value="item.value"></el-option>
                     </el-select>
                 </div> 
 
@@ -148,7 +148,7 @@
                     <label>编码</label>
                     <el-input v-model="createContactParams.contact" 
                               placeholder=""
-                              @focus="contact"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('createContactParams.contact')}"
                               class="contact"></el-input>
                 </div>
@@ -158,7 +158,7 @@
                     <label>名称</label>
                     <el-input v-model="createContactParams.contactName" 
                               placeholder=""
-                              @focus="contactName"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('createContactParams.contactName')}"
                               class="contactName"></el-input>
                 </div>
@@ -168,7 +168,7 @@
                     <label>全称</label>
                     <el-input v-model="createContactParams.contactFullName" 
                               placeholder=""
-                              @focus="contactFullName"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('createContactParams.contactFullName')}"
                               class="contactFullName"></el-input>
                 </div>
@@ -177,7 +177,7 @@
                     <label>助记码</label>
                     <el-input v-model="createContactParams.mnemonic" 
                               placeholder=""
-                              @focus="mnemonic"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('createContactParams.mnemonic')}"
                               class="mnemonic"></el-input>
                 </div>
@@ -224,7 +224,7 @@
                     </el-select>
                 </div>
                 <div class="bgcolor">
-                    <label>客户类型</label>
+                    <label>客户类型{{createContactParams.isCustomer}}</label>
                     <el-select v-model='createContactParams.isCustomer'
                                placeholder=""
                                class="isCustomer"
@@ -261,6 +261,7 @@
                     <label>业务地区区号</label>
                     <el-select v-model="createContactParams.opAreaId"
                                class="opAreaId"
+                               placeholder=""
                                :class="{redBorder : validation.hasError('createContactParams.opAreaId')}"
                                @focus="showErrprTips">
                         <el-option v-for="item in opArea" 
@@ -272,7 +273,7 @@
                 <div class="bgcolor">
                     <!-- 创建参数中没有 -->
                     <label>国家/地区</label>
-                    <el-select>
+                    <el-select placeholder="">
                         <el-option v-for="item in country" 
                                    :key="item.valueCountry" 
                                    :label="item.label" 
@@ -296,7 +297,7 @@
                     <el-input v-model="createContactParams.legalPerson" 
                               placeholder=""
                               class="legalPerson"
-                              :class="{redBorder : validation.hasError('createAccountParams.legalPerson')}"
+                              :class="{redBorder : validation.hasError('createContactParams.legalPerson')}"
                               @focus="showErrprTips"></el-input>
                 </div>
 
@@ -305,7 +306,7 @@
                     <el-input v-model="createContactParams.regAddress" 
                               placeholder=""
                               class="regAddress"
-                              :class="{redBorder : validation.hasError('createAccountParams.regAddress')}"
+                              :class="{redBorder : validation.hasError('createContactParams.regAddress')}"
                               @focus="showErrprTips"></el-input>
                 </div>
 
@@ -314,7 +315,7 @@
                     <el-input v-model="createContactParams.manager" 
                               placeholder=""
                               class="manager"
-                              :class="{redBorder : validation.hasError('createAccountParams.manager')}"
+                              :class="{redBorder : validation.hasError('createContactParams.manager')}"
                               @focus="showErrprTips"></el-input>
                 </div>
                 
@@ -323,7 +324,7 @@
                     <el-input v-model="createContactParams.phone" 
                               placeholder=""
                               class="phone"
-                              :class="{redBorder : validation.hasError('createAccountParams.phone')}"
+                              :class="{redBorder : validation.hasError('createContactParams.phone')}"
                               @focus="showErrprTips"></el-input>
                 </div>
                 
@@ -332,7 +333,7 @@
                     <el-input v-model="createContactParams.remark" 
                               placeholder=""
                               class="remark"
-                              :class="{redBorder : validation.hasError('createAccountParams.remark')}"
+                              :class="{redBorder : validation.hasError('createContactParams.remark')}"
                               @focus="showErrprTips"></el-input>
                 </div>
             </el-col>
@@ -341,7 +342,7 @@
  </el-collapse-transition>     
 <el-row>
     <el-col :span="2" :offset="1"><el-checkbox v-model="supplier">同为供应商</el-checkbox></el-col>
-    <el-col :span="2"><el-checkbox v-model="credit">信用管理</el-checkbox></el-col>   
+    <el-col :span="2"><el-checkbox v-model="createContactParams.creditMgt">信用管理</el-checkbox></el-col>   
 </el-row>
 
     <!-- 公司业务财务bootTab标签页 -->
@@ -711,13 +712,13 @@ export default({
             },
 
             ou: [{//所属组织
-                    ou:'1',
+                    value:'1',
                     label: '恒康'
                 }, {
-                    ou:'2',
+                    value:'2',
                     label: '恒大'
                 }, {
-                    ou:'3',
+                    value:'3',
                     label: '361度'
                 }],
 
@@ -809,61 +810,60 @@ export default({
             }],
             activeName: 'bank',//tabs标签页默认激活name
             supplier:true,//同为供应商
-            credit :true,//信用管理
 
             createContactParams:{//创建客户资料参数
-                'groupId':1,//集团Id
-                'ouId':'',//组织单元id
-                'contact':'',//供应商编码
-                'contactName':'',//客户名称
-                'contactFullName':'',//供应商全称
-                'mnemonic':'',//助记码
-                'contactClassId':'',//客户分类
-                'contactWorkPropertyId':'',//客户性质
-                'contactGradeId':'',//客户/供应商等级ID,
-                'isSupplier':0,//是否为供应商
-                'isCustomer':0,//是否客户
-                'ficaOuId':'',//财务组织单元 ID
-                'taxCode':'',//纳税登记号
-                'opAreaId':'',//业务地区
-                'adAreaId':'',//行政地区
-                'legalPerson':'',//法人代表
-                'regAddress':'',// 注册地址
-                'manager':'',//负责人
-                'phone':'',//电话
-                'remark':'',//备注
-                'creditMgt':true,//信用管理
+                groupId:1,//集团Id
+                ouId:'',//组织单元id
+                contact:'',//供应商编码
+                contactName:'',//客户名称
+                contactFullName:'',//供应商全称
+                mnemonic:'',//助记码
+                contactClassId:'',//客户分类
+                contactWorkPropertyId:'',//客户性质
+                contactGradeId:'',//客户/供应商等级ID,
+                isSupplier:0,//是否为供应商
+                isCustomer:'',//是否客户
+                ficaOuId:'',//财务组织单元 ID
+                taxCode:'',//纳税登记号
+                opAreaId:'',//业务地区
+                adAreaId:'',//行政地区
+                legalPerson:'',//法人代表
+                regAddress:'',// 注册地址
+                manager:'',//负责人
+                phone:'',//电话
+                remark:'',//备注
+                creditMgt:true,//信用管理
                 },
 
             createBankParams:{//创建银行的参数
-                "groupId": 1,
-                "contactId":'',
-                "settlementCurrencyId": '',
-                "accountNo": "",
-                "accountName": "",
-                "openingBank": '',
-                "contactPerson": '',
-                "phone": '',
-                "isDefault": true
+                groupId: 1,
+                contactId:'',
+                settlementCurrencyId: '',
+                accountNo: "",
+                accountName: "",
+                openingBank: '',
+                contactPerson: '',
+                phone: '',
+                isDefault: true
             },    
 
             createAddressParams:{//创建地址的参数
-                "groupId": 1,
-                "contactId": '',
-                "addressType": '',
-                "addressId": '',
-                "completeAddress": "",
-                "contactPerson": "",
-                "phone": "",
-                "isDefault": true
+                groupId: 1,
+                contactId: '',
+                addressType: '',
+                addressId: '',
+                completeAddress: "",
+                contactPerson: "",
+                phone: "",
+                isDefault: true
             },
             
             createOuParams:{//创建组织参数
-                "groupId": 1,
-                "contactId": '',
-                "ouId": '',
-                "transport_method_id": '',
-                "is_default": true
+                groupId: 1,
+                contactId: '',
+                ouId: '',
+                transport_method_id: '',
+                is_default: true
             },
             bankData:[],//银行数据列表，开始为空
             updataBankList:[],//需要修改的银行信息
@@ -888,10 +888,16 @@ export default({
         }
     },
     validators: {
+        'createContactParams.ouId': function (value) {//所属组织
+            return this.Validator.value(value).required().integer();
+        },
         'createContactParams.contact': function (value) {//编码
             return this.Validator.value(value).required().maxLength(50);
         },
-        'createContactParams.contactName': function (value) {//全称
+        'createContactParams.contactName': function (value) {//名称
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'createContactParams.contactFullName': function (value) {//全称
             return this.Validator.value(value).required().maxLength(50);
         },
         'createContactParams.mnemonic': function (value) {//助记码
@@ -909,7 +915,7 @@ export default({
         'createContactParams.isCustomer': function (value) {//客户类型
             return this.Validator.value(value).required().integer();
         },
-        'createContactParams.ficaOuId': function (value) {//对应财务组织单元
+        'createContactParams.ficaOuId': function (value) {//对应财务组织
             return this.Validator.value(value).required().integer();
         },
         'createContactParams.taxCode': function (value) {//纳税登记号 
@@ -950,6 +956,15 @@ export default({
                     }
                 })
             },
+        showErrprTips1(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
         //-------------------------------------------------------------
         //---创建完成后刷新页面获取数据----------------------------------
         loadData:function(){
