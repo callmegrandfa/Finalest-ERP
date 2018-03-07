@@ -11,35 +11,35 @@
                 <div class="bgcolor reset">
                     <label>集团编码</label><el-input v-model="tableData[0].groupCode"  :disabled="isEdit" @change="isUpdate()" ></el-input>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor reset">
                     <label>集团名称</label><el-input :disabled="isEdit" v-model="tableData[0].groupName" @change="isUpdate()"></el-input>
                     </div>
-                <div class="bgcolor">
+                <div class="bgcolor reset">
                     <label>集团全称</label><el-input :disabled="isEdit" v-model="tableData[0].groupFullname" @change="isUpdate()"></el-input>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor reset">
                     <label>会计方案</label><el-input :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  @change="isUpdate()"></el-input>
                 </div>
-                <div class="bgcolor"><label>行政地区</label><el-input :disabled="isEdit" v-model="tableData[0].areaId_AreaName" @change="isUpdate()"></el-input></div>
-                <div class="bgcolor">
+                <div class="bgcolor reset"><label>行政地区</label><el-input :disabled="isEdit" v-model="tableData[0].areaId_AreaName" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor reset">
                     <label>启用会计月份</label>
                     <el-select v-model="tableData[0].openAccperiodMonth"  :disabled="isEdit" @change="isUpdate()">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor reset">
                     <label>本位币种</label>
                     <el-select v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor"><label>所属行业</label><el-input :disabled="isEdit" v-model="tableData[0].industry" @change="isUpdate()" ></el-input></div>
-                <div class="bgcolor"><label>电话</label><el-input :disabled="isEdit" v-model="tableData[0].phone" @change="isUpdate()"></el-input></div>
-                <div class="bgcolor"><label>传真</label><el-input :disabled="isEdit" v-model="tableData[0].fax" @change="isUpdate()"></el-input></div>
-                <div class="bgcolor"><label>总部地址</label><el-input :disabled="isEdit" v-model="tableData[0].address" @change="isUpdate()"></el-input></div>
-                <div class="bgcolor"><label>备注</label><el-input :disabled="isEdit" v-model="tableData[0].remark" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor reset"><label>所属行业</label><el-input :disabled="isEdit" v-model="tableData[0].industry" @change="isUpdate()" ></el-input></div>
+                <div class="bgcolor reset"><label>电话</label><el-input :disabled="isEdit" v-model="tableData[0].phone" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor reset"><label>传真</label><el-input :disabled="isEdit" v-model="tableData[0].fax" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor reset"><label>总部地址</label><el-input :disabled="isEdit" v-model="tableData[0].address" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor reset"><label>备注</label><el-input :disabled="isEdit" v-model="tableData[0].remark" @change="isUpdate()"></el-input></div>
         </el-row>
         <!-- <el-row class="bg-white">
             <el-col :span="6">
@@ -544,7 +544,13 @@
 .groupList .el-table__body{
     text-align: center;
 }
+.reset{
+    width:250px!important;
+}
 .reset .el-input input{
     height: 35px;
+}
+.reset .el-input__inner{
+    height: 35px!important
 }
 </style>
