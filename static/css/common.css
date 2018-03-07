@@ -92,6 +92,9 @@
     overflow: hidden;
     margin-right: 5px;
 }
+.bgcolor .redBorder.el-date-editor{
+  border-color: #f66;
+}
 .bgcolor .redBorder .el-input__inner{
   border-color: #f66;
 }

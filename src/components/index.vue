@@ -99,7 +99,6 @@ export default {
 </script>
 <style scoped>
 .wrapper{
-  background-color: rgba(38, 52, 75, 1);
   padding-top: 50px;
   position: relative;
   overflow: hidden;

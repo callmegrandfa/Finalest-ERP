@@ -30,7 +30,7 @@
                 <el-row class="h48 pt5 pr10 pl5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                    <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_out">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
                         <span class="btDetail">导出</span>
@@ -67,7 +67,7 @@
                                  <template slot-scope="scope">
                                     <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
+                                    <el-button type="text" size="small"  @click="confirmDelThis(scope.row)" >删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -357,22 +357,55 @@
              handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
             },
-            delRow(){
+            confirm(){
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            if(_this.load){
-                                _this.loadTableData();
-                                _this.loadTree();
-                            }
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }
-                };
+                    _this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                    }).then(() => {//确认
+                        _this.delRow()
+                    }).catch(() => {//取消
+                    });
+                }
+            },
+            delRow(){
+                let _this=this;
+                for(let i=0;i<_this.multipleSelection.length;i++){
+                    _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:_this.multipleSelection[i].id})
+                    .then(function(res){
+                        _this.open('删除成功','el-icon-circle-check','successERP');
+                        if(_this.load){
+                            _this.loadTableData();
+                            _this.loadTree();
+                        }
+                    },function(res){
+                        _this.open('删除失败','el-icon-error','faildERP');
+                    })
+                }
+            },
+            confirmDelThis(row){
+                let _this=this;
+                _this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {//确认
+                    _this.delThis(row)
+                }).catch(() => {//取消
+                });
+            },
+            delThis(row){//删除行
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:row.id})
+                .then(function(res){
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                    _this.loadTableData();
+                },function(res){
+                })
             },
             nodeClick(data){
             },
@@ -383,14 +416,6 @@
             see(row){
                 this.$store.state.url='/OuManage/OuManageSee/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-            delThis(row){//删除行
-                let _this=this;
-                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:row.id})
-                .then(function(res){
-                    _this.loadTableData();
-                },function(res){
-                })
             },
             whichButton(event,node, data){
                 let e = event || window.event;
@@ -491,9 +516,11 @@
             showTable(event,node,data){
                 let _this=this;
                  _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{id:data.id})
+                 console.log(data)
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id})
                 .then(function(res){
                     _this.tableData=res.result;
+                    _this.tableData.unshift(data);
                     _this.totalItem=res.result.length;
                     _this.tableLoading=false;
                     },function(res){

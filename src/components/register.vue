@@ -127,6 +127,14 @@ export default {
       valueDate:'',
     }
   },
+  created () {
+    let _this=this;
+    _this.$axios.gets('/AbpScripts/GetScripts')
+          .then(function (res) {
+                //成功之后处理逻辑
+                console.log(res);
+                }) 
+  },
   methods:{
     open8() {
         this.$notify({

@@ -35,7 +35,7 @@
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                    <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
                     <button class="erp_bt bt_out bt_width">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
@@ -75,7 +75,7 @@
                             <el-table-column prop="ouCode" label="编码"></el-table-column>
                             <el-table-column prop="ouFullname" label="全称"></el-table-column>
                             <el-table-column prop="ouName" label="简称"></el-table-column>
-                            <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
+                            <el-table-column prop="ouParentid" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
                             <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
                             <el-table-column prop="createdTime" label="创建时间" width="160">
@@ -296,90 +296,39 @@
                 this.multipleSelection = val;
                 //console.log(val)
             },
-            delRow(){
+            confirm(){
                 let _this=this;
                 if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            if(_this.load){
-                                _this.loadTableData();
-                            }else{
-                                _this.SimpleSearch();
-                            }
-                            
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                            // for(let x=0;x<_this.tableData.length;x++){
-                            //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){
-                            //         console.log(_this.tableData[x]);
-                            //         _this.tableData.splice(x, 1);
-                            //     }
-                            // }
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                            //console.log('err:'+res)
-                        })
-                    }
-                };
-
-                // if(_this.treeCheck.length>0){//tree
-                //     for(let i=0;i<_this.treeCheck.length;i++){
-                //         _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
-                //         .then(function(res){    
-                //           _this.loadTree();
-                //         },function(res){
-                //             console.log('err:'+res)
-                //         })
-                //     }
-                // }
-
+                    _this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                    }).then(() => {//确认
+                        _this.delRow()
+                    }).catch(() => {//取消
+                    });
+                }
             },
-            // checkChange(data,check){
-            //     let _this=this;
-            //     let add=false;
-            //     if(check){
-            //         _this.treeCheck.push(data.treeId);
-            //     }else{
-            //         for(let i=0;i<_this.treeCheck.length;i++){
-            //             if(_this.treeCheck[i]==data.treeId){
-            //                 _this.treeCheck.splice(i,1);
-            //             }
-            //         }
-            //     }
-            // },
+            delRow(){
+                let _this=this;
+                for(let i=0;i<_this.multipleSelection.length;i++){
+                    _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
+                    .then(function(res){
+                        _this.open('删除成功','el-icon-circle-check','successERP');
+                        if(_this.load){
+                            _this.loadTableData();
+                        }else{
+                            _this.SimpleSearch();
+                        }
+                    },function(res){
+                        _this.open('删除失败','el-icon-error','faildERP');
+                        //console.log('err:'+res)
+                    })
+                }
+            },
             nodeClick(data){
-                //  let _this=this;
-                //  let flag=false;
-                //  if(_this.isClick.length>0){
-                //      for(let i=0;i<_this.isClick.length;i++){
-                //         if(_this.isClick[i]==data.treeId){
-                //             flag=false
-                //             break;
-                //         }else{
-                //             flag=true;
-                //         }
-                //     }
-                //  }else{
-                //      flag=true;
-                //  }
-                 
-                // //  console.log(flag)
-                //  if(data.treeId!=1&&flag){
-                //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
-                //     .then(function(res){
-                //         _this.isClick.push(data.treeId);
-                //         //console.log(res)
-                //         if(res.result.length>0){
-                //             for(let i=0;i<res.result.length;i++){
-                //                 let label=res.result[i].deptName;
-                //                 let treeId=res.result[i].id;
-                //                 let child={'treeId':treeId,'label':label,children:[]}
-                //                 data.children.push(child)
-                //             }
-                //         }
-                //     })
-                //  }
-                
+               
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
