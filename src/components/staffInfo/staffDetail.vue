@@ -3,59 +3,103 @@
         <div id="bgc">
 	        <el-row >
 	            <el-col :span="24">
-	            	<btm :date="btnbox"> </btm>
+	            	<button class="erp_bt bt_back" @click="goBack">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_back.png">
+                            </div>
+                            <span class="btDetail">返回</span>
+                    </button>
+	            	<button class="erp_bt bt_add" @click="addStaff">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_add.png">
+                            </div>
+                            <span class="btDetail">新增</span>
+                    </button>
+	            	<button class="erp_bt bt_modify" @click="addStaff">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_modify.png">
+                            </div>
+                            <span class="btDetail">修改</span>
+                    </button>
+	            	<button class="erp_bt bt_save" @click="addStaff">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_save.png">
+                            </div>
+                            <span class="btDetail">保存</span>
+                    </button>
+	            	<button class="erp_bt bt_cancel" @click="addStaff">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_cancel.png">
+                            </div>
+                            <span class="btDetail">取消</span>
+                    </button>
+	            	<button class="erp_bt bt_print" @click="addStaff">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_print.png">
+                            </div>
+                            <span class="btDetail">打印</span>
+                    </button>
+	            	<button class="erp_bt bt_version" @click="addStaff">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_version.png">
+                            </div>
+                            <span class="btDetail">生成用户</span>
+                    </button>
 	            </el-col>
 	        </el-row>
-            <el-form ref="form" :model="form" label-width="80px" class="pl fs pt ">
-                <el-form-item label="职员编码" class="pr">
-                    <el-input v-model="form.number" label-width="80px"></el-input>
+            <el-form ref="form" :model="form" label-width="80px" size="small" class="pl pt ">
+                <el-form-item label="职员编码" class="pr"  :rules="[
+                        { required: true, message: '请输入职员编码', trigger: 'blur' },{ type: 'email', message: '请输入正确的职员编码', trigger: 'blur,change' }]">
+                    <el-input v-model="form.employeeCode" label-width="80px"></el-input>
                 </el-form-item>
-                <el-form-item label="职员名称" class="pr">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="职员名称" class="pr" :rules="[
+                        { required: true, message: '请输入职员编码', trigger: 'blur' },{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }]">
+                    <el-input v-model="form.employeeName"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号码" class="pr">
-                    <el-input v-model="form.phone"></el-input>
+                    <el-input v-model="form.mobile"></el-input>
                 </el-form-item>
                 <el-form-item label="部门" class="pr">
-                    <el-input v-model="form.department"></el-input>
+                    <el-select v-model="form.department">
+                    <el-option label="" value=""></el-option>
+                    <el-option label="" value=""></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="性别">
-                    <el-select v-model="form.gender">
-                    <el-option label="女" value="女"></el-option>
+                    <el-select v-model="form.sex">
+                    <el-option label="女" value="sexTValue"></el-option>
                     <el-option label="男" value="男"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生日" class="pr">
                     <el-input v-model="form.birthday"></el-input>
                 </el-form-item>
-                <el-form-item label="折扣范围">
-                    <el-select v-model="form.discount">
-                    <el-option label="广东总部" value="80%"></el-option>
-                    <el-option label="广东分部" value="90%"></el-option>
-                    </el-select>
+                <el-form-item>
                 </el-form-item>
+                <el-form-item>
+                </el-form-item>
+                <el-form-item>
+                </el-form-item>
+               
+
                 <el-form-item label="所属店铺">
-                    <el-select v-model="form.shops">
+                    <el-select v-model="form.shopName">
                     <el-option label="广东" value="广东"></el-option>
                     <el-option label="成都" value="成都"></el-option>
                     </el-select>
                 </el-form-item>                            
                 <el-form-item label="职员类型">
-                    <el-checkbox-group v-model="form.type">
-                    <el-checkbox label="采购" name="type"></el-checkbox>
+                    <el-checkbox-group v-model="form.employeeTypes">
+                    <el-checkbox  label="采购" name="type"></el-checkbox>
                     <el-checkbox label="业务" name="type"></el-checkbox>
                     <el-checkbox label="仓库" name="type"></el-checkbox>
                     <el-checkbox label="店员" name="type"></el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="备注" >
-                    <el-input type="textarea" :rows="5" resize="none" v-model="form.tips"></el-input>
+                    <el-input type="textarea" rows="5" resize="none" v-model="form.remark"></el-input>
                 </el-form-item>
-               
             </el-form>
-
-
-
         </div>
     </div>
 </template>
@@ -64,60 +108,47 @@
     export default{
         name:'staffDetail',
         data(){
-            return {                
-                btnbox:{
-                     url:"/staff/staffList",
-                     botton:[
-                         {class: 'erp_bt bt_back',
-                          imgsrc: '../../../static/image/common/bt_back.png',
-                          text: '返回'
-                         },
-                         {class: 'erp_bt bt_add',
-                          imgsrc: '../../../static/image/common/bt_add.png',
-                          text: '新增'
-                         },
-                         {class: 'erp_bt bt_modify',
-                          imgsrc: '../../../static/image/common/bt_modify.png',
-                          text: '修改'
-                         },
-                         {class: 'erp_bt bt_save',
-                          imgsrc: '../../../static/image/common/bt_save.png',
-                          text: '保存'
-                         },
-                         {class: 'erp_bt bt_cancel',
-                          imgsrc: '../../../static/image/common/bt_cancel.png',
-                          text: '取消'
-                         },
-                         {class: 'erp_bt bt_print',
-                          imgsrc: '../../../static/image/common/bt_print.png',
-                          text: '打印'
-                         },
-                         {class: 'erp_bt bt_version',
-                          imgsrc: '../../../static/image/common/bt_version.png',
-                          text: '生成用户'
-                         },
-                     ]
-                },
+            return { 
+                id:'',
                  form: {
-                        number: '',
-                        name: '',
-                        phone: '',
+                        employeeCode: '',
+                        employeeName: '',
+                        mobile: '',
                         department: '',
-                        gender:'',
+                        sex:'',
                         birthday:'',
-                        discount:'',
-                        shops:'',
-                        type: [],
+                        shopName:'',
+                        employeeTypes: [],
                         resource: '',
-                        tips: ''
+                        remark: ''
                 }
                    
                 
             }
         },
+        created:function(){
+            console.log(this.$route);
+            console.log(this.$route.params);
+            this.$axios.gets('/api/services/app/EmployeeManagement/Get',{id:this.$route.params.id})
+            .then(
+                rsp=>{
+                    console.log(rsp.result);
+                    this.form=rsp.result;
+
+
+                }
+            )
+        },
         methods: {
             onSubmit() {
                 console.log('submit!');
+            },
+            goBack:function(){//点击切换路由，返回到职员数据列表
+                this.$store.state.url='/staff/staffList/default'
+                this.$router.push({path:this.$store.state.url})
+            },
+            addStaff:function(){
+                 console.log('测试新增');
             }
         },
         components:{
@@ -127,35 +158,39 @@
 </script>
 <style>
    .pl{
-       padding-left:80px;
+       padding-left:20%;
    }
    .pt{
        padding-top:10px;
    }
    .pr{
-       padding-right:70%;
+       padding-right:30%;
    }
    .fs{
        font-size:12px;
    }
    .el-form-item__label {
-    text-align: right;
-    vertical-align: middle;
-    float: left;
-    font-size: 12px;
-    color: #000;
-    line-height: 40px;
-    padding: 0 12px 0 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+        font-size: 12px;
    }
    .el-form-item {
-    margin-bottom: 10px;
+        margin-bottom: 10px;
    }
-    .el-checkbox__inner {
+   .el-checkbox__inner {
         width: 20px;
         height: 20px;
+   }
+   .el-select .el-input__inner {
+        cursor: pointer;
+        padding-right: 340px;
     }
+    .el-textarea__inner{
+        width:67%;
+    }
+    .el-col-24 {
+    width: 100%;
+    border-bottom: 1px solid #E4E4E4;
+    padding-bottom: 5px;
+}
 </style>
 
 
