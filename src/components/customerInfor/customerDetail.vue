@@ -1,7 +1,7 @@
 <template>
  <div class="customerBasicForm">
      <el-row>
-         <el-col :span="24"  class="fixed bg-white bb1 pb5">
+         <el-col :span="24"  class="fixed bg-white bb1 pb5 pt5">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_back.png">
@@ -77,9 +77,9 @@
                         <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactGradeId') }}</p>
                     </div>
                 </div>
-                <div class="tipsWrapper" name="contactClassId">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactClassId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactClassId') }}</p>
+                <div class="tipsWrapper" name="isCustomer">
+                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.isCustomer')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.isCustomer') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="ficaOuId">
@@ -756,14 +756,14 @@ export default({
             }],
 
             sort:[{//客户类型
-                valueSort:'客户类型1',
-                label: '1'
+                valueSort:'1',
+                label: '客户类型1'
             }, {
-                valueSort:'客户类型2',
-                label: '2'
+                valueSort:'2',
+                label: '客户类型2'
             }, {
-                valueSort:'客户类型3',
-                label: '3'
+                valueSort:'3',
+                label: '客户类型3'
             }],
             
             ficaOu :[{//对应财务组织
@@ -812,28 +812,28 @@ export default({
             supplier:true,//同为供应商
 
             createContactParams:{//创建客户资料参数
-                groupId:1,//集团Id
-                ouId:'',//组织单元id
-                contact:'',//供应商编码
-                contactName:'',//客户名称
-                contactFullName:'',//供应商全称
-                mnemonic:'',//助记码
-                contactClassId:'',//客户分类
-                contactWorkPropertyId:'',//客户性质
-                contactGradeId:'',//客户/供应商等级ID,
-                isSupplier:0,//是否为供应商
-                isCustomer:'',//是否客户
-                ficaOuId:'',//财务组织单元 ID
-                taxCode:'',//纳税登记号
-                opAreaId:'',//业务地区
-                adAreaId:'',//行政地区
-                legalPerson:'',//法人代表
-                regAddress:'',// 注册地址
-                manager:'',//负责人
-                phone:'',//电话
-                remark:'',//备注
-                creditMgt:true,//信用管理
-                },
+                'groupId':1,//集团Id
+                'ouId':'',//组织单元id
+                'contact':'',//供应商编码
+                'contactName':'',//客户名称
+                'contactFullName':'',//供应商全称
+                'mnemonic':'',//助记码
+                'contactClassId':'',//客户分类
+                'contactWorkPropertyId':'',//客户性质
+                'contactGradeId':'',//客户/供应商等级ID,
+                'isSupplier':0,//是否为供应商
+                'isCustomer':'',//是否客户
+                'ficaOuId':'',//财务组织单元 ID
+                'taxCode':'',//纳税登记号
+                'opAreaId':'',//业务地区
+                'adAreaId':'',//行政地区
+                'legalPerson':'',//法人代表
+                'regAddress':'',// 注册地址
+                'manager':'',//负责人
+                'phone':'',//电话
+                'remark':'',//备注
+                'creditMgt':true,//信用管理
+            },
 
             createBankParams:{//创建银行的参数
                 groupId: 1,
@@ -1013,9 +1013,11 @@ export default({
         //---保存数据--------------------------------------------------       
         save:function(){//点击保存创建客户资料
             let self = this;
+            // console.log(2)
             self.$validate().then(function(success){
                 if(success){
-                    this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
+                    console.log(2)
+                    self.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
                         // console.log(res);
                         self.open('创建客户资料成功','el-icon-circle-check','successERP');
                         // console.log(res.result.id);
@@ -1299,6 +1301,9 @@ export default({
   }
   .pb5{
     padding-bottom: 5px;
+  }
+  .pt5{
+    padding-top: 5px;
   }
  /*收起*/
  .customerBasicForm .upBt{

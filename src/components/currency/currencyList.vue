@@ -379,23 +379,26 @@
             },
             confirmDelRow() {
                 let self = this;
-                this.$confirm('确定删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-                }).then(() => {
-                    self.delRow();
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
+                if(self.multipleSelection.length>0){
+                    self.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                        self.delRow();
+                        // this.$message({
+                        //     type: 'success',
+                        //     message: '删除成功!'
+                        // });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
                     });
-                });
+                }
+                
             },
             delRow:function(){//删除选中的项
                 let _this=this;
