@@ -104,6 +104,10 @@ export default new vuex.Store({
             { name: 'roleList', url: '/role/roleList/:id', parent: 'role' },
             { name: 'roleDetail', url: '/role/roleDetail/:id', parent: 'role' },
             { name: 'roleModify', url: '/role/roleModify/:id', parent: 'role' },
+
+            { name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' }, //职员资料
+            { name: 'staffList', url: '/staff/staffList/:id', parent: 'staff' },
+            { name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' },
         ],
     },
     mutations: {
