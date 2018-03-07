@@ -6,7 +6,7 @@
                 <el-col :span="24" class="border-left" id="bg-white">
                     <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                      <el-row class="shopclass">
-                        <tree :datc="componyTree"></tree> 
+                        <tree :datc="componyTree"> </tree> 
                         <div class="bgfc">  
                             <el-col :span='24' class="pt10 pl10" >
                                 <el-row >
