@@ -64,7 +64,7 @@
 
                         <div class="bgcolor">
                             <label><small>*</small>会计年份</label>
-                            <el-input placeholder="请录入会计年份" 
+                            <el-input placeholder="" 
                                       @focus="showErrprTips"
                                       class="periodYear"
                                       :class="{redBorder : validation.hasError('createAccountParams.periodYear')}"
@@ -73,7 +73,7 @@
 
                         <div class="bgcolor">
                             <label><small>*</small>期间个数</label>
-                            <el-input placeholder="请录入期间个数" 
+                            <el-input placeholder="" 
                                       @focus="showErrprTips"
                                       class="periodNum"
                                       :class="{redBorder : validation.hasError('createAccountParams.periodNum')}"
@@ -93,7 +93,7 @@
                             value-format="yyyy-MM-dd" 
                             v-model="createAccountParams.beginDate" 
                             type="date" 
-                            placeholder="开始日期"></el-date-picker>
+                            placeholder=""></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
@@ -106,12 +106,12 @@
                             value-format="yyyy-MM-dd" 
                             v-model="createAccountParams.endDate" 
                             type="date" 
-                            placeholder="结束日期"></el-date-picker>
+                            placeholder=""></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
                             <label>备注</label>
-                            <el-input placeholder="请录入备注" 
+                            <el-input placeholder="" 
                                       v-model="createAccountParams.remark"
                                       @focus="showErrprTips"
                                       class="remark"
