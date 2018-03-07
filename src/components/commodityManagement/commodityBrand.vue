@@ -14,12 +14,12 @@
                     </el-row>
                     <el-row>
                         <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                            <label>品牌编码</label>
+                            <div class="bgcolor" style="margin-top:20px">
+                            <label style="width:86px">品牌编码</label>
                            </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor" style="margin-top:20px">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
                             <el-input v-model="searchItem.BrandCode"></el-input>
                             </div>
                         </el-col>
@@ -27,11 +27,11 @@
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" >
-                            <label>品牌名称(中文)</label>
+                            <label style="width:86px">品牌名称(中文)</label>
                            </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor" >
+                            <div class="bgcolor smallBgcolor" >
                             <el-input placeholder="" v-model="searchItem.BrandName"></el-input>
                             </div>
                         </el-col>
@@ -39,11 +39,11 @@
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" >
-                                    <label>品牌名称(英文)</label>
+                                    <label style="width:86px">品牌名称(英文)</label>
                            </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor" >
+                            <div class="bgcolor smallBgcolor" >
                             <el-input placeholder=""></el-input>
                             </div>
                         </el-col>
@@ -51,7 +51,7 @@
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" >
-                            <label>状态</label>
+                            <label style="width:86px">状态</label>
                             </div>
                         </el-col>
                         <el-col :span="14">
