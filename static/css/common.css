@@ -907,6 +907,6 @@ end-placeholder="结束日期">
 }
 .abimg{
   position: absolute;
-  left: 0;
+  left: -48px;
   top: 0;
 }

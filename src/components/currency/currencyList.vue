@@ -17,7 +17,7 @@
                         <span class="btDetail">保存</span>
                     </button>
 
-                    <button class="erp_bt bt_del" @click="delRow">
+                    <button class="erp_bt bt_del" @click="confirmDelRow">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -51,21 +51,11 @@
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
-                            <el-table-column label="序号">
-                                <template slot-scope="scope">
-                                    <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.seq"
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
                             <el-table-column type="selection"></el-table-column>
 
                             <el-table-column prop="ouId" label="币种编码">
                                 <template slot-scope="scope">
+                                    <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.currencyCode"
@@ -136,7 +126,7 @@
                             
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
-                                    <el-button v-on:click="handleDel(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="confirmDel(scope.$index,scope.row)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -294,20 +284,6 @@
         //------------------------------------------------------------------
 
         //---控制修改及分页--------------------------------------------------
-            delRow:function(){//删除选中的项
-                let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            _this.loadAllList();
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }
-                };
-            },
             handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
             },
@@ -371,16 +347,70 @@
                 }
                 
             },
-            handleDel:function(index,id){//每行右边的删除
+            confirmDel(index,row) {
+                let self = this;
+                this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    self.handleDel(index,row);
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            handleDel:function(index,row){//每行右边的删除
                 let self = this;
                 self.allList.splice(index,1);
                 self.addList.splice(index,1);
-                this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:id}).then(function(res){
+                this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:row.id}).then(function(res){
                     console.log(res);
                     self.open('删除成功','el-icon-circle-check','successERP');
                     // self.loadAllList();
               })
-            }
+            },
+            confirmDelRow() {
+                let self = this;
+                this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    self.delRow();
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            delRow:function(){//删除选中的项
+                let _this=this;
+                if(_this.multipleSelection.length>0){//表格
+                    for(let i=0;i<_this.multipleSelection.length;i++){
+                        _this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:_this.multipleSelection[i].id})
+                        .then(function(res){
+                            _this.loadAllList();
+                            _this.open('删除成功','el-icon-circle-check','successERP');
+                        },function(res){
+                            _this.open('删除失败','el-icon-error','faildERP');
+                        })
+                    }
+                };
+            },
         //------------------------------------------------------------------
     }
 }

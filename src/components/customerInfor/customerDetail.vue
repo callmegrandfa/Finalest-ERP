@@ -1,7 +1,7 @@
 <template>
  <div class="customerBasicForm">
      <el-row>
-         <el-col :span="24"  class="fixed">
+         <el-col :span="24"  class="fixed bg-white bb1 pb5">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_back.png">
@@ -1287,9 +1287,18 @@ export default({
   <style>
   .block{
     display: none;
-}
+    }
+    .bg-white{
+        background: white;
+    }
   .customerBasicForm{
       font-family: 'microsoft yahei';
+  }
+  .bb1{
+    border-bottom: 1px solid #cccccc;
+  }
+  .pb5{
+    padding-bottom: 5px;
   }
  /*收起*/
  .customerBasicForm .upBt{
@@ -1323,7 +1332,6 @@ export default({
 }
   .customerBasicForm .el-row{
      padding:15px 0;
-     border-bottom: 1px solid #e4e4e4;
      background-color: #fff;
   }
   .customerBasicForm .el-row:last-child{
