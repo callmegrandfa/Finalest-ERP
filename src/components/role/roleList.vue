@@ -15,14 +15,33 @@
                 <!-- <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
                     <el-select  v-model="searchData.OuType">
-                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div> -->
                 <div class="mt20 bgcolor smallBgcolor"><label>角色编码</label><el-input v-model="searchData.roleCode" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>角色名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属组织</label><el-input v-model="searchData.ouId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>上级用户组(无字段)</label><el-input v-model="searchData.UserType" placeholder="无字段"></el-input></div>
+                <div class="bgcolor smallBgcolor">
+                    <label>所属组织</label>
+                    <!-- <el-input v-model="searchData.ouId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.ouId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>上级用户组(无字段)</label>
+                    <el-select  v-model="searchData.UserType" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -113,32 +132,32 @@
                 searchDataClick:{},
                 tableSearchData:{},
                 options: [{
-                    basOuTypes: '1',
-                    label: '1'
+                    value: '1',
+                    label: '选项1'
                     }, {
-                    basOuTypes: '2',
-                    label: '2'
+                    value: '2',
+                    label: '选项2'
                     }, {
-                    basOuTypes: '3',
-                    label: '3'
+                    value: '3',
+                    label: '选项3'
                     }, {
-                    basOuTypes: '4',
-                    label: '4'
+                    value: '4',
+                    label: '选项4'
                     }, {
-                    basOuTypes: '5',
-                    label: '5'
+                    value: '5',
+                    label: '选项5'
                     }, {
-                    basOuTypes: '6',
-                    label: '6'
+                    value: '6',
+                    label: '选项6'
                     }, {
-                    basOuTypes: '7',
-                    label: '7'
+                    value: '7',
+                    label: '选项7'
                     }, {
-                    basOuTypes: '8',
-                    label: '8'
+                    value: '8',
+                    label: '选项8'
                     }, {
-                    basOuTypes: '9',
-                    label: '9'
+                    value: '9',
+                    label: '选项9'
                     }],
                 tableData:[],
 

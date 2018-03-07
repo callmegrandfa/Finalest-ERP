@@ -21,13 +21,76 @@
                 </div> -->
                 <div class="mt20 bgcolor smallBgcolor"><label>用户编码</label><el-input v-model="searchData.UserCode" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>用户名称</label><el-input v-model="searchData.DisplayName" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>用户组</label><el-input v-model="searchData.UserGroupId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属组织</label><el-input v-model="searchData.OuId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>身份类型</label><el-input v-model="searchData.UserType" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>语种</label><el-input v-model="searchData.LanguageId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>认证类型</label><el-input v-model="searchData.AuthType" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>状态</label><el-input v-model="searchData.Status" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>关联角色</label><el-input v-model="searchData.RoleId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor">
+                    <label>用户组</label>
+                    <!-- <el-input v-model="searchData.UserGroupId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.UserGroupId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>所属组织</label>
+                    <!-- <el-input v-model="searchData.OuId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.OuId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>身份类型</label>
+                    <!-- <el-input v-model="searchData.UserType" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.UserType" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>语种</label>
+                    <!-- <el-input v-model="searchData.LanguageId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.LanguageId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>认证类型</label>
+                    <!-- <el-input v-model="searchData.AuthType" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.AuthType" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>状态</label>
+                    <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.Status" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>关联角色</label>
+                    <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.RoleId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <span style="float: left">{{ item.label }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        </el-option>
+                    </el-select>
+                </div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -137,32 +200,32 @@
                 searchDataClick:{},
                 tableSearchData:{},
                 options: [{
-                    basOuTypes: '1',
-                    label: '1'
+                    value: '1',
+                    label: '选项1'
                     }, {
-                    basOuTypes: '2',
-                    label: '2'
+                    value: '2',
+                    label: '选项2'
                     }, {
-                    basOuTypes: '3',
-                    label: '3'
+                    value: '3',
+                    label: '选项3'
                     }, {
-                    basOuTypes: '4',
-                    label: '4'
+                    value: '4',
+                    label: '选项4'
                     }, {
-                    basOuTypes: '5',
-                    label: '5'
+                    value: '5',
+                    label: '选项5'
                     }, {
-                    basOuTypes: '6',
-                    label: '6'
+                    value: '6',
+                    label: '选项6'
                     }, {
-                    basOuTypes: '7',
-                    label: '7'
+                    value: '7',
+                    label: '选项7'
                     }, {
-                    basOuTypes: '8',
-                    label: '8'
+                    value: '8',
+                    label: '选项8'
                     }, {
-                    basOuTypes: '9',
-                    label: '9'
+                    value: '9',
+                    label: '选项9'
                     }],
                 tableData:[],
 

@@ -27,7 +27,7 @@
                 </el-col>   
             </el-col>
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5 pr10 pl5">
+                <el-row class="h48 pt5 pr10">
                     <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -112,6 +112,8 @@
                 
                 <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId">
                     <el-option v-for="item in areaParentId" :key="item.value" :label="item.label" :value="item.value" placeholder="">
+                        <span style="float: left">{{ item.label }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                     </el-option>
                 </el-select>
                 <el-input v-else :class="{redBorder : validation.hasError('dialogData.areaParentId')}"  v-model="dialogData.areaParentId" disabled></el-input>
@@ -123,6 +125,8 @@
                 <label>允许使用</label>
                 <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
                     <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
+                        <span style="float: left">{{ item.label }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                     </el-option>
                 </el-select>
             </div>
