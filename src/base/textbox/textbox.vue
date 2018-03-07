@@ -1,6 +1,6 @@
 <template>
 	<el-row class="pl10 pr10" style="margin-top:20px">                
-        <el-col :span="6" v-for="item in data">
+        <el-col :span="6" v-for="item in data" :key="item.must" >
             <el-row>
                <el-col :span="7" >
 	                <div class="bgcolor smallBgcolor">

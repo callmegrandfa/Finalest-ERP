@@ -321,9 +321,22 @@ import Btm from '../../base/btm/btm'
                 })
             },
             handleCurrentChange:function(val){//获取当前页码,分页
-                this.pageIndex=val;
-                this.page = val;
-                this.loadTableData();
+                if(this.isUpdate){
+                    this.$confirm('存在未保存修改项，是否继续查看下一页?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            this.pageIndex=val;
+                            this.page = val;
+                            this.loadTableData();
+                        }).catch(() => {
+                            
+                    });
+                }
+                
+                
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -375,17 +388,27 @@ import Btm from '../../base/btm/btm'
                 this.addArray.push(newcol);
             },
             handleDel(row,index){//行内删除
-                if(row.brandCode==""){
-                    this.tableData.splice(index,1)
-                }else{
-                    let _this=this;
-                    _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
-                        _this.loadTableData();
-                        _this.open('删除成功','el-icon-circle-check','successERP');              
-                    })
-                }
-                
-                //this.tableData.splice(index,1);
+                this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                    if(row.brandCode==""){
+                        this.tableData.splice(index,1)
+                        }else{
+                            let _this=this;
+                            _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
+                                _this.loadTableData();
+                                _this.open('删除成功','el-icon-circle-check','successERP');              
+                            })
+                        }
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                });
             },
             search(){//按条件查询
                 let _this=this;
@@ -400,32 +423,19 @@ import Btm from '../../base/btm/btm'
             handleSelectionChange(val){//多选操作
                 this.SelectionChange=val;
             },
-            // Disabled(){//批量禁用
-            //     let DisabledArray=[];
-            //     this.isUpdate=true;
-            //     for(let o in this.SelectionChange){
-            //         this.updateArray.push(this.SelectionChange[o].id)
-            //         DisabledArray.push(this.SelectionChange[o].id)
-            //     }
-            //     for(let i in DisabledArray){
-            //         for(let j in this.tableData){
-            //             if (DisabledArray[i]==this.tableData[j].id){
-            //                 this.tableData[j].status=0;
-            //             }
-            //         }
-            //     }
-            // },
             handleStatus(statu){//批量启用/禁用
                 let handleArray=[];
-                this.isUpdate=true;
-                for(let o in this.SelectionChange){
-                    this.updateArray.push(this.SelectionChange[o].id)
-                    handleArray.push(this.SelectionChange[o].id)
-                }
-                for(let i in handleArray){
-                    for(let j in this.tableData){
-                        if (handleArray[i]==this.tableData[j].id){
-                            this.tableData[j].status=statu;
+                if(this.SelectionChange.length>0){
+                    this.isUpdate=true;
+                    for(let o in this.SelectionChange){
+                        this.updateArray.push(this.SelectionChange[o].id)
+                        handleArray.push(this.SelectionChange[o].id)
+                    }
+                    for(let i in handleArray){
+                        for(let j in this.tableData){
+                            if (handleArray[i]==this.tableData[j].id){
+                                this.tableData[j].status=statu;
+                            }
                         }
                     }
                 }
@@ -436,10 +446,27 @@ import Btm from '../../base/btm/btm'
                 }
                 let _this=this;
                 if(this.idArray.ids.length>0){
-                    _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
-                        _this.loadTableData();
-                        _this.open('删除成功','el-icon-circle-check','successERP');    
-                    })
+                    this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                        if(row.brandCode==""){
+                            this.tableData.splice(index,1)
+                            }else{
+                                 _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
+                                    _this.loadTableData();
+                                    _this.open('删除成功','el-icon-circle-check','successERP');    
+                                })
+                            }
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                   
                 }
             },
             save(){

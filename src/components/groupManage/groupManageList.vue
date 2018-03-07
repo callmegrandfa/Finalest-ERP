@@ -8,7 +8,7 @@
             <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
         </el-row>
         <el-row class="bg-white pt20">
-                <div class="bgcolor">
+                <div class="bgcolor reset">
                     <label>集团编码</label><el-input v-model="tableData[0].groupCode"  :disabled="isEdit" @change="isUpdate()" ></el-input>
                 </div>
                 <div class="bgcolor">
@@ -544,7 +544,7 @@
 .groupList .el-table__body{
     text-align: center;
 }
-.bgcolor .el-input input{
-    height: 35px!important;
+.reset .el-input input{
+    height: 35px;
 }
 </style>
