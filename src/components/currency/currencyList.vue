@@ -53,7 +53,7 @@
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column label="序号">
                                 <template slot-scope="scope">
-                                    <img v-show='scope.$index==ar[scope.$index]' class="abimg" src="../../../static/image/content/redremind.png"/>
+                                    <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.seq"
@@ -164,7 +164,7 @@
 
 <script>
     export default{
-        name:'currencyList',
+        name:'currencyList', 
         data(){
             return {
                 allList:[],//所有数据列表
@@ -191,6 +191,7 @@
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
                 page:1,//当前页
+                pagex:1,//前一页
                 eachPage:10,//一页显示的数量
                 x:0,//增行的下标
                 rows:[],//增行的数组
@@ -209,8 +210,7 @@
             }
         },
         created:function(){
-            this.loadAllList();
-            
+            this.loadAllList();            
         },
         methods:{
         //---获取数据-------------------------------------------------------
@@ -311,25 +311,30 @@
             handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
             },
-            handleCurrentChange:function(val){//获取当前页码
-                this.pageIndex=val;
-                console.log(val)
-                this.page = val;
-                this.loadAllList();
+            handleCurrentChange:function(val){//获取点击页码
+                let self = this;
+                if(self.updateList.length==0){
+                    this.pageIndex=val;
+                    console.log(val)
+                    this.page = val;
+                    this.loadAllList();
+                    console.log(self.page)
+                }else if(self.updateList.length>0){
+                    self.page = self.pagex;
+                    console.log(self.page)
+                    alert('您有修改未保存')
+                }
+                
             },
-            // handleEdit:function(index,row){//表格内编辑操作
-                
-                
-            // },
             handleChange:function(index,row){
                 let self = this;
                 // console.log(index)
                 let map = false;
                 if(self.ar.length==0){//修改后表格前红标
-                    self.ar.push(index)
+                    self.ar.push(row.id)
                 }else if(self.ar.length>=1){
                     for(let i in self.ar){
-                        if(index!=self.ar[i]){
+                        if(row.id!=self.ar[i]){
                             map = true;
                         }else{
                             map = false;
@@ -338,11 +343,11 @@
                     }
                 }
                 if(map){
-                    self.ar.push(index)
-                    self.ar.sort();
+                    self.ar.push(row.id)
+                    // self.ar.sort();
                     console.log(self.ar)
                 }
-                self.redIndex = index;
+                // self.redIndex = index;
 
 
                 let flag = false;
@@ -382,112 +387,112 @@
 </script>
 
 <style scoped>
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
-.bg-white{
-    background: white;
-    border-radius: 3px;
-}
-.h48{
-    height: 48px;
-    line-height: 48px;
-    border-bottom: 1px solid #E4E4E4;
-}
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
-.mt20{
-    margin-top: 20px;
-}
+    .store-data-wrapper{
+        width: 100%;
+        height: auto;
+    }
+    .bg-white{
+        background: white;
+        border-radius: 3px;
+    }
+    .h48{
+        height: 48px;
+        line-height: 48px;
+        border-bottom: 1px solid #E4E4E4;
+    }
+    .mt5{
+        margin-top: 5px;
+    }
+    .mt10{
+        margin-top: 10px;
+    }
+    .mt20{
+        margin-top: 20px;
+    }
 
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
-}
-.pl15{
-    padding-left: 15px;
-}
-.pt10{
-    padding-top: 10px;
-}
-.pt5{
-    padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
-.fs12{
-    font-size: 12px;
-}
-.border1{
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-}
-.btn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(130, 170, 252, 1);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.search-btn{
-    display: inline-block;
-    width: 87px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 3px;
-    background: #4A6997;
-    color: white;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
-.text-right{
-    text-align: right;
-}
+    .ml10{
+        margin-left: 10px;
+    }
+    .pl10{
+        padding-left: 10px;
+    }
+    .pl15{
+        padding-left: 15px;
+    }
+    .pt10{
+        padding-top: 10px;
+    }
+    .pt5{
+        padding-top: 5px;
+    }
+    .pt20{
+        padding-top: 20px;
+    }
+    .pb10{
+        padding-bottom: 10px;
+    }
+    .pr10{
+        padding-right: 10px;
+    }
+    .h30{
+        height: 30px;
+        line-height: 30px;
+    }
+    .fs14{
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.349019607843137);
+    }
+    .fs12{
+        font-size: 12px;
+    }
+    .border1{
+        border: 1px solid #cccccc;
+        border-radius: 3px;
+    }
+    .btn{
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        background: rgba(130, 170, 252, 1);
+        color: white;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .rbtn{
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        background: rgba(242, 242, 242, 1);
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .search-btn{
+        display: inline-block;
+        width: 87px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 3px;
+        background: #4A6997;
+        color: white;
+        cursor: pointer;
+    }
+    .open{
+        display: inline-block;
+        width: 49px;
+        height: 22px;
+        line-height: 22px;
+        border: 1px solid #cccccc;
+        color: #cccccc;
+        text-align: center;
+        cursor: pointer;
+    }
+    .text-right{
+        text-align: right;
+    }
 </style>
 
 <style>

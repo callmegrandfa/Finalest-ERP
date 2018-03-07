@@ -14,12 +14,12 @@
                     </el-row>
                     <el-row>
                         <el-col :span="8">
-                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                            <label>品牌编码</label>
+                            <div class="bgcolor" style="margin-top:20px">
+                            <label style="width:86px">品牌编码</label>
                            </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor" style="margin-top:20px">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
                             <el-input v-model="searchItem.BrandCode"></el-input>
                             </div>
                         </el-col>
@@ -27,11 +27,11 @@
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" >
-                            <label>品牌名称(中文)</label>
+                            <label style="width:86px">品牌名称(中文)</label>
                            </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor" >
+                            <div class="bgcolor smallBgcolor" >
                             <el-input placeholder="" v-model="searchItem.BrandName"></el-input>
                             </div>
                         </el-col>
@@ -39,11 +39,11 @@
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" >
-                                    <label>品牌名称(英文)</label>
+                                    <label style="width:86px">品牌名称(英文)</label>
                            </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor" >
+                            <div class="bgcolor smallBgcolor" >
                             <el-input placeholder=""></el-input>
                             </div>
                         </el-col>
@@ -51,7 +51,7 @@
                     <el-row>
                         <el-col :span="8">
                             <div class="bgcolor smallBgcolor" >
-                            <label>状态</label>
+                            <label style="width:86px">状态</label>
                             </div>
                         </el-col>
                         <el-col :span="14">
@@ -95,14 +95,14 @@
                                 <el-table-column prop="brandCode" label="品牌编码">
                                     <template slot-scope="scope">   
                                          <img :id=scope.row.id  :if=updateArray.indexOf(scope.row.id)  v-show='updateArray.indexOf(scope.row.id)>=0||scope.row.brandCode==""' class="update-icon" src="../../../static/image/content/redremind.png"/>                                   
-                                        <input class="input-need" 
+                                        <input class="input-need" :class="{errorclass:scope.row.brandCode==''&&isSave==true}"
                                                 v-model="scope.row.brandCode" 
                                                 type="text"/>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="brandName" label="品牌名称">
                                     <template slot-scope="scope">
-                                        <input class="input-need" 
+                                        <input class="input-need" :class="{errorclass:scope.row.brandName==''&&isSave==true}" 
                                                 v-model="scope.row.brandName" 
                                                 type="text"/>
                                     </template>
@@ -118,7 +118,7 @@
                                 </el-table-column>
                                 <el-table-column prop="status" label="状态">
                                     <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.status" >
+                                        <el-select  v-model="scope.row.status" :un="scope.row.status" >
                                             <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                             </el-option>
                                         </el-select>
@@ -234,6 +234,7 @@ import Btm from '../../base/btm/btm'
                 Sorting:'',//table搜索
                 updateId:'',
                 cancelClick:false,//是否点击取消按钮
+                isSave:false,
             }
         },
         created:function(){
@@ -296,6 +297,7 @@ import Btm from '../../base/btm/btm'
                 this.isCancel=false;
                 this.isUpdate=false;
                 this.isAdd=false;
+                this.isSave=false;
                 this.updateArray=[];
                 this.addArray=[];
                 this.updateId="";
@@ -307,7 +309,6 @@ import Btm from '../../base/btm/btm'
                     _this.tableData=res.result.items;
                     let countPage=res.result.totalCount;
                     _this.totalPage = Math.ceil(countPage/_this.eachPage);
-                    _this.Init();
                   
                 })
             },
@@ -321,20 +322,23 @@ import Btm from '../../base/btm/btm'
                 })
             },
             handleCurrentChange:function(val){//获取当前页码,分页
-                if(this.isUpdate){
-                    this.$confirm('存在未保存修改项，是否继续查看下一页?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            this.pageIndex=val;
-                            this.page = val;
-                            this.loadTableData();
-                        }).catch(() => {
+                // if(this.isUpdate){
+                //     this.$confirm('存在未保存修改项，是否继续查看下一页?', '提示', {
+                //         confirmButtonText: '确定',
+                //         cancelButtonText: '取消',
+                //         type: 'warning',
+                //         center: true
+                //         }).then(() => {
+                //             this.pageIndex=val;
+                //             this.page = val;
+                //             this.loadTableData();
+                //         }).catch(() => {
                             
-                    });
-                }
+                //     });
+                // }
+                this.pageIndex=val;
+                this.page = val;
+                this.loadTableData();
                 
                 
             },
@@ -374,7 +378,7 @@ import Btm from '../../base/btm/btm'
                     "groupId":0,
                     "brandCode":"" ,
                     "brandName":"" ,
-                    "status":"" ,
+                    "status":1 ,
                     "remark": "" ,
                     "remark2":"" ,
                     "statusTValue":1,
@@ -419,6 +423,7 @@ import Btm from '../../base/btm/btm'
             cancel(){//数据恢复到初始化状态 取消
                 this.cancelClick=true;
                 this.loadTableData();
+                this.Init();
             },
             handleSelectionChange(val){//多选操作
                 this.SelectionChange=val;
@@ -457,6 +462,7 @@ import Btm from '../../base/btm/btm'
                             }else{
                                  _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
                                     _this.loadTableData();
+                                    _this.Init();
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
                             }
@@ -470,23 +476,29 @@ import Btm from '../../base/btm/btm'
                 }
             },
             save(){
+                this.isSave=true;
                 let _this=this;
                 if(_this.addArray.length>0){//新增保存
                     for(let i=0;i<_this.addArray.length;i++){
-                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""){
-                            console.log("必填为空！")
+                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""||_this.addArray[i].status==""){
+                            this.$message({
+                                message: '红色框内为必填项！',
+                                type: 'warning'
+                            });
                             return false
                         }
                     }
                     if(_this.addArray.length==1){//单条新增
                         _this.$axios.posts('/api/services/app/BrandManagement/Create',_this.addArray[0]).then(function(res){
                             _this.loadTableData();
+                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
                     }else{//批量新增
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',_this.addArray).then(function(res){
                             _this.loadTableData();
+                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
@@ -501,11 +513,13 @@ import Btm from '../../base/btm/btm'
                         }
                         _this.$axios.puts('/api/services/app/BrandManagement/Update',_this.tableData[updataIndex]).then(function(res){
                             _this.loadTableData();
+                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         });
                     }else{//批量修改
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',_this.tableData).then(function(res){
                             _this.loadTableData();
+                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
@@ -705,5 +719,9 @@ table .el-input__inner{
     height: 28px;
     text-align:center;
     border:none;
+}
+/* 验证为空 */
+.errorclass{
+    border:1px solid #f98b8b!important;
 }
 </style>

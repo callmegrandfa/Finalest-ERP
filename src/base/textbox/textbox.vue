@@ -1,6 +1,6 @@
 <template>
 	<el-row class="pl10 pr10" style="margin-top:20px">                
-        <el-col :span="6" v-for="item in data" :key="item.must" >
+        <el-col :span="6" v-for="item in data" :key="item">
             <el-row>
                <el-col :span="7" >
 	                <div class="bgcolor smallBgcolor">
@@ -15,9 +15,8 @@
 	            <el-col :span="14" v-else>
 	                <div class="bgcolor smallBgcolor">
 	                    <el-select  v-model="item.value" >
-	                    <el-option  v-for="item in item.options" :key="item.value" :label="item.label" :value="item.value">
+	                    <el-option  v-for="(item,index) in item.options" :key="index" :label="item.label" :value="item.value">
 	                    </el-option>
-
 	                    </el-select>
 	                </div>
 	            </el-col>

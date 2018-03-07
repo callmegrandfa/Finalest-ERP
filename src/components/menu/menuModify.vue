@@ -836,15 +836,18 @@
     background-color: #354052;
 }
 .menuModify .bgcolor.longWidth .addRole{
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  margin-right: 10px;
-  cursor: pointer;
-  position: relative;
+    text-align: center;
+    line-height: 35px;
+    display: inline-block;
+    width: 66px;
+    height: 35px;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    position: relative;
 }
 .menuModify .bgcolor.longWidth .addRole i{
   position: absolute;

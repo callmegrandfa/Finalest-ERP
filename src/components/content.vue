@@ -44,7 +44,7 @@ export default {
   data(){
       return{
           x:0,
-          go:document.getElementById('routerBox').offsetWidth / 10
+          go:100
       }
   },
   methods:{
