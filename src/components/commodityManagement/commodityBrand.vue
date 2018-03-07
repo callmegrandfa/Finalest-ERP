@@ -95,14 +95,14 @@
                                 <el-table-column prop="brandCode" label="品牌编码">
                                     <template slot-scope="scope">   
                                          <img :id=scope.row.id  :if=updateArray.indexOf(scope.row.id)  v-show='updateArray.indexOf(scope.row.id)>=0||scope.row.brandCode==""' class="update-icon" src="../../../static/image/content/redremind.png"/>                                   
-                                        <input class="input-need" 
+                                        <input class="input-need" :class="{errorclass:scope.row.brandCode==''&&isSave==true}"
                                                 v-model="scope.row.brandCode" 
                                                 type="text"/>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="brandName" label="品牌名称">
                                     <template slot-scope="scope">
-                                        <input class="input-need" 
+                                        <input class="input-need" :class="{errorclass:scope.row.brandName==''&&isSave==true}" 
                                                 v-model="scope.row.brandName" 
                                                 type="text"/>
                                     </template>
@@ -118,7 +118,7 @@
                                 </el-table-column>
                                 <el-table-column prop="status" label="状态">
                                     <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.status" >
+                                        <el-select  v-model="scope.row.status" :un="scope.row.status" >
                                             <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                             </el-option>
                                         </el-select>
@@ -234,6 +234,7 @@ import Btm from '../../base/btm/btm'
                 Sorting:'',//table搜索
                 updateId:'',
                 cancelClick:false,//是否点击取消按钮
+                isSave:false,
             }
         },
         created:function(){
@@ -296,6 +297,7 @@ import Btm from '../../base/btm/btm'
                 this.isCancel=false;
                 this.isUpdate=false;
                 this.isAdd=false;
+                this.isSave=false;
                 this.updateArray=[];
                 this.addArray=[];
                 this.updateId="";
@@ -307,7 +309,6 @@ import Btm from '../../base/btm/btm'
                     _this.tableData=res.result.items;
                     let countPage=res.result.totalCount;
                     _this.totalPage = Math.ceil(countPage/_this.eachPage);
-                    _this.Init();
                   
                 })
             },
@@ -321,9 +322,25 @@ import Btm from '../../base/btm/btm'
                 })
             },
             handleCurrentChange:function(val){//获取当前页码,分页
+                // if(this.isUpdate){
+                //     this.$confirm('存在未保存修改项，是否继续查看下一页?', '提示', {
+                //         confirmButtonText: '确定',
+                //         cancelButtonText: '取消',
+                //         type: 'warning',
+                //         center: true
+                //         }).then(() => {
+                //             this.pageIndex=val;
+                //             this.page = val;
+                //             this.loadTableData();
+                //         }).catch(() => {
+                            
+                //     });
+                // }
                 this.pageIndex=val;
                 this.page = val;
                 this.loadTableData();
+                
+                
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -361,7 +378,7 @@ import Btm from '../../base/btm/btm'
                     "groupId":0,
                     "brandCode":"" ,
                     "brandName":"" ,
-                    "status":"" ,
+                    "status":1 ,
                     "remark": "" ,
                     "remark2":"" ,
                     "statusTValue":1,
@@ -375,17 +392,27 @@ import Btm from '../../base/btm/btm'
                 this.addArray.push(newcol);
             },
             handleDel(row,index){//行内删除
-                if(row.brandCode==""){
-                    this.tableData.splice(index,1)
-                }else{
-                    let _this=this;
-                    _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
-                        _this.loadTableData();
-                        _this.open('删除成功','el-icon-circle-check','successERP');              
-                    })
-                }
-                
-                //this.tableData.splice(index,1);
+                this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                    if(row.brandCode==""){
+                        this.tableData.splice(index,1)
+                        }else{
+                            let _this=this;
+                            _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
+                                _this.loadTableData();
+                                _this.open('删除成功','el-icon-circle-check','successERP');              
+                            })
+                        }
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                });
             },
             search(){//按条件查询
                 let _this=this;
@@ -396,36 +423,24 @@ import Btm from '../../base/btm/btm'
             cancel(){//数据恢复到初始化状态 取消
                 this.cancelClick=true;
                 this.loadTableData();
+                this.Init();
             },
             handleSelectionChange(val){//多选操作
                 this.SelectionChange=val;
             },
-            // Disabled(){//批量禁用
-            //     let DisabledArray=[];
-            //     this.isUpdate=true;
-            //     for(let o in this.SelectionChange){
-            //         this.updateArray.push(this.SelectionChange[o].id)
-            //         DisabledArray.push(this.SelectionChange[o].id)
-            //     }
-            //     for(let i in DisabledArray){
-            //         for(let j in this.tableData){
-            //             if (DisabledArray[i]==this.tableData[j].id){
-            //                 this.tableData[j].status=0;
-            //             }
-            //         }
-            //     }
-            // },
             handleStatus(statu){//批量启用/禁用
                 let handleArray=[];
-                this.isUpdate=true;
-                for(let o in this.SelectionChange){
-                    this.updateArray.push(this.SelectionChange[o].id)
-                    handleArray.push(this.SelectionChange[o].id)
-                }
-                for(let i in handleArray){
-                    for(let j in this.tableData){
-                        if (handleArray[i]==this.tableData[j].id){
-                            this.tableData[j].status=statu;
+                if(this.SelectionChange.length>0){
+                    this.isUpdate=true;
+                    for(let o in this.SelectionChange){
+                        this.updateArray.push(this.SelectionChange[o].id)
+                        handleArray.push(this.SelectionChange[o].id)
+                    }
+                    for(let i in handleArray){
+                        for(let j in this.tableData){
+                            if (handleArray[i]==this.tableData[j].id){
+                                this.tableData[j].status=statu;
+                            }
                         }
                     }
                 }
@@ -436,30 +451,54 @@ import Btm from '../../base/btm/btm'
                 }
                 let _this=this;
                 if(this.idArray.ids.length>0){
-                    _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
-                        _this.loadTableData();
-                        _this.open('删除成功','el-icon-circle-check','successERP');    
-                    })
+                    this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                        if(row.brandCode==""){
+                            this.tableData.splice(index,1)
+                            }else{
+                                 _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
+                                    _this.loadTableData();
+                                    _this.Init();
+                                    _this.open('删除成功','el-icon-circle-check','successERP');    
+                                })
+                            }
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                   
                 }
             },
             save(){
+                this.isSave=true;
                 let _this=this;
                 if(_this.addArray.length>0){//新增保存
                     for(let i=0;i<_this.addArray.length;i++){
-                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""){
-                            console.log("必填为空！")
+                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""||_this.addArray[i].status==""){
+                            this.$message({
+                                message: '红色框内为必填项！',
+                                type: 'warning'
+                            });
                             return false
                         }
                     }
                     if(_this.addArray.length==1){//单条新增
                         _this.$axios.posts('/api/services/app/BrandManagement/Create',_this.addArray[0]).then(function(res){
                             _this.loadTableData();
+                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
                     }else{//批量新增
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',_this.addArray).then(function(res){
                             _this.loadTableData();
+                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
@@ -474,11 +513,13 @@ import Btm from '../../base/btm/btm'
                         }
                         _this.$axios.puts('/api/services/app/BrandManagement/Update',_this.tableData[updataIndex]).then(function(res){
                             _this.loadTableData();
+                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         });
                     }else{//批量修改
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',_this.tableData).then(function(res){
                             _this.loadTableData();
+                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
@@ -678,5 +719,9 @@ table .el-input__inner{
     height: 28px;
     text-align:center;
     border:none;
+}
+/* 验证为空 */
+.errorclass{
+    border:1px solid #f98b8b!important;
 }
 </style>
