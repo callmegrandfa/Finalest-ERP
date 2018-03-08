@@ -1,7 +1,7 @@
 <template>
     <div class="roleList">
         <el-row class="bg-white">
-            <el-col :span="[ifWidth?'5':'0']" v-show="ifWidth">
+            <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
@@ -44,7 +44,7 @@
                 </div>
             </el-col>
 
-            <el-col :span="[ifWidth?'19':'24']" class="border-left">
+            <el-col :span="ifWidth?19:24" class="border-left">
                 <el-row class="h48 pt5">
                     <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>

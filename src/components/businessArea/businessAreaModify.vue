@@ -319,9 +319,6 @@
     margin-bottom: 10px;
     margin-top: -10px;
 }
-.block{
-    display: none;
-}
  .businessAreaModify .el-row{
     background-color: #fff;
   }

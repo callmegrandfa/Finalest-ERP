@@ -311,9 +311,6 @@
     margin-bottom: 10px;
     margin-top: -10px;
 }
-.block{
-    display: none;
-}
  .businessAreaDetail .el-row{
     background-color: #fff;
   }

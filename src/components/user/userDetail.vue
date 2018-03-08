@@ -197,12 +197,12 @@
               <label>备注</label>
               <el-input
               class="remark" 
-               @focus="showErrprTipsTextArea"
-               :class="{redBorder : validation.hasError('addData.remark')}"
-                v-model="addData.remark"
-                type="textarea"
-                :autosize="{ minRows: 4, maxRows: 10}"
-                placeholder="">
+              @focus="showErrprTipsTextArea"
+              :class="{redBorder : validation.hasError('addData.remark')}"
+              v-model="addData.remark"
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 10}"
+              placeholder="">
               </el-input>
             </div>
           </el-col>
@@ -571,9 +571,6 @@
 .userDetail  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
-}
-.block{
-    display: none;
 }
  .userDetail .el-row{
     background-color: #fff;

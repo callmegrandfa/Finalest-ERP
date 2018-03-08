@@ -1,7 +1,7 @@
 <template>
     <div class="OuListForm">
         <el-row class="bg-white">
-            <el-col :span="[ifWidth?'5':'0']" v-show="ifWidth">
+            <el-col :span="ifWidth ? 5 : 0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
@@ -15,23 +15,50 @@
                 <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
                     <el-select  v-model="searchData.OuType" placeholder="">
-                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-option v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor">
+                    <label>所属公司</label>
+                    <el-select  v-model="searchData.CompanyOuId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>行政地区</label>
+                    <el-select  v-model="searchData.AreaId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>启用状态</label>
+                    <el-select  v-model="searchData.status" placeholder="">
+                        <el-option v-for="item in selectData.Status002" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                        </el-option>
+                    </el-select>
+                </div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
                     <span class="search-btn">高级搜索</span>
                 </div>
             </el-col>
-
-             <el-col :span="[ifWidth?'19':'24']" class="border-left">
+            <el-col :span='4' class="tree-container border-left" v-loading="treeLoading" >
+                <el-tree
+                :data="componyTree"
+                :props="defaultProps"
+                node-key="treeId"
+                default-expand-all
+                :expand-on-click-node="false"
+                @node-click="nodeClick">
+                </el-tree>
+            </el-col>
+             <el-col :span="ifWidth ? 15:20" class="border-left">
                 <el-row class="h48 pt5">
                     <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
@@ -71,18 +98,7 @@
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span='4' class="tree-container" v-loading="treeLoading">
-                        <el-tree
-                        :data="componyTree"
-                        :props="defaultProps"
-                        node-key="treeId"
-                        default-expand-all
-                        :expand-on-click-node="false"
-                        @node-click="nodeClick">
-                        </el-tree>
-                    </el-col>
-
-                    <el-col :span='20'>
+                    <el-col :span='24'>
                         <el-table 
                         v-loading="tableLoading"
                         :data="tableData" 
@@ -93,12 +109,12 @@
                         ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="ouCode" label="编码"></el-table-column>
+                            <el-table-column prop="ouName" label="名称"></el-table-column>
                             <el-table-column prop="ouFullname" label="全称"></el-table-column>
-                            <el-table-column prop="ouName" label="简称"></el-table-column>
                             <el-table-column prop="ouParentid" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
                             <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="createdTime" label="创建时间" width="160">
+                            <el-table-column prop="createdTime" label="启用年月" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker 
                                     format="yyyy-MM-dd HH:mm:ss"
@@ -110,7 +126,11 @@
                                     placeholder=""></el-date-picker>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].status" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="isCompany" label="公司">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].isCompany" disabled></el-checkbox>
@@ -165,8 +185,22 @@
                     Status: '',//启用状态
                     OuType: '',//组织类型
                 },
+                selectData:{//select数据
+                    OUType:[],//组织类型
+                    Status002:[],//启用状态
+                },
                 searchDataClick:{},
                 tableSearchData:{},
+                statu:[{
+                    value: '0',
+                    label: '启用'
+                    },{
+                    value: '1',
+                    label: '停用'
+                    },{
+                    value: '2',
+                    label: '冻结'
+                    },],
                 options: [{
                     value: '1',
                     label: '选项1'
@@ -218,10 +252,22 @@
         },
         created:function(){       
                 let _this=this;
+                _this.getSelectData();
                 _this.loadTableData();
                 _this.loadTree();
              },
         methods:{
+            getSelectData(){
+                let _this=this;//Status002
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'OUType'}).then(function(res){ 
+                    // 组织类型
+                    _this.selectData.OUType=res.result;
+                    })
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+                    // 启用状态
+                    _this.selectData.Status002=res.result;
+                    })
+            },
             closeLeft:function(){
                let self = this;
                self.ifWidth = false;
@@ -305,6 +351,8 @@
                  let _this=this;
                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
+                 _this.searchData.OuType=parseInt(_this.searchData.OuType);
+                 _this.searchData.Status002=parseInt(_this.searchData.Status002);
                 _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchDataClick)
                 .then(function(res){      
                     _this.totalItem=res.result.totalCount

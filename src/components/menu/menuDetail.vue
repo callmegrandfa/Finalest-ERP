@@ -604,9 +604,6 @@
     margin-bottom: 10px;
     margin-top: -10px;
 }
-.block{
-    display: none;
-}
 .menu_box{
     display: none;
 }
