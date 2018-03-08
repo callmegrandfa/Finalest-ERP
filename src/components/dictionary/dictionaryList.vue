@@ -859,9 +859,6 @@
 .data-wrapper .areaDialog .bgcolor:first-child{
     margin-top:15px;
 }
-.data-wrapper .bgcolor{
-    margin-bottom: 0
-}
 .data-table .el-input__inner{
     height: 28px;
     text-align:center;

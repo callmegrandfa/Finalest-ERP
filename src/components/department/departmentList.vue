@@ -1,5 +1,5 @@
 <template>
-    <div class="data-wrapper">
+    <div class="data-wrapper department">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
@@ -755,7 +755,7 @@
 .data-wrapper .areaDialog .bgcolor:first-child{
     margin-top:15px;
 }
-.data-wrapper .bgcolor{
+.department .bgcolor{
     margin-bottom: 0
 }
 </style>

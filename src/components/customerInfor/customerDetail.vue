@@ -33,313 +33,313 @@
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
     </el-row>
- <el-collapse-transition>
-     <div v-show="ifShow">   
-        <el-row>
-            <el-col :span="24" class="getPadding"> 
-                <div class="tipsWrapper" name="ouId">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.ouId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.ouId') }}</p>
+    <el-collapse-transition>
+        <div v-show="ifShow">   
+            <el-row>
+                <el-col :span="24" class="getPadding"> 
+                    <div class="tipsWrapper" name="ouId">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.ouId')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.ouId') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="contact">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contact')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contact') }}</p>
+                    <div class="tipsWrapper" name="contact">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contact')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contact') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="contactName">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactName')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactName') }}</p>
+                    <div class="tipsWrapper" name="contactName">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactName')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactName') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="contactFullName">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactFullName')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactFullName') }}</p>
+                    <div class="tipsWrapper" name="contactFullName">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactFullName')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactFullName') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="mnemonic">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.mnemonic')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.mnemonic') }}</p>
+                    <div class="tipsWrapper" name="mnemonic">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.mnemonic')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.mnemonic') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="contactClassId">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactClassId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactClassId') }}</p>
+                    <div class="tipsWrapper" name="contactClassId">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactClassId')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactClassId') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="contactWorkPropertyId">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactWorkPropertyId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactWorkPropertyId') }}</p>
+                    <div class="tipsWrapper" name="contactWorkPropertyId">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactWorkPropertyId')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactWorkPropertyId') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="contactGradeId">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactGradeId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactGradeId') }}</p>
+                    <div class="tipsWrapper" name="contactGradeId">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactGradeId')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactGradeId') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="isCustomer">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.isCustomer')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.isCustomer') }}</p>
+                    <div class="tipsWrapper" name="isCustomer">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.isCustomer')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.isCustomer') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="ficaOuId">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.ficaOuId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.ficaOuId') }}</p>
+                    <div class="tipsWrapper" name="ficaOuId">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.ficaOuId')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.ficaOuId') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="taxCode">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.taxCode')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.taxCode') }}</p>
+                    <div class="tipsWrapper" name="taxCode">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.taxCode')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.taxCode') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="opAreaId">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.opAreaId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.opAreaId') }}</p>
+                    <div class="tipsWrapper" name="opAreaId">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.opAreaId')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.opAreaId') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="adAreaId">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.adAreaId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.adAreaId') }}</p>
+                    <div class="tipsWrapper" name="adAreaId">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.adAreaId')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.adAreaId') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="legalPerson">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.legalPerson')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.legalPerson') }}</p>
+                    <div class="tipsWrapper" name="legalPerson">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.legalPerson')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.legalPerson') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="regAddress">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.regAddress')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.regAddress') }}</p>
+                    <div class="tipsWrapper" name="regAddress">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.regAddress')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.regAddress') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="manager">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.manager')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.manager') }}</p>
+                    <div class="tipsWrapper" name="manager">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.manager')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.manager') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="phone">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.phone')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.phone') }}</p>
+                    <div class="tipsWrapper" name="phone">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.phone')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.phone') }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="remark">
-                    <div class="errorTips" :class="{block : !validation.hasError('createContactParams.remark')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.remark') }}</p>
+                    <div class="tipsWrapper" name="remark">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.remark')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.remark') }}</p>
+                        </div>
                     </div>
-                </div>
-                
-
-                <div class="bgcolor">
-                    <label>所属组织</label>
-                    <el-select v-model="createContactParams.ouId" 
-                               placeholder=""
-                               class="ouId"
-                               :class="{redBorder : validation.hasError('createContactParams.ouId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in ou" 
-                                   :key="item.value" 
-                                   :label="item.label" 
-                                   :value="item.value"></el-option>
-                    </el-select>
-                </div> 
-
-
-                <div class="bgcolor">
-                    <label>编码</label>
-                    <el-input v-model="createContactParams.contact" 
-                              placeholder=""
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('createContactParams.contact')}"
-                              class="contact"></el-input>
-                </div>
-
-
-                <div class="bgcolor">
-                    <label>名称</label>
-                    <el-input v-model="createContactParams.contactName" 
-                              placeholder=""
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('createContactParams.contactName')}"
-                              class="contactName"></el-input>
-                </div>
-
-
-                <div class="bgcolor">
-                    <label>全称</label>
-                    <el-input v-model="createContactParams.contactFullName" 
-                              placeholder=""
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('createContactParams.contactFullName')}"
-                              class="contactFullName"></el-input>
-                </div>
-
-                <div class="bgcolor">
-                    <label>助记码</label>
-                    <el-input v-model="createContactParams.mnemonic" 
-                              placeholder=""
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('createContactParams.mnemonic')}"
-                              class="mnemonic"></el-input>
-                </div>
                     
-                <div class="bgcolor">
-                    <label>客户分类</label>
-                    <el-select v-model="createContactParams.contactClassId" 
-                               placeholder=""
-                               class="contactClassId"
-                               :class="{redBorder : validation.hasError('createContactParams.contactClassId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in customerType" 
-                                   :key="item.valueCustomerType" 
-                                   :label="item.label" 
-                                   :value="item.valueCustomerType"></el-option>
-                    </el-select>
-                </div>
-                             
-                <div class="bgcolor">
-                    <label>客户性质</label>
-                    <el-select v-model="createContactParams.contactWorkPropertyId" 
-                               placeholder=""
-                               class="contactWorkPropertyId"
-                               :class="{redBorder : validation.hasError('createContactParams.contactWorkPropertyId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in customerNature" 
-                                   :key="item.valueNature" 
-                                   :label="item.label" 
-                                   :value="item.valueNature"></el-option>
-                    </el-select>
-                </div>
 
-                <div class="bgcolor">
-                    <label>客户等级</label>
-                    <el-select v-model="createContactParams.contactGradeId" 
-                               placeholder=""
-                               class="contactGradeId"
-                               :class="{redBorder : validation.hasError('createContactParams.contactGradeId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in customerGrade" 
-                                   :key="item.valueGrade" 
-                                   :label="item.label" 
-                                   :value="item.valueGrade"></el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor">
-                    <label>客户类型</label>
-                    <el-select v-model='createContactParams.isCustomer'
-                               placeholder=""
-                               class="isCustomer"
-                               :class="{redBorder : validation.hasError('createContactParams.isCustomer')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in sort" 
-                                   :key="item.valueSort" 
-                                   :label="item.label" 
-                                   :value="item.valueSort"></el-option>
-                    </el-select>
-                </div>   
-                <div class="bgcolor">
-                    <label>对应财务组织</label>
-                    <el-select v-model="createContactParams.ficaOuId" 
-                               placeholder=""
-                               class="ficaOuId"
-                               :class="{redBorder : validation.hasError('createContactParams.ficaOuId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in ficaOu" 
-                                   :key="item.valueFinance" 
-                                   :label="item.label" 
-                                   :value="item.valueFinance"></el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor">
-                    <label>纳税登记号</label>
-                    <el-input v-model="createContactParams.taxCode" 
-                              placeholder=""
-                              @focus="showErrprTips"
-                              class="taxCode"
-                              :class="{redBorder : validation.hasError('createContactParams.taxCode')}"></el-input>
-                </div>
-                <div class="bgcolor">
-                    <label>业务地区区号</label>
-                    <el-select v-model="createContactParams.opAreaId"
-                               class="opAreaId"
-                               placeholder=""
-                               :class="{redBorder : validation.hasError('createContactParams.opAreaId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in opArea" 
-                                   :key="item.valueAreaBusiness" 
-                                   :label="item.label" 
-                                   :value="item.valueAreaBusiness"></el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor">
-                    <!-- 创建参数中没有 -->
-                    <label>国家/地区</label>
-                    <el-select placeholder="" v-model='ctest'>
-                        <el-option v-for="item in country" 
-                                   :key="item.valueCountry" 
-                                   :label="item.label" 
-                                   :value="item.valueCountry"></el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor">
-                    <label>行政地区</label>
-                    <el-select v-model="createContactParams.adAreaId" 
-                               placeholder=""
-                               :class="{redBorder : validation.hasError('createContactParams.adAreaId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in adArea" 
-                                   :key="item.adArea" 
-                                   :label="item.label" 
-                                   :value="item.adArea"></el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor">
-                    <label>法人代表</label>
-                    <el-input v-model="createContactParams.legalPerson" 
-                              placeholder=""
-                              class="legalPerson"
-                              :class="{redBorder : validation.hasError('createContactParams.legalPerson')}"
-                              @focus="showErrprTips"></el-input>
-                </div>
+                    <div class="bgcolor">
+                        <label>所属组织</label>
+                        <el-select v-model="createContactParams.ouId" 
+                                placeholder=""
+                                class="ouId"
+                                :class="{redBorder : validation.hasError('createContactParams.ouId')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in ou" 
+                                    :key="item.value" 
+                                    :label="item.label" 
+                                    :value="item.value"></el-option>
+                        </el-select>
+                    </div> 
 
-                <div class="bgcolor">
-                    <label>注册地址</label>
-                    <el-input v-model="createContactParams.regAddress" 
-                              placeholder=""
-                              class="regAddress"
-                              :class="{redBorder : validation.hasError('createContactParams.regAddress')}"
-                              @focus="showErrprTips"></el-input>
-                </div>
 
-                <div class="bgcolor">
-                    <label>负责人</label>
-                    <el-input v-model="createContactParams.manager" 
-                              placeholder=""
-                              class="manager"
-                              :class="{redBorder : validation.hasError('createContactParams.manager')}"
-                              @focus="showErrprTips"></el-input>
-                </div>
-                
-                <div class="bgcolor">
-                    <label>电话</label>
-                    <el-input v-model="createContactParams.phone" 
-                              placeholder=""
-                              class="phone"
-                              :class="{redBorder : validation.hasError('createContactParams.phone')}"
-                              @focus="showErrprTips"></el-input>
-                </div>
-                
-                <div class="bgcolor">
-                    <label>备注</label>
-                    <el-input v-model="createContactParams.remark" 
-                              placeholder=""
-                              class="remark"
-                              :class="{redBorder : validation.hasError('createContactParams.remark')}"
-                              @focus="showErrprTips"></el-input>
-                </div>
-            </el-col>
-        </el-row>
-     </div>
- </el-collapse-transition>     
+                    <div class="bgcolor">
+                        <label>编码</label>
+                        <el-input v-model="createContactParams.contact" 
+                                placeholder=""
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('createContactParams.contact')}"
+                                class="contact"></el-input>
+                    </div>
+
+
+                    <div class="bgcolor">
+                        <label>名称</label>
+                        <el-input v-model="createContactParams.contactName" 
+                                placeholder=""
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('createContactParams.contactName')}"
+                                class="contactName"></el-input>
+                    </div>
+
+
+                    <div class="bgcolor">
+                        <label>全称</label>
+                        <el-input v-model="createContactParams.contactFullName" 
+                                placeholder=""
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('createContactParams.contactFullName')}"
+                                class="contactFullName"></el-input>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>助记码</label>
+                        <el-input v-model="createContactParams.mnemonic" 
+                                placeholder=""
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('createContactParams.mnemonic')}"
+                                class="mnemonic"></el-input>
+                    </div>
+                        
+                    <div class="bgcolor">
+                        <label>客户分类</label>
+                        <el-select v-model="createContactParams.contactClassId" 
+                                placeholder=""
+                                class="contactClassId"
+                                :class="{redBorder : validation.hasError('createContactParams.contactClassId')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in customerType" 
+                                    :key="item.valueCustomerType" 
+                                    :label="item.label" 
+                                    :value="item.valueCustomerType"></el-option>
+                        </el-select>
+                    </div>
+                                
+                    <div class="bgcolor">
+                        <label>客户性质</label>
+                        <el-select v-model="createContactParams.contactWorkPropertyId" 
+                                placeholder=""
+                                class="contactWorkPropertyId"
+                                :class="{redBorder : validation.hasError('createContactParams.contactWorkPropertyId')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in customerNature" 
+                                    :key="item.valueNature" 
+                                    :label="item.label" 
+                                    :value="item.valueNature"></el-option>
+                        </el-select>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>客户等级</label>
+                        <el-select v-model="createContactParams.contactGradeId" 
+                                placeholder=""
+                                class="contactGradeId"
+                                :class="{redBorder : validation.hasError('createContactParams.contactGradeId')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in customerGrade" 
+                                    :key="item.valueGrade" 
+                                    :label="item.label" 
+                                    :value="item.valueGrade"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="bgcolor">
+                        <label>客户类型</label>
+                        <el-select v-model='createContactParams.isCustomer'
+                                placeholder=""
+                                class="isCustomer"
+                                :class="{redBorder : validation.hasError('createContactParams.isCustomer')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in sort" 
+                                    :key="item.valueSort" 
+                                    :label="item.label" 
+                                    :value="item.valueSort"></el-option>
+                        </el-select>
+                    </div>   
+                    <div class="bgcolor">
+                        <label>对应财务组织</label>
+                        <el-select v-model="createContactParams.ficaOuId" 
+                                placeholder=""
+                                class="ficaOuId"
+                                :class="{redBorder : validation.hasError('createContactParams.ficaOuId')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in ficaOu" 
+                                    :key="item.valueFinance" 
+                                    :label="item.label" 
+                                    :value="item.valueFinance"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="bgcolor">
+                        <label>纳税登记号</label>
+                        <el-input v-model="createContactParams.taxCode" 
+                                placeholder=""
+                                @focus="showErrprTips"
+                                class="taxCode"
+                                :class="{redBorder : validation.hasError('createContactParams.taxCode')}"></el-input>
+                    </div>
+                    <div class="bgcolor">
+                        <label>业务地区区号</label>
+                        <el-select v-model="createContactParams.opAreaId"
+                                class="opAreaId"
+                                placeholder=""
+                                :class="{redBorder : validation.hasError('createContactParams.opAreaId')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in opArea" 
+                                    :key="item.valueAreaBusiness" 
+                                    :label="item.label" 
+                                    :value="item.valueAreaBusiness"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="bgcolor">
+                        <!-- 创建参数中没有 -->
+                        <label>国家/地区</label>
+                        <el-select placeholder="" v-model='ctest'>
+                            <el-option v-for="item in country" 
+                                    :key="item.valueCountry" 
+                                    :label="item.label" 
+                                    :value="item.valueCountry"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="bgcolor">
+                        <label>行政地区</label>
+                        <el-select v-model="createContactParams.adAreaId" 
+                                placeholder=""
+                                :class="{redBorder : validation.hasError('createContactParams.adAreaId')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in adArea" 
+                                    :key="item.adArea" 
+                                    :label="item.label" 
+                                    :value="item.adArea"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="bgcolor">
+                        <label>法人代表</label>
+                        <el-input v-model="createContactParams.legalPerson" 
+                                placeholder=""
+                                class="legalPerson"
+                                :class="{redBorder : validation.hasError('createContactParams.legalPerson')}"
+                                @focus="showErrprTips"></el-input>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>注册地址</label>
+                        <el-input v-model="createContactParams.regAddress" 
+                                placeholder=""
+                                class="regAddress"
+                                :class="{redBorder : validation.hasError('createContactParams.regAddress')}"
+                                @focus="showErrprTips"></el-input>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>负责人</label>
+                        <el-input v-model="createContactParams.manager" 
+                                placeholder=""
+                                class="manager"
+                                :class="{redBorder : validation.hasError('createContactParams.manager')}"
+                                @focus="showErrprTips"></el-input>
+                    </div>
+                    
+                    <div class="bgcolor">
+                        <label>电话</label>
+                        <el-input v-model="createContactParams.phone" 
+                                placeholder=""
+                                class="phone"
+                                :class="{redBorder : validation.hasError('createContactParams.phone')}"
+                                @focus="showErrprTips"></el-input>
+                    </div>
+                    
+                    <div class="bgcolor">
+                        <label>备注</label>
+                        <el-input v-model="createContactParams.remark" 
+                                placeholder=""
+                                class="remark"
+                                :class="{redBorder : validation.hasError('createContactParams.remark')}"
+                                @focus="showErrprTips"></el-input>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+    </el-collapse-transition>     
 <el-row>
     <el-col :span="2" :offset="1"><el-checkbox v-model="supplier">同为供应商</el-checkbox></el-col>
     <el-col :span="2"><el-checkbox v-model="createContactParams.creditMgt">信用管理</el-checkbox></el-col>   
@@ -678,20 +678,21 @@
             </el-col>
         </div>
     </el-row>    
- <el-row>
-    <el-col :span="22" class="auditInformation getPadding">
-        <h4 class="h4">审计信息</h4>
-        <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="创建人" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="创建时间" disabled="disabled"></el-date-picker></div>
-            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="修改人" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="修改时间" disabled="disabled"></el-date-picker></el-input></div>
-            <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-            <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
-        </div>                                  
-    </el-col>
-</el-row>                                                                       
+    
+    <el-row>
+        <el-col :span="22" class="auditInformation getPadding">
+            <h4 class="h4">审计信息</h4>
+            <div>
+                <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="创建人" disabled="disabled"></el-input></div>
+                <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="创建时间" disabled="disabled"></el-date-picker></div>
+                <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="修改人" disabled="disabled"></el-input></div>
+                <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="修改时间" disabled="disabled"></el-date-picker></el-input></div>
+                <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
+                <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
+                <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+            </div>                                  
+        </el-col>
+    </el-row>                                                                       
 </div>
 </template>
 
