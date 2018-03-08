@@ -123,13 +123,15 @@
 /* elementUI表单控件 */
 /* input输入框 */
 /* <div class="bgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  
- <div class="bgcolor smallBgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  */
+ <div class="bgcolor smallBgcolor"><label class="longLabel"><small>*</small>营业或有效期限终止日期</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  */
 
  /* <div class="bgcolor smallBgcolor">
     <label></label>
     <span class="search-btn">查询</span>
 </div> */
 
+
+/* <label class="longLabel"><small>*</small>营业或有效期限终止日期</label> */
 .smallBgcolor .search-btn{
     text-align: center;
     font-size: 12px;
@@ -181,6 +183,9 @@
     font-family: 'microsoft yahei';
     font-weight: 400;
     font-style: normal;
+}
+.bgcolor>label.longLabel{
+  line-height:normal;
 }
 .smallBgcolor>label{
   line-height:28px;

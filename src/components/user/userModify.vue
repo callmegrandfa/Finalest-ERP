@@ -636,9 +636,6 @@
     margin-bottom: 10px;
     margin-top: -10px;
 }
-.block{
-    display: none;
-}
  .userDetail .el-row{
     background-color: #fff;
     padding-top: 15px;

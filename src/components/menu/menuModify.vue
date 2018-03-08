@@ -711,9 +711,6 @@
 
 
 <style scoped>
-.block{
-    display: none;
-}
 .menuModify  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;

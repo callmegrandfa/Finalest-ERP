@@ -1,7 +1,7 @@
 <template>
     <div class="userList">
         <el-row class="bg-white">
-             <el-col :span="[ifWidth?'5':'0']" v-show="ifWidth">
+             <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
@@ -41,7 +41,7 @@
                     <label>身份类型</label>
                     <!-- <el-input v-model="searchData.UserType" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.UserType" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
@@ -65,7 +65,7 @@
                     <label>状态</label>
                     <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.Status" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        <el-option v-for="item in selectData.Status002" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
@@ -83,7 +83,7 @@
                 </div>
             </el-col>
 
-            <el-col :span="[ifWidth?'19':'24']" class="border-left">
+            <el-col :span="ifWidth?19:24" class="border-left">
                 <el-row class="h48 pt5">
                     <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
@@ -205,6 +205,10 @@
                 },
                 searchDataClick:{},
                 tableSearchData:{},
+                selectData:{
+                    UserType:[],//身份类型
+                    Status002:[],//状态
+                },
                 options: [{
                     value: '1',
                     label: '选项1'
@@ -257,8 +261,20 @@
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
+                _this.getSelectData();
              },
         methods:{
+            getSelectData(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
+                // 身份类型
+                _this.selectData.UserType=res.result;
+                })
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+                // 启用状态
+                _this.selectData.Status002=res.result;
+                })
+            },
             closeLeft:function(){
                let self = this;
                self.ifWidth = false;
@@ -322,6 +338,8 @@
                  let _this=this;
                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
+                 _this.searchDataClick.UserType=parseInt(_this.searchDataClick.UserType);
+                 _this.searchDataClick.Status002=parseInt(_this.searchDataClick.Status002);
                 _this.$axios.gets('/api/services/app/User/GetAll',_this.searchDataClick)
                 .then(function(res){
                     _this.totalItem=res.result.totalCount
