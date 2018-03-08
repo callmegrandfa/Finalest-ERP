@@ -1,14 +1,14 @@
 <template>
     <div class="roleList">
         <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :span="[ifWidth?'5':'0']" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
-                    <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
+                   <el-col :span="5">
+                        <span class="fs12 open" @click="closeLeft">- 缩起</span>
                     </el-col>
                 </el-row>
 
@@ -44,9 +44,9 @@
                 </div>
             </el-col>
 
-            <el-col :span='19' class="border-left">
+            <el-col :span="[ifWidth?'19':'24']" class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                    <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
@@ -56,7 +56,13 @@
                         <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                     </button>
                     <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                    <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>             
+                    <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>   
+                    <button class="erp_bt bt_print" @click="openLeft" v-show="!ifWidth">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_print.png">
+                        </div>
+                        <span class="btDetail">展开</span>
+                    </button>          
                     <div class="search_input_group">
                         <div class="search_input_wapper">
                             <el-input
@@ -187,6 +193,7 @@
                 load:true,
                 totalItem:0,//总共有多少条消息
                 searchBtClick:false,
+                ifWidth:true,
             }
         },
         created:function(){       
@@ -194,6 +201,14 @@
                 _this.loadTableData();
              },
         methods:{
+            closeLeft:function(){
+               let self = this;
+               self.ifWidth = false;
+           },
+           openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+           },
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
