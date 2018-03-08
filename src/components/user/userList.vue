@@ -1,14 +1,14 @@
 <template>
     <div class="userList">
         <el-row class="bg-white">
-            <el-col :span="5">
+             <el-col :span="[ifWidth?'5':'0']" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
+                        <span class="fs12 open" @click="closeLeft">- 缩起</span>
                     </el-col>
                 </el-row>
 
@@ -26,8 +26,6 @@
                     <!-- <el-input v-model="searchData.UserGroupId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.UserGroupId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -36,8 +34,6 @@
                     <!-- <el-input v-model="searchData.OuId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.OuId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -46,8 +42,6 @@
                     <!-- <el-input v-model="searchData.UserType" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.UserType" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -56,8 +50,6 @@
                     <!-- <el-input v-model="searchData.LanguageId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.LanguageId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -66,8 +58,6 @@
                     <!-- <el-input v-model="searchData.AuthType" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.AuthType" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -76,8 +66,6 @@
                     <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -86,8 +74,6 @@
                     <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.RoleId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -97,9 +83,9 @@
                 </div>
             </el-col>
 
-            <el-col :span='19' class="border-left">
+            <el-col :span="[ifWidth?'19':'24']" class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                    <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
@@ -110,6 +96,26 @@
                     </button>
                     <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
                     <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>             
+                     <button class="erp_bt bt_print" @click="openLeft" v-show="!ifWidth">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_print.png">
+                        </div>
+                        <span class="btDetail">展开</span>
+                    </button>     
+                    <div class="search_input_group">
+                        <div class="search_input_wapper">
+                            <el-input
+                                placeholder="搜索..."
+                                class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
+                    </div>
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
@@ -128,11 +134,11 @@
                             <el-table-column prop="displayName" label="用户名称"></el-table-column>
                             <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
                             <el-table-column prop="userGroupName" label="所属用户组"></el-table-column>
-                            <el-table-column prop="OuId" label="所属组织"></el-table-column>
+                            <el-table-column prop="ouId" label="所属组织"></el-table-column>
                             <el-table-column prop="userType" label="身份类型"></el-table-column>
                             <el-table-column prop="languageId" label="语种"></el-table-column>
-                            <el-table-column prop="AuthType" label="认证类型"></el-table-column>
-                            <el-table-column prop="Status" label="状态"></el-table-column>
+                            <el-table-column prop="authType" label="认证类型"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column label="有效日期" width="200">
                                 <template slot-scope="scope">
                                     <div class="halfWidth left">
@@ -156,7 +162,7 @@
                                     </div>    
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="RoleId" label="关联角色"></el-table-column>
+                            <el-table-column prop="statusTValue" label="关联角色"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
                                      <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
@@ -245,6 +251,7 @@
                 load:true,
                 totalItem:0,//总共有多少条消息
                 searchBtClick:false,
+                ifWidth:true,
             }
         },
         created:function(){       
@@ -252,6 +259,14 @@
                 _this.loadTableData();
              },
         methods:{
+            closeLeft:function(){
+               let self = this;
+               self.ifWidth = false;
+           },
+           openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+           },
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',

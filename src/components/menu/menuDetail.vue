@@ -140,8 +140,6 @@
                 v-model="addData.moduleParentId"  
                 placeholder="">
                     <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value">
-                        <span style="float: left">{{ item.label }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                     </el-option>
                 </el-select>
 

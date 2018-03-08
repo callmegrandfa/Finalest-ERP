@@ -112,8 +112,6 @@
               placeholder="无字段"
               v-model="addData.userGroupId">
                   <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                      <span style="float: left">{{ item.label }}</span>
-                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                   </el-option>
               </el-select>
             </div>
@@ -125,8 +123,6 @@
               :class="{redBorder : validation.hasError('addData.ouId')}"
               v-model="addData.ouId">
                 <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                    <span style="float: left">{{ item.label }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                 </el-option>
               </el-select>
             </div>
@@ -138,8 +134,6 @@
               :class="{redBorder : validation.hasError('addData.userType')}"
               v-model="addData.userType">
                 <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                    <span style="float: left">{{ item.label }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                 </el-option>
               </el-select>
             </div>
@@ -151,8 +145,6 @@
               :class="{redBorder : validation.hasError('addData.languageId')}"
               v-model="addData.languageId">
                 <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                    <span style="float: left">{{ item.label }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                 </el-option>
               </el-select>
             </div>
@@ -180,8 +172,6 @@
               :class="{redBorder : validation.hasError('addData.status')}"
               v-model="addData.status">
                 <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                    <span style="float: left">{{ item.label }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                 </el-option>
               </el-select>
             </div>

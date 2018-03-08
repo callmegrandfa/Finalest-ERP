@@ -1,4 +1,60 @@
+/* 搜索 */
+/* <el-input
+    placeholder="搜索..."
+    v-model="" class="search_input">
+    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+</el-input> */
 
+/* 搜索组 */
+/* <div class="search_input_group">
+    <div class="search_input_wapper">
+        <el-input
+            placeholder="搜索..."
+            class="search_input">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+        </el-input>
+    </div>
+    <div class="search_button_wrapper">
+        <button class="userDefined">
+            <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+        </button>
+    </div>
+</div>     */
+.search_input_group{
+  width: calc(30% + 10px);
+  margin-top: -6px;
+  float: right;
+  margin-right: 10px;
+}
+.search_input_wapper{
+  width: calc(80% - 10px);
+  float: left;
+}
+.search_button_wrapper{
+  width: 20%;
+  margin-left: 10px;
+  float: left;
+  position: relative;
+}
+.userDefined{
+    width: 100%;
+    position: absolute;
+    height: 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    background-color: #fff;
+    font-size: 12px;
+    color: #ccc;
+    top: calc(50% + 9.5px);
+    border: 1px solid #f2f2f2;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.search_input .el-input__inner{
+  height: 30px;
+  border-radius: 30px;
+}
 /* 表单验证 */
 .tipsWrapper{
   display: none;   
