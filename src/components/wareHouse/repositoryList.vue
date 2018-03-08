@@ -1,7 +1,7 @@
 <template>
   <div class="data-list-container">
       <el-row class="bg-white">
-            <el-col :span="[ifWidth?'5':'0']" v-show="ifWidth">
+            <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
@@ -53,7 +53,7 @@
                 </el-row>
             </el-col>
 
-            <el-col :span="[ifWidth?'19':'24']" class="border-left">
+            <el-col :span="ifWidth?19:24" class="border-left">
                 <el-row class="h48">
                     <el-col :span="2" class="search-block"  v-show="!ifWidth">
                         <div style="display:inline-block;line-height:47px" @click="openLeft">
