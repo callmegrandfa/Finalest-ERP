@@ -8,7 +8,7 @@
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12 open" @click="closeLeft">- 缩起</span>
+                        <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
 
@@ -361,15 +361,17 @@ input::-webkit-input-placeholder{
 .fs12{
     font-size: 12px;
 }
-.open{
+.search_info_open{
     display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border: 1px solid #E3E3E3;
     color: #cccccc;
     text-align: center;
     cursor: pointer;
+    border-radius: 50%;
+    margin-left: 20px;
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
@@ -392,5 +394,6 @@ input::-webkit-input-placeholder{
     background-image: url(../../../static/image/common/btn-circle.png);
     background-repeat: no-repeat;
     background-position: center;
+    color: #E3E3E3;
 }
 </style>
