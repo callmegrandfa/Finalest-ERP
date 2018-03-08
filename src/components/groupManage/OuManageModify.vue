@@ -123,8 +123,6 @@
                         :key="item.value" 
                         :label="item.label" 
                         :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -153,8 +151,6 @@
                         :label="item.label" 
                         :value="item.value" 
                         placeholder="请选择本位币种">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -171,8 +167,6 @@
                         :label="item.label" 
                         :value="item.value" 
                         placeholder="请选择所属公司">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -226,8 +220,6 @@
                         :label="item.label" 
                         :value="item.value" 
                         placeholder="请选择用户状态">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>

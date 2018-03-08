@@ -28,8 +28,6 @@
                     <!-- <el-input v-model="searchData.ouId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.ouId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -37,8 +35,6 @@
                     <label>上级用户组(无字段)</label>
                     <el-select  v-model="searchData.UserType" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -61,6 +57,20 @@
                     </button>
                     <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
                     <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>             
+                    <div class="search_input_group">
+                        <div class="search_input_wapper">
+                            <el-input
+                                placeholder="搜索..."
+                                class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
+                    </div>
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">

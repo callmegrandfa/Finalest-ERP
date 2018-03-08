@@ -132,7 +132,7 @@ export default {
     _this.$axios.gets('/AbpScripts/GetScripts')
           .then(function (res) {
                 //成功之后处理逻辑
-                console.log(res);
+                // console.log(res);
                 }) 
   },
   methods:{

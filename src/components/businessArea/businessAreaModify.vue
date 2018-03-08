@@ -98,8 +98,6 @@
                         placeholder=""
                         v-model="addData.areaParentId">
                             <el-option v-for="item in contains" :key="item.value" :label="item.label" :value="item.value">
-                                <span style="float: left">{{ item.label }}</span>
-                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                             </el-option>
                         </el-select>
                     </div>
@@ -134,8 +132,6 @@
                         placeholder=""
                         v-model="addData.status">
                             <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                                <span style="float: left">{{ item.label }}</span>
-                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                             </el-option>
                         </el-select>
                     </div>
