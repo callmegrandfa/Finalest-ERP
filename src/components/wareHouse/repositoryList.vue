@@ -1,7 +1,7 @@
 <template>
   <div class="data-list-container">
       <el-row class="bg-white">
-            <el-col :class="[ifWidth?'w20':'w0']" v-show="ifWidth">
+            <el-col :span="[ifWidth?'5':'0']" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
@@ -53,35 +53,43 @@
                 </el-row>
             </el-col>
 
-            <el-col :class="[ifWidth?'w80':'w100']" class="border-left">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add" @click="goDetail">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_add.png">
+            <el-col :span="[ifWidth?'19':'24']" class="border-left">
+                <el-row class="h48">
+                    <el-col :span="2" class="search-block"  v-show="!ifWidth">
+                        <div style="display:inline-block;line-height:47px" @click="openLeft">
+                            <img src="../../../static/image/common/search_btn.png">
                         </div>
-                        <span class="btDetail">新增</span>
-                    </button>
-              
-                    <button class="erp_bt bt_print" @click="openLeft" v-show="!ifWidth">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_print.png">
+                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
+                            <span>查询</span>
                         </div>
-                        <span class="btDetail">展开</span>
-                    </button>
+                        <div class="out-img" @click="openLeft">
+                            <span>+</span>
+                        </div>
+                    </el-col>
 
-                    <button class="erp_bt bt_excel">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_excel.png">
-                        </div>
-                        <span class="btDetail">Excel</span>
-                    </button>
+                    <el-col :span="22" class="pt5">
+                        <button class="erp_bt bt_add" @click="goDetail">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_add.png">
+                            </div>
+                            <span class="btDetail">新增</span>
+                        </button>
 
-                    <button class="erp_bt bt_auxiliary">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_auxiliary.png">
-                        </div>
-                        <span class="btDetail">辅助功能</span>
-                    </button>
+                        <button class="erp_bt bt_excel">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_excel.png">
+                            </div>
+                            <span class="btDetail">Excel</span>
+                        </button>
+
+                        <button class="erp_bt bt_auxiliary">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_auxiliary.png">
+                            </div>
+                            <span class="btDetail">辅助功能</span>
+                        </button>
+                    </el-col>
+                    
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
@@ -369,55 +377,20 @@ input::-webkit-input-placeholder{
 }
 </style>
 <style>
-/* 重写checkbox */
-.data-list-container .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
+.search-block{
+    border-right:1px solid #E3E3E3;
+    line-height:47px;
+    text-align:center;
+    cursor: pointer;
 }
-.data-list-container .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
+.out-img{
+    display: inline-block;
+    width: 16px;
 }
-
-/* 重写el-table样式 */
-.data-list-container .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.data-list-container .el-table td{
-    padding: 3px 0;
-}
-.data-list-container .el-table__body{
-    text-align: center;
-}
-/* 重写el-pagination样式 */
-.data-list-container .text-right{
-    text-align: right;
-}
-.mt-10{
-    margin-top: 10px;
+.out-img span{
+    display: block;
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 </style>
