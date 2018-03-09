@@ -220,12 +220,12 @@
                     class="status" 
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.status')}" 
-                    v-model="addData.status">
+                    v-model="selectData.Status002">
                         <el-option 
                         v-for="item in state" 
                         :key="item.value" 
-                        :label="item.label" 
-                        :value="item.value" 
+                        :label="item.itemName" 
+                        :value="item.itemValue" 
                         >
                         </el-option>
                     </el-select>
@@ -694,6 +694,11 @@ export default({
                 label: '停用'
             }],
             isSave:true,//是否可以保存
+            selectData:{//select数据
+                OUType:[],//组织类型
+                Status002:[],//启用状态
+                UserType:[],//身份类型
+            },
         }
     },
     validators: {
@@ -754,7 +759,22 @@ export default({
             return this.ischeck;
             },
     },         
+    created () {
+        let _this=this;
+        _this.getSelectData()  
+    },
     methods:{
+        getSelectData(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
+                // 组织类型
+                _this.selectData.UserType=res.result;
+                })
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+                // 启用状态
+                _this.selectData.Status002=res.result;
+                })
+        },
         showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){

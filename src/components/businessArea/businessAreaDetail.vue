@@ -97,8 +97,21 @@
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
                         v-model="addData.areaParentId">
-                            <el-option v-for="item in contains" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
+                        <!-- <input type="text" class="selectTree"> -->
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="componyTree"
+                            :props="defaultProps"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree"
+                            :expand-on-click-node="false"
+                            @node-click="nodeClick"
+                            >
+                            </el-tree>
+                                <el-option v-show="false" :key="id" :label="areaName" :value="id" id="confirmSelect">
+                            
+                                </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -171,6 +184,16 @@
   export default({
     data(){
       return{
+        id:'',
+        areaName:'',
+        componyTree:[
+        ],
+        defaultProps: {
+            children: 'items',
+            label: 'areaName',
+            id:'id'
+        },
+        AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
          contain: 
          [{ 
             value:1,
@@ -237,7 +260,12 @@
           return this.Validator.value(value).required().maxLength(200);
       },
     },
+    created () {
+        let _this=this;
+        _this.loadTree();  
+    },
     methods: {
+
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
@@ -275,6 +303,29 @@
           customClass:className
           });
       },
+      loadTree(){
+            let _this=this;
+            _this.treeLoading=true;
+            _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+            .then(function(res){
+                _this.componyTree=res.result;
+                _this.loadIcon();
+            },function(res){
+            })
+        },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
       back(row){
           this.$store.state.url='/businessArea/businessAreaList/default'
           this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -296,6 +347,12 @@
             }
         });
       },
+      nodeClick(data){
+          let _this=this;
+          _this.id=data.id;
+          _this.areaName=data.areaName;
+          $("#confirmSelect").click()
+      }
     }
 
 })
@@ -332,6 +389,9 @@
     width: 421px;
     height:auto;
     float: left;
+  }
+  .businessAreaDetail .bgcolor.longWidth .selectTree{
+      width: calc(100% - 122px)
   }
   .marginAuto{
       margin: auto;

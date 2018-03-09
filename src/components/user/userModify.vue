@@ -332,6 +332,11 @@
         rolePage:0,//当前页
         roleOneItem:10,//每页有多少条信息
         roleTotalItem:0,//总共有多少条消息
+        selectData:{//select数据
+            OUType:[],//组织类型
+            Status002:[],//启用状态
+            UserType:[],//身份类型
+        },
       }
     },
      validators: {
@@ -377,6 +382,21 @@
       
     },
     methods: {
+        getSelectData(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
+            // 身份类型
+            _this.selectData.UserType=res.result;
+            })
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+            // 启用状态
+            _this.selectData.Status002=res.result;
+            })
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'OUType'}).then(function(res){ 
+            // 组织类型
+            _this.selectData.OUType=res.result;
+            })
+        },
         GetRoles(){
             let _this=this;
             _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id})
@@ -611,6 +631,8 @@
                     _this.addData.roleCodes=roles;
                     _this.addData.effectiveStart=_this.dateRange[0];
                     _this.addData.effectiveEnd=_this.dateRange[1];
+                    _this.addData.userType=parseInt(_this.addData.userType);
+                    _this.addData.status=parseInt(_this.addData.status);
                     _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
                         _this.checkedRoleCode=[]
