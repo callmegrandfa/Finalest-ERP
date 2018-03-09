@@ -999,7 +999,7 @@ end-placeholder="结束日期">
 }
 
 /* 树形下拉 */
-.bgcolor .selectTree{
+/* .bgcolor .selectTree{
   -webkit-appearance: none;
   border: 1px solid rgb(194, 202, 216);
   background-color: #fff;
@@ -1018,4 +1018,7 @@ end-placeholder="结束日期">
 }
 .bgcolor .selectTree:focus{
   border-color: #33CCCC;
+} */
+.selectSearch input{
+  height: 35px;
 }

@@ -98,6 +98,11 @@
                         placeholder=""
                         v-model="addData.areaParentId">
                         <!-- <input type="text" class="selectTree"> -->
+                        <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search">
+                        </el-input>
                             <el-tree
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :data="componyTree"
@@ -105,11 +110,12 @@
                             node-key="id"
                             default-expand-all
                             ref="tree"
+                            :filter-node-method="filterNode"
                             :expand-on-click-node="false"
                             @node-click="nodeClick"
                             >
                             </el-tree>
-                            <el-option :key="count.id" :label="count.areaName" :value="count.id" id="confirmSelect">
+                            <el-option v-show="false" :key="count.id" :label="count.areaName" :value="count.id" id="confirmSelect">
                             </el-option>
                         </el-select>
                     </div>
@@ -183,6 +189,7 @@
   export default({
     data(){
       return{
+          search:'',
         item:{
             id:'',
             areaName:'',
@@ -270,8 +277,16 @@
         let _this=this;
         _this.loadTree();  
     },
+     watch: {
+      search(val) {
+        this.$refs.tree.filter(val);
+      }
+    },
     methods: {
-
+        filterNode(value, data) {
+        if (!value) return true;
+        return data.areaName.indexOf(value) !== -1;
+      },
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
@@ -355,12 +370,13 @@
       },
       nodeClick(data){
           let _this=this;
-          _this.item.id=data.id;
-          _this.item.areaName=data.areaName;
-          $("#confirmSelect").click()
-      },
-      isGetdata(){
+            _this.item.id=data.id;
+            _this.item.areaName=data.areaName;
+            _this.$nextTick(function(){
+                $('#confirmSelect').click()
+            })
           
+        
       }
     }
 
