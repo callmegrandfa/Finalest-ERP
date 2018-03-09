@@ -1,16 +1,16 @@
 <template>
   <div class="data-wrapper">
-      <el-row class="pt5 pb5 bb1 fixed bg-white">
+        <el-row class="pt5 pb5 bb1 fixed bg-white">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
-                  <img src="../../../static/image/common/bt_back.png">
+                <img src="../../../static/image/common/bt_back.png">
                 </div>
                 <span class="btDetail">返回</span>
             </button>
                                             <!-- 保存新创建的仓库信息 -->
             <button class="erp_bt bt_save" @click="save">
                 <div class="btImg">
-                  <img src="../../../static/image/common/bt_save.png">
+                <img src="../../../static/image/common/bt_save.png">
                 </div>
                 <span class="btDetail">保存</span>
             </button>
@@ -26,9 +26,9 @@
                 <span @click='ifShow = !ifShow'>收起</span>
                 <i class="el-icon-arrow-up"></i>
             </div>
-      </el-row>
+        </el-row>
 
-      <el-collapse-transition>
+        <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
                 <el-row class="bg-white ft12 pr10 pt10">
                     <el-col :span="24">
@@ -97,6 +97,11 @@
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.remark') }}</p>
                             </div>
                         </div>
+                        <div class="tipsWrapper" name="status">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.status')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.status') }}</p>
+                            </div>
+                        </div>
                         <div class="bgcolor">
                             <label><small>*</small>所属组织</label>
                             <el-select v-model="createRepositoryParams.ouId"
@@ -113,7 +118,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>仓库编码</label>
+                            <label>编码</label>
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockCode"
                                       @focus="showErrprTips"
@@ -122,7 +127,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>仓库名称</label>
+                            <label>名称</label>
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockName"
                                       @focus="showErrprTips"
@@ -131,7 +136,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>仓库全称</label>
+                            <label>全称</label>
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockFullName"
                                       @focus="showErrprTips"
@@ -238,16 +243,25 @@
                                       class="remark"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.remark')}"></el-input>
                         </div>
-                    </el-col>
-                </el-row>
 
-                <el-row class="bg-white pb5">
-                    <el-col :span="2" :offset="1">
-                        <el-checkbox v-model="ifCan">允许使用</el-checkbox>
+                        <div class="bgcolor">
+                            <label><small>*</small>状态</label>
+                            <el-select v-model="createRepositoryParams.status" 
+                                       placeholder=""
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.status')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="status">
+                                <el-option v-for="item in status"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
                     </el-col>
                 </el-row>
             </div>
-      </el-collapse-transition>
+        </el-collapse-transition>
       
 
       <el-row class="bg-white ft12 pr10 pt10 br3 mt10">
@@ -418,6 +432,9 @@
             'createRepositoryParams.remark': function (value) {//备注
                 return this.Validator.value(value).required().maxLength(50);
             },
+            'createRepositoryParams.status': function (value) {//状态
+                return this.Validator.value(value).required().integer();
+            },
         },
 
         methods:{
@@ -485,7 +502,7 @@
                             "invTypeId": 1,
                             "fax": "",
                             "email":  '',
-                            "status": 1,
+                            "status": '',
                             "manager": "",
                             "phone": "",
                             "remark": ""
@@ -619,68 +636,59 @@
                     finishName:"",
                 },
                 ifShow:true,//控制折叠页面
-                ifCan:true,//控制允许使用
+                ifCan:true,//控制启用状态
                 // ifSave:-1,//保存按钮（是否可见）
                 queryOuId:{//ouManagement的搜索Id
                     id:'2'
                 },
                 ouGet:'',
                 ou: [{//所属组织
-                    value:'1',
+                    value:1,
                     label: '恒康'
                 }, {
-                    value:'2',
+                    value:2,
                     label: '恒大'
                 }, {
-                    value:'3',
+                    value:3,
                     label: '361度'
                 }],
                 stockType: [{//仓库类型
-                    value:'1',
-                    label: '仓库类型1'
+                    value:1,
+                    label: '仓库'
                 }, {
-                    value:'2',
-                    label: '仓库类型2'
-                }, {
-                    value:'3',
-                    label: '仓库类型3'
+                    value:2,
+                    label: '店铺'
                 }],
                 opArea: [{//业务地区
-                    value:'1',
+                    value:1,
                     label: '业务地区1'
                 }, {
-                    value:'2',
+                    value:2,
                     label: '业务地区2'
                 }, {
-                    value:'3',
+                    value:3,
                     label: '业务地区3'
                 }],
                 adArea: [{//行政地区
-                    value:'1',
+                    value:1,
                     label: '行政地区1'
                 }, {
-                    value:'2',
+                    value:2,
                     label: '行政地区2'
                 }, {
-                    value:'3',
+                    value:3,
                     label: '行政地区3'
                 }],
-                options: [{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }],
+                status: [{//状态
+                    value:1,
+                    label: '状态1'
+                }, {
+                    value:2,
+                    label: '状态2'
+                }, {
+                    value:3,
+                    label: '状态3'
+                }],
 
                 value: '',
                 tableData:[],
@@ -696,7 +704,7 @@
                     "invTypeId": 1,
                     "fax": "",
                     "email":  '',
-                    "status": 1,
+                    "status": '',
                     "manager": "",
                     "phone": "",
                     "remark": ""

@@ -1,16 +1,16 @@
 <template>
   <div class="data-wrapper b1">
-      <el-row class="bg-white pt10 pb10 bb1 fixed">
+        <el-row class="bg-white pt10 pb10 bb1 fixed">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
-                  <img src="../../../static/image/common/bt_back.png">
+                <img src="../../../static/image/common/bt_back.png">
                 </div>
                 <span class="btDetail">返回</span>
             </button>
-                                              <!-- 保存修改 -->
+                                            <!-- 保存修改 -->
             <button class="erp_bt bt_save" @click="saveModify">
                 <div class="btImg">
-                  <img src="../../../static/image/common/bt_save.png">
+                <img src="../../../static/image/common/bt_save.png">
                 </div>
                 <span class="btDetail">保存</span>
             </button>
@@ -26,184 +26,249 @@
                 <span @click='ifShow = !ifShow'>收起</span>
                 <i class="el-icon-arrow-up"></i>
             </div>
-      </el-row>
+        </el-row>
 
-      <el-row class="bg-white ft12 pt10 pr10">
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                        <label><small>*</small>所属组织</label>
-                        <el-select v-model="value" placeholder="请选择所属组织">
-                            <el-option v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>仓库编码</label>
-                    <el-input placeholder="请录入仓库编码" v-model="repositoryData.stockCode" @change="Modify()"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>仓库名称</label>
-                    <el-input placeholder="请录入仓库名称" v-model="repositoryData.stockFullName" @change="Modify()"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>仓库简称</label>
-                    <el-input placeholder="请录入仓库简称" v-model="repositoryData.stockName" @change="Modify()"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-      </el-row>
-
-      <el-row class="bg-white ft12 pr10">
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>助记码</label>
-                    <el-input placeholder="请录入助记码" v-model="ouGet.mnemonic" @change="Modify()"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                        <label><small>*</small>仓库类型</label>
-                        <el-select v-model="value" placeholder="请选择仓库类型">
-                            <el-option v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>助记码</label>
-                    <el-input placeholder="请录入库存分类" @change="Modify()"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                        <label><small>*</small>业务地区</label>
-                        <el-select v-model="value" placeholder="请选择业务地区">
-                            <el-option v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-              </el-row>
-          </el-col>
-      </el-row>
-
-      <el-collapse-transition>
+        <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
-                <el-row class="bg-white ft12 pr10">
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label><small>*</small>行政地区</label>
-                                <el-select v-model="value" placeholder="请选择行政地区">
-                                    <el-option v-for="item in options"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                    </el-option>
-                                </el-select>
+                <el-row class="bg-white ft12 pr10 pt10">
+                    <el-col :span="24">
+                        <div class="tipsWrapper" name="ouId">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.ouId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.ouId') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>负责人</label>
-                                <el-input placeholder="请录入负责人" v-model="repositoryData.manager" @change="Modify()"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="stockCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.stockCode')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.stockCode') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>电话</label>
-                                <el-input placeholder="请录入电话" v-model="repositoryData.phone" @change="Modify()"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="stockName">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.stockName')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.stockName') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>Email</label>
-                                <el-input placeholder="请录入邮箱" v-model="repositoryData.email" @change="Modify()"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="stockFullName">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.stockFullName')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.stockFullName') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-                </el-row>
-
-                <el-row class="bg-white ft12 pr10">
-                    <el-col :span="5" class="h30">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>传真</label>
-                                <el-input placeholder="请录入传真" v-model="repositoryData.fax" @change="Modify()"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="mnemonic">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.mnemonic')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.mnemonic') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>地址</label>
-                                <el-input placeholder="请录入地址"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="stockTypeId">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.stockTypeId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.stockTypeId') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>备注</label>
-                                <el-input placeholder="请录入备注" v-model="repositoryData.remark" @change="Modify()"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="opAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.opAreaId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.opAreaId') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
+                        </div>
+                        <div class="tipsWrapper" name="adAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.adAreaId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.adAreaId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="manager">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.manager')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.manager') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="phone">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.phone')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.phone') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="email">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.email')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.email') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="fax">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.fax')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.fax') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="remark">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.remark')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.remark') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="status">
+                            <div class="errorTips" :class="{block : !validation.hasError('repositoryData.status')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.status') }}</p>
+                            </div>
+                        </div>
+                        <div class="bgcolor">
+                            <label><small>*</small>所属组织</label>
+                            <el-select v-model="repositoryData.ouId"
+                                       :class="{redBorder : validation.hasError('repositoryData.ouId')}"
+                                       @focus="showErrprTipsSelect" 
+                                       class="ouId"
+                                       placeholder="">
+                                <el-option v-for="item in ou"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="bgcolor">
+                            <label>编码</label>
+                            <el-input placeholder="" 
+                                      v-model="repositoryData.stockCode" 
+                                      @change="Modify()"
+                                      @focus="showErrprTips"
+                                      class="stockCode"
+                                      :class="{redBorder : validation.hasError('repositoryData.stockCode')}"></el-input>
+                        </div>
+                        <div class="bgcolor">
+                            <label>名称</label>
+                            <el-input placeholder="" 
+                                      v-model="repositoryData.stockName" 
+                                      @change="Modify()"
+                                      @focus="showErrprTips"
+                                      class="stockName"
+                                      :class="{redBorder : validation.hasError('repositoryData.stockName')}"></el-input>
+                        </div>
+                        <div class="bgcolor">
+                            <label>全称</label>
+                            <el-input placeholder="" 
+                                      v-model="repositoryData.stockFullName" 
+                                      @change="Modify()"
+                                      @focus="showErrprTips"
+                                      class="stockFullName"
+                                      :class="{redBorder : validation.hasError('repositoryData.stockFullName')}"></el-input>
+                        </div>
+                        <!-- <div class="bgcolor">
+                            <label>助记码</label>
+                            <el-input placeholder="" v-model="ouGet.mnemonic" @change="Modify()"></el-input>
+                        </div> -->
 
-                    <el-col :span="24" class="mt20 mb10 pl40">
-                        <template>
-                            <el-checkbox v-model="ifCan">允许使用</el-checkbox>
-                        </template>
-                </el-col>
+                        <div class="bgcolor">
+                            <label><small>*</small>仓库类型</label>
+                            <el-select v-model="repositoryData.stockTypeId" 
+                                       placeholder=""
+                                       @change="Modify()"
+                                       :class="{redBorder : validation.hasError('repositoryData.stockTypeId')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="stockTypeId">
+                                <el-option v-for="item in stockType"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>业务地区</label>
+                            <el-select v-model="repositoryData.opAreaId" 
+                                       placeholder=""
+                                       @change="Modify()"
+                                       :class="{redBorder : validation.hasError('repositoryData.opAreaId')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="opAreaId">
+                                <el-option v-for="item in opArea"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>行政地区</label>
+                            <el-select v-model="repositoryData.adAreaId" 
+                                       placeholder=""
+                                       @change="Modify()"
+                                       :class="{redBorder : validation.hasError('repositoryData.adAreaId')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="adAreaId">
+                                <el-option v-for="item in adArea"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>负责人</label>
+                            <el-input placeholder="" 
+                                      v-model="repositoryData.manager"
+                                      @focus="showErrprTips"
+                                      @change="Modify()"
+                                      class="manager"
+                                      :class="{redBorder : validation.hasError('repositoryData.manager')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>电话</label>
+                            <el-input placeholder="" 
+                                      v-model="repositoryData.phone"
+                                      @focus="showErrprTips"
+                                      @change="Modify()"
+                                      class="phone"
+                                      :class="{redBorder : validation.hasError('repositoryData.phone')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>Email</label>
+                            <el-input placeholder="" 
+                                      v-model="repositoryData.email"
+                                      @focus="showErrprTips"
+                                      @change="Modify()"
+                                      class="email"
+                                      :class="{redBorder : validation.hasError('repositoryData.email')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>传真</label>
+                            <el-input v-model="repositoryData.fax"
+                                      @focus="showErrprTips"
+                                      @change="Modify()"
+                                      placeholder="" 
+                                      class="fax"
+                                      :class="{redBorder : validation.hasError('repositoryData.fax')}"></el-input>
+                        </div>
+
+                        <!-- <div class="bgcolor">
+                            <label>地址</label>
+                            <el-input placeholder="请录入地址"></el-input>
+                        </div> -->
+
+                        <div class="bgcolor">
+                            <label>备注</label>
+                            <el-input placeholder="" 
+                                      v-model="repositoryData.remark"
+                                      @focus="showErrprTips"
+                                      @change="Modify()"
+                                      class="remark"
+                                      :class="{redBorder : validation.hasError('repositoryData.remark')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>状态</label>
+                            <el-select v-model="repositoryData.status" 
+                                       placeholder=""
+                                       :class="{redBorder : validation.hasError('repositoryData.status')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="status">
+                                <el-option v-for="item in status"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </el-col>    
                 </el-row>
             </div>
-      </el-collapse-transition>
+        </el-collapse-transition>
 
       <el-row class="ft12 pr10 pt10 br3">
           <el-col :span='24' class="pl10 mb10">
@@ -387,15 +452,99 @@
             let self = this;
             self.loadData();
         },
-
+        validators: {
+            'repositoryData.ouId': function (value) {//所属组织
+                return this.Validator.value(value).required().integer();
+            },
+            'repositoryData.stockCode': function (value) {//仓库编码
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'repositoryData.stockName': function (value) {//仓库名称
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'repositoryData.stockFullName': function (value) {//仓库全称
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            // 'repositoryData.mnemonic': function (value) {//助记码
+            //     return this.Validator.value(value).required().maxLength(50);
+            // },
+            'repositoryData.stockTypeId': function (value) {//仓库类型
+                return this.Validator.value(value).required().integer();
+            },
+            'repositoryData.opAreaId': function (value) {//业务地区
+                return this.Validator.value(value).required().integer();
+            },
+            'repositoryData.adAreaId': function (value) {//行政地区
+                return this.Validator.value(value).required().integer();
+            },
+            'repositoryData.manager': function (value) {//负责人
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'repositoryData.phone': function (value) {//电话
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'repositoryData.email': function (value) {//Email 
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'repositoryData.fax': function (value) {//传真
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            // 'createRepositoryParams.adAreaId': function (value) {//地址
+            //     return this.Validator.value(value).required().integer();
+            // },
+            'repositoryData.remark': function (value) {//备注
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'repositoryData.status': function (value) {//备注
+                return this.Validator.value(value).required().integer();
+            },
+        },
         methods:{
+            //---提示错误----------------------------------------------
+            showErrprTips(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsSelect(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsRangedate(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.$el).hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsTextArea(e){
+                    $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                    })
+            },
+            //-------------------------------------------------------------
             //---加载信息-----------------------------------------------
             loadData:function(){//根据id查找仓库信息和仓库地址信息
                 let self = this;
                 if(self.$route.params.id!='default'){
                     self.$destroy()
                     //根据仓库id获取仓库信息
-                    this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
+                    self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
                         self.repositoryData = res.result;
                         // console.log(self.repositoryData);
@@ -418,12 +567,20 @@
             //---修改完成保存----------------------------------------------
             saveModify:function(){//修改仓库信息保存
                 let self = this;
+
                 if(self.ifModify){
-                    this.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
-                        console.log(res);
-                        self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-                        self.ifModify = false;
+                    console.log(1)
+                    self.$validate().then(function(success){
+                        if(success){
+                            console.log(12)
+                            self.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
+                                console.log(res);
+                                self.open('修改仓库信息成功','el-icon-circle-check','successERP');
+                                self.ifModify = false;
+                            })
+                        }
                     })
+                    
                 };
                 
 
@@ -578,55 +735,84 @@
 
         data(){
             return {
-                repositoryData:'',//根据仓库id查出的仓库信息
+                repositoryData:{
+                    "ouId": '',
+                    "stockCode": "",
+                    "stockName": "",
+                    "stockFullName": "",
+                    "opAreaId": '',
+                    "adAreaId": '',
+                    "stockTypeId": '',
+                    "invTypeId": '',
+                    "fax": "",
+                    "email": "",
+                    "status": '',
+                    "manager": "",
+                    "phone": "",
+                    "remark": ""
+                },//根据仓库id查出的仓库信息
                 repositoryAddressData:[],//根据仓库id查出的仓库地址信息
                 getRepositoryAddressParams:{
                    id:'',
                 }, 
                 ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
-                ifCan:true,//控制允许使用
+                ifCan:true,//控制启用状态
                 // ifSave:-1,//保存按钮（是否可见）
                 queryOuId:{//ouManagement的搜索Id
                     id:'2'
                 },
                 ouGet:'',
-
-                options: [{
-                    value: '选项1',
+                ou: [{//所属组织
+                    value:1,
+                    label: '恒康'
+                }, {
+                    value:2,
+                    label: '恒大'
+                }, {
+                    value:3,
+                    label: '361度'
+                }],
+                stockType: [{//仓库类型
+                    value:1,
                     label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }],
+                }, {
+                    value:2,
+                    label: '店铺'
+                }],
+                opArea: [{//业务地区
+                    value:1,
+                    label: '业务地区1'
+                }, {
+                    value:2,
+                    label: '业务地区2'
+                }, {
+                    value:3,
+                    label: '业务地区3'
+                }],
+                adArea: [{//行政地区
+                    value:1,
+                    label: '行政地区1'
+                }, {
+                    value:2,
+                    label: '行政地区2'
+                }, {
+                    value:3,
+                    label: '行政地区3'
+                }],
+                status: [{//状态
+                    value:1,
+                    label: '状态1'
+                }, {
+                    value:2,
+                    label: '状态2'
+                }, {
+                    value:3,
+                    label: '状态3'
+                }],
 
                 value: '',
                 
-                createRepositoryParams:{//创建新仓库的参数
-                    "ouId": '1',
-                    "stockCode": "",
-                    "stockName": "",
-                    "stockFullName": "",
-                    "opAreaId": 1,
-                    "adAreaId": 1,
-                    "stockTypeId": 1,
-                    "invTypeId": 1,
-                    "fax": " ",
-                    "email":  '',
-                    "status": 1,
-                    "manager": "",
-                    "phone": "",
-                    "remark": ""
-                },
                 createParams:{//创建新的仓库地址
                     groupId:'1',//集团ID
                     stockId:'',//仓库ID
@@ -762,63 +948,7 @@ input::-webkit-input-placeholder{
 }
 </style>
 <style>
-/* 重写checkbox */
-.data-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-/* .data-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-} */
 
-/* 重写el-table样式 */
-.data-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.data-wrapper .el-table td{
-    padding: 3px 0;
-}
-.data-wrapper .el-table__body{
-    text-align: center;
-}
-.data-wrapper .el-table .cell{
-    padding-left:0px;
-    padding-right:0px;
-}
-/* 重写el-pagination样式 */
-
-
-.data-wrapper .text-right{
-    text-align: right;
-}
-.mt-10{
-    margin-top: 10px;
-}
 </style>
 
 
