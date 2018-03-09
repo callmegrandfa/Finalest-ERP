@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>会计方案{{value}}</label>
+                            <label>会计方案</label>
                             <el-select v-model="value" 
                                         placeholder=""
                                         :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -342,16 +342,23 @@
             //---提示错误----------------------------------------------
             showErrprTips(e){
                 $('.tipsWrapper').each(function(){
-                // console.log($(e.target).parent('.el-input'))
                     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')
-                        
                     }else{
                         $(this).removeClass('display_block')
                     }
                 })
             },
-            showErrprTips1(e){
+            showErrprTipsSelect(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsRangedate(e){
                 $('.tipsWrapper').each(function(){
                     if($(e.$el).hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')
@@ -359,6 +366,15 @@
                         $(this).removeClass('display_block')
                     }
                 })
+            },
+            showErrprTipsTextArea(e){
+                    $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                    })
             },
             //------------------------------------------------------
             //---保存------------------------------------------------

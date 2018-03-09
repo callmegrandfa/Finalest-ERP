@@ -112,7 +112,8 @@
               @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.userGroupId')}"
               v-model="addData.userGroupId">
-                  <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
               </el-select>
             </div>
             <div class="bgcolor">
@@ -123,7 +124,8 @@
               @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.ouId')}"
               v-model="addData.ouId">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
               </el-select>
             </div>
             <div class="bgcolor">
@@ -134,7 +136,8 @@
               @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.userType')}"
               v-model="addData.userType">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
               </el-select>
             </div>
             <div class="bgcolor">
@@ -145,7 +148,8 @@
               @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.languageId')}"
               v-model="addData.languageId">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
               </el-select>
             </div>
             <div class="bgcolor">
@@ -160,6 +164,8 @@
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd" 
                   range-separator="to"
+                  align="center"
+                  unlink-panels
                   start-placeholder=""
                   end-placeholder="">
                   </el-date-picker>
@@ -173,7 +179,8 @@
               @focus="showErrprTipsSelect"
               :class="{redBorder : validation.hasError('addData.status')}"
               v-model="addData.status">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
               </el-select>
             </div>
           </el-col>
@@ -190,12 +197,12 @@
               <label>备注</label>
               <el-input
               class="remark" 
-               @focus="showErrprTipsTextArea"
-               :class="{redBorder : validation.hasError('addData.remark')}"
-                v-model="addData.remark"
-                type="textarea"
-                :autosize="{ minRows: 4, maxRows: 10}"
-                placeholder="">
+              @focus="showErrprTipsTextArea"
+              :class="{redBorder : validation.hasError('addData.remark')}"
+              v-model="addData.remark"
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 10}"
+              placeholder="">
               </el-input>
             </div>
           </el-col>
@@ -294,13 +301,13 @@
          contain: 
          [{ 
             value:0,
-            label: '0'
+            label: '选项1'
          },{ 
             value:1,
-            label: '1'
+            label: '选项2'
          }, {
             value:2,
-            label: '2'
+            label: '选项3'
          }],
         addData:{
           "userCode": "",
@@ -564,9 +571,6 @@
 .userDetail  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
-}
-.block{
-    display: none;
 }
  .userDetail .el-row{
     background-color: #fff;

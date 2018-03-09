@@ -135,11 +135,12 @@
             ></el-cascader> -->
                 <el-select v-if="showParent" 
                 class="moduleParentId" 
-                @focus="showErrprTips"
+                @focus="showErrprTipsSelect"
                 :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                 v-model="addData.moduleParentId"  
                 placeholder="">
-                    <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
                 </el-select>
 
                 <el-input v-else
@@ -391,6 +392,33 @@
                 }
             })
         },
+        showErrprTipsSelect(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsRangedate(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+      showErrprTipsTextArea(e){
+            $('.tipsWrapper').each(function(){
+              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                  $(this).addClass('display_block')
+              }else{
+                  $(this).removeClass('display_block')
+              }
+            })
+      },
         loadParent(){
             let _this=this;
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
@@ -575,9 +603,6 @@
 .menuDetail  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
-}
-.block{
-    display: none;
 }
 .menu_box{
     display: none;

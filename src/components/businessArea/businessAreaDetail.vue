@@ -97,7 +97,8 @@
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
                         v-model="addData.areaParentId">
-                            <el-option v-for="item in contains" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <el-option v-for="item in contains" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -130,7 +131,8 @@
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
                         v-model="addData.status">
-                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
@@ -183,10 +185,10 @@
             label: '无'
          },{ 
             value:1,
-            label: '1'
+            label: '选项1'
          }, {
             value:2,
-            label: '2'
+            label: '选项2'
          }],
         addData:{
         "groupId": 1,
@@ -238,22 +240,31 @@
     methods: {
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
             })
         },
-      showErrprTipsTextArea(e){
+        showErrprTipsSelect(e){
             $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
             })
-      },
+        },
+        showErrprTipsRangedate(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
       open(tittle,iconClass,className) {
           this.$notify({
           position: 'bottom-right',
@@ -299,9 +310,6 @@
 .businessAreaDetail  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
-}
-.block{
-    display: none;
 }
  .businessAreaDetail .el-row{
     background-color: #fff;

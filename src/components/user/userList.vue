@@ -1,14 +1,14 @@
 <template>
     <div class="userList">
         <el-row class="bg-white">
-            <el-col :span="5">
+             <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
+                        <span class="fs12 open" @click="closeLeft">- 缩起</span>
                     </el-col>
                 </el-row>
 
@@ -21,22 +21,71 @@
                 </div> -->
                 <div class="mt20 bgcolor smallBgcolor"><label>用户编码</label><el-input v-model="searchData.UserCode" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>用户名称</label><el-input v-model="searchData.DisplayName" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>用户组</label><el-input v-model="searchData.UserGroupId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属组织</label><el-input v-model="searchData.OuId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>身份类型</label><el-input v-model="searchData.UserType" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>语种</label><el-input v-model="searchData.LanguageId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>认证类型</label><el-input v-model="searchData.AuthType" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>状态</label><el-input v-model="searchData.Status" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>关联角色</label><el-input v-model="searchData.RoleId" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor">
+                    <label>用户组</label>
+                    <!-- <el-input v-model="searchData.UserGroupId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.UserGroupId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>所属组织</label>
+                    <!-- <el-input v-model="searchData.OuId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.OuId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>身份类型</label>
+                    <!-- <el-input v-model="searchData.UserType" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.UserType" placeholder="">
+                        <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>语种</label>
+                    <!-- <el-input v-model="searchData.LanguageId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.LanguageId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>认证类型</label>
+                    <!-- <el-input v-model="searchData.AuthType" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.AuthType" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>状态</label>
+                    <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.Status" placeholder="">
+                        <el-option v-for="item in selectData.Status002" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>关联角色</label>
+                    <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.RoleId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
                 </div>
             </el-col>
 
-            <el-col :span='19' class="border-left">
+            <el-col :span="ifWidth?19:24" class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                    <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
@@ -47,6 +96,26 @@
                     </button>
                     <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
                     <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>             
+                     <button class="erp_bt bt_print" @click="openLeft" v-show="!ifWidth">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_print.png">
+                        </div>
+                        <span class="btDetail">展开</span>
+                    </button>     
+                    <div class="search_input_group">
+                        <div class="search_input_wapper">
+                            <el-input
+                                placeholder="搜索..."
+                                class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
+                    </div>
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
@@ -65,11 +134,11 @@
                             <el-table-column prop="displayName" label="用户名称"></el-table-column>
                             <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
                             <el-table-column prop="userGroupName" label="所属用户组"></el-table-column>
-                            <el-table-column prop="OuId" label="所属组织"></el-table-column>
+                            <el-table-column prop="ouId" label="所属组织"></el-table-column>
                             <el-table-column prop="userType" label="身份类型"></el-table-column>
                             <el-table-column prop="languageId" label="语种"></el-table-column>
-                            <el-table-column prop="AuthType" label="认证类型"></el-table-column>
-                            <el-table-column prop="Status" label="状态"></el-table-column>
+                            <el-table-column prop="authType" label="认证类型"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column label="有效日期" width="200">
                                 <template slot-scope="scope">
                                     <div class="halfWidth left">
@@ -93,7 +162,7 @@
                                     </div>    
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="RoleId" label="关联角色"></el-table-column>
+                            <el-table-column prop="statusTValue" label="关联角色"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
                                      <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
@@ -136,33 +205,37 @@
                 },
                 searchDataClick:{},
                 tableSearchData:{},
+                selectData:{
+                    UserType:[],//身份类型
+                    Status002:[],//状态
+                },
                 options: [{
-                    basOuTypes: '1',
-                    label: '1'
+                    value: '1',
+                    label: '选项1'
                     }, {
-                    basOuTypes: '2',
-                    label: '2'
+                    value: '2',
+                    label: '选项2'
                     }, {
-                    basOuTypes: '3',
-                    label: '3'
+                    value: '3',
+                    label: '选项3'
                     }, {
-                    basOuTypes: '4',
-                    label: '4'
+                    value: '4',
+                    label: '选项4'
                     }, {
-                    basOuTypes: '5',
-                    label: '5'
+                    value: '5',
+                    label: '选项5'
                     }, {
-                    basOuTypes: '6',
-                    label: '6'
+                    value: '6',
+                    label: '选项6'
                     }, {
-                    basOuTypes: '7',
-                    label: '7'
+                    value: '7',
+                    label: '选项7'
                     }, {
-                    basOuTypes: '8',
-                    label: '8'
+                    value: '8',
+                    label: '选项8'
                     }, {
-                    basOuTypes: '9',
-                    label: '9'
+                    value: '9',
+                    label: '选项9'
                     }],
                 tableData:[],
 
@@ -182,13 +255,34 @@
                 load:true,
                 totalItem:0,//总共有多少条消息
                 searchBtClick:false,
+                ifWidth:true,
             }
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
+                _this.getSelectData();
              },
         methods:{
+            getSelectData(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
+                // 身份类型
+                _this.selectData.UserType=res.result;
+                })
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+                // 启用状态
+                _this.selectData.Status002=res.result;
+                })
+            },
+            closeLeft:function(){
+               let self = this;
+               self.ifWidth = false;
+           },
+           openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+           },
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -244,6 +338,8 @@
                  let _this=this;
                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
+                 _this.searchDataClick.UserType=parseInt(_this.searchDataClick.UserType);
+                 _this.searchDataClick.Status002=parseInt(_this.searchDataClick.Status002);
                 _this.$axios.gets('/api/services/app/User/GetAll',_this.searchDataClick)
                 .then(function(res){
                     _this.totalItem=res.result.totalCount

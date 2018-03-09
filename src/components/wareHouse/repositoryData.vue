@@ -1,16 +1,16 @@
 <template>
-  <div class="data-wrapper b1">
-      <el-row class="bg-white pt10 pb10 bb1">
+  <div class="data-wrapper">
+        <el-row class="pt5 pb5 bb1 fixed bg-white">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
-                  <img src="../../../static/image/common/bt_back.png">
+                <img src="../../../static/image/common/bt_back.png">
                 </div>
                 <span class="btDetail">返回</span>
             </button>
                                             <!-- 保存新创建的仓库信息 -->
             <button class="erp_bt bt_save" @click="save">
                 <div class="btImg">
-                  <img src="../../../static/image/common/bt_save.png">
+                <img src="../../../static/image/common/bt_save.png">
                 </div>
                 <span class="btDetail">保存</span>
             </button>
@@ -26,187 +26,246 @@
                 <span @click='ifShow = !ifShow'>收起</span>
                 <i class="el-icon-arrow-up"></i>
             </div>
-      </el-row>
+        </el-row>
 
-      <el-row class="bg-white pt10 ft12 pr10">
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                        <label><small>*</small>所属组织</label>
-                        <el-select v-model="value" placeholder="请选择所属组织">
-                            <el-option v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>仓库编码</label>
-                    <el-input placeholder="请录入仓库编码" v-model="createRepositoryParams.stockCode"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>仓库名称</label>
-                    <el-input placeholder="请录入仓库名称" v-model="createRepositoryParams.stockFullName"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>仓库简称</label>
-                    <el-input placeholder="请录入仓库简称" v-model="createRepositoryParams.stockName"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-      </el-row>
-
-      <el-row class="bg-white ft12 pr10">
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>助记码</label>
-                    <el-input placeholder="请录入助记码" v-model="ouGet.mnemonic"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                        <label><small>*</small>仓库类型</label>
-                        <el-select v-model="value" placeholder="请选择仓库类型">
-                            <el-option v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                    <label>助记码</label>
-                    <el-input placeholder="请录入库存分类"></el-input>
-                  </div>
-              </el-row>
-          </el-col>
-
-          <el-col :span="5">
-              <el-row>
-                  <div class="bgcolor">
-                        <label><small>*</small>业务地区</label>
-                        <el-select v-model="value" placeholder="请选择业务地区">
-                            <el-option v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-              </el-row>
-          </el-col>
-      </el-row>
-
-      <el-collapse-transition>
+        <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
-                <el-row class="bg-white ft12 pr10">
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label><small>*</small>行政地区</label>
-                                <el-select v-model="value" placeholder="请选择行政地区">
-                                    <el-option v-for="item in options"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                    </el-option>
-                                </el-select>
+                <el-row class="bg-white ft12 pr10 pt10">
+                    <el-col :span="24">
+                        <div class="tipsWrapper" name="ouId">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.ouId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.ouId') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>负责人</label>
-                                <el-input placeholder="请录入负责人" v-model="createRepositoryParams.manager"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="stockCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockCode')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockCode') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>电话</label>
-                                <el-input placeholder="请录入电话" v-model="createRepositoryParams.phone"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="stockName">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockName')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockName') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>Email</label>
-                                <el-input placeholder="请录入邮箱" v-model="createRepositoryParams.email"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="stockFullName">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockFullName')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockFullName') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-                </el-row>
-
-                <el-row class="bg-white ft12 pr10">
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>传真</label>
-                                <el-input placeholder="请录入传真" v-model="createRepositoryParams.fax"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="mnemonic">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.mnemonic')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.mnemonic') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>地址</label>
-                                <el-input placeholder="请录入地址"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="stockTypeId">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockTypeId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockTypeId') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
-
-                    <el-col :span="5">
-                        <el-row>
-                            <div class="bgcolor">
-                                <label>备注</label>
-                                <el-input placeholder="请录入备注" v-model="createRepositoryParams.remark"></el-input>
+                        </div>
+                        <div class="tipsWrapper" name="opAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.opAreaId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.opAreaId') }}</p>
                             </div>
-                        </el-row>
-                    </el-col>
+                        </div>
+                        <div class="tipsWrapper" name="adAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.adAreaId')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.adAreaId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="manager">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.manager')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.manager') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="phone">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.phone')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.phone') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="email">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.email')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.email') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="fax">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.fax')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.fax') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="remark">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.remark')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.remark') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="status">
+                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.status')}">
+                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.status') }}</p>
+                            </div>
+                        </div>
+                        <div class="bgcolor">
+                            <label><small>*</small>所属组织</label>
+                            <el-select v-model="createRepositoryParams.ouId"
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.ouId')}"
+                                       @focus="showErrprTipsSelect" 
+                                       class="ouId"
+                                       placeholder="">
+                                <el-option v-for="item in ou"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
 
-                    <el-col :span="24" class="mt10 mb10 pl40">
-                        <template>
-                            <el-checkbox v-model="ifCan">允许使用</el-checkbox>
-                        </template>
+                        <div class="bgcolor">
+                            <label>编码</label>
+                            <el-input placeholder="" 
+                                      v-model="createRepositoryParams.stockCode"
+                                      @focus="showErrprTips"
+                                      class="stockCode"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stockCode')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>名称</label>
+                            <el-input placeholder="" 
+                                      v-model="createRepositoryParams.stockName"
+                                      @focus="showErrprTips"
+                                      class="stockName"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stockName')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>全称</label>
+                            <el-input placeholder="" 
+                                      v-model="createRepositoryParams.stockFullName"
+                                      @focus="showErrprTips"
+                                      class="stockFullName"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stockFullName')}"></el-input>
+                        </div>
+                        <div class="bgcolor">
+                            <label>助记码</label>
+                            <el-input placeholder="无字段" 
+                                      v-model="createRepositoryParams.mnemonic"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>仓库类型</label>
+                            <el-select v-model="createRepositoryParams.stockTypeId" 
+                                       placeholder=""
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockTypeId')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="stockTypeId">
+                                <el-option v-for="item in stockType"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>业务地区</label>
+                            <el-select v-model="createRepositoryParams.opAreaId" 
+                                       placeholder=""
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.opAreaId')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="opAreaId">
+                                <el-option v-for="item in opArea"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>行政地区</label>
+                            <el-select v-model="createRepositoryParams.adAreaId" 
+                                       placeholder=""
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.adAreaId')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="adAreaId">
+                                <el-option v-for="item in adArea"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>负责人</label>
+                            <el-input placeholder="" 
+                                      v-model="createRepositoryParams.manager"
+                                      @focus="showErrprTips"
+                                      class="manager"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.manager')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>电话</label>
+                            <el-input placeholder="" 
+                                      v-model="createRepositoryParams.phone"
+                                      @focus="showErrprTips"
+                                      class="phone"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.phone')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>Email</label>
+                            <el-input placeholder="" 
+                                      v-model="createRepositoryParams.email"
+                                      @focus="showErrprTips"
+                                      class="email"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.email')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>传真</label>
+                            <el-input v-model="createRepositoryParams.fax"
+                                      @focus="showErrprTips"
+                                      placeholder="" 
+                                      class="fax"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.fax')}"></el-input>
+                        </div>
+
+                        <!-- <div class="bgcolor">
+                            <label>地址</label>
+                            <el-input placeholder=""></el-input>
+                        </div> -->
+
+                        <div class="bgcolor">
+                            <label>备注</label>
+                            <el-input placeholder="" 
+                                      v-model="createRepositoryParams.remark"
+                                      @focus="showErrprTips"
+                                      class="remark"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.remark')}"></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>状态</label>
+                            <el-select v-model="createRepositoryParams.status" 
+                                       placeholder=""
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.status')}"
+                                       @focus="showErrprTipsSelect"
+                                       class="status">
+                                <el-option v-for="item in status"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
                     </el-col>
                 </el-row>
             </div>
-      </el-collapse-transition>
+        </el-collapse-transition>
+      
 
-      <el-row class="ft12 pr10 pt10 br3">
-          <el-col :span='24' class="pl10 mb10">
+      <el-row class="bg-white ft12 pr10 pt10 br3 mt10">
+          <el-col :span='24' class="pl10 mb10 bb1">
               <span class="header-title">送货信息</span>
           </el-col>
 
@@ -219,7 +278,7 @@
                 </button>
           </el-col>
 
-          <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
+          <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10">
               <el-table :data="allList" border style="width: 100%" stripe>
                     <el-table-column type="selection"></el-table-column>
 
@@ -305,63 +364,20 @@
           </el-col>
       </el-row>
 
-      <el-row class="ft12 pr10 pt10 br3">
-          <el-col :span='24' class="bg-white pl10 pt10 pb10">
-              <span style="color:black;font-size:16px;font-weight:bolder;">审计信息</span>
-          </el-col>
-
-          <el-col :span="24" class="bg-white pb10">
-              <el-row class="pl10">
-                  <el-col :span="5" class="bg-white br3 h35 b1">
-                    <el-row>
-                        <el-col :span="8" class="pl10">
-                            <span>创建人</span>
-                        </el-col>
-
-                        <el-col :span="15">
-                            <input class="input-need" type="text" disabled>
-                        </el-col>
-                    </el-row>
-                  </el-col>
-
-                  <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                    <el-row>
-                        <el-col :span="8" class="pl10">
-                            <span>创建时间</span>
-                        </el-col>
-
-                        <el-col :span="15">
-                            <input class="input-need" type="text" disabled>
-                        </el-col>
-                    </el-row>
-                  </el-col>
-
-                  <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                    <el-row>
-                        <el-col :span="8" class="pl10">
-                            <span>修改人</span>
-                        </el-col>
-
-                        <el-col :span="15">
-                            <input class="input-need" type="text" disabled>
-                        </el-col>
-                    </el-row>
-                  </el-col>
-
-                  <el-col :span="5" class="bg-white br3 h35 b1 ml10">
-                    <el-row>
-                        <el-col :span="8" class="pl10">
-                            <span>修改时间</span>
-                        </el-col>
-
-                        <el-col :span="15">
-                            <input class="input-need" type="text" disabled>
-                        </el-col>
-                    </el-row>
-                  </el-col>
-              </el-row>
-          </el-col>
-      </el-row>
+      <el-row class="bg-white">
+        <el-col :span="22" class="auditInformation getPadding">
+            <h4 class="h4">审计信息</h4>
+            <div>
+                <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="创建人" disabled="disabled"></el-input></div>
+                <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="创建时间" disabled="disabled"></el-date-picker></div>
+                <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="修改人" disabled="disabled"></el-input></div>
+                <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="修改时间" disabled="disabled"></el-date-picker></el-input></div>
+                <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
+                <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
+                <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+            </div>                                  
+        </el-col>
+    </el-row>  
 
 
   </div>
@@ -373,8 +389,93 @@
         created:function(){
             
         },
+        validators: {
+            'createRepositoryParams.ouId': function (value) {//所属组织
+                return this.Validator.value(value).required().integer();
+            },
+            'createRepositoryParams.stockCode': function (value) {//仓库编码
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'createRepositoryParams.stockName': function (value) {//仓库名称
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'createRepositoryParams.stockFullName': function (value) {//仓库全称
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'createRepositoryParams.mnemonic': function (value) {//助记码
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'createRepositoryParams.stockTypeId': function (value) {//仓库类型
+                return this.Validator.value(value).required().integer();
+            },
+            'createRepositoryParams.opAreaId': function (value) {//业务地区
+                return this.Validator.value(value).required().integer();
+            },
+            'createRepositoryParams.adAreaId': function (value) {//行政地区
+                return this.Validator.value(value).required().integer();
+            },
+            'createRepositoryParams.manager': function (value) {//负责人
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'createRepositoryParams.phone': function (value) {//电话
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'createRepositoryParams.email': function (value) {//Email 
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'createRepositoryParams.fax': function (value) {//传真
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            // 'createRepositoryParams.adAreaId': function (value) {//地址
+            //     return this.Validator.value(value).required().integer();
+            // },
+            'createRepositoryParams.remark': function (value) {//备注
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'createRepositoryParams.status': function (value) {//状态
+                return this.Validator.value(value).required().integer();
+            },
+        },
 
         methods:{
+            //---提示错误----------------------------------------------
+            showErrprTips(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsSelect(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsRangedate(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.$el).hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsTextArea(e){
+                    $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                    })
+            },
+            //-------------------------------------------------------------
             //---保存------------------------------------------------
             save:function(){
                 let self = this;
@@ -384,40 +485,49 @@
 
             saveAdd:function(){//创建新的仓库并且清除数据
                 let self = this;
-                this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
-                    console.log(res);
-                    self.open('创建仓库成功','el-icon-circle-check','successERP');
-                 })
-              self.createRepositoryParams = {
-                    "ouId": '1',
-                    "stockCode": "",
-                    "stockName": "",
-                    "stockFullName": "",
-                    "opAreaId": 1,
-                    "adAreaId": 1,
-                    "stockTypeId": 1,
-                    "invTypeId": 1,
-                    "fax": "",
-                    "email":  '',
-                    "status": 1,
-                    "manager": "",
-                    "phone": "",
-                    "remark": ""
-                } 
-                self.addList = [];
-                self.rows = [];
+                self.$validate().then(function(success){
+                    if(success){
+                        self.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
+                            console.log(res);
+                            self.open('创建仓库成功','el-icon-circle-check','successERP');
+                        })
+                        self.createRepositoryParams = {
+                            "ouId": '1',
+                            "stockCode": "",
+                            "stockName": "",
+                            "stockFullName": "",
+                            "opAreaId": '',
+                            "adAreaId": '',
+                            "stockTypeId": '',
+                            "invTypeId": 1,
+                            "fax": "",
+                            "email":  '',
+                            "status": 1,
+                            "manager": "",
+                            "phone": "",
+                            "remark": ""
+                        } 
+                        self.addList = [];
+                        self.rows = [];
+                    }
+                })
+                
+              
             },
             //-------------------------------------------------------
 
             //---创建------------------------------------------------
             createRepository:function(){//创建新仓库
                 let self = this;
-                // console.log(self.createRepositoryParams)
-                this.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
-                    // console.log(res);
-                    self.open('创建仓库成功','el-icon-circle-check','successERP');
-                    self.createReAddress(res.result);
-                    self.goModify(res.result)
+                self.$validate().then(function(success){
+                    if(success){
+                        self.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
+                            // console.log(res);
+                            self.open('创建仓库成功','el-icon-circle-check','successERP');
+                            self.createReAddress(res.result);
+                            self.goModify(res.result)
+                        })
+                    }
                 })
             },
             createReAddress:function(id){//创建新的仓库地址
@@ -516,42 +626,81 @@
         data(){
             return {
                 allList:[],
+                auditInformation:{//审计信息
+                    createName:"",
+                    createTime:"",
+                    modifyName:"",
+                    modifyTime:"",
+                    startTime:"",
+                    finishTime:"",
+                    finishName:"",
+                },
                 ifShow:true,//控制折叠页面
-                ifCan:true,//控制允许使用
+                ifCan:true,//控制启用状态
                 // ifSave:-1,//保存按钮（是否可见）
                 queryOuId:{//ouManagement的搜索Id
                     id:'2'
                 },
                 ouGet:'',
-
-                options: [{
-                    value: '选项1',
+                ou: [{//所属组织
+                    value:'1',
+                    label: '恒康'
+                }, {
+                    value:'2',
+                    label: '恒大'
+                }, {
+                    value:'3',
+                    label: '361度'
+                }],
+                stockType: [{//仓库类型
+                    value:'1',
                     label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }],
+                }, {
+                    value:'2',
+                    label: '店铺'
+                }],
+                opArea: [{//业务地区
+                    value:'1',
+                    label: '业务地区1'
+                }, {
+                    value:'2',
+                    label: '业务地区2'
+                }, {
+                    value:'3',
+                    label: '业务地区3'
+                }],
+                adArea: [{//行政地区
+                    value:'1',
+                    label: '行政地区1'
+                }, {
+                    value:'2',
+                    label: '行政地区2'
+                }, {
+                    value:'3',
+                    label: '行政地区3'
+                }],
+                status: [{//状态
+                    value:'1',
+                    label: '状态1'
+                }, {
+                    value:'2',
+                    label: '状态2'
+                }, {
+                    value:'3',
+                    label: '状态3'
+                }],
 
                 value: '',
                 tableData:[],
                 
                 createRepositoryParams:{//创建新仓库的参数
-                    "ouId": '1',
+                    "ouId": '',
                     "stockCode": "",
                     "stockName": "",
                     "stockFullName": "",
-                    "opAreaId": 1,
-                    "adAreaId": 1,
-                    "stockTypeId": 1,
+                    "opAreaId": '',
+                    "adAreaId": '',
+                    "stockTypeId": '',
                     "invTypeId": 1,
                     "fax": "",
                     "email":  '',
@@ -610,6 +759,12 @@
 .mb10{
     margin-bottom: 10px;
 }
+.pt5{
+    padding-top: 5px;
+}
+.pb5{
+    padding-bottom: 5px;
+}
 .pt10{
     padding-top: 10px;
 }
@@ -620,7 +775,7 @@
     padding-right: 10px;
 }
 .ft12{
-    font-size: 14px;
+    font-size: 12px;
 }
 .btn{
     display: inline-block;
@@ -660,11 +815,9 @@
     text-align: center;
 }
 .header-title{
-    color: #F55E6E;
     font-size: 16px;
     display: inline-block;
-    border-bottom: 4px solid #F55E6E;
-    font-weight: bolder;
+    border-bottom: 4px solid #00CAC9;
     padding: 5px 1px;
 }
 .bb1{
@@ -693,63 +846,15 @@ input::-webkit-input-placeholder{
 }
 </style>
 <style>
-/* 重写checkbox */
-.data-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
-}
-.data-wrapper .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
-
-/* 重写el-table样式 */
-.data-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.data-wrapper .el-table td{
-    padding: 3px 0;
-}
-.data-wrapper .el-table__body{
-    text-align: center;
-}
-.data-wrapper .el-table .cell{
-    padding-left:0px;
-    padding-right:0px;
-}
-/* 重写el-pagination样式 */
-
-
-.data-wrapper .text-right{
-    text-align: right;
-}
 .mt-10{
     margin-top: 10px;
 }
+.data-wrapper .tabZoo .auditInformation{
+     margin-top: 15px;
+ }
+.data-wrapper .getPadding,.tabZoo .el-tabs__nav-scroll{
+     padding: 0 10px;
+ }
 </style>
 
 

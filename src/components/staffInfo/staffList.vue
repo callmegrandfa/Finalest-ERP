@@ -45,8 +45,11 @@
                             </button>
                         </el-col>
                         <el-col :span="8" class="h48 lh48">
-                            <el-input v-model="searchContent" class="search-wid">
-                                <el-button slot="append">搜索</el-button>
+                            <el-input
+                                placeholder="搜索..."
+                                prefix-icon="el-icon-search"
+                                v-model="searchContent"
+                                class="search-wid">
                             </el-input>
                         </el-col>
                     </el-row>
@@ -56,32 +59,32 @@
 
                          
                             <el-table :data="allList" border style="width: 100%">
-                                <el-table-column type="selection" width="30">
+                                <el-table-column type="selection" width="50">
                                 </el-table-column>
-                                <el-table-column prop="employeeCode" label="职员编码" width="100">
+                                <el-table-column prop="employeeCode" label="职员编码" width="120" fixed>
                                 </el-table-column>
-                                <el-table-column prop="employeeName" label="职员名称"  width="95">
+                                <el-table-column prop="employeeName" label="职员名称"  width="120">
                                 </el-table-column>
-                                <el-table-column prop="mobile" label="手机号码" width="95">
+                                <el-table-column prop="mobile" label="手机号码" width="120">
                                 </el-table-column>
                                 <el-table-column prop="deptName" label="所属部门"
-                                width="95">
+                                width="120">
                                 </el-table-column>
                                 <el-table-column prop="sex" label="性别"
-                                width="50">
+                                width="120">
                                 </el-table-column>
                                 <el-table-column prop="birthday" label="生日"
-                                width="50">
+                                width="120">
                                 </el-table-column>
                                 <el-table-column prop="employeeTypes" label="职员类型"
-                                width="95">
+                                width="120">
                                 </el-table-column>
                                 <el-table-column prop="shopName" label="所属店铺"
-                                width="95">
+                                width="120">
                                 </el-table-column>
-                                <el-table-column label="操作" width="100">
+                                <el-table-column label="操作" width="120" fixed="right">
                                     <template slot-scope="scope">
-                                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                                        <el-button @click="checkDetail(scope.row)" type="text" size="small">查看</el-button>
                                         <el-button type="text" size="small" @click="delRow">删除</el-button>
                                     </template>
                                 </el-table-column>
@@ -163,32 +166,25 @@
                         console.log(rsp.result);
                         this.allList=rsp.result.items;
                         this.totalCount=rsp.result.totalCount;
-
-                
-                   
-                        
                     }
                     
                 )
             },
             // 添加数据
-            addStaff:function(){
-                console.log('这是添加');//点击更改路由，到详情页
+            addStaff:function(){//点击切换路由，到详情页添加
+                this.$store.state.url='/staff/staffDetail/default'
+                this.$router.push({path:this.$store.state.url})
                 
             },
             // 按钮删除
             delSelected:function(){
                 console.log('这是按钮删除')
             },
-            // 查看（行内按钮）
-            handleClick:(obj)=>{
-                console.log(obj.id);
-                let id=obj.id;
-                this.$axios.gets('/api/services/app/EmployeeManagement/Get',{'id':id}).then(
-                    rsp=>{
-                        console.log(rsp);
-                    }
-                )
+            // （行内按钮查看）查看详情
+            checkDetail:function(row){
+                // console.log(row.id)
+                this.$store.state.url='/staff/staffDetail/'+row.id
+                this.$router.push({path:this.$store.state.url})
             },
             
             // 行内删除
@@ -249,14 +245,12 @@
         left: 4px;
         top: -2px;
     }
-    .el-input-group__append{
-        background-color: rgb(51,204,204);
-        color: #fff;
-        cursor: pointer;
-        border-color: rgb(51,204,204);
+    .el-icon-search:before {
+    content: "\E619";
+    font-weight: 900;
+    font-size: 16px;
     }
     .el-input__inner{
-        
         height: 30px;
     }
     .ai .el-input__inner{
@@ -269,7 +263,7 @@
     background-color: #fff;
   }
   .search-wid{
-      width:80px;
+      width:200px;
   }
 .el-input-group--append .el-input__inner, .el-input-group__prepend {
     border-top-right-radius: 0;

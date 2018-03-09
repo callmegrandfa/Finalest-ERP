@@ -1,39 +1,66 @@
 <template>
     <div class="OuListForm">
         <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :span="ifWidth ? 5 : 0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
+                        <span class="fs12 open" @click="closeLeft">- 缩起</span>
                     </el-col>
                 </el-row>
 
                 <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
                     <el-select  v-model="searchData.OuType" placeholder="">
-                        <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-option v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor"><label>编码</label><el-input v-model="searchData.OuCode" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>所属公司</label><el-input v-model="searchData.CompanyOuId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>行政地区</label><el-input v-model="searchData.AreaId" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>启用状态</label><el-input v-model="searchData.Status" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor">
+                    <label>所属公司</label>
+                    <el-select  v-model="searchData.CompanyOuId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>行政地区</label>
+                    <el-select  v-model="searchData.AreaId" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>启用状态</label>
+                    <el-select  v-model="searchData.status" placeholder="">
+                        <el-option v-for="item in selectData.Status002" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                        </el-option>
+                    </el-select>
+                </div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
                     <span class="search-btn">高级搜索</span>
                 </div>
             </el-col>
-
-            <el-col :span='19' class="border-left">
+            <el-col :span='4' class="tree-container border-left" v-loading="treeLoading" >
+                <el-tree
+                :data="componyTree"
+                :props="defaultProps"
+                node-key="treeId"
+                default-expand-all
+                :expand-on-click-node="false"
+                @node-click="nodeClick">
+                </el-tree>
+            </el-col>
+             <el-col :span="ifWidth ? 15:20" class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                    <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
@@ -47,22 +74,31 @@
                         <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
                         <span class="btDetail">辅助功能</span>
                         <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                    </button>                
+                    </button>
+                     <button class="erp_bt bt_print" @click="openLeft" v-show="!ifWidth">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_print.png">
+                        </div>
+                        <span class="btDetail">展开</span>
+                    </button>     
+                    <div class="search_input_group">
+                        <div class="search_input_wapper">
+                            <el-input
+                                placeholder="搜索..."
+                                class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
+                    </div>    
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span='4' class="tree-container" v-loading="treeLoading">
-                        <el-tree
-                        :data="componyTree"
-                        :props="defaultProps"
-                        node-key="treeId"
-                        default-expand-all
-                        :expand-on-click-node="false"
-                        @node-click="nodeClick">
-                        </el-tree>
-                    </el-col>
-
-                    <el-col :span='20'>
+                    <el-col :span='24'>
                         <el-table 
                         v-loading="tableLoading"
                         :data="tableData" 
@@ -73,12 +109,12 @@
                         ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="ouCode" label="编码"></el-table-column>
+                            <el-table-column prop="ouName" label="名称"></el-table-column>
                             <el-table-column prop="ouFullname" label="全称"></el-table-column>
-                            <el-table-column prop="ouName" label="简称"></el-table-column>
                             <el-table-column prop="ouParentid" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
                             <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="createdTime" label="创建时间" width="160">
+                            <el-table-column prop="createdTime" label="启用年月" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker 
                                     format="yyyy-MM-dd HH:mm:ss"
@@ -90,7 +126,11 @@
                                     placeholder=""></el-date-picker>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="tableData[scope.$index].status" disabled></el-checkbox>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="isCompany" label="公司">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].isCompany" disabled></el-checkbox>
@@ -145,35 +185,49 @@
                     Status: '',//启用状态
                     OuType: '',//组织类型
                 },
+                selectData:{//select数据
+                    OUType:[],//组织类型
+                    Status002:[],//启用状态
+                },
                 searchDataClick:{},
                 tableSearchData:{},
+                statu:[{
+                    value: '0',
+                    label: '启用'
+                    },{
+                    value: '1',
+                    label: '停用'
+                    },{
+                    value: '2',
+                    label: '冻结'
+                    },],
                 options: [{
-                    basOuTypes: '1',
-                    label: '1'
+                    value: '1',
+                    label: '选项1'
                     }, {
-                    basOuTypes: '2',
-                    label: '2'
+                    value: '2',
+                    label: '选项2'
                     }, {
-                    basOuTypes: '3',
-                    label: '3'
+                    value: '3',
+                    label: '选项3'
                     }, {
-                    basOuTypes: '4',
-                    label: '4'
+                    value: '4',
+                    label: '选项4'
                     }, {
-                    basOuTypes: '5',
-                    label: '5'
+                    value: '5',
+                    label: '选项5'
                     }, {
-                    basOuTypes: '6',
-                    label: '6'
+                    value: '6',
+                    label: '选项6'
                     }, {
-                    basOuTypes: '7',
-                    label: '7'
+                    value: '7',
+                    label: '选项7'
                     }, {
-                    basOuTypes: '8',
-                    label: '8'
+                    value: '8',
+                    label: '选项8'
                     }, {
-                    basOuTypes: '9',
-                    label: '9'
+                    value: '9',
+                    label: '选项9'
                     }],
                 tableData:[],
 
@@ -193,14 +247,35 @@
                 load:true,
                 totalItem:0,//总共有多少条消息
                 searchBtClick:false,
+                ifWidth:true,
             }
         },
         created:function(){       
                 let _this=this;
+                _this.getSelectData();
                 _this.loadTableData();
                 _this.loadTree();
              },
         methods:{
+            getSelectData(){
+                let _this=this;//Status002
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'OUType'}).then(function(res){ 
+                    // 组织类型
+                    _this.selectData.OUType=res.result;
+                    })
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+                    // 启用状态
+                    _this.selectData.Status002=res.result;
+                    })
+            },
+            closeLeft:function(){
+               let self = this;
+               self.ifWidth = false;
+           },
+           openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+           },
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -276,6 +351,8 @@
                  let _this=this;
                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
+                 _this.searchData.OuType=parseInt(_this.searchData.OuType);
+                 _this.searchData.Status002=parseInt(_this.searchData.Status002);
                 _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchDataClick)
                 .then(function(res){      
                     _this.totalItem=res.result.totalCount

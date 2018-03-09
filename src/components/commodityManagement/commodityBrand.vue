@@ -477,6 +477,11 @@ import Btm from '../../base/btm/btm'
                             });
                     });
                    
+                }else{
+                    this.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
+                    });
                 }
             },
             save(){

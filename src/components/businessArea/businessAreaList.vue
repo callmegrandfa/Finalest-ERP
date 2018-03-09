@@ -5,7 +5,7 @@
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-input
                         placeholder="搜索..."
-                        v-model="searchLeft" class="bAreaSearch">
+                        v-model="searchLeft" class="search_input">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-col>
@@ -27,17 +27,26 @@
                 </el-col>   
             </el-col>
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5 pr10 pl5">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                <el-row class="h48 pt5">
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_out">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
                         <span class="btDetail">导出</span>
                     </button>
-                    <div class="formSearch">
-                        <input type="text" class="inputForm">
-                        <button>搜索</button>
+                    <div class="search_input_group">
+                        <div class="search_input_wapper">
+                            <el-input
+                                placeholder="搜索..."
+                                class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
                     </div>
                 </el-row>
                 <el-row>
@@ -89,7 +98,7 @@
         <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             <!-- <div class="bgcolor smallBgcolor">
                 <label>地区分类</label>
-                <el-select :class="{redBorder : validation.hasError('dialogData.areaType')}" v-model="dialogData.areaType">
+                <el-select filterable :class="{redBorder : validation.hasError('dialogData.areaType')}" v-model="dialogData.areaType">
                     <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
                 </el-select>
@@ -110,8 +119,8 @@
             <div class="bgcolor smallBgcolor">
                 <label>上级业务地区</label>
                 
-                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId">
-                    <el-option v-for="item in areaParentId" :key="item.value" :label="item.label" :value="item.value" placeholder="">
+                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId" placeholder="">
+                    <el-option v-for="item in areaParentId" :key="item.value" :label="item.label" :value="item.value" >
                     </el-option>
                 </el-select>
                 <el-input v-else :class="{redBorder : validation.hasError('dialogData.areaParentId')}"  v-model="dialogData.areaParentId" disabled></el-input>
@@ -121,8 +130,8 @@
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
             <div class="bgcolor smallBgcolor">
                 <label>允许使用</label>
-                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
-                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
+                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status" placeholder="">
+                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" >
                     </el-option>
                 </el-select>
             </div>
@@ -665,10 +674,6 @@
 .bAreaListForm .el-button+.el-button{
     margin-left: 0;
 }
-.bAreaListForm .bAreaSearch .el-input__inner{
-    height: 30px;
-    border-radius: 30px;
-}
 /* .bAreaListForm .el-tree-node>.el-tree-node__children{
     overflow: visible!important;
 } */
@@ -681,4 +686,5 @@
 .bAreaListForm .bgcolor{
     margin-bottom: 0
 }
+
 </style>

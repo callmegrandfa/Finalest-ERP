@@ -30,46 +30,168 @@
      <div v-show="ifShow">   
         <el-row>
             <el-col :span="24" class="getPadding"> 
-                <!-- <div class="errorTips">
-                    <p class="msgDetail">错误提示：名称不能为特殊字符</p>
-                    <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
-                </div> -->
+                <div class="tipsWrapper" name="ouId">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.ouId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.ouId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contact">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contact')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contact') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contactName">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactName')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactName') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contactFullName">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactFullName')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactFullName') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="mnemonic">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.mnemonic')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.mnemonic') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contactClassId">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactClassId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactClassId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contactWorkPropertyId">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactWorkPropertyId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactWorkPropertyId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contactGradeId">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactGradeId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactGradeId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="isCustomer">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.isCustomer')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.isCustomer') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="ficaOuId">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.ficaOuId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.ficaOuId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="taxCode">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.taxCode')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.taxCode') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="opAreaId">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.opAreaId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.opAreaId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="adAreaId">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.adAreaId')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.adAreaId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="legalPerson">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.legalPerson')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.legalPerson') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="regAddress">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.regAddress')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.regAddress') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="manager">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.manager')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.manager') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="phone">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.phone')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.phone') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="remark">
+                    <div class="errorTips" :class="{block : !validation.hasError('customerData.remark')}">
+                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.remark') }}</p>
+                    </div>
+                </div>
+
                 <div class="bgcolor">
                     <label>所属组织</label>
-                    <el-select v-model="valueOrganization">
-                        <el-option v-for="item in organization" :key="item.valueMonth" :label="item.label" :value="item.valueOrganization"></el-option>
+                    <el-select v-model="customerData.ouId"
+                               placeholder=""
+                               class="ouId"
+                               @change='Modify()'
+                               :class="{redBorder : validation.hasError('customerData.ouId')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in organization" 
+                                   :key="item.valueOrganization" 
+                                   :label="item.label" 
+                                   :value="item.valueOrganization"></el-option>
                     </el-select>
                 </div> 
 
 
                 <div class="bgcolor">
                     <label>编码</label>
-                    <el-input v-model="customerData.contact" placeholder="请录入编码" @change='Modify()'></el-input>
+                    <el-input v-model="customerData.contact" 
+                              placeholder="" 
+                              @focus="showErrprTips"
+                              :class="{redBorder : validation.hasError('customerData.contact')}"
+                              class="contact"
+                              @change='Modify()'></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label>名称</label>
-                    <el-input v-model="customerData.contactName" placeholder="请录入名称" @change='Modify()'></el-input>
+                    <el-input v-model="customerData.contactName" 
+                              placeholder="" 
+                              @focus="showErrprTips"
+                              :class="{redBorder : validation.hasError('customerData.contactName')}"
+                              class="contact"
+                              @change='Modify()'></el-input>
                 </div>
 
 
                 <div class="bgcolor">
                     <label>全称</label>
-                    <el-input v-model="customerData.contactFullName" placeholder="请录入全称" @change='Modify()'></el-input>
+                    <el-input v-model="customerData.contactFullName" 
+                              placeholder=""
+                              @focus="showErrprTips"
+                              :class="{redBorder : validation.hasError('customerData.contactFullName')}"
+                              class="contactFullName" 
+                              @change='Modify()'></el-input>
                 </div>
 
                 <div class="bgcolor">
                     <label>助记码</label>
-                    <el-input v-model="customerData.mnemonic" placeholder="请录入助记码" @change='Modify()'></el-input>
+                    <el-input v-model="customerData.mnemonic" 
+                              placeholder="" 
+                              @focus="showErrprTips"
+                              :class="{redBorder : validation.hasError('customerData.mnemonic')}"
+                              class="mnemonic"
+                              @change='Modify()'></el-input>
                 </div>
                     
 
 
                 <div class="bgcolor">
                     <label>客户分类</label>
-                    <el-select v-model="customerData.contactClassId">
-                        <el-option v-for="item in customerType" :key="item.valueCustomerType" :label="item.label" :value="item.valueCustomerType"></el-option>
+                    <el-select v-model="customerData.contactClassId"
+                               placeholder=""
+                               class="contactClassId"
+                               :class="{redBorder : validation.hasError('customerData.contactClassId')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in customerType" 
+                                   :key="item.valueCustomerType" 
+                                   :label="item.label" 
+                                   :value="item.valueCustomerType"></el-option>
                     </el-select>
                 </div>
                 
@@ -77,69 +199,160 @@
                 
                 <div class="bgcolor">
                     <label>客户性质</label>
-                    <el-select v-model="customerData.contactWorkPropertyId">
-                        <el-option v-for="item in nature" :key="item.valueNature" :label="item.label" :value="item.valueNature"></el-option>
+                    <el-select v-model="customerData.contactWorkPropertyId"
+                               placeholder=""
+                               class="contactWorkPropertyId"
+                               :class="{redBorder : validation.hasError('customerData.contactWorkPropertyId')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in customerNature" 
+                                   :key="item.valueNature" 
+                                   :label="item.label" 
+                                   :value="item.valueNature"></el-option>
                     </el-select>
                 </div>
+
                 <div class="bgcolor">
                     <label>客户等级</label>
-                    <el-select v-model="customerData.contactGradeId">
-                        <el-option v-for="item in grade" :key="item.valueGrade" :label="item.label" :value="item.valueGrade"></el-option>
+                    <el-select v-model="customerData.contactGradeId"
+                               placeholder=""
+                               class="contactGradeId"
+                               :class="{redBorder : validation.hasError('customerData.contactGradeId')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in customerGrade" 
+                                   :key="item.valueGrade" 
+                                   :label="item.label" 
+                                   :value="item.valueGrade"></el-option>
                     </el-select>
                 </div>
+
                 <div class="bgcolor">
                     <label>客户类型</label>
-                    <el-select v-model="valueSort">
-                        <el-option v-for="item in sort" :key="item.valueSort" :label="item.label" :value="item.valueSort"></el-option>
+                    <el-select v-model="customerData.isCustomer"
+                               placeholder=""
+                               class="isCustomer"
+                               :class="{redBorder : validation.hasError('customerData.isCustomer')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in sort" 
+                                   :key="item.valueSort" 
+                                   :label="item.label" 
+                                   :value="item.valueSort"></el-option>
                     </el-select>
                 </div>   
+
                 <div class="bgcolor">
                     <label>对应财务组织</label>
-                    <el-select v-model="customerData.ficaOuid">
-                        <el-option v-for="item in finance" :key="item.valueFinance" :label="item.label" :value="item.valueFinance"></el-option>
+                    <el-select v-model="customerData.ficaOuId"
+                               placeholder=""
+                               class="ficaOuId"
+                               :class="{redBorder : validation.hasError('customerData.ficaOuId')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in ficaOu" 
+                                   :key="item.valueFinance" 
+                                   :label="item.label" 
+                                   :value="item.valueFinance"></el-option>
                     </el-select>
                 </div>
+
                 <div class="bgcolor">
                     <label>纳税登记号</label>
-                    <el-input v-model="customerData.taxCode" placeholder="请录入登记号" @change='Modify()'></el-input>
+                    <el-input v-model="customerData.taxCode" 
+                              placeholder="" 
+                              @focus="showErrprTips"
+                              class="taxCode"
+                              :class="{redBorder : validation.hasError('customerData.taxCode')}"
+                              @change='Modify()'></el-input>
                 </div>
+
                 <div class="bgcolor">
                     <label>业务地区区号</label>
-                    <el-select v-model="customerData.opAreaId">
-                        <el-option v-for="item in areaBusiness" :key="item.valueAreaBusiness" :label="item.label" :value="item.valueAreaBusiness"></el-option>
+                    <el-select v-model="customerData.opAreaId"
+                               class="opAreaId"
+                               placeholder=""
+                               :class="{redBorder : validation.hasError('customerData.opAreaId')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in opArea" 
+                                   :key="item.valueAreaBusiness" 
+                                   :label="item.label" 
+                                   :value="item.valueAreaBusiness"></el-option>
                     </el-select>
                 </div>
+
                 <div class="bgcolor">
                     <label>国家/地区</label>
-                    <el-select v-model="valueCountry">
+                    <el-select placeholder="" v-model="ctest">
                         <el-option v-for="item in country" :key="item.valueCountry" :label="item.label" :value="item.valueCountry"></el-option>
                     </el-select>
                 </div>
+
                 <div class="bgcolor">
                     <label>行政地区</label>
-                    <el-select v-model="customerData.adAreaId">
-                        <el-option v-for="item in areaAdministrative" :key="item.valueAreaAdministrative" :label="item.label" :value="item.valueAreaAdministrative"></el-option>
+                    <el-select v-model="customerData.adAreaId"
+                               placeholder=""
+                               :class="{redBorder : validation.hasError('customerData.adAreaId')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in adArea" 
+                                   :key="item.adArea" 
+                                   :label="item.label" 
+                                   :value="item.adArea"></el-option>
                     </el-select>
                 </div>
+
                 <div class="bgcolor">
                     <label>法人代表</label>
-                    <el-input v-model="customerData.legalPerson" placeholder="请录入法人代表" @change='Modify()'></el-input>
+                    <el-input v-model="customerData.legalPerson" 
+                              placeholder="" 
+                              class="legalPerson"
+                              :class="{redBorder : validation.hasError('customerData.legalPerson')}"
+                              @focus="showErrprTips"
+                              @change='Modify()'></el-input>
                 </div>
+
                 <div class="bgcolor">
                     <label>注册地址</label>
-                    <el-input v-model="customerData.regAddress" placeholder="请录入注册地址" @change='Modify()'></el-input>
+                    <el-input v-model="customerData.regAddress" 
+                              placeholder="" 
+                              class="regAddress"
+                              :class="{redBorder : validation.hasError('customerData.regAddress')}"
+                              @focus="showErrprTips"
+                              @change='Modify()'></el-input>
                 </div>
-                <div class="bgcolor"><label>负责人</label><el-input v-model="customerData.manager" placeholder="请填写负责人" @change='Modify()'></el-input></div>
-                <div class="bgcolor"><label>电话</label><el-input v-model="customerData.phone" placeholder="请填写电话" @change='Modify()'></el-input></div>
+
+                <div class="bgcolor">
+                    <label>负责人</label>
+                    <el-input v-model="customerData.manager" 
+                              placeholder="" 
+                              class="manager"
+                              :class="{redBorder : validation.hasError('customerData.manager')}"
+                              @focus="showErrprTips"
+                              @change='Modify()'></el-input>
+                </div>
+
+                <div class="bgcolor">
+                    <label>电话</label>
+                    <el-input v-model="customerData.phone" 
+                              placeholder="" 
+                              class="phone"
+                              :class="{redBorder : validation.hasError('customerData.phone')}"
+                              @focus="showErrprTips"
+                              @change='Modify()'></el-input>
+                </div>
                 
-                <div class="bgcolor"><label>备注</label><el-input v-model="customerData.remark" placeholder="备注" @change='Modify()'></el-input></div>
+                <div class="bgcolor">
+                    <label>备注</label>
+                    <el-input v-model="customerData.remark" 
+                              placeholder="" 
+                              class="remark"
+                              :class="{redBorder : validation.hasError('customerData.remark')}"
+                              @focus="showErrprTips"
+                              @change='Modify()'></el-input>
+                </div>
             </el-col>
         </el-row>
      </div>
  </el-collapse-transition>     
 <el-row>
     <el-col :span="2" :offset="1"><el-checkbox v-model="supplier">同为供应商</el-checkbox></el-col>
-    <el-col :span="2"><el-checkbox v-model="credit">信用管理</el-checkbox></el-col>   
+    <el-col :span="2"><el-checkbox v-model="customerData.creditMgt">信用管理</el-checkbox></el-col>   
 </el-row>
 
     <!-- 公司业务财务bootTab标签页 -->
@@ -472,108 +685,90 @@ export default({
                 valueOrganization:'3',
                 label: '361度'
             }],
-            customerType:[{//客户分类
+            customerType:[{//客户类型
                 valueCustomerType:'1',
-                label: '1'
+                label: '客户类型1'
             }, {
                 valueCustomerType:'2',
-                label: '2'
+                label:'客户类型2' 
             }, {
                 valueCustomerType:'3',
-                label: '3'
+                label:'客户类型3' 
             }],
-            nature:[{//客户性质
+            customerNature:[{//客户性质
                 valueNature:'1',
-                label: '1'
+                label: '客户性质1'
             }, {
                 valueNature:'2',
-                label: '2'
+                label: '客户性质2'
             }, {
                 valueNature:'3',
-                label: '3'
+                label: '客户性质3'
             }],
-            grade:[{//客户等级
+            customerGrade:[{//客户等级
                 valueGrade:'1',
-                label: '1'
+                label: '客户等级1'
             }, {
                 valueGrade:'2',
-                label: '2'
+                label: '客户等级2'
             }, {
                 valueGrade:'3',
-                label: '3'
+                label: '客户等级3'
             }],
             sort:[{//客户类型
                 valueSort:'1',
-                label: '1'
+                label: '客户类型1'
             }, {
                 valueSort:'2',
-                label: '2'
+                label: '客户类型2'
             }, {
                 valueSort:'3',
-                label: '3'
+                label: '客户类型3'
             }],
-            areaBusiness:[{//业务地区
-                valueAreaBusiness:'1',
-                label: '1'
-            }, {
-                valueAreaBusiness:'2',
-                label: '2'
-            }, {
-                valueAreaBusiness:'3',
-                label: '3'
-            }],
-            finance :[{//对应财务组织
+            ficaOu :[{//对应财务组织
                 valueFinance:'1',
-                label: '1'
+                label: '财务组织1'
             }, {
                 valueFinance:'2',
-                label: '2'
+                label: '财务组织2'
             }, {
                 valueFinance:'3',
-                label: '3'
+                label: '财务组织3'
             }],
+            opArea:[{//业务地区
+                valueAreaBusiness:'1',
+                label: '业务地区1'
+            }, {
+                valueAreaBusiness:'2',
+                label: '业务地区2'
+            }, {
+                valueAreaBusiness:'3',
+                label: '业务地区3'
+            }],
+            ctest:'1',
             country :[{//国家/地区
                 valueCountry:'1',
-                label: '1'
+                label: '选项1'
             }, {
                 valueCountry:'2',
-                label: '2'
+                label: '选项2'
             }, {
                 valueCountry:'3',
-                label: '3'
+                label: '选项3'
             }],
-            areaAdministrative :[{//行政地区
-                valueAreaAdministrative:'1',
-                label: '1'
+            adArea :[{//行政地区
+                adArea:'1',
+                label: '行政地区1'
             }, {
-                valueAreaAdministrative:'2',
-                label: '2'
+                adArea:'2',
+                label: '行政地区2'
             }, {
-                valueAreaAdministrative:'3',
-                label: '3'
+                adArea:'3',
+                label: '行政地区3'
             }],
             activeName: 'bank',//tabs标签页默认激活name
             
-
-            
             supplier:true,//同为供应商
-            credit :true,//信用管理
-
-            showCompany:false,//初始默认公司计信息状态展开  
-            valueOrganization: '请选择组织',//所属组织
-            valueShopType:'请选择店铺类型',//店铺类型
-            valueNature:'请选择店铺性质',//店铺性质
-            valueGrade:'请选择店铺等级',//店铺等级 
-            valueWarehouse:'请选择对应仓库',//对应仓库 
-            valueAreaBusiness:'请选择业务地区',//业务地区 
-            valueAreaAdministrative:'请选择行政地区',//行政地区 
-            valueOpenData:'请选择开店日期',//开店日期 
-            valueBrand:'请选择主营品牌',//主营品牌 
-            valueTradingArea:'请选择商圈',//商圈  
-            valueCountry:'中国',//国家地区 
-            valueFinance:'亚投行',//财务组织 
-            valueSort:'学生',//客户类型 
-            valueCustomerType:'中国人',//客户分类 
 
             customerData:'',//根据id获得的客户信息
             bankData:[],//根据groupId获得银行信息
@@ -624,7 +819,101 @@ export default({
             },
         }
     },
+    validators: {
+        'customerData.ouId': function (value) {//所属组织
+            return this.Validator.value(value).required().integer();
+        },
+        'customerData.contact': function (value) {//编码
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.contactName': function (value) {//名称
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.contactFullName': function (value) {//全称
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.mnemonic': function (value) {//助记码
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.contactClassId': function (value) {//客户分类
+            return this.Validator.value(value).required().integer();
+        },
+        'customerData.contactWorkPropertyId': function (value) {//客户性质
+            return this.Validator.value(value).required().integer();
+        },
+        'customerData.contactGradeId': function (value) {//客户等级
+            return this.Validator.value(value).required().integer();
+        },
+        'customerData.isCustomer': function (value) {//客户类型
+            return this.Validator.value(value).required().integer();
+        },
+        'customerData.ficaOuId': function (value) {//对应财务组织
+            return this.Validator.value(value).required().integer();
+        },
+        'customerData.taxCode': function (value) {//纳税登记号 
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.opAreaId': function (value) {//业务地区区号
+            return this.Validator.value(value).required().integer();
+        },
+        'customerData.adAreaId': function (value) {//行政地区
+            return this.Validator.value(value).required().integer();
+        },
+        'customerData.legalPerson': function (value) {//法人代表
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.regAddress': function (value) {//注册地址
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.manager': function (value) {//负责人
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.phone': function (value) {//电话
+            return this.Validator.value(value).required().maxLength(50);
+        },
+        'customerData.remark': function (value) {//备注
+            return this.Validator.value(value).required().maxLength(200);
+        },
+    },
     methods:{
+        //---提示错误----------------------------------------------
+        showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsSelect(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsRangedate(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsTextArea(e){
+                $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+                })
+        },
+        //-------------------------------------------------------------
         //---获取数据--------------------------------------------
         loadData:function(){
             let self = this;
@@ -632,8 +921,9 @@ export default({
                 self.$destroy();
                 //根据id获得的客户信息
                 this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
-                    // console.log(res);
+                    
                     self.customerData = res.result;
+                    console.log(self.customerData);
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
