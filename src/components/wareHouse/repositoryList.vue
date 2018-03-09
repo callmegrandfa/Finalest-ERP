@@ -36,8 +36,8 @@
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>仓库类型</label>
-                        <el-select v-model="ouValue" placeholder="">
-                            <el-option v-for="item in ouValue"
+                        <el-select v-model="stockTypeId" placeholder="">
+                            <el-option v-for="item in stockType"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value">
@@ -107,7 +107,12 @@
                             <el-table-column prop="stockCode" label="仓库编码" ></el-table-column>
                             <el-table-column prop="stockName" label="仓库名称"></el-table-column>
                             <el-table-column prop="stockFullName" label="仓库全称"></el-table-column>
-                            <el-table-column prop="stockTypeId" label="仓库类型"></el-table-column>
+                            <el-table-column prop="stockTypeId" label="仓库类型">
+                                <template slot-scope="scope">
+                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[0].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[1].label' disabled=""></el-input>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="opAreaId" label="业务地区"></el-table-column>
                             <el-table-column prop="address" label="地址"></el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
@@ -300,7 +305,7 @@
                 stockNm:'',
                 AreaCode:'',
 
-                ouValue:'',
+                stockTypeId:'',//左侧搜索框的仓库类型值
                 ifWidth:true,
 
                 status: [{
@@ -313,6 +318,13 @@
                     value: 1,
                     label: '启用'
                  }],
+                 stockType:[{
+                    value:1,
+                    label: '仓库'
+                    }, {
+                    value:2,
+                    label: '店铺'
+                    }],
             }
         },
     }
@@ -452,10 +464,10 @@ input::-webkit-input-placeholder{
 .bgg .el-input__inner{
     background-color:#f5f7fa;
 } */
-.res-list .bgw .el-input.is-disabled .el-input__inner{
+.res-list .bgw .el-input__inner{
     background-color:white;
 }
-.res-list .bgg .el-input.is-disabled .el-input__inner{
+.res-list .bgg .el-input__inner{
     background-color:#f5f7fa;
 }
 </style>
