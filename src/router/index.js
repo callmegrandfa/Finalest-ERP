@@ -157,12 +157,12 @@ const dictionaryList = () =>
     // const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
     // const commodity = () =>import('../components/commodityManagement/commodity')
     // const commercial = () =>import('../components/commodityManagement/commercial')
-    // const commodityleimu = () =>import('../components/commodityManagement/commodityleimu')
+     const commodityleimu = () =>import('../components/commodityManagement/commodityleimu')
     // const Property = () =>import('../components/commodityManagement/Property')
     // const commercialSpecification= () =>import('../components/commodityManagement/commercialSpecification')
     // const commercialSpecificationDetails= () =>import('../components/commodityManagement/commercialSpecificationDetails')
-    // const CommodityCategories= () =>import('../components/commodityManagement/CommodityCategories')
-    //const CommodityCategoriesDetails= () =>import('../components/commodityManagement/CommodityCategoriesDetails')
+     const CommodityCategories= () =>import('../components/commodityManagement/CommodityCategories')
+    const CommodityCategoriesDetails= () =>import('../components/commodityManagement/CommodityCategoriesDetails')
     // const classProperty= () =>import('../components/commodityManagement/classProperty')
     // const classPropertyDetails= () =>import('../components/commodityManagement/classPropertyDetails')
     // const unitOfMeasurement= () =>import('../components/commodityManagement/unitOfMeasurement')
@@ -388,101 +388,23 @@ const routes = [
                 ]
             },
 
-            // {
-            //     path: '/commodity',
-            //     component: commodity,
-            //     name: 'commodity',
-            //     redirect: function() { //商品属性
-            //         let name = 'commodity';
-            //         let activeRouter = store.state.activeRouter;
-
-            //         for (let i = 0; i < activeRouter.length; i++) {
-            //             if (activeRouter[i].name == name) {
-
-            //                 return activeRouter[i].url;
-
-            //                 break;
-            //             }
-            //         }
-            //     },
-            //     children: [
-            //         { path: '/commodity/commodityProperty/:id', component: commodityProperty, name: 'commodityProperty' },
-            //         { path: '/commodity/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
-            //     ]
-            // },
-
-            // {
-            //     path: '/commercial',
-            //     component: commercial,
-            //     name: 'commercial',
-            //     redirect: function() { //商品规格
-            //         let name = 'commercial';
-            //         let activeRouter = store.state.activeRouter;
-
-            //         for (let i = 0; i < activeRouter.length; i++) {
-            //             if (activeRouter[i].name == name) {
-
-            //                 return activeRouter[i].url;
-
-            //                 break;
-            //             }
-            //         }
-            //     },
-            //     children: [
-            //         { path: '/commercial/commercialSpecification/:id', component: commercialSpecification, name: 'commercialSpecification' },
-            //         { path: '/commercial/commercialSpecificationDetails/:id', component: commercialSpecificationDetails, name: 'commercialSpecificationDetails' },
-            //     ]
-            // },
-
-            // {
-            //     path: '/Property',
-            //     component: Property,
-            //     name: 'Property',
-            //     redirect: function() { //商品规格
-            //         let name = 'Property';
-            //         let activeRouter = store.state.activeRouter;
-
-            //         for (let i = 0; i < activeRouter.length; i++) {
-            //             if (activeRouter[i].name == name) {
-
-            //                 return activeRouter[i].url;
-
-            //                 break;
-            //             }
-            //         }
-            //     },
-            //     children: [
-            //         { path: '/Property/classProperty/:id', component: classProperty, name: 'classProperty' },
-            //         { path: '/Property/classPropertyDetails/:id', component: classPropertyDetails, name: 'classPropertyDetails' },
-            //     ]
-            // },
-
-            // {
-            //     path: '/commodityleimu',
-            //     component: commodityleimu,
-            //     name: 'commodityleimu',
-            //     redirect: function() { //商品规格
-            //         let name = 'commodityleimu';
-            //         let activeRouter = store.state.activeRouter;
-
-            //         for (let i = 0; i < activeRouter.length; i++) {
-            //             if (activeRouter[i].name == name) {
-
-            //                 return activeRouter[i].url;
-
-            //                 break;
-            //             }
-            //         }
-            //     },
-            //     children: [
-            //         { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
-            //         { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
-            //     ]
-            // },
+            {
+                path: '/commodityleimu',
+                component: commodityleimu,
+                name: 'commodityleimu',
+                redirect: function() { //商品类目
+                    return redirectRouter('commodityleimu')
+                },
+                children: [
+                    { path: '/commodityleimu/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
+                    //{ path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
+                ]
+            },
 
             // { path: '/unitOfMeasurement/:id', component: unitOfMeasurement, name: 'unitOfMeasurement' }, //计量单位
             { path: '/commodityBrand/:id', component: commodityBrand, name: 'commodityBrand' }, //商品品牌
-            { path: '/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
+            
             // { path: '/commodityAttribute/:id', component: commodityAttribute, name: 'commodityAttribute' }, //商品属性
             // { path: '/specificationOfGoods/:id', component: specificationOfGoods, name: 'specificationOfGoods' }, //商品规格
 
@@ -863,7 +785,7 @@ const routes = [
 
             // { path: '/unitOfMeasurement/:id', component: unitOfMeasurement,name:'unitOfMeasurement' },//计量单位
             { path: '/commodityBrand/:id', component: commodityBrand, name: 'commodityBrand' }, //商品品牌
-            { path: '/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
+           
             // { path: '/commodityAttribute/:id', component: commodityAttribute,name:'commodityAttribute' },//商品属性
             // { path: '/specificationOfGoods/:id', component: specificationOfGoods,name:'specificationOfGoods' },//商品规格
 

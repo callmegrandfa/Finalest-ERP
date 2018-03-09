@@ -37,7 +37,7 @@
                 <el-row>
                     <el-col :span="8">&nbsp;</el-col>
                     <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                        <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
+                        <span class="search-btn" @click="search"  style="float:left;margin-left:10px;">查询</span>
                     </el-col>
                 </el-row>
             </el-col>
@@ -62,6 +62,9 @@
                 oleftBox.style.display="none";
                 _this.data.up=true;
                 this.$emit('listquery', _this.data.up)
+                
+            },
+            search(){
                 
             }
         },

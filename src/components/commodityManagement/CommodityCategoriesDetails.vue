@@ -31,7 +31,8 @@ import Textbox from '../../base/textbox/textbox'
             return{
                 radio:'1',
                 bottonbox:{
-                    url: '/commodityleimu/CommodityCategories',
+                   //url: '/commodityleimu/CommodityCategories',
+                   url: '/commodityleimu/CommodityCategories',
                    botton:[{
                     class: 'erp_bt bt_back',
                     imgsrc: '../../../static/image/common/bt_back.png',
@@ -56,7 +57,8 @@ import Textbox from '../../base/textbox/textbox'
                 textboxipt1:[{
                     must: '',
                     title: '创建人',
-                    place: ''                
+                    place: '',
+                    model:''                
                 },{
                     must: '',
                     title: '创建时间',
@@ -84,7 +86,7 @@ import Textbox from '../../base/textbox/textbox'
                     place: '1223'                 
                 },{
                     must: '',
-                    title: '控件类型',
+                    title: '助记码',
                     options:[{
                     value: '选项1',
                     label: '仓库'

@@ -61,7 +61,7 @@
                 
                 
             </el-col>
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>业务地区名称</label>
@@ -74,7 +74,7 @@
                 </div>    
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>负责人</label>
@@ -88,7 +88,7 @@
                 </div>   
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>上级业务地区</label>
@@ -104,7 +104,7 @@
                 </div>   
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>备注</label>
@@ -121,7 +121,7 @@
                 </div>       
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
@@ -137,7 +137,7 @@
                 </div>    
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
@@ -149,7 +149,7 @@
                 </div>    
             </el-col>
             
-            <el-col :span="24" class="pt15">
+            <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建时间</label>

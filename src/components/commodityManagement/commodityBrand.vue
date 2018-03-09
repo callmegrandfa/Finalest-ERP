@@ -149,6 +149,7 @@
                         <el-pagination
                          style="margin-top:20px;" 
                          class="text-right" 
+                         :current-page.sync="pageIndex"
                          background layout="total, prev, pager, next" 
                          @current-change="handleCurrentChange"
                          :page-count="totalPage" >
@@ -308,6 +309,7 @@ import Btm from '../../base/btm/btm'
                 _this.$axios.gets('/api/services/app/BrandManagement/GetAll',{SkipCount:(_this.page-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
                     let countPage=res.result.totalCount;
+                    _this.Init();
                     _this.totalPage = Math.ceil(countPage/_this.eachPage);
                   
                 })
@@ -322,25 +324,26 @@ import Btm from '../../base/btm/btm'
                 })
             },
             handleCurrentChange:function(val){//获取当前页码,分页
-                // if(this.isUpdate){
-                //     this.$confirm('存在未保存修改项，是否继续查看下一页?', '提示', {
-                //         confirmButtonText: '确定',
-                //         cancelButtonText: '取消',
-                //         type: 'warning',
-                //         center: true
-                //         }).then(() => {
-                //             this.pageIndex=val;
-                //             this.page = val;
-                //             this.loadTableData();
-                //         }).catch(() => {
-                            
-                //     });
-                // }
-                this.pageIndex=val;
-                this.page = val;
-                this.loadTableData();
-                
-                
+                if(this.isUpdate){
+                    this.$confirm('当前存在未保存修改项，是否继续查看下一页?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            this.pageIndex=val;
+                            this.page = val;
+                            this.loadTableData();
+                        }).catch(() => {
+                           
+                            return;
+                            //alert(this.pageIndex);     
+                    });
+                }else{
+                    this.pageIndex=val;
+                    this.page = val;
+                    this.loadTableData();
+                }
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -379,8 +382,8 @@ import Btm from '../../base/btm/btm'
                     "brandCode":"" ,
                     "brandName":"" ,
                     "status":1 ,
-                    "remark": "" ,
-                    "remark2":"" ,
+                    "remark": " " ,
+                    "remark2":" " ,
                     "statusTValue":1,
                     "createdBy":this.$store.state.name,
                     "createdTime":this.GetDateTime()
@@ -423,7 +426,6 @@ import Btm from '../../base/btm/btm'
             cancel(){//数据恢复到初始化状态 取消
                 this.cancelClick=true;
                 this.loadTableData();
-                this.Init();
             },
             handleSelectionChange(val){//多选操作
                 this.SelectionChange=val;
@@ -462,7 +464,6 @@ import Btm from '../../base/btm/btm'
                             }else{
                                  _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
                                     _this.loadTableData();
-                                    _this.Init();
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
                             }
@@ -491,14 +492,12 @@ import Btm from '../../base/btm/btm'
                     if(_this.addArray.length==1){//单条新增
                         _this.$axios.posts('/api/services/app/BrandManagement/Create',_this.addArray[0]).then(function(res){
                             _this.loadTableData();
-                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
                     }else{//批量新增
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',_this.addArray).then(function(res){
                             _this.loadTableData();
-                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
@@ -513,13 +512,11 @@ import Btm from '../../base/btm/btm'
                         }
                         _this.$axios.puts('/api/services/app/BrandManagement/Update',_this.tableData[updataIndex]).then(function(res){
                             _this.loadTableData();
-                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         });
                     }else{//批量修改
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',_this.tableData).then(function(res){
                             _this.loadTableData();
-                            _this.Init();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 

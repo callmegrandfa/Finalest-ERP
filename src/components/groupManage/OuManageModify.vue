@@ -511,7 +511,7 @@ export default({
                 entityProperty :1,//实体属性 '未返回字段'
                 status: res.result.status,//启用状态存在
                 remark: res.result.remark ,//备注存在
-                basOuTypes:[0],//组织职能
+                basOuTypes:res.result.basOuTypes,//组织职能
                 isGroupCompany:true ,//'未返回字段'
                 ouCompanyParentid: 0 ,//上级公司组织ID '未返回字段'
                 legalPerson:'ad' ,//法人代表 '未返回字段'
@@ -669,7 +669,7 @@ export default({
                 entityProperty : '',//实体属性
                 status: '',//启用状态存在
                 remark: '' ,//备注存在
-                basOuTypes: [0],//组织职能
+                basOuTypes: [],//组织职能
                 isGroupCompany:false ,//
                 ouCompanyParentid: '' ,//上级公司组织ID
                 legalPerson:'',//法人代表
