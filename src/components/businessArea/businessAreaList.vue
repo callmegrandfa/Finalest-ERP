@@ -21,7 +21,6 @@
                     :expand-on-click-node="false"
                     :filter-node-method="filterNode"
                     @node-click="nodeClick"
-                    :render-content="renderContent"
                     >
                     </el-tree>
                 </el-col>   
@@ -42,13 +41,45 @@
                                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
                             </el-input>
                         </div>
-                        <div class="search_button_wrapper">
+                        <div class="search_button_wrapper" @click="dialogUserDefined = true">
                             <button class="userDefined">
                                 <i class="fa fa-cogs" aria-hidden="true"></i>自定义
                             </button>
                         </div>
                     </div>
                 </el-row>
+                <!-- dialog -->
+                <el-dialog :visible.sync="dialogUserDefined" class="dialogUserDefined">
+                    <template slot="title">
+                        <span>自定义<small>(设置显示字段)</small></span>
+                    </template>
+                     <el-table
+                        :data="tableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe 
+                        ref="multipleTable">
+                            <el-table-column label="序号">
+                                 <template slot-scope="scope">
+                                    {{scope.$index + 1}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="field" label="字段"></el-table-column>
+                            <el-table-column prop="field" label="操作">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                        v-model="tableData[scope.$index].value"
+                                        active-color="#13ce66">
+                                    </el-switch>
+                                </template>
+                            </el-table-column>
+                        </el-table>   
+                        <span slot="footer" class="dialog-footer">
+                            <el-button type="primary">确 定</el-button>
+                            <el-button>取 消</el-button>
+                        </span>
+                </el-dialog>
+                <!-- dialog -->
                 <el-row>
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
@@ -74,7 +105,7 @@
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                    <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
+                                    <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text" size="small"  @click="confirmDelThis(scope.row)" >删除</el-button>
                                 </template>
@@ -244,6 +275,7 @@
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
                 showParent:true,//上级组织单元是否可选
+                dialogUserDefined:false,//dialog
             }
         },
         validators: {
@@ -417,13 +449,24 @@
                 })
             },
             nodeClick(data){
+                 let _this=this;
+                 _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id})
+                .then(function(res){
+                    _this.tableData=res.result;
+                    _this.tableData.unshift(data);
+                    _this.totalItem=res.result.length;
+                    _this.tableLoading=false;
+                    },function(res){
+                    _this.tableLoading=false;
+                })
             },
             modify(row){
-                this.$store.state.url='/OuManage/OuManageModify/'+row.id
+                this.$store.state.url='/businessArea/businessAreaModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
             see(row){
-                this.$store.state.url='/OuManage/OuManageSee/'+row.id
+                this.$store.state.url='/businessArea/businessArea/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             whichButton(event,node, data){

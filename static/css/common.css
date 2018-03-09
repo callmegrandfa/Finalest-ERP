@@ -210,6 +210,7 @@
     border: 1px solid rgb(194, 202, 216);
     height: 35px;
 }
+
 .smallBgcolor .el-input input{
   height: 28px!important;
 }
@@ -970,4 +971,51 @@ end-placeholder="结束日期">
   position: absolute;
   left: -48px;
   top: 0;
+}
+
+/* 搜索 */
+.search_info_open{
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  border: 1px solid #E3E3E3;
+  color: #cccccc;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-left: 20px;
+}
+
+.out-img{
+  display: inline-block;
+  width: 16px;
+}
+.search-block{
+  border-right:1px solid #E3E3E3;
+  line-height:47px;
+  text-align:center;
+  cursor: pointer;
+}
+
+/* 树形下拉 */
+.bgcolor .selectTree{
+  -webkit-appearance: none;
+  border: 1px solid rgb(194, 202, 216);
+  background-color: #fff;
+  border-radius: 4px;
+  float: left;
+  color: #606266;
+  display: block;
+  font-size: inherit;
+  height: 35px;
+  line-height: 1;
+  outline: 0;
+  padding: 0 15px;
+  -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  width: calc(100% - 114px);;
+}
+.bgcolor .selectTree:focus{
+  border-color: #33CCCC;
 }
