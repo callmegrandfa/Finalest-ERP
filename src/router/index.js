@@ -147,6 +147,10 @@ const department = () =>
     import ( /* webpackChunkName: "group-department" */ '../components/department/department')
 const departmentList = () =>
     import ( /* webpackChunkName: "group-department" */ '../components/department/departmentList')
+const departmentDetail = () =>
+    import ( /* webpackChunkName: "group-department" */ '../components/department/departmentDetail')
+const departmentModify = () =>
+    import ( /* webpackChunkName: "group-department" */ '../components/department/departmentModify')
     // 系统字典
 const dictionary = () =>
     import ( /* webpackChunkName: "group-dictionary" */ '../components/dictionary/dictionary')
@@ -518,6 +522,8 @@ const routes = [
                 },
                 children: [
                     { path: '/department/departmentList/:id', component: departmentList, name: 'departmentList' },
+                    { path: '/department/departmentDetail/:id', component: departmentDetail, name: 'departmentDetail' },
+                    { path: '/department/departmentModify/:id', component: departmentModify, name: 'departmentModify' },
                 ]
             },
             {
