@@ -109,9 +109,8 @@
                             @node-click="nodeClick"
                             >
                             </el-tree>
-                                <el-option v-show="false" :key="id" :label="areaName" :value="id" id="confirmSelect">
-                            
-                                </el-option>
+                            <el-option :key="count.id" :label="count.areaName" :value="count.id" id="confirmSelect">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -184,8 +183,10 @@
   export default({
     data(){
       return{
-        id:'',
-        areaName:'',
+        item:{
+            id:'',
+            areaName:'',
+        },
         componyTree:[
         ],
         defaultProps: {
@@ -260,6 +261,11 @@
           return this.Validator.value(value).required().maxLength(200);
       },
     },
+    computed:{
+        count () {
+            return this.item;
+            },
+    },  
     created () {
         let _this=this;
         _this.loadTree();  
@@ -349,9 +355,12 @@
       },
       nodeClick(data){
           let _this=this;
-          _this.id=data.id;
-          _this.areaName=data.areaName;
+          _this.item.id=data.id;
+          _this.item.areaName=data.areaName;
           $("#confirmSelect").click()
+      },
+      isGetdata(){
+          
       }
     }
 
