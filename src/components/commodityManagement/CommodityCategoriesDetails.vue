@@ -196,7 +196,8 @@ import Textbox from '../../base/textbox/textbox'
                     label: '北京烤鸭'
                     }],
                 bottonbox:{
-                    url: '/commodityleimu/CommodityCategories',
+                   //url: '/commodityleimu/CommodityCategories',
+                   url: '/commodityleimu/commodityClassHeading',
                    botton:[{
                     class: 'erp_bt bt_back',
                     imgsrc: '../../../static/image/common/bt_back.png',
@@ -222,10 +223,10 @@ import Textbox from '../../base/textbox/textbox'
             }
         },
         methods:{
-            back(){//点击新增跳转
-                this.$store.state.url='/commodityleimu/CommodityCategories/default'
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
+            // back(){//点击新增跳转
+            //     this.$store.state.url='/commodityleimu/commodityClassHeading/default'
+            //     this.$router.push({path:this.$store.state.url})//点击切换路由
+            // },
             btmlog:function(data){
                
             },

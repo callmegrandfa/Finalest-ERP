@@ -122,10 +122,6 @@
                                     <el-input v-show="scope.row.status==''" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[0].label' disabled=""></el-input>
                                     <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' disabled=""></el-input>
                                     <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
-                                    <!-- <el-select  v-model="scope.row.status" disabled >
-                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value" @click="aa">
-                                        </el-option>
-                                    </el-select> -->
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作">

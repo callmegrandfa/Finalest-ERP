@@ -61,9 +61,10 @@ export default new vuex.Store({
             { name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' },
             { name: 'commercialSpecificationDetails', url: '/commercial/commercialSpecificationDetails/:id', parent: 'commercial' },
 
-            { name: 'commodityleimu', url: '/commodityleimu/CommodityCategories/:id', parent: '', default: '/commodityleimu/CommodityCategories/:id' }, //商品类目
-            { name: 'CommodityCategories', url: '/commodityleimu/CommodityCategories/:id', parent: 'commodityleimu' },
+            { name: 'commodityleimu', url: '/commodityleimu/commodityClassHeading/:id', parent: '', default: '/commodityleimu/commodityClassHeading/:id' }, //商品类目
+            // { name: 'CommodityCategories', url: '/commodityleimu/CommodityCategories/:id', parent: 'commodityleimu' },
             { name: 'CommodityCategoriesDetails', url: '/commodityleimu/CommodityCategoriesDetails/:id', parent: 'commodityleimu' },
+            { name: 'commodityClassHeading', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu' },
 
             { name: 'Property', url: '/Property/classProperty/:id', parent: '', default: '/Property/classProperty/:id' }, //类目属性规格
             { name: 'classProperty', url: '/Property/classProperty/:id', parent: 'Property' },

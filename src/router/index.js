@@ -161,12 +161,12 @@ const dictionaryList = () =>
     // const commodityPropertyDetails= () =>import('../components/commodityManagement/commodityPropertyDetails')
     // const commodity = () =>import('../components/commodityManagement/commodity')
     // const commercial = () =>import('../components/commodityManagement/commercial')
-    // const commodityleimu = () =>import('../components/commodityManagement/commodityleimu')
+     const commodityleimu = () =>import('../components/commodityManagement/commodityleimu')
     // const Property = () =>import('../components/commodityManagement/Property')
     // const commercialSpecification= () =>import('../components/commodityManagement/commercialSpecification')
     // const commercialSpecificationDetails= () =>import('../components/commodityManagement/commercialSpecificationDetails')
-    // const CommodityCategories= () =>import('../components/commodityManagement/CommodityCategories')
-    //const CommodityCategoriesDetails= () =>import('../components/commodityManagement/CommodityCategoriesDetails')
+     const CommodityCategories= () =>import('../components/commodityManagement/CommodityCategories')
+    const CommodityCategoriesDetails= () =>import('../components/commodityManagement/CommodityCategoriesDetails')
     // const classProperty= () =>import('../components/commodityManagement/classProperty')
     // const classPropertyDetails= () =>import('../components/commodityManagement/classPropertyDetails')
     // const unitOfMeasurement= () =>import('../components/commodityManagement/unitOfMeasurement')
@@ -459,6 +459,19 @@ const routes = [
             // ]},
 
             // { path: '/unitOfMeasurement/:id', component: unitOfMeasurement,name:'unitOfMeasurement' },//计量单位
+            {
+                path: '/commodityleimu',
+                component: commodityleimu,
+                name: 'commodityleimu',
+                redirect: function() { //商品类目
+                    return redirectRouter('commodityleimu')
+                },
+                children: [
+                    { path: '/commodityleimu/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
+                    // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
+                ]
+            },
             { path: '/commodityBrand/:id', component: commodityBrand, name: 'commodityBrand' }, //商品品牌
             { path: '/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
             // { path: '/commodityAttribute/:id', component: commodityAttribute,name:'commodityAttribute' },//商品属性
