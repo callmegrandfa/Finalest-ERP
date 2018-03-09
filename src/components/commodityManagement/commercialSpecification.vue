@@ -1,6 +1,99 @@
 <template>
-    <div class="customer-infor-wrapper" style="background:#fff;width:100%;float:left">
-        <query :data="querychend"  v-on:listquery="querylog"></query>
+    <div class="commercialSpecification" style="background:#fff;width:100%;float:left">
+        <div id="left-box" style="min-width:275px;width:275px;float:left">
+        <el-row class="bg-white" >
+            <el-col :span="24">
+                <el-row class="h48 pl15">
+                    <el-col :span="18">
+                        <i class="el-icon-search"></i>
+                        <span>查询</span>
+                    </el-col>
+                    <el-col :span="5">
+                        <span class="fs12 open" @click="packUp">+ 收起</span>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                <label>规格编码</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="smallBgcolor" style="margin-top:20px">
+                        <el-input placeholder="请录入单号"></el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" >
+                                <label>规格名称</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="smallBgcolor" >
+                        <el-input placeholder="请录入单号"></el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" >
+                                <label>控件类型</label>
+                        </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="bgcolor smallBgcolor">
+                            <el-select  v-model="value" >
+                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+
+                            </el-select>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" >
+                                <label>必填</label>
+                        </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="bgcolor smallBgcolor">
+                            <el-select  v-model="value" >
+                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+
+                            </el-select>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" >
+                                <label>状态</label>
+                        </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="bgcolor smallBgcolor">
+                            <el-select  v-model="value" >
+                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+
+                            </el-select>
+                        </div>
+                    </el-col>
+                </el-row>
+                
+                <el-row>
+                    <el-col :span="8">&nbsp;</el-col>
+                    <el-col style="text-align:center;margin-bottom:20px;" :span="14">
+                        <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
+                    </el-col>
+                </el-row>
+            </el-col>
+            </el-row>
+        </div>
         <div id="bs" style="float:left;">
             <el-row  >
                 <el-col :span="24" class="border-left" id="bg-white">
@@ -116,73 +209,6 @@
                     class: 'erp_bt bt_auxiliary',
                     imgsrc: '../../../static/image/common/bt_stop.png',
                     text: '停用'
-                }]},
-                querychend:{
-                demand:[{
-                    must: '',
-                    title: '规格编码',
-                    place: '1223'                
-                },{
-                    must: '',
-                    title: '规格名称',
-                    place: '1223'                 
-                },{
-                    must: '',
-                    title: '控件类型',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '必填',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '状态',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
                 }]},
                 options: [{
                     value: '选项1',
@@ -349,6 +375,68 @@
 </script>
 
 <style scoped> 
+.commercialSpecification .fs14{
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.349019607843137);
+}
+.commercialSpecification .fs12{
+    font-size: 12px;
+}
+.commercialSpecification .open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
+}
+.commercialSpecification .pl15{
+    padding-left: 15px;
+}
+.commercialSpecification .search-btn{
+    font-size: 12px;
+    display: inline-block;
+    width: 87px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    background: #4A6997;
+    color: white;
+    cursor: pointer;
+}
+.commercialSpecification .smallBgcolor .el-select{
+    width: 100% !important ;
+    margin-left: 10px;   
+}
+.commercialSpecification .bgcolor label{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100% !important ;
+    margin-right: 0; 
+}
+.commercialSpecification .smallBgcolor .el-input--suffix{
+    width: 100% !important ;
+}
+.commercialSpecification .smallBgcolor .el-input{
+    width: 100% !important ;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.commercialSpecification .bgcolor{
+    overflow:  visible; 
+}
+.commercialSpecification .bg-white{
+    background: white;
+    border-radius: 3px;
+} 
+.commercialSpecification .h48{
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #E4E4E4;
+}
 .border-left{
     border-left: 1px solid #E4E4E4;
 }
@@ -358,6 +446,12 @@
 </style>
 
 <style>
+.commercialSpecification .smallBgcolor .el-input input{
+    height: 32px !important;
+}
+.commercialSpecification .bgcolor{
+    width: 100%;
+}
 .el-checkbox__inner{
     width: 16px;
     height: 16px;
