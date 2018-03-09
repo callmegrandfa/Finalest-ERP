@@ -112,12 +112,12 @@
 
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
-                                    <el-select  v-model="scope.row.status" v-if="scope.row.isSystem==true" disabled >
+                                    <el-select  v-model="scope.row.status" v-if="scope.row.isSystem==true" disabled :class="scope.$index%2==0?'bgw':'bgg'">
                                         <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value" @click="aa">
                                         </el-option>
                                     </el-select>
 
-                                    <el-select  v-model="scope.row.status" v-else @change="handleChange(scope.$index,scope.row)" >
+                                    <el-select  v-model="scope.row.status" v-else @change="handleChange(scope.$index,scope.row)" :class="scope.$index%2==0?'bgw':'bgg'">
                                         <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value" @click="aa">
                                         </el-option>
                                     </el-select>
@@ -853,5 +853,17 @@
     height: 28px;
     text-align:center;
     border:none;
+}
+.dic-list .el-input--suffix .el-input__inner{
+    padding:0;
+}
+.dic-list ..el-input__inner{
+    padding:0;
+}
+.dic-list .bgw .el-input__inner{
+    background-color:white;
+}
+.dic-list .bgg .el-input__inner{
+    background-color:#FAFAFA;
 }
 </style>

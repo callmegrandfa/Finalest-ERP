@@ -126,9 +126,9 @@
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="ouId" label="所属组织" ></el-table-column>
                             <el-table-column prop="contact" label="客户编码"></el-table-column>
-                            <el-table-column prop="contactFullName" label="客户名称"></el-table-column>
-                            <el-table-column prop="contactName" label="客户简称"></el-table-column>
-                            <el-table-column prop="contactClassId" label="客户分类"></el-table-column>
+                            <el-table-column prop="contactName" label="客户名称"></el-table-column>
+                            <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
+                            <el-table-column prop="contactClassId" label="客户类型"></el-table-column>
                             <el-table-column prop="contactWorkPropertyId" label="客户性质"></el-table-column>
                             <el-table-column prop="isSupplier" label="供应">
                                 <template slot-scope="scope">
