@@ -454,16 +454,10 @@ input::-webkit-input-placeholder{
     text-align:center;
     padding:0;
 }
-/* .bgw .el-input__inner{
-    background-color:white;
-}
-.bgg .el-input__inner{
-    background-color:#f5f7fa;
-} */
 .res-list .bgw .el-input__inner{
     background-color:white;
 }
 .res-list .bgg .el-input__inner{
-    background-color:#f5f7fa;
+    background-color:#FAFAFA;
 }
 </style>
