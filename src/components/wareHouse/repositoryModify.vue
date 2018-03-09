@@ -544,7 +544,7 @@
                 if(self.$route.params.id!='default'){
                     self.$destroy()
                     //根据仓库id获取仓库信息
-                    this.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
+                    self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
                         self.repositoryData = res.result;
                         // console.log(self.repositoryData);
@@ -764,50 +764,50 @@
                 },
                 ouGet:'',
                 ou: [{//所属组织
-                    value:'1',
+                    value:1,
                     label: '恒康'
                 }, {
-                    value:'2',
+                    value:2,
                     label: '恒大'
                 }, {
-                    value:'3',
+                    value:3,
                     label: '361度'
                 }],
                 stockType: [{//仓库类型
-                    value:'1',
+                    value:1,
                     label: '仓库'
                 }, {
-                    value:'2',
+                    value:2,
                     label: '店铺'
                 }],
                 opArea: [{//业务地区
-                    value:'1',
+                    value:1,
                     label: '业务地区1'
                 }, {
-                    value:'2',
+                    value:2,
                     label: '业务地区2'
                 }, {
-                    value:'3',
+                    value:3,
                     label: '业务地区3'
                 }],
                 adArea: [{//行政地区
-                    value:'1',
+                    value:1,
                     label: '行政地区1'
                 }, {
-                    value:'2',
+                    value:2,
                     label: '行政地区2'
                 }, {
-                    value:'3',
+                    value:3,
                     label: '行政地区3'
                 }],
                 status: [{//状态
-                    value:'1',
+                    value:1,
                     label: '状态1'
                 }, {
-                    value:'2',
+                    value:2,
                     label: '状态2'
                 }, {
-                    value:'3',
+                    value:3,
                     label: '状态3'
                 }],
 
