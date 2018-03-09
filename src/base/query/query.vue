@@ -12,7 +12,7 @@
                     </el-col>
                 </el-row>
                 <div style="margin-top:20px">
-                    <el-row v-for="item in data.demand" :key="item.place">
+                    <el-row v-for="item in info.demand" :key="item.place">
                         <el-col :span="8" >
                             <div class="bgcolor smallBgcolor">
                                 <label><small>{{item.must}}</small>{{item.title}}</label>
@@ -20,15 +20,14 @@
                         </el-col>
                         <el-col :span="14" v-if="!item.options">
                             <div class="smallBgcolor">
-                                <el-input :placeholder="item.place"></el-input>
+                                <el-input :placeholder="item.place" :v-model="item.model"></el-input>
                             </div>
                         </el-col>
                         <el-col :span="14" v-else>
                             <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="value" >
-                                <el-option  v-for="item in item.options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-
+                                <el-select  :v-model="item.model" >
+                                    <el-option  v-for="itemnode in item.options" :key="itemnode.value" :label="itemnode.label" :value="itemnode.value">
+                                    </el-option>
                                 </el-select>
                             </div>
                         </el-col>
@@ -46,14 +45,15 @@
 </template>
 <script type="text/javascript">
 	export default{
-        props: ['data'],
+        props: ['info'],
         data(){
             return{
-            value: '',
-            
+                value: '',
+                newinfo:null
             }
-            
-
+        },
+        created(){
+            this.newinfo=this.info
         },
         methods:{
             packUp(){
@@ -65,7 +65,7 @@
                 
             },
             search(){
-                
+                this.$emit(this.newinfo);
             }
         },
         created() {

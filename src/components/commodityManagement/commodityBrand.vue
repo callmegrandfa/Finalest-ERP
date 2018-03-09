@@ -452,21 +452,24 @@ import Btm from '../../base/btm/btm'
                     this.idArray.ids.push(this.SelectionChange[i].id)
                 }
                 let _this=this;
-                if(this.idArray.ids.length>0){
-                    this.$confirm('确定删除?', '提示', {
+                if(_this.idArray.ids.indexOf(undefined)!=-1){
+                        this.$message({
+                            type: 'warning',
+                            message: '新增数据请在行内删除'
+                        });
+                        return;
+                }
+                if(_this.idArray.ids.length>0){
+                    _this.$confirm('确定删除?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning',
                         center: true
                         }).then(() => {
-                        if(row.brandCode==""){
-                            this.tableData.splice(index,1)
-                            }else{
-                                 _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
-                                    _this.loadTableData();
-                                    _this.open('删除成功','el-icon-circle-check','successERP');    
-                                })
-                            }
+                            _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
+                                _this.loadTableData();
+                                _this.open('删除成功','el-icon-circle-check','successERP');    
+                            })
                         }).catch(() => {
                             this.$message({
                                 type: 'info',
@@ -484,7 +487,7 @@ import Btm from '../../base/btm/btm'
                         if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""||_this.addArray[i].status==""){
                             this.$message({
                                 message: '红色框内为必填项！',
-                                type: 'warning'
+                                type: 'error'
                             });
                             return false
                         }

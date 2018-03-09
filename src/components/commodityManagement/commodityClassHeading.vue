@@ -1,6 +1,70 @@
 <template>
     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
-        <query :data="querychend" v-on:listquery="querylog" ></query>  
+        <div id="left-box" style="min-width:275px;width:275px;float:left">    
+            <el-row class="bg-white">
+                <el-col :span="24">
+                    <el-row class="h48 pl15">
+                        <el-col :span="18">
+                            <i class="el-icon-search"></i>
+                            <span>查询</span>
+                        </el-col>
+                        <el-col :span="5">
+                            <span class="fs12 open" @click="packUp">+ 收起</span>
+                        </el-col>
+                    </el-row>
+                    <div style="margin-top:20px">
+                        <el-row>
+                            <el-col :span="8">
+                                <div class="bgcolor" style="margin-top:20px">
+                                <label style="width:86px">商品类目</label>
+                            </div>
+                            </el-col>
+                            <el-col :span="14">
+                                <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                <el-input v-model="search.CategoryName"></el-input>
+                                </div>
+                            </el-col>
+                        </el-row>
+                        <el-row >
+                            <el-col :span="8" >
+                                <div class="bgcolor smallBgcolor">
+                                    <label><small></small>服务类(虚拟)</label>
+                                </div>
+                            </el-col>
+                            <el-col :span="14">
+                                <div class="bgcolor smallBgcolor">
+                                    <el-select v-model="search.IsService">
+                                        <el-option  >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </el-col>
+                        </el-row>
+                        <el-row >
+                            <el-col :span="8" >
+                                <div class="bgcolor smallBgcolor">
+                                    <label><small></small>状态</label>
+                                </div>
+                            </el-col>
+                            <el-col :span="14">
+                                <div class="bgcolor smallBgcolor">
+                                    <el-select  v-model="search.Status" >
+                                        <el-option >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <el-row>
+                        <el-col :span="8">&nbsp;</el-col>
+                        <el-col style="text-align:center;margin-bottom:20px;" :span="14">
+                            <span class="search-btn" @click="query"  style="float:left;margin-left:10px;">查询</span>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+        </div>
         <div id="bgj">
             <el-row >
                 <el-col :span="24" class="border-left" id="bg-white" style="background-color:rgb(249,249,249)">
@@ -59,7 +123,6 @@
 </template>
 
 <script>
-import Query from '../../base/query/query'
 import Btm from '../../base/btm/btm'
 import Tree from '../../base/tree/tree'
     export default{
@@ -79,19 +142,27 @@ import Tree from '../../base/tree/tree'
                 "remark": "st54ring"
                 },
                 tableLoading:true,
+                search:{
+                    CategoryName:'',
+                    IsService:'',
+                    Status:'',
+                },
                 querychend:{
                     up:'',
                     demand:[{
                     must: '',
                     title: '商品类目',
-                    place: ''                
+                    place: '', 
+                    model:'CategoryName'           
                 },{
                     must: '*',
                     title: '服务类(虚拟)',
-                    place: '1223'                 
+                    place: '1223',
+                    model:'IsService'                
                 },{
                     must: '*',
                     title: '状态',
+                    model:'Status',
                     options:[{
                     value: '选项1',
                     label: '仓库'
@@ -212,7 +283,7 @@ import Tree from '../../base/tree/tree'
                     _this.treeLoading=true;
                     _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetCategoryTree')
                     .then(function(res){
-                        _this.classTree=res.result
+                        _this.classTree=res
                         console.log(_this.classTree)
                         _this.treeLoading=false;
                         _this.loadIcon();
@@ -244,10 +315,19 @@ import Tree from '../../base/tree/tree'
                     })
                 })
             },
-            
+            packUp(){
+                let oleftBox=document.getElementById('left-box');
+                let Re=document.getElementById('refer');
+                let obgh=document.getElementById('bgh');
+                oleftBox.style.display="none";
+                obgh.style.width="100%";
+                Re.style.display="block";
+            },
+            query(){
+                
+            },
         },
         components:{
-            Query,
             Btm,
             Tree
         }
@@ -259,8 +339,16 @@ import Tree from '../../base/tree/tree'
     background: white;
     border-radius: 3px;
 }
+.h48{
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #E4E4E4;
+}
 .pl10{
     padding-left: 10px;
+}
+.pl15{
+    padding-left: 15px;
 }
 .pt10{
     padding-top: 10px;
@@ -285,7 +373,34 @@ import Tree from '../../base/tree/tree'
 </style>
 
 <style>
-
+.fs14{
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.349019607843137);
+}
+.fs12{
+    font-size: 12px;
+}
+.open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
+}
+.search-btn{
+        font-size: 12px;
+        display: inline-block;
+        width: 87px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 3px;
+        background: #4A6997;
+        color: white;
+        cursor: pointer;
+    }
 .el-checkbox__inner{
     width: 16px;
     height: 16px;
