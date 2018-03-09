@@ -144,7 +144,7 @@ export default {
                     {name:'类目属性规格列表',address:'Property'},
                     {name:'计量单位',address:'unitOfMeasurement'},
                     {name:'商品品牌',address:'commodityBrand'},
-                    {name:'商品类目',address:'commodityClassHeading'},
+                    {name:'商品类目',address:'commodityleimu'},
                     {name:'商品属性',address:'commodityAttribute'},
                     {name:'商品规格',address:'specificationOfGoods'},
                     {name:'商品规格组',address:'specification'},

@@ -2,7 +2,7 @@
 <template>
     <el-row class="h48 pt5">
     		<div class="ml5" style="float:left" v-for="item in date.botton">
-    			<button :class="item.class" @click="selectItem(item)"><div class="btImg"><img  :src="item.imgsrc"></div><span :class="String(item.imgsrc)" class="btDetail">{{item.text}}</span></button>
+    			<button :class="item.class" @click="selectItem(item)" ><div class="btImg"><img  :src="item.imgsrc"></div><span :class="String(item.imgsrc)" class="btDetail">{{item.text}}</span></button>
     		</div>                   
     </el-row>
 </template>
@@ -30,6 +30,9 @@
            		    this.$router.push({path:this.$store.state.url})//点击切换路由
 	    		}else if(item.text == '保存'){
 	    			_this.stop='保存';
+	    			this.$emit('listbtm', _this.stop)
+	    		}else if(item.text == '启用'){
+	    			_this.stop='启用';
 	    			this.$emit('listbtm', _this.stop)
 	    		}
 	    	}
