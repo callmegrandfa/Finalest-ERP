@@ -1,40 +1,27 @@
 <template>
-  <div class="data-list-container">
+  <div class="res-list">
       <el-row class="bg-white">
-            <el-col :class="[ifWidth?'w20':'w0']" v-show="ifWidth">
+            <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
                         <i class="el-icon-search"></i>
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12 open" @click="closeLeft">- 缩起</span>
+                        <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
 
-                <el-row class="mt10">
+                <el-row class="mt10"> 
                     <div class="bgcolor smallBgcolor">
-                        <label><small>*</small>组织类型</label>
-                        <el-select v-model="ouValue" placeholder="请选择客户类型">
-                            <el-option v-for="item in ouValue"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </el-row>
-
-                <el-row> 
-                    <div class="bgcolor smallBgcolor">
-                        <label>编码</label>
+                        <label>编号</label>
                         <el-input placeholder="" v-model="stockC"></el-input>
                     </div> 
                 </el-row>
 
                 <el-row>
                     <div class="bgcolor smallBgcolor">
-                        <label>仓库名称</label>
+                        <label>名称</label>
                         <el-input placeholder="" v-model='stockNm'></el-input>
                     </div> 
                 </el-row>
@@ -46,6 +33,19 @@
                     </div>
                 </el-row>
 
+                <el-row>
+                    <div class="bgcolor smallBgcolor">
+                        <label>仓库类型</label>
+                        <el-select v-model="stockTypeId" placeholder="">
+                            <el-option v-for="item in stockType"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </el-row>
+
                 <el-row style="text-align:center;">
                     <div class="bgcolor smallBgcolor">
                         <span class="search-btn" @click="searchList">查询</span>
@@ -53,51 +53,75 @@
                 </el-row>
             </el-col>
 
-            <el-col :class="[ifWidth?'w80':'w100']" class="border-left">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add" @click="goDetail">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_add.png">
+            <el-col :span="ifWidth?19:24" class="border-left">
+                <el-row class="h48">
+                    <el-col :span="2" class="search-block"  v-show="!ifWidth">
+                        <div style="display:inline-block;line-height:47px" @click="openLeft">
+                            <img src="../../../static/image/common/search_btn.png">
                         </div>
-                        <span class="btDetail">新增</span>
-                    </button>
-              
-                    <button class="erp_bt bt_print" @click="openLeft" v-show="!ifWidth">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_print.png">
+                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
+                            <span>查询</span>
                         </div>
-                        <span class="btDetail">展开</span>
-                    </button>
+                        <div class="out-img" @click="openLeft">
+                            <span>+</span>
+                        </div>
+                    </el-col>
 
-                    <button class="erp_bt bt_excel">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_excel.png">
-                        </div>
-                        <span class="btDetail">Excel</span>
-                    </button>
+                    <el-col :span="22" class="pt5">
+                        <button class="erp_bt bt_add" @click="goDetail">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_add.png">
+                            </div>
+                            <span class="btDetail">新增</span>
+                        </button>
 
-                    <button class="erp_bt bt_auxiliary">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_auxiliary.png">
-                        </div>
-                        <span class="btDetail">辅助功能</span>
-                    </button>
+                        <button @click="delRow" class="erp_bt bt_del">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_del.png">
+                            </div>
+                            <span class="btDetail">删除</span>
+                        </button>
+
+                        <button class="erp_bt bt_excel">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_excel.png">
+                            </div>
+                            <span class="btDetail">Excel</span>
+                        </button>
+
+                        <button class="erp_bt bt_auxiliary">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_auxiliary.png">
+                            </div>
+                            <span class="btDetail">辅助功能</span>
+                        </button>
+                    </el-col>
+                    
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
-                        <el-table :data="allList" border style="width: 100%" stripe>
-                            <el-table-column prop="ouId" label="业务组织" ></el-table-column>
+                        <el-table :data="allList" border @selection-change="handleSelectionChange" style="width: 100%" stripe>
+                            <el-table-column type="selection"></el-table-column>
+                            <el-table-column prop="ouId" label="所属组织" ></el-table-column>
                             <el-table-column prop="stockCode" label="仓库编码" ></el-table-column>
-                            <el-table-column prop="stockFullName" label="仓库名称"></el-table-column>
-                            <el-table-column prop="stockName" label="仓库简称"></el-table-column>
-                            <el-table-column prop="stockTypeId" label="仓库类型"></el-table-column>
+                            <el-table-column prop="stockName" label="仓库名称"></el-table-column>
+                            <el-table-column prop="stockFullName" label="仓库全称"></el-table-column>
+                            <el-table-column prop="stockTypeId" label="仓库类型">
+                                <template slot-scope="scope">
+                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[0].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[1].label' disabled=""></el-input>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="opAreaId" label="业务地区"></el-table-column>
                             <el-table-column prop="address" label="地址"></el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
-                            <el-table-column prop="ifAllow" label="允许使用">
+                            
+                            <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="allList[scope.$index].ifAllow" disabled></el-checkbox>
+                                    <el-input v-show="scope.row.status==''" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[0].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作">
@@ -196,12 +220,31 @@
                 })
             },
 
+            handleSelectionChange(val) {//点击复选框选中的数据
+                this.multipleSelection = val;
+            },
+
             handleCurrentChange:function(val){//获取当前页码
                 this.pageIndex=val;
                 console.log(val)
                 this.page = val;
                 this.getAllList();
             },     
+
+            delRow(){
+                let self=this;
+                if(self.multipleSelection.length>0){//表格
+                    for(let i=0;i<self.multipleSelection.length;i++){
+                        self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.multipleSelection[i].id})
+                        .then(function(res){
+                            self.getAllList();
+                            self.open('删除成功','el-icon-circle-check','successERP');
+                        },function(res){
+                            self.open('删除失败','el-icon-error','faildERP');
+                        })
+                    }
+                };
+            },
 
             goDetail(){
                 this.$store.state.url='/repository/repositoryData/default'
@@ -238,9 +281,9 @@
                 allList:[],//获取所有的列表数据
                 total:'',//数据总条数
                 queryList:[],//将查询回来的数据保存为数组形式
-
+                multipleSelection: [],//复选框选中数据
                 listById:'',//根据id获取的list
-               
+               xx:'156416',
                 getAllParam:{
                     OuId:'1',//组织单元ID()
                     Draw:'1',
@@ -258,15 +301,33 @@
                 stockNm:'',
                 AreaCode:'',
 
-                ouValue:'',
+                stockTypeId:'',//左侧搜索框的仓库类型值
                 ifWidth:true,
+
+                status: [{
+                    value:"",
+                    label: '全部'
+                    }, {
+                    value: 0,
+                    label: '禁用'
+                    }, {
+                    value: 1,
+                    label: '启用'
+                 }],
+                 stockType:[{
+                    value:1,
+                    label: '仓库'
+                    }, {
+                    value:2,
+                    label: '店铺'
+                    }],
             }
         },
     }
 </script>
 
 <style scoped>
-.data-list-container{
+.res-list{
     width: 100%;
     height: 100%;
     background:#EEF1F5;
@@ -353,15 +414,17 @@ input::-webkit-input-placeholder{
 .fs12{
     font-size: 12px;
 }
-.open{
+.search_info_open{
     display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border: 1px solid #E3E3E3;
     color: #cccccc;
     text-align: center;
     cursor: pointer;
+    border-radius: 50%;
+    margin-left: 20px;
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
@@ -369,55 +432,32 @@ input::-webkit-input-placeholder{
 }
 </style>
 <style>
-/* 重写checkbox */
-.data-list-container .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
-    border-radius:50% !important; 
+.search-block{
+    border-right:1px solid #E3E3E3;
+    line-height:47px;
+    text-align:center;
+    cursor: pointer;
 }
-.data-list-container .el-checkbox__inner::after{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    content: "";
-    border: 3px solid #fff;
-    border-left: 0;
-    border-top: 0;
-    height: 11px;
-    left: 6px;
-    position: absolute;
-    top: 1px;
-    -webkit-transform: rotate(45deg) scaleY(0);
-    transform: rotate(45deg) scaleY(0);
-    width: 6px;
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-    -webkit-transform-origin: center;
-    transform-origin: center;
+.out-img{
+    display: inline-block;
+    width: 16px;
 }
-
-/* 重写el-table样式 */
-.data-list-container .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
+.out-img span{
+    display: block;
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #E3E3E3;
 }
-.data-list-container .el-table td{
-    padding: 3px 0;
+.res-list .cell .el-input__inner{
+    border:none;
+    text-align:center;
+    padding:0;
 }
-.data-list-container .el-table__body{
-    text-align: center;
+.res-list .bgw .el-input__inner{
+    background-color:white;
 }
-/* 重写el-pagination样式 */
-.data-list-container .text-right{
-    text-align: right;
-}
-.mt-10{
-    margin-top: 10px;
+.res-list .bgg .el-input__inner{
+    background-color:#FAFAFA;
 }
 </style>

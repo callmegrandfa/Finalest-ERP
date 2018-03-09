@@ -92,14 +92,30 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>上级业务地区</label>
-                        <el-select 
+                       <el-select 
                         class="areaParentId" 
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
                         v-model="addData.areaParentId">
-                            <el-option v-for="item in contains" :key="item.value" :label="item.label" :value="item.value">
-                                <span style="float: left">{{ item.label }}</span>
-                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        <!-- <input type="text" class="selectTree"> -->
+                        <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search">
+                        </el-input>
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="selectTree"
+                            :props="selectProps"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree"
+                            :filter-node-method="filterNode"
+                            :expand-on-click-node="false"
+                            @node-click="nodeClick"
+                            >
+                            </el-tree>
+                            <el-option v-show="false" :key="count.id" :label="count.areaName" :value="count.id" id="businessModify_confirmSelect">
                             </el-option>
                         </el-select>
                     </div>
@@ -134,8 +150,6 @@
                         placeholder=""
                         v-model="addData.status">
                             <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                                <span style="float: left">{{ item.label }}</span>
-                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                             </el-option>
                         </el-select>
                     </div>
@@ -177,6 +191,18 @@
   export default({
     data(){
       return{
+        search:'',
+        item:{
+            id:'',
+            areaName:'',
+        },
+        selectTree:[
+        ],
+        selectProps: {
+            children: 'items',
+            label: 'areaName',
+            id:'id'
+        },
          contain: 
          [{ 
             value:1,
@@ -243,8 +269,14 @@
           return this.Validator.value(value).required().maxLength(200);
       },
     },
+    computed:{
+        count () {
+            return this.item;
+            },
+    },  
     created () {
         let _this=this;
+         _this.loadTree();  
         _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:_this.$route.params.id})
         .then(function(res){
             _this.addData=res.result;
@@ -252,7 +284,16 @@
 
         })  
     },
+     watch: {
+      search(val) {
+        this.$refs.tree.filter(val);
+      }
+    },
     methods: {
+         filterNode(value, data) {
+        if (!value) return true;
+        return data.areaName.indexOf(value) !== -1;
+      },
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
@@ -308,6 +349,37 @@
             }
         });
       },
+      loadTree(){
+            let _this=this;
+            _this.treeLoading=true;
+            _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+            .then(function(res){
+                _this.selectTree=res.result;
+                _this.loadIcon();
+            },function(res){
+            })
+        },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        nodeClick(data){
+        let _this=this;
+        _this.item.id=data.id;
+        _this.item.areaName=data.areaName;
+        _this.$nextTick(function(){
+            $('#businessModify_confirmSelect').click()
+        })
+      },
     }
 
 })
@@ -322,9 +394,6 @@
 .businessAreaModify  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
-}
-.block{
-    display: none;
 }
  .businessAreaModify .el-row{
     background-color: #fff;

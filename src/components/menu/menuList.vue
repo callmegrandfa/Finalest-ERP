@@ -5,7 +5,7 @@
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-input
                         placeholder="搜索..."
-                        v-model="searchLeft" class="bAreaSearch">
+                        v-model="searchLeft" class="search_input">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-col>
@@ -21,14 +21,13 @@
                     :expand-on-click-node="false"
                     :filter-node-method="filterNode"
                     @node-click="nodeClick"
-                    :render-content="renderContent"
                     >
                     </el-tree>
                 </el-col>   
             </el-col>
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5 pr10">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                <el-row class="h48 pt5">
+                    <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
@@ -38,8 +37,53 @@
                         <span class="btDetail">导出</span>
                         <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                     </button>
+                    <div class="search_input_group">
+                        <div class="search_input_wapper">
+                            <el-input
+                                placeholder="搜索..."
+                                class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
+                    </div>
                 </el-row>
-
+                <!-- dialog -->
+                <el-dialog :visible.sync="dialogUserDefined" class="dialogUserDefined">
+                    <template slot="title">
+                        <span>自定义<small>(设置显示字段)</small></span>
+                    </template>
+                     <el-table
+                        :data="tableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe 
+                        ref="multipleTable">
+                            <el-table-column label="序号">
+                                 <template slot-scope="scope">
+                                    {{scope.$index + 1}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="field" label="字段"></el-table-column>
+                            <el-table-column prop="field" label="操作">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                        v-model="tableData[scope.$index].value"
+                                        active-color="#13ce66">
+                                    </el-switch>
+                                </template>
+                            </el-table-column>
+                        </el-table>   
+                        <span slot="footer" class="dialog-footer">
+                            <el-button type="primary">确 定</el-button>
+                            <el-button>取 消</el-button>
+                        </span>
+                </el-dialog>
+                <!-- dialog -->
                 <el-row>
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
@@ -57,7 +101,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="moduleParentId" label="上级菜单"></el-table-column>
-                            <el-table-column label="状态（无字段）">
+                            <el-table-column prop="status" label="状态">
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
@@ -159,6 +203,7 @@
                 Sorting:'',//table搜索
                 dialogFormVisible:false,
                 tittle:'',
+                dialogUserDefined:false,//dialog
             }
         },
         created:function(){       
@@ -284,7 +329,10 @@
                 _this.loadTree();
             },
             nodeClick(data){
-                
+                let _this=this;
+                _this.tableData=[];
+                _this.tableData.push(data)
+                _this.totalItem=_this.tableData.length;
             },
             modify(row){
                 this.$store.state.url='/menu/menuModify/'+row.id
@@ -513,10 +561,6 @@
 <style>
 .menuListForm .el-button+.el-button{
     margin-left: 0;
-}
-.menuListForm .bAreaSearch .el-input__inner{
-    height: 30px;
-    border-radius: 30px;
 }
 .menuListForm .el-dialog__footer{
     padding:0;

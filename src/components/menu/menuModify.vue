@@ -126,22 +126,30 @@
             </div>
             <div class="bgcolor">
               <label>上级菜单</label>
-              <!-- <el-cascader
-                placeholder="试试搜索：指南"
-                :options="treeData"
-                :props="Props"
-                filterable
-                change-on-select
-            ></el-cascader> -->
-                <el-select 
+             <el-select 
                 class="moduleParentId" 
                 @focus="showErrprTipsSelect"
+                placeholder=""
                 :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
-                v-model="addData.moduleParentId"  
-                placeholder="">
-                    <el-option v-for="item in ParentId" :key="item.value" :label="item.label" :value="item.value">
-                        <span style="float: left">{{ item.label }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                v-model="addData.moduleParentId"  >
+                <el-input
+                    placeholder="搜索..."
+                    class="selectSearch"
+                    v-model="search">
+                </el-input>
+                    <el-tree
+                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                    :data="selectTree"
+                    :props="selectProps"
+                    node-key="id"
+                    default-expand-all
+                    ref="tree"
+                    :filter-node-method="filterNode"
+                    :expand-on-click-node="false"
+                    @node-click="selectNodeClick"
+                    >
+                    </el-tree>
+                    <el-option v-show="false" :key="count.id" :label="count.moduleName" :value="count.id" id="menuModify_confirmSelect">
                     </el-option>
                 </el-select>
             </div>
@@ -269,6 +277,11 @@
   export default({
     data(){
         return{
+             search:'',
+             item:{
+                id:'',
+                moduleName:'',
+            },
             // isSave:true,//是否可以保存，不能保存就是修改
             menuCheck:true,
             dialogTableVisible:false,//控制对话框
@@ -330,6 +343,13 @@
                 label: 'displayName',
                 value:'permissionName'
             },
+            selectTree:[
+            ],
+            selectProps: {
+                children: 'childNodes',
+                label: 'moduleName',
+                id:'id',
+            },
             treeData:[],
             Props: {
                 children: 'childNodes',
@@ -373,6 +393,7 @@
     },
     created:function(){
         let _this=this;
+            _this.loadTree(); 
             _this.loadParent()
             _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
@@ -397,10 +418,21 @@
             })
        
     },
-    mounted:function(){
-        let _this=this;
+    computed:{
+        count () {
+            return this.item;
+            },
+    },  
+     watch: {
+      search(val) {
+        this.$refs.tree.filter(val);
+      }
     },
     methods:{
+         filterNode(value, data) {
+        if (!value) return true;
+        return data.moduleName.indexOf(value) !== -1;
+      },
         showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
@@ -435,6 +467,37 @@
               }else{
                   $(this).removeClass('display_block')
               }
+            })
+      },
+      loadTree(){
+            let _this=this;
+            _this.treeLoading=true;
+            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
+            .then(function(res){
+                _this.selectTree=res;
+                _this.loadIcon();
+            },function(res){
+            })
+        },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        selectNodeClick(data){
+            let _this=this;
+            _this.item.id=data.id;
+            _this.item.moduleName=data.moduleName;
+            _this.$nextTick(function(){
+                $('#menuModify_confirmSelect').click()
             })
       },
         loadParent(){
@@ -713,9 +776,6 @@
 
 
 <style scoped>
-.block{
-    display: none;
-}
 .menuModify  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;

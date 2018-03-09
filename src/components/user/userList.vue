@@ -1,14 +1,14 @@
 <template>
     <div class="userList">
         <el-row class="bg-white">
-            <el-col :span="5">
+             <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
-                        <i class="el-icon-search"></i>
+                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:10px;">
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
-                        <span class="fs12 open">+ 展开</span>
+                        <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
 
@@ -26,8 +26,6 @@
                     <!-- <el-input v-model="searchData.UserGroupId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.UserGroupId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -36,8 +34,6 @@
                     <!-- <el-input v-model="searchData.OuId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.OuId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -45,9 +41,7 @@
                     <label>身份类型</label>
                     <!-- <el-input v-model="searchData.UserType" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.UserType" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
@@ -56,8 +50,6 @@
                     <!-- <el-input v-model="searchData.LanguageId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.LanguageId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -66,8 +58,6 @@
                     <!-- <el-input v-model="searchData.AuthType" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.AuthType" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -75,9 +65,7 @@
                     <label>状态</label>
                     <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.Status" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        <el-option v-for="item in selectData.Status002" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
@@ -86,8 +74,6 @@
                     <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.RoleId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -97,21 +83,79 @@
                 </div>
             </el-col>
 
-            <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-                    <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
-                    <button class="erp_bt bt_out bt_width">
-                        <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
-                        <span class="btDetail">导出</span>
-                        <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                    </button>
-                    <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                    <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>             
+            <el-col :span="ifWidth?19:24" class="border-left">
+                <el-row class="h48">
+                    <el-col :span="ifWidth?0:2" class="search-block">
+                        <div style="display:inline-block" @click="openLeft">
+                            <img src="../../../static/image/common/search_btn.png">
+                        </div>
+                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
+                            <span>查询</span>
+                        </div>
+                        <div class="out-img" @click="openLeft">
+                            <span class="search_info_open" style="margin-left:0">+</span>
+                        </div>
+                    </el-col>
+                    <el-col :span="ifWidth?24:22" class="pt5">
+                        <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
+                        <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                        <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
+                        <button class="erp_bt bt_out bt_width">
+                            <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
+                            <span class="btDetail">导出</span>
+                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                        </button>
+                        <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
+                        <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
+                        <div class="search_input_group">
+                            <div class="search_input_wapper">
+                                <el-input
+                                    placeholder="搜索..."
+                                    class="search_input">
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
+                            <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                                <button class="userDefined">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                </button>
+                            </div>
+                        </div>
+                    </el-col>   
                 </el-row>
-
+                <!-- dialog -->
+                <el-dialog :visible.sync="dialogUserDefined" class="dialogUserDefined">
+                    <template slot="title">
+                        <span>自定义<small>(设置显示字段)</small></span>
+                    </template>
+                     <el-table
+                        :data="tableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe 
+                        ref="multipleTable">
+                            <el-table-column label="序号">
+                                 <template slot-scope="scope">
+                                    {{scope.$index + 1}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="field" label="字段"></el-table-column>
+                            <el-table-column prop="field" label="操作">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                        v-model="tableData[scope.$index].value"
+                                        active-color="#13ce66">
+                                    </el-switch>
+                                </template>
+                            </el-table-column>
+                        </el-table>   
+                        <span slot="footer" class="dialog-footer">
+                            <el-button type="primary">确 定</el-button>
+                            <el-button>取 消</el-button>
+                        </span>
+                </el-dialog>
+                <!-- dialog -->
                 <el-row class="pl10 pt10 pr10 pb10">
 
                     <el-col :span='24'>
@@ -128,11 +172,11 @@
                             <el-table-column prop="displayName" label="用户名称"></el-table-column>
                             <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
                             <el-table-column prop="userGroupName" label="所属用户组"></el-table-column>
-                            <el-table-column prop="OuId" label="所属组织"></el-table-column>
+                            <el-table-column prop="ouId" label="所属组织"></el-table-column>
                             <el-table-column prop="userType" label="身份类型"></el-table-column>
                             <el-table-column prop="languageId" label="语种"></el-table-column>
-                            <el-table-column prop="AuthType" label="认证类型"></el-table-column>
-                            <el-table-column prop="Status" label="状态"></el-table-column>
+                            <el-table-column prop="authType" label="认证类型"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
                             <el-table-column label="有效日期" width="200">
                                 <template slot-scope="scope">
                                     <div class="halfWidth left">
@@ -156,7 +200,7 @@
                                     </div>    
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="RoleId" label="关联角色"></el-table-column>
+                            <el-table-column prop="statusTValue" label="关联角色"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
                                      <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
@@ -199,6 +243,10 @@
                 },
                 searchDataClick:{},
                 tableSearchData:{},
+                selectData:{
+                    UserType:[],//身份类型
+                    Status002:[],//状态
+                },
                 options: [{
                     value: '1',
                     label: '选项1'
@@ -245,13 +293,35 @@
                 load:true,
                 totalItem:0,//总共有多少条消息
                 searchBtClick:false,
+                ifWidth:true,
+                dialogUserDefined:false,//dialog
             }
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
+                _this.getSelectData();
              },
         methods:{
+            getSelectData(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
+                // 身份类型
+                _this.selectData.UserType=res.result;
+                })
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+                // 启用状态
+                _this.selectData.Status002=res.result;
+                })
+            },
+            closeLeft:function(){
+               let self = this;
+               self.ifWidth = false;
+           },
+           openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+           },
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -307,6 +377,8 @@
                  let _this=this;
                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
+                 _this.searchDataClick.UserType=parseInt(_this.searchDataClick.UserType);
+                 _this.searchDataClick.Status=parseInt(_this.searchDataClick.Status);
                 _this.$axios.gets('/api/services/app/User/GetAll',_this.searchDataClick)
                 .then(function(res){
                     _this.totalItem=res.result.totalCount

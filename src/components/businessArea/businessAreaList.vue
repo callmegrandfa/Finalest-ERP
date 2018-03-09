@@ -5,7 +5,7 @@
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-input
                         placeholder="搜索..."
-                        v-model="searchLeft" class="bAreaSearch">
+                        v-model="searchLeft" class="search_input">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-col>
@@ -21,25 +21,65 @@
                     :expand-on-click-node="false"
                     :filter-node-method="filterNode"
                     @node-click="nodeClick"
-                    :render-content="renderContent"
                     >
                     </el-tree>
                 </el-col>   
             </el-col>
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5 pr10">
-                    <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+                <el-row class="h48 pt5">
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                     <button class="erp_bt bt_out">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
                         <span class="btDetail">导出</span>
                     </button>
-                    <div class="formSearch">
-                        <input type="text" class="inputForm">
-                        <button>搜索</button>
+                    <div class="search_input_group">
+                        <div class="search_input_wapper">
+                            <el-input
+                                placeholder="搜索..."
+                                class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
                     </div>
                 </el-row>
+                <!-- dialog -->
+                <el-dialog :visible.sync="dialogUserDefined" class="dialogUserDefined">
+                    <template slot="title">
+                        <span>自定义<small>(设置显示字段)</small></span>
+                    </template>
+                     <el-table
+                        :data="tableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe 
+                        ref="multipleTable">
+                            <el-table-column label="序号">
+                                 <template slot-scope="scope">
+                                    {{scope.$index + 1}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="field" label="字段"></el-table-column>
+                            <el-table-column prop="field" label="操作">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                        v-model="tableData[scope.$index].value"
+                                        active-color="#13ce66">
+                                    </el-switch>
+                                </template>
+                            </el-table-column>
+                        </el-table>   
+                        <span slot="footer" class="dialog-footer">
+                            <el-button type="primary">确 定</el-button>
+                            <el-button>取 消</el-button>
+                        </span>
+                </el-dialog>
+                <!-- dialog -->
                 <el-row>
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
@@ -65,7 +105,7 @@
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                    <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
+                                    <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text" size="small"  @click="confirmDelThis(scope.row)" >删除</el-button>
                                 </template>
@@ -89,7 +129,7 @@
         <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             <!-- <div class="bgcolor smallBgcolor">
                 <label>地区分类</label>
-                <el-select :class="{redBorder : validation.hasError('dialogData.areaType')}" v-model="dialogData.areaType">
+                <el-select filterable :class="{redBorder : validation.hasError('dialogData.areaType')}" v-model="dialogData.areaType">
                     <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder="">
                     </el-option>
                 </el-select>
@@ -110,10 +150,8 @@
             <div class="bgcolor smallBgcolor">
                 <label>上级业务地区</label>
                 
-                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId">
-                    <el-option v-for="item in areaParentId" :key="item.value" :label="item.label" :value="item.value" placeholder="">
-                        <span style="float: left">{{ item.label }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId" placeholder="">
+                    <el-option v-for="item in areaParentId" :key="item.value" :label="item.label" :value="item.value" >
                     </el-option>
                 </el-select>
                 <el-input v-else :class="{redBorder : validation.hasError('dialogData.areaParentId')}"  v-model="dialogData.areaParentId" disabled></el-input>
@@ -123,10 +161,8 @@
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
             <div class="bgcolor smallBgcolor">
                 <label>允许使用</label>
-                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
-                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="">
-                        <span style="float: left">{{ item.label }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status" placeholder="">
+                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" >
                     </el-option>
                 </el-select>
             </div>
@@ -239,6 +275,7 @@
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
                 showParent:true,//上级组织单元是否可选
+                dialogUserDefined:false,//dialog
             }
         },
         validators: {
@@ -412,13 +449,24 @@
                 })
             },
             nodeClick(data){
+                 let _this=this;
+                 _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id})
+                .then(function(res){
+                    _this.tableData=res.result;
+                    _this.tableData.unshift(data);
+                    _this.totalItem=res.result.length;
+                    _this.tableLoading=false;
+                    },function(res){
+                    _this.tableLoading=false;
+                })
             },
             modify(row){
-                this.$store.state.url='/OuManage/OuManageModify/'+row.id
+                this.$store.state.url='/businessArea/businessAreaModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
             see(row){
-                this.$store.state.url='/OuManage/OuManageSee/'+row.id
+                this.$store.state.url='/businessArea/businessArea/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             whichButton(event,node, data){
@@ -669,10 +717,6 @@
 .bAreaListForm .el-button+.el-button{
     margin-left: 0;
 }
-.bAreaListForm .bAreaSearch .el-input__inner{
-    height: 30px;
-    border-radius: 30px;
-}
 /* .bAreaListForm .el-tree-node>.el-tree-node__children{
     overflow: visible!important;
 } */
@@ -685,4 +729,5 @@
 .bAreaListForm .bgcolor{
     margin-bottom: 0
 }
+
 </style>

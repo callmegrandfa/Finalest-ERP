@@ -1,5 +1,5 @@
 <template>
-    <div class="data-wrapper">
+    <div class="data-wrapper department">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
@@ -35,7 +35,7 @@
                         <span class="btDetail">返回</span>
                     </button>
 
-                    <button class="erp_bt bt_add" @click="addNew">
+                    <button class="erp_bt bt_add" @click="goDetail">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_add.png">
                         </div>
@@ -71,11 +71,12 @@
                             <el-table-column prop="manager" label="负责人(无)"></el-table-column>
                             <el-table-column prop="deptParentName" label="上级部门(null)"></el-table-column>
                             <el-table-column prop="remark" label="备注(无)"></el-table-column>
-                            <el-table-column label="允许使用(无)"></el-table-column>
+                            <el-table-column prop='status' label="状态"></el-table-column>
+                            <el-table-column prop='creatorUserName' label="创建人(null)"></el-table-column>
                             <el-table-column prop='createdTime' width="180" label="创建时间"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)" >修改</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
                                 </template>
@@ -364,6 +365,28 @@
                 
             // },
             //----------------------------------------------------------------
+            // ---跳转--------open----------------------------------------------
+            goDetail(){//点击新增跳转
+               this.$store.state.url='/department/departmentDetail/default'
+               this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+
+            goModify:function(id){//点击跳转修改页modify
+                this.$store.state.url='/department/departmentModify/'+id;
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            
+            open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+        //------------------------------------------------------------------
             //---清除数据--------------------------------------------------
             clearAddDate:function(){//清除新增数据
                 let self = this;
@@ -463,16 +486,6 @@
                     }
                 };
 
-                // if(_this.treeCheck.length>0){//tree
-                //     for(let i=0;i<_this.treeCheck.length;i++){
-                //         _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
-                //         .then(function(res){    
-                //           _this.loadTree();
-                //         },function(res){
-                //         })
-                //     }
-                // }
-
             },
             //---------------------------------------------------------------
             // SimpleSearch(){//简单搜索
@@ -487,31 +500,7 @@
             //         _this.tableLoading=false;
             //     })
             // },
-
-            //---open-----路由切换------------------------------------------
-             open(tittle,iconClass,className) {
-                this.$notify({
-                position: 'bottom-right',
-                iconClass:iconClass,
-                title: tittle,
-                showClose: false,
-                duration: 3000,
-                customClass:className
-                });
-            },
-            // goDetail(){
-            //     this.$store.state.url='/OuManage/OuManageDetail/default'
-            //     this.$router.push({path:this.$store.state.url})//点击切换路由
-            // },
-            
-            // see(row){
-            //     this.$store.state.url='/OuManage/OuManageSee/'+row.id
-            //     this.$router.push({path:this.$store.state.url})//点击切换路由
-            // },
-            //-------------------------------------------------------------
-            
-            
-            
+      
             // checkChange(data,check){
             //     let _this=this;
             //     let add=false;
@@ -755,7 +744,7 @@
 .data-wrapper .areaDialog .bgcolor:first-child{
     margin-top:15px;
 }
-.data-wrapper .bgcolor{
+.department .bgcolor{
     margin-bottom: 0
 }
 </style>

@@ -1,0 +1,435 @@
+<template>
+    <div class="departmentDetail">
+        <el-row>
+            <el-col :span="24">
+                <button @click="back" class="erp_bt bt_back">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_back.png">
+                    </div>
+                    <span class="btDetail">返回</span>
+                </button>
+                <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
+                <!-- <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>     -->
+                <button @click="save" class="erp_bt bt_save">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_save.png">
+                    </div>
+                    <span class="btDetail">保存</span>
+                </button>
+
+                <button @click='saveAdd' class="erp_bt bt_saveAdd">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_saveAdd.png">
+                    </div>
+                    <span class="btDetail">保存并新增</span>
+                </button>
+                
+                <button class="erp_bt bt_auxiliary bt_width">
+                    <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
+                    <span class="btDetail">辅助功能</span>
+                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                </button>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="24" class="pt15">
+               <div class="marginAuto">
+                    <div class="bgcolor longWidth">
+                        <label><small>*</small>所属组织</label>
+                        <el-select 
+                        class="ouId" 
+                        :class="{redBorder : validation.hasError('addData.ouId')}" 
+                        placeholder=""
+                        v-model="addData.ouId">
+                            <el-option v-for="item in ou" 
+                                       :key="item.value" 
+                                       :label="item.label" 
+                                       :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="error_tips">{{ validation.firstError('addData.ouId') }}</div>
+                </div>
+            </el-col>
+
+            <el-col :span="24">
+               <div class="marginAuto">
+                    <div class="bgcolor longWidth">
+                        <label><small>*</small>上级部门{{addData.deptParentid}}</label>
+                        <el-select 
+                        class="deptParentid" 
+                        :class="{redBorder : validation.hasError('addData.deptParentid')}" 
+                        placeholder=""
+                        v-model="addData.deptParentid">
+                            <el-option v-for="item in deptParent" 
+                                       :key="item.value" 
+                                       :label="item.label" 
+                                       :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="error_tips">{{ validation.firstError('addData.deptParentid') }}</div>
+                </div>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="marginAuto">
+                    <div class="bgcolor longWidth">
+                        <label><small>*</small>部门编码</label>
+                        <el-input class="deptCode" 
+                                  :class="{redBorder : validation.hasError('addData.deptCode')}" 
+                                  v-model="addData.deptCode"></el-input>
+                    </div>
+                    <div class="error_tips">{{ validation.firstError('addData.deptCode') }}</div>
+                </div>    
+            </el-col>
+
+            <el-col :span="24">
+                <div class="marginAuto">
+                    <div class="bgcolor longWidth">
+                        <label><small>*</small>部门名称</label>
+                        <el-input  class="deptName" 
+                                   :class="{redBorder : validation.hasError('addData.deptName')}" 
+                                   v-model="addData.deptName"></el-input>
+                    </div>
+                    <div class="error_tips">{{ validation.firstError('addData.deptName') }}</div>
+                </div>    
+            </el-col>
+            
+            <el-col :span="24">
+                <div class="marginAuto">
+                    <div class="bgcolor longWidth">
+                        <label>负责人</label>
+                        <el-input class="director" 
+                                  :class="{redBorder : validation.hasError('addData.director')}" 
+                                  v-model="addData.director"  
+                        ></el-input>
+                    </div>
+                    <div class="error_tips">{{ validation.firstError('addData.director') }}</div>
+                </div>   
+            </el-col>
+
+            <el-col :span="24">
+                <div class="marginAuto">
+                    <div class="bgcolor longWidth">
+                        <label>电话</label>
+                        <el-input class="phone" 
+                                  :class="{redBorder : validation.hasError('addData.phone')}" 
+                                  v-model="addData.phone"  
+                        ></el-input>
+                    </div>
+                    <div class="error_tips">{{ validation.firstError('addData.phone') }}</div>
+                </div>   
+            </el-col>
+            
+            <el-col :span="24">
+                <div class="marginAuto">
+                    <div class="bgcolor longWidth">
+                        <label>备注</label>
+                        <el-input class="remark" 
+                                  :class="{redBorder : validation.hasError('addData.remark')}" 
+                                  v-model="addData.remark"
+                                  type="textarea"
+                                  :autosize="{ minRows: 4, maxRows: 4}">
+                        </el-input>
+                    </div>
+                    <div class="error_tips">{{ validation.firstError('addData.remark') }}</div>
+                </div>       
+            </el-col>
+            
+            <el-col :span="24">
+                <div class="marginAuto">
+                    <div class="bgcolor longWidth">
+                        <label><small>*</small>状态</label>
+                        <el-select  class="status" 
+                                    :class="{redBorder : validation.hasError('addData.status')}" 
+                                    placeholder=""
+                                    v-model="addData.status">
+                            <el-option v-for="item in status" 
+                                       :key="item.value" 
+                                       :label="item.label" 
+                                       :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
+                </div>    
+            </el-col>
+      </el-row>
+  </div>
+</template>
+
+<script>
+    export default({
+        data(){
+            return{
+                ou:[{//所属组织
+                        value:'21',
+                        label: '恒康'
+                    }, {
+                        value:'35',
+                        label: '恒大'
+                    }, {
+                        value:'79',
+                        label: '361度'
+                }],
+                deptParent:[{//上级部门
+                        value:'1',
+                        label: '上级部门1'
+                    }, {
+                        value:'2',
+                        label: '上级部门2'
+                    }, {
+                        value:'3',
+                        label: '上级部门3'
+                }],
+
+                status: [{ //状态
+                    value:1,
+                    label: '状态1'
+                },{ 
+                    value:2,
+                    label: '状态2'
+                }, {
+                    value:3,
+                    label: '状态3'
+                }],
+                addData:{
+                    "groupId": 1,
+                    "ouId": '',
+                    "deptCode": "",
+                    "deptName": "",
+                    "director": "",
+                    "phone": "",
+                    "deptParentid": '',
+                    "remark": "",
+                    "status": ''
+                },
+            }
+        },
+     validators: {
+      'addData.ouId': function (value) {//所属组织
+         return this.Validator.value(value).required().integer();
+      },
+      'addData.deptParentid': function (value) {//上级部门
+         return this.Validator.value(value).required().integer();
+      },
+      'addData.deptCode': function (value) {//部门编码
+         return this.Validator.value(value).required().maxLength(20);
+      },
+      'addData.deptName': function (value) {//部门名称
+         return this.Validator.value(value).required().maxLength(20);
+      },
+      'addData.director': function (value) {//负责人
+          return this.Validator.value(value).required().maxLength(20);
+      },
+      'addData.phone': function (value) {//电话
+          return this.Validator.value(value).required().maxLength(20);
+      },
+      'addData.remark': function (value) {//备注
+          return this.Validator.value(value).required().maxLength(200);
+      },
+      'addData.status': function (value) {//状态
+         return this.Validator.value(value).required().integer();
+      },
+    },
+    methods: {
+        //---错误提示-------------------------------------------
+        showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsSelect(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsRangedate(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        //------------------------------------------------------
+        //---保存新增---------------------------------------------
+        save(){
+            let self=this;
+            self.$validate().then(function (success) {
+                if (success) {
+                    self.$axios.posts('/api/services/app/DeptManagement/Create',self.addData).then(function(res){
+                        console.log(res)
+                        self.open('保存成功','el-icon-circle-check','successERP');
+                        self.addData = {
+                            "groupId": 1,
+                            "ouId": '',
+                            "deptCode": "",
+                            "deptName": "",
+                            "director": "",
+                            "phone": "",
+                            "deptParentid": '',
+                            "remark": "",
+                            "status": ''
+                        },
+                        self.goModify(res.id)
+                    },function(res){    
+                        self.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });
+        },
+        saveAdd:function(){
+            let self = this;
+            self.$validate().then(function (success) {
+                if (success) {
+                    self.$axios.posts('/api/services/app/DeptManagement/Create',self.addData).then(function(res){
+                        console.log(res)
+                        self.open('保存成功','el-icon-circle-check','successERP');
+                        self.goDetail();
+                    },function(res){    
+                        self.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });
+        },
+        //-------------------------------------------------------
+        //---open---路由切换--------------------------------------
+        open(tittle,iconClass,className) {
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
+        back(row){
+            this.$store.state.url='/department/departmentList/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        goModify:function(id){
+            // console.log(id)
+            this.$store.state.url='/department/departmentModify/'+id
+            // this.$store.state.url='/repository/default/repositoryModify/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        goDetail(){//点击新增跳转
+            this.$store.state.url='/department/departmentDetail/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        //---------------------------------------------------------
+    }
+
+})
+</script>
+
+
+
+<style scoped>
+.pt15{
+    padding-top: 15px;
+}
+.departmentDetail  .errorTips{
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
+ .departmentDetail .el-row{
+    background-color: #fff;
+  }
+ .departmentDetail .el-row:first-child{
+   padding: 7px 0;
+   border-bottom: 1px solid #e4e4e4;
+  }
+  .departmentDetail .el-row:last-child{
+    padding-bottom: 15px;
+  }
+  .departmentDetail .bgcolor .isGive{
+    display: block;
+    float: left;
+    height: 100%;
+    line-height: 35px;
+  }
+.departmentDetail .bgcolor.longWidth{
+    margin-right: 0;
+    width: 421px;
+    height:auto;
+    float: left;
+  }
+  .marginAuto{
+      margin: auto;
+      width: 550px;
+  }
+  .error_tips{
+      color: red;
+      font-size: 12px;
+      float: left;
+      height: 35px;
+      line-height: 35px;
+  }
+  .departmentDetail .bgcolor.longWidth .el-input,
+  .departmentDetail .bgcolor.longWidth .el-textarea,
+  .departmentDetail .bgcolor.longWidth .el-select{
+      width: calc(100% - 90px)
+  }
+  .departmentDetail .bgcolor.longWidth label{
+    width:80px;
+  }
+ .departmentDetail .bgcolor.longWidth .el-textarea{
+   font-size: 12px;
+ } 
+ .departmentDetail .bgcolor.longWidth .addZoo{
+   float: left;
+   width: calc(100% - 82px)
+ }
+.departmentDetail .bgcolor.longWidth .add{
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 3px;
+    background-color: #c7c7c7;
+    color: #fff;
+    text-align: center;
+    line-height: 35px;
+    text-decoration: none;
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.departmentDetail .bgcolor.longWidth .addRole{
+  text-align: center;
+  line-height: 35px;
+  display: inline-block;
+  width: 66px;
+  height: 35px;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+}
+.departmentDetail .bgcolor.longWidth .add:hover{
+    background-color: #354052;
+}
+.departmentDetail .bgcolor.longWidth .addRole i{
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  color: #cccccc;
+}
+.departmentDetail .bgcolor.longWidth .addRole:hover i{
+  color:#f66;
+}
+</style>
+

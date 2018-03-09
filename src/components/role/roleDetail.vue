@@ -63,8 +63,6 @@
                     <label><small>*</small>所属组织</label>
                     <el-select v-model="addData.ouId" placeholder="">
                         <el-option v-for="item in customerNature" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
@@ -74,8 +72,6 @@
                     <label><small>*</small>状态</label>
                     <el-select v-model="addData.status" placeholder="">
                         <el-option v-for="item in customerNature" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
                         </el-option>
                     </el-select>
                 </div>
