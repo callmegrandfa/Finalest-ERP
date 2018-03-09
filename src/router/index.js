@@ -186,6 +186,8 @@ const staffList = () =>
     import ('../components/staffInfo/staffList')
 const staffDetail = () =>
     import ('../components/staffInfo/staffDetail')
+const staffModify = () =>
+    import ('../components/staffInfo/staffModify')
 
 let redirectRouter = function(routerName) { //重定向
     let activeRouter = store.state.activeRouter;
@@ -601,6 +603,7 @@ const routes = [
                 children: [
                     { path: '/staff/staffList/:id', component: staffList, name: 'staffList' },
                     { path: '/staff/staffDetail/:id', component: staffDetail, name: 'staffDetail' },
+                    { path: '/staff/staffModify/:id', component: staffModify, name: 'staffModify' },
                 ]
             },
         ]

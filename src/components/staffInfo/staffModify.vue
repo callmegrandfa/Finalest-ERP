@@ -21,13 +21,13 @@
                             </div>
                             <span class="btDetail">修改</span>
                     </button>
-	            	<button class="erp_bt bt_save" @click="addStaff">
+	            	<button class="erp_bt bt_save">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_save.png">
                             </div>
                             <span class="btDetail">保存</span>
                     </button>
-	            	<button class="erp_bt bt_cancel" @click="addStaff">
+	            	<button class="erp_bt bt_cancel">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_cancel.png">
                             </div>
@@ -48,11 +48,11 @@
 	            </el-col>
 	        </el-row>
 
-            <el-form :model="form" :rules="rules" ref="form" label-width="80px" class="demo-ruleForm pl pt">
-                <el-form-item label="职员编码" class="pr" prop="employeeCode">
+            <el-form :model="form"   label-width="80px" class="demo-ruleForm pl pt" >
+                <el-form-item label="职员编码" class="pr">
                     <el-input v-model="form.employeeCode" label-width="80px"></el-input>
                 </el-form-item>
-                <el-form-item label="职员名称" class="pr" prop="employeeName">
+                <el-form-item label="职员名称" class="pr">
                     <el-input v-model="form.employeeName"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号码" class="pr">
@@ -66,8 +66,8 @@
                 </el-form-item>
                 <el-form-item label="性别">
                     <el-select v-model="form.sex">
-                    <el-option label="sex" value="sexTValue"></el-option>
-                    <el-option label="sex" value="sexTValue"></el-option>
+                    <el-option label="sexId" value="sexTValue"></el-option>
+                    <el-option label="sexId" value="sexTValue"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生日" class="pr">
@@ -88,7 +88,7 @@
                     </el-select>
                 </el-form-item>                            
                 <el-form-item label="职员类型">
-                    <el-checkbox-group v-model="form.employeeTypes">
+                    <el-checkbox-group v-model="form.employeeTypeIds">
                     <el-checkbox  label="采购" name="type"></el-checkbox>
                     <el-checkbox label="业务" name="type"></el-checkbox>
                     <el-checkbox label="仓库" name="type"></el-checkbox>
@@ -97,10 +97,6 @@
                 </el-form-item>
                 <el-form-item label="备注">
                     <el-input type="textarea" rows=5 resize="none" v-model="form.remark"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-                    <el-button @click="resetForm('ruleForm')">重置</el-button>
                 </el-form-item>
             </el-form>
 
@@ -115,64 +111,22 @@
             return { 
                 id:'',
                  form: {
-                        employeeCode: '',
-                        employeeName: '',
-                        mobile: '',
-                        department: '',
-                        sex:'',
-                        birthday:'',
-                        shopName:'',
-                        employeeTypes: [],
-                        resource: '',
-                        remark: ''
-                },
-                rules: {
-                    employeeCode: [
-                        { required: true,trigger: 'blur' },
-                    ],
-                    employeeName: [
-                        { required: true, trigger: 'blur' },
-                    ],
-                },
-                addStaffList:{//创建员工资料的参数
-                        "employeeCode": "",
-                        "employeeName": "",
-                        "mobile": "",
-                        "deptId": 0,
+                        "employeeName":"",
+                        "mobile":"",
+                        "deptId":0,
                         "sex":0,
-                        "birthday": "",
-                        "discountStart": 0,
-                        "discountEnd":0 ,
-                        "shopId": 0,
-                        "remark": "",
-                        "employeeTypeIds": [
-                            0
-                        ],
-                        "id": 0,
-                },
-                validators: {
-                    'addStaffList.employeeCode': function (value) {//职员编码
-                        return this.Validator.value(value).required().integer();
-                    },
-                    'addStaffList.employeeName': function (value) {//职员名称
-                        return this.Validator.value(value).required().integer();
-                    },
+                        "birthday":"",
+                        "discountStart":0,
+                        "discountEnd":0,
+                        "shopId":0,
+                        "remark":"",
+                        "employeeTypeIds":[0],
+                        "id":0,
                 },
             }
-
-                                              
-            
         },
         created:function(){
-            // console.log(this.$route);
-            // console.log(this.$route.params);
-            this.$axios.gets('/api/services/app/EmployeeManagement/Get',{id:this.$route.params.id})
-            .then(
-                rsp=>{
-                    console.log(rsp.result);
-                    this.form=rsp.result;
-                }
-            )
+            
         },
         methods: {
             onSubmit() {
@@ -184,22 +138,25 @@
             },
                 // 新增
             add:function(){
-                console.log("123");
+                let _this=this;
+                if(
+                    _this.form.employeeCode!=''&&
+                    _this.form.employeeName!=''
+                ){
+                    console.log('嘻嘻');
+                    _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.form)
+                    .then(
+                        rsp=>{
+                            console.log(rsp);
+                        }
+                        
+                    )
+                }
             },
-
-            addStaff:function(){//新增之后的保存
-                 console.log('测试新增');
-                 this.Validator().then(function(success){
-                     if(success){
-                         console.log("222")
-                     }
-                 })
-            },
-
-        },
+        },      
         components:{
             Btm,
-        }
+        },
     }
 </script>
 <style>

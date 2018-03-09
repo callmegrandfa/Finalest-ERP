@@ -108,6 +108,7 @@ export default new vuex.Store({
             { name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' }, //职员资料
             { name: 'staffList', url: '/staff/staffList/:id', parent: 'staff' },
             { name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' },
+            // { name: 'staffModify', url: '/staff/staffModify/:id', parent: 'staff' },
         ],
     },
     mutations: {
