@@ -15,28 +15,28 @@
                 <el-row class="mt10"> 
                     <div class="bgcolor smallBgcolor">
                         <label>编号</label>
-                        <el-input placeholder="" v-model="stockC"></el-input>
+                        <el-input placeholder="" v-model="searchCode"></el-input>
                     </div> 
                 </el-row>
 
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>名称</label>
-                        <el-input placeholder="" v-model='stockNm'></el-input>
+                        <el-input placeholder="" v-model='searchName'></el-input>
                     </div> 
                 </el-row>
 
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
-                        <el-input placeholder="" v-model="AreaCode"></el-input>
+                        <el-input placeholder="" v-model="searchArea"></el-input>
                     </div>
                 </el-row>
 
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>仓库类型</label>
-                        <el-select v-model="stockTypeId" placeholder="">
+                        <el-select v-model="searchType" placeholder="">
                             <el-option v-for="item in stockType"
                                         :key="item.value"
                                         :label="item.label"
@@ -114,14 +114,14 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="opAreaId" label="业务地区"></el-table-column>
-                            <el-table-column prop="address" label="地址"></el-table-column>
+                            <el-table-column prop="stockAddress" label="地址"></el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
-                                    <el-input v-show="scope.row.status==''" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[0].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status===''" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[0].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status===0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status===1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作">
@@ -195,7 +195,7 @@
 
             searchList:function(){//根据条件查找仓库信息
                 let self = this;
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:self.stockC,StockName:self.stockNm,AreaCode:self.AreaCode,Start:'0',Length:'100'}).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
                     console.log(res);
                     self.queryList=res.data;
                     self.allList = self.queryList;
@@ -297,9 +297,10 @@
                 page:1,//当前页
                 eachPage:10,//一页显示的数量
 
-                stockC:'',
-                stockNm:'',
-                AreaCode:'',
+                searchCode:'',//查询编号
+                searchName:'',//查询名称
+                searchArea:'',//查询业务地区
+                searchType:'',//仓库类型
 
                 stockTypeId:'',//左侧搜索框的仓库类型值
                 ifWidth:true,
@@ -315,10 +316,10 @@
                     label: '启用'
                  }],
                  stockType:[{
-                    value:1,
+                    value:0,
                     label: '仓库'
                     }, {
-                    value:2,
+                    value:1,
                     label: '店铺'
                     }],
             }

@@ -143,10 +143,15 @@
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockFullName')}"></el-input>
                         </div>
-                        <!-- <div class="bgcolor">
+                        <div class="bgcolor">
                             <label>助记码</label>
-                            <el-input placeholder="" v-model="ouGet.mnemonic" @change="Modify()"></el-input>
-                        </div> -->
+                            <el-input placeholder="" 
+                                      v-model="repositoryData.mnemonic" 
+                                      @change="Modify()"
+                                      @focus="showErrprTips"
+                                      class="mnemonic"
+                                      :class="{redBorder : validation.hasError('repositoryData.mnemonic')}"></el-input>
+                        </div>
 
                         <div class="bgcolor">
                             <label><small>*</small>仓库类型</label>
@@ -236,10 +241,15 @@
                                       :class="{redBorder : validation.hasError('repositoryData.fax')}"></el-input>
                         </div>
 
-                        <!-- <div class="bgcolor">
+                        <div class="bgcolor">
                             <label>地址</label>
-                            <el-input placeholder="请录入地址"></el-input>
-                        </div> -->
+                            <el-input v-model="repositoryData.stockAddress"
+                                      @focus="showErrprTips"
+                                      @change="Modify()"
+                                      placeholder="" 
+                                      class="stockAddress"
+                                      :class="{redBorder : validation.hasError('repositoryData.stockAddress')}"></el-input>
+                        </div>
 
                         <div class="bgcolor">
                             <label>备注</label>
@@ -465,9 +475,9 @@
             'repositoryData.stockFullName': function (value) {//仓库全称
                 return this.Validator.value(value).required().maxLength(50);
             },
-            // 'repositoryData.mnemonic': function (value) {//助记码
-            //     return this.Validator.value(value).required().maxLength(50);
-            // },
+            'repositoryData.mnemonic': function (value) {//助记码
+                return this.Validator.value(value).required().maxLength(50);
+            },
             'repositoryData.stockTypeId': function (value) {//仓库类型
                 return this.Validator.value(value).required().integer();
             },
@@ -489,9 +499,9 @@
             'repositoryData.fax': function (value) {//传真
                 return this.Validator.value(value).required().maxLength(50);
             },
-            // 'createRepositoryParams.adAreaId': function (value) {//地址
-            //     return this.Validator.value(value).required().integer();
-            // },
+            'createRepositoryParams.stockAddress': function (value) {//地址
+                return this.Validator.value(value).required().integer();
+            },
             'repositoryData.remark': function (value) {//备注
                 return this.Validator.value(value).required().maxLength(50);
             },
@@ -740,11 +750,13 @@
                     "stockCode": "",
                     "stockName": "",
                     "stockFullName": "",
+                    'mnemonic':'',
                     "opAreaId": '',
                     "adAreaId": '',
                     "stockTypeId": '',
                     "invTypeId": '',
                     "fax": "",
+                    'stockAddress':'',
                     "email": "",
                     "status": '',
                     "manager": "",
@@ -764,51 +776,51 @@
                 },
                 ouGet:'',
                 ou: [{//所属组织
-                    value:1,
+                    value:0,
                     label: '恒康'
                 }, {
-                    value:2,
+                    value:1,
                     label: '恒大'
                 }, {
-                    value:3,
+                    value:2,
                     label: '361度'
                 }],
                 stockType: [{//仓库类型
-                    value:1,
+                    value:0,
                     label: '仓库'
                 }, {
-                    value:2,
+                    value:1,
                     label: '店铺'
                 }],
                 opArea: [{//业务地区
-                    value:1,
+                    value:0,
                     label: '业务地区1'
                 }, {
-                    value:2,
+                    value:1,
                     label: '业务地区2'
                 }, {
-                    value:3,
+                    value:2,
                     label: '业务地区3'
                 }],
                 adArea: [{//行政地区
-                    value:1,
+                    value:0,
                     label: '行政地区1'
                 }, {
-                    value:2,
+                    value:1,
                     label: '行政地区2'
                 }, {
-                    value:3,
+                    value:2,
                     label: '行政地区3'
                 }],
                 status: [{//状态
+                    value:0,
+                    label: '全部'
+                }, {
                     value:1,
-                    label: '状态1'
+                    label: '启用'
                 }, {
                     value:2,
-                    label: '状态2'
-                }, {
-                    value:3,
-                    label: '状态3'
+                    label: '禁用'
                 }],
 
                 value: '',

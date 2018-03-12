@@ -55,7 +55,7 @@
             <el-col :span="24">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级部门{{addData.deptParentid}}</label>
+                        <label><small>*</small>上级部门</label>
                         <el-select 
                         class="deptParentid" 
                         :class="{redBorder : validation.hasError('addData.deptParentid')}" 
@@ -99,25 +99,12 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>负责人</label>
-                        <el-input class="director" 
-                                  :class="{redBorder : validation.hasError('addData.director')}" 
-                                  v-model="addData.director"  
+                        <el-input class="manager" 
+                                  :class="{redBorder : validation.hasError('addData.manager')}" 
+                                  v-model="addData.manager"  
                         ></el-input>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.director') }}</div>
-                </div>   
-            </el-col>
-
-            <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label>电话</label>
-                        <el-input class="phone" 
-                                  :class="{redBorder : validation.hasError('addData.phone')}" 
-                                  v-model="addData.phone"  
-                        ></el-input>
-                    </div>
-                    <div class="error_tips">{{ validation.firstError('addData.phone') }}</div>
+                    <div class="error_tips">{{ validation.firstError('addData.manager') }}</div>
                 </div>   
             </el-col>
             
@@ -183,22 +170,20 @@
                 }],
 
                 status: [{ //状态
-                    value:1,
-                    label: '状态1'
+                    value:0,
+                    label: '全部'
                 },{ 
-                    value:2,
-                    label: '状态2'
+                    value:1,
+                    label: '启用'
                 }, {
-                    value:3,
-                    label: '状态3'
+                    value:2,
+                    label: '禁用'
                 }],
                 addData:{
-                    "groupId": 1,
                     "ouId": '',
                     "deptCode": "",
                     "deptName": "",
-                    "director": "",
-                    "phone": "",
+                    "manager": "",
                     "deptParentid": '',
                     "remark": "",
                     "status": ''
@@ -218,10 +203,7 @@
       'addData.deptName': function (value) {//部门名称
          return this.Validator.value(value).required().maxLength(20);
       },
-      'addData.director': function (value) {//负责人
-          return this.Validator.value(value).required().maxLength(20);
-      },
-      'addData.phone': function (value) {//电话
+      'addData.manager': function (value) {//负责人
           return this.Validator.value(value).required().maxLength(20);
       },
       'addData.remark': function (value) {//备注
@@ -270,12 +252,10 @@
                         console.log(res)
                         self.open('保存成功','el-icon-circle-check','successERP');
                         self.addData = {
-                            "groupId": 1,
                             "ouId": '',
                             "deptCode": "",
                             "deptName": "",
-                            "director": "",
-                            "phone": "",
+                            "manager": "",
                             "deptParentid": '',
                             "remark": "",
                             "status": ''

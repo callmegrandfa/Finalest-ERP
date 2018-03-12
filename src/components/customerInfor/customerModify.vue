@@ -676,94 +676,94 @@ export default({
                 finishName:"",
             },
             organization: [{//所属组织
-                valueOrganization:'1',
+                valueOrganization:1,
                 label: '恒康'
             }, {
-                valueOrganization:'2',
+                valueOrganization:2,
                 label: '恒大'
             }, {
-                valueOrganization:'3',
+                valueOrganization:3,
                 label: '361度'
             }],
             customerType:[{//客户类型
-                valueCustomerType:'1',
-                label: '客户类型1'
+                valueCustomerType:0,
+                label: '客户类型'
             }, {
-                valueCustomerType:'2',
+                valueCustomerType:1,
+                label:'客户类型1' 
+            }, {
+                valueCustomerType:2,
                 label:'客户类型2' 
-            }, {
-                valueCustomerType:'3',
-                label:'客户类型3' 
             }],
             customerNature:[{//客户性质
-                valueNature:'1',
+                valueNature:0,
+                label: '客户性质'
+            }, {
+                valueNature:1,
                 label: '客户性质1'
             }, {
-                valueNature:'2',
+                valueNature:2,
                 label: '客户性质2'
-            }, {
-                valueNature:'3',
-                label: '客户性质3'
             }],
             customerGrade:[{//客户等级
-                valueGrade:'1',
+                valueGrade:0,
+                label: '客户等级'
+            }, {
+                valueGrade:1,
                 label: '客户等级1'
             }, {
-                valueGrade:'2',
+                valueGrade:2,
                 label: '客户等级2'
-            }, {
-                valueGrade:'3',
-                label: '客户等级3'
             }],
             sort:[{//客户类型
-                valueSort:'1',
+                valueSort:0,
+                label: '客户类型'
+            }, {
+                valueSort:1,
                 label: '客户类型1'
             }, {
-                valueSort:'2',
+                valueSort:2,
                 label: '客户类型2'
-            }, {
-                valueSort:'3',
-                label: '客户类型3'
             }],
             ficaOu :[{//对应财务组织
-                valueFinance:'1',
+                valueFinance:0,
+                label: '财务组织'
+            }, {
+                valueFinance:1,
                 label: '财务组织1'
             }, {
-                valueFinance:'2',
+                valueFinance:2,
                 label: '财务组织2'
-            }, {
-                valueFinance:'3',
-                label: '财务组织3'
             }],
             opArea:[{//业务地区
-                valueAreaBusiness:'1',
+                valueAreaBusiness:0,
+                label: '业务地区'
+            }, {
+                valueAreaBusiness:1,
                 label: '业务地区1'
             }, {
-                valueAreaBusiness:'2',
+                valueAreaBusiness:2,
                 label: '业务地区2'
-            }, {
-                valueAreaBusiness:'3',
-                label: '业务地区3'
             }],
             ctest:'1',
             country :[{//国家/地区
-                valueCountry:'1',
+                valueCountry:1,
                 label: '选项1'
             }, {
-                valueCountry:'2',
+                valueCountry:2,
                 label: '选项2'
             }, {
-                valueCountry:'3',
+                valueCountry:3,
                 label: '选项3'
             }],
             adArea :[{//行政地区
-                adArea:'1',
+                adArea:1,
                 label: '行政地区1'
             }, {
-                adArea:'2',
+                adArea:2,
                 label: '行政地区2'
             }, {
-                adArea:'3',
+                adArea:3,
                 label: '行政地区3'
             }],
             activeName: 'bank',//tabs标签页默认激活name
