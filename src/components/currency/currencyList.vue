@@ -253,7 +253,6 @@
                                 self.open('修改货币资料失败','el-icon-error','faildERP');
                         };
                     }
-                    
                 }
             }
         },
