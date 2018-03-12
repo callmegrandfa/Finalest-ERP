@@ -55,7 +55,7 @@
             <el-col :span="24">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级部门{{departmentData.deptParentid}}</label>
+                        <label><small>*</small>上级部门</label>
                         <el-select class="deptParentid" 
                                    :class="{redBorder : validation.hasError('departmentData.deptParentid')}" 
                                    placeholder=""
@@ -103,27 +103,13 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>负责人</label>
-                        <el-input class="director" 
-                                  :class="{redBorder : validation.hasError('departmentData.director')}" 
-                                  v-model="departmentData.director"
+                        <el-input class="manager" 
+                                  :class="{redBorder : validation.hasError('departmentData.manager')}" 
+                                  v-model="departmentData.manager"
                                   @change='Modify()'
                                   placeholder=""></el-input>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('departmentData.director') }}</div>
-                </div>   
-            </el-col>
-
-            <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label>电话</label>
-                        <el-input class="phone" 
-                                  :class="{redBorder : validation.hasError('departmentData.phone')}" 
-                                  v-model="departmentData.phone"
-                                  @change='Modify()'
-                                  placeholder=""></el-input>
-                    </div>
-                    <div class="error_tips">{{ validation.firstError('departmentData.phone') }}</div>
+                    <div class="error_tips">{{ validation.firstError('departmentData.manager') }}</div>
                 </div>   
             </el-col>
             
@@ -145,7 +131,7 @@
             <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>状态{{departmentData.status}}</label>
+                        <label><small>*</small>状态</label>
                         <el-select  class="status" 
                                     :class="{redBorder : validation.hasError('departmentData.status')}" 
                                     placeholder=""
@@ -168,6 +154,7 @@
         created:function(){
             let self = this;
             self.loadData();
+            console.log(self.ifModify)
         },
         data(){
             return{
@@ -194,13 +181,13 @@
                 }],
 
                 status: [{ //状态
-                    value:1,
+                    value:0,
                     label: '状态1'
                 },{ 
-                    value:2,
+                    value:1,
                     label: '状态2'
                 }, {
-                    value:3,
+                    value:2,
                     label: '状态3'
                 }],
                 departmentData:{
@@ -209,8 +196,7 @@
                     "ouId": '',
                     "deptCode": "",
                     "deptName": "",
-                    "director": "",
-                    "phone": "",
+                    "manager": "",
                     "deptParentid": '',
                     "remark": "",
                     "status": ''
@@ -230,10 +216,7 @@
       'departmentData.deptName': function (value) {//部门名称
          return this.Validator.value(value).required().maxLength(20);
       },
-      'departmentData.director': function (value) {//负责人
-          return this.Validator.value(value).required().maxLength(20);
-      },
-      'departmentData.phone': function (value) {//电话
+      'departmentData.manager': function (value) {//负责人
           return this.Validator.value(value).required().maxLength(20);
       },
       'departmentData.remark': function (value) {//备注
@@ -290,16 +273,17 @@
         Modify:function(){//判断数据是否修改过
             let self = this;
             self.ifModify = true;
+            console.log(self.ifModify)
         },
         save(){//保存修改
             let self=this;
-            if(self.ifModify = true){
+            if(self.ifModify == true){
                 self.departmentData.id = self.$route.params.id;
                     self.$validate().then(function (success) {
                         if (success) {
                             self.$axios.puts('/api/services/app/DeptManagement/Update',self.departmentData).then(function(res){
                                 console.log(res)
-                                self.ifModify = false;
+                                self.ifModify == false;
                                 self.open('修改成功','el-icon-circle-check','successERP');
                             },function(res){    
                                 self.open('修改失败','el-icon-error','faildERP');
