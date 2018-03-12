@@ -27,7 +27,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="smallBgcolor" >
-                                    <el-input placeholder=""></el-input>
+                                    <el-input placeholder="" v-model="addItem.categoryCode"></el-input>
                                 </div>
                             </el-col>
                         </el-row>
@@ -41,7 +41,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder=""></el-input>
+                                <el-input placeholder="" v-model="addItem.categoryName"></el-input>
                                 </div>
                             </el-col>
                         </el-row>
@@ -55,7 +55,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-select  v-model="value" >
+                                    <el-select  v-model="addItem.mnemonic" >
                                     <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
 
@@ -75,7 +75,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder=""></el-input>
+                                <el-input placeholder="" v-model="addItem.status" ></el-input>
                                 </div>
                             </el-col>
                         </el-row>
@@ -89,7 +89,7 @@
                             </el-col>
                             <el-col :span="15">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder=""></el-input>
+                                <el-input placeholder="" v-model="addItem.remark"></el-input>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -101,7 +101,7 @@
                     </el-col>
                     <el-col :span="2" style="margin-left:0">
                         <div class="bgcolor smallBgcolor">
-                            <el-checkbox>服务类（虚拟）</el-checkbox>
+                            <el-checkbox v-model="addItem.isService">服务类（虚拟）</el-checkbox>
                         </div>
                     </el-col> 
                 </el-row>
@@ -118,7 +118,7 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="smallBgcolor">
-                                <el-input placeholder=""></el-input>
+                                <el-input placeholder="" v-model="addItem.createdBy"></el-input>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -132,7 +132,11 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="smallBgcolor">
-                                <el-input placeholder=""></el-input>
+                                    <el-date-picker
+                                    v-model="addItem.createdTime"
+                                    type="datetime"
+                                    placeholder="选择日期时间">
+                                    </el-date-picker>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -146,7 +150,7 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="smallBgcolor">
-                                <el-input placeholder=""></el-input>
+                                <el-input placeholder="" v-model="addItem.modifiedBy"></el-input>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -160,7 +164,10 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder=""></el-input>
+                                    <el-date-picker
+                                    v-model="addItem.modifiedTime"
+                                    type="datetime">
+                                    </el-date-picker>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -219,8 +226,23 @@ import Textbox from '../../base/textbox/textbox'
                     imgsrc: '../../../static/image/common/bt_audit.png',
                     text: '审核'
                 }]},
-                    value: '',
+                addItem:{
+                    //上级商品类目
+                    categoryCode:"",//商品类目编码
+                    categoryName:"",//商品类目名称
+                    mnemonic:"",//助记码
+                    status:"",//状态
+                    isService:"",//服务类
+                    remark:"",//备注
+                    createdTime:"",//创建时间
+                    createdBy:"",//创建人
+                    modifiedTime:"",//修改人
+                    modifiedBy:""//修改时间
+                },
             }
+        },
+        created(){
+            this.InitModify();
         },
         methods:{
             // back(){//点击新增跳转
@@ -230,6 +252,28 @@ import Textbox from '../../base/textbox/textbox'
             btmlog:function(data){
                
             },
+            InitModify(){
+                let _this=this;
+                if(_this.$route.params.id=="default"){
+                    return;
+                }else{
+                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
+                        console.log(res.result)
+                        _this.addItem.categoryCode=res.result.categoryCode;
+                        _this.addItem.categoryName=res.result.categoryName;
+                        _this.addItem.mnemonic=res.result.mnemonic;
+                        _this.addItem.status=res.result.status;
+                        _this.addItem.isService=res.result.isService;
+                        _this.addItem.remark=res.result.remark;
+                        _this.addItem.createdTime=res.result.createdTime;
+                        _this.addItem.createdBy=res.result.createdBy;
+                        _this.addItem.modifiedTime=res.result.modifiedTime;
+                        _this.addItem.modifiedBy=res.result.modifiedBy;
+                        //_this.tableData=res.result;                   
+                    })
+                }
+                 
+            }
         },
         components:{
             Btm,
