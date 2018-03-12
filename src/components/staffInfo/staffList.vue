@@ -1,6 +1,6 @@
 <template>
     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
-       	<query :data="querychend"></query>     
+       	<query :data="querychend" @listquery="listquery"></query>     
         <div id="bgc">
 	        <el-row >
 	            <el-col :span="24" class="border-left">
@@ -58,7 +58,7 @@
 	                	 <div id="bg-white" style="background-color: rgba(251, 252, 253, 1);">
 
                          
-                            <el-table :data="allList" border style="width: 100%">
+                            <el-table :data="allList" border style="width: 100%"  @selection-change="handleSelectionChange">
                                 <el-table-column type="selection" width="50">
                                 </el-table-column>
                                 <el-table-column prop="employeeCode" label="职员编码" width="120" fixed>
@@ -85,20 +85,19 @@
                                 <el-table-column label="操作" width="120" fixed="right">
                                     <template slot-scope="scope">
                                         <el-button @click="checkDetail(scope.row)" type="text" size="small">查看</el-button>
-                                        <el-button type="text" size="small" @click="delRow">删除</el-button>
+                                        <el-button type="text" size="small" @click="delRow(scope.row)">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
-  
-
-                             <el-col :span="18">
-                                <el-pagination @size-change="handleSizeChange"
-                                @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[10, 20, 30, 40]"
-                                :page-size="10"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="totalCount">
+                            
+                             <el-col :span="12">
+                                 <el-pagination @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="currentPage4"
+                                    :page-sizes="[10, 20, 30, 40]"
+                                    :page-size="10"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="totalCount">
                                 </el-pagination>
                             </el-col>
 
@@ -152,6 +151,7 @@
                                 ],          
                         },
                 ]},
+                multipleSelection: [],//复选框选中数据
                 tableData:[],
             }
         },        
@@ -170,15 +170,46 @@
                     
                 )
             },
+            // 查询
+            listquery(up){
+                console.log(up)
+            },
+            handleSelectionChange:function(val){//点击复选框选中的数据
+                this.multipleSelection = val;
+            },
+            // 提示信息
+            open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
             // 添加数据
-            addStaff:function(){//点击切换路由，到详情页添加
-                this.$store.state.url='/staff/staffDetail/default'
+            addStaff:function(){//点击切换路由去添加
+                this.$store.state.url='/staff/staffModify/default'
                 this.$router.push({path:this.$store.state.url})
                 
             },
             // 按钮删除
             delSelected:function(){
-                console.log('这是按钮删除')
+                // console.log('这是按钮批量删除')
+                let _this=this;
+                if(_this.multipleSelection.length>0){//表格
+                    for(let i=0;i<_this.multipleSelection.length;i++){
+                        _this.$axios.deletes('/api/services/app/EmployeeManagement/Delete',{id:_this.multipleSelection[i].id})
+                        .then(function(res){
+                            _this.loadAllList();
+                            _this.open('删除成功','el-icon-circle-check','successERP');
+                        },function(res){
+                            _this.open('删除失败','el-icon-error','faildERP');
+                            //console.log('err:'+res)
+                        })
+                    }
+                };
             },
             // （行内按钮查看）查看详情
             checkDetail:function(row){
@@ -188,8 +219,15 @@
             },
             
             // 行内删除
-            delRow:function(){
-                console.log("这是行内删除");
+            delRow:function(row){
+                 this.$axios.deletes('/api/services/app/EmployeeManagement/Delete',{id:row.id})
+                .then(
+                    rsp=>{
+                        this.getAllList();
+                        this.open('删除成功','el-icon-circle-check','successERP');
+
+                    }
+                )
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
@@ -265,28 +303,28 @@
   .search-wid{
       width:200px;
   }
-.el-input-group--append .el-input__inner, .el-input-group__prepend {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    width: 150px;
-    height:30px;
-}
-.fr{
-    float:right;
-}
-.h48{
-        height: 48px;
-        line-height: 48px;
-        border-bottom: 1px solid #E4E4E4;
-}
-.pt5{
-        padding-top: 5px;
+    .el-input-group--append .el-input__inner, .el-input-group__prepend {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        width: 150px;
+        height:30px;
     }
-.el-input-group>.el-input__inner {
-    vertical-align: middle;
-    display: table-cell;
-    padding-top: 10px;
-}
+    .fr{
+        float:right;
+    }
+    .h48{
+            height: 48px;
+            line-height: 48px;
+            border-bottom: 1px solid #E4E4E4;
+    }
+    .pt5{
+            padding-top: 5px;
+        }
+    .el-input-group>.el-input__inner {
+        vertical-align: middle;
+        display: table-cell;
+        padding-top: 10px;
+    }
 </style>
 <style scoped>
     .smallBgcolor .el-select{

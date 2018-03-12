@@ -52,11 +52,11 @@
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockFullName') }}</p>
                             </div>
                         </div>
-                        <!-- <div class="tipsWrapper" name="mnemonic">
+                        <div class="tipsWrapper" name="mnemonic">
                             <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.mnemonic')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.mnemonic') }}</p>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="tipsWrapper" name="stockTypeId">
                             <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockTypeId')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockTypeId') }}</p>
@@ -143,11 +143,15 @@
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockFullName')}"></el-input>
                         </div>
-                        <!-- <div class="bgcolor">
+
+                        <div class="bgcolor">
                             <label>助记码</label>
-                            <el-input placeholder="无字段" 
-                                      v-model="createRepositoryParams.mnemonic"></el-input>
-                        </div> -->
+                            <el-input placeholder="" 
+                                      v-model="createRepositoryParams.mnemonic"
+                                      @focus="showErrprTips"
+                                      class="mnemonic"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.mnemonic')}"></el-input>
+                        </div>
 
                         <div class="bgcolor">
                             <label><small>*</small>仓库类型</label>
@@ -230,10 +234,14 @@
                                       :class="{redBorder : validation.hasError('createRepositoryParams.fax')}"></el-input>
                         </div>
 
-                        <!-- <div class="bgcolor">
+                        <div class="bgcolor">
                             <label>地址</label>
-                            <el-input placeholder=""></el-input>
-                        </div> -->
+                            <el-input v-model="createRepositoryParams.stockAddress"
+                                      @focus="showErrprTips"
+                                      placeholder="" 
+                                      class="stockAddress"
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stockAddress')}"></el-input>
+                        </div>
 
                         <div class="bgcolor">
                             <label>备注</label>
@@ -402,9 +410,9 @@
             'createRepositoryParams.stockFullName': function (value) {//仓库全称
                 return this.Validator.value(value).required().maxLength(50);
             },
-            // 'createRepositoryParams.mnemonic': function (value) {//助记码
-            //     return this.Validator.value(value).required().maxLength(50);
-            // },
+            'createRepositoryParams.mnemonic': function (value) {//助记码
+                return this.Validator.value(value).required().maxLength(50);
+            },
             'createRepositoryParams.stockTypeId': function (value) {//仓库类型
                 return this.Validator.value(value).required().integer();
             },
@@ -426,9 +434,9 @@
             'createRepositoryParams.fax': function (value) {//传真
                 return this.Validator.value(value).required().maxLength(50);
             },
-            // 'createRepositoryParams.adAreaId': function (value) {//地址
-            //     return this.Validator.value(value).required().integer();
-            // },
+            'createRepositoryParams.stockAddress': function (value) {//地址
+                return this.Validator.value(value).required().integer();
+            },
             'createRepositoryParams.remark': function (value) {//备注
                 return this.Validator.value(value).required().maxLength(50);
             },
@@ -504,6 +512,8 @@
                             "email":  '',
                             "status": '',
                             "manager": "",
+                            "mnemonic": "",
+                            "stockAddress": "",
                             "phone": "",
                             "remark": ""
                         } 
@@ -643,51 +653,51 @@
                 },
                 ouGet:'',
                 ou: [{//所属组织
-                    value:1,
+                    value:0,
                     label: '恒康'
                 }, {
-                    value:2,
+                    value:1,
                     label: '恒大'
                 }, {
-                    value:3,
+                    value:2,
                     label: '361度'
                 }],
                 stockType: [{//仓库类型
-                    value:1,
+                    value:0,
                     label: '仓库'
                 }, {
-                    value:2,
+                    value:1,
                     label: '店铺'
                 }],
                 opArea: [{//业务地区
-                    value:1,
+                    value:0,
                     label: '业务地区1'
                 }, {
-                    value:2,
+                    value:1,
                     label: '业务地区2'
                 }, {
-                    value:3,
+                    value:2,
                     label: '业务地区3'
                 }],
                 adArea: [{//行政地区
-                    value:1,
+                    value:0,
                     label: '行政地区1'
                 }, {
-                    value:2,
+                    value:1,
                     label: '行政地区2'
                 }, {
-                    value:3,
+                    value:2,
                     label: '行政地区3'
                 }],
                 status: [{//状态
+                    value:0,
+                    label: '全部'
+                }, {
                     value:1,
-                    label: '状态1'
+                    label: '启用'
                 }, {
                     value:2,
-                    label: '状态2'
-                }, {
-                    value:3,
-                    label: '状态3'
+                    label: '禁用'
                 }],
 
                 value: '',
@@ -705,6 +715,8 @@
                     "fax": "",
                     "email":  '',
                     "status": '',
+                    "mnemonic": "",
+                    "stockAddress": "",
                     "manager": "",
                     "phone": "",
                     "remark": ""
