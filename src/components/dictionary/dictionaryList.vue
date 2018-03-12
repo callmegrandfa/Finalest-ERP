@@ -247,16 +247,6 @@
                     value:'2',
                     label: '行政地区'
                 }],
-                statuses:[//启用状态
-                    {
-                        value:'1',
-                        label: '启用'
-                    },
-                    {
-                        value:'2',
-                        label: '停用'
-                    },
-                ],
                  options: [{
                     value:"",
                     label: '全部'

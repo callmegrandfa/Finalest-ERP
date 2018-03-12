@@ -33,8 +33,8 @@
                             </el-col>
                             <el-col :span="14">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-select v-model="search.IsService">
-                                        <el-option  >
+                                    <el-select  v-model="search.IsService">
+                                        <el-option v-for="item in SystemOptions" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -49,7 +49,7 @@
                             <el-col :span="14">
                                 <div class="bgcolor smallBgcolor">
                                     <el-select  v-model="search.Status" >
-                                        <el-option >
+                                        <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -99,16 +99,11 @@
                                         <el-checkbox v-model='scope.row.isService'></el-checkbox>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="address6" label="系统默认" width="80">
-                                    <template slot-scope="scope">
-                                        <el-checkbox></el-checkbox>
-                                    </template>
-                                </el-table-column>
                                 <el-table-column prop="address7" label="备注" width="">
                                 </el-table-column>
                                 <el-table-column prop="address12" label="操作" width="">
                                     <template slot-scope="scope">
-                                        <el-button type="text" size="small"  >查看</el-button>
+                                        <el-button @click="modify(scope.row)" type="text" size="small"  >查看</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -147,39 +142,6 @@ import Tree from '../../base/tree/tree'
                     IsService:'',
                     Status:'',
                 },
-                querychend:{
-                    up:'',
-                    demand:[{
-                    must: '',
-                    title: '商品类目',
-                    place: '', 
-                    model:'CategoryName'           
-                },{
-                    must: '*',
-                    title: '服务类(虚拟)',
-                    place: '1223',
-                    model:'IsService'                
-                },{
-                    must: '*',
-                    title: '状态',
-                    model:'Status',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                }]},
                 bottonbox:{
                     url: '/commodityleimu/CommodityCategoriesDetails',
                    botton:[{
@@ -203,22 +165,23 @@ import Tree from '../../base/tree/tree'
                     imgsrc: '../../../static/image/common/bt_inOut.png',
                     text: '导出'
                 }]},
-                options: [{
-                    value: '选项1',
-                    label: '仓库'
+                SystemOptions: [{
+                    value: null,
+                    label: '全部'
                     }, {
-                    value: '选项2',
-                    label: '地址'
+                    value: false,
+                    label: '是'
                     }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
+                    value: true,
+                    label: '否'
                     }],
+                StatusOptions:[{
+                    value: 1,
+                    label: '启用'
+                },{
+                    value: 0,
+                    label: '未启用'
+                }],
 
                 value: '',
                 classTree:  [//类目tree
@@ -294,11 +257,11 @@ import Tree from '../../base/tree/tree'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/Get',{Id:data.id}).then(function(res){       
+                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetCategory',{Id:data.id}).then(function(res){       
                         console.log(res.result);                
-                        // _this.tableData = res.result;
-                        // _this.totalCount=res.result.length
-                         self.tableLoading=false;
+                        _this.tableData = res.result;
+                        _this.totalCount=res.result.length
+                        _this.tableLoading=false;
                         
                     })
             },
@@ -323,8 +286,16 @@ import Tree from '../../base/tree/tree'
                 obgh.style.width="100%";
                 Re.style.display="block";
             },
-            query(){
-                
+            query(){//条件查询
+                let _this=this;
+                _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
+                    console.log(res.result);
+                    _this.tableData=res.result;                   
+                })
+            },
+            modify(row){//查看编辑
+                this.$store.state.url='/commodityleimu/CommodityCategoriesDetails/'+row.id
+                this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
         },
         components:{
