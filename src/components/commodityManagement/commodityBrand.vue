@@ -349,14 +349,14 @@ import Btm from '../../base/btm/btm'
                         }).catch(() => {
                             this.currentPage=this.turnPage 
                             this.pageFlag=false;
-                            return;   
-                            
+                            return;      
                     });
                 }else if(this.isUpdate!=true){  
                     this.page = val;
                     this.currentPage=val;
                     this.loadTableData();
                 }
+                setTimeout(() => {this.pageFlag = true}, 1000)
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
