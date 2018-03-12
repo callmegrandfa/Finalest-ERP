@@ -20,80 +20,17 @@
         <el-row>
                 <!--公司信息  -->
             <el-col :span="24" class="getPadding">
-                <div class="tipsWrapper" name="ouCode">
+                <!-- <div class="tipsWrapper" name="ouCode">
                     <div class="errorTips" :class="{block : !validation.hasError('addData.ouCode')}">
                         <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouCode') }}</p>
                     </div>
-                </div>
-                <div class="tipsWrapper" name="ouName">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouName')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouName') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="ouParentid">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouParentid')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouParentid') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="regtime">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.regtime')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.regtime') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="baseCurrencyId">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.baseCurrencyId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.baseCurrencyId') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="companyOuId">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.companyOuId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.companyOuId') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="contactPerson">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.contactPerson')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.contactPerson') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="phone">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.phone')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.phone') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="address">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.address')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.address') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="remark">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.remark')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.remark') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="status">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.status') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="ouCompanyParentid">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouCompanyParentid')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouCompanyParentid') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="legalPerson">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.legalPerson')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.legalPerson') }}</p>
-                    </div>
-                </div>
+                </div> -->
                 
                 
                 
                 <div class="bgcolor" >
                     <label><small>*</small>编码</label>
                     <el-input class="ouCode" 
-                    @focus="showErrprTips"
-                    placeholder=" "
-                    :class="{redBorder : validation.hasError('addData.ouCode')}" 
                     v-model="addData.ouCode">
                     </el-input>
                 </div>
@@ -102,37 +39,18 @@
                 <div class="bgcolor">
                     <label><small>*</small>名称</label>
                     <el-input class="ouName"
-                    placeholder=" "
-                    @focus="showErrprTips"
-                     :class="{redBorder : validation.hasError('addData.ouName')}"
                      v-model="addData.ouName" >
                      </el-input>
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>全称</label>
-                    <el-input placeholder="无字段"></el-input>
+                    <el-input class="ouCode"  
+                    v-model="addData.ouFullname" 
+                    placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
                     <label class="longLabel"><small>*</small>上级业务单元</label>
                     <el-select class="ouParentid"
-                    @focus="showErrprTipsSelect"
-                    placeholder=" "
-                     :class="{redBorder : validation.hasError('addData.ouParentid')}" 
-                     v-model="addData.ouParentid">
-                        <el-option 
-                        v-for="item in higherUnit" 
-                        :key="item.value" 
-                        :label="item.label" 
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor">
-                    <label><small>*</small>会计方案</label>
-                    <el-select class="ouParentid"
-                    @focus="showErrprTipsSelect"
-                    placeholder=" "
-                    :class="{redBorder : validation.hasError('addData.ouParentid')}" 
                     v-model="addData.ouParentid">
                         <el-option 
                         v-for="item in higherUnit" 
@@ -143,23 +61,31 @@
                     </el-select>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>引用月份</label>
+                    <label><small>*</small>会计方案</label>
+                    <el-select class="accCchemeId"
+                    v-model="addData.accCchemeId">
+                        <el-option 
+                        v-for="item in higherUnit" 
+                        :key="item.value" 
+                        :label="item.label" 
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor">
+                    <label><small>*</small>启用月份</label>
                     <el-date-picker 
-                    class="regtime datepicker" 
-                    @focus="showErrprTipsRangedate"
-                    :class="{redBorder : validation.hasError('addData.regtime')}"
+                    class="accStartMonth datepicker" 
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd" 
-                    v-model="addData.regtime" 
+                    v-model="addData.accStartMonth" 
                     type="date" 
-                    placeholder=" "></el-date-picker>
+                    ></el-date-picker>
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>本位币种</label>
-                    <el-select placeholder=" "
+                    <el-select 
                     class="baseCurrencyId" 
-                    @focus="showErrprTipsSelect"
-                    :class="{redBorder : validation.hasError('addData.baseCurrencyId')}" 
                     v-model="addData.baseCurrencyId">
                         <el-option 
                         v-for="item in money" 
@@ -172,10 +98,8 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select placeholder=" "
+                    <el-select 
                     class="companyOuId" 
-                    @focus="showErrprTipsSelect"
-                    :class="{redBorder : validation.hasError('addData.companyOuId')}" 
                     v-model="addData.companyOuId">
                         <el-option 
                         v-for="item in company" 
@@ -190,40 +114,32 @@
                     <label>联系人</label>
                     <el-input 
                     class="contactPerson" 
-                    @focus="showErrprTips"
-                    :class="{redBorder : validation.hasError('addData.contactPerson')}" 
                     v-model="addData.contactPerson" 
-                    placeholder=" ">
+                    >
                     </el-input>
                 </div>
                 <div class="bgcolor">
                     <label>电话</label>
                     <el-input 
                     class="phone" 
-                    @focus="showErrprTips"
-                    :class="{redBorder : validation.hasError('addData.phone')}" 
                     v-model="addData.phone" 
-                    placeholder=" "></el-input>
+                    ></el-input>
                 </div>
                 <div class="bgcolor">
                     <label>地址</label>
                     <el-input 
                     class="address" 
-                    @focus="showErrprTips"
-                    :class="{redBorder : validation.hasError('addData.address')}" 
                     v-model="addData.address" 
-                    placeholder=" "></el-input>
+                    ></el-input>
                 </div>
                  <div class="bgcolor">
                     <label>启用状态</label>
-                    <el-select placeholder=" "
-                    class="status" 
-                    @focus="showErrprTipsSelect"
-                    :class="{redBorder : validation.hasError('addData.status')}" 
-                    v-model="selectData.Status002">
+                    <el-select 
+                    class="status1" 
+                    v-model="addData.status">
                         <el-option 
-                        v-for="item in state" 
-                        :key="item.value" 
+                        v-for="item in selectData.Status001" 
+                        :key="item.itemValue" 
                         :label="item.itemName" 
                         :value="item.itemValue" 
                         >
@@ -233,13 +149,11 @@
                 <div class="bgcolor longWidth">
                     <label>备注</label>
                     <el-input
-                    class="remark" 
-                    @focus="showErrprTipsTextArea"
-                    :class="{redBorder : validation.hasError('addData.remark')}"
+                    class="remark1" 
                     v-model="addData.remark"
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 10}"
-                    placeholder="">
+                    >
                     </el-input>
                 </div>
                
@@ -268,18 +182,15 @@
                           <div class="companyInfo">
                             <el-col :span="24">
                                 <el-col :span="5"  class="getPadding">
-                                    <el-checkbox v-model="group">集团公司</el-checkbox>
+                                    <el-checkbox v-model="basCompany.isGroupCompany">集团公司</el-checkbox>
                                 </el-col> 
                             </el-col>
                             <el-col :span="24"  class="getPadding" style="border-bottom:1px solid #e4e4e4; ">
                                 <div class="bgcolor">
                                     <label>上级公司</label>
                                     <el-select 
-                                    placeholder=" "
-                                    class="ouCompanyParentid" 
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('addData.ouCompanyParentid')}" 
-                                    v-model="addData.ouCompanyParentid">
+                                    class="ouParentid" 
+                                    v-model="basCompany.ouParentid">
                                         <el-option 
                                         v-for="item in preCompany" 
                                         :key="item.value" 
@@ -290,11 +201,9 @@
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select placeholder=" "
-                                    class="status" 
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('addData.status')}" 
-                                    v-model="addData.status">
+                                    <el-select 
+                                    class="status2" 
+                                    v-model="basCompany.status">
                                         <el-option 
                                         v-for="item in state" 
                                         :key="item.value" 
@@ -308,26 +217,76 @@
                             <el-col :span="24" class="getPadding">
                                 <h4 class="h4">其他信息</h4>
                                 <div>
-                                    <div class="bgcolor"><label>注册资本</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>法人代表</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>纳税人登记号</label><el-input></el-input></div>
+                                    <div class="bgcolor">
+                                        <label>注册资本</label>
+                                        <el-input
+                                        class="regCapital"
+                                        v-model="basCompany.regCapital"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>法人代表</label>
+                                        <el-input
+                                        class="legalPerson"
+                                        v-model="basCompany.legalPerson"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>纳税人登记号</label>
+                                        <el-input
+                                        class="vatRegno"
+                                        v-model="basCompany.vatRegno"
+                                        ></el-input>
+                                    </div>
                                     <div class="bgcolor">
                                         <label>成立日期</label>
                                         <el-date-picker 
                                         class="regtime datepicker" 
-                                        @focus="showErrprTipsRangedate"
-                                        :class="{redBorder : validation.hasError('addData.regtime')}"
                                         format="yyyy-MM-dd"
-                                        value-format="yyyy-MM-dd" 
-                                        v-model="addData.regtime" 
+                                        v-model="basCompany.regtime"
+                                        value-format="yyyy-MM-dd"
                                         type="date" 
                                         placeholder=""></el-date-picker>
                                     </div>
-                                    <div class="bgcolor"><label class="longLabel">法人身份证号码</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>主管部门代码</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>主管部门名称</label><el-input></el-input></div>
+                                    <div class="bgcolor">
+                                        <label class="longLabel">法人身份证号码</label>
+                                        <el-input
+                                         
+                                        class="legalPersonIdnr"
+                                        v-model="basCompany.legalPersonIdnr"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>主管部门代码</label>
+                                        <el-input
+                                        class="mgtDeptCode"
+                                        v-model="basCompany.mgtDeptCode"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>主管部门名称</label>
+                                        <el-input
+                                        class="mgtDeptName"
+                                        v-model="basCompany.mgtDeptName"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>纳税人类别</label>
+                                        <el-input
+                                        class="legalPersonType"
+                                        v-model="basCompany.legalPersonType"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>营业地址</label>
+                                        <el-input
+                                        class="businessAddress"
+                                        v-model="basCompany.businessAddress"
+                                        ></el-input>
+                                    </div>
                                     <div class="bgcolor">
                                         <label class="longLabel">营业或有效期限</label>
+                                        <!-- businessStart  businessEnd  -->
                                         <div class="rangeDate">
                                             <el-date-picker
                                             v-model="dateRange"
@@ -342,48 +301,67 @@
                                             </el-date-picker>
                                         </div>
                                     </div>
-                                    <!-- <div class="bgcolor">
-                                        <label class="longLabel">营业或有效期限起始日期</label>
-                                        <el-date-picker 
-                                        class="regtime datepicker" 
-                                        @focus="showErrprTipsRangedate"
-                                        :class="{redBorder : validation.hasError('addData.regtime')}"
-                                        format="yyyy-MM-dd"
-                                        value-format="yyyy-MM-dd" 
-                                        v-model="addData.regtime" 
-                                        type="date" 
-                                        placeholder=""></el-date-picker>
+                                    <div class="bgcolor">
+                                        <label>公司简介</label>
+                                        <el-input
+                                        class="introduction"
+                                        v-model="basCompany.introduction"
+                                        ></el-input>
                                     </div>
                                     <div class="bgcolor">
-                                        <label class="longLabel">营业或有效期限终止日期</label>
-                                        <el-date-picker 
-                                        class="regtime datepicker" 
-                                        @focus="showErrprTipsRangedate"
-                                        :class="{redBorder : validation.hasError('addData.regtime')}"
-                                        format="yyyy-MM-dd"
-                                        value-format="yyyy-MM-dd" 
-                                        v-model="addData.regtime" 
-                                        type="date" 
-                                        placeholder=""></el-date-picker>
-                                    </div> -->
-                                    <div class="bgcolor"><label>纳税人类别</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>公司简介</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>联系信息</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>营业地址</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>通讯地址</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>邮政编码</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>电话</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>传真</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>联系人</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>E-mail</label><el-input></el-input></div>
-                                    <div class="bgcolor"><label>web网址</label><el-input></el-input></div>
+                                        <label>通讯地址</label>
+                                        <el-input
+                                        class="contactAddress"
+                                        v-model="basCompany.contactAddress"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>邮政编码</label>
+                                        <el-input
+                                        class="zipCode"
+                                        v-model="basCompany.zipCode"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>联系人</label>
+                                        <el-input
+                                        class="contact"
+                                        v-model="basCompany.contact"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>传真</label>
+                                        <el-input
+                                        class="fax"
+                                        v-model="basCompany.fax"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>电话</label>
+                                        <el-input
+                                        class="phone"
+                                        v-model="basCompany.phone"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>E-mail</label>
+                                        <el-input
+                                        class="email"
+                                        v-model="basCompany.email"
+                                        ></el-input>
+                                    </div>
+                                    <div class="bgcolor">
+                                        <label>web网址</label>
+                                        <el-input
+                                        class="webUrl"
+                                        v-model="basCompany.webUrl"
+                                        ></el-input>
+                                    </div>
                                     <div class="bgcolor longWidth">
                                     <label>备注</label>
                                     <el-input
-                                    class="remark" 
-                                    @focus="showErrprTipsTextArea"
-                                    :class="{redBorder : validation.hasError('addData.remark')}"
-                                    v-model="addData.remark"
+                                    class="remark2" 
+                                    v-model="basCompany.remark"
                                     type="textarea"
                                     :autosize="{ minRows: 4, maxRows: 10}"
                                     placeholder="">
@@ -392,77 +370,7 @@
                                 </div>                                  
                             </el-col>
                          </div>
-                     </el-col>   
-                     <!-- <el-col :span="24" class="getPadding">
-                        <h4 class="h4">其他信息</h4>
-                        <div>
-                            <div class="bgcolor"><label>注册资本</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>法人代表</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>纳税人登记号</label><el-input></el-input></div>
-                            <div class="bgcolor">
-                                <label>成立日期</label>
-                                <el-date-picker 
-                                class="regtime datepicker" 
-                                @focus="showErrprTipsRangedate"
-                                :class="{redBorder : validation.hasError('addData.regtime')}"
-                                format="yyyy-MM-dd"
-                                value-format="yyyy-MM-dd" 
-                                v-model="addData.regtime" 
-                                type="date" 
-                                placeholder=""></el-date-picker>
-                            </div>
-                            <div class="bgcolor"><label class="longLabel">法人身份证号码</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>主管部门代码</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>主管部门名称</label><el-input></el-input></div>
-                            <div class="bgcolor">
-                                <label class="longLabel">营业或有效期限起始日期</label>
-                                <el-date-picker 
-                                class="regtime datepicker" 
-                                @focus="showErrprTipsRangedate"
-                                :class="{redBorder : validation.hasError('addData.regtime')}"
-                                format="yyyy-MM-dd"
-                                value-format="yyyy-MM-dd" 
-                                v-model="addData.regtime" 
-                                type="date" 
-                                placeholder=""></el-date-picker>
-                            </div>
-                            <div class="bgcolor">
-                                <label class="longLabel">营业或有效期限终止日期</label>
-                                <el-date-picker 
-                                class="regtime datepicker" 
-                                @focus="showErrprTipsRangedate"
-                                :class="{redBorder : validation.hasError('addData.regtime')}"
-                                format="yyyy-MM-dd"
-                                value-format="yyyy-MM-dd" 
-                                v-model="addData.regtime" 
-                                type="date" 
-                                placeholder=""></el-date-picker>
-                            </div>
-                            <div class="bgcolor"><label>纳税人类别</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>公司简介</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>联系信息</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>营业地址</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>通讯地址</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>邮政编码</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>电话</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>传真</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>联系人</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>E-mail</label><el-input></el-input></div>
-                            <div class="bgcolor"><label>web网址</label><el-input></el-input></div>
-                            <div class="bgcolor longWidth">
-                            <label>备注</label>
-                            <el-input
-                            class="remark" 
-                            @focus="showErrprTipsTextArea"
-                            :class="{redBorder : validation.hasError('addData.remark')}"
-                            v-model="addData.remark"
-                            type="textarea"
-                            :autosize="{ minRows: 4, maxRows: 10}"
-                            placeholder="">
-                            </el-input>
-                            </div>
-                        </div>                                  
-                    </el-col> -->
+                     </el-col>
                 </el-tab-pane>
 <!--                  财务                            -->
                 <el-tab-pane label="财务" name="finance" v-if="count.isCheckFinance">
@@ -473,66 +381,48 @@
                                     <label>国税登记号</label>
                                     <el-input 
                                     class="legalPerson" 
-                                    @focus="showErrprTips"
-                                    :class="{redBorder 
-                                    : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
-                                    placeholder=" ">
+                                    >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
                                     <label>发税登记号</label>
                                     <el-input 
                                     class="legalPerson" 
-                                    @focus="showErrprTips"
-                                    :class="{redBorder 
-                                    : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
-                                    placeholder=" ">
+                                    >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
                                     <label>纳税人识别号</label>
                                     <el-input 
                                     class="legalPerson" 
-                                    @focus="showErrprTips"
-                                    :class="{redBorder 
-                                    : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
-                                    placeholder=" ">
+                                    >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
                                     <label>纳税人编码</label>
                                     <el-input 
                                     class="legalPerson" 
-                                    @focus="showErrprTips"
-                                    :class="{redBorder 
-                                    : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
-                                    placeholder=" ">
+                                    >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
                                     <label>纳税税种</label>
                                     <el-input 
                                     class="legalPerson" 
-                                    @focus="showErrprTips"
-                                    :class="{redBorder 
-                                    : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
-                                    placeholder=" ">
+                                    >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
                                     <label>委托税种</label>
                                     <el-input 
                                     class="legalPerson" 
-                                    @focus="showErrprTips"
-                                    :class="{redBorder 
-                                    : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
-                                    placeholder=" ">
+                                    >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
@@ -541,10 +431,8 @@
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select placeholder=" "
+                                    <el-select 
                                     class="status" 
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('addData.status')}" 
                                     v-model="addData.status">
                                         <el-option 
                                         v-for="item in state" 
@@ -566,10 +454,6 @@
                                 <div class="bgcolor">
                                     <label>上级业务组织</label>
                                     <el-select 
-                                    placeholder=" "
-                                    class="ouCompanyParentid" 
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('addData.ouCompanyParentid')}" 
                                     v-model="addData.ouCompanyParentid">
                                         <el-option 
                                         v-for="item in preCompany" 
@@ -583,19 +467,14 @@
                                     <label>结算账务组织</label>
                                     <el-input 
                                     class="legalPerson" 
-                                    @focus="showErrprTips"
-                                    :class="{redBorder 
-                                    : validation.hasError('addData.legalPerson')}"  
                                     v-model="addData.legalPerson" 
-                                    placeholder=" ">
+                                    >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select placeholder=" "
+                                    <el-select 
                                     class="status" 
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('addData.status')}" 
                                     v-model="addData.status">
                                         <el-option 
                                         v-for="item in state" 
@@ -609,10 +488,8 @@
 
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select placeholder=" "
+                                    <el-select 
                                     class="status" 
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('addData.status')}" 
                                     v-model="addData.status">
                                         <el-option 
                                         v-for="item in state" 
@@ -655,28 +532,45 @@ export default({
             activeName: 'company',
             auditInfo:{},//审计信息
             addData:{//post需要的键值对
-                groupId:1,//集团ID
-                ouCode: '',//组织代码
-                ouName: '' ,//组织名称
-                foreignName: 'good' ,//外文名称
-                mnemonic: 'sdd' ,//助记码
-                ouParentid: '' ,//上级组织ID
-                accountPeriodId:1 ,//会计期间ID
-                baseCurrencyId: '',//本位币种id
-                companyOuId: '',//所属公司ID
-                contactPerson: '' ,//联系人
-                phone: '' ,//电话
-                address: '' ,//地址
-                areaId: 1 ,//行政区域ID
-                entityProperty : 1 ,//实体属性
-                status: '' ,//启用状态
-                remark: '' ,//备注
-                basOuTypes: [ 0,1,2,3,4,5,6],//组织职能
-                isGroupCompany: false,//是否是法人公司
-                ouCompanyParentid: '' ,//上级公司组织ID
-                legalPerson: '',//法人代表
-                companyStatus: 0 ,//公司启用状态
-                regtime: ''//公司成立时间
+                ouCode: '1',//组织代码
+                ouName: '1' ,//组织名称
+                ouFullname:'1',
+                ouParentid: 1 ,//上级组织ID
+                baseCurrencyId: 1,//本位币种id
+                companyOuId: 1,//所属公司ID
+                contactPerson: '1' ,//联系人
+                accCchemeId:1,
+                accStartMonth:'1',
+                phone: '1' ,//电话
+                address: '1' ,//地址
+                status: 1 ,//启用状态
+                remark: '1' ,//备注
+            },
+            basOuTypes:[],//组织职能
+            basCompany:{//其他信息
+                "ouParentid": 1,
+                "legalPerson": "1",
+                "status": 1,
+                "isGroupCompany": true,
+                "regCapital": "1",
+                "vatRegno": "1",
+                "regtime": "1",
+                "legalPersonIdnr": "1",
+                "mgtDeptCode": "1",
+                "mgtDeptName": "1",
+                "businessStart": "1",
+                "businessEnd": "1",
+                "legalPersonType": "1",
+                "introduction": "1",
+                "contact": "1",
+                "businessAddress": "1",
+                "contactAddress": "1",
+                "zipCode": "1",
+                "phone": "1",
+                "fax": "1",
+                "email": "1",
+                "webUrl": "1",
+                "remark": "sting"
             },
             ischeck:{isCheckCompany:true,//公司复选框初始选种状态
                     isCheckFinance:false,//财务复选框初始选种状态
@@ -753,7 +647,7 @@ export default({
             isSave:true,//是否可以保存
             selectData:{//select数据
                 OUType:[],//组织类型
-                Status002:[],//启用状态
+                Status001:[],//启用状态
                 UserType:[],//身份类型
             },
         }
@@ -827,9 +721,9 @@ export default({
                 // 组织类型
                 _this.selectData.UserType=res.result;
                 })
-            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
                 // 启用状态
-                _this.selectData.Status002=res.result;
+                _this.selectData.Status001=res.result;
                 })
         },
         showErrprTips(e){
@@ -916,18 +810,19 @@ export default({
         },
         save(){
             let _this=this;
-            _this.$validate()
-          .then(function (success) {
-            if (success) {
-                _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-                    _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
-                    _this.$router.push({path:_this.$store.state.url})//点击切换路由OuManage
-                    _this.open('保存成功','el-icon-circle-check','successERP');
-                },function(res){
-                    _this.open('保存失败','el-icon-error','faildERP');
-                })
-            }
-          });
+        //     _this.$validate()
+        //   .then(function (success) {
+        //     if (success) {
+            console.log(_this.addData)
+                // _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                //     _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
+                //     _this.$router.push({path:_this.$store.state.url})//点击切换路由OuManage
+                //     _this.open('保存成功','el-icon-circle-check','successERP');
+                // },function(res){
+                //     _this.open('保存失败','el-icon-error','faildERP');
+                // })
+        //     }
+        //   });
             
         },
         saveAdd(){
