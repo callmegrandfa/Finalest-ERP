@@ -1,5 +1,5 @@
 <template>
-    <div class="data-wrapper">
+    <div class="dic-list">
         <el-row class="bg-white">
             <el-col :span="5" class="border-right">
                 <el-col class="h48 pl15 pr15" :span="24">
@@ -112,13 +112,13 @@
 
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
-                                    <el-select  v-model="scope.row.status" v-if="scope.row.isSystem==true" disabled >
-                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value" @click="aa">
+                                    <el-select  v-model="scope.row.status" v-if="scope.row.isSystem==true" disabled :class="scope.$index%2==0?'bgw':'bgg'">
+                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value" @click="aa">
                                         </el-option>
                                     </el-select>
 
-                                    <el-select  v-model="scope.row.status" v-else @change="handleChange(scope.$index,scope.row)" >
-                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value" @click="aa">
+                                    <el-select  v-model="scope.row.status" v-else @change="handleChange(scope.$index,scope.row)" :class="scope.$index%2==0?'bgw':'bgg'">
+                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value" @click="aa">
                                         </el-option>
                                     </el-select>
 
@@ -247,7 +247,7 @@
                     value:'2',
                     label: '行政地区'
                 }],
-                 options: [{
+                 status: [{
                     value:"",
                     label: '全部'
                     }, {
@@ -833,25 +833,37 @@
 </style>
 
 <style>
-.data-wrapper .el-button+.el-button{
+.dic-list .el-button+.el-button{
     margin-left: 0;
 }
-.data-wrapper .bAreaSearch .el-input__inner{
+.dic-list .bAreaSearch .el-input__inner{
     height: 30px;
     border-radius: 30px;
 }
 /* .bAreaListForm .el-tree-node>.el-tree-node__children{
     overflow: visible!important;
 } */
-.data-wrapper .el-dialog__footer{
+.dic-list .el-dialog__footer{
     padding:0;
 }
-.data-wrapper .areaDialog .bgcolor:first-child{
+.dic-list .areaDialog .bgcolor:first-child{
     margin-top:15px;
 }
 .data-table .el-input__inner{
     height: 28px;
     text-align:center;
     border:none;
+}
+.dic-list .el-input--suffix .el-input__inner{
+    padding:0;
+}
+.dic-list ..el-input__inner{
+    padding:0;
+}
+.dic-list .bgw .el-input__inner{
+    background-color:white;
+}
+.dic-list .bgg .el-input__inner{
+    background-color:#FAFAFA;
 }
 </style>

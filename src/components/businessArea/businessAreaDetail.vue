@@ -98,20 +98,25 @@
                         placeholder=""
                         v-model="addData.areaParentId">
                         <!-- <input type="text" class="selectTree"> -->
+                        <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search">
+                        </el-input>
                             <el-tree
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                            :data="componyTree"
-                            :props="defaultProps"
+                            :data="selectTree"
+                            :props="selectProps"
                             node-key="id"
                             default-expand-all
                             ref="tree"
+                            :filter-node-method="filterNode"
                             :expand-on-click-node="false"
                             @node-click="nodeClick"
                             >
                             </el-tree>
-                                <el-option v-show="false" :key="id" :label="areaName" :value="id" id="confirmSelect">
-                            
-                                </el-option>
+                            <el-option v-show="false" :key="count.id" :label="count.areaName" :value="count.id" id="businessDetail_confirmSelect">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -184,11 +189,14 @@
   export default({
     data(){
       return{
-        id:'',
-        areaName:'',
-        componyTree:[
+        search:'',
+        item:{
+            id:'',
+            areaName:'',
+        },
+        selectTree:[
         ],
-        defaultProps: {
+        selectProps: {
             children: 'items',
             label: 'areaName',
             id:'id'
@@ -260,12 +268,25 @@
           return this.Validator.value(value).required().maxLength(200);
       },
     },
+    computed:{
+        count () {
+            return this.item;
+            },
+    },  
     created () {
         let _this=this;
         _this.loadTree();  
     },
+     watch: {
+      search(val) {
+        this.$refs.tree.filter(val);
+      }
+    },
     methods: {
-
+        filterNode(value, data) {
+        if (!value) return true;
+        return data.areaName.indexOf(value) !== -1;
+      },
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
@@ -308,7 +329,7 @@
             _this.treeLoading=true;
             _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
             .then(function(res){
-                _this.componyTree=res.result;
+                _this.selectTree=res.result;
                 _this.loadIcon();
             },function(res){
             })
@@ -348,11 +369,13 @@
         });
       },
       nodeClick(data){
-          let _this=this;
-          _this.id=data.id;
-          _this.areaName=data.areaName;
-          $("#confirmSelect").click()
-      }
+        let _this=this;
+        _this.item.id=data.id;
+        _this.item.areaName=data.areaName;
+        _this.$nextTick(function(){
+            $('#businessDetail_confirmSelect').click()
+        })
+      },
     }
 
 })

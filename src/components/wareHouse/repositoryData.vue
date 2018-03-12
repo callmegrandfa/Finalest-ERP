@@ -52,11 +52,11 @@
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockFullName') }}</p>
                             </div>
                         </div>
-                        <div class="tipsWrapper" name="mnemonic">
+                        <!-- <div class="tipsWrapper" name="mnemonic">
                             <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.mnemonic')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.mnemonic') }}</p>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="tipsWrapper" name="stockTypeId">
                             <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockTypeId')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockTypeId') }}</p>
@@ -143,11 +143,11 @@
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockFullName')}"></el-input>
                         </div>
-                        <div class="bgcolor">
+                        <!-- <div class="bgcolor">
                             <label>助记码</label>
                             <el-input placeholder="无字段" 
                                       v-model="createRepositoryParams.mnemonic"></el-input>
-                        </div>
+                        </div> -->
 
                         <div class="bgcolor">
                             <label><small>*</small>仓库类型</label>
@@ -402,9 +402,9 @@
             'createRepositoryParams.stockFullName': function (value) {//仓库全称
                 return this.Validator.value(value).required().maxLength(50);
             },
-            'createRepositoryParams.mnemonic': function (value) {//助记码
-                return this.Validator.value(value).required().maxLength(50);
-            },
+            // 'createRepositoryParams.mnemonic': function (value) {//助记码
+            //     return this.Validator.value(value).required().maxLength(50);
+            // },
             'createRepositoryParams.stockTypeId': function (value) {//仓库类型
                 return this.Validator.value(value).required().integer();
             },

@@ -283,13 +283,28 @@
                     <div class="bgcolor">
                         <label>行政地区</label>
                         <el-select v-model="createContactParams.adAreaId" 
-                                placeholder=""
-                                :class="{redBorder : validation.hasError('createContactParams.adAreaId')}"
-                                @focus="showErrprTipsSelect">
+                                   placeholder=""
+                                   class="adAreaId"
+                                   :class="{redBorder : validation.hasError('createContactParams.adAreaId')}"
+                                   @focus="showErrprTipsSelect">
+                                    <el-input placeholder="搜索..."
+                                              class="selectSearch"
+                                              v-model="search"></el-input>
+                                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                             :data="componyTree"
+                                             :props="defaultProps"
+                                             node-key="id"
+                                             default-expand-all
+                                             ref="tree"
+                                             :filter-node-method="filterNode"
+                                             :expand-on-click-node="false"
+                                             @node-click="nodeClick"></el-tree>
                             <el-option v-for="item in adArea" 
-                                    :key="item.adArea" 
-                                    :label="item.label" 
-                                    :value="item.adArea"></el-option>
+                                       :key="item.adArea" 
+                                       v-show="false"
+                                       :label="item.label" 
+                                       :value="item.adArea"
+                                       id="menuModify_confirmSelect"></el-option>
                         </el-select>
                     </div>
                     <div class="bgcolor">
@@ -711,7 +726,17 @@ export default({
                 finishTime:"",
                 finishName:"",
             },
-
+            search:'',
+            item:{
+                id:'',
+                areaName:'',
+            },
+            defaultProps: {
+            children: 'items',
+            label: 'areaName',
+            id:'id'
+        },
+            componyTree:[],
             ou: [{//所属组织
                     value:'1',
                     label: '恒康'
@@ -943,6 +968,20 @@ export default({
         'createContactParams.remark': function (value) {//备注
             return this.Validator.value(value).required().maxLength(200);
         },
+    },
+    computed:{
+        count () {
+            return this.item;
+        },
+    },  
+    created () {
+        let self=this;
+        self.loadTree();  
+    },
+    watch: {
+      search(val) {
+        this.$refs.tree.filter(val);
+      }
     },
     methods:{
         //---提示错误----------------------------------------------
@@ -1280,11 +1319,49 @@ export default({
             });
         },
         //----------------------------------------------------------
+
+        //---树形操作------------------------------------------------
+        loadTree(){
+            let _this=this;
+            _this.treeLoading=true;
+            _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+            .then(function(res){
+                _this.componyTree=res.result;
+                _this.loadIcon();
+            },function(res){
+            })
+        },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        nodeClick(data){
+            console.log(data)
+          let _this=this;
+            _this.item.id=data.id;
+            _this.item.areaName=data.areaName;
+            _this.$nextTick(function(){
+                $('#menuModify_confirmSelect').click()
+            })
+        },
+        filterNode(value, data) {
+            if (!value) return true;
+            return data.areaName.indexOf(value) !== -1;
+        },
         
     }
        
 
-    })
+  })
   </script>
 
   <style>

@@ -1,12 +1,127 @@
 <template>
-    <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%">
-        <query :data="querychend" v-on:listquery="querylog" ></query>
+    <div class="classPropertyList" style="float:left;background:#fff;width:100%">
+        <div id="left-box" style="min-width:275px;width:275px;float:left;">
+            <el-row class="bg-white">
+                    <el-row class="h48 pl15">
+                        <el-col :span="18">
+                            <i class="el-icon-search"></i>
+                            <span>查询</span>
+                        </el-col>
+                        <el-col :span="5">
+                            <span class="fs12 open" >+ 收起</span>
+                        </el-col>
+                    </el-row>
+                     <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                    <label>商品类目</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor" style="margin-top:20px">
+                            <el-input placeholder="请录入单号"></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>继承到子类目</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="value" >
+                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+
+                                </el-select>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>统一码管理</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="value" >
+                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+
+                                </el-select>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>批次管理</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="value" >
+                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+
+                                </el-select>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>保质期管理</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="value" >
+                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+
+                                </el-select>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>状态</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="value" >
+                                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+
+                                </el-select>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">&nbsp;</el-col>
+                        <el-col style="text-align:center;margin-bottom:20px;" :span="14">
+                            <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>    
+        </div>
         <div id="bgx">
             <el-row >
                 <el-col :span="24" class="border-left" id="bg-white">
-                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                       <btm :date="bottonbox" v-on:listbtm="btmlog" class="fixed bg-white"> </btm> 
                      <el-row class="shopclass">
-                        <tree :datc="componyTree"></tree>
+                        <div style="min-width:200px;width:200px;float:left;">
+                            <el-col :span='24' class="tree-container pl10 pt10">
+                                <el-tree :data="componyTree" node-key="id" ></el-tree>
+                            </el-col>
+                        </div>
                         <el-row class="watch" style="background-color:rgba(238,241,245,1)">
                             <el-col :span='24' >
                                 <el-row class="ml10">
@@ -127,7 +242,7 @@
                                                 </span>
                                             </el-col>
                                         </el-row>
-                                        <el-row>
+                                        <el-row style="margin-top:30px;">
                                             <el-col :span="12">
                                                 <el-row>
                                                     <el-col :span="8">
@@ -220,108 +335,6 @@ import Tree from '../../base/tree/tree'
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-                querychend:{
-                    up:'',
-                    demand:[{
-                    must: '',
-                    title: '商品类目',
-                    place: ''                
-                },{
-                    must: '',
-                    title: '继承到子类目',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '统一码管理',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '批次管理',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '保质期管理',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '状态',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                }]},
                 bottonbox:{
                     url: '/commodityleimu/CommodityCategoriesDetails',
                    botton:[{
@@ -456,6 +469,9 @@ import Tree from '../../base/tree/tree'
 </script>
 
 <style scoped>
+.el-tree{
+    background-color: transparent;
+}   
 .shopclass{
     background: rgba(251, 252, 253, 1);
 }
@@ -506,9 +522,77 @@ import Tree from '../../base/tree/tree'
 .border-left{
     border-left: 1px solid #E4E4E4;
 }
+.classPropertyList .fs14{
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.349019607843137);
+}
+.classPropertyList .fs12{
+    font-size: 12px;
+}
+.classPropertyList .open{
+    display: inline-block;
+    width: 49px;
+    height: 22px;
+    line-height: 22px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
+}
+.classPropertyList .pl15{
+    padding-left: 15px;
+}
+.classPropertyList .search-btn{
+    font-size: 12px;
+    display: inline-block;
+    width: 87px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    background: #4A6997;
+    color: white;
+    cursor: pointer;
+}
+.classPropertyList .smallBgcolor .el-select{
+    width: 100% !important ;
+    margin-left: 10px;   
+}
+.classPropertyList .bgcolor label{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100% !important ;
+    margin-right: 0; 
+}
+.classPropertyList .smallBgcolor .el-input--suffix{
+    width: 100% !important ;
+}
+.classPropertyList .smallBgcolor .el-input{
+    width: 100% !important ;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.classPropertyList .bgcolor{
+    overflow:  visible; 
+}
+.classPropertyList .bg-white{
+    background: white;
+    border-radius: 3px;
+} 
+.classPropertyList .h48{
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #E4E4E4;
+}
 </style>
 
 <style>
+.classPropertyList .smallBgcolor .el-input input{
+    height: 32px !important;
+}
+.classPropertyList .bgcolor{
+    width: 100%;
+}
 .watch{
     width: calc(100% - 200px);
     float: left;

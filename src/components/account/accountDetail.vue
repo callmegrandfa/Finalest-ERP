@@ -87,7 +87,7 @@
                             <label>开始日期</label>
                             <el-date-picker 
                             class="beginDate datepicker" 
-                            @focus="showErrprTips1"
+                            @focus="showErrprTipsRangedate"
                             :class="{redBorder : validation.hasError('createAccountParams.beginDate')}"
                             format="yyyy-MM-dd"
                             value-format="yyyy-MM-dd" 
@@ -100,7 +100,7 @@
                             <label>结束日期</label>
                             <el-date-picker 
                             class="beginDate datepicker" 
-                            @focus="showErrprTips1"
+                            @focus="showErrprTipsRangedate"
                             :class="{redBorder : validation.hasError('createAccountParams.endDate')}"
                             format="yyyy-MM-dd"
                             value-format="yyyy-MM-dd" 
