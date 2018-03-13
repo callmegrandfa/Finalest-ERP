@@ -9,25 +9,13 @@
                             </div>
                             <span class="btDetail">返回</span>
                     </button>
-	            	<button class="erp_bt bt_add" @click="add">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_add.png">
-                            </div>
-                            <span class="btDetail">新增</span>
-                    </button>
-	            	<button class="erp_bt bt_modify">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_modify.png">
-                            </div>
-                            <span class="btDetail">修改</span>
-                    </button>
 	            	<button class="erp_bt bt_save" @click="addStaff">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_save.png">
                             </div>
                             <span class="btDetail">保存</span>
                     </button>
-	            	<button class="erp_bt bt_cancel" @click="addStaff">
+	            	<button class="erp_bt bt_cancel" >
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_cancel.png">
                             </div>
@@ -96,11 +84,7 @@
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="备注">
-                    <el-input type="textarea" rows=5 resize="none" v-model="form.remark"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                    <el-input type="textarea" :rows="5" resize="none" v-model="form.remark"></el-input>
                 </el-form-item>
             </el-form>
 
@@ -135,20 +119,22 @@
                     ],
                 },
                 addStaffList:{//创建员工资料的参数
-                        "employeeCode": "",
-                        "employeeName": "",
-                        "mobile": "",
-                        "deptId": 0,
-                        "sex":0,
-                        "birthday": "",
-                        "discountStart": 0,
-                        "discountEnd":0 ,
-                        "shopId": 0,
-                        "remark": "",
-                        "employeeTypeIds": [
-                            0
-                        ],
-                        "id": 0,
+                                            
+                    "employeeCode": "string",
+                    "employeeName": "string",
+                    "mobile": "string",
+                    "deptId": 0,
+                    "sex": 0,
+                    "birthday": "2018-03-12T05:54:50.468Z",
+                    "discountStart": 0,
+                    "discountEnd": 0,
+                    "shopId": 0,
+                    "remark": "string",
+                    "employeeTypeIds": [
+                        0
+                    ],
+                    "id": 0
+                    
                 },
                 validators: {
                     'addStaffList.employeeCode': function (value) {//职员编码
@@ -182,18 +168,23 @@
                 this.$store.state.url='/staff/staffList/default'
                 this.$router.push({path:this.$store.state.url})
             },
-                // 新增
-            add:function(){
-                console.log("123");
-            },
 
-            addStaff:function(){//新增之后的保存
-                 console.log('测试新增');
-                 this.Validator().then(function(success){
-                     if(success){
-                         console.log("222")
-                     }
-                 })
+            addStaff:function(){//保存---新增并保存
+            let _this=this;
+            console.log(_this.addStaffList)
+            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addStaffList).then(
+                             res=>{
+                                 console.log(res)
+                             }
+
+                         )
+                //  console.log('测试新增');
+                //  this.Validator().then(function(success){
+                //      if(success){
+                         
+                         
+                //      }
+                //  })
             },
 
         },

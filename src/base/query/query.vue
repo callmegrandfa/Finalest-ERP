@@ -62,7 +62,6 @@
                 oleftBox.style.display="none";
                 _this.data.up=true;
                 this.$emit('listquery', _this.data.up)
-                
             },
             search(){
                 this.$emit(this.newinfo);

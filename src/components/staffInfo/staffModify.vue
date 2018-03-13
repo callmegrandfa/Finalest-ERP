@@ -9,13 +9,7 @@
                             </div>
                             <span class="btDetail">返回</span>
                     </button>
-	            	<button class="erp_bt bt_add" @click="add">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_add.png">
-                            </div>
-                            <span class="btDetail">新增</span>
-                    </button>
-	            	<button class="erp_bt bt_modify">
+	            	<button class="erp_bt bt_modify" @click="edit">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_modify.png">
                             </div>
@@ -39,16 +33,10 @@
                             </div>
                             <span class="btDetail">打印</span>
                     </button>
-	            	<button class="erp_bt bt_version">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_version.png">
-                            </div>
-                            <span class="btDetail">生成用户</span>
-                    </button>
 	            </el-col>
 	        </el-row>
 
-            <el-form :model="form"   label-width="80px" class="demo-ruleForm pl pt" >
+            <el-form :model="form" :disabled="true"  label-width="80px" class="demo-ruleForm pl pt" >
                 <el-form-item label="职员编码" class="pr">
                     <el-input v-model="form.employeeCode" label-width="80px"></el-input>
                 </el-form-item>
@@ -96,7 +84,7 @@
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="备注">
-                    <el-input type="textarea" rows=5 resize="none" v-model="form.remark"></el-input>
+                    <el-input type="textarea" :rows="5" resize="none" v-model="form.remark"></el-input>
                 </el-form-item>
             </el-form>
 
@@ -109,19 +97,19 @@
         name:'staffDetail',
         data(){
             return { 
-                id:'',
+                forbidden:false,                
                  form: {
-                        "employeeName":"",
-                        "mobile":"",
-                        "deptId":0,
-                        "sex":0,
-                        "birthday":"",
-                        "discountStart":0,
-                        "discountEnd":0,
-                        "shopId":0,
-                        "remark":"",
-                        "employeeTypeIds":[0],
-                        "id":0,
+                        employeeName:"",
+                        mobile:"",
+                        deptId:0,
+                        sex:0,
+                        birthday:"",
+                        discountStart:0,
+                        discountEnd:0,
+                        shopId:0,
+                        remark:"",
+                        employeeTypeIds:[0],
+                        id:0,
                 },
             }
         },
@@ -132,31 +120,29 @@
             onSubmit() {
                 console.log('submit!');
             },
-            goBack:function(){//点击切换路由，返回到职员数据列表
+            // 成功的提示框
+             open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            //点击切换路由，返回到职员数据列表
+            goBack:function(){
                 this.$store.state.url='/staff/staffList/default'
                 this.$router.push({path:this.$store.state.url})
             },
-                // 新增
-            add:function(){
-                let _this=this;
-                if(
-                    _this.form.employeeCode!=''&&
-                    _this.form.employeeName!=''
-                ){
-                    console.log('嘻嘻');
-                    _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.form)
-                    .then(
-                        rsp=>{
-                            console.log(rsp);
-                        }
-                        
-                    )
-                }
-            },
+            // 修改，点击修改输入框的编辑状态
+            edit(){
+                // 点击让输入框进入可编辑状态
+            }
+
         },      
-        components:{
-            Btm,
-        },
+        
     }
 </script>
 <style>

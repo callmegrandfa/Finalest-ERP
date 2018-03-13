@@ -598,7 +598,6 @@ const routes = [
                     let activeRouter = store.state.activeRouter;
 
                     for (let i = 0; i < activeRouter.length; i++) {
-                        console.log(activeRouter[i].name)
                         if (activeRouter[i].name == name) {
 
                             return activeRouter[i].url;
