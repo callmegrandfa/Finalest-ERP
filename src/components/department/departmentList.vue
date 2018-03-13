@@ -28,12 +28,6 @@
             
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5 pr10 pl5">
-                    <button class="erp_bt bt_back">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_back.png">
-                        </div>
-                        <span class="btDetail">返回</span>
-                    </button>
 
                     <button class="erp_bt bt_add" @click="goDetail">
                         <div class="btImg">

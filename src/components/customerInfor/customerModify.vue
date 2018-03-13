@@ -16,11 +16,11 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_look">
+            <button class="erp_bt bt_cancel">
                 <div class="btImg">
-                    <img src="../../../static/image/common/bt_look.png">
+                    <img src="../../../static/image/common/bt_cancel.png">
                 </div>
-                <span class="btDetail">审核</span>
+                <span class="btDetail">取消</span>
             </button>
             
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
@@ -274,13 +274,6 @@
                                    :key="item.valueAreaBusiness" 
                                    :label="item.label" 
                                    :value="item.valueAreaBusiness"></el-option>
-                    </el-select>
-                </div>
-
-                <div class="bgcolor">
-                    <label>国家/地区</label>
-                    <el-select placeholder="" v-model="ctest">
-                        <el-option v-for="item in country" :key="item.valueCountry" :label="item.label" :value="item.valueCountry"></el-option>
                     </el-select>
                 </div>
 
@@ -744,17 +737,6 @@ export default({
             }, {
                 valueAreaBusiness:2,
                 label: '业务地区2'
-            }],
-            ctest:'1',
-            country :[{//国家/地区
-                valueCountry:1,
-                label: '选项1'
-            }, {
-                valueCountry:2,
-                label: '选项2'
-            }, {
-                valueCountry:3,
-                label: '选项3'
             }],
             adArea :[{//行政地区
                 adArea:1,

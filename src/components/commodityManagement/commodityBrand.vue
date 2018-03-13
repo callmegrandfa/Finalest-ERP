@@ -1,7 +1,7 @@
 <template>
     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
         <div id="left-box" style="min-width:275px;width:275px;float:left;">
-            <el-row class="bg-white" >
+            <el-row class="bg-white"  v-show="ifWidth">
                 <el-col :span="24">
                     <el-row class="h48 pl15">
                         <el-col :span="18">
@@ -9,7 +9,7 @@
                             <span>查询</span>
                         </el-col>
                         <el-col :span="5">
-                            <span class="fs12 open" @click="packUp">+ 收起</span>
+                            <span class="fs12 open" @click="closeLeft">收起</span>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -75,7 +75,21 @@
         <div id="bgh">
             <el-row style="width:100%;" >
                 <el-col id="bg-white"  class="border-left" :span="24" >
-                    <el-row class="h48 pt5">         
+                    <el-row class="h48 ">
+                            <el-col :span="ifWidth?0:2" class="search-block" >
+                                <div @click="openLeft">
+                                    <div style="display:inline-block" >
+                                        <img src="../../../static/image/common/search_btn.png">
+                                    </div>
+                                    <div style="display:inline-block;margin-left:2px;font-size:16px;" >
+                                        <span>查询</span>
+                                    </div>
+                                    <div class="out-img" >
+                                        <span class="search_info_open" style="margin-left:0">+</span>
+                                    </div>
+                                </div>
+                            </el-col> 
+                            <el-col :span="ifWidth?24:22" class="pt5">        
                             <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
                             <button v-show="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
                             <button class="erp_bt bt_save" @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
@@ -83,7 +97,7 @@
                             <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>                    
                             <button class="erp_bt bt_version" @click="handleStatus(1)"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
                             <button class="erp_bt bt_auxiliary" @click="handleStatus(0)"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>                   
+                            </el-col>                  
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
@@ -234,6 +248,7 @@ import Btm from '../../base/btm/btm'
                 treeLoading:true,
                 Sorting:'',//table搜索
                 updateId:'',
+                ifWidth:true,
                 cancelClick:false,//是否点击取消按钮
                 isSave:false,
                 turnPage:-1,//是否允许翻页
@@ -243,8 +258,7 @@ import Btm from '../../base/btm/btm'
         },
         created:function(){
             //this.datashop();
-            let _this=this;
-            _this.loadTableData();
+            this.loadTableData();
             // $(document).on("click",".pageActive .el-pager>li",function(){
             //     if(_this.turnPage==false){
             //        //$(this).html("12");
@@ -287,6 +301,18 @@ import Btm from '../../base/btm/btm'
             }
         },
         methods:{
+            closeLeft:function(){
+                let self = this;
+                self.ifWidth = false;
+                let obgh=document.getElementById('bgh');
+                obgh.style.width="100%";
+            },
+            openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+               let obgh=document.getElementById('bgh');
+                obgh.style.width="calc(100% - 275px)";
+            },
             btmlog:function(data){
                 let oleftBox=document.getElementById('left-box');
                 oleftBox.style.display="block";
@@ -406,6 +432,28 @@ import Btm from '../../base/btm/btm'
                 this.isAdd=true;
                 this.tableData.unshift(newcol);
                 this.addArray.push(newcol);
+                // if(this.addArray.length>0){
+                //     for(let i in this.addArray){
+                //         if(this.addArray[i].brandCode==""||this.addArray[i].brandName==""){
+                //             return
+                //         }else{
+                //             this.tableData.unshift(newcol);
+                //             this.addArray.push(newcol);
+                //         }
+                //         // if(this.addArray[i].brandCode==""||this.addArray[i].brandName==""){
+                //         //     this.$message({
+                //         //         message: '红色框内为必填项！',
+                //         //         type: 'error'
+                //         //     });
+                //         //     return
+                //         // }
+                //     }
+                // }else{
+                //     this.tableData.unshift(newcol);
+                //     this.addArray.push(newcol);
+                // }
+                
+                    
             },
             handleDel(row,index){//行内删除
                 this.$confirm('确定删除?', '提示', {
@@ -415,7 +463,8 @@ import Btm from '../../base/btm/btm'
                     center: true
                     }).then(() => {
                     if(row.brandCode==""){
-                        this.tableData.splice(index,1)
+                        this.tableData.splice(index,1);
+                        this.addArray.splice(index,1);
                         }else{
                             let _this=this;
                             _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
@@ -458,7 +507,13 @@ import Btm from '../../base/btm/btm'
                             }
                         }
                     }
+                }else if(this.SelectionChange.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请勾选需要更改状态的记录！'
+                    });
                 }
+                
             },
             delBatch(){//批量删除
                 for(var i in this.SelectionChange){
@@ -501,13 +556,13 @@ import Btm from '../../base/btm/btm'
                 this.isSave=true;
                 let _this=this;
                 if(_this.addArray.length>0){//新增保存
-                    for(let i=0;i<_this.addArray.length;i++){
-                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""||_this.addArray[i].status==""){
+                console.log(_this.tableData);
+                    for(let i in _this.tableData){
+                        if(_this.tableData[i].brandCode==""||_this.tableData[i].brandName==""){
                             this.$message({
                                 message: '红色框内为必填项！',
                                 type: 'error'
                             });
-                            return false
                         }
                     }
                     if(_this.addArray.length==1){//单条新增
@@ -516,7 +571,7 @@ import Btm from '../../base/btm/btm'
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
-                    }else{//批量新增
+                    }else{//批量新增                      
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',_this.addArray).then(function(res){
                             _this.loadTableData();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
@@ -545,22 +600,6 @@ import Btm from '../../base/btm/btm'
                 }              
                   
             },                          
-            packUp(){
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                let obgh=document.getElementById('bgh');
-                oleftBox.style.display="none";
-                obgh.style.width="100%";
-                Re.style.display="block";
-            },
-            refer(){
-                let obgh=document.getElementById('bgh');
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                obgh.style.width="calc(100% - 275px)";
-                oleftBox.style.display="block";
-                Re.style.display="none";
-            },
         }
     }
 </script>

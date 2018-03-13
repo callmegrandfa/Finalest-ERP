@@ -271,16 +271,6 @@
                         </el-select>
                     </div>
                     <div class="bgcolor">
-                        <!-- 创建参数中没有 -->
-                        <label>国家/地区</label>
-                        <el-select placeholder="" v-model='ctest'>
-                            <el-option v-for="item in country" 
-                                    :key="item.valueCountry" 
-                                    :label="item.label" 
-                                    :value="item.valueCountry"></el-option>
-                        </el-select>
-                    </div>
-                    <div class="bgcolor">
                         <label>行政地区</label>
                         <el-select v-model="createContactParams.adAreaId" 
                                    placeholder=""
@@ -812,17 +802,6 @@ export default({
             }, {
                 valueAreaBusiness:'3',
                 label: '业务地区3'
-            }],
-            ctest:'1',
-            country :[{//国家/地区
-                valueCountry:'1',
-                label: '选项1'
-            }, {
-                valueCountry:'2',
-                label: '选项2'
-            }, {
-                valueCountry:'3',
-                label: '选项3'
             }],
             adArea :[{//行政地区
                 adArea:'1',

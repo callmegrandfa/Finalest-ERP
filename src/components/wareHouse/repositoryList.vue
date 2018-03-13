@@ -113,7 +113,7 @@
                                     <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[1].label' disabled=""></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="opAreaId" label="业务地区"></el-table-column>
+                            <el-table-column prop="opAreaId_AreaName" label="业务地区"></el-table-column>
                             <el-table-column prop="stockAddress" label="地址"></el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             
