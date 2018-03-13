@@ -15,82 +15,24 @@
             </el-col>
         </el-row>
         <el-row>
-            <!-- <div class="tipsWrapper" name="areaCode">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.areaCode')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaCode') }}</p>
-                </div>
-            </div>
-             <div class="tipsWrapper" name="areaName">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.areaName')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaName') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="manager">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.manager')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.manager') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="areaParentId">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.areaParentId')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaParentId') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="remark">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.remark')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.remark') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="status">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.status') }}</p>
-                </div>
-            </div> -->
 
-
-            <el-col :span="24" class="pt15">
-               <div class="marginAuto">
-                   <div class="bgcolor longWidth"><label>
-                        <small>*</small>业务地区编码</label>
-                        <el-input 
-                        class="areaCode" 
-                        :class="{redBorder : validation.hasError('addData.areaCode')}" 
-                        v-model="addData.areaCode"></el-input>
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>所属组织</label>
+                        <el-select 
+                        placeholder=""
+                        >
+                            <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
+                            </el-option>
+                        </el-select>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.areaCode') }}</div>
-                </div> 
-                
-                
-            </el-col>
-            <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label><small>*</small>业务地区名称</label>
-                        <el-input 
-                        class="areaName" 
-                        :class="{redBorder : validation.hasError('addData.areaName')}" 
-                        v-model="addData.areaName"></el-input>
-                    </div>
-                    <div class="error_tips">{{ validation.firstError('addData.areaName') }}</div>
                 </div>    
             </el-col>
-            
+
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label>负责人</label>
-                        <el-input 
-                        class="manager" 
-                        :class="{redBorder : validation.hasError('addData.manager')}" 
-                        v-model="addData.manager"  
-                        ></el-input>
-                    </div>
-                    <div class="error_tips">{{ validation.firstError('addData.manager') }}</div>
-                </div>   
-            </el-col>
-            
-            <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label><small>*</small>上级业务地区</label>
                         <el-select 
                         class="areaParentId" 
@@ -119,13 +61,54 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.areaParentId') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
                 </div>   
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+               <div class="bgMarginAuto">
+                   <div class="bgcolor bgLongWidth"><label>
+                        <small>*</small>业务地区编码</label>
+                        <el-input 
+                        class="areaCode" 
+                        :class="{redBorder : validation.hasError('addData.areaCode')}" 
+                        v-model="addData.areaCode"></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.areaCode') }}</div>
+                </div> 
+                
+                
+            </el-col>
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>业务地区名称</label>
+                        <el-input 
+                        class="areaName" 
+                        :class="{redBorder : validation.hasError('addData.areaName')}" 
+                        v-model="addData.areaName"></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.areaName') }}</div>
+                </div>    
+            </el-col>
+            
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label>负责人</label>
+                        <el-input 
+                        class="manager" 
+                        :class="{redBorder : validation.hasError('addData.manager')}" 
+                        v-model="addData.manager"  
+                        ></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.manager') }}</div>
+                </div>   
+            </el-col>
+            
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
                         class="remark" 
@@ -136,13 +119,13 @@
                         >
                         </el-input>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.remark') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.remark') }}</div>
                 </div>       
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
                         <el-select 
                         class="status" 
@@ -153,13 +136,13 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label>创建人</label>
                         <el-input 
                         disabled
@@ -169,8 +152,8 @@
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label>创建时间</label>
                         <el-date-picker
                         type="date"
@@ -234,6 +217,13 @@
         "status": '',
         "remark": ""
         },
+        selectData:{//select数据
+            OUType:[],//所属组织
+            Status001:[],//启用状态
+            UserType:[],//身份类型
+            userGroupId:[],//所属用户组
+            languageId:[],//语种
+        },
       }
     },
      validators: {
@@ -275,6 +265,7 @@
     },  
     created () {
         let _this=this;
+        _this.getSelectData();
         _this.loadTree();  
     },
      watch: {
@@ -287,6 +278,31 @@
         if (!value) return true;
         return data.areaName.indexOf(value) !== -1;
       },
+      getSelectData(){
+            let _this=this;
+            // _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
+            // // 身份类型
+            // _this.selectData.UserType=res.result;
+            // })
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+            // 启用状态
+            _this.selectData.Status001=res.result;
+            })
+            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // 所属组织
+            _this.selectData.OUType=res.result;
+            })
+            // _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
+            // // 所属用户组
+            //     _this.selectData.userGroupId=res.result.items;
+            //     _this.totalCount=res.result.totalCount;
+            // })
+            // ///api/services/app/Language/GetLanguages
+            // _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
+            // // 语种
+            //     _this.selectData.languageId=res.result.items;
+            // })
+        },
        showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
@@ -407,80 +423,5 @@
     height: 100%;
     line-height: 35px;
   }
-.businessAreaDetail .bgcolor.longWidth{
-    margin-right: 0;
-    width: 421px;
-    height:auto;
-    float: left;
-  }
-  .businessAreaDetail .bgcolor.longWidth .selectTree{
-      width: calc(100% - 122px)
-  }
-  .marginAuto{
-      margin: auto;
-      width: 550px;
-  }
-  .error_tips{
-      color: red;
-      font-size: 12px;
-      float: left;
-      height: 35px;
-      line-height: 35px;
-  }
-  .businessAreaDetail .bgcolor.longWidth .el-input,
-  .businessAreaDetail .bgcolor.longWidth .el-textarea,
-  .businessAreaDetail .bgcolor.longWidth .el-select{
-      width: calc(100% - 90px)
-  }
-  .businessAreaDetail .bgcolor.longWidth label{
-    width:80px;
-  }
- .businessAreaDetail .bgcolor.longWidth .el-textarea{
-   font-size: 12px;
- } 
- .businessAreaDetail .bgcolor.longWidth .addZoo{
-   float: left;
-   width: calc(100% - 82px)
- }
-.businessAreaDetail .bgcolor.longWidth .add{
-    display: block;
-    width: 35px;
-    height: 35px;
-    border-radius: 3px;
-    background-color: #c7c7c7;
-    color: #fff;
-    text-align: center;
-    line-height: 35px;
-    text-decoration: none;
-    font-size: 23px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-.businessAreaDetail .bgcolor.longWidth .addRole{
-  text-align: center;
-  line-height: 35px;
-  display: inline-block;
-  width: 66px;
-  height: 35px;
-  background-color: #f2f2f2;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  margin-right: 10px;
-  cursor: pointer;
-  position: relative;
-}
-.businessAreaDetail .bgcolor.longWidth .add:hover{
-    background-color: #354052;
-}
-.businessAreaDetail .bgcolor.longWidth .addRole i{
-  position: absolute;
-  right: -4px;
-  top: -4px;
-  color: #cccccc;
-}
-.businessAreaDetail .bgcolor.longWidth .addRole:hover i{
-  color:#f66;
-}
 </style>
 

@@ -279,7 +279,22 @@
          _this.loadTree();  
         _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:_this.$route.params.id})
         .then(function(res){
-            _this.addData=res.result;
+            console.log()
+            _this.addData={
+                "id": res.result.id,
+                "groupId":  res.result.groupId,
+                "ouId":  res.result.ouId,
+                "areaType": res.result.areaType,
+                "areaParentId":  res.result.areaParentId,
+                "areaCode":  res.result.areaCode,
+                "areaName":  res.result.areaName,
+                "areaFullName":  res.result.areaFullName,
+                "areaFullPathId": res.result.areaFullPathId,
+                "areaFullPathName":  res.result.areaFullPathName,
+                "manager":  res.result.manager,
+                "status":  res.result.status,
+                "remark":  res.result.remark
+                }
         },function(res){    
 
         })  
@@ -340,6 +355,7 @@
         _this.$validate()
         .then(function (success) {
             if (success) {
+                console.log(_this.addData)
                  _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.addData)
                 .then(function(res){
                     _this.open('保存成功','el-icon-circle-check','successERP');

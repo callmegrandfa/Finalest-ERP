@@ -52,8 +52,9 @@ export default {
         let left=parseInt($('#longWidth').css('left'))
         let width=document.getElementById('routerBox').offsetWidth;
         if(left-this.go+width<0){
-            // alert('已到尽头')
+            return false
         }else{
+            console.log(left-this.go+width)
             this.x-=this.go;
             document.getElementById('longWidth').style.left= this.x+'px';
         }
@@ -64,7 +65,7 @@ export default {
             this.x+=this.go;
             document.getElementById('longWidth').style.left=this.x+'px';
         }else{
-            //alert('已到尽头')
+            return false
         }
         
       },

@@ -7,203 +7,156 @@
             </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24">
-            <div class="tipsWrapper" name="moduleCode">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleCode')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleCode') }}</p>
-                </div>
-            </div>
-             <div class="tipsWrapper" name="moduleName">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleName')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleName') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="ico">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.ico')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.ico') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="moduleFullPathId">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleFullPathId')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleFullPathId') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="moduleFullPathName">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleFullPathName')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleFullPathName') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="seq">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.seq')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.seq') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="systemId">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.systemId')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.systemId') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="moduleParentId">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.moduleParentId')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.moduleParentId') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="url">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.url')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.url') }}</p>
-                </div>
-            </div>
-            
-
-            <div class="bgcolor">
-                <label>菜单编码</label>
-                <el-input 
-                class="moduleCode" 
-                @focus="showErrprTips"
-                :class="{redBorder : validation.hasError('addData.moduleCode')}" 
-                v-model="addData.moduleCode"  
-                placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-                <label>菜单名称</label>
-                <el-input 
-                class="moduleName" 
-                @focus="showErrprTips"
-                :class="{redBorder : validation.hasError('addData.moduleName')}" 
-                v-model="addData.moduleName"  
-                placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-                <label>图标</label>
-                <el-input 
-                class="ico" 
-                @focus="showErrprTips"
-                :class="{redBorder : validation.hasError('addData.ico')}" 
-                v-model="addData.ico"  
-                placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-                <label>功能模块ID全路径</label>
-                <el-input 
-                class="moduleFullPathId" 
-                @focus="showErrprTips"
-                :class="{redBorder : validation.hasError('addData.moduleFullPathId')}" 
-                v-model="addData.moduleFullPathId" 
-                placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-                <label>功能模块名称全路径</label>
-                <el-input 
-                class="moduleFullPathName" 
-                @focus="showErrprTips"
-                :class="{redBorder : validation.hasError('addData.moduleFullPathName')}" 
-                v-model="addData.moduleFullPathName" 
-                placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-                <label>排序</label>
-                <el-input 
-                class="seq" 
-                @focus="showErrprTips"
-                :class="{redBorder : validation.hasError('addData.seq')}" 
-                v-model="addData.seq" 
-                placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-                <label>语言</label>
-                <el-input  placeholder="无字段">
-                    <i slot="suffix" class="el-icon-more" @click="goLanguage" style="cursor:pointer"></i>
-                </el-input>
-            </div>
-            <div class="bgcolor">
-                <label>系统ID</label>
-                <el-input 
-                class="systemId" 
-                @focus="showErrprTips"
-                :class="{redBorder : validation.hasError('addData.systemId')}" 
-                v-model="addData.systemId" 
-                placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-              <label>上级菜单</label>
-              <el-select 
-                class="moduleParentId" 
-                @focus="showErrprTipsSelect"
-                placeholder=""
-                :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
-                v-model="addData.moduleParentId"  >
-                <el-input
-                    placeholder="搜索..."
-                    class="selectSearch"
-                    v-model="search">
-                </el-input>
-                    <el-tree
-                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                    :data="selectTree"
-                    :props="selectProps"
-                    node-key="id"
-                    default-expand-all
-                    ref="tree"
-                    :filter-node-method="filterNode"
-                    :expand-on-click-node="false"
-                    @node-click="selectNodeClick"
-                    >
-                    </el-tree>
-                    <el-option v-show="false" :key="count.id" :label="count.moduleName" :value="count.id" id="menuDetail_confirmSelect">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor moreWidth">
-                <label>web地址</label>
-                <el-input 
-                class="url" 
-                @focus="showErrprTips"
-                :class="{redBorder : validation.hasError('addData.url')}" 
-                v-model="addData.url"  
-                placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-                <label>状态</label>
-                <el-input 
-                placeholder="无字段"></el-input>
-                <!-- <el-select 
-                placeholder="无字段">
-                    <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-                </el-select> -->
-            </div>
-          </el-col>
-          <div class="bgcolor">
-              <label>子系统</label>
-              <el-cascader
-                placeholder="无字段"
-                :options="treeData"
-                :props="Props"
-                filterable
-                change-on-select
-            ></el-cascader>
-               <!-- <el-select v-model="valueContain" placeholder="无字段">
-                  <el-option v-for="item in contain" :key="item.valueContain" :label="item.label" :value="item.valueContain"></el-option>
-              </el-select> -->
-          </div>
-          <div class="bgcolor"><label>是否在最底层</label><el-checkbox class="w_auto" v-model="addData.moduleIsBottom"></el-checkbox></div>
-            <el-col :span="24">
-                <div class="bgcolor longWidth">
-                <label>备注</label>
-                <el-input
-                    type="textarea"
-                    :autosize="{ minRows: 4, maxRows: 10}"
-                    placeholder="无字段">
-                </el-input>
-                </div>
+          <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>菜单编码</label>
+                        <el-input 
+                        class="moduleCode" 
+                        @focus="showErrprTips"
+                        :class="{redBorder : validation.hasError('addData.moduleCode')}" 
+                        v-model="addData.moduleCode"  
+                        placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.moduleCode') }}</div>
+                </div>    
             </el-col>
 
-            <el-col :span="24">
-                <div class="bgcolor longWidth">
-                    <label>功能权限</label>
-                    <div class="addZoo">
-                        <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>菜单名称</label>
+                        <el-input 
+                        class="moduleName" 
+                        @focus="showErrprTips"
+                        :class="{redBorder : validation.hasError('addData.moduleName')}" 
+                        v-model="addData.moduleName"  
+                        placeholder=""></el-input>
                     </div>
-                </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.moduleName') }}</div>
+                </div>    
+            </el-col>
+
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>子系统</label>
+                        <el-select 
+                        class="systemId" 
+                        :class="{redBorder : validation.hasError('addData.systemId')}" 
+                        placeholder=""
+                        v-model="addData.systemId">
+                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.systemId') }}</div>
+                </div>    
+            </el-col>
+
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>上级菜单</label>
+                    <el-select 
+                        class="moduleParentId" 
+                        @focus="showErrprTipsSelect"
+                        placeholder=""
+                        :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
+                        v-model="addData.moduleParentId"  >
+                        <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search">
+                        </el-input>
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="selectTree"
+                            :props="selectProps"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree"
+                            :filter-node-method="filterNode"
+                            :expand-on-click-node="false"
+                            @node-click="selectNodeClick"
+                            >
+                            </el-tree>
+                            <el-option v-show="false" :key="count.id" :label="count.moduleName" :value="count.id" id="menuDetail_confirmSelect">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.moduleParentId') }}</div>
+                </div>    
+            </el-col>
+
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>状态</label>
+                        <el-select 
+                        v-model="addData.status"
+                        placeholder="">
+                            <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>    
+            </el-col>
+
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label>图标</label>
+                        <el-input 
+                        class="ico" 
+                        @focus="showErrprTips"
+                        :class="{redBorder : validation.hasError('addData.ico')}" 
+                        v-model="addData.ico"  
+                        placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.ico') }}</div>
+                </div>    
+            </el-col>
+
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label>web地址</label>
+                        <el-input 
+                        class="url" 
+                        @focus="showErrprTips"
+                        :class="{redBorder : validation.hasError('addData.url')}" 
+                        v-model="addData.url"  
+                        placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.url') }}</div>
+                </div>    
+            </el-col>
+
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label>备注</label>
+                        <el-input
+                            type="textarea"
+                            :autosize="{ minRows: 4, maxRows: 10}"
+                            placeholder="">
+                        </el-input>
+                    </div>
+                </div>    
+            </el-col>
+
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label>功能权限</label>
+                        <div class="addZoo">
+                            <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
+                        </div>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
+                </div>    
+            </el-col>
                 <el-dialog :visible.sync="dialogTableVisible">
                     <template slot="title">
                         <span style="float:left;">添加功能</span>
@@ -216,7 +169,6 @@
                                 <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选功能</div>
                                 <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选功能</div>
                             </template>
-                            
                         </div>
                     </template>
                     <el-col :span="6" class="dialog_ dialog_l">
@@ -252,21 +204,24 @@
                         </el-col> -->
                     </el-col>
                 </el-dialog>
-            </el-col>
              <el-col :span="24">
-                <div class="bgcolor longWidth">
-                    <label class="h_35"></label>
-                    <div>
-                        <a class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></a>
+                 <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label class="h_35"></label>
+                        <div>
+                            <a class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></a>
+                        </div>
                     </div>
-                </div>
+                 </div>
             </el-col>
             <el-col :span="24">
-                <div class="bgcolor longWidth">
-                    <label class="h_35"></label>
-                    <div>
-                        <button @click="save" class="add_m_bt">提交</button>
-                        <button @click="back" class="add_m_bt">返回</button>
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label class="h_35"></label>
+                        <div>
+                            <button @click="save" class="add_m_bt">提交</button>
+                            <button @click="back" class="add_m_bt">返回</button>
+                        </div>
                     </div>
                 </div>
             </el-col>
@@ -290,9 +245,9 @@
                 moduleCode:'',
                 moduleName:'',
                 ico:'',
-                moduleFullPathId:'',
-                moduleFullPathName:'',
-                seq:'',
+                moduleFullPathId:'default',
+                moduleFullPathName:'default',
+                seq:0,
                 systemId:'',
                 moduleParentId:'',
                 url:'',
@@ -324,11 +279,11 @@
                 label: '组织管理'
             }],
             contain: [{ 
-                valueContain:'1',
-                label: '腾讯'
+                value:'1',
+                label: '系统1'
             }, {
-                valueContain:'2',
-                label: '阿里'
+                value:'2',
+                label: '系统2'
             }],
             componyTree:[],
             defaultProps: {
@@ -352,6 +307,9 @@
             checked:[],//展示所有权限
             nochecked:[],//
             nodeName:'',
+            selectData:{//select数据
+                Status001:[],//启用状态
+            },
         }
     },
      validators: {
@@ -364,16 +322,7 @@
       'addData.ico': function (value) {//图标
          return this.Validator.value(value).required().maxLength(200);
       },
-      'addData.moduleFullPathId': function (value) {//功能模块ID全路径
-         return this.Validator.value(value).required().maxLength(2000);
-      },
-      'addData.moduleFullPathName': function (value) {//功能模块名称全路径
-         return this.Validator.value(value).required().maxLength(2000);
-      },
-      'addData.seq': function (value) {//排序
-          return this.Validator.value(value).required().integer();
-      },
-      'addData.systemId': function (value) {//系统ID
+      'addData.systemId': function (value) {//子系统
          return this.Validator.value(value).required().integer();
       },
       'addData.moduleParentId': function (value) {//上级菜单
@@ -385,6 +334,7 @@
     },
     created:function(){
         let _this=this;
+        _this.getSelectData();
         _this.loadTree();  
         _this.loadParent()
         _this.loadPermission();
@@ -400,10 +350,18 @@
       }
     },
     methods:{
+        getSelectData(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+            // 启用状态
+            _this.selectData.Status001=res.result;
+            console.log(res.result)
+            })
+        },
         filterNode(value, data) {
-        if (!value) return true;
-        return data.moduleName.indexOf(value) !== -1;
-      },
+            if (!value) return true;
+            return data.moduleName.indexOf(value) !== -1;
+        },
         showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
@@ -470,7 +428,7 @@
             _this.$nextTick(function(){
                 $('#menuDetail_confirmSelect').click()
             })
-      },
+        },
         loadParent(){
             let _this=this;
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
@@ -517,6 +475,7 @@
                     })
                     _this.addData.permissions=permissions;
                     // _this.addData.permissionDtos=_this.checked;//权限
+                    console.log(_this.addData)
                     _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
                         _this.addData.id=res.result.id;
                         _this.$store.state.url='/menu/menuModify/'+res.result.id
@@ -542,10 +501,6 @@
                     })
                 }
             });
-        },
-        newAdd(){
-            this.open('新增成功','el-icon-circle-check','successERP');
-            this.validation.reset();
         },
         clearData(){
            this.validation.reset();
@@ -744,12 +699,7 @@
      height: 31px;
      width: 32px;
  }
- .menuDetail .bgcolor.moreWidth{
-     width: 505px;
- }
-  .menuDetail .bgcolor.moreWidth .el-input{
-      width: 423px;
-  }
+
  .menuDetail .pageName{
      display: block;
      float: left;
@@ -770,60 +720,6 @@
     height: 100%;
     line-height: 35px;
   }
-.menuDetail .bgcolor.longWidth{
-    width: 100%;
-    height:auto;
-    overflow: visible;
-  }
- .menuDetail .bgcolor.longWidth .el-textarea{
-   width: 423px;
-   font-size: 12px;
- } 
- 
- .menuDetail .bgcolor.longWidth .addZoo{
-   float: left;
-   width: calc(100% - 82px)
- }
-.menuDetail .bgcolor.longWidth .add{
-    display: block;
-    width: 35px;
-    height: 35px;
-    border-radius: 3px;
-    background-color: #c7c7c7;
-    color: #fff;
-    text-align: center;
-    line-height: 35px;
-    text-decoration: none;
-    font-size: 23px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-.menuDetail .bgcolor.longWidth .add:hover{
-    background-color: #354052;
-}
-.menuDetail .bgcolor.longWidth .addRole{
-  text-align: center;
-    line-height: 35px;
-    display: inline-block;
-    width: 66px;
-    height: 35px;
-    background-color: #f2f2f2;
-    border: none;
-    border-radius: 3px;
-    font-size: 12px;
-    margin-right: 10px;
-    cursor: pointer;
-    position: relative;
-}
-.menuDetail .bgcolor.longWidth .addRole i{
-  position: absolute;
-  right: -4px;
-  top: -4px;
-  color: #cccccc;
-}
-.menuDetail .bgcolor.longWidth .addRole:hover i{
-  color:#f66;
-}
 /* 右侧选项 */
 .menu_item{
     text-align: center;
