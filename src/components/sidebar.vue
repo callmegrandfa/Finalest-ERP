@@ -88,7 +88,7 @@ export default {
             },{
                 name:'角色管理',
                 thirdInfo:[
-                    {name:'角色资料',address:'role'},
+                    // {name:'角色资料',address:'role'},
                 ]
             },{
                 name:'采购管理',

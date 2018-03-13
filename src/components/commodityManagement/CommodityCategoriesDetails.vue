@@ -13,7 +13,31 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="smallBgcolor">
-                                    <el-input placeholder=""></el-input>
+                                    <el-select 
+                                    class="areaParentId" 
+                                    v-model="addItem.categoryCode"
+                                    placeholder="">
+                                    <!-- <input type="text" class="selectTree"> -->
+                                    <el-input
+                                        placeholder="搜索..."
+                                        class="selectSearch"
+                                        v-model="treeQuery">
+                                    </el-input>
+                                        <el-tree
+                                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                        :data="classTree"
+                                        :props="defaultProps"
+                                        node-key="id"
+                                        default-expand-all
+                                        ref="tree"
+                                        :filter-node-method="filterNode"
+                                        :expand-on-click-node="false"
+                                         @node-click="nodeClick"
+                                        >
+                                        </el-tree>
+                                        <el-option v-show="false" :key="count.id" :label="count.categoryName" :value="count.id"   id="businessDetail_confirmSelect">
+                                        </el-option>
+                                    </el-select>
                                 </div>
                             </el-col>
                         </el-row>
@@ -55,11 +79,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-select  v-model="addItem.mnemonic" >
-                                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-
-                                    </el-select>
+                                    <el-input  v-model="addItem.mnemonic" > </el-input>
                                 </div>
                             </el-col>
                         </el-row>
@@ -75,7 +95,9 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder="" v-model="addItem.status" ></el-input>
+                                <el-select  v-model="addItem.status" >
+                                    <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
                                 </div>
                             </el-col>
                         </el-row>
@@ -101,7 +123,7 @@
                     </el-col>
                     <el-col :span="2" style="margin-left:0">
                         <div class="bgcolor smallBgcolor">
-                            <el-checkbox v-model="addItem.isService">服务类（虚拟）</el-checkbox>
+                            <el-checkbox  v-model="addItem.isService" >服务类（虚拟）</el-checkbox>
                         </div>
                     </el-col> 
                 </el-row>
@@ -118,7 +140,7 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="smallBgcolor">
-                                <el-input placeholder="" v-model="addItem.createdBy"></el-input>
+                                <el-input :disabled="isEdit" placeholder="" v-model="addItem.createdBy"></el-input>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -133,8 +155,9 @@
                             <el-col :span="13">
                                 <div class="smallBgcolor">
                                     <el-date-picker
+                                    :disabled="isEdit"
                                     v-model="addItem.createdTime"
-                                    type="datetime"
+                                    type="date"
                                     placeholder="选择日期时间">
                                     </el-date-picker>
                                 </div>
@@ -150,7 +173,7 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="smallBgcolor">
-                                <el-input placeholder="" v-model="addItem.modifiedBy"></el-input>
+                                <el-input :disabled="isEdit" placeholder="" v-model="addItem.modifiedBy"></el-input>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -165,8 +188,9 @@
                             <el-col :span="13">
                                 <div class="smallBgcolor" >
                                     <el-date-picker
+                                    :disabled="isEdit"
                                     v-model="addItem.modifiedTime"
-                                    type="datetime">
+                                    type="date">
                                     </el-date-picker>
                                 </div>
                             </el-col>
@@ -218,6 +242,11 @@ import Textbox from '../../base/textbox/textbox'
                     imgsrc: '../../../static/image/common/bt_save_add.png',
                     text: '新增'
                 },{
+                    class: 'erp_bt bt_modify',
+                    imgsrc: '../../../static/image/common/bt_modify.png',
+                    text: '修改',
+                    show:false
+                },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
                     text: '删除'
@@ -231,20 +260,69 @@ import Textbox from '../../base/textbox/textbox'
                     categoryCode:"",//商品类目编码
                     categoryName:"",//商品类目名称
                     mnemonic:"",//助记码
-                    status:"",//状态
-                    isService:"",//服务类
+                    status:1,//状态
+                    isService:true,//服务类
                     remark:"",//备注
-                    createdTime:"",//创建时间
-                    createdBy:"",//创建人
-                    modifiedTime:"",//修改人
-                    modifiedBy:""//修改时间
+                    createdTime:this.GetDateTime(),//创建时间
+                    createdBy:this.$store.state.name,//创建人
+                    modifiedTime:this.GetDateTime(),//修改人
+                    modifiedBy:this.$store.state.name//修改时间
                 },
+                isEdit:true,
+                treeQuery:"",
+                classTree:[],
+                defaultProps: {
+                    children:'childNodes',
+                    label:'categoryName',
+                    id:"id"
+                },
+                treeNode:{
+                    id:'',
+                    categoryName:'',
+                },
+                StatusOptions:[{
+                    value: 1,
+                    label: '启用'
+                },{
+                    value: 0,
+                    label: '未启用'
+                }],
             }
         },
         created(){
             this.InitModify();
+            this.loadTree();
+        },
+        computed:{
+            count () {
+                return this.treeNode;
+                },
+        },
+        watch: {
+            treeQuery(val) {
+                console.log(this.$refs.tree.filter(val));
+                this.$refs.tree.filter(val);
+            }
         },
         methods:{
+            //获取当前时间
+            GetDateTime: function () {
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            },
             // back(){//点击新增跳转
             //     this.$store.state.url='/commodityleimu/commodityClassHeading/default'
             //     this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -273,7 +351,45 @@ import Textbox from '../../base/textbox/textbox'
                     })
                 }
                  
-            }
+            },
+            loadTree(){//获取tree data
+                    let _this=this;
+                    _this.treeLoading=true;
+                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetCategoryTree')
+                    .then(function(res){
+                        _this.classTree=res
+                        _this.loadIcon();
+                        _this.treeLoading=false;
+                },function(res){
+                    _this.treeLoading=false;
+                })
+            },
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            filterNode(value, data) {
+                console.log(value)
+                if (!value) return true;
+                return data.categoryName.indexOf(value) !== -1;
+            },
+            nodeClick(data){
+                let _this=this;
+                _this.treeNode.id=data.id;
+                _this.treeNode.categoryName=data.categoryName;
+                _this.$nextTick(function(){
+                    $('#businessDetail_confirmSelect').click()
+                })
+            },
         },
         components:{
             Btm,
@@ -331,6 +447,9 @@ import Textbox from '../../base/textbox/textbox'
 <style>
 .CommodityCategoriesDetails .smallBgcolor .el-input input{
     height: 33px!important;
+}
+.smallBgcolor .el-select .el-input{
+    width: 100%!important;
 }
 .CommodityCategoriesDetails .bgcolor{
     width: 100%; 

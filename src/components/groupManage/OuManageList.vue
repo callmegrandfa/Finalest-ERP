@@ -145,9 +145,17 @@
                         stripe 
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="ouCode" label="编码"></el-table-column>
-                            <el-table-column prop="ouName" label="名称"></el-table-column>
+                            <el-table-column type="selection" fixed="left"></el-table-column>
+                            <el-table-column prop="ouCode" label="编码" fixed="left">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].ouCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="ouName" label="名称" fixed="left">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].ouName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="ouFullname" label="全称"></el-table-column>
                             <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
                             <el-table-column prop="companyOuName" label="所属公司"></el-table-column>
@@ -155,8 +163,8 @@
                             <el-table-column prop="accStartMonth" label="启用年月" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker 
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    value-format="yyyy-MM-dd HH:mm:ss" 
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd" 
                                     v-model="tableData[scope.$index].createdTime" 
                                     type="datetime" 
                                     readonly
@@ -171,20 +179,20 @@
                             </el-table-column>
                             <el-table-column label="公司">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==1" v-for="i in tableData[scope.$index].basOuTypes" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==1" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="业务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==2" v-for="i in tableData[scope.$index].basOuTypes" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==2" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="财务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==3" v-for="i in tableData[scope.$index].basOuTypes" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==3" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="confirmDelThis(scope.row)" >删除</el-button>
                                     <el-button type="text" size="small"  @click="modify(scope.row)" >查看</el-button>
