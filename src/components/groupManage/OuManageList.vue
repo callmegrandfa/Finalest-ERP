@@ -171,17 +171,17 @@
                             </el-table-column>
                             <el-table-column label="公司">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==1" v-for="i in tableData[scope.$index].basOuTypes" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==1" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="业务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==2" v-for="i in tableData[scope.$index].basOuTypes" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==2" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="财务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==3" v-for="i in tableData[scope.$index].basOuTypes" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==3" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作">

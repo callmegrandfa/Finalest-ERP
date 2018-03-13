@@ -236,6 +236,7 @@
             Cancel(){
                 if(this.isEdit==false){
                     this.isEdit=!this.isEdit;
+                    
                 }
                 
             },
