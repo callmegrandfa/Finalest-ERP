@@ -114,7 +114,13 @@
             }
         },
         created:function(){
-            
+            this.$axios.gets('/api/services/app/EmployeeManagement/Get',{id:this.$route.params.id})
+            .then(
+                rsp=>{
+                    console.log(rsp.result);
+                    this.form=rsp.result;
+                }
+            )
         },
         methods: {
             onSubmit() {

@@ -13,7 +13,7 @@
                             </el-col>
                         </el-row>
                         <div style="margin-top:20px">
-                            <el-row v-for="item in info.demand" :key="item.place">
+                            <el-row v-for="item in info.demand" :key="item.title">
                                 <el-col :span="8" >
                                     <div class="bgcolor">
                                         <label><small>{{item.must}}</small>{{item.title}}</label>

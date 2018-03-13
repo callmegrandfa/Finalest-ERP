@@ -92,7 +92,6 @@
     </div>
 </template>
 <script>
-    import Btm from '../../base/btm/btm'
     export default{
         name:'staffDetail',
         data(){
@@ -118,24 +117,6 @@
                         { required: true, trigger: 'blur' },
                     ],
                 },
-                addStaffList:{//创建员工资料的参数
-                                            
-                    "employeeCode": "string",
-                    "employeeName": "string",
-                    "mobile": "string",
-                    "deptId": 0,
-                    "sex": 0,
-                    "birthday": "2018-03-12T05:54:50.468Z",
-                    "discountStart": 0,
-                    "discountEnd": 0,
-                    "shopId": 0,
-                    "remark": "string",
-                    "employeeTypeIds": [
-                        0
-                    ],
-                    "id": 0
-                    
-                },
                 validators: {
                     'addStaffList.employeeCode': function (value) {//职员编码
                         return this.Validator.value(value).required().integer();
@@ -144,21 +125,27 @@
                         return this.Validator.value(value).required().integer();
                     },
                 },
-            }
-
-                                              
-            
+                // 增加职员所需列表数据
+                addStaffList:{
+                    "employeeCode": "155",
+                    "employeeName": "2077",
+                    "mobile": 13378908765,
+                    "deptId": 0,
+                    "sex": 0,
+                    "birthday": "2018-03-13T01:57:47.740Z",
+                    "discountStart": 0,
+                    "discountEnd": 0,
+                    "shopId": 0,
+                    "remark": "哈哈哈",
+                    "employeeTypeIds": [
+                        0
+                    ],
+                    "id": 0
+                },
+             }                                                        
         },
         created:function(){
-            // console.log(this.$route);
-            // console.log(this.$route.params);
-            this.$axios.gets('/api/services/app/EmployeeManagement/Get',{id:this.$route.params.id})
-            .then(
-                rsp=>{
-                    console.log(rsp.result);
-                    this.form=rsp.result;
-                }
-            )
+
         },
         methods: {
             onSubmit() {
@@ -168,29 +155,16 @@
                 this.$store.state.url='/staff/staffList/default'
                 this.$router.push({path:this.$store.state.url})
             },
-
             addStaff:function(){//保存---新增并保存
-            let _this=this;
-            console.log(_this.addStaffList)
-            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addStaffList).then(
-                             res=>{
-                                 console.log(res)
-                             }
-
-                         )
-                //  console.log('测试新增');
-                //  this.Validator().then(function(success){
-                //      if(success){
-                         
-                         
-                //      }
-                //  })
-            },
-
+                let _this=this;
+                // console.log(_this.addStaffList);
+                _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addStaffList).then(
+                                res=>{
+                                    console.log(res)
+                                }
+                )
+            }
         },
-        components:{
-            Btm,
-        }
     }
 </script>
 <style>
