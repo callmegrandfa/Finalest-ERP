@@ -75,7 +75,7 @@
                             <span class="btDetail">新增</span>
                         </button>
 
-                        <button @click="delRow" class="erp_bt bt_del">
+                        <button @click="confirmDelRow" class="erp_bt bt_del">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -102,9 +102,9 @@
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border @selection-change="handleSelectionChange" style="width: 100%" stripe>
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="ouId" label="所属组织" ></el-table-column>
-                            <el-table-column prop="stockCode" label="仓库编码" ></el-table-column>
+                            <el-table-column type="selection" fixed></el-table-column>
+                            <el-table-column prop="ouId" label="所属组织" fixed></el-table-column>
+                            <el-table-column prop="stockCode" label="仓库编码" fixed></el-table-column>
                             <el-table-column prop="stockName" label="仓库名称"></el-table-column>
                             <el-table-column prop="stockFullName" label="仓库全称"></el-table-column>
                             <el-table-column prop="stockTypeId" label="仓库类型">
@@ -124,13 +124,13 @@
                                     <el-input v-show="scope.row.status===1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <!-- <span>{{scope.row}}</span> -->
                                     <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
                                     <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="confirmDel(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table> 
@@ -230,7 +230,46 @@
                 this.page = val;
                 this.getAllList();
             },     
-
+            confirmDel(index,row) {
+                let self = this;
+                this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    self.handleDelete(index,row);
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            confirmDelRow() {
+                let self = this;
+                this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    self.delRow();
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             delRow(){
                 let self=this;
                 if(self.multipleSelection.length>0){//表格

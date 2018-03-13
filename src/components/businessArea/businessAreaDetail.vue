@@ -284,6 +284,7 @@
     },
     methods: {
         filterNode(value, data) {
+            console.log(data)
         if (!value) return true;
         return data.areaName.indexOf(value) !== -1;
       },
