@@ -148,8 +148,8 @@
                             </el-table>
                         <el-pagination
                          style="margin-top:20px;" 
-                         class="text-right" 
-                         :current-page.sync="pageIndex"
+                         class="text-right pageActive"
+                         :current-page.sync="currentPage"
                          background layout="total, prev, pager, next" 
                          @current-change="handleCurrentChange"
                          :page-count="totalPage" >
@@ -221,7 +221,7 @@ import Btm from '../../base/btm/btm'
                         }] 
                         }],                   
                     }],
-                pageIndex:1,//分页的当前页码
+                currentPage:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 eachPage:10,//每页有多少条信息
                 multipleSelection: [],//复选框选中数据
@@ -236,11 +236,21 @@ import Btm from '../../base/btm/btm'
                 updateId:'',
                 cancelClick:false,//是否点击取消按钮
                 isSave:false,
+                turnPage:-1,//是否允许翻页
+                pageFlag:true,
+
             }
         },
         created:function(){
             //this.datashop();
-            this.loadTableData();
+            let _this=this;
+            _this.loadTableData();
+            // $(document).on("click",".pageActive .el-pager>li",function(){
+            //     if(_this.turnPage==false){
+            //        //$(this).html("12");
+            //        $(this).css("background","#f4f4f5")
+            //     }  
+            // })
         },
         mounted:function(){   
             let content1=document.getElementById('bg-white');//设置高度为全屏
@@ -250,8 +260,9 @@ import Btm from '../../base/btm/btm'
         watch:{
             isUpdate:function(val,oldVal){
                 if(val==true){
-                    this.isCancel=true
-                } 
+                    this.isCancel=true;
+                    this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
+                }
             },
             tableData:{
                 handler: function (val, oldVal) {
@@ -299,6 +310,7 @@ import Btm from '../../base/btm/btm'
                 this.isUpdate=false;
                 this.isAdd=false;
                 this.isSave=false;
+                this.pageFlag=true;
                 this.updateArray=[];
                 this.addArray=[];
                 this.updateId="";
@@ -324,26 +336,27 @@ import Btm from '../../base/btm/btm'
                 })
             },
             handleCurrentChange:function(val){//获取当前页码,分页
-                if(this.isUpdate){
+                if(this.isUpdate&&this.pageFlag){
                     this.$confirm('当前存在未保存修改项，是否继续查看下一页?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning',
                         center: true
                         }).then(() => {
-                            this.pageIndex=val;
+                            this.currentPage=val;
                             this.page = val;
                             this.loadTableData();
                         }).catch(() => {
-                           
-                            return;
-                            //alert(this.pageIndex);     
+                            this.currentPage=this.turnPage 
+                            this.pageFlag=false;
+                            return;      
                     });
-                }else{
-                    this.pageIndex=val;
+                }else if(this.isUpdate!=true){  
                     this.page = val;
+                    this.currentPage=val;
                     this.loadTableData();
                 }
+                setTimeout(() => {this.pageFlag = true}, 1000)
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -531,7 +544,7 @@ import Btm from '../../base/btm/btm'
                     }
                 }              
                   
-            },                           
+            },                          
             packUp(){
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');

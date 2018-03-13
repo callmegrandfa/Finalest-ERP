@@ -1,5 +1,5 @@
 <template>
-    <div class="data-wrapper department">
+    <div class="de-list">
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
@@ -28,12 +28,6 @@
             
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5 pr10 pl5">
-                    <button class="erp_bt bt_back">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_back.png">
-                        </div>
-                        <span class="btDetail">返回</span>
-                    </button>
 
                     <button class="erp_bt bt_add" @click="goDetail">
                         <div class="btImg">
@@ -68,11 +62,17 @@
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="deptCode" label="部门编码"></el-table-column>
                             <el-table-column prop="deptName" label="部门名称"></el-table-column>
-                            <el-table-column prop="manager" label="负责人(无)"></el-table-column>
-                            <el-table-column prop="deptParentName" label="上级部门(null)"></el-table-column>
-                            <el-table-column prop="remark" label="备注(无)"></el-table-column>
-                            <el-table-column prop='status' label="状态"></el-table-column>
-                            <el-table-column prop='creatorUserName' label="创建人(null)"></el-table-column>
+                            <el-table-column prop="manager" label="负责人"></el-table-column>
+                            <el-table-column prop="deptParentName" label="上级部门"></el-table-column>
+                            <el-table-column prop="remark" label="备注"></el-table-column>
+                            <el-table-column prop='status' label="状态">
+                                <template slot-scope="scope">
+                                    <el-input v-show="scope.row.status===''" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[0].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop='creatorUserName' label="创建人"></el-table-column>
                             <el-table-column prop='createdTime' width="180" label="创建时间"></el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
@@ -176,6 +176,16 @@
                         label: '停用'
                     },
                 ],
+                status: [{//状态
+                    value:"",
+                    label: '全部'
+                    }, {
+                    value: 0,
+                    label: '禁用'
+                    }, {
+                    value: 1,
+                    label: '启用'
+                 }],
                 options: [{
                     basOuTypes: '1',
                     label: '1'
@@ -210,7 +220,7 @@
                 ],
                 defaultProps: {
                     children: 'items',
-                    label: 'areaName',
+                    label: 'deptName',
                     id:'id'
                 },
                 TreeContextMenu:[//点击鼠标右键生成菜单
@@ -290,16 +300,16 @@
                 })
             },
             loadTree(){
-                let _this=this;
-                _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+                let self=this;
+                self.treeLoading=true;
+                self.$axios.gets('/api/services/app/DeptManagement/GetTree',{id:0})
                 .then(function(res){
                     console.log(res)
-                    _this.componyTree=res.result
-                    _this.treeLoading=false;
-                    _this.loadIcon();
+                    self.componyTree=res.result
+                    self.treeLoading=false;
+                    self.loadIcon();
                },function(res){
-                   _this.treeLoading=false;
+                   self.treeLoading=false;
                })
             },
             loadIcon(){
@@ -728,23 +738,34 @@
 </style>
 
 <style>
-.data-wrapper .el-button+.el-button{
+.de-list .el-button+.el-button{
     margin-left: 0;
 }
-.data-wrapper .bAreaSearch .el-input__inner{
+.de-list .bAreaSearch .el-input__inner{
     height: 30px;
     border-radius: 30px;
 }
 /* .bAreaListForm .el-tree-node>.el-tree-node__children{
     overflow: visible!important;
 } */
-.data-wrapper .el-dialog__footer{
+/* .data-wrapper .el-dialog__footer{
     padding:0;
 }
 .data-wrapper .areaDialog .bgcolor:first-child{
     margin-top:15px;
-}
-.department .bgcolor{
+} */
+.de-list .bgcolor{
     margin-bottom: 0
+}
+.de-list .cell .el-input__inner{
+    border:none;
+    text-align:center;
+    padding:0;
+}
+.de-list .bgw .el-input__inner{
+    background-color:white;
+}
+.de-list .bgg .el-input__inner{
+    background-color:#FAFAFA;
 }
 </style>

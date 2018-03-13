@@ -15,7 +15,7 @@
                 <el-row class="mt10">
                     <div class="bgcolor smallBgcolor">
                         <label>客户分类</label>
-                        <el-select v-model="value" placeholder="请选择客户类型">
+                        <el-select v-model="value" placeholder="">
                             <el-option v-for="item in options"
                                         :key="item.value"
                                         :label="item.label"
@@ -130,13 +130,13 @@
                             <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
                             <el-table-column prop="contactClassId" label="客户类型"></el-table-column>
                             <el-table-column prop="contactWorkPropertyId" label="客户性质"></el-table-column>
-                            <el-table-column prop="isSupplier" label="供应">
+                            <el-table-column prop="isSupplier" label="是否为供应商">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="allList[scope.$index].isSupplier" disabled="disabled"></el-checkbox>
                                 </template>
                             </el-table-column>   
                             <el-table-column prop="ficaOuId" label="对应财务组织"></el-table-column>
-                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="status" label="状态(无字段)"></el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
