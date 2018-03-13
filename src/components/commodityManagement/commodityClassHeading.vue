@@ -96,7 +96,7 @@
                                 </el-table-column>
                                 <el-table-column prop="isService" label="服务类" width="80">
                                     <template slot-scope="scope">
-                                        <el-checkbox v-model='scope.row.isService'></el-checkbox>
+                                        <el-checkbox disabled v-model='scope.row.isService'></el-checkbox>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="address7" label="备注" width="">
@@ -257,7 +257,7 @@ import Tree from '../../base/tree/tree'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetCategory',{Id:data.id}).then(function(res){       
+                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){       
                         console.log(res.result);                
                         _this.tableData = res.result;
                         _this.totalCount=res.result.length
