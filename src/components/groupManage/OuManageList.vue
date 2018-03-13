@@ -37,8 +37,8 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>启用状态</label>
-                    <el-select  v-model="searchData.status" placeholder="">
-                        <el-option v-for="item in selectData.Status002" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                    <el-select  v-model="searchData.Status" placeholder="">
+                        <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
@@ -49,7 +49,7 @@
                 </div>
             </el-col>
             <el-col :span='4' class="border-left" v-loading="treeLoading" id="ouListTree">
-                <el-tree
+                <el-tree 
                 :data="componyTree"
                 :props="defaultProps"
                 node-key="treeId"
@@ -135,7 +135,7 @@
                         </span>
                 </el-dialog>
                 <!-- dialog -->
-                <el-row class="pl10 pt10 pr10 pb10">
+                <el-row class="pl10 pt10 pr10 pb10 tableWapper">
                     <el-col :span='24'>
                         <el-table 
                         v-loading="tableLoading"
@@ -149,10 +149,10 @@
                             <el-table-column prop="ouCode" label="编码"></el-table-column>
                             <el-table-column prop="ouName" label="名称"></el-table-column>
                             <el-table-column prop="ouFullname" label="全称"></el-table-column>
-                            <el-table-column prop="ouParentid" label="上级业务单元"></el-table-column>
-                            <el-table-column prop="companyOuId" label="所属公司"></el-table-column>
-                            <el-table-column prop="baseCurrencyId" label="本位币种"></el-table-column>
-                            <el-table-column prop="createdTime" label="启用年月" width="160">
+                            <el-table-column prop="ouParentName" label="上级业务单元"></el-table-column>
+                            <el-table-column prop="companyOuName" label="所属公司"></el-table-column>
+                            <el-table-column prop="baseCurrencyName" label="本位币种"></el-table-column>
+                            <el-table-column prop="accStartMonth" label="启用年月" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker 
                                     format="yyyy-MM-dd HH:mm:ss"
@@ -164,30 +164,30 @@
                                     placeholder=""></el-date-picker>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="status" label="状态">
-                                <template slot-scope="scope">
+                            <el-table-column prop="statusTValue" label="状态">
+                                <!-- <template slot-scope="scope">
                                     <el-checkbox v-model="tableData[scope.$index].status" disabled></el-checkbox>
+                                </template> -->
+                            </el-table-column>
+                            <el-table-column label="公司">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-if="i.ouType==1" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="isCompany" label="公司">
+                            <el-table-column label="业务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].isCompany" disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==2" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="isPurchase" label="业务">
+                            <el-table-column label="财务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].isPurchase" disabled></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="isFinance" label="财务">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].isFinance" disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==3" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作">
                                  <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="confirmDelThis(scope.row)" >删除</el-button>
                                     <el-button type="text" size="small"  @click="modify(scope.row)" >查看</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -225,7 +225,7 @@
                 },
                 selectData:{//select数据
                     OUType:[],//组织类型
-                    Status002:[],//启用状态
+                    Status001:[],//启用状态
                 },
                 searchDataClick:{},
                 tableSearchData:{},
@@ -269,10 +269,12 @@
                     }],
                 tableData:[],
 
-                componyTree:  [],
+                componyTree:  [
+
+                ],
                 defaultProps: {
-                    children: 'items',
-                    label: 'deptName',
+                    children: 'children',
+                    label: 'ouFullname',
                     id:'id'
                 },
                 pageIndex:1,//分页的当前页码
@@ -284,9 +286,9 @@
                 isClick:[],
                 load:true,
                 totalItem:0,//总共有多少条消息
-                searchBtClick:false,
                 ifWidth:true,
                 dialogUserDefined:false,//dialog
+                height:'0px'
             }
         },
         created:function(){       
@@ -294,10 +296,10 @@
                 _this.getSelectData();
                 _this.loadTableData();
                 _this.loadTree();
+                
              },
         mounted () {
-            
-            
+            let _this=this;
         },     
         methods:{
             getSelectData(){
@@ -306,9 +308,9 @@
                     // 组织类型
                     _this.selectData.OUType=res.result;
                     })
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
                     // 启用状态
-                    _this.selectData.Status002=res.result;
+                    _this.selectData.Status001=res.result;
                     })
             },
             closeLeft:function(){
@@ -338,9 +340,7 @@
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
                     _this.$nextTick(function(){
-                        $("#ouListTree").css({
-                            height:$("#ouListTable").css("height")
-                        })  
+                        _this.getHeight()
                     })
                     },function(res){
                     _this.tableLoading=false;
@@ -349,11 +349,11 @@
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
+                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
                 .then(function(res){
-                        _this.componyTree=res.result;
-                        _this.treeLoading=false;
-                        _this.loadIcon()
+                    _this.componyTree=res.result;
+                    _this.treeLoading=false;
+                    _this.loadIcon()
                },function(res){
                    _this.treeLoading=false;
                })
@@ -383,7 +383,6 @@
             SimpleSearchClick(){
                 let _this=this;
                  _this.load=false;
-                 _this.searchBtClick=true;
                  _this.tableLoading=true;
                  _this.searchDataClick={
                     OuCode:_this.searchData.OuCode,//编码
@@ -397,20 +396,16 @@
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
-                _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
+                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
-                 _this.searchData.OuType=parseInt(_this.searchData.OuType);
-                 _this.searchData.Status002=parseInt(_this.searchData.Status002);
-                _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchDataClick)
+                _this.$axios.gets('/api/services/app/OuManagement/GetAll',_this.searchDataClick)
                 .then(function(res){      
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableData=res.result.items;
                     _this.tableLoading=false;
-                    _this.searchBtClick=false;
                 },function(res){
                      _this.tableLoading=false;
-                     _this.searchBtClick=false;
                 })
             },
             goDetail(){
@@ -452,17 +447,57 @@
                     })
                 }
             },
+            getHeight(){
+                $("#ouListTree").css({
+                    minHeight:$('.OuListForm .bg-white').css('height')
+                })
+                $("#ouListTable").css({
+                    minHeight:$('.OuListForm .bg-white').css('height')
+                })
+            },
             nodeClick(data){
-               
+                console.log(data)
+                 let _this=this;
+                _this.tableLoading=true
+                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuParentid:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                    _this.tableData=res.result.items;
+                    _this.totalItem=res.result.totalCount
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.tableLoading=false;
+                    _this.$nextTick(function(){
+                        // _this.getHeight()
+                    })
+                    },function(res){
+                    _this.tableLoading=false;
+                })
+                 
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
-            see(row){
-                this.$store.state.url='/OuManage/OuManageSee/'+row.id
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            }
+            confirmDelThis(row){
+                let _this=this;
+                _this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {//确认
+                    _this.delThis(row)
+                }).catch(() => {//取消
+                });
+            },
+            delThis(row){//删除行
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:row.id})
+                .then(function(res){
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                    _this.loadTableData();
+                    _this.loadTree();
+                },function(res){
+                })
+            },
         },
     }
 </script>
@@ -538,7 +573,6 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 380px;
 }
 .btn{
     display: inline-block;

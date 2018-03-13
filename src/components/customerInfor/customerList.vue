@@ -130,7 +130,7 @@
                             <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
                             <el-table-column prop="contactClassId" label="客户类型"></el-table-column>
                             <el-table-column prop="contactWorkPropertyId" label="客户性质"></el-table-column>
-                            <el-table-column prop="isSupplier" label="供应">
+                            <el-table-column prop="isSupplier" label="是否为供应商">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="allList[scope.$index].isSupplier" disabled="disabled"></el-checkbox>
                                 </template>

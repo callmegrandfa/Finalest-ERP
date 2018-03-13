@@ -104,7 +104,7 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="contactWorkPropertyId" label="创建人">
+                            <el-table-column prop="createBy" label="创建人">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -114,11 +114,11 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="ficaOuId" label="创建时间">
+                            <el-table-column prop="createdTime" label="创建时间">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.createTime" 
+                                            v-model="scope.row.createdTime" 
                                             disabled
                                             type="text"/>
                                 </template>
@@ -190,7 +190,7 @@
                     "currencyCode": "",
                     "currencyName": "",
                     "increment": '',
-                    "seq": '',
+                    "seq": 0,
                     "status": '',
                     "remark": ""
                 },
@@ -209,6 +209,13 @@
                 this.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.result.items;
+                    $.each(self.allList,function(index,value){
+                        // console.log(value.createdTime)
+                        let createdTime = value.createdTime.slice(0,value.createdTime.indexOf('.')).replace('T',' ');
+                        // console.log(createdTime)
+                        self.allList[index].createdTime = createdTime;
+                        // console.log(self.allList[index].createdTime)
+                    })
                     self.total = res.result.totalCount;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
                 },function(res){
@@ -224,8 +231,9 @@
                 for(let i in self.addList){
                     this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.addList[i]).then(function(res){         
                         self.open('创建货币资料成功','el-icon-circle-check','successERP');
-                        console.log(res)
-                        self.loadAllList()
+                        // console.log(res)
+                        self.loadAllList();
+                        self.addList = [];
                     }),function(res){
                         self.open('创建货币资料失败','el-icon-error','faildERP');
                     };
@@ -236,7 +244,7 @@
                 for(let i in self.updateList){
                     if(self.updateList[i].id!=''){
                         this.$axios.puts('/api/services/app/CurrencyManagement/Update',self.updateList[i]).then(function(res){
-                            console.log(res);
+                            // console.log(res);
                             self.open('修改货币资料成功','el-icon-circle-check','successERP');
                             self.loadAllList()
                             self.ar = [];
@@ -245,7 +253,6 @@
                                 self.open('修改货币资料失败','el-icon-error','faildERP');
                         };
                     }
-                    
                 }
             }
         },
@@ -253,15 +260,14 @@
                 let self = this;
                 self.x++;
                 let newCol = 'newCol'+self.x;
-                console.log(newCol)
-                console.log(self.rows)
+                // console.log(newCol)
+                // console.log(self.rows)
                 self.rows.newCol ={
-                    id:'',
                     group_id: 1,
                     currencyCode: "",
                     currencyName: "",
                     increment: '',
-                    seq: '',
+                    seq: 0,
                     status: '',
                     remark: ""
                 };
@@ -327,9 +333,9 @@
 
 
                 let flag = false;
-                if(self.updateList.length==0){//修改过的数据
+                if(self.updateList.length==0&&row.id!=''){//修改过的数据
                     flag = true;
-                }else if(self.updateList.length>=1){
+                }else if(self.updateList.length>=1&&row.id!=''){
                     for(let i in self.updateList){
                         if(row.id != self.updateList[i].id){
                             flag = true;
@@ -371,11 +377,15 @@
                 let self = this;
                 self.allList.splice(index,1);
                 self.addList.splice(index,1);
-                this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:row.id}).then(function(res){
-                    console.log(res);
-                    self.open('删除成功','el-icon-circle-check','successERP');
-                    // self.loadAllList();
-              })
+                console.log(row.id)
+                if(row.id>=0){
+                    self.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:row.id}).then(function(res){
+                        console.log(res);
+                        self.open('删除成功','el-icon-circle-check','successERP');
+                        self.loadAllList();
+                    })
+                }
+                
             },
             confirmDelRow() {
                 let self = this;
@@ -398,7 +408,6 @@
                         });
                     });
                 }
-                
             },
             delRow:function(){//删除选中的项
                 let _this=this;
