@@ -65,7 +65,7 @@
                     <label>状态</label>
                     <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.Status" placeholder="">
-                        <el-option v-for="item in selectData.Status002" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                        <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
@@ -167,16 +167,24 @@
                         stripe 
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="userCode" label="用户编码"></el-table-column>
-                            <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                            <el-table-column type="selection" fixed="left"></el-table-column>
+                            <el-table-column label="用户编码" fixed="left">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="see(scope.row)">{{tableData[scope.$index].userCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="用户名称" fixed="left">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="see(scope.row)">{{tableData[scope.$index].displayName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
                             <el-table-column prop="userGroupName" label="所属用户组"></el-table-column>
-                            <el-table-column prop="ouId" label="所属组织"></el-table-column>
-                            <el-table-column prop="userType" label="身份类型"></el-table-column>
-                            <el-table-column prop="languageId" label="语种"></el-table-column>
-                            <el-table-column prop="authType" label="认证类型"></el-table-column>
-                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="ouFullname" label="所属组织"></el-table-column>
+                            <el-table-column prop="userTypeTValue" label="身份类型"></el-table-column>
+                            <el-table-column prop="languageDisplayName" label="语种"></el-table-column>
+                            <el-table-column prop="authTypeTValue" label="认证类型"></el-table-column>
+                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
                             <el-table-column label="有效日期" width="200">
                                 <template slot-scope="scope">
                                     <div class="halfWidth left">
@@ -201,9 +209,9 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="statusTValue" label="关联角色"></el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
-                                     <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
+                                    <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
                                     <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
                                 </template>
@@ -245,7 +253,7 @@
                 tableSearchData:{},
                 selectData:{
                     UserType:[],//身份类型
-                    Status002:[],//状态
+                    Status001:[],//状态
                 },
                 options: [{
                     value: '1',
@@ -309,9 +317,9 @@
                 // 身份类型
                 _this.selectData.UserType=res.result;
                 })
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
                 // 启用状态
-                _this.selectData.Status002=res.result;
+                _this.selectData.Status001=res.result;
                 })
             },
             closeLeft:function(){

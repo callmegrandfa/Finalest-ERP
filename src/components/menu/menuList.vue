@@ -63,13 +63,13 @@
                         style="width: 100%" 
                         stripe 
                         ref="multipleTable">
-                            <el-table-column label="序号">
+                            <el-table-column label="序号" fixed="left">
                                  <template slot-scope="scope">
                                     {{scope.$index + 1}}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="field" label="字段"></el-table-column>
-                            <el-table-column prop="field" label="操作">
+                            <el-table-column prop="field" label="字段" fixed="left"></el-table-column>
+                            <el-table-column prop="field" label="操作" fixed="left">
                                 <template slot-scope="scope">
                                     <el-switch
                                         v-model="tableData[scope.$index].value"
@@ -86,24 +86,24 @@
                 <!-- dialog -->
                 <el-row>
                     <el-col :span='24'>
-                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
+                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" border stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="systemId" label="系统">
+                            <el-table-column prop="systemId" label="系统"></el-table-column>
+                            <el-table-column prop="moduleCode" label="模块编码">
                                 <template slot-scope="scope">
-                                    <span style="color:#6699FF">{{scope.row.systemId}}</span>
+                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{scope.row.moduleCode}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="moduleCode" label="模块编码"></el-table-column>
-                            <el-table-column prop="moduleName" label="模块名称"></el-table-column>
-                            <el-table-column prop="url" label="web地址">
+                            <el-table-column prop="moduleName" label="模块名称">
                                 <template slot-scope="scope">
-                                    <span style="color:#33CCCC">{{scope.row.url}}</span>
+                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{scope.row.moduleName}}</el-button>
                                 </template>
                             </el-table-column>
+                            <el-table-column prop="url" label="web地址"></el-table-column>
                             <el-table-column prop="moduleParentId" label="上级菜单"></el-table-column>
                             <el-table-column prop="status" label="状态">
                             </el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="modify(scope.row)">修改</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->

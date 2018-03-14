@@ -21,26 +21,19 @@
 	    methods:{
 	    	selectItem(item){
 	    		let _this=this;
-	    		if(item.text=='查询'){
-	    			_this.date.botton.pop();
-	    			_this.stop='查询';
-                	this.$emit('listbtm', _this.stop)
-	    		}else if(item.class=='erp_bt bt_add'|| item.class=='erp_bt bt_back'){
+	    		if(item.class=='erp_bt bt_add'|| item.class=='erp_bt bt_back'){
 	    			this.$store.state.url=`${this.date.url}/default`
            		    this.$router.push({path:this.$store.state.url})//点击切换路由
-	    		}else if(item.text == '保存'){
-	    			_this.stop='保存';
+	    		}else if(item.text == '保存' && item.class == 'erp_bt bt_save'){
+	    			_this.stop='新增保存';
 	    			this.$emit('listbtm', _this.stop)
-	    		}else if(item.text == '启用'){
-	    			_this.stop='启用';
+	    		}else if(item.text == '保存' && item.class == 'erp_bt bt_save amend_save'){
+	    			_this.stop='修改保存';
 	    			this.$emit('listbtm', _this.stop)
-	    		}else if(item.text == '修改'){
-	    			_this.stop='修改';
+	    		}else{
+	    			_this.stop= item.text;
 	    			this.$emit('listbtm', _this.stop)
-	    		}else if(item.text == '取消'){
-	    			_this.stop='取消';
-	    			this.$emit('listbtm', _this.stop)
-	    		}
+	    		} 
 	    	}
 	    }
 	}
