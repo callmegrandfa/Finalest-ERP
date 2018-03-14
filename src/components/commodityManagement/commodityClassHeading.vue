@@ -1,7 +1,7 @@
 <template>
     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
         <div id="left-box" style="min-width:275px;width:275px;float:left">    
-            <el-row class="bg-white">
+            <el-row class="bg-white" v-show="ifWidth">
                 <el-col :span="24">
                     <el-row class="h48 pl15">
                         <el-col :span="18">
@@ -9,24 +9,24 @@
                             <span>查询</span>
                         </el-col>
                         <el-col :span="5">
-                            <span class="fs12 open" @click="packUp">+ 收起</span>
+                            <span class="fs12 open" @click="closeLeft">+ 收起</span>
                         </el-col>
                     </el-row>
                     <div style="margin-top:20px">
                         <el-row>
-                            <el-col :span="8">
-                                <div class="bgcolor" style="margin-top:20px">
-                                <label style="width:86px">商品类目</label>
+                            <el-col :span="7">
+                                <div class="bgcolor smallBgcolor">
+                                <label >商品类目</label>
                             </div>
                             </el-col>
                             <el-col :span="14">
-                                <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                <div class="bgcolor smallBgcolor">
                                 <el-input v-model="search.CategoryName"></el-input>
                                 </div>
                             </el-col>
                         </el-row>
                         <el-row >
-                            <el-col :span="8" >
+                            <el-col :span="7" >
                                 <div class="bgcolor smallBgcolor">
                                     <label><small></small>服务类(虚拟)</label>
                                 </div>
@@ -41,7 +41,7 @@
                             </el-col>
                         </el-row>
                         <el-row >
-                            <el-col :span="8" >
+                            <el-col :span="7" >
                                 <div class="bgcolor smallBgcolor">
                                     <label><small></small>状态</label>
                                 </div>
@@ -57,7 +57,7 @@
                         </el-row>
                     </div>
                     <el-row>
-                        <el-col :span="8">&nbsp;</el-col>
+                        <el-col :span="7">&nbsp;</el-col>
                         <el-col style="text-align:center;margin-bottom:20px;" :span="14">
                             <span class="search-btn" @click="query"  style="float:left;margin-left:10px;">查询</span>
                         </el-col>
@@ -68,8 +68,23 @@
         <div id="bgj">
             <el-row >
                 <el-col :span="24" class="border-left" id="bg-white" style="background-color:rgb(249,249,249)">
-                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
-                     <el-row>
+                	<el-col :span="ifWidth?0:2" class="search-block" >
+	                    <div @click="openLeft">
+	                        <div style="display:inline-block" @click="openLeft">
+	                            <img src="../../../static/image/common/search_btn.png">
+	                        </div>
+	                        <div style="display:inline-block;margin-left:2px;font-size:16px;" >
+	                            <span>查询</span>
+	                        </div>
+	                        <div class="out-img" >
+	                            <span class="search_info_open" style="margin-left:0">+</span>
+	                        </div>
+	                    </div>
+	                </el-col>
+	                <el-col :span="ifWidth?24:22">
+	                	<btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+	                </el-col>
+                     <el-row style="float:left;width:100%;">
                         <el-col :span="5">
                             <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
                                 :data="classTree"
@@ -124,6 +139,7 @@ import Tree from '../../base/tree/tree'
         name:'customerInfor',
         data(){
             return {
+            	ifWidth:true,
                 try:{
                 "groupId": 2,
                 "stockId": 1,
@@ -207,6 +223,18 @@ import Tree from '../../base/tree/tree'
            this.loadTableData();
         },
         methods:{
+        	closeLeft:function(){
+                let self = this;
+                self.ifWidth = false;
+                let obgh=document.getElementById('bgj');
+                obgh.style.width="100%";
+            },
+            openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+               let obgh=document.getElementById('bgj');
+                obgh.style.width="calc(100% - 275px)";
+            },
             handleSelectionChange(val) {//点击复选框选中的数据
             },
             btmlog:function(data){
@@ -277,14 +305,6 @@ import Tree from '../../base/tree/tree'
                         }
                     })
                 })
-            },
-            packUp(){
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                let obgh=document.getElementById('bgh');
-                oleftBox.style.display="none";
-                obgh.style.width="100%";
-                Re.style.display="block";
             },
             query(){//条件查询
                 let _this=this;

@@ -156,15 +156,23 @@ import Btm from '../../base/btm/btm'
                 });
             },
             handleDel(row,index){//行内删除
-                if(row.brandCode==""){
-                    this.tableData.splice(index,1)
-                }else{
-                    let _this=this;
-                    _this.$axios.deletes('http://192.168.100.107:8085/api/services/app/TenantManagement/Delete',{Id:row.id}).then(function(res){
-                        _this.loadTableData();
-                        _this.open('删除成功','el-icon-circle-check','successERP');              
-                    })
-                }
+                let _this=this;
+                this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                        _this.$axios.deletes('http://192.168.100.107:8085/api/services/app/TenantManagement/Delete',{Id:row.id}).then(function(res){
+                            _this.loadTableData();
+                            _this.open('删除成功','el-icon-circle-check','successERP');              
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                });
                 
                 //this.tableData.splice(index,1);
             },
@@ -179,10 +187,22 @@ import Btm from '../../base/btm/btm'
                         _this.idArray.ids.push(this.SelectionChange[i].id)
                     }
                     if(this.idArray.ids.length>0){
-                        _this.$axios.posts('http://192.168.100.107:8085/api/services/app/TenantManagement/BatchDelete',_this.idArray).then(function(res){
-                            _this.loadTableData();
-                            _this.open('删除成功','el-icon-circle-check','successERP');    
-                        })
+                        this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            _this.$axios.posts('http://192.168.100.107:8085/api/services/app/TenantManagement/BatchDelete',_this.idArray).then(function(res){
+                                _this.loadTableData();
+                                _this.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
                     }
                 }else if(data=='停用' || data=='启用'){
                     let handleArray=[];

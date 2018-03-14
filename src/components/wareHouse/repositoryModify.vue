@@ -1,5 +1,5 @@
 <template>
-  <div class="data-wrapper b1">
+  <div class="res-modify">
         <el-row class="bg-white pt10 pb10 bb1 fixed">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
@@ -8,19 +8,26 @@
                 <span class="btDetail">返回</span>
             </button>
                                             <!-- 保存修改 -->
-            <button class="erp_bt bt_save" @click="saveModify">
+            <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_save.png">
                 </div>
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_modify">
+            <button @click="Cancel()" class="erp_bt bt_cancel">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_cancel.png">
+                </div>
+                <span class="btDetail">取消</span>
+            </button>
+
+            <button @click="Update()" class="erp_bt bt_modify">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_modify.png">
                 </div>
                 <span class="btDetail">修改</span>
-            </button>
+            </button> 
 
             <div class="toggle-btn">
                 <span @click='ifShow = !ifShow'>收起</span>
@@ -107,6 +114,7 @@
                             <el-select v-model="repositoryData.ouId"
                                        :class="{redBorder : validation.hasError('repositoryData.ouId')}"
                                        @focus="showErrprTipsSelect" 
+                                       :disabled="isEdit"
                                        class="ouId"
                                        placeholder="">
                                 <el-option v-for="item in ou"
@@ -121,6 +129,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockCode" 
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       @focus="showErrprTips"
                                       class="stockCode"
                                       :class="{redBorder : validation.hasError('repositoryData.stockCode')}"></el-input>
@@ -130,6 +139,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockName" 
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       @focus="showErrprTips"
                                       class="stockName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockName')}"></el-input>
@@ -139,6 +149,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockFullName" 
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       @focus="showErrprTips"
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockFullName')}"></el-input>
@@ -148,6 +159,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.mnemonic" 
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       @focus="showErrprTips"
                                       class="mnemonic"
                                       :class="{redBorder : validation.hasError('repositoryData.mnemonic')}"></el-input>
@@ -158,6 +170,7 @@
                             <el-select v-model="repositoryData.stockTypeId" 
                                        placeholder=""
                                        @change="Modify()"
+                                       :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.stockTypeId')}"
                                        @focus="showErrprTipsSelect"
                                        class="stockTypeId">
@@ -174,6 +187,7 @@
                             <el-select v-model="repositoryData.opAreaId" 
                                        placeholder=""
                                        @change="Modify()"
+                                       :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.opAreaId')}"
                                        @focus="showErrprTipsSelect"
                                        class="opAreaId">
@@ -190,6 +204,7 @@
                             <el-select v-model="repositoryData.adAreaId" 
                                        placeholder=""
                                        @change="Modify()"
+                                       :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.adAreaId')}"
                                        @focus="showErrprTipsSelect"
                                        class="adAreaId">
@@ -207,6 +222,7 @@
                                       v-model="repositoryData.manager"
                                       @focus="showErrprTips"
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       class="manager"
                                       :class="{redBorder : validation.hasError('repositoryData.manager')}"></el-input>
                         </div>
@@ -217,6 +233,7 @@
                                       v-model="repositoryData.phone"
                                       @focus="showErrprTips"
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       class="phone"
                                       :class="{redBorder : validation.hasError('repositoryData.phone')}"></el-input>
                         </div>
@@ -227,6 +244,7 @@
                                       v-model="repositoryData.email"
                                       @focus="showErrprTips"
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       class="email"
                                       :class="{redBorder : validation.hasError('repositoryData.email')}"></el-input>
                         </div>
@@ -236,6 +254,7 @@
                             <el-input v-model="repositoryData.fax"
                                       @focus="showErrprTips"
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       placeholder="" 
                                       class="fax"
                                       :class="{redBorder : validation.hasError('repositoryData.fax')}"></el-input>
@@ -246,6 +265,7 @@
                             <el-input v-model="repositoryData.stockAddress"
                                       @focus="showErrprTips"
                                       @change="Modify()"
+                                      :disabled="isEdit"
                                       placeholder="" 
                                       class="stockAddress"
                                       :class="{redBorder : validation.hasError('repositoryData.stockAddress')}"></el-input>
@@ -256,6 +276,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.remark"
                                       @focus="showErrprTips"
+                                      :disabled="isEdit"
                                       @change="Modify()"
                                       class="remark"
                                       :class="{redBorder : validation.hasError('repositoryData.remark')}"></el-input>
@@ -265,6 +286,7 @@
                             <label><small>*</small>状态</label>
                             <el-select v-model="repositoryData.status" 
                                        placeholder=""
+                                       :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.status')}"
                                        @focus="showErrprTipsSelect"
                                        class="status">
@@ -444,9 +466,6 @@
                     <label>修改时间</label>
                     <el-date-picker type="date" placeholder="选择修改时间" disabled="disabled"></el-date-picker>
                 </div>
-                <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-                <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-                <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
             </div> 
           </el-col>
       </el-row>
@@ -622,6 +641,21 @@
             },
             //------------------------------------------------------------
 
+            //---控制是否可编辑---------------------------------------
+            Update(){//修改
+                if(this.isEdit==true){
+                    this.isEdit=!this.isEdit;
+                }
+            },        
+            Cancel(){
+                let self = this;
+                if(self.isEdit==false){
+                    self.isEdit=!self.isEdit;
+                    self.loadData();
+                }
+            },
+            //-------------------------------------------------------
+
             //---表格编辑-------------------------------------------------
             addCol:function(){//增行
                 let self = this;
@@ -769,12 +803,7 @@
                 }, 
                 ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
-                ifCan:true,//控制启用状态
-                // ifSave:-1,//保存按钮（是否可见）
-                queryOuId:{//ouManagement的搜索Id
-                    id:'2'
-                },
-                ouGet:'',
+                isEdit:true,//判断是否要修改
                 ou: [{//所属组织
                     value:0,
                     label: '恒康'
@@ -848,7 +877,7 @@
 </script>
 
 <style scoped>
-.data-wrapper{
+.res-modify{
     background: #EEF1F5;
     height: auto;
     width: 100%;
@@ -951,16 +980,13 @@
     height: 36px;
     line-height: 36px;
 }
-input:-ms-input-placeholder{
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
 
-input::-webkit-input-placeholder{
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
 </style>
 <style>
-
+.res-modify .el-input__inner{
+    height:35px !important;
+}
 </style>
+
 
 
