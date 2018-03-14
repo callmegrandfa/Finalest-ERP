@@ -1,3 +1,6 @@
+.el-col-24{
+  border-bottom: none;
+}
 /* 搜索 */
 /* <el-input
     placeholder="搜索..."

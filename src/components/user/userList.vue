@@ -53,10 +53,17 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor smallBgcolor">
+                <!-- <div class="bgcolor smallBgcolor">
                     <label>认证类型</label>
-                    <!-- <el-input v-model="searchData.AuthType" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.AuthType" placeholder="">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div> -->
+                <div class="bgcolor smallBgcolor">
+                    <label>关联角色</label>
+                    <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
+                    <el-select  v-model="searchData.RoleId" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
@@ -66,14 +73,6 @@
                     <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor smallBgcolor">
-                    <label>关联角色</label>
-                    <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
-                    <el-select  v-model="searchData.RoleId" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
@@ -194,7 +193,7 @@
                                         type="datetime" 
                                         readonly
                                         align="center"
-                                        placeholder="无数据"></el-date-picker>
+                                        placeholder=""></el-date-picker>
                                     </div>
                                     <span>-</span>
                                     <div class="halfWidth right">
@@ -204,11 +203,11 @@
                                         type="datetime" 
                                         readonly
                                         align="center"
-                                        placeholder="无数据"></el-date-picker>
+                                        placeholder=""></el-date-picker>
                                     </div>    
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="statusTValue" label="关联角色"></el-table-column>
+                            <el-table-column prop="" label="关联角色"></el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
@@ -385,8 +384,6 @@
                  let _this=this;
                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
-                 _this.searchDataClick.UserType=parseInt(_this.searchDataClick.UserType);
-                 _this.searchDataClick.Status=parseInt(_this.searchDataClick.Status);
                 _this.$axios.gets('/api/services/app/User/GetAll',_this.searchDataClick)
                 .then(function(res){
                     _this.totalItem=res.result.totalCount
