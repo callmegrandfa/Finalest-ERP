@@ -1,5 +1,5 @@
 <template>
-    <div class="infor-wrapper">
+    <div class="cu-list">
         <el-row class="bg-white">
             <el-col :span='24'>
                 <el-row class="h48 pt5">
@@ -17,35 +17,27 @@
                         <span class="btDetail">保存</span>
                     </button>
 
-                    <button class="erp_bt bt_del" @click="confirmDelRow">
+                    <button class="erp_bt bt_del" @click="delRow">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
                         <span class="btDetail">删除</span>
                     </button>
 
-                    <button class="erp_bt bt_excel">
+                    <button class="erp_bt bt_in">
                         <div class="btImg">
-                            <img src="../../../static/image/common/bt_excel.png">
+                            <img src="../../../static/image/common/bt_inOut.png">
                         </div>
-                        <span class="btDetail">Excel</span>
+                        <span class="btDetail">导入</span>
                     </button>
 
-                    
-
-                    <button class="erp_bt bt_auxiliary">
+                    <button class="erp_bt bt_out">
                         <div class="btImg">
-                            <img src="../../../static/image/common/bt_auxiliary.png">
+                            <img src="../../../static/image/common/bt_inOut.png">
                         </div>
-                        <span class="btDetail">辅助功能</span>
+                        <span class="btDetail">导出</span>
                     </button>
 
-                    <button class="erp_bt bt_print">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_print.png">
-                        </div>
-                        <span class="btDetail">打印</span>
-                    </button>
                 </el-row>
 
                 <el-row class="pl10 pt10 pr10 pb10">
@@ -84,13 +76,12 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="contactName" label="状态">
+                            <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.status"
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
+                                    <el-select  v-model="scope.row.status" @change="handleChange(scope.$index,scope.row)" :class="scope.$index%2==0?'bgw':'bgg'">
+                                        <el-option  v-for="item in statusAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                                        </el-option>
+                                    </el-select>
                                 </template>
                             </el-table-column>
 
@@ -158,25 +149,27 @@
         data(){
             return {
                 allList:[],//所有数据列表
+                statusAr:[{
+                    itemName:'停用',
+                    itemValue:0,
+                    itemCode:'Disabled'
+                },{
+                    "itemCode": "Enabled",
+                    "itemName": "启用",
+                    "itemValue": 1
+                },{
+                    "itemCode": "Frozen",
+                    "itemName": "冻结",
+                    "itemValue": 2
+                }],//状态下拉框数据
+                
                 updateList:[],//修改的数据
                 addList:[],//新增的数据
                 multipleSelection: [],//复选框选中数据
-                options: [{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
+                idArray:{
+                    ids:[]
+                },//复选框选中数据id
+                
                 pageIndex:-1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
@@ -200,7 +193,8 @@
             }
         },
         created:function(){
-            this.loadAllList();            
+            this.loadAllList();      
+            // this.loadSelect();
         },
         methods:{
         //---获取数据-------------------------------------------------------
@@ -222,6 +216,17 @@
                     console.log('err'+res)
                 })
             },
+        //------------------------------------------------------------------
+        //---获取下拉数据----------------------------------------------------
+        // loadSelect:function(){
+        //     let self = this;
+        //     this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
+        //         self.statusAr = res.result;
+        //         console.log(self.statusAr);
+        //     },function(res){
+        //         console.log('err'+res)
+        //     })
+        // },
         //------------------------------------------------------------------
 
         // ---创建数据，修改数据---------------------------------------------
@@ -387,41 +392,42 @@
                 }
                 
             },
-            confirmDelRow() {
-                let self = this;
-                if(self.multipleSelection.length>0){
+            delRow:function(){//删除选中的项
+                let self=this;
+                // let flag;
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+                if(self.idArray.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                if(self.idArray.ids.length>0){
                     self.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        self.delRow();
-                        // this.$message({
-                        //     type: 'success',
-                        //     message: '删除成功!'
-                        // });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.$axios.posts('/api/services/app/CurrencyManagement/BatchDelete',self.idArray).then(function(res){
+                                self.loadAllList();
+                                self.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
                     });
                 }
-            },
-            delRow:function(){//删除选中的项
-                let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            _this.loadAllList();
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }
-                };
             },
         //------------------------------------------------------------------
     }
@@ -538,5 +544,19 @@
 </style>
 
 <style>
-
+.cu-list .bgw .el-input__inner{
+    text-align:center;
+    border:none;
+    padding:0;
+    background-color:white;
+}
+.cu-list .bgg .el-input__inner{
+    text-align:center;
+    border:none;
+    padding:0;
+    background-color:#FAFAFA;
+}
+.cu-list .el-select-dropdown__item{
+    text-align:center;
+}
 </style>
