@@ -20,11 +20,11 @@
         <el-row>
                 <!--公司信息  -->
             <el-col :span="24" class="getPadding">
-               <div class="tipsWrapper" name="ouCode">
+               <!-- <div class="tipsWrapper" name="ouCode">
                     <div class="errorTips" :class="{block : !validation.hasError('addData.ouCode')}">
                         <p class="msgDetail">错误提示：编码{{ validation.firstError('addData.ouCode') }}</p>
                     </div>
-                </div>
+                </div> -->
                 <div class="tipsWrapper" name="ouName">
                     <div class="errorTips" :class="{block : !validation.hasError('addData.ouName')}">
                         <p class="msgDetail">错误提示：名称{{ validation.firstError('addData.ouName') }}</p>
@@ -201,8 +201,7 @@
                 <div class="bgcolor" >
                     <label><small>*</small>编码</label>
                     <el-input class="ouCode" 
-                    @focus="showErrprTips"
-                    :class="{redBorder : validation.hasError('addData.ouCode')}"
+                    disabled=""
                     v-model="addData.ouCode">
                     </el-input>
                 </div>
@@ -840,9 +839,9 @@ export default({
         }
     },
     validators: {
-     'addData.ouCode': function (value) {//编码
-         return this.Validator.value(value).required().maxLength(50)
-      },
+    //  'addData.ouCode': function (value) {//编码
+    //      return this.Validator.value(value).required().maxLength(50)
+    //   },
       'addData.ouName': function (value) {//名称
          return this.Validator.value(value).required().maxLength(50);
       },
