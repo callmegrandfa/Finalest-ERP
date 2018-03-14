@@ -13,7 +13,6 @@
                         <label><small>*</small>菜单编码</label>
                         <el-input 
                         class="moduleCode" 
-                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.moduleCode')}" 
                         v-model="addData.moduleCode"  
                         placeholder=""></el-input>
@@ -28,7 +27,6 @@
                         <label><small>*</small>菜单名称</label>
                         <el-input 
                         class="moduleName" 
-                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.moduleName')}" 
                         v-model="addData.moduleName"  
                         placeholder=""></el-input>
@@ -60,7 +58,6 @@
                     <label><small>*</small>上级菜单</label>
                     <el-select 
                         class="moduleParentId" 
-                        @focus="showErrprTipsSelect"
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                         v-model="addData.moduleParentId"  >
@@ -94,12 +91,15 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
                         <el-select 
+                        class="status" 
+                        :class="{redBorder : validation.hasError('addData.status')}" 
                         v-model="addData.status"
                         placeholder="">
                             <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                             </el-option>
                         </el-select>
                     </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
 
@@ -109,7 +109,6 @@
                         <label>图标</label>
                         <el-input 
                         class="ico" 
-                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.ico')}" 
                         v-model="addData.ico"  
                         placeholder=""></el-input>
@@ -124,7 +123,6 @@
                         <label>web地址</label>
                         <el-input 
                         class="url" 
-                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.url')}" 
                         v-model="addData.url"  
                         placeholder=""></el-input>
@@ -251,6 +249,7 @@
                 systemId:'',
                 moduleParentId:'',
                 url:'',
+                status:'',
             },
             valueContain:'',
             ParentId: [{ 
@@ -330,6 +329,9 @@
       },
       'addData.url': function (value) {//web地址
          return this.Validator.value(value).required().maxLength(1000);
+      },
+      'addData.status': function (value) {//状态
+         return this.Validator.value(value).required().integer();
       }
     },
     created:function(){

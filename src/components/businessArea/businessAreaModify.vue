@@ -279,7 +279,6 @@
          _this.loadTree();  
         _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:_this.$route.params.id})
         .then(function(res){
-            console.log()
             _this.addData={
                 "id": res.result.id,
                 "groupId":  res.result.groupId,
@@ -355,7 +354,6 @@
         _this.$validate()
         .then(function (success) {
             if (success) {
-                console.log(_this.addData)
                  _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.addData)
                 .then(function(res){
                     _this.open('保存成功','el-icon-circle-check','successERP');
