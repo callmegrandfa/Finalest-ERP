@@ -122,7 +122,7 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <el-pagination style="margin-top:20px;"  class="text-right"  background layout="total, prev, pager, next"  :page-count="totalPage" >
+                            <el-pagination style="margin-top:20px;"  class="text-right" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, prev, pager, next"  :page-count="totalPage" >
                             </el-pagination>   
                     </el-col>
                 </el-row>
@@ -213,9 +213,10 @@ import Tree from '../../base/tree/tree'
                     label:'categoryName'
                 },
                 tableData: [],
-                pageIndex:1,//分页的当前页码
+                currentPage:1,//分页的当前页码
                 eachPage:10,//每页有多少条信息
                 totalPage:100,//当前分页总数
+                SelectionChange:[],//多选集合
             }
         },
         mounted:function(){   
@@ -240,11 +241,11 @@ import Tree from '../../base/tree/tree'
                let obgh=document.getElementById('bgj');
                 obgh.style.width="calc(100% - 275px)";
             },
-            handleSelectionChange(val) {//点击复选框选中的数据
-            },
             btmlog:function(data){
                 if(data=="启用"){
                    
+                }else if(data=="删除"){
+                    this.delData();
                 }
                 let oleftBox=document.getElementById('left-box');
                 oleftBox.style.display="block";
@@ -266,7 +267,7 @@ import Tree from '../../base/tree/tree'
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
-                _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetAll',{SkipCount:(_this.pageIndex-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
+                _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
                     let countPage=res.result.totalCount;
                     _this.tableLoading=false;
@@ -322,6 +323,65 @@ import Tree from '../../base/tree/tree'
                 this.$store.state.url='/commodityleimu/CommodityCategoriesDetails/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
+            handleCurrentChange:function(val){//获取当前页码,分页
+                this.currentPage=val;
+                console.log(this.currentPage);
+                this.loadTableData();
+            },
+            handleSelectionChange(val){//多选操作
+                this.SelectionChange=val;
+            },
+            open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            delData(){//删除
+                let _this=this;
+                if(_this.SelectionChange.length==0){
+                    _this.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的记录！'
+                    });
+                }else{
+                    let delAarry={
+                        "ids":[]
+                    }
+                    for(let i in _this.SelectionChange){
+                        delAarry.ids.push(_this.SelectionChange[i].id)
+                    }
+                    _this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            if(delAarry.length==1){//单条删除
+                                _this.$axios.deletes('http://192.168.100.107:8085/api/services/app/CategoryManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
+                                    _this.loadTableData();
+                                    _this.open('删除成功','el-icon-circle-check','successERP');    
+                                })
+                            }else{//批量删除
+                                
+                                 _this.$axios.posts('http://192.168.100.107:8085/api/services/app/CategoryManagement/BatchDelete',delAarry).then(function(res){
+                                    _this.loadTableData();
+                                    _this.open('删除成功','el-icon-circle-check','successERP');    
+                                })
+                            }  
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+
+                }
+            }
         },
         components:{
             Btm,
