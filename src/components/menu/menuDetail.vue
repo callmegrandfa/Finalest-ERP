@@ -78,7 +78,9 @@
                             @node-click="selectNodeClick"
                             >
                             </el-tree>
-                            <el-option v-show="false" :key="count.id" :label="count.moduleName" :value="count.id" id="menuDetail_confirmSelect">
+                            <!-- <el-option v-show="false" :key="count.id" :label="count.moduleName" :value="count.id" id="menuDetail_confirmSelect">
+                            </el-option> -->
+                            <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -232,10 +234,6 @@
     data(){
         return{
              search:'',
-             item:{
-                id:'',
-                moduleName:'',
-            },
             //isSave:true,//是否可以保存，不能保存就是修改
             menuCheck:true,//未选功能，已选功能
             dialogTableVisible:false,//控制对话框
@@ -251,38 +249,12 @@
                 url:'',
                 status:'',
             },
-            valueContain:'',
-            ParentId: [{ 
-                value:'0',
-                label: '无'
-            },{ 
-                value:'5',
-                label: '常用功能'
-            },{ 
-                value:'6',
-                label: '租户管理(父)'
-            },{ 
-                value:'8',
-                label: '采购管理'
-            },{ 
-                value:'9',
-                label: '租户管理(子)'
-            },{ 
-                value:'10',
-                label: '集团管理(父)'
-            },{ 
-                value:'11',
-                label: '集团管理(子)'
-            },{ 
-                value:'12',
-                label: '组织管理'
-            }],
-            contain: [{ 
+           contain: [{ 
                 value:'1',
-                label: '系统1'
+                label: '腾讯'
             }, {
                 value:'2',
-                label: '系统2'
+                label: '阿里'
             }],
             componyTree:[],
             defaultProps: {
@@ -308,6 +280,7 @@
             nodeName:'',
             selectData:{//select数据
                 Status001:[],//启用状态
+                menu:[],//菜单
             },
         }
     },
@@ -341,11 +314,6 @@
         _this.loadParent()
         _this.loadPermission();
     },
-    computed:{
-        count () {
-            return this.item;
-            },
-    },  
      watch: {
       search(val) {
         this.$refs.tree.filter(val);
@@ -357,7 +325,10 @@
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
             // 启用状态
             _this.selectData.Status001=res.result;
-            console.log(res.result)
+            })
+           _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+            // 菜单
+            _this.selectData.menu=res.result.items;
             })
         },
         filterNode(value, data) {
@@ -423,12 +394,12 @@
                 })
             })
         },
-        selectNodeClick(data){
+        selectNodeClick(data,node,self){
             let _this=this;
-            _this.item.id=data.id;
-            _this.item.moduleName=data.moduleName;
-            _this.$nextTick(function(){
-                $('#menuDetail_confirmSelect').click()
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
             })
         },
         loadParent(){

@@ -24,15 +24,39 @@
                 <div class="bgcolor smallBgcolor">
                     <label>所属公司</label>
                     <el-select  v-model="searchData.CompanyOuId" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        <el-option 
+                        v-for="item in selectData.companys" 
+                        :key="item.id" 
+                        :label="item.ouName" 
+                        :value="item.id" 
+                        >
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>行政地区</label>
                     <el-select  v-model="searchData.AreaId" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
+                        <!-- <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option> -->
+                        <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search_area">
+                        </el-input>
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="selectTree_area"
+                            :props="selectProps_area"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree"
+                            :filter-node-method="filterNode_area"
+                            :expand-on-click-node="false"
+                            @node-click="nodeClick_area"
+                            >
+                            </el-tree>
+                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
@@ -221,6 +245,16 @@
     export default{
         data(){
             return {
+                search_area:'',
+                selectTree_area:[
+                ],
+                selectProps_area: {
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
+
                 tableLoading:false,
                 treeLoading:false,
                 searchData:{
@@ -234,6 +268,8 @@
                 selectData:{//select数据
                     OUType:[],//组织类型
                     Status001:[],//启用状态
+                    companys:[],//所属公司
+                    area:[],//业务地区
                 },
                 searchDataClick:{},
                 tableSearchData:{},
@@ -306,9 +342,11 @@
                 _this.loadTree();
                 
              },
-        mounted () {
-            let _this=this;
-        },     
+         watch: {
+            search_area(val) {
+                this.$refs.tree.filter(val);
+            },
+        },
         methods:{
             getSelectData(){
                 let _this=this;
@@ -320,6 +358,18 @@
                     // 启用状态
                     _this.selectData.Status001=res.result;
                     })
+                 _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){ 
+                // 公司
+                    _this.selectData.companys=res.result;
+                })    
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAllData',{AreaType:_this.AreaType}).then(function(res){ 
+                // 业务地区
+                _this.selectData.area=res.result;
+                })
+            },
+            filterNode_area(value, data) {
+                if (!value) return true;
+                return data.areaName.indexOf(value) !== -1;
             },
             closeLeft:function(){
                let self = this;
@@ -365,6 +415,13 @@
                },function(res){
                    _this.treeLoading=false;
                })
+                //地区
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+                .then(function(res){
+                    _this.selectTree_area=res.result;
+                    _this.loadIcon();
+                },function(res){
+                })
             },
             loadIcon(){
                 let _this=this;
@@ -479,6 +536,14 @@
                     _this.tableLoading=false;
                 })
                  
+            },
+            nodeClick_area(data,node,self){
+                let _this=this;
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
