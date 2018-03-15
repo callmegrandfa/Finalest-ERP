@@ -234,23 +234,18 @@
         // ---创建数据，修改数据---------------------------------------------
         save:function(){//点击保存按钮
             let self = this;
+
             if(self.addList.length>0){
-                for(let i in self.addList){
-                    this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.addList[i]).then(function(res){         
+                self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){         
                         self.open('创建货币资料成功','el-icon-circle-check','successERP');
-                        // console.log(res)
                         self.loadAllList();
                         self.addList = [];
                     }),function(res){
                         self.open('创建货币资料失败','el-icon-error','faildERP');
                     };
-                }
-               };
-            
+            }
             if(self.updateList.length>0){
-                for(let i in self.updateList){
-                    if(self.updateList[i].id!=''){
-                        this.$axios.puts('/api/services/app/CurrencyManagement/Update',self.updateList[i]).then(function(res){
+                self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
                             // console.log(res);
                             self.open('修改货币资料成功','el-icon-circle-check','successERP');
                             self.loadAllList()
@@ -259,8 +254,6 @@
                             }),function(res){
                                 self.open('修改货币资料失败','el-icon-error','faildERP');
                         };
-                    }
-                }
             }
         },
         addCol:function(){//增行
@@ -340,7 +333,6 @@
             },
             handleChange:function(index,row){
                 let self = this;
-                // console.log(index)
                 let map = false;
                 if(self.ar.length==0){//修改后表格前红标
                     self.ar.push(row.id)
@@ -356,10 +348,8 @@
                 }
                 if(map){
                     self.ar.push(row.id)
-                    // self.ar.sort();
                     console.log(self.ar)
                 }
-                // self.redIndex = index;
 
 
                 let flag = false;

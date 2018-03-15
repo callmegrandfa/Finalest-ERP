@@ -15,19 +15,36 @@
                 <el-row class="mt10">
                     <div class="bgcolor smallBgcolor">
                         <label>客户分类</label>
-                        <el-select v-model="queryClass" placeholder="">
-                            <el-option v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                            </el-option>
+                        <el-select class="queryCu"
+                                   placeholder=""
+                                   v-model="queryCu">
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="cuSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="cuAr"
+                                     :props="selectCuProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="cuNodeClick"></el-tree>
+
+                            <el-option v-show="false"
+                                       :key="countCu.id" 
+                                       :label="countCu.cuFullname" 
+                                       :value="countCu.id"
+                                       id="cu_confirmSelect"></el-option>
+                            
                         </el-select>
                     </div>
                 </el-row>
 
                 <el-row class="fs12">
                    <div class="bgcolor smallBgcolor">
-                        <label>所属组织{{queryOu}}</label>
+                        <label>所属组织</label>
                         <el-select class="queryOu"
                                    placeholder=""
                                    v-model="queryOu">
@@ -194,8 +211,16 @@
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column type="selection" fixed></el-table-column>
                             <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
-                            <el-table-column prop="contactCode" label="客户编码" fixed></el-table-column>
-                            <el-table-column prop="contactName" label="客户名称"></el-table-column>
+                            <el-table-column prop="contactCode" label="客户编码" fixed>
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].contactCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="contactName" label="客户名称">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].contactName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
                             <el-table-column prop="contactClassId" label="客户类型"></el-table-column>
                             <el-table-column prop="contactWorkPropertyIdTValue" label="客户性质"></el-table-column>
@@ -241,13 +266,26 @@
             return {
                 allList:[],//所有数据列表
 
-                queryClass:'',//客户分类搜索
+                queryCu:'',//客户分类搜索
                 queryOu:'',//所属组织搜索
                 queryAd:'',//行政地区搜索
                 queryOp:'',//业务地区搜索
                 queryCode:'',//编码搜索
                 queryName:'',//名称搜索
                 queryProperty:'',//客户性质搜索
+                //---客户分类树形下拉-----
+                cuSearch:'',
+                selectCuProps:{
+                    children: 'childNodes',
+                    label: 'classFullname',
+                    id:'id'
+                },
+                cuItem:{
+                    id:'',
+                    cuFullname:'',
+                },
+                cuAr:[],//组织单元下拉框
+                //-----------------------
                 //---组织单元树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -327,6 +365,9 @@
             
         },
         computed:{
+            countCu () {
+                return this.cuItem;
+            },
             countOu () {
                 return this.ouItem;
             },
@@ -355,6 +396,14 @@
         //---下拉的数据------------------------------------------------------
             loadSelect:function(){
                 let self = this;
+                //客户分类
+                self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
+                    console.log(res);
+                    self.cuAr = res;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
                 //组织单元
                 self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
                     console.log(res);
@@ -532,6 +581,14 @@
             console.log(data)
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
+        },
+        cuNodeClick:function(data){
+            let self = this;
+            self.cuItem.id = data.id;
+            self.cuItem.cuFullname = data.classFullname;
+            self.$nextTick(function(){
+                $('#cu_confirmSelect').click()
+            })
         },
         ouNodeClick:function(data){
             let self = this;

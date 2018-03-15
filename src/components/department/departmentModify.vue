@@ -59,10 +59,25 @@
                                    :disabled="isEdit"
                                    @change='Modify()'
                                    v-model="departmentData.ouId">
-                            <el-option v-for="item in ou" 
-                                       :key="item.value" 
-                                       :label="item.label" 
-                                       :value="item.value"></el-option>
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="ouSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="ouTree"
+                                     :props="ouProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="ouNodeClick"></el-tree>            
+
+                            <el-option v-show="false"
+                                       :key="countOu.id" 
+                                       :label="countOu.ouName" 
+                                       :value="countOu.id"
+                                       id="ou_confirmSelect"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('departmentData.ouId') }}</div>
@@ -72,7 +87,7 @@
             <el-col :span="24">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级部门{{departmentData.deptParentid}}</label>
+                        <label><small>*</small>上级部门</label>
                         <el-select class="deptParentid" 
                                    :class="{redBorder : validation.hasError('departmentData.deptParentid')}" 
                                    placeholder=""
@@ -174,9 +189,9 @@
                                     placeholder=""
                                     v-model="departmentData.status">
                             <el-option v-for="item in status" 
-                                       :key="item.value" 
-                                       :label="item.label" 
-                                       :value="item.value"></el-option>
+                                       :key="item.itemValue" 
+                                       :label="item.itemName" 
+                                       :value="item.itemValue"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('departmentData.status') }}</div>
@@ -190,11 +205,15 @@
     export default({
         created:function(){
             let self = this;
-            self.loadParentTree();
-            // self.loadData();
-            
+            self.loadData();
+            self.loadOuTree();
+            self.loadStatus();
+            self.loadParentTree();      
         },
         computed:{
+            countOu () {
+                return this.ouItem;
+                },
             count () {
                 return this.parentItem;
                 },
@@ -203,7 +222,21 @@
             return{
                 ifModify:false,//判断是否修改过
                 isEdit:true,//判断是否要修改
-
+                
+                //---组织单元树--------
+                ouTree:[],
+                ouSearch:'',
+                ouProps:{
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+                ouItem:{
+                    id:'',
+                    ouName:'',
+                },
+                //--------------------
+                //---上级部门树--------
                 selectParentTree:[],//选择上级部门
                 parentSearch:'',//搜索上级部门
                 selectParentProps:{
@@ -215,28 +248,8 @@
                     id:'',
                     deptName:'',
                 },
-
-                ou:[{//所属组织
-                        value:21,
-                        label: '恒康'
-                    }, {
-                        value:35,
-                        label: '恒大'
-                    }, {
-                        value:79,
-                        label: '361度'
-                }],
-
-                status: [{ //状态
-                    value:0,
-                    label: '状态1'
-                },{ 
-                    value:1,
-                    label: '状态2'
-                }, {
-                    value:2,
-                    label: '状态3'
-                }],
+                //--------------------
+                status: [],
                 departmentData:{
                     "id": '',
                     "groupId": 1,
@@ -274,35 +287,6 @@
       },
     },
     methods: {
-        //---错误提示-------------------------------------------
-        showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsSelect(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsRangedate(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.$el).hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        //------------------------------------------------------
         //---加载数据---------------------------------------------
         loadData:function(){//根据id加载信息
             let self = this;
@@ -310,24 +294,33 @@
                 self.$axios.gets('/api/services/app/DeptManagement/Get',{id:self.$route.params.id}).then(function(res){  
                     console.log(res)               
                     self.departmentData = res.result;
-                    // console.log(self.repositoryData);
-                    // self.loadParentTree();
+
+
+                    self.ouItem.id = self.departmentData.ouId;
+                    self.ouItem.ouName = self.departmentData.ouFullname;
+                    self.parentItem.id = self.departmentData.deptParentid;
+                    self.parentItem.deptName = self.departmentData.deptParentName;
                 });
             }
 
+        },
+        loadOuTree:function(){
+            let self=this;
+            self.treeLoading=true;
+            self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
+                console.log(res)
+                self.ouTree=res.result;
+                self.loadIcon();
+            },function(res){
+                self.treeLoading=false;
+            })
         },
         loadParentTree(){
             let self=this;
             self.treeLoading=true;
             self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
                 console.log(res)
-                // self.loadData();
-                self.selectParentTree=res.result
-                console.log(self.$nextTick)
-                self.$nextTick(function(){
-                    self.loadData()
-                });
-                // console.log(self.componyTree)
+                self.selectParentTree=res.result;
                 self.loadIcon();
             },function(res){
                 self.treeLoading=false;
@@ -346,6 +339,17 @@
                 })
             })
         },
+        loadStatus:function(){//加载状态下拉框
+            let self = this;
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                console.log(res)
+                
+            self.status = res.result;      
+                
+            },function(res){
+                
+            })
+        },
         //-------------------------------------------------------
 
         //---树--------------------------------------------------
@@ -353,6 +357,14 @@
             console.log(data)
             if (!value) return true;
                 return data.deptName.indexOf(value) !== -1;
+        },
+        ouNodeClick:function(data){
+            let self = this;
+            self.ouItem.id = data.id;
+            self.ouItem.ouName = data.ouFullname;
+            self.$nextTick(function(){
+                $('#ou_confirmSelect').click()
+            })
         },
         nodeClick:function(data){
             let self = this;
@@ -447,6 +459,35 @@
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         //---------------------------------------------------------
+        //---错误提示-------------------------------------------
+        showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsSelect(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsRangedate(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        //------------------------------------------------------
     }
 
 })

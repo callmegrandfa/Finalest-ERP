@@ -124,9 +124,17 @@
                     <el-col :span="24">
                         <el-table :data="allList" border @selection-change="handleSelectionChange" style="width: 100%" stripe>
                             <el-table-column type="selection" fixed></el-table-column>
-                            <el-table-column prop="ouId" label="所属组织" fixed></el-table-column>
-                            <el-table-column prop="stockCode" label="仓库编码" fixed></el-table-column>
-                            <el-table-column prop="stockName" label="仓库名称"></el-table-column>
+                            <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
+                            <el-table-column prop="stockCode" label="仓库编码" fixed>
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].stockCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="stockName" label="仓库名称">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].stockName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="stockFullName" label="仓库全称"></el-table-column>
                             <el-table-column prop="stockTypeId" label="仓库类型">
                                 <template slot-scope="scope">
@@ -192,22 +200,6 @@
         methods:{
             //---获取数据------------------------------------------
             getAllList:function(){//获取所有仓库列表
-
-                // ouId (integer, optional): 组织单元ID ,
-                // stockCode (string, optional): 仓库编码 ,
-                // stockName (string, optional): 仓库名称 ,
-                // stockFullName (string, optional): 仓库全称 ,
-                // opAreaId (integer, optional): 业务地区 ,
-                // adAreaId (integer, optional): 行政地区 ,
-                // stockTypeId (integer, optional): 仓库类型 ,
-                // invTypeId (integer, optional): 库存分类 ,
-                // fax (string, optional): 传真 ,
-                // email (string, optional): 邮箱 ,
-                // status (integer, optional): 启用状态 ,
-                // manager (string, optional): 负责人 ,
-                // phone (string, optional): 电话 ,
-                // remark (string, optional): 备注 ,
-                // id (integer, optional)
 
                 let self = this;
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Draw:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
