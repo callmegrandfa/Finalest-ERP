@@ -49,17 +49,7 @@
         <el-row class="bg-white">
             <el-col :span='24' >
                 <el-row class="pl10 pt10 pr10 pb10 border-bottom">
-                    <el-col :span='4' class="tree-container">
-                        <el-tree
-                        :data="componyTree"
-                        :props="defaultProps"
-                        node-key="treeId"
-                        default-expand-all
-                        :expand-on-click-node="true"
-                        @node-click="nodeClick">
-                        </el-tree>
-                    </el-col>
-                    <el-col :span='19' class="ml10 border-left">
+                    <el-col :span='24' class="ml10 border-left">
                         <el-table :data="tableData"  style="width: 100%" stripe @selection-change="handleSelectionChange" >
                             <el-table-column type="expand">
                                 <template slot-scope="props">
