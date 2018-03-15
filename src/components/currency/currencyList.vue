@@ -51,9 +51,9 @@
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
-                            <el-table-column type="selection"></el-table-column>
+                            <el-table-column type="selection" fixed></el-table-column>
 
-                            <el-table-column prop="ouId" label="币种编码">
+                            <el-table-column prop="ouId" label="币种编码" fixed>
                                 <template slot-scope="scope">
                                     <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need" 
@@ -64,7 +64,7 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="contact" label="币种名称">
+                            <el-table-column prop="contact" label="币种名称" fixed>
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -124,7 +124,7 @@
                                 </template>
                             </el-table-column>
                             
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <el-button v-on:click="confirmDel(scope.$index,scope.row)" type="text" size="small">删除</el-button>
                                 </template>

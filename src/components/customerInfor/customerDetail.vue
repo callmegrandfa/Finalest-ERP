@@ -22,13 +22,6 @@
                 </div>
                 <span class="btDetail">保存并新增</span>
             </button>
-
-            <button class="erp_bt bt_look">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_look.png">
-                </div>
-                <span class="btDetail">审核</span>
-            </button>
             
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
@@ -130,7 +123,7 @@
                     
 
                     <div class="bgcolor">
-                        <label>所属组织</label>
+                        <label><small>*</small>所属组织</label>
                         <el-select v-model="createContactParams.ouId" 
                                 placeholder=""
                                 class="ouId"
@@ -145,17 +138,17 @@
 
 
                     <div class="bgcolor">
-                        <label>编码</label>
-                        <el-input v-model="createContactParams.contact" 
+                        <label><small>*</small>编码</label>
+                        <el-input v-model="createContactParams.contactCode" 
                                 placeholder=""
                                 @focus="showErrprTips"
-                                :class="{redBorder : validation.hasError('createContactParams.contact')}"
-                                class="contact"></el-input>
+                                :class="{redBorder : validation.hasError('createContactParams.contactCode')}"
+                                class="contactCode"></el-input>
                     </div>
 
 
                     <div class="bgcolor">
-                        <label>名称</label>
+                        <label><small>*</small>名称</label>
                         <el-input v-model="createContactParams.contactName" 
                                 placeholder=""
                                 @focus="showErrprTips"
@@ -165,7 +158,7 @@
 
 
                     <div class="bgcolor">
-                        <label>全称</label>
+                        <label><small>*</small>全称</label>
                         <el-input v-model="createContactParams.contactFullName" 
                                 placeholder=""
                                 @focus="showErrprTips"
@@ -258,7 +251,7 @@
                                 :class="{redBorder : validation.hasError('createContactParams.taxCode')}"></el-input>
                     </div>
                     <div class="bgcolor">
-                        <label>业务地区区号</label>
+                        <label>业务地区</label>
                         <el-select v-model="createContactParams.opAreaId"
                                 class="opAreaId"
                                 placeholder=""
@@ -340,6 +333,20 @@
                                 class="remark"
                                 :class="{redBorder : validation.hasError('createContactParams.remark')}"
                                 @focus="showErrprTips"></el-input>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label><small>*</small>状态</label>
+                        <el-select v-model="createContactParams.status"
+                                class="status"
+                                placeholder=""
+                                :class="{redBorder : validation.hasError('createContactParams.status')}"
+                                @focus="showErrprTipsSelect">
+                            <el-option v-for="item in opArea" 
+                                    :key="item.valueAreaBusiness" 
+                                    :label="item.label" 
+                                    :value="item.valueAreaBusiness"></el-option>
+                        </el-select>
                     </div>
                 </el-col>
             </el-row>

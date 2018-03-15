@@ -11,201 +11,207 @@
             </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24">
-            <div class="tipsWrapper" name="userCode">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.userCode')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.userCode') }}</p>
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth"><label>
+                        <small>*</small>用户编码</label>
+                        <el-input 
+                        class="userCode" 
+                        :class="{redBorder : validation.hasError('addData.userCode')}" 
+                        v-model="addData.userCode" 
+                        placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.userCode') }}</div>
                 </div>
-            </div>
-             <div class="tipsWrapper" name="displayName">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.displayName')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.displayName') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>用户名称</label>
+                    <el-input 
+                    class="displayName" 
+                    :class="{redBorder : validation.hasError('addData.displayName')}" 
+                    v-model="addData.displayName"  
+                    placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.displayName') }}</div>
                 </div>
-            </div>
-            <div class="tipsWrapper" name="phoneNumber">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.phoneNumber')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.phoneNumber') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>手机号码</label>
+                    <el-input 
+                    class="phoneNumber" 
+                    :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
+                    v-model="addData.phoneNumber"  
+                    placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.phoneNumber') }}</div>
                 </div>
-            </div>
-            <!-- <div class="tipsWrapper" name="email">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.email')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.email') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label>邮箱</label>
+                    <el-input 
+                    class="email" 
+                    :class="{redBorder : validation.hasError('addData.email')}"
+                    v-model="addData.email"  
+                    placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.email') }}</div>
                 </div>
-            </div>
-            <div class="tipsWrapper" name="userGroupId">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.userGroupId')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.userGroupId') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>所属用户组</label>
+                    <el-select 
+                    class="userGroupId" 
+                    placeholder=""
+                    :class="{redBorder : validation.hasError('addData.userGroupId')}"
+                    v-model="addData.userGroupId">
+                        <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
+                        </el-option>
+                    </el-select>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.userGroupId') }}</div>
                 </div>
-            </div> -->
-            <div class="tipsWrapper" name="ouId">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.ouId')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouId') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>所属组织</label>
+                    <el-select 
+                    class="ouId" 
+                    placeholder=""
+                    :class="{redBorder : validation.hasError('addData.ouId')}"
+                    v-model="addData.ouId">
+                        <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
+                        </el-option>
+                    </el-select>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
                 </div>
-            </div>
-            <div class="tipsWrapper" name="userType">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.userType')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.userType') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>身份类型</label>
+                    <el-select 
+                    class="userType" 
+                    placeholder=""
+                    :class="{redBorder : validation.hasError('addData.userType')}"
+                    v-model="addData.userType">
+                        <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                        </el-option>
+                    </el-select>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.userType') }}</div>
                 </div>
-            </div>
-            <div class="tipsWrapper" name="languageId">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.languageId')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.languageId') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>语种</label>
+                    <el-select 
+                    class="languageId" 
+                    placeholder=""
+                    :class="{redBorder : validation.hasError('addData.languageId')}"
+                    v-model="addData.languageId">
+                        <el-option v-for="item in selectData.languageId" :key="item.id" :label="item.displayName" :value="item.id">
+                        </el-option>
+                    </el-select>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.languageId') }}</div>
                 </div>
-            </div>
-            <div class="tipsWrapper" name="status">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.status') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>有效时间</label>
+                        <div class="rangeDate">
+                            <el-date-picker
+                            v-model="dateRange"
+                            class="dateRange"
+                            :class="{redBorder : validation.hasError('dateRange')}"
+                            type="daterange"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd" 
+                            range-separator="to"
+                            align="center"
+                            unlink-panels
+                            start-placeholder=""
+                            end-placeholder="">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('dateRange') }}</div>
                 </div>
-            </div>
-            <div class="tipsWrapper" name="remark">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.remark')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.remark') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label>状态</label>
+                        <el-select 
+                        class="status" 
+                        placeholder=""
+                        :class="{redBorder : validation.hasError('addData.status')}"
+                        v-model="addData.status">
+                            <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.status') }}</div>
                 </div>
-            </div>
-            <div class="tipsWrapper" name="dateRange">
-                <div class="errorTips" :class="{block : !validation.hasError('dateRange')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('dateRange') }}</p>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor">
+                        <label></label>
+                        <el-checkbox v-model="addData.isReg"></el-checkbox>
+                        <span class="isGive">是否注册用户</span>
+                    </div>
                 </div>
-            </div>
-            <div class="bgcolor"><label>
-              <small>*</small>用户编码</label>
-              <el-input 
-              class="userCode" 
-              @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData.userCode')}" 
-              v-model="addData.userCode" 
-              placeholder="无字段"></el-input>
-            </div>
-            <div class="bgcolor">
-              <label><small>*</small>用户名称</label>
-              <el-input 
-              class="displayName" 
-              @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData.displayName')}" 
-              v-model="addData.displayName"  
-              placeholder="无字段"></el-input>
-            </div>
-            <div class="bgcolor">
-              <label><small>*</small>手机号码</label>
-              <el-input 
-              class="phoneNumber" 
-              @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
-              v-model="addData.phoneNumber"  
-              placeholder=""></el-input>
-            </div>
-            <div class="bgcolor">
-              <label><small>*</small>邮箱</label>
-              <el-input 
-              class="email" 
-              @focus="showErrprTips"
-              :class="{redBorder : validation.hasError('addData.email')}"
-              v-model="addData.email"  
-              placeholder="无字段"></el-input>
-            </div>
-            <div class="bgcolor">
-              <label><small>*</small>所属用户组</label>
-              <el-select 
-              class="userGroupId" 
-              @focus="showErrprTipsSelect"
-              :class="{redBorder : validation.hasError('addData.userGroupId')}"
-              placeholder="无字段"
-              v-model="addData.userGroupId">
-                  <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-              </el-select>
-            </div>
-            <div class="bgcolor">
-              <label><small>*</small>所属组织</label>
-              <el-select 
-              class="ouId" 
-              @focus="showErrprTipsSelect"
-              :class="{redBorder : validation.hasError('addData.ouId')}"
-              v-model="addData.ouId">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-            <div class="bgcolor">
-              <label><small>*</small>身份类型</label>
-              <el-select 
-              class="userType" 
-              @focus="showErrprTipsSelect"
-              :class="{redBorder : validation.hasError('addData.userType')}"
-              v-model="addData.userType">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-            <div class="bgcolor">
-              <label><small>*</small>语种</label>
-              <el-select 
-              class="languageId" 
-              @focus="showErrprTipsSelect"
-              :class="{redBorder : validation.hasError('addData.languageId')}"
-              v-model="addData.languageId">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-            <div class="bgcolor">
-              <label><small>*</small>有效时间</label>
-               <div class="rangeDate">
-                  <el-date-picker
-                  v-model="dateRange"
-                  class="dateRange"
-                  @focus="showErrprTipsRangedate"
-                  type="daterange"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd" 
-                  range-separator="to"
-                  start-placeholder="无字段"
-                  end-placeholder="无字段">
-                  </el-date-picker>
-              </div>
-            </div>
-            <div class="bgcolor">
-              <label>状态</label>
-              <el-select 
-              class="status" 
-              @focus="showErrprTipsSelect"
-              :class="{redBorder : validation.hasError('addData.status')}"
-              v-model="addData.status">
-                <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-          </el-col>
+            </el-col>
+
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label>备注</label>
+                        <el-input
+                        class="remark" 
+                        :class="{redBorder : validation.hasError('addData.remark')}"
+                        v-model="addData.remark"
+                        type="textarea"
+                        :autosize="{ minRows: 4, maxRows: 10}"
+                        placeholder="">
+                        </el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.remark') }}</div>
+                </div>
+            </el-col>
 
           <el-col :span="24">
-            <div class="bgcolor">
-              <label><el-checkbox v-model="addData.isReg"></el-checkbox></label>
-              <span class="isGive">是否注册用户</span>
-            </div>
-          </el-col>
-
-          <el-col :span="24">
-            <div class="bgcolor longWidth">
-              <label>备注</label>
-              <el-input
-               class="remark" 
-               @focus="showErrprTipsTextArea"
-               :class="{redBorder : validation.hasError('addData.remark')}"
-                v-model="addData.remark"
-                type="textarea"
-                :autosize="{ minRows: 4, maxRows: 10}"
-                placeholder="请输入内容">
-              </el-input>
-            </div>
-          </el-col>
-
-          <el-col :span="24">
-            <div class="bgcolor longWidth">
-              <label>关联角色</label>
-              <div class="addZoo">
-                  <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
-                  <a class="addRole"  v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
-              </div>
+            <div class="bgMarginAuto">
+                <div class="bgcolor bgLongWidth">
+                    <label>关联角色</label>
+                    <div class="addZoo">
+                        <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
+                        <a class="addRole"  v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
+                    </div>
+                </div>    
             </div>
             <el-dialog :visible.sync="dialogTableVisible">
                 <template slot="title">
@@ -235,47 +241,6 @@
                 </el-col>
             </el-dialog>
         </el-col>
-
-          <!-- <el-col :span='24'>
-            <div class="bgcolor longWidth">
-                <label>&nbsp;</label>
-                <el-table 
-                v-loading="tableLoading"
-                :data="tableData" 
-                border 
-                style="width: calc(100% - 82px)" 
-                stripe 
-                @selection-change="handleSelectionChange" 
-                ref="multipleTable">
-                    <el-table-column type="selection"></el-table-column>
-                    <el-table-column label="序号">
-                          <template slot-scope="scope">
-                            {{scope.$index+1}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="roleCode" label="角色编码"></el-table-column>
-                    <el-table-column prop="displayName" label="角色名称"></el-table-column>
-                    <el-table-column label="所属角色组(无字段)"></el-table-column>
-                    <el-table-column prop="ouId" label="所属组织"></el-table-column>
-                    <el-table-column prop="status" label="状态"></el-table-column>
-                    <el-table-column label="操作">
-                          <template slot-scope="scope">
-                            <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
-                            <el-button type="text" size="small"  @click="modify(scope.row)" >查看</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-pagination
-                    style="margin-top:20px;" 
-                    class="text-right" 
-                    background layout="total,prev, pager, next,jumper" 
-                    @current-change="handleCurrentChange"
-                    :current-page="pageIndex"
-                    :page-size="oneItem"
-                    :total="totalItem">
-                </el-pagination>   
-            </div>
-          </el-col> -->
 
       </el-row>
   </div>
@@ -333,9 +298,11 @@
         roleOneItem:10,//每页有多少条信息
         roleTotalItem:0,//总共有多少条消息
         selectData:{//select数据
-            OUType:[],//组织类型
-            Status002:[],//启用状态
+            OUType:[],//所属组织
+            Status001:[],//启用状态
             UserType:[],//身份类型
+            userGroupId:[],//所属用户组
+            languageId:[],//语种
         },
       }
     },
@@ -349,6 +316,7 @@
       'addData.phoneNumber': function (value) {//手机号码
          return this.Validator.value(value).required().maxLength(20);
       },
+      //邮箱,所属用户组没有返回字段
     //   'addData.email': function (value) {//邮箱
     //      return this.Validator.value(value).required().maxLength(200);
     //   },
@@ -376,10 +344,11 @@
     },
     created:function(){       
       let _this=this;
-      _this.getData();
-      _this.GetRoles();
-    //   _this.loadTableData();
-      
+    _this.getSelectData();
+    _this.GetRoles();
+    _this.getData();
+    },
+    mounted () {
     },
     methods: {
         getSelectData(){
@@ -388,13 +357,23 @@
             // 身份类型
             _this.selectData.UserType=res.result;
             })
-            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){ 
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status1'}).then(function(res){ 
             // 启用状态
-            _this.selectData.Status002=res.result;
+            _this.selectData.Status001=res.result;
             })
-            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'OUType'}).then(function(res){ 
-            // 组织类型
+            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // 所属组织
             _this.selectData.OUType=res.result;
+            })
+            _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
+            // 所属用户组
+                _this.selectData.userGroupId=res.result.items;
+                _this.totalCount=res.result.totalCount;
+            })
+            ///api/services/app/Language/GetLanguages
+            _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
+            // 语种
+                _this.selectData.languageId=res.result.items;
             })
         },
         GetRoles(){
@@ -412,6 +391,7 @@
            let _this=this;
            _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
            .then(function(res){
+               console.log(res)
                 _this.addData= {
                     "userCode": res.result.userCode,
                     "displayName": res.result.displayName,
@@ -621,6 +601,7 @@
         },
         save(){
             let _this=this;
+            console.log(_this.addData)
             _this.$validate()
             .then(function (success) {
                 if (success) {
@@ -631,8 +612,7 @@
                     _this.addData.roleCodes=roles;
                     _this.addData.effectiveStart=_this.dateRange[0];
                     _this.addData.effectiveEnd=_this.dateRange[1];
-                    _this.addData.userType=parseInt(_this.addData.userType);
-                    _this.addData.status=parseInt(_this.addData.status);
+                    console.log(_this.addData)
                     _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
                         _this.checkedRoleCode=[]
@@ -672,58 +652,6 @@
     height: 100%;
     line-height: 35px;
   }
-.userDetail .bgcolor.longWidth{
-    width: 100%;
-    height:auto;
-  }
- .userDetail .bgcolor.longWidth .el-textarea{
-   width: 436px;
-   font-size: 12px;
- } 
- .userDetail .bgcolor.longWidth .addZoo{
-   float: left;
-   width: calc(100% - 82px)
- }
-.userDetail .bgcolor.longWidth .add{
-    display: block;
-    width: 35px;
-    height: 35px;
-    border-radius: 3px;
-    background-color: #c7c7c7;
-    color: #fff;
-    text-align: center;
-    line-height: 35px;
-    text-decoration: none;
-    font-size: 23px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-.userDetail .bgcolor.longWidth .addRole{
-    text-align: center;
-    line-height: 35px;
-    display: inline-block;
-    width: 66px;
-    height: 35px;
-    background-color: #f2f2f2;
-    border: none;
-    border-radius: 3px;
-    font-size: 12px;
-    margin-right: 10px;
-    cursor: pointer;
-    position: relative;
-}
-.userDetail .bgcolor.longWidth .add:hover{
-    background-color: #354052;
-}
-.userDetail .bgcolor.longWidth .addRole i{
-  position: absolute;
-  right: -4px;
-  top: -4px;
-  color: #cccccc;
-}
-.userDetail .bgcolor.longWidth .addRole:hover i{
-  color:#f66;
-}
 /* 头部已选功能，未选功能 */
 .double_bt{
     width: 200px;

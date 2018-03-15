@@ -1,6 +1,6 @@
 <template>
     <div class="departmentModify">
-        <el-row>
+        <el-row class="fixed">
             <el-col :span="24">
                 <button @click="back" class="erp_bt bt_back">
                     <div class="btImg">
@@ -10,20 +10,36 @@
                 </button>
                 <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
                 <!-- <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>     -->
-                <button @click="save" class="erp_bt bt_save">
+                <button @click="save" class="erp_bt bt_save" v-show='!isEdit'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button @click='saveAdd' class="erp_bt bt_saveAdd">
+                <button @click='saveAdd' class="erp_bt bt_saveAdd" v-show='!isEdit'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
+
+                <button @click="Cancel()" class="erp_bt bt_cancel">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
+
+                <button @click="Update()" class="erp_bt bt_modify">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_modify.png">
+                    </div>
+                    <span class="btDetail">修改</span>
+                </button> 
+
                 
+
                 <button class="erp_bt bt_auxiliary bt_width">
                     <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
                     <span class="btDetail">辅助功能</span>
@@ -40,6 +56,7 @@
                         <el-select class="ouId" 
                                    :class="{redBorder : validation.hasError('departmentData.ouId')}" 
                                    placeholder=""
+                                   :disabled="isEdit"
                                    @change='Modify()'
                                    v-model="departmentData.ouId">
                             <el-option v-for="item in ou" 
@@ -55,16 +72,31 @@
             <el-col :span="24">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级部门</label>
+                        <label><small>*</small>上级部门{{departmentData.deptParentid}}</label>
                         <el-select class="deptParentid" 
                                    :class="{redBorder : validation.hasError('departmentData.deptParentid')}" 
                                    placeholder=""
+                                   :disabled="isEdit"
                                    @change='Modify()'
                                    v-model="departmentData.deptParentid">
-                            <el-option v-for="item in deptParent" 
-                                       :key="item.value" 
-                                       :label="item.label" 
-                                       :value="item.value"></el-option>
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="parentSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="selectParentTree"
+                                     :props="selectParentProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="nodeClick"></el-tree>
+                            <el-option v-show="false"
+                                       :key="count.id" 
+                                       :label="count.deptName" 
+                                       :value="count.id"
+                                       id="businessDetail_confirmSelect"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('departmentData.deptParentid') }}</div>
@@ -77,6 +109,7 @@
                         <label><small>*</small>部门编码</label>
                         <el-input class="deptCode" 
                                   placeholder=""
+                                  :disabled="isEdit"
                                   @change='Modify()'
                                   :class="{redBorder : validation.hasError('departmentData.deptCode')}" 
                                   v-model="departmentData.deptCode"></el-input>
@@ -89,7 +122,8 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>部门名称</label>
-                        <el-input  class="deptName" 
+                        <el-input  class="deptName"
+                                   :disabled="isEdit" 
                                    :class="{redBorder : validation.hasError('departmentData.deptName')}" 
                                    v-model="departmentData.deptName"
                                    placeholder=""
@@ -104,6 +138,7 @@
                     <div class="bgcolor longWidth">
                         <label>负责人</label>
                         <el-input class="manager" 
+                                  :disabled="isEdit"
                                   :class="{redBorder : validation.hasError('departmentData.manager')}" 
                                   v-model="departmentData.manager"
                                   @change='Modify()'
@@ -117,7 +152,8 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>备注</label>
-                        <el-input class="remark" 
+                        <el-input class="remark"
+                                  :disabled="isEdit" 
                                   :class="{redBorder : validation.hasError('departmentData.remark')}" 
                                   v-model="departmentData.remark"
                                   type="textarea"
@@ -132,7 +168,8 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
-                        <el-select  class="status" 
+                        <el-select  class="status"
+                                    :disabled="isEdit" 
                                     :class="{redBorder : validation.hasError('departmentData.status')}" 
                                     placeholder=""
                                     v-model="departmentData.status">
@@ -153,12 +190,32 @@
     export default({
         created:function(){
             let self = this;
+            // self.loadParentTree();
             self.loadData();
-            console.log(self.ifModify)
+            
         },
+        computed:{
+            count () {
+                return this.parentItem;
+                },
+        },  
         data(){
             return{
-                ifModify:false,
+                ifModify:false,//判断是否修改过
+                isEdit:true,//判断是否要修改
+
+                selectParentTree:[],//选择上级部门
+                parentSearch:'',//搜索上级部门
+                selectParentProps:{
+                    children: 'children',
+                    label: 'deptName',
+                    id:'id'
+                },
+                parentItem:{
+                    id:'',
+                    deptName:'',
+                },
+
                 ou:[{//所属组织
                         value:21,
                         label: '恒康'
@@ -168,16 +225,6 @@
                     }, {
                         value:79,
                         label: '361度'
-                }],
-                deptParent:[{//上级部门
-                        value:1,
-                        label: '上级部门1'
-                    }, {
-                        value:2,
-                        label: '上级部门2'
-                    }, {
-                        value:3,
-                        label: '上级部门3'
                 }],
 
                 status: [{ //状态
@@ -264,16 +311,59 @@
                     console.log(res)               
                     self.departmentData = res.result;
                     // console.log(self.repositoryData);
+                    self.loadParentTree();
                 });
             }
 
+        },
+        loadParentTree(){
+            let self=this;
+            self.treeLoading=true;
+            self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
+                console.log(res)
+                // self.loadData();
+                self.selectParentTree=res.result
+                // console.log(self.componyTree)
+                self.loadIcon();
+            },function(res){
+                self.treeLoading=false;
+            })
+        },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        //-------------------------------------------------------
+
+        //---树--------------------------------------------------
+        filterNode(value, data) {
+            console.log(data)
+            if (!value) return true;
+                return data.deptName.indexOf(value) !== -1;
+        },
+        nodeClick:function(data){
+            let self = this;
+            self.parentItem.id = data.id;
+            self.parentItem.deptName = data.deptName;
+            self.$nextTick(function(){
+                $('#businessDetail_confirmSelect').click()
+            })
         },
         //-------------------------------------------------------
         //---保存新增---------------------------------------------
         Modify:function(){//判断数据是否修改过
             let self = this;
             self.ifModify = true;
-            console.log(self.ifModify)
+            // console.log(self.ifModify)
         },
         save(){//保存修改
             let self=this;
@@ -311,6 +401,22 @@
             }
         },
         //-------------------------------------------------------
+
+        //---控制是否可编辑---------------------------------------
+        Update(){//修改
+            if(this.isEdit==true){
+                this.isEdit=!this.isEdit;
+            }
+        },        
+        Cancel(){
+            let self = this;
+            if(self.isEdit==false){
+                self.isEdit=!self.isEdit;
+                self.loadData();
+            }
+        },
+        //-------------------------------------------------------
+
         //---open---路由切换--------------------------------------
         open(tittle,iconClass,className) {
             this.$notify({
@@ -441,4 +547,10 @@
   color:#f66;
 }
 </style>
+<style>
+.departmentModify .el-input__inner{
+    height:35px !important;
+}
+</style>
+
 

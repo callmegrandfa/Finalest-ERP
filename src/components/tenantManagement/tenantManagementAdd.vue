@@ -1,13 +1,277 @@
 <template>
     <div class="tenant-manager-wrapper">
         <el-row class="bg-white tenant">
-            
-
             <el-col :span='24'>
-                <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
-                <textbox :data="textboxipt"></textbox>
+                <btm class="fixed" :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                <el-row>
+                  <el-col>
+                    <div class="tipsWrapper" name="adAreaId">
+                      <div class="errorTips" :class="{block : !validation.hasError('addData.adAreaId')}">
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addData.adAreaId') }}</p>
+                      </div>
+                    </div>
+                    <div class="tipsWrapper" name="tenantName">
+                      <div class="errorTips" :class="{block : !validation.hasError('addData.tenantName')}">
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addData.tenantName') }}</p>
+                      </div>
+                    </div>
+                    <div class="tipsWrapper" name="phoneNumber">
+                      <div class="errorTips" :class="{block : !validation.hasError('addData.phoneNumber')}">
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addData.phoneNumber') }}</p>
+                      </div>
+                    </div>
+                    <div class="tipsWrapper" name="status">
+                      <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addData.status') }}</p>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <div>
+                    <el-row  class="pl10 pr10" style="margin-top:20px">
+                      <el-col :span="6" >
+                        <el-col :span="7" >
+                          <div class="bgcolor smallBgcolor">
+                              <label><small>*</small>租户编码</label>
+                          </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor">
+                                <el-input v-model="addData.adAreaId" placeholder="" 
+                                class="adAreaId" 
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('addData.adAreaId')}" 
+                                 ></el-input>
+                            </div>
+                        </el-col>  
+                      </el-col>
+                      <el-col :span="6" >
+                        <el-col :span="7" >
+                          <div class="bgcolor smallBgcolor">
+                              <label><small>*</small>租户名称</label>
+                          </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor">
+                                <el-input  placeholder="" 
+                                class="tenantName" 
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('addData.tenantName')}"
+                                 v-model="addData.tenantName" ></el-input>
+                            </div>
+                        </el-col>  
+                      </el-col>
+                      <el-col :span="6" >
+                        <el-col :span="7" >
+                          <div class="bgcolor smallBgcolor">
+                              <label><small>*</small>手机号</label>
+                          </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor">
+                                <el-input  placeholder=""
+                                class="phoneNumber" 
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('addData.phoneNumber')}"
+                                 v-model="addData.phoneNumber" ></el-input>
+                            </div>
+                        </el-col>  
+                      </el-col>
+                      <el-col :span="6" >
+                        <el-col :span="7" >
+                          <div class="bgcolor smallBgcolor">
+                              <label><small></small>注册时间</label>
+                          </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor">
+                              <el-date-picker 
+                                class="regtime datepicker"   
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd" 
+                                v-model="addData.regTime" 
+                                type="date" 
+                                placeholder="" disabled=""></el-date-picker>
+                            </div>
+                        </el-col>  
+                      </el-col>
+                      <el-col :span="6" >
+                        <el-col :span="7" >
+                          <div class="bgcolor smallBgcolor">
+                              <label><small></small>行政区域</label>
+                          </div>
+                        </el-col>
+                        <el-col :span="14">
+                             <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="addData.remark" >
+                                <el-option v-for="item in options1"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                </el-option>
+                                </el-select>
+                            </div>
+                        </el-col>  
+                      </el-col>
+                      <el-col :span="6" >
+                        <el-col :span="7" >
+                          <div class="bgcolor smallBgcolor">
+                              <label><small>*</small>状态</label>
+                          </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select
+                                class="status" 
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('addData.status')}"
+                                  v-model="addData.status" >
+                                <el-option v-for="item in options"
+                                          :key="item.value"
+                                          :label="item.label"
+                                          :value="item.value">
+                                </el-option>
+                                </el-select>
+                            </div>
+                        </el-col>  
+                      </el-col>
+                      <el-col :span="6" >
+                        <el-col :span="7" >
+                          <div class="bgcolor smallBgcolor">
+                              <label>地址</label>
+                          </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor">
+                                <el-input  placeholder="" v-model="addData.contactAddress" ></el-input>
+                            </div>
+                        </el-col>  
+                      </el-col>
+                      <el-col :span="6" >
+                        <el-col :span="7" >
+                          <div class="bgcolor smallBgcolor">
+                              <label>备注</label>
+                          </div>
+                        </el-col>
+                        <el-col :span="14">
+                            <div class="smallBgcolor">
+                                <el-input  placeholder=""  ></el-input>
+                            </div>
+                        </el-col>  
+                      </el-col>
+                    </el-row>  
+                </div>
                 <el-row><el-col :span="24" class="ml10"><h4 class="ml10"> 集团信息</h4></el-col></el-row>
-                <textbox :data="textboxipt1"></textbox>
+                <el-row  class="pl10 pr10" style="margin-top:20px">
+                    <el-col :span="6" >
+                      <el-col :span="7" >
+                        <div class="bgcolor smallBgcolor">
+                            <label>集团编码</label>
+                        </div>
+                      </el-col>
+                      <el-col :span="14">
+                          <div class="smallBgcolor">
+                              <el-input  placeholder="" disabled=""  ></el-input>
+                          </div>
+                      </el-col>  
+                    </el-col>
+                    <el-col :span="6" >
+                      <el-col :span="7" >
+                        <div class="bgcolor smallBgcolor">
+                            <label>集团名称</label>
+                        </div>
+                      </el-col>
+                      <el-col :span="14">
+                          <div class="smallBgcolor">
+                              <el-input  placeholder="" disabled=""  ></el-input>
+                          </div>
+                      </el-col>  
+                    </el-col>
+                    <el-col :span="6" >
+                      <el-col :span="7" >
+                        <div class="bgcolor smallBgcolor">
+                            <label>本位币种</label>
+                        </div>
+                      </el-col>
+                      <el-col :span="14">
+                          <div class="smallBgcolor">
+                              <el-input  placeholder="" disabled="" ></el-input>
+                          </div>
+                      </el-col>  
+                    </el-col>
+                    <el-col :span="6" >
+                      <el-col :span="7" >
+                        <div class="bgcolor smallBgcolor">
+                            <label>会计制度</label>
+                        </div>
+                      </el-col>
+                      <el-col :span="14">
+                          <div class="smallBgcolor">
+                              <el-input  placeholder="" disabled=""  ></el-input>
+                          </div>
+                      </el-col>  
+                    </el-col>
+                    <el-col :span="6" >
+                      <el-col :span="7" >
+                        <div class="bgcolor smallBgcolor">
+                            <label>启用年月</label>
+                        </div>
+                      </el-col>
+                      <el-col :span="14">
+                          <div class="smallBgcolor">
+                              <el-date-picker 
+                                class="regtime datepicker"   
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd" 
+                                v-model="addData.regTime" 
+                                type="date" 
+                                placeholder="" disabled=""></el-date-picker>
+                          </div>
+                      </el-col>  
+                    </el-col>
+                    <el-col :span="6" >
+                      <el-col :span="7" >
+                        <div class="bgcolor smallBgcolor">
+                            <label>状态</label>
+                        </div>
+                      </el-col>
+                      <el-col :span="14">
+                          <div class="bgcolor smallBgcolor">
+                              <el-select v-model="abc"  disabled="">
+                              <el-option v-for="item in options2"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                              </el-option>
+                              </el-select>
+                          </div>
+                      </el-col>  
+                    </el-col>
+                    <el-col :span="6" >
+                      <el-col :span="7" >
+                        <div class="bgcolor smallBgcolor">
+                            <label>收费</label>
+                        </div>
+                      </el-col>
+                      <el-col :span="14">
+                          <div class="smallBgcolor">
+                              <el-input  placeholder=""  ></el-input>
+                          </div>
+                      </el-col>  
+                    </el-col>
+                    <el-col :span="6" >
+                      <el-col :span="7" >
+                        <div class="bgcolor smallBgcolor">
+                            <label>用户数</label>
+                        </div>
+                      </el-col>
+                      <el-col :span="14">
+                          <div class="smallBgcolor">
+                              <el-input  placeholder=""  ></el-input>
+                          </div>
+                      </el-col>  
+                    </el-col>
+                  </el-row>  
                  <el-row class="bm-pd10 mt10" style=" background: rgb(249,249,249);">
                    
                     <template>
@@ -186,7 +450,9 @@ import Tree from '../../base/tree/tree'
         name:'userList',
         data(){
             return {
+                    abc:'',
                     componyTree: [{
+                        id:'1',
                         label: '商品规格组',
                         children: [{
                             label: '颜色',
@@ -291,61 +557,7 @@ import Tree from '../../base/tree/tree'
                       startUsing1: '20171113',
                       startUsing2: '',
                     }],
-                    textboxipt2:[{
-                    must: '',
-                    title: '品类',
-                    place: ''                
-                },{
-                    must: '',
-                    title: '系列',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '性别',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '季节',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '年份',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '其他属性',
-                    place: ''                 
-                }],
+                    
                 activeName: 'second',
                 try:{
                 "groupId": 2,
@@ -359,189 +571,43 @@ import Tree from '../../base/tree/tree'
                 "isDefault": true,
                 "remark": "st54ring"
                 },
+                addData:{//post需要的键子对
+                    tenantCode: "string",//可租借的
+                    tenantName: "",//租户名称
+                    phoneNumber: "",//电话
+                    password: "123456",//密码
+                    regTime: this.GetDateTime(),//启用年月
+                    adAreaId: null,//id
+                    contactAddress: "",//地址
+                    remark: "",//
+                    status: null,//状态
+                    id: 0//id
+                },
+                options1:[{
+                  value: '中国',
+                  label: '中国'
+                  }, {
+                  value: '台湾',
+                  label: '台湾'
+                  }, {
+                  value: '香港',
+                  label: '香港'
+                }],
+                options:[{
+                  value: 0,
+                  label: '启用'
+                  },{
+                  value: 2,
+                  label: '停用'
+                }],
+                options2:[{
+                  value: 0,
+                  label: '启用'
+                  },{
+                  value: 2,
+                  label: '停用'
+                }],
                 ifShow2:true,
-                textboxipt:[{
-                    must: '',
-                    title: '租户编码',
-                    place: '请输入菜单编码',
-                    input:''                
-                },{
-                    must: '',
-                    title: '租户名称',
-                    input:'',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '手机号',
-                    place: '',
-                    input:''                 
-                },{
-                    must: '',
-                    title: '注册时间',
-                    input:'',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '行政区域',
-                    place: '' ,
-                    input:''                
-                },{
-                    must: '',
-                    title: '地址',
-                    input:'',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '备注',
-                    place: '',
-                    input:''                 
-                }],
-                textboxipt1:[{
-                    must: '',
-                    title: '集团编码',
-                    place: '',
-                    input:''                
-                },{
-                    must: '',
-                    title: '集团名称',
-                    input:'',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '本位币种',
-                    place: '',
-                    input:''                 
-                },{
-                    must: '',
-                    title: '会计制度',
-                    input:'',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '启用年月',
-                    place: '' ,
-                    input:''                
-                },{
-                    must: '',
-                    title: '状态',
-                    input:'',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '收费',
-                    place: '',
-                    input:''                 
-                },{
-                    must: '',
-                    title: '会计制度',
-                    input:'',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                }],
                 bottonbox:{
                     url: '/tenant/tenantManagement',
                    botton:[{
@@ -564,14 +630,6 @@ import Tree from '../../base/tree/tree'
                     class: 'erp_bt bt_print',
                     imgsrc: '../../../static/image/common/bt_modify.png',
                     text: '打印'
-                },{
-                    class: 'erp_bt bt_version',
-                    imgsrc: '../../../static/image/common/bt_start.png',
-                    text: '启用'
-                },{
-                    class: 'erp_bt bt_auxiliary',
-                    imgsrc: '../../../static/image/common/bt_stop.png',
-                    text: '停用'
                 },{
                     class: 'erp_bt bt_save',
                     imgsrc: false,
@@ -611,22 +669,119 @@ import Tree from '../../base/tree/tree'
                     imgsrc: false,
                     text: '功能延期'
                 }]},
-                value: '',
-
+                // value: '',
+                addArray1:[],
                     pageIndex:-1,//分页的当前页码
 			        totalPage:20,//当前分页总数
             }
         },
+        validators: {
+          'addData.adAreaId': function (value) {//租户编码
+             return this.Validator.value(value).required().maxLength(50)
+          },
+          'addData.tenantName': function (value) {//租户名称
+             return this.Validator.value(value).required().maxLength(50);
+          },
+          'addData.phoneNumber': function (value) {//手机号码
+             return this.Validator.value(value).required().maxLength(20);
+          },
+          'addData.status': function (value) {//状态
+             return this.Validator.value(value).required().integer();
+          },
+        },
         created:function(){
-            
-            
+            let _this=this;
+            _this.loadData();
         },
         methods:{
+            showErrprTips(e){
+              $('.tipsWrapper').each(function(){
+                
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+              })
+            },
             handleClick(tab, event) {
                 console.log(tab, event);
             },
+            loadData:function(){
+              let _this=this;
+              if(_this.$route.params.id != 'default'){
+                _this.bottonbox.botton.splice(2,1,{class: 'erp_bt bt_modify', imgsrc: '../../../static/image/common/bt_modify.png',text: '修改'})
+                this.$axios.gets('http://192.168.100.107:8085/api/services/app/TenantManagement/Get',{Id:_this.$route.params.id}).then(function(res){
+                  _this.addData=res.result;
+                  console.log(res)
+                },function(res){
+                    console.log('err'+res)
+                })
+              }
+            },
+            GetDateTime: function () {//获取当前时间
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            },
             btmlog:function(data){
-                               
+                let _this=this;
+                if(data=='新增保存'){
+                  _this.$validate();
+                  _this.addData.adAreaId=parseInt(_this.addData.adAreaId) 
+                    _this.$axios.posts('http://192.168.100.107:8085/api/services/app/TenantManagement/Create',_this.addData).then(function(res){
+                        _this.$store.state.url='/tenant/tenantManagement/'+res.result.id;
+                        _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                    },function(){
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })   
+                }else if(data=='修改'){
+                    _this.bottonbox.botton.splice(3,0,{class: 'erp_bt bt_save amend_save', imgsrc: '../../../static/image/common/bt_save.png',text: '保存'},{class: 'erp_bt bt_auxiliary cancel', imgsrc: '../../../static/image/common/u470.png',text: '取消'})
+                }else if(data == '修改保存'){
+                  _this.$validate();
+                  _this.$axios.puts('http://192.168.100.107:8085/api/services/app/TenantManagement/Update',_this.addData).then(function(res){
+                        _this.$store.state.url='/tenant/tenantManagement/'+res.result.id;
+                        _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                    },function(){
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    });
+                }else if(data == '取消'){
+
+                  _this.loadData();
+                  _this.bottonbox.botton.splice(3,2);
+                }             
+            },
+            open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            Init(){//数据初始化
+                this.isCancel=false;
+                this.isUpdate=false;
+                this.isAdd=false;
+                this.updateArray=[];
+                this.addArray=[];
+                this.updateId="";
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -634,38 +789,8 @@ import Tree from '../../base/tree/tree'
             handlePreview(file) {
                 console.log(file);
             },
-            switch(){
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
             handleSelectionChange(val) {//点击复选框选中的数据
             },
-            storageData(e){//点击新增跳转
-                var flag=false;
-                var slidbarData=this.$store.state.slidbarData;//储存页签数组
-                let name = '用户资料-列表';
-                if(slidbarData.length==0){//slidbarData为空
-                    flag=true;
-                }else{//slidbarData不为空
-                    for(var i=0;i<slidbarData.length;i++){
-                        if(slidbarData[i].name==name){//相同页签
-                            flag=false;
-                            break;
-                        }else{
-                        flag=true;
-                        }
-                    }
-                }
-                //var pushItem={'name':name,'url':menuUrl+'/'+idparam};
-                var pushItem={'name':'用户资料-列表','url':'userDataList','params':'default'}
-                this.$store.state.url='/userDataList/default';//储存当前url
-                if(flag){
-                    slidbarData.push(pushItem);
-                }
-        
-                this.switch();
-                
-            },
-
         },
         components:{
             Btm,
@@ -676,6 +801,37 @@ import Tree from '../../base/tree/tree'
 </script>
 
 <style scoped>
+
+.block{
+    display: none;
+}
+.smallBgcolor .el-select{
+    width: 100% !important ;
+    margin-left: 10px;
+}
+.bgcolor label{
+    width: 100% !important ;
+    margin-right: 0; 
+}
+.smallBgcolor .el-input--suffix{
+    width: 100% !important ;
+}
+.smallBgcolor .el-input{
+    width: 100% !important ;
+    margin-left: 10px;
+}
+.input-need{
+    outline: none;
+    border:none;
+    width: 100%;
+    height: 28px;
+}
+.bgcolor{
+    overflow:  visible; 
+}
+.fixed{
+    background-color: #fff;
+}
 .h4-title{
     background-color: #fff;
     padding: 20px 0 20px 15px;
@@ -795,6 +951,18 @@ import Tree from '../../base/tree/tree'
 </style>
 
 <style>
+.cancel .btImg{
+  top: 14px;
+}
+.tenant-manager-wrapper .redBorder .el-input__inner{
+  border-color: #f66;
+}
+.tenant-manager-wrapper .smallBgcolor .el-input input{
+  height: 33px!important;
+}
+.tenant-manager-wrapper .bgcolor{
+    width: 100%; 
+}
 .tenant .el-tabs__nav-scroll{
     margin-left: 20px;
 }

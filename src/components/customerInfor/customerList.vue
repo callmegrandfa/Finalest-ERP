@@ -95,7 +95,7 @@
                             <span class="btDetail">新增</span>
                         </button>
 
-                        <button class="erp_bt bt_del" @click="delRow">
+                        <button class="erp_bt bt_del" @click="confirmDel">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -123,21 +123,21 @@
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="ouId" label="所属组织" ></el-table-column>
-                            <el-table-column prop="contact" label="客户编码"></el-table-column>
+                            <el-table-column type="selection" fixed></el-table-column>
+                            <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
+                            <el-table-column prop="contactCode" label="客户编码" fixed></el-table-column>
                             <el-table-column prop="contactName" label="客户名称"></el-table-column>
                             <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
                             <el-table-column prop="contactClassId" label="客户类型"></el-table-column>
-                            <el-table-column prop="contactWorkPropertyId" label="客户性质"></el-table-column>
+                            <el-table-column prop="contactWorkPropertyIdTValue" label="客户性质"></el-table-column>
                             <el-table-column prop="isSupplier" label="是否为供应商">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="allList[scope.$index].isSupplier" disabled="disabled"></el-checkbox>
                                 </template>
                             </el-table-column>   
-                            <el-table-column prop="ficaOuId" label="对应财务组织"></el-table-column>
-                            <el-table-column prop="status" label="状态(无字段)"></el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column prop="ficaOuId_OuName" label="对应财务组织"></el-table-column>
+                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                            <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
                                 </template>
@@ -241,33 +241,53 @@
         //------------------------------------------------------------------
 
         //---控制修改及分页--------------------------------------------------
-            delRow:function(){//删除选中的项
-                let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            _this.loadAllList();
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                            //console.log('err:'+res)
-                        })
-                    }
-                };
-            },
-            handleSelectionChange:function(val){//点击复选框选中的数据
-                this.multipleSelection = val;
-            },
-            handleCurrentChange:function(val){//获取当前页码
-                this.pageIndex=val;
-            },
-            handleCurrentChange:function(val){//获取当前页码
-                this.pageIndex=val;
-                console.log(val)
-                this.page = val;
-                this.loadAllList();
-            },
+        confirmDel(row) {
+            let self = this;
+            this.$confirm('确定删除?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            center: true
+            }).then(() => {
+                self.delRow(row);
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+        delRow:function(row){//删除选中的项
+            let self=this;
+            if(self.multipleSelection.length>0){//表格
+                for(let i=0;i<self.multipleSelection.length;i++){
+                    self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:self.multipleSelection[i].id})
+                    .then(function(res){
+                        self.loadAllList();
+                        self.open('删除成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        self.open('删除失败','el-icon-error','faildERP');
+                        //console.log('err:'+res)
+                    })
+                }
+            };
+        },
+        handleSelectionChange:function(val){//点击复选框选中的数据
+            this.multipleSelection = val;
+        },
+        handleCurrentChange:function(val){//获取当前页码
+            this.pageIndex=val;
+        },
+        handleCurrentChange:function(val){//获取当前页码
+            this.pageIndex=val;
+            console.log(val)
+            this.page = val;
+            this.loadAllList();
+        },
         //------------------------------------------------------------------
 
         //---左侧搜索展开----------------------------------------------------

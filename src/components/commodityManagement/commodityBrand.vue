@@ -410,7 +410,7 @@ import Btm from '../../base/btm/btm'
                 this.isUpdate=true;
                 this.isAdd=true;
                 this.tableData.unshift(newcol);
-                this.addArray.push(newcol);
+                this.addArray.unshift(newcol);
                 // if(this.addArray.length>0){
                 //     for(let i in this.addArray){
                 //         if(this.addArray[i].brandCode==""||this.addArray[i].brandName==""){
@@ -435,15 +435,18 @@ import Btm from '../../base/btm/btm'
                     
             },
             handleDel(row,index){//行内删除
+                console.log(index);
                 this.$confirm('确定删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning',
                     center: true
                     }).then(() => {
-                    if(row.brandCode==""){
-                        this.tableData.splice(index,1);
-                        this.addArray.splice(index,1);
+                        console.log(this.addArray);
+                        if(row.brandCode==""||this.isAdd==true){
+                            this.tableData.splice(index,1);
+                            this.addArray.splice(index,1);
+                            console.log(this.addArray);
                         }else{
                             let _this=this;
                             _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
@@ -535,9 +538,8 @@ import Btm from '../../base/btm/btm'
                 this.isSave=true;
                 let _this=this;
                 if(_this.addArray.length>0){//新增保存
-                console.log(_this.tableData);
-                    for(let i in _this.tableData){
-                        if(_this.tableData[i].brandCode==""||_this.tableData[i].brandName==""){
+                    for(let i in _this.addArray){
+                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""){
                             this.$message({
                                 message: '红色框内为必填项！',
                                 type: 'error'

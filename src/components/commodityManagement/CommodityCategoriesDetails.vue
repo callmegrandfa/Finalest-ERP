@@ -263,7 +263,7 @@ import Textbox from '../../base/textbox/textbox'
                     text: '修改',
                     show:false
                 },{
-                    class: 'erp_bt bt_auxiliary',
+                    class: 'erp_bt bt_cancel',
                     imgsrc: '../../../static/image/common/u470.png',
                     text: '取消',
                     show:false
@@ -313,6 +313,7 @@ import Textbox from '../../base/textbox/textbox'
                     value: 0,
                     label: '未启用'
                 }],
+                isUpdate:false,//是否修改
             }
         },
         created(){
@@ -353,6 +354,14 @@ import Textbox from '../../base/textbox/textbox'
                 console.log(this.$refs.tree.filter(val));
                 this.$refs.tree.filter(val);
             },
+            addItem:{
+                handler: function (val, oldVal) {
+                    if(val.categoryParentid!=null&&this.bottonbox.botton[3].show){
+                        this.isUpdate=true;
+                    }
+                },
+                deep:true
+            }
         },
         methods:{
             //获取当前时间
@@ -380,12 +389,14 @@ import Textbox from '../../base/textbox/textbox'
             btmlog:function(data){
                 if(data=="修改"&&this.isEdit==true){
                     this.isEdit=false;
+                    this.bottonbox.botton[2].show=false
                     this.bottonbox.botton[3].show=true
                 }else if(data=="取消"){
                     this.isEdit=true;
+                    this.bottonbox.botton[2].show=true
                     this.bottonbox.botton[3].show=false;
                     this.InitModify();
-                }else if(data=="保存"){
+                }else if(data=="新增保存"){
                     this.save();
                 }
             },
@@ -395,7 +406,8 @@ import Textbox from '../../base/textbox/textbox'
                     return;
                 }else{
                     _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
-                        console.log(res.result)
+                        _this.updateId=res.result.id;
+                        _this.addItem.categoryParentid=res.result.categoryParentid
                         _this.addItem.categoryCode=res.result.categoryCode;
                         _this.addItem.categoryName=res.result.categoryName;
                         _this.addItem.mnemonic=res.result.mnemonic;
@@ -406,6 +418,7 @@ import Textbox from '../../base/textbox/textbox'
                         _this.addItem.createdBy=res.result.createdBy;
                         _this.addItem.modifiedTime=res.result.modifiedTime;
                         _this.addItem.modifiedBy=res.result.modifiedBy;
+                        _this.isUpdate=false;
                         //_this.tableData=res.result;                   
                     })
                 }
@@ -459,15 +472,39 @@ import Textbox from '../../base/textbox/textbox'
                 customClass:className
                 });
             },
-            save(){
+            InitData(){//数据重置
+                this.addItem.categoryParentid="";
+                this.addItem.categoryCode="";
+                this.addItem.categoryName="";
+                this.addItem.mnemonic="";
+                this.addItem.remark="";
+            },
+            save(){//保存
                 let _this=this;
                 _this.$validate()
-                _this.$axios.posts('http://192.168.100.107:8085/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
-                    _this.InitModify();
-                    _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
-                    _this.isAdd=false
-                }); 
-            }
+                if(_this.isUpdate){
+                    let updateData=_this.addItem;
+                    _this.$set(updateData, 'id', _this.updateId);
+                    _this.$axios.puts('http://192.168.100.107:8085/api/services/app/CategoryManagement/Update',updateData).then(function(res){
+                        _this.InitModify();
+                        _this.validation.reset();
+                        _this.isEdit=true;
+                        _this.bottonbox.botton[2].show=true;//修改按钮
+                        _this.bottonbox.botton[3].show=false;//取消按钮
+                        _this.open('修改商品类目成功','el-icon-circle-check','successERP'); 
+
+                        return;   
+                    }); 
+                }else{
+                    _this.$axios.posts('http://192.168.100.107:8085/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
+                        _this.InitModify();
+                        _this.InitData();
+                        _this.validation.reset();
+                        _this.open('保存商品类目成功','el-icon-circle-check','successERP');    
+                    }); 
+                }
+                
+            },
         },
         components:{
             Btm,

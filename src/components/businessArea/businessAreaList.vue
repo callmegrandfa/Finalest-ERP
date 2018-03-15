@@ -59,13 +59,13 @@
                         style="width: 100%" 
                         stripe 
                         ref="multipleTable">
-                            <el-table-column label="序号">
+                            <el-table-column label="序号" fixed="left">
                                  <template slot-scope="scope">
                                     {{scope.$index + 1}}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="field" label="字段"></el-table-column>
-                            <el-table-column prop="field" label="操作">
+                            <el-table-column prop="field" label="字段" fixed="left"></el-table-column>
+                            <el-table-column prop="field" label="操作" fixed="left">
                                 <template slot-scope="scope">
                                     <el-switch
                                         v-model="tableData[scope.$index].value"
@@ -82,14 +82,22 @@
                 <!-- dialog -->
                 <el-row>
                     <el-col :span='24'>
-                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
+                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="areaCode" label="业务地区编码"></el-table-column>
-                            <el-table-column prop="areaName" label="业务地区名称"></el-table-column>
+                            <el-table-column prop="areaCode" label="业务地区编码">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].areaCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="areaName" label="业务地区名称">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].areaName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="areaParentId" label="上级业务地区"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
                             <el-table-column prop="createdBy" label="创建人"></el-table-column>
                             <el-table-column label="创建时间">
                                 <template slot-scope="scope">
@@ -103,7 +111,7 @@
                                     placeholder=""></el-date-picker>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
@@ -125,53 +133,6 @@
 
             </el-col>
         </el-row>
-        <!-- dialog -->
-        <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
-            <!-- <div class="bgcolor smallBgcolor">
-                <label>地区分类</label>
-                <el-select filterable :class="{redBorder : validation.hasError('dialogData.areaType')}" v-model="dialogData.areaType">
-                    <el-option v-for="item in areaTypes" :key="item.value" :label="item.label" :value="item.value" placeholder="">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaType') }}</div> -->
-            <div class="bgcolor smallBgcolor"><label>业务地区编码</label><el-input :class="{redBorder : validation.hasError('dialogData.areaCode')}"  v-model="dialogData.areaCode" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaCode') }}</div>
-            <div class="bgcolor smallBgcolor"><label>业务地区名称</label><el-input :class="{redBorder : validation.hasError('dialogData.areaName')}"  v-model="dialogData.areaName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaName') }}</div>
-            <!-- <div class="bgcolor smallBgcolor"><label>业务地区全称</label><el-input :class="{redBorder : validation.hasError('dialogData.areaFullName')}"  v-model="dialogData.areaFullName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullName') }}</div>
-            <div class="bgcolor smallBgcolor"><label>全路径ID</label><el-input :class="{redBorder : validation.hasError('dialogData.areaFullPathId')}"  v-model="dialogData.areaFullPathId" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullPathId') }}</div>
-            <div class="bgcolor smallBgcolor"><label>全路径名称</label><el-input :class="{redBorder : validation.hasError('dialogData.areaFullPathName')}"  v-model="dialogData.areaFullPathName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaFullPathName') }}</div> -->
-            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input :class="{redBorder : validation.hasError('dialogData.manager')}"  v-model="dialogData.manager" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.manager') }}</div>
-            <div class="bgcolor smallBgcolor">
-                <label>上级业务地区</label>
-                
-                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.areaParentId')}" v-model="dialogData.areaParentId" placeholder="">
-                    <el-option v-for="item in areaParentId" :key="item.value" :label="item.label" :value="item.value" >
-                    </el-option>
-                </el-select>
-                <el-input v-else :class="{redBorder : validation.hasError('dialogData.areaParentId')}"  v-model="dialogData.areaParentId" disabled></el-input>
-            </div>   
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.areaParentId') }}</div>
-            <div class="bgcolor smallBgcolor"><label>备注</label><el-input :class="{redBorder : validation.hasError('dialogData.remark')}"  v-model="dialogData.remark" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
-            <div class="bgcolor smallBgcolor">
-                <label>允许使用</label>
-                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status" placeholder="">
-                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" >
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.status') }}</div>
-            <div slot="footer" class="dialog-footer">
-                <button class="dialogBtn" @click="sendAjax">确 认</button>
-                <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -201,52 +162,6 @@
                     value:'2',
                     label: '行政地区'
                 }],
-                statuses:[//启用状态
-                    {
-                        value:'1',
-                        label: '启用'
-                    },
-                    {
-                        value:'2',
-                        label: '停用'
-                    },
-                ],
-                areaParentId:[{
-                        value:'0',
-                        label: '无'
-                    },
-                    {
-                        value:'1',
-                        label: '松花江'
-                    },],
-                options: [{
-                    basOuTypes: '1',
-                    label: '1'
-                    }, {
-                    basOuTypes: '2',
-                    label: '2'
-                    }, {
-                    basOuTypes: '3',
-                    label: '3'
-                    }, {
-                    basOuTypes: '4',
-                    label: '4'
-                    }, {
-                    basOuTypes: '5',
-                    label: '5'
-                    }, {
-                    basOuTypes: '6',
-                    label: '6'
-                    }, {
-                    basOuTypes: '7',
-                    label: '7'
-                    }, {
-                    basOuTypes: '8',
-                    label: '8'
-                    }, {
-                    basOuTypes: '9',
-                    label: '9'
-                    }],
                 tableData:[],
                 componyTree:  [
                     // {areaName:'根目录',id:'0',items:[]},
@@ -340,9 +255,10 @@
                  _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
                     _this.tableData=res.result.items;
-                    _this.totalItem=res.result.totalCount
+                    _this.totalItem=res.result.totalCount;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
+                    console.log(res.result.items)
                     },function(res){
                     _this.tableLoading=false;
                 })
@@ -464,10 +380,6 @@
             modify(row){
                 this.$store.state.url='/businessArea/businessAreaModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
-            },
-            see(row){
-                this.$store.state.url='/businessArea/businessArea/'+row.id
-                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             whichButton(event,node, data){
                 let e = event || window.event;

@@ -8,17 +8,25 @@
 
                     <el-col :span='24' class="">
                         <el-table :data="tableData" @selection-change="handleSelectionChange"  border style="width: 100%" stripe>
-                            <el-table-column type="selection" label="操作">
+                            <el-table-column type="selection" >
                             </el-table-column>
-                            <el-table-column prop="tenantCode" label="租户编码" ></el-table-column>
+                            <el-table-column prop="adAreaId" label="租户编码" ></el-table-column>
                             <el-table-column prop="tenantName" label="租户名称"></el-table-column>
-                            <el-table-column prop="phone" label="手机号码"></el-table-column>
-                            <el-table-column prop="data" label="启用年月"></el-table-column>
-                            <el-table-column prop="area" label="行政地区"></el-table-column>
-                            <el-table-column prop="status" label="当前状态"></el-table-column>
-                            <el-table-column  label="当前状态">
+                            <el-table-column prop="phoneNumber" label="手机号码"></el-table-column>
+                            <el-table-column prop="regTime" label="启用年月"></el-table-column>
+                            <el-table-column prop="remark" label="行政地区"></el-table-column>
+                            <el-table-column prop="status" label="当前状态">
+                                <!-- <template slot-scope="scope">
+                                    <el-select  v-model="scope.row.status" @click="onselect()">
+                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </template> -->
+                            </el-table-column>
+                            <el-table-column  label="操作">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small" @click="modify(scope.row)"  >查看</el-button>
+                                    <el-button type="text" size="small" @click="see(scope.row)"  >查看</el-button>
+                                    <el-button  type="text" size="small" v-on:click="handleDel(scope.row,scope.$index)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>  
@@ -33,9 +41,7 @@
 </template>
 
 <script>
-import Query from '../../base/query/query'
 import Btm from '../../base/btm/btm'
-import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -52,6 +58,13 @@ import Tree from '../../base/tree/tree'
                 "isDefault": true,
                 "remark": "st54ring"
                 },
+                options: [{
+                    value: 0,
+                    label: '启用'
+                    },{
+                    value: 2,
+                    label: '停用'
+                }],
                 bottonbox:{
                     url: '/tenant/tenantManagementAdd',
                    botton:[{
@@ -80,82 +93,15 @@ import Tree from '../../base/tree/tree'
                     text: '停用'
                 }]},
                 value: '',
-                tableData: [{
-                    ifAction:true,
-                    tenantCode: '租户编码',
-                    tenantName: '租户名称',
-                    phone: '手机号码',
-                    data: '启用年月',
-                    area:'行政地区',
-                    status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }, {
-                        ifAction:true,
-                        tenantCode: '租户编码',
-                        tenantName: '租户名称',
-                        phone: '手机号码',
-                        data: '启用年月',
-                        area:'行政地区',
-                        status:'当前状态',
-                    }],
-
+                SelectionChange:[],
+                tableData: [],
+                idArray:{
+                    ids:[]
+                },
+                    page:1,//当前页
+                    eachPage:10,
                     pageIndex:-1,//分页的当前页码
-			        totalPage:20,//当前分页总数
+			        totalPage:100,//当前分页总数
             }
         },
         created:function(){
@@ -170,42 +116,139 @@ import Tree from '../../base/tree/tree'
         },
         methods:{
             handleSelectionChange(val) {//点击复选框选中的数据
+                this.SelectionChange=val;   
+            },
+            Init(){//数据初始化
+                this.isCancel=false;
+                this.isUpdate=false;
+                this.isAdd=false;
+                this.updateArray=[];
+                this.addArray=[];
+                this.updateId="";
             },
             loadTableData(){//表格
                  let _this=this;
                  _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/Tenant/GetAll').then(function(res){ 
-                    console.log(res)
+                _this.$axios.gets('http://192.168.100.107:8085/api/services/app/TenantManagement/GetAll',{SkipCount:(_this.page-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){ 
+                    _this.tableData=res.result.items;
+                    let countPage=res.result.totalCount;
+                    _this.totalPage = Math.ceil(countPage/_this.eachPage);
+                    _this.Init();
+                    for(let i=0;i<_this.tableData.length;i++){status
+                       _this.tableData[i].regTime= _this.tableData[i].regTime.substr(0,7)
+                        
+                        if(_this.tableData[i].status == 0){
+                           _this.tableData[i].status= '启用'
+                        }else{
+                          _this.tableData[i].status= '停用'  
+                        }
+                    }
                 })
             },
-            modify(row){
-                this.$store.state.url='/commodity/commodityPropertyDetails/'+row.address5;
-                this.$router.push({path:this.$store.state.url});
+            open(tittle,iconClass,className) {
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            handleDel(row,index){//行内删除
+                let _this=this;
+                this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                        _this.$axios.deletes('http://192.168.100.107:8085/api/services/app/TenantManagement/Delete',{Id:row.id}).then(function(res){
+                            _this.loadTableData();
+                            _this.open('删除成功','el-icon-circle-check','successERP');              
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                });
+                
+                //this.tableData.splice(index,1);
+            },
+            see(row){
+                this.$store.state.url='/tenant/tenantManagementAdd/'+row.id
+                this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             btmlog:function(data){
-                               
-            },
-            test:function(){
-                // console.log(this.try)
-                this.$axios.posts('/api/services/app/StockAddressManagement/Create',this.try)
-                .then(function(res){
-                console.log(res);
-            },function(res){
-                console.log('err:'+res)
-            })
-            },
+                let _this=this;
+                if(data=='删除'){
+                    for(let i in _this.SelectionChange){
+                        _this.idArray.ids.push(this.SelectionChange[i].id)
+                    }
+                    if(this.idArray.ids.length>0){
+                        this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            _this.$axios.posts('http://192.168.100.107:8085/api/services/app/TenantManagement/BatchDelete',_this.idArray).then(function(res){
+                                _this.loadTableData();
+                                _this.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                    }
+                }else if(data=='停用' || data=='启用'){
+                    let handleArray=[];
+                    let nb = null;
+                    if(data=='停用'){
+                        nb=2;
+                    }else{
+                        nb=0;
+                    }
+                    for(let o in this.SelectionChange){
+                        this.updateArray.push(this.SelectionChange[o].id)
+                        handleArray.push(this.SelectionChange[o].id)
+                    }
+                    for(let i in handleArray){
+                        for(let j in this.tableData){
+                            if (handleArray[i]==this.tableData[j].id){
+                                this.tableData[j].status=nb;
+                            }
+                        }
+                    }
+                    if(_this.updateArray.length==1){//单条修改
 
-            test1:function(){
-                this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){
-                console.log(res);
-            })
+                        let updataIndex=-1;
+                        for(let i in _this.tableData){
+                            if(_this.updateArray[0]==_this.tableData[i].id){
+                                updataIndex=i;
+                            }
+                        }
+                        console.log(_this.tableData[updataIndex])
+                        _this.$axios.puts('http://192.168.100.107:8085/api/services/app/TenantManagement/Update',_this.tableData[updataIndex]).then(function(res){
+                            _this.loadTableData(); 
+                        });
+                    }
+                    // else{//批量修改
+                    //     _this.$axios.posts('http://192.168.100.107:8085/api/services/app/TenantManagement/Update',_this.tableData).then(function(res){
+                    //         _this.loadTableData();
+                    //         // _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
+                    //         _this.isAdd=false
+                    //     }); 
+                    // }
+                }            
             },
 
         },
         components:{
-            Query,
-            Btm,
-            Tree
+            Btm,  
         }
     }
 </script>
@@ -326,6 +369,9 @@ import Tree from '../../base/tree/tree'
 </style>
 
 <style>
+.tenant-management-wrapper .el-input__inner{
+    border: none;
+}
 /*.tenant-management-wrapper .el-input input{
     border:none;
     height: 30px;
