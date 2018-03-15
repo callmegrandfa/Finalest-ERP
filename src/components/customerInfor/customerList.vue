@@ -15,7 +15,7 @@
                 <el-row class="mt10">
                     <div class="bgcolor smallBgcolor">
                         <label>客户分类</label>
-                        <el-select v-model="value" placeholder="">
+                        <el-select v-model="queryClass" placeholder="">
                             <el-option v-for="item in options"
                                         :key="item.value"
                                         :label="item.label"
@@ -27,49 +27,118 @@
 
                 <el-row class="fs12">
                    <div class="bgcolor smallBgcolor">
-                        <label>所属组织</label>
-                        <el-input placeholder="" ></el-input>
+                        <label>所属组织{{queryOu}}</label>
+                        <el-select class="queryOu"
+                                   placeholder=""
+                                   v-model="queryOu">
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="ouSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="ouAr"
+                                     :props="selectOuProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="ouNodeClick"></el-tree>
+                            <el-option v-show="false"
+                                       :key="countOu.id" 
+                                       :label="countOu.ouFullname" 
+                                       :value="countOu.id"
+                                       id="ou_confirmSelect"></el-option>
+                        </el-select>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
                         <label>行政地区</label>
-                        <el-input placeholder="" ></el-input>
+                        <el-select class="queryAd"
+                                   placeholder=""
+                                   v-model="queryAd">
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="adSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="adAr"
+                                     :props="selectAdProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="adNodeClick"></el-tree>
+                            <el-option v-show="false"
+                                       :key="countAd.id" 
+                                       :label="countAd.areaName" 
+                                       :value="countAd.id"
+                                       id="ad_confirmSelect"></el-option>
+                        </el-select>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
-                        <el-input placeholder="" ></el-input>
+                        <el-select class="queryOp"
+                                   placeholder=""
+                                   v-model="queryOp">
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="opSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="opAr"
+                                     :props="selectOpProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="opNodeClick"></el-tree>
+                            <el-option v-show="false"
+                                       :key="countOp.id" 
+                                       :label="countOp.areaName" 
+                                       :value="countOp.id"
+                                       id="op_confirmSelect"></el-option>
+                        </el-select>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
                         <label>编码</label>
-                        <el-input placeholder="" ></el-input>
+                        <el-input placeholder="" v-model="queryCode"></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
                         <label>名称</label>
-                        <el-input placeholder="" ></el-input>
+                        <el-input placeholder="" v-model="queryName"></el-input>
                     </div> 
                 </el-row>
 
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
                         <label>客户性质</label>
-                        <el-input placeholder="" ></el-input>
+                        <el-select v-model="queryProperty" placeholder="">
+                            <el-option v-for="item in propertyAr"
+                                        :key="item.itemValue"
+                                        :label="item.itemName"
+                                        :value="item.itemValue">
+                            </el-option>
+                        </el-select>
                     </div> 
                 </el-row>
 
                 <el-row style="text-align:center;">
                     <div class="bgcolor smallBgcolor">
-                        <span class="search-btn">查询</span>
+                        <span class="search-btn" @click='doSearch'>查询</span>
                     </div>
                 </el-row>
             </el-col>
@@ -95,7 +164,7 @@
                             <span class="btDetail">新增</span>
                         </button>
 
-                        <button class="erp_bt bt_del" @click="confirmDel">
+                        <button class="erp_bt bt_del" @click="delRow">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -140,6 +209,7 @@
                             <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
+                                    <el-button v-on:click="confirmDel(scope.row)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -170,6 +240,57 @@
         data(){
             return {
                 allList:[],//所有数据列表
+
+                queryClass:'',//客户分类搜索
+                queryOu:'',//所属组织搜索
+                queryAd:'',//行政地区搜索
+                queryOp:'',//业务地区搜索
+                queryCode:'',//编码搜索
+                queryName:'',//名称搜索
+                queryProperty:'',//客户性质搜索
+                //---组织单元树形下拉-----
+                ouSearch:'',
+                selectOuProps:{
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+                ouItem:{
+                    id:'',
+                    ouFullname:'',
+                },
+                ouAr:[],//组织单元下拉框
+                //-----------------------
+                //---行政地区树形下拉-----
+                adSearch:'',//树形搜索框的
+                selectAdProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                adItem:{
+                    id:'',
+                    areaName:'',
+                },
+                adAr:[],//行政地区下拉框
+                //-----------------------
+                //---业务地区树形下拉-----
+                opSearch:'',//树形搜索框的
+                selectOpProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                opItem:{
+                    id:'',
+                    areaName:'',
+                },
+                opAr:[],//业务地区下拉框
+                //-----------------------
+
+                adAr:[],//行政地区下拉框
+                propertyAr:'',//客户性质下拉框
+                
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -187,20 +308,35 @@
                     label: '北京烤鸭'
                     }],
 
-                value: '',
+                
                 pageIndex:-1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
                 page:1,//当前页
                 eachPage:10,//一页显示的数量
                 multipleSelection: [],//复选框选中数据
+                idArray:{
+                    ids:[]
+                },//复选框选中数据id
                 ifWidth:true,//控制左侧搜索展开
             }
         },
         created:function(){
             this.loadAllList();
+            this.loadSelect();
             
         },
+        computed:{
+            countOu () {
+                return this.ouItem;
+            },
+            countAd () {
+                return this.adItem;
+            },
+            countOp () {
+                return this.opItem;
+            },
+        }, 
         methods:{
         //---获取数据-------------------------------------------------------
             loadAllList:function(){//获取所有列表数据
@@ -210,6 +346,43 @@
                     self.allList = res.result.items;
                     self.total = res.result.totalCount;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
+        //------------------------------------------------------------------
+
+        //---下拉的数据------------------------------------------------------
+            loadSelect:function(){
+                let self = this;
+                //组织单元
+                self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
+                    console.log(res);
+                    self.ouAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
+                //行政地区*2
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                    // console.log(res);
+                    self.opAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
+                //业务地区*1
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
+                    // console.log(res);
+                    self.opAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
+                //客户性质
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerWorkProperty'}).then(function(res){
+                    // console.log(res);
+                    self.propertyAr = res.result;
                 },function(res){
                     console.log('err'+res)
                 })
@@ -240,6 +413,20 @@
             },
         //------------------------------------------------------------------
 
+        //---左侧查询-------------------------------------------------------
+        doSearch:function(){
+            let self = this;
+            this.$axios.gets('/api/services/app/ContactManagement/QueryByCondition',{ContactClassId:self.queryClass,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
+                console.log(res);
+                self.allList = res.result;
+                self.total = res.result.length;
+                self.totalPage = Math.ceil(self.total/self.eachPage)
+            },function(res){
+                console.log('err'+res)
+            })
+        },
+        //-------------------------------------------------------------------
+
         //---控制修改及分页--------------------------------------------------
         confirmDel(row) {
             let self = this;
@@ -249,11 +436,7 @@
             type: 'warning',
             center: true
             }).then(() => {
-                self.delRow(row);
-                // this.$message({
-                //     type: 'success',
-                //     message: '删除成功!'
-                // });
+                self.delThis(row);
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -261,20 +444,50 @@
                 });
             });
         },
-        delRow:function(row){//删除选中的项
+        delThis:function(row){//删除选中的项
             let self=this;
-            if(self.multipleSelection.length>0){//表格
-                for(let i=0;i<self.multipleSelection.length;i++){
-                    self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:self.multipleSelection[i].id})
-                    .then(function(res){
-                        self.loadAllList();
-                        self.open('删除成功','el-icon-circle-check','successERP');
-                    },function(res){
-                        self.open('删除失败','el-icon-error','faildERP');
-                        //console.log('err:'+res)
-                    })
-                }
-            };
+            self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:row.id}).then(function(res){
+                self.open('删除成功','el-icon-circle-check','successERP');
+                self.loadAllList();
+            },function(res){
+            
+            })
+        },
+        delRow(){//批量删除
+            let self=this;
+            for(let i in self.multipleSelection){
+                self.idArray.ids.push(self.multipleSelection[i].id)
+            }
+            if(self.idArray.ids.indexOf(undefined)!=-1){
+                self.$message({
+                    type: 'warning',
+                    message: '新增数据请在行内删除'
+                });
+                return;
+            }
+            if(self.idArray.ids.length>0){
+                self.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                        self.$axios.posts('/api/services/app/ContactManagement/BatchDelete',self.idArray).then(function(res){
+                            self.loadAllList();
+                            self.open('删除成功','el-icon-circle-check','successERP');    
+                        })
+                    }).catch(() => {
+                        self.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                });
+            }else{
+                self.$message({
+                    type: 'info',
+                    message: '请勾选需要删除的数据！'
+                });
+            }
         },
         handleSelectionChange:function(val){//点击复选框选中的数据
             this.multipleSelection = val;
@@ -300,6 +513,50 @@
             self.ifWidth = true;
         },
         //------------------------------------------------------------------
+
+        //---树-------------------------------------------------------------
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        filterNode(value, data) {
+            console.log(data)
+            if (!value) return true;
+                return data.areaName.indexOf(value) !== -1;
+        },
+        ouNodeClick:function(data){
+            let self = this;
+            self.ouItem.id = data.id;
+            self.ouItem.ouFullname = data.ouFullname;
+            self.$nextTick(function(){
+                $('#ou_confirmSelect').click()
+            })
+        },
+        adNodeClick:function(data){
+            let self = this;
+            self.adItem.id = data.id;
+            self.adItem.areaName = data.areaName;
+            self.$nextTick(function(){
+                $('#ad_confirmSelect').click()
+            })
+        },
+        opNodeClick:function(data){
+            let self = this;
+            self.opItem.id = data.id;
+            self.opItem.areaName = data.areaName;
+            self.$nextTick(function(){
+                $('#op_confirmSelect').click()
+            })
+        },
     }
 }
 </script>

@@ -35,7 +35,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button @click="confirmDelRow" class="erp_bt bt_del">
+                    <button @click="delRow" class="erp_bt bt_del">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -48,6 +48,7 @@
                         </div>
                         <span class="btDetail">导入</span>
                     </button>
+                    
                     <button class="erp_bt bt_out">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_inOut.png">
@@ -197,6 +198,9 @@
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
                 multipleSelection: [],//复选框选中数据
+                idArray:{
+                    ids:[]
+                },//复选框选中数据id
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
@@ -319,30 +323,8 @@
                     }
                 })
             },
-            // sendAjax(){
-            //     let _this=this;
-            //     if(_this.isAdd){
-            //         _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
-            //         .then(function(res){
-            //             _this.dialogFormVisible=false;
-            //             _this.loadTree();
-            //             _this.loadTableData();
-            //         },function(res){    
-
-            //         })
-            //     }else{
-            //          _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
-            //         .then(function(res){
-            //             _this.dialogFormVisible=false;
-            //             _this.loadTree();
-            //             _this.loadTableData();
-            //         },function(res){    
-
-            //         })
-            //     }
-                
-            // },
             //----------------------------------------------------------------
+
             // ---跳转--------open----------------------------------------------
             goDetail(){//点击新增跳转
                this.$store.state.url='/department/departmentDetail/default'
@@ -364,7 +346,7 @@
                 customClass:className
                 });
             },
-        //------------------------------------------------------------------
+            //------------------------------------------------------------------
             //---清除数据--------------------------------------------------
             clearAddDate:function(){//清除新增数据
                 let self = this;
@@ -468,41 +450,45 @@
                 },function(res){
                 })
             },
-            confirmDelRow() {
-                let self = this;
-                self.$confirm('确定删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-                }).then(() => {
-                    self.delRow();
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            },
             delRow(){
                 let self=this;
-                if(self.multipleSelection.length>0){//表格
-                    for(let i=0;i<self.multipleSelection.length;i++){
-                        self.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:self.multipleSelection[i].id})
-                        .then(function(res){
-                            if(self.load){
+                
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+                // if(self.idArray.ids.indexOf(undefined)!=-1){
+                //     self.$message({
+                //         type: 'warning',
+                //         message: '新增数据请在行内删除'
+                //     });
+                //     return;
+                // }
+                if(self.idArray.ids.length>0){
+                    self.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.$axios.posts('/api/services/app/DeptManagement/BatchDelete',self.idArray).then(function(res){
                                 self.loadTableData();
-                            }
-                            self.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            self.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }
-                };
+                                self.open('删除成功','el-icon-circle-check','successERP');  
+                                self.idArray = {
+                                    ids:[],
+                                };  
+                            })
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
+                    });
+                }
 
             },
             //---------------------------------------------------------------

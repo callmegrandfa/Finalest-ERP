@@ -20,32 +20,212 @@
         <el-row>
                 <!--公司信息  -->
             <el-col :span="24" class="getPadding">
-                <!-- <div class="tipsWrapper" name="ouCode">
+               <!-- <div class="tipsWrapper" name="ouCode">
                     <div class="errorTips" :class="{block : !validation.hasError('addData.ouCode')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('addData.ouCode') }}</p>
+                        <p class="msgDetail">错误提示：编码{{ validation.firstError('addData.ouCode') }}</p>
                     </div>
                 </div> -->
-               <div class="bgcolor" >
+                <div class="tipsWrapper" name="ouName">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouName')}">
+                        <p class="msgDetail">错误提示：名称{{ validation.firstError('addData.ouName') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="ouFullname">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouFullname')}">
+                        <p class="msgDetail">错误提示：全称{{ validation.firstError('addData.ouFullname') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="ouParentid">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouParentid')}">
+                        <p class="msgDetail">错误提示：上级业务单元{{ validation.firstError('addData.ouParentid') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="accCchemeId">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.accCchemeId')}">
+                        <p class="msgDetail">错误提示：会计方案{{ validation.firstError('addData.accCchemeId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="accStartMonth">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.accStartMonth')}">
+                        <p class="msgDetail">错误提示：启用月份{{ validation.firstError('addData.accStartMonth') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="baseCurrencyId">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.baseCurrencyId')}">
+                        <p class="msgDetail">错误提示：本位币种{{ validation.firstError('addData.baseCurrencyId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="companyOuId">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.companyOuId')}">
+                        <p class="msgDetail">错误提示：所属公司{{ validation.firstError('addData.companyOuId') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contactPerson">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.contactPerson')}">
+                        <p class="msgDetail">错误提示：联系人{{ validation.firstError('addData.contactPerson') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="phone">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.phone')}">
+                        <p class="msgDetail">错误提示：电话{{ validation.firstError('addData.phone') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="address">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.address')}">
+                        <p class="msgDetail">错误提示：地址{{ validation.firstError('addData.address') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="status1">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
+                        <p class="msgDetail">错误提示：启用状态{{ validation.firstError('addData.status') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="remark1">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.remark')}">
+                        <p class="msgDetail">错误提示：备注{{ validation.firstError('addData.remark') }}</p>
+                    </div>
+                </div>
+
+                
+                <div class="tipsWrapper" name="ouParentid">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.ouParentid')}">
+                        <p class="msgDetail">错误提示：上级公司{{ validation.firstError('basCompany.ouParentid') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="status2">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.status')}">
+                        <p class="msgDetail">错误提示：启用状态{{ validation.firstError('basCompany.status') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="regCapital">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.regCapital')}">
+                        <p class="msgDetail">错误提示：注册资本{{ validation.firstError('basCompany.regCapital') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="legalPerson">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.legalPerson')}">
+                        <p class="msgDetail">错误提示：法人代表{{ validation.firstError('basCompany.legalPerson') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="vatRegno">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.vatRegno')}">
+                        <p class="msgDetail">错误提示：纳税人登记号{{ validation.firstError('basCompany.vatRegno') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="regtime">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.regtime')}">
+                        <p class="msgDetail">错误提示：成立日期{{ validation.firstError('basCompany.regtime') }}</p>
+                    </div>
+                </div>
+
+                <div class="tipsWrapper" name="legalPersonIdnr">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.legalPersonIdnr')}">
+                        <p class="msgDetail">错误提示：法人身份证号码{{ validation.firstError('basCompany.legalPersonIdnr') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="mgtDeptCode">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.mgtDeptCode')}">
+                        <p class="msgDetail">错误提示：主管部门代码{{ validation.firstError('basCompany.mgtDeptCode') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="mgtDeptName">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.mgtDeptName')}">
+                        <p class="msgDetail">错误提示：主管部门名称{{ validation.firstError('basCompany.mgtDeptName') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="legalPersonType">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.legalPersonType')}">
+                        <p class="msgDetail">错误提示：纳税人类别{{ validation.firstError('basCompany.legalPersonType') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="businessAddress">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.businessAddress')}">
+                        <p class="msgDetail">错误提示：营业地址{{ validation.firstError('basCompany.businessAddress') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="rangeDate">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.dateRange')}">
+                        <p class="msgDetail">错误提示：营业或有效期限{{ validation.firstError('basCompany.dateRange') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="introduction">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.introduction')}">
+                        <p class="msgDetail">错误提示：公司简介{{ validation.firstError('basCompany.introduction') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contactAddress">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.contactAddress')}">
+                        <p class="msgDetail">错误提示：通讯地址{{ validation.firstError('basCompany.contactAddress') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="zipCode">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.zipCode')}">
+                        <p class="msgDetail">错误提示：邮政编码{{ validation.firstError('basCompany.zipCode') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="contact">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.contact')}">
+                        <p class="msgDetail">错误提示：联系人{{ validation.firstError('basCompany.contact') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="fax">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.fax')}">
+                        <p class="msgDetail">错误提示：传真{{ validation.firstError('basCompany.fax') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="phone">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.phone')}">
+                        <p class="msgDetail">错误提示：电话{{ validation.firstError('basCompany.phone') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="email">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.email')}">
+                        <p class="msgDetail">错误提示：email{{ validation.firstError('basCompany.email') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="webUrl">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.webUrl')}">
+                        <p class="msgDetail">错误提示：web网址{{ validation.firstError('basCompany.webUrl') }}</p>
+                    </div>
+                </div>
+                <div class="tipsWrapper" name="remark2">
+                    <div class="errorTips" :class="{block : !validation.hasError('basCompany.remark')}">
+                        <p class="msgDetail">错误提示：备注{{ validation.firstError('basCompany.remark') }}</p>
+                    </div>
+                </div>
+                
+
+
+
+
+                <div class="bgcolor" >
                     <label><small>*</small>编码</label>
                     <el-input class="ouCode" 
+                    disabled=""
                     v-model="addData.ouCode">
                     </el-input>
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>名称</label>
                     <el-input class="ouName"
+                    @focus="showErrprTips"
+                    :class="{redBorder : validation.hasError('addData.ouName')}"
                      v-model="addData.ouName" >
                      </el-input>
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>全称</label>
-                    <el-input class="ouCode"  
+                    <el-input class="ouFullname"  
+                    @focus="showErrprTips"
+                    :class="{redBorder : validation.hasError('addData.ouFullname')}"
                     v-model="addData.ouFullname" 
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
                     <label class="longLabel"><small>*</small>上级业务单元</label>
                     <el-select class="ouParentid"
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.ouParentid')}"
                     placeholder=""
                     v-model="addData.ouParentid">
                         <el-option 
@@ -59,6 +239,8 @@
                 <div class="bgcolor">
                     <label><small>*</small>会计方案</label>
                     <el-select class="accCchemeId"
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.accCchemeId')}"
                     placeholder=""
                     v-model="addData.accCchemeId">
                         <el-option 
@@ -72,6 +254,8 @@
                 <div class="bgcolor">
                     <label><small>*</small>启用月份</label>
                     <el-date-picker 
+                    @focus="showErrprTipsRangedate"
+                    :class="{redBorder : validation.hasError('addData.accStartMonth')}"
                     class="accStartMonth datepicker" 
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd" 
@@ -83,6 +267,8 @@
                     <label><small>*</small>本位币种</label>
                     <el-select 
                     placeholder=""
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.baseCurrencyId')}"
                     class="baseCurrencyId" 
                     v-model="addData.baseCurrencyId">
                         <el-option 
@@ -98,6 +284,8 @@
                     <label>所属公司</label>
                     <el-select 
                     placeholder=""
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.companyOuId')}"
                     class="companyOuId" 
                     v-model="addData.companyOuId">
                         <el-option 
@@ -112,6 +300,8 @@
                 <div class="bgcolor">
                     <label>联系人</label>
                     <el-input 
+                    @focus="showErrprTips"
+                    :class="{redBorder : validation.hasError('addData.contactPerson')}"
                     class="contactPerson" 
                     v-model="addData.contactPerson" 
                     >
@@ -120,6 +310,8 @@
                 <div class="bgcolor">
                     <label>电话</label>
                     <el-input 
+                    @focus="showErrprTips"
+                    :class="{redBorder : validation.hasError('addData.phone')}"
                     class="phone" 
                     v-model="addData.phone" 
                     ></el-input>
@@ -127,6 +319,8 @@
                 <div class="bgcolor">
                     <label>地址</label>
                     <el-input 
+                    @focus="showErrprTips"
+                    :class="{redBorder : validation.hasError('addData.address')}"
                     class="address" 
                     v-model="addData.address" 
                     ></el-input>
@@ -134,6 +328,8 @@
                  <div class="bgcolor">
                     <label>启用状态</label>
                     <el-select 
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.status')}"
                     class="status1" 
                     placeholder=""
                     v-model="addData.status">
@@ -149,6 +345,8 @@
                 <div class="bgcolor longWidth">
                     <label>备注</label>
                     <el-input
+                    @focus="showErrprTipsTextArea"
+                    :class="{redBorder : validation.hasError('addData.remark')}"
                     class="remark1" 
                     v-model="addData.remark"
                     type="textarea"
@@ -194,6 +392,8 @@
                                 <div class="bgcolor">
                                     <label>上级公司</label>
                                     <el-select 
+                                    @focus="showErrprTipsSelect"
+                                    :class="{redBorder : validation.hasError('basCompany.ouParentid')}"
                                     placeholder=""
                                     class="ouParentid" 
                                     v-model="basCompany.ouParentid">
@@ -209,6 +409,8 @@
                                 <div class="bgcolor">
                                     <label>启用状态</label>
                                     <el-select 
+                                    @focus="showErrprTipsSelect"
+                                    :class="{redBorder : validation.hasError('basCompany.status')}"
                                     placeholder=""
                                     class="status2" 
                                     v-model="basCompany.status">
@@ -228,6 +430,8 @@
                                     <div class="bgcolor">
                                         <label>注册资本</label>
                                         <el-input
+                                         @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.regCapital')}"
                                         class="regCapital"
                                         v-model="basCompany.regCapital"
                                         ></el-input>
@@ -235,13 +439,17 @@
                                     <div class="bgcolor">
                                         <label>法人代表</label>
                                         <el-input
+                                         @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.legalPerson')}"
                                         class="legalPerson"
                                         v-model="basCompany.legalPerson"
                                         ></el-input>
                                     </div>
                                     <div class="bgcolor">
                                         <label>纳税人登记号</label>
-                                        <el-input
+                                        <el-input 
+                                         @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.vatRegno')}"
                                         class="vatRegno"
                                         v-model="basCompany.vatRegno"
                                         ></el-input>
@@ -249,6 +457,8 @@
                                     <div class="bgcolor">
                                         <label>成立日期</label>
                                         <el-date-picker 
+                                        @focus="showErrprTipsRangedate"
+                                        :class="{redBorder : validation.hasError('basCompany.regtime')}"
                                         class="regtime datepicker" 
                                         format="yyyy-MM-dd"
                                         v-model="basCompany.regtime"
@@ -259,7 +469,8 @@
                                     <div class="bgcolor">
                                         <label class="longLabel">法人身份证号码</label>
                                         <el-input
-                                         
+                                         @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.legalPersonIdnr')}"   
                                         class="legalPersonIdnr"
                                         v-model="basCompany.legalPersonIdnr"
                                         ></el-input>
@@ -267,6 +478,8 @@
                                     <div class="bgcolor">
                                         <label>主管部门代码</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.mgtDeptCode')}"
                                         class="mgtDeptCode"
                                         v-model="basCompany.mgtDeptCode"
                                         ></el-input>
@@ -274,6 +487,8 @@
                                     <div class="bgcolor">
                                         <label>主管部门名称</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.mgtDeptName')}"
                                         class="mgtDeptName"
                                         v-model="basCompany.mgtDeptName"
                                         ></el-input>
@@ -281,6 +496,8 @@
                                     <div class="bgcolor">
                                         <label>纳税人类别</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.legalPersonType')}"
                                         class="legalPersonType"
                                         v-model="basCompany.legalPersonType"
                                         ></el-input>
@@ -288,6 +505,8 @@
                                     <div class="bgcolor">
                                         <label>营业地址</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.businessAddress')}"
                                         class="businessAddress"
                                         v-model="basCompany.businessAddress"
                                         ></el-input>
@@ -297,6 +516,8 @@
                                         <!-- businessStart  businessEnd  -->
                                         <div class="rangeDate">
                                             <el-date-picker
+                                            @focus="showErrprTipsRangedate"
+                                           :class="{redBorder : validation.hasError('dateRange')}"
                                             v-model="dateRange"
                                             type="daterange"
                                             format="yyyy-MM-dd"
@@ -312,6 +533,8 @@
                                     <div class="bgcolor">
                                         <label>公司简介</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.introduction')}"
                                         class="introduction"
                                         v-model="basCompany.introduction"
                                         ></el-input>
@@ -319,6 +542,8 @@
                                     <div class="bgcolor">
                                         <label>通讯地址</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.contactAddress')}"
                                         class="contactAddress"
                                         v-model="basCompany.contactAddress"
                                         ></el-input>
@@ -326,6 +551,8 @@
                                     <div class="bgcolor">
                                         <label>邮政编码</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.zipCode')}"
                                         class="zipCode"
                                         v-model="basCompany.zipCode"
                                         ></el-input>
@@ -333,6 +560,8 @@
                                     <div class="bgcolor">
                                         <label>联系人</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.contact')}"
                                         class="contact"
                                         v-model="basCompany.contact"
                                         ></el-input>
@@ -340,6 +569,8 @@
                                     <div class="bgcolor">
                                         <label>传真</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.fax')}"
                                         class="fax"
                                         v-model="basCompany.fax"
                                         ></el-input>
@@ -347,13 +578,17 @@
                                     <div class="bgcolor">
                                         <label>电话</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.phone')}"
                                         class="phone"
                                         v-model="basCompany.phone"
                                         ></el-input>
                                     </div>
                                     <div class="bgcolor">
-                                        <label>E-mail</label>
+                                        <label>email</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.email')}"
                                         class="email"
                                         v-model="basCompany.email"
                                         ></el-input>
@@ -361,19 +596,23 @@
                                     <div class="bgcolor">
                                         <label>web网址</label>
                                         <el-input
+                                        @focus="showErrprTips"
+                                        :class="{redBorder : validation.hasError('basCompany.webUrl')}"
                                         class="webUrl"
                                         v-model="basCompany.webUrl"
                                         ></el-input>
                                     </div>
                                     <div class="bgcolor longWidth">
-                                    <label>备注</label>
-                                    <el-input
-                                    class="remark2" 
-                                    v-model="basCompany.remark"
-                                    type="textarea"
-                                    :autosize="{ minRows: 4, maxRows: 10}"
-                                    placeholder="">
-                                    </el-input>
+                                        <label>备注</label>
+                                        <el-input
+                                        @focus="showErrprTipsTextArea"
+                                            :class="{redBorder : validation.hasError('basCompany.remark')}"
+                                        class="remark2" 
+                                        v-model="basCompany.remark"
+                                        type="textarea"
+                                        :autosize="{ minRows: 4, maxRows: 10}"
+                                        placeholder="">
+                                        </el-input>
                                     </div>
                                 </div>                                  
                             </el-col>
@@ -559,7 +798,7 @@ export default({
                 "ouParentid": "",//整数
                 "legalPerson": "",
                 "status": "",//整数
-                "isGroupCompany": true,
+                "isGroupCompany": false,
                 "regCapital": "",//整数
                 "vatRegno": "",
                 "regtime": "",
@@ -600,17 +839,23 @@ export default({
         }
     },
     validators: {
-      'addData.ouCode': function (value) {//编码
-         return this.Validator.value(value).required().maxLength(50)
-      },
+    //  'addData.ouCode': function (value) {//编码
+    //      return this.Validator.value(value).required().maxLength(50)
+    //   },
       'addData.ouName': function (value) {//名称
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.ouFullname': function (value) {//全称
          return this.Validator.value(value).required().maxLength(50);
       },
       'addData.ouParentid': function (value) {//上级业务单元
          return this.Validator.value(value).required().maxLength(50);
       },
-      'addData.regtime': function (value) {//公司成立时间
+      'addData.accCchemeId': function (value) {//会计方案
          return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.accStartMonth': function (value) {//启用月份
+         return this.Validator.value(value).required();
       },
       'addData.baseCurrencyId': function (value) {//本位币种id
          return this.Validator.value(value).required().integer();
@@ -625,19 +870,78 @@ export default({
           return this.Validator.value(value).required().maxLength(50);
       },
       'addData.address': function (value) {//地址
-         return this.Validator.value(value).required().maxLength(200);
-      },
-      'addData.remark': function (value) {//备注
-         return this.Validator.value(value).required().maxLength(200);
+          return this.Validator.value(value).required().maxLength(200);
       },
       'addData.status': function (value) {//用户状态
          return this.Validator.value(value).required().integer();
       },
-      'addData.ouCompanyParentid': function (value) {//上级公司
+      'addData.remark': function (value) {//备注
+         return this.Validator.value(value).required().maxLength(200);
+      },
+
+
+      'basCompany.ouParentid': function (value) {//上级公司
          return this.Validator.value(value).required().integer();
       },
-      'addData.legalPerson': function (value) {//法人代表
-          return this.Validator.value(value).required().maxLength(50);
+      'basCompany.status': function (value) {//启用状态
+         return this.Validator.value(value).required().integer();
+      },
+      'basCompany.regCapital': function (value) {//注册资本
+         return this.Validator.value(value).required().integer();
+      },
+      'basCompany.legalPerson': function (value) {//法人代表
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'basCompany.vatRegno': function (value) {//纳税人登记号
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'basCompany.regtime': function (value) {//成立日期
+         return this.Validator.value(value).required();
+      },
+      'basCompany.legalPersonIdnr': function (value) {//法人身份证号码
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'basCompany.mgtDeptCode': function (value) {//主管部门代码
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'basCompany.mgtDeptName': function (value) {//主管部门名称
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'basCompany.legalPersonType': function (value) {//纳税人类别
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'basCompany.businessAddress': function (value) {//营业地址
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'dateRange': function (value) {//营业或有效期限
+         return this.Validator.value(value).required();
+      },
+      'basCompany.introduction': function (value) {//公司简介
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'basCompany.contactAddress': function (value) {//通讯地址
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'basCompany.zipCode': function (value) {//邮政编码
+         return this.Validator.value(value).required().maxLength(20);
+      },
+      'basCompany.contact': function (value) {//联系人
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'basCompany.fax': function (value) {//传真
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'basCompany.phone': function (value) {//电话
+         return this.Validator.value(value).required().integer();
+      },
+      'basCompany.email': function (value) {//email
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'basCompany.webUrl': function (value) {//web网址
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'basCompany.remark': function (value) {//备注
+         return this.Validator.value(value).required().maxLength(200);
       },
     },
     watch:{
@@ -713,7 +1017,7 @@ export default({
                 "remark": res.result.remark,
                 "id":res.result.id
             };
-            _this.basOuTypes=res.result.ouTypes;
+            // _this.basOuTypes=res.result.ouTypes;
             _this.basCompany={
                 "ouParentid": res.result.basCompany.ouParentid,//整数
                 "legalPerson": res.result.basCompany.legalPerson,
@@ -834,9 +1138,9 @@ export default({
         },
         save(){
             let _this=this;
-            //  _this.$validate()
-            // .then(function (success) {
-            //     if (success) {
+             _this.$validate()
+            .then(function (success) {
+                if (success) {
                     _this.basCompany.businessStart=_this.dateRange[0];
                     _this.basCompany.businessEnd=_this.dateRange[1];
                     _this.addData.ouTypes=_this.basOuTypes;
@@ -847,8 +1151,8 @@ export default({
                     },function(res){
                         _this.open('保存失败','el-icon-error','faildERP');
                     })
-            //     }
-            // });       
+                }
+            });       
         },
         saveAdd(){
              let _this=this;

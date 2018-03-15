@@ -43,7 +43,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button @click="confirmDelRow" class="erp_bt bt_del">
+                    <button @click="delRow" class="erp_bt bt_del">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -121,22 +121,7 @@
                                         <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
-
-
-                                    <!-- <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.status"
-                                            v-if="scope.row.isSystem==true"
-                                            disabled
-                                            type="text"/>
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.status"
-                                            v-else
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>         -->
                                 </template>
-                                
                             </el-table-column>
 
                             <el-table-column prop="remark" label="备注">
@@ -272,6 +257,9 @@
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
                 multipleSelection: [],//复选框选中数据
+                idArray:{
+                    ids:[]
+                },//复选框选中数据id
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
@@ -548,59 +536,49 @@
                 let self=this;
                 // self.tableData.splice(index,1);
                 // self.addList.splice(index,1);
-                self.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:row.id})
-                .then(function(res){
+                self.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:row.id}).then(function(res){
                     self.open('删除成功','el-icon-circle-check','successERP');
                     self.loadTableData();
                 },function(res){
+                
                 })
             },
-            confirmDelRow() {
-                let self = this;
-                self.$confirm('确定删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-                }).then(() => {
-                    self.delRow();
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            },
-            delRow(){
+            delRow(){//批量删除
                 let self=this;
-                if(self.multipleSelection.length>0){//表格
-                    for(let i=0;i<self.multipleSelection.length;i++){
-                        self.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:self.multipleSelection[i].id})
-                        .then(function(res){
-                            if(self.load){
+                // let flag;
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+                if(self.idArray.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                if(self.idArray.ids.length>0){
+                    self.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.$axios.posts('/api/services/app/DictItemManagement/BatchDelete',self.idArray).then(function(res){
                                 self.loadTableData();
-                            }
-                            self.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            self.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }
-                };
-
-                // if(self.treeCheck.length>0){//tree
-                //     for(let i=0;i<self.treeCheck.length;i++){
-                //         self.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:self.treeCheck[i]})
-                //         .then(function(res){    
-                //           self.loadTree();
-                //         },function(res){
-                //         })
-                //     }
-                // }
-
+                                self.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
+                    });
+                }
             },
             //---------------------------------------------------------------
             // SimpleSearch(){//简单搜索
@@ -880,7 +858,7 @@
 .dic-list .el-input--suffix .el-input__inner{
     padding:0;
 }
-.dic-list ..el-input__inner{
+.dic-list .el-input__inner{
     padding:0;
 }
 .dic-list .bgw .el-input__inner{

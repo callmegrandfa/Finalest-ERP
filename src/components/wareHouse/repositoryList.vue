@@ -29,7 +29,28 @@
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
-                        <el-input placeholder="" v-model="searchArea"></el-input>
+                        <el-select class="queryOp"
+                                   placeholder=""
+                                   v-model="queryOp">
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="opSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="opAr"
+                                     :props="selectOpProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="opNodeClick"></el-tree>
+                            <el-option v-show="false"
+                                       :key="countOp.id" 
+                                       :label="countOp.areaName" 
+                                       :value="countOp.id"
+                                       id="op_confirmSelect"></el-option>
+                        </el-select>
                     </div>
                 </el-row>
 
@@ -160,10 +181,16 @@
         
         created:function(){
             this.getAllList();
+            this.loadSelect();
             
         },
-
+        computed:{
+            countOp () {
+                return this.opItem;
+            },
+        }, 
         methods:{
+            //---获取数据------------------------------------------
             getAllList:function(){//获取所有仓库列表
 
                 // ouId (integer, optional): 组织单元ID ,
@@ -192,7 +219,20 @@
                     console.log('err'+res)
                 })
             },
-
+            //---------------------------------------------------------
+            //---获取下拉数据-------------------------------------------
+            loadSelect:function(){
+                let self = this;
+                //业务地区
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
+                    console.log(res);
+                    self.opAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
+            //---------------------------------------------------------
             searchList:function(){//根据条件查找仓库信息
                 let self = this;
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
@@ -314,6 +354,34 @@
                let self = this;
                self.ifWidth = true;
            },
+           //---树------------------------------------------
+           loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            filterNode(value, data) {
+                console.log(data)
+                if (!value) return true;
+                    return data.areaName.indexOf(value) !== -1;
+            },
+            opNodeClick:function(data){
+                let self = this;
+                self.opItem.id = data.id;
+                self.opItem.areaName = data.areaName;
+                self.$nextTick(function(){
+                    $('#op_confirmSelect').click()
+                })
+            },
+           //-----------------------------------------------
         },
         data(){
             return{ 
@@ -322,7 +390,7 @@
                 queryList:[],//将查询回来的数据保存为数组形式
                 multipleSelection: [],//复选框选中数据
                 listById:'',//根据id获取的list
-               xx:'156416',
+                xx:'156416',
                 getAllParam:{
                     OuId:'1',//组织单元ID()
                     Draw:'1',
@@ -343,6 +411,21 @@
 
                 stockTypeId:'',//左侧搜索框的仓库类型值
                 ifWidth:true,
+
+                //---业务地区树形下拉-----
+                queryOp:'',
+                opSearch:'',//树形搜索框的
+                selectOpProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                opItem:{
+                    id:'',
+                    areaName:'',
+                },
+                opAr:[],//业务地区下拉框
+                //-----------------------
 
                 status: [{
                     value:"",
