@@ -66,16 +66,23 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
                             <el-table-column type="selection" fixed></el-table-column>
-                            <el-table-column prop="deptCode" label="部门编码" fixed></el-table-column>
-                            <el-table-column prop="deptName" label="部门名称" fixed></el-table-column>
+                            <el-table-column prop="deptCode" label="部门编码" fixed >
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="deptName" label="部门名称" fixed>
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptCode}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="deptParentName" label="上级部门"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
                             <el-table-column prop='status' label="状态">
                                 <template slot-scope="scope">
-                                    <el-input v-show="scope.row.status===''" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[0].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[0].itemName' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[1].itemName' disabled=""></el-input>
                                 </template>
                             </el-table-column>
                             <el-table-column prop='creatorUserName' label="创建人"></el-table-column>
@@ -171,17 +178,7 @@
                     value:'2',
                     label: '行政地区'
                 }],
-                status: [{//状态
-                    value:"",
-                    label: '全部'
-                    }, {
-                    value: 0,
-                    label: '禁用'
-                    }, {
-                    value: 1,
-                    label: '启用'
-                 }],
-                
+                statusC:[],//状态
                 tableData:[],
                 componyTree:  [{
                     deptName:'部门管理',
@@ -217,9 +214,10 @@
             }
         },
         created:function(){       
-                let _this=this;
-                _this.loadTableData();
-                _this.loadTree();
+                let self = this;
+                self.loadTableData();
+                self.loadTree();
+                self.loadStatus();
              },
         mounted:function(){
             let _this=this;
@@ -296,6 +294,17 @@
                         }
                     })
                 })
+            },
+            loadStatus:function(){//加载状态下拉框
+                let self = this;
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                    console.log(res)
+                    
+                self.statusC = res.result;      
+                    
+               },function(res){
+                   
+               })
             },
             //---------------------------------------------------------------
 

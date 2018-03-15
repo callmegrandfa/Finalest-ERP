@@ -194,8 +194,16 @@
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column type="selection" fixed></el-table-column>
                             <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
-                            <el-table-column prop="contactCode" label="客户编码" fixed></el-table-column>
-                            <el-table-column prop="contactName" label="客户名称"></el-table-column>
+                            <el-table-column prop="contactCode" label="客户编码" fixed>
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].contactCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="contactName" label="客户名称">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].contactName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
                             <el-table-column prop="contactClassId" label="客户类型"></el-table-column>
                             <el-table-column prop="contactWorkPropertyIdTValue" label="客户性质"></el-table-column>
