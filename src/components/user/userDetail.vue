@@ -147,8 +147,29 @@
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.ouId')}"
                     v-model="addData.ouId">
-                        <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
-                        </el-option>
+                        <!-- <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
+                        </el-option> -->
+                        <el-input
+                        placeholder="搜索..."
+                        class="selectSearch"
+                        v-model="search">
+                        </el-input>
+                        <el-tree
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        :data="selectTree"
+                        :props="selectProps"
+                        node-key="id"
+                        default-expand-all
+                        ref="tree"
+                        :filter-node-method="filterNode"
+                        :expand-on-click-node="false"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                        <!-- <el-option v-show="false" :key="count.id" :label="count.ouFullname" :value="count.id" id="userDetail_confirmSelect">
+                        </el-option> -->
+                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -305,6 +326,16 @@
   export default({
     data(){
       return{
+        search:'',
+        selectTree:[
+        ],
+        selectProps: {
+            children: 'children',
+            label: 'ouFullname',
+            id:'id'
+        },
+
+
         dialogTableVisible:false,//控制对话框
         menuCheck:true,//未选功能，已选功能
          check:false,//是否授权
@@ -352,7 +383,7 @@
             languageId:[],//语种
         },
         SkipCount:0,
-        MaxResultCount:10,
+        MaxResultCount:100,
         totalCount:0,
       }
     },
@@ -394,8 +425,14 @@
     },
     created:function(){       
       let _this=this;
+      _this.loadTree();
       _this.getSelectData();
       _this.loadTableData();
+    },
+    watch: {
+      search(val) {
+        this.$refs.tree.filter(val);
+      }
     },
     methods: {
         getSelectData(){
@@ -459,6 +496,41 @@
               }
             })
       },
+      filterNode(value, data) {
+            if (!value) return true;
+            return data.ouFullname.indexOf(value) !== -1;
+        },
+        loadTree(){
+            let _this=this;
+            _this.treeLoading=true;
+            _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+            .then(function(res){
+                _this.selectTree=res.result;
+                _this.loadIcon();
+            },function(res){
+            })
+        },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        nodeClick(data,node,self){
+            let _this=this;
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
+            })
+        },
       open(tittle,iconClass,className) {
           this.$notify({
           position: 'bottom-right',

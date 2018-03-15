@@ -228,10 +228,21 @@
 .el-input input:focus{
   border-color: #33CCCC;
 }
-.bgcolor .el-input input[disabled]{
+.bgcolor .el-input input[disabled],
+.bgcolor .el-textarea.is-disabled,
+{
     border-color:#c0c4cc;
     background-color: #f2f2f2;
-    cursor: unset;
+}
+.el-select .el-input.is-disabled .el-input__inner,
+.el-textarea.is-disabled .el-textarea__inner,
+.el-checkbox__input.is-disabled .el-checkbox__inner,
+.el-checkbox__input.is-disabled+span.el-checkbox__label,
+.el-range-editor.is-disabled,
+.el-range-editor.is-disabled input,
+.el-input.is-disabled .el-input__inner,
+.el-input.is-disabled .el-input__icon{
+  cursor: default;
 }
 
 /* datePicker日期控件 */

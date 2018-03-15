@@ -250,7 +250,7 @@
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
+                _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
                 .then(function(res){
                     _this.componyTree=res
                     _this.treeLoading=false;
