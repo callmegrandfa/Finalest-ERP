@@ -29,7 +29,28 @@
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
-                        <el-input placeholder="" v-model="searchArea"></el-input>
+                        <el-select class="queryOp"
+                                   placeholder=""
+                                   v-model="queryOp">
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="opSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="opAr"
+                                     :props="selectOpProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="opNodeClick"></el-tree>
+                            <el-option v-show="false"
+                                       :key="countOp.id" 
+                                       :label="countOp.areaName" 
+                                       :value="countOp.id"
+                                       id="op_confirmSelect"></el-option>
+                        </el-select>
                     </div>
                 </el-row>
 
@@ -75,7 +96,7 @@
                             <span class="btDetail">新增</span>
                         </button>
 
-                        <button @click="delRow" class="erp_bt bt_del">
+                        <button @click="confirmDelRow" class="erp_bt bt_del">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -102,10 +123,18 @@
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border @selection-change="handleSelectionChange" style="width: 100%" stripe>
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="ouId" label="所属组织" ></el-table-column>
-                            <el-table-column prop="stockCode" label="仓库编码" ></el-table-column>
-                            <el-table-column prop="stockName" label="仓库名称"></el-table-column>
+                            <el-table-column type="selection" fixed></el-table-column>
+                            <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
+                            <el-table-column prop="stockCode" label="仓库编码" fixed>
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].stockCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="stockName" label="仓库名称">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].stockName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="stockFullName" label="仓库全称"></el-table-column>
                             <el-table-column prop="stockTypeId" label="仓库类型">
                                 <template slot-scope="scope">
@@ -124,13 +153,13 @@
                                     <el-input v-show="scope.row.status===1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <!-- <span>{{scope.row}}</span> -->
                                     <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
                                     <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="confirmDel(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table> 
@@ -160,27 +189,17 @@
         
         created:function(){
             this.getAllList();
+            this.loadSelect();
             
         },
-
+        computed:{
+            countOp () {
+                return this.opItem;
+            },
+        }, 
         methods:{
+            //---获取数据------------------------------------------
             getAllList:function(){//获取所有仓库列表
-
-                // ouId (integer, optional): 组织单元ID ,
-                // stockCode (string, optional): 仓库编码 ,
-                // stockName (string, optional): 仓库名称 ,
-                // stockFullName (string, optional): 仓库全称 ,
-                // opAreaId (integer, optional): 业务地区 ,
-                // adAreaId (integer, optional): 行政地区 ,
-                // stockTypeId (integer, optional): 仓库类型 ,
-                // invTypeId (integer, optional): 库存分类 ,
-                // fax (string, optional): 传真 ,
-                // email (string, optional): 邮箱 ,
-                // status (integer, optional): 启用状态 ,
-                // manager (string, optional): 负责人 ,
-                // phone (string, optional): 电话 ,
-                // remark (string, optional): 备注 ,
-                // id (integer, optional)
 
                 let self = this;
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Draw:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
@@ -192,7 +211,20 @@
                     console.log('err'+res)
                 })
             },
-
+            //---------------------------------------------------------
+            //---获取下拉数据-------------------------------------------
+            loadSelect:function(){
+                let self = this;
+                //业务地区
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
+                    console.log(res);
+                    self.opAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
+            //---------------------------------------------------------
             searchList:function(){//根据条件查找仓库信息
                 let self = this;
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
@@ -230,7 +262,46 @@
                 this.page = val;
                 this.getAllList();
             },     
-
+            confirmDel(index,row) {
+                let self = this;
+                this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    self.handleDelete(index,row);
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            confirmDelRow() {
+                let self = this;
+                this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    self.delRow();
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             delRow(){
                 let self=this;
                 if(self.multipleSelection.length>0){//表格
@@ -275,6 +346,34 @@
                let self = this;
                self.ifWidth = true;
            },
+           //---树------------------------------------------
+           loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            filterNode(value, data) {
+                console.log(data)
+                if (!value) return true;
+                    return data.areaName.indexOf(value) !== -1;
+            },
+            opNodeClick:function(data){
+                let self = this;
+                self.opItem.id = data.id;
+                self.opItem.areaName = data.areaName;
+                self.$nextTick(function(){
+                    $('#op_confirmSelect').click()
+                })
+            },
+           //-----------------------------------------------
         },
         data(){
             return{ 
@@ -283,7 +382,7 @@
                 queryList:[],//将查询回来的数据保存为数组形式
                 multipleSelection: [],//复选框选中数据
                 listById:'',//根据id获取的list
-               xx:'156416',
+                xx:'156416',
                 getAllParam:{
                     OuId:'1',//组织单元ID()
                     Draw:'1',
@@ -304,6 +403,21 @@
 
                 stockTypeId:'',//左侧搜索框的仓库类型值
                 ifWidth:true,
+
+                //---业务地区树形下拉-----
+                queryOp:'',
+                opSearch:'',//树形搜索框的
+                selectOpProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                opItem:{
+                    id:'',
+                    areaName:'',
+                },
+                opAr:[],//业务地区下拉框
+                //-----------------------
 
                 status: [{
                     value:"",

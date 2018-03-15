@@ -107,7 +107,12 @@
                                                 type="text"/>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="" label="英文名称" width="">
+                                <el-table-column prop="brandEname" label="英文名称" width="">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" :class="{errorclass:scope.row.brandEname==''&&isSave==true}" 
+                                                v-model="scope.row.brandEname" 
+                                                type="text"/>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column prop="remark" label="备注">
                                     <template slot-scope="scope">
@@ -243,8 +248,7 @@ import Btm from '../../base/btm/btm'
         },
         created:function(){
             //this.datashop();
-            let _this=this;
-            _this.loadTableData();
+            this.loadTableData();
             // $(document).on("click",".pageActive .el-pager>li",function(){
             //     if(_this.turnPage==false){
             //        //$(this).html("12");
@@ -394,6 +398,7 @@ import Btm from '../../base/btm/btm'
                     "groupId":0,
                     "brandCode":"" ,
                     "brandName":"" ,
+                    "brandEname":"",
                     "status":1 ,
                     "remark": " " ,
                     "remark2":" " ,
@@ -405,17 +410,43 @@ import Btm from '../../base/btm/btm'
                 this.isUpdate=true;
                 this.isAdd=true;
                 this.tableData.unshift(newcol);
-                this.addArray.push(newcol);
+                this.addArray.unshift(newcol);
+                // if(this.addArray.length>0){
+                //     for(let i in this.addArray){
+                //         if(this.addArray[i].brandCode==""||this.addArray[i].brandName==""){
+                //             return
+                //         }else{
+                //             this.tableData.unshift(newcol);
+                //             this.addArray.push(newcol);
+                //         }
+                //         // if(this.addArray[i].brandCode==""||this.addArray[i].brandName==""){
+                //         //     this.$message({
+                //         //         message: '红色框内为必填项！',
+                //         //         type: 'error'
+                //         //     });
+                //         //     return
+                //         // }
+                //     }
+                // }else{
+                //     this.tableData.unshift(newcol);
+                //     this.addArray.push(newcol);
+                // }
+                
+                    
             },
             handleDel(row,index){//行内删除
+                console.log(index);
                 this.$confirm('确定删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning',
                     center: true
                     }).then(() => {
-                    if(row.brandCode==""){
-                        this.tableData.splice(index,1)
+                        console.log(this.addArray);
+                        if(row.brandCode==""||this.isAdd==true){
+                            this.tableData.splice(index,1);
+                            this.addArray.splice(index,1);
+                            console.log(this.addArray);
                         }else{
                             let _this=this;
                             _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
@@ -458,7 +489,13 @@ import Btm from '../../base/btm/btm'
                             }
                         }
                     }
+                }else if(this.SelectionChange.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请勾选需要更改状态的记录！'
+                    });
                 }
+                
             },
             delBatch(){//批量删除
                 for(var i in this.SelectionChange){
@@ -501,13 +538,12 @@ import Btm from '../../base/btm/btm'
                 this.isSave=true;
                 let _this=this;
                 if(_this.addArray.length>0){//新增保存
-                    for(let i=0;i<_this.addArray.length;i++){
-                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""||_this.addArray[i].status==""){
+                    for(let i in _this.addArray){
+                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""){
                             this.$message({
                                 message: '红色框内为必填项！',
                                 type: 'error'
                             });
-                            return false
                         }
                     }
                     if(_this.addArray.length==1){//单条新增
@@ -516,7 +552,7 @@ import Btm from '../../base/btm/btm'
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                             _this.isAdd=false
                         }); 
-                    }else{//批量新增
+                    }else{//批量新增                      
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',_this.addArray).then(function(res){
                             _this.loadTableData();
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    

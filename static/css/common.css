@@ -1,3 +1,6 @@
+.el-col-24{
+  border-bottom: none;
+}
 /* 搜索 */
 /* <el-input
     placeholder="搜索..."
@@ -104,6 +107,11 @@
 }
 .el-table__body{
   text-align: center;
+}
+.el-table .cell{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 /* elementUI分页 */
 /* <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage"></el-pagination> */
@@ -220,10 +228,21 @@
 .el-input input:focus{
   border-color: #33CCCC;
 }
-.bgcolor .el-input input[disabled]{
+.bgcolor .el-input input[disabled],
+.bgcolor .el-textarea.is-disabled,
+{
     border-color:#c0c4cc;
     background-color: #f2f2f2;
-    cursor: unset;
+}
+.el-select .el-input.is-disabled .el-input__inner,
+.el-textarea.is-disabled .el-textarea__inner,
+.el-checkbox__input.is-disabled .el-checkbox__inner,
+.el-checkbox__input.is-disabled+span.el-checkbox__label,
+.el-range-editor.is-disabled,
+.el-range-editor.is-disabled input,
+.el-input.is-disabled .el-input__inner,
+.el-input.is-disabled .el-input__icon{
+  cursor: default;
 }
 
 /* datePicker日期控件 */
@@ -964,8 +983,9 @@ end-placeholder="结束日期">
   border:none;
   outline: none;
   width: 100%;
-  height: 23px;
-  line-height: 23px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
 }
 .abimg{
   position: absolute;
@@ -1001,4 +1021,88 @@ end-placeholder="结束日期">
 /* 树形下拉 */
 .selectSearch input{
   height: 35px;
+}
+
+ 
+ .bgcolor.bgLongWidth{
+  margin-right: 0;
+  width: 421px;
+  height:auto;
+  float: left;
+}
+ .bgcolor.bgLongWidth .selectTree{
+    width: calc(100% - 122px)
+}
+.bgMarginAuto{
+    margin: auto;
+    width: 550px;
+}
+  .bgcolor.bgLongWidth .el-input,
+  .bgcolor.bgLongWidth .rangeDate,
+ .bgcolor.bgLongWidth .el-textarea,
+ .bgcolor.longWidth .addZoo,
+ .bgcolor.bgLongWidth .el-select{
+    width: calc(100% - 90px)
+}
+.bgcolor.bgLongWidth .el-select .el-input{
+  width: 100%;
+}
+.bgcolor.bgLongWidth .rangeDate input.el-range-input{
+  width: calc(50% - 10px)
+}
+ .bgcolor.bgLongWidth label{
+  width:80px;
+}
+ .bgcolor.bgLongWidth .el-textarea{
+ font-size: 12px;
+} 
+ .bgcolor.bgLongWidth .addZoo{
+ float: left;
+}
+ .bgcolor.bgLongWidth .add{
+  display: block;
+  width: 35px;
+  height: 35px;
+  border-radius: 3px;
+  background-color: #c7c7c7;
+  color: #fff;
+  text-align: center;
+  line-height: 35px;
+  text-decoration: none;
+  font-size: 23px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+ .bgcolor.bgLongWidth .addRole{
+text-align: center;
+line-height: 35px;
+display: inline-block;
+width: 66px;
+height: 35px;
+background-color: #f2f2f2;
+border: none;
+border-radius: 3px;
+font-size: 12px;
+margin-right: 10px;
+cursor: pointer;
+position: relative;
+}
+ .bgcolor.bgLongWidth .add:hover{
+  background-color: #354052;
+}
+ .bgcolor.bgLongWidth .addRole i{
+position: absolute;
+right: -4px;
+top: -4px;
+color: #cccccc;
+}
+ .bgcolor.bgLongWidth .addRole:hover i{
+color:#f66;
+}
+.error_tips_info{
+  color: red;
+  font-size: 12px;
+  float: left;
+  height: 35px;
+  line-height: 35px;
 }

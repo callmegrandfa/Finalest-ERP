@@ -16,11 +16,18 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_cancel">
+            <button @click="Cancel()" class="erp_bt bt_cancel">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
                 <span class="btDetail">取消</span>
+            </button>
+
+            <button @click="Update()" class="erp_bt bt_modify">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_modify.png">
+                </div>
+                <span class="btDetail">修改</span>
             </button>
             
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
@@ -122,10 +129,11 @@
                 </div>
 
                 <div class="bgcolor">
-                    <label>所属组织</label>
+                    <label><small>*</small>所属组织</label>
                     <el-select v-model="customerData.ouId"
                                placeholder=""
                                class="ouId"
+                               :disabled="isEdit"
                                @change='Modify()'
                                :class="{redBorder : validation.hasError('customerData.ouId')}"
                                @focus="showErrprTipsSelect">
@@ -138,20 +146,22 @@
 
 
                 <div class="bgcolor">
-                    <label>编码</label>
-                    <el-input v-model="customerData.contact" 
+                    <label><small>*</small>编码</label>
+                    <el-input v-model="customerData.contactCode" 
                               placeholder="" 
+                              :disabled="isEdit"
                               @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('customerData.contact')}"
-                              class="contact"
+                              :class="{redBorder : validation.hasError('customerData.contactCode')}"
+                              class="contactCode"
                               @change='Modify()'></el-input>
                 </div>
 
 
                 <div class="bgcolor">
-                    <label>名称</label>
+                    <label><small>*</small>名称</label>
                     <el-input v-model="customerData.contactName" 
-                              placeholder="" 
+                              placeholder=""
+                              :disabled="isEdit" 
                               @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.contactName')}"
                               class="contact"
@@ -160,9 +170,10 @@
 
 
                 <div class="bgcolor">
-                    <label>全称</label>
+                    <label><small>*</small>全称</label>
                     <el-input v-model="customerData.contactFullName" 
                               placeholder=""
+                              :disabled="isEdit"
                               @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.contactFullName')}"
                               class="contactFullName" 
@@ -172,7 +183,8 @@
                 <div class="bgcolor">
                     <label>助记码</label>
                     <el-input v-model="customerData.mnemonic" 
-                              placeholder="" 
+                              placeholder=""
+                              :disabled="isEdit" 
                               @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.mnemonic')}"
                               class="mnemonic"
@@ -185,6 +197,7 @@
                     <label>客户分类</label>
                     <el-select v-model="customerData.contactClassId"
                                placeholder=""
+                               :disabled="isEdit"
                                class="contactClassId"
                                :class="{redBorder : validation.hasError('customerData.contactClassId')}"
                                @focus="showErrprTipsSelect">
@@ -201,6 +214,7 @@
                     <label>客户性质</label>
                     <el-select v-model="customerData.contactWorkPropertyId"
                                placeholder=""
+                               :disabled="isEdit"
                                class="contactWorkPropertyId"
                                :class="{redBorder : validation.hasError('customerData.contactWorkPropertyId')}"
                                @focus="showErrprTipsSelect">
@@ -215,6 +229,7 @@
                     <label>客户等级</label>
                     <el-select v-model="customerData.contactGradeId"
                                placeholder=""
+                               :disabled="isEdit"
                                class="contactGradeId"
                                :class="{redBorder : validation.hasError('customerData.contactGradeId')}"
                                @focus="showErrprTipsSelect">
@@ -229,6 +244,7 @@
                     <label>客户类型</label>
                     <el-select v-model="customerData.isCustomer"
                                placeholder=""
+                               :disabled="isEdit"
                                class="isCustomer"
                                :class="{redBorder : validation.hasError('customerData.isCustomer')}"
                                @focus="showErrprTipsSelect">
@@ -243,6 +259,7 @@
                     <label>对应财务组织</label>
                     <el-select v-model="customerData.ficaOuId"
                                placeholder=""
+                               :disabled="isEdit"
                                class="ficaOuId"
                                :class="{redBorder : validation.hasError('customerData.ficaOuId')}"
                                @focus="showErrprTipsSelect">
@@ -256,7 +273,8 @@
                 <div class="bgcolor">
                     <label>纳税登记号</label>
                     <el-input v-model="customerData.taxCode" 
-                              placeholder="" 
+                              placeholder=""
+                              :disabled="isEdit" 
                               @focus="showErrprTips"
                               class="taxCode"
                               :class="{redBorder : validation.hasError('customerData.taxCode')}"
@@ -264,9 +282,10 @@
                 </div>
 
                 <div class="bgcolor">
-                    <label>业务地区区号</label>
+                    <label>业务地区</label>
                     <el-select v-model="customerData.opAreaId"
                                class="opAreaId"
+                               :disabled="isEdit"
                                placeholder=""
                                :class="{redBorder : validation.hasError('customerData.opAreaId')}"
                                @focus="showErrprTipsSelect">
@@ -281,6 +300,7 @@
                     <label>行政地区</label>
                     <el-select v-model="customerData.adAreaId"
                                placeholder=""
+                               :disabled="isEdit"
                                :class="{redBorder : validation.hasError('customerData.adAreaId')}"
                                @focus="showErrprTipsSelect">
                         <el-option v-for="item in adArea" 
@@ -293,7 +313,8 @@
                 <div class="bgcolor">
                     <label>法人代表</label>
                     <el-input v-model="customerData.legalPerson" 
-                              placeholder="" 
+                              placeholder=""
+                              :disabled="isEdit" 
                               class="legalPerson"
                               :class="{redBorder : validation.hasError('customerData.legalPerson')}"
                               @focus="showErrprTips"
@@ -303,7 +324,8 @@
                 <div class="bgcolor">
                     <label>注册地址</label>
                     <el-input v-model="customerData.regAddress" 
-                              placeholder="" 
+                              placeholder=""
+                              :disabled="isEdit" 
                               class="regAddress"
                               :class="{redBorder : validation.hasError('customerData.regAddress')}"
                               @focus="showErrprTips"
@@ -313,7 +335,8 @@
                 <div class="bgcolor">
                     <label>负责人</label>
                     <el-input v-model="customerData.manager" 
-                              placeholder="" 
+                              placeholder=""
+                              :disabled="isEdit" 
                               class="manager"
                               :class="{redBorder : validation.hasError('customerData.manager')}"
                               @focus="showErrprTips"
@@ -323,7 +346,8 @@
                 <div class="bgcolor">
                     <label>电话</label>
                     <el-input v-model="customerData.phone" 
-                              placeholder="" 
+                              placeholder=""
+                              :disabled="isEdit" 
                               class="phone"
                               :class="{redBorder : validation.hasError('customerData.phone')}"
                               @focus="showErrprTips"
@@ -333,11 +357,27 @@
                 <div class="bgcolor">
                     <label>备注</label>
                     <el-input v-model="customerData.remark" 
-                              placeholder="" 
+                              placeholder=""
+                              :disabled="isEdit" 
                               class="remark"
                               :class="{redBorder : validation.hasError('customerData.remark')}"
                               @focus="showErrprTips"
                               @change='Modify()'></el-input>
+                </div>
+
+                <div class="bgcolor">
+                    <label><small>*</small>状态</label>
+                    <el-select v-model="customerData.status"
+                               class="status"
+                               placeholder=""
+                               :disabled="isEdit" 
+                               :class="{redBorder : validation.hasError('customerData.status')}"
+                               @focus="showErrprTipsSelect">
+                        <el-option v-for="item in opArea" 
+                                   :key="item.valueAreaBusiness" 
+                                   :label="item.label" 
+                                   :value="item.valueAreaBusiness"></el-option>
+                    </el-select>
                 </div>
             </el-col>
         </el-row>
@@ -659,6 +699,7 @@ export default({
         return{
             ifShow:true,
             ifModify:false,//判断主表是否修改过
+            isEdit:true,//判断是否要修改
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -1051,6 +1092,21 @@ export default({
         },
         //-------------------------------------------------------
 
+        //---控制是否可编辑---------------------------------------
+            Update(){//修改
+                if(this.isEdit==true){
+                    this.isEdit=!this.isEdit;
+                }
+            },        
+            Cancel(){
+                let self = this;
+                if(self.isEdit==false){
+                    self.isEdit=!self.isEdit;
+                    self.loadData();
+                }
+            },
+        //-------------------------------------------------------
+
         // ---控制表格编辑----------------------------------------
         Modify:function(){//判断主表是否修改过
             let self = this;
@@ -1327,14 +1383,6 @@ export default({
 .mb10{
     margin-bottom: 10px;
 }
-.input-need{
-    border:none;
-    outline: none;
-    width: 100%;
-    height: 23px;
-    line-height: 23px;
-    text-align: center
-}
 .input-bgw{
     background: white;
     text-align: center;
@@ -1342,6 +1390,10 @@ export default({
 .input-bgp{
     background: #FAFAFA;
     text-align: center;
+}
+
+.customerBasicForm .el-input__inner{
+    height:35px !important;
 }
   </style>
   

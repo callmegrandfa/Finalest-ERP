@@ -405,6 +405,28 @@ const routes = [
                     { path: '/department/departmentModify/:id', component: departmentModify, name: 'departmentModify' },
                 ]
             },
+
+
+            // { path: '/supplierList/:id', component: supplierList, name: 'supplierList' },
+            // { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
+            // { path: '/userList/:id', component: userList,name:'userList' },
+            // { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
+
+            { path: '/tenant', component: tenant,name:'tenant',redirect: function(){//租户管理
+              let name='tenant';
+              let activeRouter=store.state.activeRouter;
+              for(let i=0;i<activeRouter.length;i++){
+                  if(activeRouter[i].name==name){
+
+                    return activeRouter[i].url;
+
+                    break;
+                  }
+              }
+            },children:[
+                { path: '/tenant/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
+                { path: '/tenant/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
+            ]},
             {
                 path: '/staff',
                 component: staff,

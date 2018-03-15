@@ -20,8 +20,7 @@
                              ref="tree"
                              :expand-on-click-node="false"
                              :filter-node-method="filterNode"
-                             @node-click="nodeClick"
-                             :render-content="renderContent">
+                             @node-click="nodeClick">
                     </el-tree>
                 </el-col>   
             </el-col>
@@ -43,6 +42,13 @@
                         <span class="btDetail">删除</span>
                     </button>
 
+                    <button class="erp_bt bt_in">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_inOut.png">
+                        </div>
+                        <span class="btDetail">导入</span>
+                    </button>
+                    
                     <button class="erp_bt bt_out">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_inOut.png">
@@ -59,26 +65,33 @@
                 <el-row>
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="deptCode" label="部门编码"></el-table-column>
-                            <el-table-column prop="deptName" label="部门名称"></el-table-column>
+                            <el-table-column type="selection" fixed></el-table-column>
+                            <el-table-column prop="deptCode" label="部门编码" fixed >
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="deptName" label="部门名称" fixed>
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptCode}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="deptParentName" label="上级部门"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
                             <el-table-column prop='status' label="状态">
                                 <template slot-scope="scope">
-                                    <el-input v-show="scope.row.status===''" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[0].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[0].itemName' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[1].itemName' disabled=""></el-input>
                                 </template>
                             </el-table-column>
                             <el-table-column prop='creatorUserName' label="创建人"></el-table-column>
                             <el-table-column prop='createdTime' width="180" label="创建时间"></el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed='right'>
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)" >修改</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)" >查看</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="delThis(scope.row)" >删除</el-button>
+                                    <el-button type="text" size="small"  @click="confirmDel(scope.row)" >删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -96,7 +109,7 @@
             </el-col>
         </el-row>
         <!-- dialog -->
-        <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
+        <!-- <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
             
             <div class="bgcolor smallBgcolor"><label>部门编码</label><el-input :class="{redBorder : validation.hasError('dialogData.deptCode')}" v-model="dialogData.deptCode" placeholder=""></el-input></div>
             <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptCode') }}</div>
@@ -125,7 +138,6 @@
             
             <div class="bgcolor smallBgcolor">
                 <label>允许使用</label>
-                <!-- <el-checkbox v-model="ifCan"></el-checkbox> -->
                 <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
                     <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择">
                     </el-option>
@@ -136,7 +148,7 @@
                 <button class="dialogBtn" @click="save">确认</button>
                 <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
             </div>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 
@@ -147,18 +159,6 @@
             return {
                 searchLeft:'',
                 ifCan:true,
-                dialogData:{//dialog数据
-                    id:'',
-                    groupId:'',//集团ID
-                    ouId:'',//组织单元ID
-                    deptCode:'',//部门代码
-                    deptName:'',//部门名称
-                    director:'',//负责人
-                    phone:'',//电话
-                    deptParentid:'',//父部门id
-                    remark:'',//备注
-                    status:'',//启用状态
-                },
                  deptParentid: [{//业务地区分类
                     value:'1',
                     label: '业务地区'
@@ -166,69 +166,26 @@
                     value:'2',
                     label: '行政地区'
                 }],
-                statuses:[//启用状态
-                    {
-                        value:'1',
-                        label: '启用'
-                    },
-                    {
-                        value:'2',
-                        label: '停用'
-                    },
-                ],
-                status: [{//状态
-                    value:"",
-                    label: '全部'
-                    }, {
-                    value: 0,
-                    label: '禁用'
-                    }, {
-                    value: 1,
-                    label: '启用'
-                 }],
-                options: [{
-                    basOuTypes: '1',
-                    label: '1'
-                    }, {
-                    basOuTypes: '2',
-                    label: '2'
-                    }, {
-                    basOuTypes: '3',
-                    label: '3'
-                    }, {
-                    basOuTypes: '4',
-                    label: '4'
-                    }, {
-                    basOuTypes: '5',
-                    label: '5'
-                    }, {
-                    basOuTypes: '6',
-                    label: '6'
-                    }, {
-                    basOuTypes: '7',
-                    label: '7'
-                    }, {
-                    basOuTypes: '8',
-                    label: '8'
-                    }, {
-                    basOuTypes: '9',
-                    label: '9'
-                    }],
+                statusC:[],//状态
                 tableData:[],
-                componyTree:  [
-                    // {areaName:'根目录',id:'0',items:[]},
-                ],
+                componyTree:  [{
+                    deptName:'部门管理',
+                    children:[],
+                }],
                 defaultProps: {
-                    children: 'items',
+                    children: 'children',
                     label: 'deptName',
                     id:'id'
                 },
-                TreeContextMenu:[//点击鼠标右键生成菜单
-                ],
+                // TreeContextMenu:[//点击鼠标右键生成菜单
+                // ],
                 pageIndex:0,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
                 multipleSelection: [],//复选框选中数据
+                idArray:{
+                    ids:[]
+                },//复选框选中数据id
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
@@ -237,7 +194,7 @@
                 tableLoading:true,
                 treeLoading:false,
                 Sorting:'',//table搜索
-                dialogFormVisible:false,
+                // dialogFormVisible:false,
                 AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
@@ -245,13 +202,11 @@
             }
         },
         created:function(){       
-                let _this=this;
-                _this.loadTableData();
-                _this.loadTree();
-             },
-        mounted:function(){
-            let _this=this;
-        }, 
+            let self = this;
+            self.loadTableData();
+            self.loadTree();
+            self.loadStatus();
+        },
         validators: {
             'dialogData.deptCode':function(value){//部门编码
                 return this.Validator.value(value).required().maxLength(50)
@@ -281,31 +236,31 @@
             
             //---数据加载---------------------------------------------------
             loadTableData(){//表格
-                 let _this=this;
-                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/DeptManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
-                    _this.tableData = res.result.items;
-                    console.log(_this.tableData)
-                     $.each( _this.tableData,function(index,value){//处理时间格式
+                let self=this;
+                self.tableLoading=true;
+                self.$axios.gets('/api/services/app/DeptManagement/GetAll',{SkipCount:(self.page-1)*self.oneItem,MaxResultCount:self.oneItem,Sorting:self.Sorting}).then(function(res){ 
+                    self.tableData = res.result.items;
+                    // console.log(self.tableData)
+                     $.each( self.tableData,function(index,value){//处理时间格式
                         if(value.createdTime&&value.createdTime!=''){
                             let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
-                            _this.tableData[index].createdTime=createdTime;
+                            self.tableData[index].createdTime=createdTime;
                         } 
                     })
-                    _this.totalItem=res.result.totalCount
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    _this.tableLoading=false;
+                    self.totalItem=res.result.totalCount
+                    self.totalPage=Math.ceil(res.result.totalCount/self.oneItem);
+                    self.tableLoading=false;
                     },function(res){
-                    _this.tableLoading=false;
+                    self.tableLoading=false;
                 })
             },
             loadTree(){
                 let self=this;
                 self.treeLoading=true;
-                self.$axios.gets('/api/services/app/DeptManagement/GetTree',{id:0})
-                .then(function(res){
-                    console.log(res)
-                    self.componyTree=res.result
+                self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
+                    // console.log(res)
+                    self.componyTree[0].children=res.result
+                    // console.log(self.componyTree)
                     self.treeLoading=false;
                     self.loadIcon();
                },function(res){
@@ -313,8 +268,8 @@
                })
             },
             loadIcon(){
-                let _this=this;
-                _this.$nextTick(function () {
+                let self=this;
+                self.$nextTick(function () {
                     $('.preNode').remove();   
                     $('.el-tree-node__label').each(function(){
                         if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
@@ -324,6 +279,14 @@
                         }
                     })
                 })
+            },
+            loadStatus:function(){//加载状态下拉框
+                let self = this;
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                    self.statusC = res.result;       
+               },function(res){
+                   
+               })
             },
             //---------------------------------------------------------------
 
@@ -351,30 +314,8 @@
                     }
                 })
             },
-            // sendAjax(){
-            //     let _this=this;
-            //     if(_this.isAdd){
-            //         _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
-            //         .then(function(res){
-            //             _this.dialogFormVisible=false;
-            //             _this.loadTree();
-            //             _this.loadTableData();
-            //         },function(res){    
-
-            //         })
-            //     }else{
-            //          _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
-            //         .then(function(res){
-            //             _this.dialogFormVisible=false;
-            //             _this.loadTree();
-            //             _this.loadTableData();
-            //         },function(res){    
-
-            //         })
-            //     }
-                
-            // },
             //----------------------------------------------------------------
+
             // ---跳转--------open----------------------------------------------
             goDetail(){//点击新增跳转
                this.$store.state.url='/department/departmentDetail/default'
@@ -396,7 +337,7 @@
                 customClass:className
                 });
             },
-        //------------------------------------------------------------------
+            //------------------------------------------------------------------
             //---清除数据--------------------------------------------------
             clearAddDate:function(){//清除新增数据
                 let self = this;
@@ -412,19 +353,6 @@
                     remark:'',//备注
                     status:'',//启用状态
                 }
-            },
-            //----------------------------------------------------------------
-            //---新增----------------------------------------------------------
-            addNew:function(){
-                let self = this;
-                self.tittle='新增';
-                self.dialogFormVisible = true;
-                
-                self.dialogData.groupId = self.tableData[0].groupId;
-                self.dialogData.ouId = self.tableData[0].ouId;
-                // self.dialogData.deptParentid = self.tableData[0].deptParentid;
-                // self.dialogData.status = self.tableData[0].status;
-                console.log(self.dialogData)
             },
             //----------------------------------------------------------------
 
@@ -462,74 +390,133 @@
 
             //---控制编辑------分页--------------------------------------------
             handleCurrentChange(val) {//页码改变
-                 let _this=this;
-                 _this.page=val;
-                 if(_this.load){
-                     _this.loadTableData();
+                 let self=this;
+                 self.page=val;
+                 if(self.load){
+                     self.loadTableData();
                  }
             },
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
             },
+            confirmDel(row) {
+                let self = this;
+                this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                }).then(() => {
+                    self.delThis(row);
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             delThis(row){//删除行
-                let _this=this;
-                _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:row.id})
+                let self=this;
+                self.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:row.id})
                 .then(function(res){
-                    _this.open('删除成功','el-icon-circle-check','successERP');
-                    _this.loadTableData();
+                    self.open('删除成功','el-icon-circle-check','successERP');
+                    self.loadTableData();
                 },function(res){
                 })
             },
             delRow(){
-                let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            if(_this.load){
-                                _this.loadTableData();
-                            }
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }
-                };
+                let self=this;
+                
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+                // if(self.idArray.ids.indexOf(undefined)!=-1){
+                //     self.$message({
+                //         type: 'warning',
+                //         message: '新增数据请在行内删除'
+                //     });
+                //     return;
+                // }
+                if(self.idArray.ids.length>0){
+                    self.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.$axios.posts('/api/services/app/DeptManagement/BatchDelete',self.idArray).then(function(res){
+                                self.loadTableData();
+                                self.open('删除成功','el-icon-circle-check','successERP');  
+                                self.idArray = {
+                                    ids:[],
+                                };  
+                            })
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
+                    });
+                }
 
             },
             //---------------------------------------------------------------
             // SimpleSearch(){//简单搜索
-            //      let _this=this;
-            //      _this.tableLoading=true;
-            //     _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
+            //      let self=this;
+            //      self.tableLoading=true;
+            //     self.$axios.gets('/api/services/app/OuManagement/SimpleSearch',self.searchData)
             //     .then(function(res){
-            //         _this.load=false
-            //         _this.tableData=res.result.basOus;
-            //         _this.tableLoading=false;
+            //         self.load=false
+            //         self.tableData=res.result.basOus;
+            //         self.tableLoading=false;
             //     },function(res){
-            //         _this.tableLoading=false;
+            //         self.tableLoading=false;
             //     })
             // },
       
             // checkChange(data,check){
-            //     let _this=this;
+            //     let self=this;
             //     let add=false;
             //     if(check){
-            //         _this.treeCheck.push(data.treeId);
+            //         self.treeCheck.push(data.treeId);
             //     }else{
-            //         for(let i=0;i<_this.treeCheck.length;i++){
-            //             if(_this.treeCheck[i]==data.treeId){
-            //                 _this.treeCheck.splice(i,1);
+            //         for(let i=0;i<self.treeCheck.length;i++){
+            //             if(self.treeCheck[i]==data.treeId){
+            //                 self.treeCheck.splice(i,1);
             //             }
             //         }
             //     }
             // },
             nodeClick:function(data){
-                //  let _this=this;
+                console.log(data)
+                let self = this;
+                if(data.id){
+                    self.$axios.gets('/api/services/app/DeptManagement/GetTree',{id:data.id}).then(function(res){
+                        console.log(res)
+                        self.tableData=res.result
+                        self.tableData.unshift(data);
+                        console.log(self.tableData)
+                    },function(res){
+                        self.treeLoading=false;
+                    })
+                }else{
+                    self.loadTableData();
+                }
+                
+                //  let self=this;
                 //  let flag=false;
-                //  if(_this.isClick.length>0){
-                //      for(let i=0;i<_this.isClick.length;i++){
-                //         if(_this.isClick[i]==data.treeId){
+                //  if(self.isClick.length>0){
+                //      for(let i=0;i<self.isClick.length;i++){
+                //         if(self.isClick[i]==data.treeId){
                 //             flag=false
                 //             break;
                 //         }else{
@@ -541,9 +528,9 @@
                 //  }
                  
                 //  if(data.treeId!=1&&flag){
-                //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
+                //      self.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
                 //     .then(function(res){
-                //         _this.isClick.push(data.treeId);
+                //         self.isClick.push(data.treeId);
                 //         if(res.result.length>0){
                 //             for(let i=0;i<res.result.length;i++){
                 //                 let label=res.result[i].deptName;
@@ -557,95 +544,95 @@
                 
             },
             //---树形操作-----------------------------------------------
-            TreeAdd(event,node,data){
-                $('.TreeMenu').css({
-                    display:'none'
-                })
-                let _this=this;
-                _this.clearTreeData();
-                _this.tittle='新增';
-                _this.isAdd=true;
-                _this.dialogFormVisible=true;
-                _this.dialogData.groupId=data.groupId;//集团id
-                _this.dialogData.areaParentId=data.id;//父级id
-            },
-            TreeDel(event,node,data){
-                $('.TreeMenu').css({
-                    display:'none'
-                })
-                let _this=this;
-                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
-                .then(function(res){
-                    _this.loadTree();
-                    _this.loadTableData();
-                },function(res){    
+            // TreeAdd(event,node,data){
+            //     $('.TreeMenu').css({
+            //         display:'none'
+            //     })
+            //     let self=this;
+            //     self.clearTreeData();
+            //     self.tittle='新增';
+            //     self.isAdd=true;
+            //     self.dialogFormVisible=true;
+            //     self.dialogData.groupId=data.groupId;//集团id
+            //     self.dialogData.areaParentId=data.id;//父级id
+            // },
+            // TreeDel(event,node,data){
+            //     $('.TreeMenu').css({
+            //         display:'none'
+            //     })
+            //     let self=this;
+            //     self.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
+            //     .then(function(res){
+            //         self.loadTree();
+            //         self.loadTableData();
+            //     },function(res){    
 
-                })
-            },
-            TreeModify(event,node,data){
-                $('.TreeMenu').css({
-                    display:'none'
-                })
-                let _this=this;
-                _this.clearTreeData();
-                _this.tittle='修改';
-                _this.isAdd=false;
-                _this.dialogFormVisible=true;
-                 _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
-                    .then(function(res){
-                        _this.dialogData=res.result;
-                    },function(res){    
+            //     })
+            // },
+            // TreeModify(event,node,data){
+            //     $('.TreeMenu').css({
+            //         display:'none'
+            //     })
+            //     let self=this;
+            //     self.clearTreeData();
+            //     self.tittle='修改';
+            //     self.isAdd=false;
+            //     self.dialogFormVisible=true;
+            //      self.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
+            //         .then(function(res){
+            //             self.dialogData=res.result;
+            //         },function(res){    
 
-                    })
-            },
+            //         })
+            // },
             filterNode(value, data) {
                 if (!value) return true;
                  return data.areaName.indexOf(value) !== -1;
             },
-            renderContent(h, { node, data, store }) {
-                return (
-                <span class="TreeNode el-tree-node__label"
-                on-mousedown ={ (event) => this.whichButton(event,node, data) } 
-                on-click={ (event) => this.showTable(event,node, data) }
-                style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
-                  {node.label}
-                   <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
-                    </div>
-                </span>);
-            },
-            whichButton(event,node, data){
-                let e = event || window.event;
-                let btnNum = e.button;
-                if(e.target.className!='TreeMenuBtn'){
-                    $('.TreeMenu').css({
-                        display:'none'
-                    })
-                }else{
-                    return false;
-                }
-                if (btnNum==2){
-                e.target.id= data.id
-                let clickDom=$('#'+e.target.id);
-                let x = e.clientX
-                let y = e.clientY
-                let left=clickDom.offset().left;
-                clickDom.children('.TreeMenu').css({
-                    display:'block',
-                    left:x-left+'px',
-                    top:'0px'
-                })
-                $('.el-tree-node>.el-tree-node__children').css({
-                    overflow:'visible'
-                })
-                }
-            },
-            clearTreeData(){
-                let _this=this;
-                _this.dialogData={}
-            }
+            // renderContent(h, { node, data, store }) {
+            //     return (
+            //     <span class="TreeNode el-tree-node__label"
+            //     on-mousedown ={ (event) => this.whichButton(event,node, data) } 
+            //     on-click={ (event) => this.showTable(event,node, data) }
+            //     style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
+            //       {node.label}
+            //        <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
+            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
+            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
+            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
+            //         </div>
+            //     </span>);
+            // },
+            // whichButton(event,node, data){
+            //     let e = event || window.event;
+            //     let btnNum = e.button;
+            //     if(e.target.className!='TreeMenuBtn'){
+            //         $('.TreeMenu').css({
+            //             display:'none'
+            //         })
+            //     }else{
+            //         return false;
+            //     }
+            //     if (btnNum==2){
+            //     e.target.id= data.id
+            //     let clickDom=$('#'+e.target.id);
+            //     let x = e.clientX
+            //     let y = e.clientY
+            //     let left=clickDom.offset().left;
+            //     clickDom.children('.TreeMenu').css({
+            //         display:'block',
+            //         left:x-left+'px',
+            //         top:'0px'
+            //     })
+            //     $('.el-tree-node>.el-tree-node__children').css({
+            //         overflow:'visible'
+            //     })
+            //     }
+            // },
+            // clearTreeData(){
+            //     let self=this;
+            //     self.dialogData={}
+            // }
             //-------------------------------------------------------------------       
         },
     }

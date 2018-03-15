@@ -2,7 +2,7 @@
 <template>
     <el-row class="h48 pt5">
     		<div class="ml5" style="float:left" v-for="item in date.botton">
-    			<button :class="item.class" @click="selectItem(item)" ><div class="btImg"><img  :src="item.imgsrc"></div><span :class="String(item.imgsrc)" class="btDetail">{{item.text}}</span></button>
+    			<button v-show="item.show" :class="item.class" @click="selectItem(item)" ><div class="btImg"><img  :src="item.imgsrc"></div><span :class="String(item.imgsrc)" class="btDetail">{{item.text}}</span></button>
     		</div>                   
     </el-row>
 </template>
@@ -21,20 +21,19 @@
 	    methods:{
 	    	selectItem(item){
 	    		let _this=this;
-	    		if(item.text=='查询'){
-	    			_this.date.botton.pop();
-	    			_this.stop='查询';
-                	this.$emit('listbtm', _this.stop)
-	    		}else if(item.class=='erp_bt bt_add'|| item.class=='erp_bt bt_back'){
+	    		if(item.class=='erp_bt bt_add'|| item.class=='erp_bt bt_back'){
 	    			this.$store.state.url=`${this.date.url}/default`
            		    this.$router.push({path:this.$store.state.url})//点击切换路由
-	    		}else if(item.text == '保存'){
-	    			_this.stop='保存';
+	    		}else if(item.text == '保存' && item.class == 'erp_bt bt_save'){
+	    			_this.stop='新增保存';
 	    			this.$emit('listbtm', _this.stop)
-	    		}else if(item.text == '启用'){
-	    			_this.stop='启用';
+	    		}else if(item.text == '保存' && item.class == 'erp_bt bt_save amend_save'){
+	    			_this.stop='修改保存';
 	    			this.$emit('listbtm', _this.stop)
-	    		}
+	    		}else{
+	    			_this.stop= item.text;
+	    			this.$emit('listbtm', _this.stop)
+	    		} 
 	    	}
 	    }
 	}

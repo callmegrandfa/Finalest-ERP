@@ -67,9 +67,9 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
                             
-                            <el-table-column type="selection"></el-table-column>
+                            <el-table-column type="selection" fixed></el-table-column>
 
-                            <el-table-column prop="itemCode" label="编码">
+                            <el-table-column prop="itemCode" label="编码" fixed>
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -86,7 +86,7 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="itemName" label="名称">
+                            <el-table-column prop="itemName" label="名称" fixed>
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -113,30 +113,15 @@
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
                                     <el-select  v-model="scope.row.status" v-if="scope.row.isSystem==true" disabled :class="scope.$index%2==0?'bgw':'bgg'">
-                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value" @click="aa">
+                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
 
                                     <el-select  v-model="scope.row.status" v-else @change="handleChange(scope.$index,scope.row)" :class="scope.$index%2==0?'bgw':'bgg'">
-                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value" @click="aa">
+                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
-
-
-                                    <!-- <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.status"
-                                            v-if="scope.row.isSystem==true"
-                                            disabled
-                                            type="text"/>
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.status"
-                                            v-else
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>         -->
                                 </template>
-                                
                             </el-table-column>
 
                             <el-table-column prop="remark" label="备注">
@@ -160,24 +145,25 @@
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.currencyCode"
+                                            v-model="scope.row.createdTime"
                                             v-if="scope.row.isSystem==true"
                                             disabled
                                             type="text"/>
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.currencyCode"
+                                            v-model="scope.row.createdTime"
                                             v-else
+                                            disabled
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" fixed='right'>
                                  <template slot-scope="scope">
-                                    <!-- <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button> -->
+                                    <!-- <el-button type="text" size="small"   @click="modify(scope.row)" >修改</el-button> -->
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="confirmDel(scope.row)" >删除</el-button>
+                                    <el-button type="text" size="small" v-show='scope.row.isSystem==false' @click="confirmDel(scope.row)" >删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -272,6 +258,9 @@
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
                 multipleSelection: [],//复选框选中数据
+                idArray:{
+                    ids:[]
+                },//复选框选中数据id
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
@@ -291,13 +280,10 @@
             }
         },
         created:function(){       
-                let _this=this;
-                _this.loadTableData();
-                _this.loadTree();
+                let self=this;
+                self.loadTableData();
+                self.loadTree();
              },
-        mounted:function(){
-            let _this=this;
-        }, 
         // validators: {
         //     'dialogData.dictCode':function(value){//字典编码
         //         return this.Validator.value(value).required().maxLength(50)
@@ -318,45 +304,45 @@
             }
         },
         methods:{
-            aa:function(){console.log(123)},
             //---数据加载---------------------------------------------------
             loadTableData(){//表格
-                 let _this=this;
-                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                let self=this;
+                self.tableLoading=true;
+                self.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:(self.page-1)*self.oneItem,MaxResultCount:self.oneItem}).then(function(res){ 
                     // console.log(res)
-                    _this.tableData = res.result.items;
-                    // console.log(_this.tableData)
-                     $.each( _this.tableData,function(index,value){//处理时间格式
+                    self.tableData = res.result.items;
+                    // console.log(self.tableData)
+                     $.each( self.tableData,function(index,value){//处理时间格式
                         if(value.createdTime&&value.createdTime!=''){
                             let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
-                            _this.tableData[index].createdTime=createdTime;
+                            self.tableData[index].createdTime=createdTime;
+                            // console.log(self.tableData[index].createdTime)
                         } 
                     })
-                    _this.totalItem=res.result.totalCount
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    _this.tableLoading=false;
+                    self.totalItem=res.result.totalCount
+                    self.totalPage=Math.ceil(res.result.totalCount/self.oneItem);
+                    self.tableLoading=false;
                     },function(res){
-                    _this.tableLoading=false;
+                    self.tableLoading=false;
                 })
             },
             loadTree(){
-                let _this=this;
-                _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/DictManagement/GetDictionaryTree')
+                let self=this;
+                self.treeLoading=true;
+                self.$axios.gets('/api/services/app/DictManagement/GetDictionaryTree')
                 .then(function(res){
                     console.log(res)
-                    _this.componyTree=res.result;
-                    // console.log(_this.componyTree)
-                    _this.treeLoading=false;
-                    _this.loadIcon();
+                    self.componyTree=res.result;
+                    // console.log(self.componyTree)
+                    self.treeLoading=false;
+                    self.loadIcon();
                },function(res){
-                   _this.treeLoading=false;
+                   self.treeLoading=false;
                })
             },
             loadIcon(){
-                let _this=this;
-                _this.$nextTick(function () {
+                let self=this;
+                self.$nextTick(function () {
                     $('.preNode').remove();   
                     $('.el-tree-node__label').each(function(){
                         if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
@@ -400,27 +386,24 @@
                 
                 let self = this;
                 if(self.addList.length>0){
-                    for(let i in self.addList){
-                        self.$axios.posts('/api/services/app/DictItemManagement/Create',self.addList[i]).then(function(res){
-                            self.open('创建字典系统值成功','el-icon-circle-check','successERP');
-                            self.addList = [];
-                            self.loadTableData();
-                        },function(res){    
-                            console.log('error')
-                        })
-                    }
+                    self.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){
+                        self.open('创建字典系统值成功','el-icon-circle-check','successERP');
+                        self.addList = [];
+                        self.loadTableData();
+                    },function(res){    
+                        console.log('error')
+                    })
+                    
                 }
 
-                if(self.updateList.length>0){
-                    for(let i in self.updateList){
-                        self.$axios.puts('/api/services/app/DictItemManagement/Update',self.updateList[i]).then(function(res){
-                            self.open('修改字典系统值成功','el-icon-circle-check','successERP');
-                            self.updateList = [];
-                            self.loadTableData();
-                        },function(res){    
-                            console.log('error')
-                        })
-                    }
+                if(self.updateList.length>0){   
+                    self.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
+                        self.open('修改字典系统值成功','el-icon-circle-check','successERP');
+                        self.updateList = [];
+                        self.loadTableData();
+                    },function(res){    
+                        console.log('error')
+                    })
                 }
             },
             //----------------------------------------------------------------
@@ -514,10 +497,10 @@
                 }  
             },
             handleCurrentChange(val) {//页码改变
-                 let _this=this;
-                 _this.page=val;
-                 if(_this.load){
-                     _this.loadTableData();
+                 let self=this;
+                 self.page=val;
+                 if(self.load){
+                     self.loadTableData();
                  }
             },
             handleSelectionChange(val) {//点击复选框选中的数据
@@ -525,7 +508,8 @@
             },
             confirmDel(row) {
                 let self = this;
-                this.$confirm('确定删除?', '提示', {
+                console.log(row)
+                self.$confirm('确定删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
@@ -544,52 +528,63 @@
                 });
             },
             delThis(row){//删除字典值行
-                let _this=this;
-                _this.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:row.id})
-                .then(function(res){
-                    _this.open('删除成功','el-icon-circle-check','successERP');
-                    _this.loadTableData();
+                let self=this;
+                // self.tableData.splice(index,1);
+                // self.addList.splice(index,1);
+                self.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:row.id}).then(function(res){
+                    self.open('删除成功','el-icon-circle-check','successERP');
+                    self.loadTableData();
                 },function(res){
+                
                 })
             },
-            delRow(){
-                let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            if(_this.load){
-                                _this.loadTableData();
-                            }
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }
-                };
-
-                // if(_this.treeCheck.length>0){//tree
-                //     for(let i=0;i<_this.treeCheck.length;i++){
-                //         _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
-                //         .then(function(res){    
-                //           _this.loadTree();
-                //         },function(res){
-                //         })
-                //     }
-                // }
-
+            delRow(){//批量删除
+                let self=this;
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+                if(self.idArray.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                if(self.idArray.ids.length>0){
+                    self.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.$axios.posts('/api/services/app/DictItemManagement/BatchDelete',self.idArray).then(function(res){
+                                self.loadTableData();
+                                self.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
+                    });
+                }
             },
             //---------------------------------------------------------------
             // SimpleSearch(){//简单搜索
-            //      let _this=this;
-            //      _this.tableLoading=true;
-            //     _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
+            //      let self=this;
+            //      self.tableLoading=true;
+            //     self.$axios.gets('/api/services/app/OuManagement/SimpleSearch',self.searchData)
             //     .then(function(res){
-            //         _this.load=false
-            //         _this.tableData=res.result.basOus;
-            //         _this.tableLoading=false;
+            //         self.load=false
+            //         self.tableData=res.result.basOus;
+            //         self.tableLoading=false;
             //     },function(res){
-            //         _this.tableLoading=false;
+            //         self.tableLoading=false;
             //     })
             // },
 
@@ -618,14 +613,14 @@
             
             
             // checkChange(data,check){
-            //     let _this=this;
+            //     let self=this;
             //     let add=false;
             //     if(check){
-            //         _this.treeCheck.push(data.treeId);
+            //         self.treeCheck.push(data.treeId);
             //     }else{
-            //         for(let i=0;i<_this.treeCheck.length;i++){
-            //             if(_this.treeCheck[i]==data.treeId){
-            //                 _this.treeCheck.splice(i,1);
+            //         for(let i=0;i<self.treeCheck.length;i++){
+            //             if(self.treeCheck[i]==data.treeId){
+            //                 self.treeCheck.splice(i,1);
             //             }
             //         }
             //     }
@@ -634,22 +629,17 @@
                 let self = this;
                 console.log(data)
                 self.dictId = data.id;
-                self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id}).then(function(res){ 
-                    // console.log(data.id)
-                    // console.log(res.result.length)
-                    self.tableData = res.result;
-                    //  $.each(self.tableData,function(index,value){//处理时间格式
-                    //     if(value.createdTime&&value.createdTime!=''){
-                    //         let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
-                    //         self.tableData[index].createdTime=createdTime;
-                    //     } 
-                    // })
-                    self.totalItem=res.result.length
-                    // self.totalPage=Math.ceil(res.result.totalCount/self.oneItem);
-                    // self.tableLoading=false;
+                if(self.dictId==0){
+                    self.loadTableData()
+                }else{
+                    self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id}).then(function(res){ 
+                        self.tableData = res.result;
+                        self.totalItem=res.result.length
                     },function(res){
-                    self.tableLoading=false;
-                })
+                        self.tableLoading=false;
+                    })
+                }
+                
                 
             },
             //---树形操作-----------------------------------------------
@@ -658,22 +648,22 @@
             //     $('.TreeMenu').css({
             //         display:'none'
             //     })
-            //     let _this=this;
-            //     // _this.clearTreeData();
-            //     _this.tittle='新增';
-            //     _this.isAdd=true;
-            //     _this.dialogFormVisible=true;
-            //     _this.dialogData.id=data.id;
+            //     let self=this;
+            //     // self.clearTreeData();
+            //     self.tittle='新增';
+            //     self.isAdd=true;
+            //     self.dialogFormVisible=true;
+            //     self.dialogData.id=data.id;
             // },
             // TreeDel(event,node,data){
             //     $('.TreeMenu').css({
             //         display:'none'
             //     })
-            //     let _this=this;
-            //     _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
+            //     let self=this;
+            //     self.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
             //     .then(function(res){
-            //         _this.loadTree();
-            //         _this.loadTableData();
+            //         self.loadTree();
+            //         self.loadTableData();
             //     },function(res){    
 
             //     })
@@ -682,14 +672,14 @@
             //     $('.TreeMenu').css({
             //         display:'none'
             //     })
-            //     let _this=this;
-            //     _this.clearTreeData();
-            //     _this.tittle='修改';
-            //     _this.isAdd=false;
-            //     _this.dialogFormVisible=true;
-            //      _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
+            //     let self=this;
+            //     self.clearTreeData();
+            //     self.tittle='修改';
+            //     self.isAdd=false;
+            //     self.dialogFormVisible=true;
+            //      self.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
             //         .then(function(res){
-            //             _this.dialogData=res.result;
+            //             self.dialogData=res.result;
             //         },function(res){    
 
             //         })
@@ -738,8 +728,8 @@
             //     }
             // },
             // clearTreeData(){
-            //     let _this=this;
-            //     _this.dialogData={}
+            //     let self=this;
+            //     self.dialogData={}
             // }
             //-------------------------------------------------------------------       
         },
@@ -857,7 +847,7 @@
 .dic-list .el-input--suffix .el-input__inner{
     padding:0;
 }
-.dic-list ..el-input__inner{
+.dic-list .el-input__inner{
     padding:0;
 }
 .dic-list .bgw .el-input__inner{

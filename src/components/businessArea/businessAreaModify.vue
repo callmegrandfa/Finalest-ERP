@@ -6,6 +6,7 @@
               <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
               <!-- <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>     -->
               <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+              <button @click="Cancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
               <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
               <button class="erp_bt bt_auxiliary bt_width">
                 <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
@@ -15,68 +16,102 @@
             </el-col>
         </el-row>
         <el-row>
-            <!-- <div class="tipsWrapper" name="areaCode">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.areaCode')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaCode') }}</p>
-                </div>
-            </div>
-             <div class="tipsWrapper" name="areaName">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.areaName')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaName') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="manager">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.manager')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.manager') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="areaParentId">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.areaParentId')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaParentId') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="remark">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.remark')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.remark') }}</p>
-                </div>
-            </div>
-            <div class="tipsWrapper" name="status">
-                <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
-                    <p class="msgDetail">错误提示：{{ validation.firstError('addData.status') }}</p>
-                </div>
-            </div> -->
+            <el-col :span="24"  class="pt15">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>所属组织</label>
+                        <el-select 
+                        placeholder=""
+                        v-model="test"
+                        >
+                            <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search_ou">
+                            </el-input>
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="selectTree_ou"
+                            :props="selectProps_ou"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree"
+                            :filter-node-method="filterNode_ou"
+                            :expand-on-click-node="false"
+                            @node-click="nodeClick"
+                            >
+                            </el-tree>
+                            <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>    
+            </el-col>
 
-
-            <el-col :span="24" class="pt15">
-               <div class="marginAuto">
-                   <div class="bgcolor longWidth"><label>
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>上级业务地区</label>
+                        <el-select 
+                        class="areaParentId" 
+                        :class="{redBorder : validation.hasError('addData.areaParentId')}" 
+                        placeholder=""
+                        v-model="addData.areaParentId">
+                        <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search_area">
+                        </el-input>
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="selectTree_area"
+                            :props="selectProps_area"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree"
+                            :filter-node-method="filterNode_area"
+                            :expand-on-click-node="false"
+                            @node-click="nodeClick"
+                            >
+                            </el-tree>
+                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
+                </div>   
+            </el-col>
+            
+            <el-col :span="24">
+               <div class="bgMarginAuto">
+                   <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>业务地区编码</label>
                         <el-input 
                         class="areaCode" 
                         :class="{redBorder : validation.hasError('addData.areaCode')}" 
                         v-model="addData.areaCode"></el-input>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.areaCode') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.areaCode') }}</div>
                 </div> 
                 
                 
             </el-col>
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label><small>*</small>业务地区名称</label>
                         <el-input 
                         class="areaName" 
                         :class="{redBorder : validation.hasError('addData.areaName')}" 
                         v-model="addData.areaName"></el-input>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.areaName') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.areaName') }}</div>
                 </div>    
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label>负责人</label>
                         <el-input 
                         class="manager" 
@@ -84,48 +119,13 @@
                         v-model="addData.manager"  
                         ></el-input>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.manager') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.manager') }}</div>
                 </div>   
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label><small>*</small>上级业务地区</label>
-                       <el-select 
-                        class="areaParentId" 
-                        :class="{redBorder : validation.hasError('addData.areaParentId')}" 
-                        placeholder=""
-                        v-model="addData.areaParentId">
-                        <!-- <input type="text" class="selectTree"> -->
-                        <el-input
-                            placeholder="搜索..."
-                            class="selectSearch"
-                            v-model="search">
-                        </el-input>
-                            <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                            :data="selectTree"
-                            :props="selectProps"
-                            node-key="id"
-                            default-expand-all
-                            ref="tree"
-                            :filter-node-method="filterNode"
-                            :expand-on-click-node="false"
-                            @node-click="nodeClick"
-                            >
-                            </el-tree>
-                            <el-option v-show="false" :key="count.id" :label="count.areaName" :value="count.id" id="businessModify_confirmSelect">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="error_tips">{{ validation.firstError('addData.areaParentId') }}</div>
-                </div>   
-            </el-col>
-            
-            <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
                         class="remark" 
@@ -136,33 +136,32 @@
                         >
                         </el-input>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.remark') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.remark') }}</div>
                 </div>       
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
                         <el-select 
                         class="status" 
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
                         v-model="addData.status">
-                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                             </el-option>
                         </el-select>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label>创建人</label>
                         <el-input 
-                        v-model="addData.createdBy"
                         disabled
                         ></el-input>
                     </div>
@@ -170,15 +169,14 @@
             </el-col>
             
             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
                         <label>创建时间</label>
                         <el-date-picker
-                        v-model="addData.createdTime    "
                         type="date"
                         disabled
-                        format="yyyy-MM-dd HH:mm:ss"
-                        value-format="yyyy-MM-dd HH:mm:ss">
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </div>
                 </div>    
@@ -191,37 +189,27 @@
   export default({
     data(){
       return{
-        search:'',
-        item:{
-            id:'',
-            areaName:'',
-        },
-        selectTree:[
+        test:'',
+        search_ou:'',
+        selectTree_ou:[
         ],
-        selectProps: {
+        selectProps_ou: {
+            children: 'children',
+            label: 'ouFullname',
+            id:'id'
+        },
+
+        search_area:'',
+        selectTree_area:[
+        ],
+        selectProps_area: {
             children: 'items',
             label: 'areaName',
             id:'id'
         },
-         contain: 
-         [{ 
-            value:1,
-            label: '启用'
-         }, {
-            value:2,
-            label: '停用'
-         }],
-         contains: 
-         [{ 
-            value:0,
-            label: '无'
-         },{ 
-            value:1,
-            label: '选项1'
-         }, {
-            value:2,
-            label: '选项2'
-         }],
+
+
+        AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
         addData:{
         "groupId": 1,
         "areaType": 1,
@@ -234,6 +222,14 @@
         "manager": "",
         "status": '',
         "remark": ""
+        },
+        selectData:{//select数据
+            Status001:[],//启用状态
+            UserType:[],//身份类型
+            userGroupId:[],//所属用户组
+            languageId:[],//语种
+            area:[],//上级业务地区
+            ou:[],//组织
         },
       }
     },
@@ -268,33 +264,84 @@
       'addData.remark': function (value) {//备注
           return this.Validator.value(value).required().maxLength(200);
       },
-    },
-    computed:{
-        count () {
-            return this.item;
-            },
-    },  
+    }, 
     created () {
         let _this=this;
+        _this.getSelectData();
          _this.loadTree();  
-        _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:_this.$route.params.id})
-        .then(function(res){
-            _this.addData=res.result;
-        },function(res){    
-
-        })  
+        _this.getData()
     },
      watch: {
-      search(val) {
+      search_area(val) {
+        this.$refs.tree.filter(val);
+      },
+      search_ou(val) {
         this.$refs.tree.filter(val);
       }
     },
     methods: {
-         filterNode(value, data) {
-        if (!value) return true;
-        return data.areaName.indexOf(value) !== -1;
-      },
-       showErrprTips(e){
+        getSelectData(){
+            let _this=this;
+            // _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
+            // // 身份类型
+            // _this.selectData.UserType=res.result;
+            // })
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+            // 启用状态
+            _this.selectData.Status001=res.result;
+            })
+            _this.$axios.gets('/api/services/app/AreaManagement/GetAllData',{AreaType:_this.AreaType}).then(function(res){ 
+            // 业务地区
+            _this.selectData.area=res.result;
+            })
+            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // 所属组织
+            _this.selectData.ou=res.result;
+            })
+            // _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
+            // // 所属用户组
+            //     _this.selectData.userGroupId=res.result.items;
+            //     _this.totalCount=res.result.totalCount;
+            // })
+            // ///api/services/app/Language/GetLanguages
+            // _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
+            // // 语种
+            //     _this.selectData.languageId=res.result.items;
+            // })
+        },
+        getData(){
+            let _this=this;
+             _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:_this.$route.params.id})
+            .then(function(res){
+                _this.addData={
+                    "id": res.result.id,
+                    "groupId":  res.result.groupId,
+                    "ouId":  res.result.ouId,
+                    "areaType": res.result.areaType,
+                    "areaParentId":  res.result.areaParentId,
+                    "areaCode":  res.result.areaCode,
+                    "areaName":  res.result.areaName,
+                    "areaFullName":  res.result.areaFullName,
+                    "areaFullPathId": res.result.areaFullPathId,
+                    "areaFullPathName":  res.result.areaFullPathName,
+                    "manager":  res.result.manager,
+                    "status":  res.result.status,
+                    "remark":  res.result.remark
+                    }
+                    console.log(_this.item_area)
+            },function(res){    
+
+            })  
+        },
+         filterNode_ou(value, data) {
+            if (!value) return true;
+            return data.ouFullname.indexOf(value) !== -1;
+        },
+        filterNode_area(value, data) {
+            if (!value) return true;
+            return data.areaName.indexOf(value) !== -1;
+        },
+        showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                     $(this).addClass('display_block')
@@ -335,6 +382,9 @@
           this.$store.state.url='/businessArea/businessAreaList/default'
           this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
       },
+      Cancel(){
+            this.getData()
+        },
       save(){
         let _this=this;
         _this.$validate()
@@ -350,11 +400,18 @@
         });
       },
       loadTree(){
-            let _this=this;
-            _this.treeLoading=true;
+           let _this=this;
+            //地区
             _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
             .then(function(res){
-                _this.selectTree=res.result;
+                _this.selectTree_area=res.result;
+                _this.loadIcon();
+            },function(res){
+            })
+            //组织
+             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+            .then(function(res){
+                _this.selectTree_ou=res.result;
                 _this.loadIcon();
             },function(res){
             })
@@ -372,14 +429,14 @@
                 })
             })
         },
-        nodeClick(data){
-        let _this=this;
-        _this.item.id=data.id;
-        _this.item.areaName=data.areaName;
-        _this.$nextTick(function(){
-            $('#businessModify_confirmSelect').click()
-        })
-      },
+        nodeClick(data,node,self){
+            let _this=this;
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
+            })
+        },
     }
 
 })
