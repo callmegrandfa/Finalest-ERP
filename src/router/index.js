@@ -378,7 +378,7 @@ const routes = [
                 ]
             },
             { path: '/commodityBrand/:id', component: commodityBrand, name: 'commodityBrand' }, //商品品牌
-            { path: '/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
+
             {
                 path: '/businessArea',
                 component: businessArea,
@@ -388,6 +388,8 @@ const routes = [
                 },
                 children: [
                     { path: '/businessArea/businessAreaList/:id', component: businessAreaList, name: 'businessAreaList' },
+                    { path: '/businessArea/businessAreaDetail/:id', component: businessAreaDetail, name: 'businessAreaDetail' },
+                    { path: '/businessArea/businessAreaModify/:id', component: businessAreaModify, name: 'businessAreaModify' },
                 ]
             },
             {
@@ -399,6 +401,8 @@ const routes = [
                 },
                 children: [
                     { path: '/department/departmentList/:id', component: departmentList, name: 'departmentList' },
+                    { path: '/department/departmentDetail/:id', component: departmentDetail, name: 'departmentDetail' },
+                    { path: '/department/departmentModify/:id', component: departmentModify, name: 'departmentModify' },
                 ]
             },
             {
@@ -423,6 +427,76 @@ const routes = [
                     { path: '/staff/staffModify/:id', component: staffModify, name: 'staffModify' },
                 ]
             },
+            {
+                path: '/commodityleimu',
+                component: commodityleimu,
+                name: 'commodityleimu',
+                redirect: function() { //商品类目
+                    return redirectRouter('commodityleimu')
+                },
+                children: [
+                    { path: '/commodityleimu/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
+                    // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
+                ]
+            },
+            {
+                path: '/dictionary',
+                component: dictionary,
+                name: 'dictionary',
+                redirect: function() { //系统字典
+                    return redirectRouter('dictionary')
+                },
+                children: [
+                    { path: '/dictionary/dictionaryList/:id', component: dictionaryList, name: 'dictionaryList' },
+                ]
+            },
+            {
+                path: '/user',
+                component: user,
+                name: 'user',
+                redirect: function() { //用户资料
+                    return redirectRouter('user')
+                },
+                children: [
+                    { path: '/user/userList/:id', component: userList, name: 'userList' },
+                    { path: '/user/userDetail/:id', component: userDetail, name: 'userDetail' },
+                    { path: '/user/userModify/:id', component: userModify, name: 'userModify' },
+                ]
+            },
+            {
+                path: '/role',
+                component: role,
+                name: 'role',
+                redirect: function() { //用户资料
+                    return redirectRouter('role')
+                },
+                children: [
+                    { path: '/role/roleList/:id', component: roleList, name: 'roleList' },
+                    { path: '/role/roleDetail/:id', component: roleDetail, name: 'roleDetail' },
+                    { path: '/role/roleModify/:id', component: roleModify, name: 'roleModify' },
+                ]
+            },
+            {
+                path: '/tenant',
+                component: tenant,
+                name: 'tenant',
+                redirect: function() { //租户管理
+                    let name = 'tenant';
+                    let activeRouter = store.state.activeRouter;
+
+                    for (let i = 0; i < activeRouter.length; i++) {
+                        if (activeRouter[i].name == name) {
+
+                            return activeRouter[i].url;
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+
 
         ]
     },
