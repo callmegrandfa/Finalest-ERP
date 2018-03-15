@@ -121,7 +121,12 @@
                                                 type="text"/>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="" label="英文名称" width="">
+                                <el-table-column prop="brandEname" label="英文名称" width="">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" :class="{errorclass:scope.row.brandEname==''&&isSave==true}" 
+                                                v-model="scope.row.brandEname" 
+                                                type="text"/>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column prop="remark" label="备注">
                                     <template slot-scope="scope">
@@ -420,6 +425,7 @@ import Btm from '../../base/btm/btm'
                     "groupId":0,
                     "brandCode":"" ,
                     "brandName":"" ,
+                    "brandEname":"",
                     "status":1 ,
                     "remark": " " ,
                     "remark2":" " ,

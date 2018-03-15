@@ -190,8 +190,8 @@
     export default({
         created:function(){
             let self = this;
-            // self.loadParentTree();
-            self.loadData();
+            self.loadParentTree();
+            // self.loadData();
             
         },
         computed:{
@@ -311,7 +311,7 @@
                     console.log(res)               
                     self.departmentData = res.result;
                     // console.log(self.repositoryData);
-                    self.loadParentTree();
+                    // self.loadParentTree();
                 });
             }
 
@@ -323,6 +323,10 @@
                 console.log(res)
                 // self.loadData();
                 self.selectParentTree=res.result
+                console.log(self.$nextTick)
+                self.$nextTick(function(){
+                    self.loadData()
+                });
                 // console.log(self.componyTree)
                 self.loadIcon();
             },function(res){

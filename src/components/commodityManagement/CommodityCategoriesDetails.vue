@@ -15,7 +15,9 @@
                                 <div class="smallBgcolor">
                                     <el-select 
                                     class="areaParentId" 
-                                    v-model="addItem.categoryCode"
+                                    :class="{redBorder : validation.hasError('addItem.categoryParentid')}" 
+                                    :disabled="isEdit"
+                                    v-model="addItem.categoryParentid"
                                     placeholder="">
                                     <!-- <input type="text" class="selectTree"> -->
                                     <el-input
@@ -35,10 +37,13 @@
                                          @node-click="nodeClick"
                                         >
                                         </el-tree>
-                                        <el-option v-show="false" :key="count.id" :label="count.categoryName" :value="count.id"   id="businessDetail_confirmSelect">
+                                        <el-option v-show="false" :key="count.categoryParentid" :label="count.categoryName" :value="count.categoryParentid"   id="businessDetail_confirmSelect">
                                         </el-option>
                                     </el-select>
                                 </div>
+                            </el-col>
+                            <el-col :span="2">
+                                <div class="error_tips">{{ validation.firstError('addItem.categoryParentid') }}</div>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -51,8 +56,11 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="smallBgcolor" >
-                                    <el-input placeholder="" v-model="addItem.categoryCode"></el-input>
+                                    <el-input :class="{redBorder : validation.hasError('addItem.categoryCode')}" :disabled="isEdit" placeholder="" v-model="addItem.categoryCode"></el-input>
                                 </div>
+                            </el-col>
+                            <el-col :span="2">
+                                <div class="error_tips">{{ validation.firstError('addItem.categoryCode') }}</div>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -65,8 +73,11 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder="" v-model="addItem.categoryName"></el-input>
+                                <el-input placeholder="" :class="{redBorder : validation.hasError('addItem.categoryName')}" :disabled="isEdit" v-model="addItem.categoryName"></el-input>
                                 </div>
+                            </el-col>
+                            <el-col :span="2">
+                                <div class="error_tips">{{ validation.firstError('addItem.categoryName') }}</div>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -74,13 +85,16 @@
                         <el-row>
                             <el-col :span="2">
                                 <div class="bgcolor smallBgcolor">
-                                        <label><small>*</small>助记码</label>
+                                        <label>助记码</label>
                                </div>
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-input  v-model="addItem.mnemonic" > </el-input>
+                                    <el-input :class="{redBorder : validation.hasError('addItem.mnemonic')}" :disabled="isEdit" v-model="addItem.mnemonic" > </el-input>
                                 </div>
+                            </el-col>
+                            <el-col :span="2">
+                                <div class="error_tips">{{ validation.firstError('addItem.mnemonic') }}</div>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -90,15 +104,18 @@
                         <el-row>
                             <el-col :span="2">
                                 <div class="bgcolor smallBgcolor">
-                                        <label ><small>*</small>状态</label>
+                                        <label >状态</label>
                                </div>
                             </el-col>
                             <el-col :span="3">
                                 <div class="smallBgcolor" >
-                                <el-select  v-model="addItem.status" >
+                                <el-select :class="{redBorder : validation.hasError('addItem.status')}"  :disabled="isEdit"  v-model="addItem.status" >
                                     <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                                 </div>
+                            </el-col>
+                            <el-col :span="2">
+                                <div class="error_tips">{{ validation.firstError('addItem.status') }}</div>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -106,12 +123,13 @@
                         <el-row>
                             <el-col :span="2">
                                 <div class="bgcolor smallBgcolor">
-                                        <label ><small>*</small>备注</label>
+                                        <label >备注</label>
                                </div>
                             </el-col>
                             <el-col :span="15">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder="" v-model="addItem.remark"></el-input>
+                                <el-input  :disabled="isEdit" placeholder="" v-model="addItem.remark">
+                                </el-input>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -123,7 +141,7 @@
                     </el-col>
                     <el-col :span="2" style="margin-left:0">
                         <div class="bgcolor smallBgcolor">
-                            <el-checkbox  v-model="addItem.isService" >服务类（虚拟）</el-checkbox>
+                            <el-checkbox :disabled="isEdit" v-model="addItem.isService" >服务类（虚拟）</el-checkbox>
                         </div>
                     </el-col> 
                 </el-row>
@@ -140,7 +158,7 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="smallBgcolor">
-                                <el-input :disabled="isEdit" placeholder="" v-model="addItem.createdBy"></el-input>
+                                <el-input :disabled="isDisabled" placeholder="" v-model="addItem.createdBy"></el-input>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -155,7 +173,7 @@
                             <el-col :span="13">
                                 <div class="smallBgcolor">
                                     <el-date-picker
-                                    :disabled="isEdit"
+                                    :disabled="isDisabled"
                                     v-model="addItem.createdTime"
                                     type="date"
                                     placeholder="选择日期时间">
@@ -173,7 +191,7 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="smallBgcolor">
-                                <el-input :disabled="isEdit" placeholder="" v-model="addItem.modifiedBy"></el-input>
+                                <el-input :disabled="isDisabled" placeholder="" v-model="addItem.modifiedBy"></el-input>
                                 </div>
                             </el-col>
                         </el-row> 
@@ -188,7 +206,7 @@
                             <el-col :span="13">
                                 <div class="smallBgcolor" >
                                     <el-date-picker
-                                    :disabled="isEdit"
+                                    :disabled="isDisabled"
                                     v-model="addItem.modifiedTime"
                                     type="date">
                                     </el-date-picker>
@@ -232,42 +250,50 @@ import Textbox from '../../base/textbox/textbox'
                    botton:[{
                     class: 'erp_bt bt_back',
                     imgsrc: '../../../static/image/common/bt_back.png',
-                    text: '返回'
+                    text: '返回',
+                    show:true
                 },{
                     class: 'erp_bt bt_save',
                     imgsrc: '../../../static/image/common/bt_save.png',
-                    text: '保存'
-                },{
-                    class: 'erp_bt bt_save_add',
-                    imgsrc: '../../../static/image/common/bt_save_add.png',
-                    text: '新增'
+                    text: '保存',
+                    show:true
                 },{
                     class: 'erp_bt bt_modify',
                     imgsrc: '../../../static/image/common/bt_modify.png',
                     text: '修改',
                     show:false
                 },{
+                    class: 'erp_bt bt_auxiliary',
+                    imgsrc: '../../../static/image/common/u470.png',
+                    text: '取消',
+                    show:false
+                },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
-                    text: '删除'
+                    text: '删除',
+                    show:true
                 },{
                     class: 'erp_bt bt_auxiliary',
                     imgsrc: '../../../static/image/common/bt_audit.png',
-                    text: '审核'
+                    text: '审核',
+                    show:true
                 }]},
                 addItem:{
-                    //上级商品类目
+                    categoryParentid:"",//上级商品类目
                     categoryCode:"",//商品类目编码
                     categoryName:"",//商品类目名称
                     mnemonic:"",//助记码
                     status:1,//状态
                     isService:true,//服务类
                     remark:"",//备注
+                    categoryFullpathId:0,//全路径id
+                    categoryFullpathName:"默认",//全路径名称
                     createdTime:this.GetDateTime(),//创建时间
                     createdBy:this.$store.state.name,//创建人
                     modifiedTime:this.GetDateTime(),//修改人
                     modifiedBy:this.$store.state.name//修改时间
                 },
+                isDisabled:true,//审计信息 
                 isEdit:true,
                 treeQuery:"",
                 classTree:[],
@@ -277,7 +303,7 @@ import Textbox from '../../base/textbox/textbox'
                     id:"id"
                 },
                 treeNode:{
-                    id:'',
+                    categoryParentid:'',
                     categoryName:'',
                 },
                 StatusOptions:[{
@@ -292,6 +318,30 @@ import Textbox from '../../base/textbox/textbox'
         created(){
             this.InitModify();
             this.loadTree();
+            if(this.$route.params.id=="default"){//判断是否新增进入
+                this.bottonbox.botton[2].show=false;
+                this.isEdit=false
+            }else{
+                this.bottonbox.botton[2].show=true;
+                this.isEdit=true;
+            }
+        },
+        validators: {
+            'addItem.categoryParentid': function (value) {//上级商品类目
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addItem.categoryCode': function (value) {//商品类目编码
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addItem.categoryName': function (value) {//商品类目名称
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addItem.mnemonic': function (value) {//助记码
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            'addItem.status': function (value) {//状态
+                return this.Validator.value(value).required().maxLength(50);
+            },
         },
         computed:{
             count () {
@@ -302,7 +352,7 @@ import Textbox from '../../base/textbox/textbox'
             treeQuery(val) {
                 console.log(this.$refs.tree.filter(val));
                 this.$refs.tree.filter(val);
-            }
+            },
         },
         methods:{
             //获取当前时间
@@ -328,7 +378,16 @@ import Textbox from '../../base/textbox/textbox'
             //     this.$router.push({path:this.$store.state.url})//点击切换路由
             // },
             btmlog:function(data){
-               
+                if(data=="修改"&&this.isEdit==true){
+                    this.isEdit=false;
+                    this.bottonbox.botton[3].show=true
+                }else if(data=="取消"){
+                    this.isEdit=true;
+                    this.bottonbox.botton[3].show=false;
+                    this.InitModify();
+                }else if(data=="保存"){
+                    this.save();
+                }
             },
             InitModify(){
                 let _this=this;
@@ -384,12 +443,31 @@ import Textbox from '../../base/textbox/textbox'
             },
             nodeClick(data){
                 let _this=this;
-                _this.treeNode.id=data.id;
+                _this.treeNode.categoryParentid=data.categoryParentid;
                 _this.treeNode.categoryName=data.categoryName;
                 _this.$nextTick(function(){
                     $('#businessDetail_confirmSelect').click()
                 })
             },
+            open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            save(){
+                let _this=this;
+                _this.$validate()
+                _this.$axios.posts('http://192.168.100.107:8085/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
+                    _this.InitModify();
+                    _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
+                    _this.isAdd=false
+                }); 
+            }
         },
         components:{
             Btm,
@@ -441,6 +519,15 @@ import Textbox from '../../base/textbox/textbox'
     padding-right: 10px;
 }
 
+.error_tips{
+    color: red;
+    font-size: 12px;
+    height: 35px;
+    line-height: 35px;
+    width: 100%;
+    text-align: left;
+    margin-left: 26px
+  }
 
 </style>
 
@@ -480,5 +567,8 @@ import Textbox from '../../base/textbox/textbox'
     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
     -webkit-transform-origin: center;
     transform-origin: center;
+}
+.el-input.redBorder .el-input__inner,.el-select.redBorder .el-input__inner{
+    border-color:red;
 }
 </style>
