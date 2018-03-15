@@ -1,12 +1,12 @@
 <template>
-    <div class="userDetail">
+    <div class="userModify">
         <el-row>
             <el-col :span="24">
               <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
               <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
               <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>    
               <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button @click="Cancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
               <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
             </el-col>
         </el-row>
@@ -93,8 +93,29 @@
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.ouId')}"
                     v-model="addData.ouId">
-                        <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
-                        </el-option>
+                        <!-- <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
+                        </el-option> -->
+                        <el-input
+                        placeholder="搜索..."
+                        class="selectSearch"
+                        v-model="search">
+                        </el-input>
+                        <el-tree
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        :data="selectTree"
+                        :props="selectProps"
+                        node-key="id"
+                        default-expand-all
+                        ref="tree"
+                        :filter-node-method="filterNode"
+                        :expand-on-click-node="false"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                        <!-- <el-option v-show="false" :key="count.id" :label="count.ouFullname" :value="count.id" id="userModify_confirmSelect">
+                        </el-option> -->
+                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -250,6 +271,16 @@
   export default({
     data(){
       return{
+        search:'',
+        selectTree:[
+        ],
+        selectProps: {
+            children: 'children',
+            label: 'ouFullname',
+            id:'id'
+        },
+
+
         dialogTableVisible:false,//控制对话框
         menuCheck:true,//未选功能，已选功能
          check:false,//是否授权
@@ -316,13 +347,12 @@
       'addData.phoneNumber': function (value) {//手机号码
          return this.Validator.value(value).required().maxLength(20);
       },
-      //邮箱,所属用户组没有返回字段
-    //   'addData.email': function (value) {//邮箱
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
-    //   'addData.userGroupId': function (value) {//所属用户组
-    //      return this.Validator.value(value).required().integer();
-    //   },
+      'addData.email': function (value) {//邮箱
+         return this.Validator.value(value).required().maxLength(200);
+      },
+      'addData.userGroupId': function (value) {//所属用户组
+         return this.Validator.value(value).required().integer();
+      },
       'addData.ouId': function (value) {//所属组织
           return this.Validator.value(value).required().integer();
       },
@@ -344,11 +374,15 @@
     },
     created:function(){       
       let _this=this;
+      _this.loadTree();
     _this.getSelectData();
     _this.GetRoles();
     _this.getData();
     },
-    mounted () {
+    watch: {
+      search(val) {
+        this.$refs.tree.filter(val);
+      }
     },
     methods: {
         getSelectData(){
@@ -357,9 +391,10 @@
             // 身份类型
             _this.selectData.UserType=res.result;
             })
-            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status1'}).then(function(res){ 
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
             // 启用状态
             _this.selectData.Status001=res.result;
+            console.log(res.result)
             })
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 所属组织
@@ -391,7 +426,6 @@
            let _this=this;
            _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
            .then(function(res){
-               console.log(res)
                 _this.addData= {
                     "userCode": res.result.userCode,
                     "displayName": res.result.displayName,
@@ -400,9 +434,11 @@
                     "status": res.result.status,
                     "userType": res.result.userType,
                     "languageId": res.result.languageId,
+                    "userGroupId": res.result.userGroupId,
                     "isReg": res.result.isReg,
                     "remark": res.result.remark,
                     "roleCodes": res.result.roleCodes,
+                    "email":res.result.email,
                     "id": res.result.id,
                 }
                 if(res.result.effectiveStart && res.result.effectiveEnd){
@@ -454,6 +490,41 @@
               }
             })
       },
+      filterNode(value, data) {
+            if (!value) return true;
+            return data.ouFullname.indexOf(value) !== -1;
+        },
+        loadTree(){
+            let _this=this;
+            _this.treeLoading=true;
+            _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+            .then(function(res){
+                _this.selectTree=res.result;
+                _this.loadIcon();
+            },function(res){
+            })
+        },
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        nodeClick(data,node,self){
+            let _this=this;
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
+            })
+        },
       open(tittle,iconClass,className) {
           this.$notify({
           position: 'bottom-right',
@@ -599,9 +670,11 @@
                 _this.checked.push(x);
             }
         },
+        Cancel(){
+            this.getData()
+        },
         save(){
             let _this=this;
-            console.log(_this.addData)
             _this.$validate()
             .then(function (success) {
                 if (success) {
@@ -612,7 +685,6 @@
                     _this.addData.roleCodes=roles;
                     _this.addData.effectiveStart=_this.dateRange[0];
                     _this.addData.effectiveEnd=_this.dateRange[1];
-                    console.log(_this.addData)
                     _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
                         _this.checkedRoleCode=[]
@@ -634,19 +706,19 @@
 
 
 <style scoped>
-.userDetail  .errorTips{
+.userModify  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
 }
- .userDetail .el-row{
+ .userModify .el-row{
     background-color: #fff;
     padding-top: 15px;
   }
- .userDetail .el-row:first-child{
+ .userModify .el-row:first-child{
    padding: 7px 0;
    border-bottom: 1px solid #e4e4e4;
   }
-  .userDetail .bgcolor .isGive{
+  .userModify .bgcolor .isGive{
     display: block;
     float: left;
     height: 100%;
@@ -737,11 +809,11 @@
 </style>
 
 <style>
-.userDetail .el-dialog__headerbtn{
+.userModify .el-dialog__headerbtn{
     top:3px;
     font-size:50px;
 }
-.userDetail .el-dialog__body{
+.userModify .el-dialog__body{
   overflow: hidden;
 }
 </style>

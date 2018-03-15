@@ -25,7 +25,7 @@
                     <label>用户组</label>
                     <!-- <el-input v-model="searchData.UserGroupId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.UserGroupId" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -33,8 +33,27 @@
                     <label>所属组织</label>
                     <!-- <el-input v-model="searchData.OuId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.OuId" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
+                        <el-input
+                        placeholder="搜索..."
+                        class="selectSearch"
+                        v-model="search">
+                        </el-input>
+                        <el-tree
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        :data="selectTree"
+                        :props="selectProps"
+                        node-key="id"
+                        default-expand-all
+                        ref="tree"
+                        :filter-node-method="filterNode"
+                        :expand-on-click-node="false"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                        <!-- <el-option v-show="false" :key="count1.id" :label="count1.ouFullname" :value="count1.id" id="OuModifyForm_confirmSelect">
+                        </el-option> -->
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
@@ -49,7 +68,7 @@
                     <label>语种</label>
                     <!-- <el-input v-model="searchData.LanguageId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.LanguageId" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                       <el-option v-for="item in selectData.languageId" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -64,7 +83,7 @@
                     <label>关联角色</label>
                     <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.RoleId" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        <el-option v-for="item in selectData.roles" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -207,7 +226,7 @@
                                     </div>    
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="" label="关联角色"></el-table-column>
+                            <el-table-column prop="roleString" label="关联角色"></el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
@@ -238,6 +257,16 @@
     export default{
         data(){
             return {
+                search:'',
+                selectTree:[
+                ],
+                selectProps: {
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+
+
                 tableLoading:false,
                 treeLoading:false,
                 searchData:{
@@ -253,6 +282,10 @@
                 selectData:{
                     UserType:[],//身份类型
                     Status001:[],//状态
+                    userGroupId:[],//用户组
+                    languageId:[],//语种
+                    roles:[],//角色
+                    ou:[],//组织
                 },
                 options: [{
                     value: '1',
@@ -284,12 +317,6 @@
                     }],
                 tableData:[],
 
-                componyTree:  [],
-                defaultProps: {
-                    children: 'items',
-                    label: 'deptName',
-                    id:'id'
-                },
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
@@ -305,10 +332,16 @@
             }
         },
         created:function(){       
-                let _this=this;
-                _this.loadTableData();
-                _this.getSelectData();
-             },
+            let _this=this;
+            _this.loadTree();
+            _this.loadTableData();
+            _this.getSelectData();
+        },
+        watch: {
+            search(val) {
+                this.$refs.tree.filter(val);
+            }
+        },     
         methods:{
             getSelectData(){
                 let _this=this;
@@ -319,6 +352,23 @@
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
                 // 启用状态
                 _this.selectData.Status001=res.result;
+                })
+                _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+                // 所属用户组
+                    _this.selectData.userGroupId=res.result.items;
+                    _this.totalCount=res.result.totalCount;
+                })
+                _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
+                // 语种
+                    _this.selectData.languageId=res.result.items;
+                })
+                _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+                // 语种
+                    _this.selectData.roles=res.result.items;
+                })
+                _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+                // 所属组织
+                _this.selectData.ou=res.result;
                 })
             },
             closeLeft:function(){
@@ -343,7 +393,6 @@
                 let _this=this;
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
-                    console.log(res)
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
@@ -432,6 +481,40 @@
                         _this.open('删除失败','el-icon-error','faildERP');
                     })
                 }
+            },
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
+            },
+            loadTree(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                .then(function(res){
+                    _this.selectTree=res.result;
+                    _this.loadIcon();
+                },function(res){
+                })
+            },
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            nodeClick(data,node,self){
+                let _this=this;
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
             },
             see(row){
                 this.$store.state.url='/user/userModify/'+row.id

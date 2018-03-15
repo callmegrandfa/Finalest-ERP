@@ -99,7 +99,7 @@
                             <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
                                 <el-table-column type="selection" label="" width="50">
                                 </el-table-column>
-                                <el-table-column prop="categoryParentid" label="上级类目">
+                                <el-table-column prop="categoryParentName" label="上级类目">
                                 </el-table-column>
                                 <el-table-column prop="categoryCode" label="类目编码">
                                 </el-table-column>
@@ -163,23 +163,28 @@ import Tree from '../../base/tree/tree'
                    botton:[{
                     class: 'erp_bt bt_add',
                     imgsrc: '../../../static/image/common/bt_add.png',
-                    text: '新增'
+                    text: '新增',
+                    show:true
                 },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
-                    text: '删除'
+                    text: '删除',
+                    show:true
                 },{
                     class: 'erp_bt bt_audit',
                     imgsrc: '../../../static/image/common/bt_audit.png',
-                    text: '审核' 
+                    text: '审核',
+                    show:true 
                 },{
                     class: 'erp_bt bt_in',
                     imgsrc: '../../../static/image/common/bt_in.png',
-                    text: '导入'
+                    text: '导入',
+                    show:true
                 },{
                     class: 'erp_bt bt_out',
                     imgsrc: '../../../static/image/common/bt_inOut.png',
-                    text: '导出'
+                    text: '导出',
+                    show:true
                 }]},
                 SystemOptions: [{
                     value: null,
