@@ -407,6 +407,8 @@ import Textbox from '../../base/textbox/textbox'
                 }else{
                     _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
                         _this.updateId=res.result.id;
+                        _this.treeNode.categoryParentid=res.result.categoryParentid;
+                        _this.treeNode.categoryName=res.result.categoryName;
                         _this.addItem.categoryParentid=res.result.categoryParentid
                         _this.addItem.categoryCode=res.result.categoryCode;
                         _this.addItem.categoryName=res.result.categoryName;
