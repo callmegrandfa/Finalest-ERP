@@ -159,18 +159,6 @@
             return {
                 searchLeft:'',
                 ifCan:true,
-                // dialogData:{//dialog数据
-                //     id:'',
-                //     groupId:'',//集团ID
-                //     ouId:'',//组织单元ID
-                //     deptCode:'',//部门代码
-                //     deptName:'',//部门名称
-                //     director:'',//负责人
-                //     phone:'',//电话
-                //     deptParentid:'',//父部门id
-                //     remark:'',//备注
-                //     status:'',//启用状态
-                // },
                  deptParentid: [{//业务地区分类
                     value:'1',
                     label: '业务地区'
@@ -214,14 +202,11 @@
             }
         },
         created:function(){       
-                let self = this;
-                self.loadTableData();
-                self.loadTree();
-                self.loadStatus();
-             },
-        mounted:function(){
-            let _this=this;
-        }, 
+            let self = this;
+            self.loadTableData();
+            self.loadTree();
+            self.loadStatus();
+        },
         validators: {
             'dialogData.deptCode':function(value){//部门编码
                 return this.Validator.value(value).required().maxLength(50)
@@ -251,31 +236,31 @@
             
             //---数据加载---------------------------------------------------
             loadTableData(){//表格
-                 let _this=this;
-                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/DeptManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
-                    _this.tableData = res.result.items;
-                    console.log(_this.tableData)
-                     $.each( _this.tableData,function(index,value){//处理时间格式
+                let self=this;
+                self.tableLoading=true;
+                self.$axios.gets('/api/services/app/DeptManagement/GetAll',{SkipCount:(self.page-1)*self.oneItem,MaxResultCount:self.oneItem,Sorting:self.Sorting}).then(function(res){ 
+                    self.tableData = res.result.items;
+                    // console.log(self.tableData)
+                     $.each( self.tableData,function(index,value){//处理时间格式
                         if(value.createdTime&&value.createdTime!=''){
                             let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
-                            _this.tableData[index].createdTime=createdTime;
+                            self.tableData[index].createdTime=createdTime;
                         } 
                     })
-                    _this.totalItem=res.result.totalCount
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    _this.tableLoading=false;
+                    self.totalItem=res.result.totalCount
+                    self.totalPage=Math.ceil(res.result.totalCount/self.oneItem);
+                    self.tableLoading=false;
                     },function(res){
-                    _this.tableLoading=false;
+                    self.tableLoading=false;
                 })
             },
             loadTree(){
                 let self=this;
                 self.treeLoading=true;
                 self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
-                    console.log(res)
+                    // console.log(res)
                     self.componyTree[0].children=res.result
-                    console.log(self.componyTree)
+                    // console.log(self.componyTree)
                     self.treeLoading=false;
                     self.loadIcon();
                },function(res){
@@ -283,8 +268,8 @@
                })
             },
             loadIcon(){
-                let _this=this;
-                _this.$nextTick(function () {
+                let self=this;
+                self.$nextTick(function () {
                     $('.preNode').remove();   
                     $('.el-tree-node__label').each(function(){
                         if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
@@ -298,10 +283,7 @@
             loadStatus:function(){//加载状态下拉框
                 let self = this;
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    console.log(res)
-                    
-                self.statusC = res.result;      
-                    
+                    self.statusC = res.result;       
                },function(res){
                    
                })
@@ -373,19 +355,6 @@
                 }
             },
             //----------------------------------------------------------------
-            //---新增----------------------------------------------------------
-            addNew:function(){
-                let self = this;
-                self.tittle='新增';
-                self.dialogFormVisible = true;
-                
-                self.dialogData.groupId = self.tableData[0].groupId;
-                self.dialogData.ouId = self.tableData[0].ouId;
-                // self.dialogData.deptParentid = self.tableData[0].deptParentid;
-                // self.dialogData.status = self.tableData[0].status;
-                console.log(self.dialogData)
-            },
-            //----------------------------------------------------------------
 
             //---修改---------------------------------------------------------
             modify:function(row){
@@ -421,10 +390,10 @@
 
             //---控制编辑------分页--------------------------------------------
             handleCurrentChange(val) {//页码改变
-                 let _this=this;
-                 _this.page=val;
-                 if(_this.load){
-                     _this.loadTableData();
+                 let self=this;
+                 self.page=val;
+                 if(self.load){
+                     self.loadTableData();
                  }
             },
             handleSelectionChange(val) {//点击复选框选中的数据
@@ -502,27 +471,27 @@
             },
             //---------------------------------------------------------------
             // SimpleSearch(){//简单搜索
-            //      let _this=this;
-            //      _this.tableLoading=true;
-            //     _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
+            //      let self=this;
+            //      self.tableLoading=true;
+            //     self.$axios.gets('/api/services/app/OuManagement/SimpleSearch',self.searchData)
             //     .then(function(res){
-            //         _this.load=false
-            //         _this.tableData=res.result.basOus;
-            //         _this.tableLoading=false;
+            //         self.load=false
+            //         self.tableData=res.result.basOus;
+            //         self.tableLoading=false;
             //     },function(res){
-            //         _this.tableLoading=false;
+            //         self.tableLoading=false;
             //     })
             // },
       
             // checkChange(data,check){
-            //     let _this=this;
+            //     let self=this;
             //     let add=false;
             //     if(check){
-            //         _this.treeCheck.push(data.treeId);
+            //         self.treeCheck.push(data.treeId);
             //     }else{
-            //         for(let i=0;i<_this.treeCheck.length;i++){
-            //             if(_this.treeCheck[i]==data.treeId){
-            //                 _this.treeCheck.splice(i,1);
+            //         for(let i=0;i<self.treeCheck.length;i++){
+            //             if(self.treeCheck[i]==data.treeId){
+            //                 self.treeCheck.splice(i,1);
             //             }
             //         }
             //     }
@@ -543,11 +512,11 @@
                     self.loadTableData();
                 }
                 
-                //  let _this=this;
+                //  let self=this;
                 //  let flag=false;
-                //  if(_this.isClick.length>0){
-                //      for(let i=0;i<_this.isClick.length;i++){
-                //         if(_this.isClick[i]==data.treeId){
+                //  if(self.isClick.length>0){
+                //      for(let i=0;i<self.isClick.length;i++){
+                //         if(self.isClick[i]==data.treeId){
                 //             flag=false
                 //             break;
                 //         }else{
@@ -559,9 +528,9 @@
                 //  }
                  
                 //  if(data.treeId!=1&&flag){
-                //      _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
+                //      self.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
                 //     .then(function(res){
-                //         _this.isClick.push(data.treeId);
+                //         self.isClick.push(data.treeId);
                 //         if(res.result.length>0){
                 //             for(let i=0;i<res.result.length;i++){
                 //                 let label=res.result[i].deptName;
@@ -579,23 +548,23 @@
             //     $('.TreeMenu').css({
             //         display:'none'
             //     })
-            //     let _this=this;
-            //     _this.clearTreeData();
-            //     _this.tittle='新增';
-            //     _this.isAdd=true;
-            //     _this.dialogFormVisible=true;
-            //     _this.dialogData.groupId=data.groupId;//集团id
-            //     _this.dialogData.areaParentId=data.id;//父级id
+            //     let self=this;
+            //     self.clearTreeData();
+            //     self.tittle='新增';
+            //     self.isAdd=true;
+            //     self.dialogFormVisible=true;
+            //     self.dialogData.groupId=data.groupId;//集团id
+            //     self.dialogData.areaParentId=data.id;//父级id
             // },
             // TreeDel(event,node,data){
             //     $('.TreeMenu').css({
             //         display:'none'
             //     })
-            //     let _this=this;
-            //     _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
+            //     let self=this;
+            //     self.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
             //     .then(function(res){
-            //         _this.loadTree();
-            //         _this.loadTableData();
+            //         self.loadTree();
+            //         self.loadTableData();
             //     },function(res){    
 
             //     })
@@ -604,14 +573,14 @@
             //     $('.TreeMenu').css({
             //         display:'none'
             //     })
-            //     let _this=this;
-            //     _this.clearTreeData();
-            //     _this.tittle='修改';
-            //     _this.isAdd=false;
-            //     _this.dialogFormVisible=true;
-            //      _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
+            //     let self=this;
+            //     self.clearTreeData();
+            //     self.tittle='修改';
+            //     self.isAdd=false;
+            //     self.dialogFormVisible=true;
+            //      self.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
             //         .then(function(res){
-            //             _this.dialogData=res.result;
+            //             self.dialogData=res.result;
             //         },function(res){    
 
             //         })
@@ -661,8 +630,8 @@
             //     }
             // },
             // clearTreeData(){
-            //     let _this=this;
-            //     _this.dialogData={}
+            //     let self=this;
+            //     self.dialogData={}
             // }
             //-------------------------------------------------------------------       
         },
