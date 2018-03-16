@@ -271,31 +271,37 @@ import Textbox from '../../base/textbox/textbox'
                     place: ''                 
                 }],
                 bottonbox:{
-                    url: '/commodity/commodityProperty',
+                    url: '/commodityProperty/commodityPropertyList',
                    botton:[{
                     class: 'erp_bt bt_back',
                     imgsrc: '../../../static/image/common/bt_back.png',
-                    text: '返回'
+                    text: '返回',
+                    show:true,
                 },{
                     class: 'erp_bt bt_save',
                     imgsrc: '../../../static/image/common/bt_save.png',
-                    text: '保存'
+                    text: '保存',
+                    show:true,
                 },{
                     class: 'erp_bt bt_save_add',
                     imgsrc: '../../../static/image/common/bt_save.png',
-                    text: '保存并新增'
+                    text: '保存并新增',
+                    show:true,
                 },{
                     class: 'erp_bt bt_add',
                     imgsrc: '../../../static/image/common/bt_add.png',
-                    text: '新增'
+                    text: '新增',
+                    show:true,
                 },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
-                    text: '删除'
+                    text: '删除',
+                    show:true,
                 },{
                     class: 'erp_bt bt_auxiliary',
                     imgsrc: '../../../static/image/common/bt_audit.png',
-                    text: '审核'
+                    text: '审核',
+                    show:true,
                 }]},
                 options: [{
                     value: '选项1',

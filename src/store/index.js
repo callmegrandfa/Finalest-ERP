@@ -53,9 +53,9 @@ export default new vuex.Store({
             { name: 'menuList', url: '/menu/menuList/:id', parent: 'menu' },
             { name: 'menuModify', url: '/menu/menuModify/:id', parent: 'menu' },
 
-            { name: 'commodity', url: '/commodity/commodityProperty/:id', parent: '', default: '/commodity/commodityProperty/:id' }, //商品属性
-            { name: 'commodityProperty', url: '/commodity/commodityProperty/:id', parent: 'menu' },
-            { name: 'commodityPropertyDetails', url: '/commodity/commodityPropertyDetails/:id', parent: 'commodity' },
+            { name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: '', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
+            { name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
+            { name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
 
             { name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: '', default: '/commercial/commercialSpecification/:id' }, //商品规格
             { name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' },
