@@ -806,8 +806,8 @@ export default({
             //---财务组织树形下拉-----
                 fiSearch:'',
                 selectFiProps:{
-                    children: 'items',
-                    label: 'fiFullname',
+                    children: 'children',
+                    label: 'ouFullname',
                     id:'id'
                 },
                 fiItem:{
@@ -849,48 +849,7 @@ export default({
             typeAr:[],//客户类型下拉框
             statusAr:[],//状态下拉框
             //-----------------------
-            
-            customerType:[{//客户类型
-                valueCustomerType:0,
-                label: '客户类型'
-            }, {
-                valueCustomerType:1,
-                label:'客户类型1' 
-            }, {
-                valueCustomerType:2,
-                label:'客户类型2' 
-            }],
-            
-            ficaOu :[{//对应财务组织
-                valueFinance:0,
-                label: '财务组织'
-            }, {
-                valueFinance:1,
-                label: '财务组织1'
-            }, {
-                valueFinance:2,
-                label: '财务组织2'
-            }],
-            opArea:[{//业务地区
-                valueAreaBusiness:0,
-                label: '业务地区'
-            }, {
-                valueAreaBusiness:1,
-                label: '业务地区1'
-            }, {
-                valueAreaBusiness:2,
-                label: '业务地区2'
-            }],
-            adArea :[{//行政地区
-                adArea:1,
-                label: '行政地区1'
-            }, {
-                adArea:2,
-                label: '行政地区2'
-            }, {
-                adArea:3,
-                label: '行政地区3'
-            }],
+  
             activeName: 'bank',//tabs标签页默认激活name
             
             supplier:true,//同为供应商
@@ -1037,12 +996,14 @@ export default({
                     self.ouItem.ouFullname = self.customerData.ouId_OuName;
                     self.ouItem.id =  self.customerData.ouId;
 
-                    // self.cuItem.cuFullname = self.customerData;
                     self.cuItem.id = self.customerData.contactClassId;
+                    self.cuItem.id = self.customerData.contactClassId_ClassName;
 
                     self.adItem.areaName = self.customerData.name;
                     self.adItem.id = self.customerData.adAreaId;
-                    // console.log(self.ouItem.ouFullname)
+
+                    self.fiItem.fiFullname = self.customerData.ficaOuId_OuName;
+                    self.fiItem.id = self.customerData.ficaOuId;
                 })
                 //获取所有的银行信息，也可以用groupid获取，
                 this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
@@ -1115,7 +1076,7 @@ export default({
                 });
                 //行政地区*2
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                    // console.log(res);
+                    console.log(res);
                     self.opAr = res.result;
                     self.loadIcon();
                 },function(res){

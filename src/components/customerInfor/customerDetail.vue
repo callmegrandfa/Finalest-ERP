@@ -807,8 +807,8 @@ export default({
             //---财务组织树形下拉-----
                 fiSearch:'',
                 selectFiProps:{
-                    children: 'items',
-                    label: 'fiFullname',
+                    children: 'children',
+                    label: 'ouFullname',
                     id:'id'
                 },
                 fiItem:{
@@ -850,118 +850,33 @@ export default({
             typeAr:[],//客户类型下拉框
             statusAr:[],//状态下拉框
             //-----------------------
-            componyTree:[],
-            ou: [{//所属组织
-                    value:'1',
-                    label: '恒康'
-                }, {
-                    value:'2',
-                    label: '恒大'
-                }, {
-                    value:'3',
-                    label: '361度'
-                }],
-
-            customerType:[{//客户类型
-                valueCustomerType:'1',
-                label: '客户类型1'
-            }, {
-                valueCustomerType:'2',
-                label:'客户类型2' 
-            }, {
-                valueCustomerType:'3',
-                label:'客户类型3' 
-            }],
-
-            customerNature:[{//客户性质
-                valueNature:'1',
-                label: '客户性质1'
-            }, {
-                valueNature:'2',
-                label: '客户性质2'
-            }, {
-                valueNature:'3',
-                label: '客户性质3'
-            }],
-
-            customerGrade:[{//客户等级
-                valueGrade:'1',
-                label: '客户等级1'
-            }, {
-                valueGrade:'2',
-                label: '客户等级2'
-            }, {
-                valueGrade:'3',
-                label: '客户等级3'
-            }],
-
-            sort:[{//客户类型
-                valueSort:'1',
-                label: '客户类型1'
-            }, {
-                valueSort:'2',
-                label: '客户类型2'
-            }, {
-                valueSort:'3',
-                label: '客户类型3'
-            }],
             
-            ficaOu :[{//对应财务组织
-                valueFinance:'1',
-                label: '财务组织1'
-            }, {
-                valueFinance:'2',
-                label: '财务组织2'
-            }, {
-                valueFinance:'3',
-                label: '财务组织3'
-            }],
-
-            opArea:[{//业务地区
-                valueAreaBusiness:'1',
-                label: '业务地区1'
-            }, {
-                valueAreaBusiness:'2',
-                label: '业务地区2'
-            }, {
-                valueAreaBusiness:'3',
-                label: '业务地区3'
-            }],
-            adArea :[{//行政地区
-                adArea:'1',
-                label: '行政地区1'
-            }, {
-                adArea:'2',
-                label: '行政地区2'
-            }, {
-                adArea:'3',
-                label: '行政地区3'
-            }],
             activeName: 'bank',//tabs标签页默认激活name
             supplier:true,//同为供应商
 
             createContactParams:{//创建客户资料参数
                 'groupId':1,//集团Id
                 'ouId':'',//组织单元id
-                'contact':'',//供应商编码
+                'contactCode':'',//客户编码
                 'contactName':'',//客户名称
-                'contactFullName':'',//供应商全称
+                'contactFullName':'',//客户全称
                 'mnemonic':'',//助记码
                 'contactClassId':'',//客户分类
                 'contactWorkPropertyId':'',//客户性质
-                'contactGradeId':'',//客户/供应商等级ID,
-                'isSupplier':0,//是否为供应商
+                'contactGradeId':'1',//客户/供应商等级ID,
+                'isSupplier':'1',//是否为供应商
                 'isCustomer':'',//是否客户
                 'ficaOuId':'',//财务组织单元 ID
                 'taxCode':'',//纳税登记号
                 'opAreaId':'',//业务地区
-                'adAreaId':'',//行政地区
+                'adAreaId':'1',//行政地区
                 'legalPerson':'',//法人代表
                 'regAddress':'',// 注册地址
                 'manager':'',//负责人
                 'phone':'',//电话
                 'remark':'',//备注
                 'creditMgt':true,//信用管理
+                'status':'',//状态
             },
 
             createBankParams:{//创建银行的参数
@@ -1020,7 +935,7 @@ export default({
         'createContactParams.ouId': function (value) {//所属组织
             return this.Validator.value(value).required().integer();
         },
-        'createContactParams.contact': function (value) {//编码
+        'createContactParams.contactCode': function (value) {//编码
             return this.Validator.value(value).required().maxLength(50);
         },
         'createContactParams.contactName': function (value) {//名称
@@ -1070,6 +985,9 @@ export default({
         },
         'createContactParams.remark': function (value) {//备注
             return this.Validator.value(value).required().maxLength(200);
+        },
+        'createContactParams.status': function (value) {//备注
+            return this.Validator.value(value).required().integer();
         },
     },
     computed:{
@@ -1150,12 +1068,13 @@ export default({
                 });
                 //行政地区*2
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                    // console.log(res);
+                    console.log(res);
                     self.opAr = res.result;
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
                 });
+                
                 //业务地区*1
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
                     // console.log(res);
@@ -1206,7 +1125,7 @@ export default({
         //---保存数据--------------------------------------------------       
         save:function(){//点击保存创建客户资料
             let self = this;
-            // console.log(2)
+            console.log(self.createContactParams)
             self.$validate().then(function(success){
                 if(success){
                     console.log(2)
@@ -1510,8 +1429,9 @@ export default({
         },
         fiNodeClick:function(data){
             let self = this;
+            console.log(data)
             self.fiItem.id = data.id;
-            self.fiItem.fiFullname = data.fiFullname;
+            self.fiItem.fiFullname = data.ouFullname;
             self.$nextTick(function(){
                 $('#fi_confirmSelect').click()
             })

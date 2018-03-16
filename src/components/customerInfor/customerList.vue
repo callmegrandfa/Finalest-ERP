@@ -382,10 +382,10 @@
         //---获取数据-------------------------------------------------------
             loadAllList:function(){//获取所有列表数据
                 let self = this;
-                this.$axios.gets('/api/services/app/ContactManagement/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
+                this.$axios.gets('/api/services/app/ContactManagement/QueryByCondition',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
-                    self.allList = res.result.items;
-                    self.total = res.result.totalCount;
+                    self.allList = res.result;
+                    self.total = res.result.length;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
                 },function(res){
                     console.log('err'+res)
