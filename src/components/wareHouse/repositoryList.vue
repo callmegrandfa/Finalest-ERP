@@ -29,8 +29,7 @@
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
-                        <el-select class="queryOp"
-                                   placeholder=""
+                        <el-select placeholder=""
                                    v-model="queryOp">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -197,6 +196,11 @@
                 return this.opItem;
             },
         }, 
+        watch: {
+            queryOp(val) {
+                this.$refs.tree.filter(val);
+            }
+        },
         methods:{
             //---获取数据------------------------------------------
             getAllList:function(){//获取所有仓库列表
@@ -361,11 +365,11 @@
                 })
             },
             filterNode(value, data) {
-                console.log(data)
                 if (!value) return true;
                     return data.areaName.indexOf(value) !== -1;
             },
             opNodeClick:function(data){
+                // console.log(data)
                 let self = this;
                 self.opItem.id = data.id;
                 self.opItem.areaName = data.areaName;
@@ -574,5 +578,9 @@ input::-webkit-input-placeholder{
 }
 .res-list .bgg .el-input__inner{
     background-color:#FAFAFA;
+}
+.res-list .bAreaSearch .el-input__inner{
+    height: 30px;
+    border-radius: 30px;
 }
 </style>

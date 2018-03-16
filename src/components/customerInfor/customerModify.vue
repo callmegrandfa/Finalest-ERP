@@ -129,18 +129,34 @@
                 </div>
 
                 <div class="bgcolor">
-                    <label><small>*</small>所属组织</label>
+                    <label><small>*</small>所属组织{{customerData.ouId}}</label>
                     <el-select v-model="customerData.ouId"
                                placeholder=""
                                class="ouId"
                                :disabled="isEdit"
                                @change='Modify()'
-                               :class="{redBorder : validation.hasError('customerData.ouId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in organization" 
-                                   :key="item.valueOrganization" 
-                                   :label="item.label" 
-                                   :value="item.valueOrganization"></el-option>
+                               :class="{redBorder : validation.hasError('customerData.ouId')}">
+                               <!-- @focus="showErrprTipsSelect" -->
+
+                        <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="ouSearch"></el-input>  
+
+                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="ouAr"
+                                     :props="selectOuProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="ouNodeClick"></el-tree> 
+
+                        <el-option v-show="false"
+                                    :key="countOu.id" 
+                                    :label="countOu.ouFullname" 
+                                    :value="countOu.id"
+                                    id="ou_confirmSelect"></el-option>
                     </el-select>
                 </div> 
 
@@ -150,10 +166,10 @@
                     <el-input v-model="customerData.contactCode" 
                               placeholder="" 
                               :disabled="isEdit"
-                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.contactCode')}"
                               class="contactCode"
                               @change='Modify()'></el-input>
+                              <!-- @focus="showErrprTips" -->
                 </div>
 
 
@@ -161,8 +177,7 @@
                     <label><small>*</small>名称</label>
                     <el-input v-model="customerData.contactName" 
                               placeholder=""
-                              :disabled="isEdit" 
-                              @focus="showErrprTips"
+                              :disabled="isEdit"
                               :class="{redBorder : validation.hasError('customerData.contactName')}"
                               class="contact"
                               @change='Modify()'></el-input>
@@ -174,7 +189,6 @@
                     <el-input v-model="customerData.contactFullName" 
                               placeholder=""
                               :disabled="isEdit"
-                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.contactFullName')}"
                               class="contactFullName" 
                               @change='Modify()'></el-input>
@@ -184,8 +198,7 @@
                     <label>助记码</label>
                     <el-input v-model="customerData.mnemonic" 
                               placeholder=""
-                              :disabled="isEdit" 
-                              @focus="showErrprTips"
+                              :disabled="isEdit"
                               :class="{redBorder : validation.hasError('customerData.mnemonic')}"
                               class="mnemonic"
                               @change='Modify()'></el-input>
@@ -194,17 +207,33 @@
 
 
                 <div class="bgcolor">
-                    <label>客户分类</label>
+                    <label>客户分类{{customerData.contactClassId}}</label>
                     <el-select v-model="customerData.contactClassId"
                                placeholder=""
                                :disabled="isEdit"
+                               @change='Modify()'
                                class="contactClassId"
                                :class="{redBorder : validation.hasError('customerData.contactClassId')}"
                                @focus="showErrprTipsSelect">
-                        <el-option v-for="item in customerType" 
-                                   :key="item.valueCustomerType" 
-                                   :label="item.label" 
-                                   :value="item.valueCustomerType"></el-option>
+                        <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="cuSearch"></el-input>
+
+                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="cuAr"
+                                     :props="selectCuProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="cuNodeClick"></el-tree>
+
+                        <el-option v-show="false"
+                                       :key="countCu.id" 
+                                       :label="countCu.cuFullname" 
+                                       :value="countCu.id"
+                                       id="cu_confirmSelect"></el-option>
                     </el-select>
                 </div>
                 
@@ -215,13 +244,14 @@
                     <el-select v-model="customerData.contactWorkPropertyId"
                                placeholder=""
                                :disabled="isEdit"
+                               @change='Modify()'
                                class="contactWorkPropertyId"
-                               :class="{redBorder : validation.hasError('customerData.contactWorkPropertyId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in customerNature" 
-                                   :key="item.valueNature" 
-                                   :label="item.label" 
-                                   :value="item.valueNature"></el-option>
+                               :class="{redBorder : validation.hasError('customerData.contactWorkPropertyId')}">
+                               <!-- @focus="showErrprTipsSelect" -->
+                        <el-option v-for="item in propertyAr" 
+                                   :key="item.itemValue" 
+                                   :label="item.itemName" 
+                                   :value="item.itemValue"></el-option>
                     </el-select>
                 </div>
 
@@ -230,28 +260,28 @@
                     <el-select v-model="customerData.contactGradeId"
                                placeholder=""
                                :disabled="isEdit"
+                               @change='Modify()'
                                class="contactGradeId"
-                               :class="{redBorder : validation.hasError('customerData.contactGradeId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in customerGrade" 
-                                   :key="item.valueGrade" 
-                                   :label="item.label" 
-                                   :value="item.valueGrade"></el-option>
+                               :class="{redBorder : validation.hasError('customerData.contactGradeId')}">
+                        <el-option v-for="item in gradeAr" 
+                                   :key="item.itemValue" 
+                                   :label="item.itemName" 
+                                   :value="item.itemValue"></el-option>
                     </el-select>
                 </div>
 
                 <div class="bgcolor">
                     <label>客户类型</label>
-                    <el-select v-model="customerData.isCustomer"
+                    <el-select v-model="customerData.contactTypeId"
                                placeholder=""
                                :disabled="isEdit"
-                               class="isCustomer"
-                               :class="{redBorder : validation.hasError('customerData.isCustomer')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in sort" 
-                                   :key="item.valueSort" 
-                                   :label="item.label" 
-                                   :value="item.valueSort"></el-option>
+                               @change='Modify()'
+                               class="contactTypeId"
+                               :class="{redBorder : validation.hasError('customerData.contactTypeId')}">
+                        <el-option v-for="item in typeAr" 
+                                   :key="item.itemValue" 
+                                   :label="item.itemName" 
+                                   :value="item.itemValue"></el-option>
                     </el-select>
                 </div>   
 
@@ -261,12 +291,25 @@
                                placeholder=""
                                :disabled="isEdit"
                                class="ficaOuId"
-                               :class="{redBorder : validation.hasError('customerData.ficaOuId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in ficaOu" 
-                                   :key="item.valueFinance" 
-                                   :label="item.label" 
-                                   :value="item.valueFinance"></el-option>
+                               @change='Modify()'
+                               :class="{redBorder : validation.hasError('customerData.ficaOuId')}">
+                        <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="fiSearch"></el-input>
+                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="fiAr"
+                                     :props="selectFiProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="fiNodeClick"></el-tree>
+                        <el-option v-show="false"
+                                    :key="countFi.id" 
+                                    :label="countFi.fiFullname" 
+                                    :value="countFi.id"
+                                    id="fi_confirmSelect"></el-option>
                     </el-select>
                 </div>
 
@@ -274,8 +317,7 @@
                     <label>纳税登记号</label>
                     <el-input v-model="customerData.taxCode" 
                               placeholder=""
-                              :disabled="isEdit" 
-                              @focus="showErrprTips"
+                              :disabled="isEdit"
                               class="taxCode"
                               :class="{redBorder : validation.hasError('customerData.taxCode')}"
                               @change='Modify()'></el-input>
@@ -287,12 +329,25 @@
                                class="opAreaId"
                                :disabled="isEdit"
                                placeholder=""
-                               :class="{redBorder : validation.hasError('customerData.opAreaId')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in opArea" 
-                                   :key="item.valueAreaBusiness" 
-                                   :label="item.label" 
-                                   :value="item.valueAreaBusiness"></el-option>
+                               @change='Modify()'
+                               :class="{redBorder : validation.hasError('customerData.opAreaId')}">
+                        <el-input placeholder="搜索..."
+                                class="selectSearch"
+                                v-model="opSearch"></el-input>
+                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="opAr"
+                                     :props="selectOpProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="opNodeClick"></el-tree>
+                        <el-option v-show="false"
+                                       :key="countOp.id" 
+                                       :label="countOp.areaName" 
+                                       :value="countOp.id"
+                                       id="op_confirmSelect"></el-option>
                     </el-select>
                 </div>
 
@@ -301,12 +356,27 @@
                     <el-select v-model="customerData.adAreaId"
                                placeholder=""
                                :disabled="isEdit"
+                               @change='Modify()'
                                :class="{redBorder : validation.hasError('customerData.adAreaId')}"
                                @focus="showErrprTipsSelect">
-                        <el-option v-for="item in adArea" 
-                                   :key="item.adArea" 
-                                   :label="item.label" 
-                                   :value="item.adArea"></el-option>
+                        <el-input placeholder=""
+                                      class="selectSearch"
+                                      v-model="adSearch"></el-input>
+                        
+                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="adAr"
+                                     :props="selectAdProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="adNodeClick"></el-tree>
+                        <el-option v-show="false"
+                                       :key="countAd.id" 
+                                       :label="countAd.areaName" 
+                                       :value="countAd.id"
+                                       id="ad_confirmSelect"></el-option>
                     </el-select>
                 </div>
 
@@ -317,7 +387,6 @@
                               :disabled="isEdit" 
                               class="legalPerson"
                               :class="{redBorder : validation.hasError('customerData.legalPerson')}"
-                              @focus="showErrprTips"
                               @change='Modify()'></el-input>
                 </div>
 
@@ -328,7 +397,6 @@
                               :disabled="isEdit" 
                               class="regAddress"
                               :class="{redBorder : validation.hasError('customerData.regAddress')}"
-                              @focus="showErrprTips"
                               @change='Modify()'></el-input>
                 </div>
 
@@ -339,7 +407,6 @@
                               :disabled="isEdit" 
                               class="manager"
                               :class="{redBorder : validation.hasError('customerData.manager')}"
-                              @focus="showErrprTips"
                               @change='Modify()'></el-input>
                 </div>
 
@@ -350,7 +417,6 @@
                               :disabled="isEdit" 
                               class="phone"
                               :class="{redBorder : validation.hasError('customerData.phone')}"
-                              @focus="showErrprTips"
                               @change='Modify()'></el-input>
                 </div>
                 
@@ -361,7 +427,6 @@
                               :disabled="isEdit" 
                               class="remark"
                               :class="{redBorder : validation.hasError('customerData.remark')}"
-                              @focus="showErrprTips"
                               @change='Modify()'></el-input>
                 </div>
 
@@ -370,13 +435,13 @@
                     <el-select v-model="customerData.status"
                                class="status"
                                placeholder=""
+                               @change='Modify()'
                                :disabled="isEdit" 
-                               :class="{redBorder : validation.hasError('customerData.status')}"
-                               @focus="showErrprTipsSelect">
-                        <el-option v-for="item in opArea" 
-                                   :key="item.valueAreaBusiness" 
-                                   :label="item.label" 
-                                   :value="item.valueAreaBusiness"></el-option>
+                               :class="{redBorder : validation.hasError('customerData.status')}">
+                        <el-option v-for="item in statusAr"  
+                                   :key="item.itemValue" 
+                                   :label="item.itemName" 
+                                   :value="item.itemValue"></el-option>
                     </el-select>
                 </div>
             </el-col>
@@ -694,6 +759,7 @@ export default({
     created:function(){
         let self = this;
         self.loadData();
+        self.loadSelect();
     },
     data() {
         return{
@@ -709,16 +775,81 @@ export default({
                 finishTime:"",
                 finishName:"",
             },
-            organization: [{//所属组织
-                valueOrganization:1,
-                label: '恒康'
-            }, {
-                valueOrganization:2,
-                label: '恒大'
-            }, {
-                valueOrganization:3,
-                label: '361度'
-            }],
+            //---所属组织树形下拉-----
+                ouSearch:'',
+                selectOuProps:{
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+                ouItem:{
+                    id:'',
+                    ouFullname:'',
+                },
+                ouAr:[],//所属组织下拉框
+            //-----------------------
+
+            //---客户分类树形下拉-----
+                cuSearch:'',
+                selectCuProps:{
+                    children: 'childNodes',
+                    label: 'classFullname',
+                    id:'id'
+                },
+                cuItem:{
+                    id:'',
+                    cuFullname:'',
+                },
+                cuAr:[],//客户分类下拉框
+            //-----------------------
+
+            //---财务组织树形下拉-----
+                fiSearch:'',
+                selectFiProps:{
+                    children: 'items',
+                    label: 'fiFullname',
+                    id:'id'
+                },
+                fiItem:{
+                    id:'',
+                    fiFullname:'',
+                },
+                fiAr:[],//财务组织下拉框
+            //-----------------------
+
+            //---行政地区树形下拉-----
+                adSearch:'',//树形搜索框的
+                selectAdProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                adItem:{
+                    id:'',
+                    areaName:'',
+                },
+                adAr:[],//行政地区下拉框
+            //-----------------------
+            //---业务地区树形下拉-----
+                opSearch:'',//树形搜索框的
+                selectOpProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                opItem:{
+                    id:'',
+                    areaName:'',
+                },
+                opAr:[],//业务地区下拉框
+            //-----------------------
+            //---普通下拉------------
+            propertyAr:[],//客户性质下拉框
+            gradeAr:[],//客户等级下拉框
+            typeAr:[],//客户类型下拉框
+            statusAr:[],//状态下拉框
+            //-----------------------
+            
             customerType:[{//客户类型
                 valueCustomerType:0,
                 label: '客户类型'
@@ -729,36 +860,7 @@ export default({
                 valueCustomerType:2,
                 label:'客户类型2' 
             }],
-            customerNature:[{//客户性质
-                valueNature:0,
-                label: '客户性质'
-            }, {
-                valueNature:1,
-                label: '客户性质1'
-            }, {
-                valueNature:2,
-                label: '客户性质2'
-            }],
-            customerGrade:[{//客户等级
-                valueGrade:0,
-                label: '客户等级'
-            }, {
-                valueGrade:1,
-                label: '客户等级1'
-            }, {
-                valueGrade:2,
-                label: '客户等级2'
-            }],
-            sort:[{//客户类型
-                valueSort:0,
-                label: '客户类型'
-            }, {
-                valueSort:1,
-                label: '客户类型1'
-            }, {
-                valueSort:2,
-                label: '客户类型2'
-            }],
+            
             ficaOu :[{//对应财务组织
                 valueFinance:0,
                 label: '财务组织'
@@ -898,45 +1000,24 @@ export default({
             return this.Validator.value(value).required().maxLength(200);
         },
     },
+    computed:{
+            countCu () {
+                return this.cuItem;
+            },
+            countFi () {
+                return this.fiItem;
+            },
+            countOu () {
+                return this.ouItem;
+            },
+            countAd () {
+                return this.adItem;
+            },
+            countOp () {
+                return this.opItem;
+            },
+        }, 
     methods:{
-        //---提示错误----------------------------------------------
-        showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsSelect(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsRangedate(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.$el).hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsTextArea(e){
-                $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-                })
-        },
-        //-------------------------------------------------------------
         //---获取数据--------------------------------------------
         loadData:function(){
             let self = this;
@@ -951,6 +1032,17 @@ export default({
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
                     // console.log(self.createBankParams)
+
+                    //加载完成拿回的下拉框的默认值
+                    self.ouItem.ouFullname = self.customerData.ouId_OuName;
+                    self.ouItem.id =  self.customerData.ouId;
+
+                    // self.cuItem.cuFullname = self.customerData;
+                    self.cuItem.id = self.customerData.contactClassId;
+
+                    self.adItem.areaName = self.customerData.name;
+                    self.adItem.id = self.customerData.adAreaId;
+                    // console.log(self.ouItem.ouFullname)
                 })
                 //获取所有的银行信息，也可以用groupid获取，
                 this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
@@ -973,6 +1065,141 @@ export default({
             }
         },
         //------------------------------------------------------
+        //---下拉的数据------------------------------------------------------
+            loadSelect:function(){
+                let self = this;
+                //客户分类
+                self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
+                    console.log(res);
+                    self.cuAr = res;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //组织单元
+                self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
+                    console.log(res);
+                    self.ouAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //对应财务组织
+                self.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:3}).then(function(res){
+                    console.log(res);
+                    self.fiAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //客户性质
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerWorkProperty'}).then(function(res){
+                    // console.log(res);
+                    self.propertyAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //客户等级
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerGrade'}).then(function(res){
+                    // console.log(res);
+                    self.gradeAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //客户类型
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerType'}).then(function(res){
+                    // console.log(res);
+                    self.typeAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //行政地区*2
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                    // console.log(res);
+                    self.opAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //业务地区*1
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
+                    // console.log(res);
+                    self.opAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //状态
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                    // console.log(res);
+                    self.statusAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                
+            },
+        //------------------------------------------------------------------
+
+        //---树-------------------------------------------------------------
+        loadIcon(){
+            let _this=this;
+            _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                    }else{
+                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                })
+            })
+        },
+        filterNode(value, data) {
+            console.log(data)
+            if (!value) return true;
+                return data.areaName.indexOf(value) !== -1;
+        },
+        cuNodeClick:function(data){
+            let self = this;
+            self.cuItem.id = data.id;
+            self.cuItem.cuFullname = data.classFullname;
+            self.$nextTick(function(){
+                $('#cu_confirmSelect').click()
+            })
+        },
+        ouNodeClick:function(data){
+            let self = this;
+            self.ouItem.id = data.id;
+            self.ouItem.ouFullname = data.ouFullname;
+            self.$nextTick(function(){
+                $('#ou_confirmSelect').click()
+            })
+        },
+        fiNodeClick:function(data){
+            let self = this;
+            self.fiItem.id = data.id;
+            self.fiItem.fiFullname = data.ouFullname;
+            self.$nextTick(function(){
+                $('#fi_confirmSelect').click()
+            })
+        },
+        adNodeClick:function(data){
+            let self = this;
+            self.adItem.id = data.id;
+            self.adItem.areaName = data.areaName;
+            self.$nextTick(function(){
+                $('#ad_confirmSelect').click()
+            })
+        },
+        opNodeClick:function(data){
+            let self = this;
+            self.opItem.id = data.id;
+            self.opItem.areaName = data.areaName;
+            self.$nextTick(function(){
+                $('#op_confirmSelect').click()
+            })
+        },
+        //-----------------------------------------------------
 
         //---保存数据---------------------------------------------
         saveModify:function(){
@@ -1293,6 +1520,44 @@ export default({
                 });
             },
         //------------------------------------------------------
+        //---提示错误----------------------------------------------
+        showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsSelect(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsRangedate(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        showErrprTipsTextArea(e){
+                $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+                })
+        },
+        //-------------------------------------------------------------
         
     }
        

@@ -3,7 +3,7 @@
         <el-row class="bg-white">
             <el-col :span="5" class="border-right">
                 <el-col class="h48 pl15 pr15" :span="24">
-                    <el-input placeholder="搜索..."
+                    <el-input placeholder=""
                               v-model="searchLeft" 
                               class="bAreaSearch">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -113,12 +113,12 @@
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
                                     <el-select  v-model="scope.row.status" v-if="scope.row.isSystem==true" disabled :class="scope.$index%2==0?'bgw':'bgg'">
-                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value">
+                                        <el-option  v-for="item in status" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                                         </el-option>
                                     </el-select>
 
                                     <el-select  v-model="scope.row.status" v-else @change="handleChange(scope.$index,scope.row)" :class="scope.$index%2==0?'bgw':'bgg'">
-                                        <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value">
+                                        <el-option  v-for="item in status" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                                         </el-option>
                                     </el-select>
                                 </template>
@@ -233,16 +233,7 @@
                     value:'2',
                     label: '行政地区'
                 }],
-                 status: [{
-                    value:"",
-                    label: '全部'
-                    }, {
-                    value: 0,
-                    label: '禁用'
-                    }, {
-                    value: 1,
-                    label: '启用'
-                    }],
+                status: [],
                 tableData:[],
                 componyTree:  [
                     // {areaName:'根目录',id:'0',items:[]},
@@ -283,6 +274,7 @@
                 let self=this;
                 self.loadTableData();
                 self.loadTree();
+                self.loadSelect();
              },
         // validators: {
         //     'dialogData.dictCode':function(value){//字典编码
@@ -351,6 +343,15 @@
                             $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                         }
                     })
+                })
+            },
+            loadSelect:function(){
+                let self = this;
+                this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                    self.status = res.result;
+                    console.log(self.status);
+                },function(res){
+                    console.log('err'+res)
                 })
             },
             //---------------------------------------------------------------

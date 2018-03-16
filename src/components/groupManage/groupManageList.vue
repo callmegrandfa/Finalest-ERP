@@ -20,7 +20,24 @@
                 <div class="bgcolor reset">
                     <label>会计方案</label><el-input :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  @change="isUpdate()"></el-input>
                 </div>
-                <div class="bgcolor reset"><label>行政地区</label><el-input :disabled="isEdit" v-model="tableData[0].areaId_AreaName" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor area">
+                    <label>行政地区</label>
+                    <div class="areaBox">
+                        <el-select class="areaDrop" placeholder="选择省" v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
+                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            </el-option>
+                        </el-select>
+                        <el-select class="areaDrop" placeholder="选择市" v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
+                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            </el-option>
+                        </el-select>
+                        <el-select class="areaDrop" placeholder="选择区" v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
+                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            </el-option>
+                        </el-select>
+                        <el-input class="areaEntry" placeholder="街道办地址" :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  @change="isUpdate()"></el-input>
+                    </div>
+                </div>
                 <div class="bgcolor reset">
                     <label>启用会计月份</label>
                     <el-select v-model="tableData[0].openAccperiodMonth"  :disabled="isEdit" @change="isUpdate()">
@@ -543,5 +560,22 @@
 }
 .reset .el-input__inner{
     height: 35px!important
+}
+.area{
+    width: 500px;
+}
+.areaBox {
+    height: 32px;
+    float: left;
+    border: 1px solid #e4e7ed;
+}
+.el-select.areaDrop,.el-input.areaEntry{
+    width: 100px;
+}
+.areaDrop input,.areaEntry input{
+    border: none!important;
+}
+.areaDrop .el-input__inner,.areaEntry .el-input__inner{
+    height: 32px!important;
 }
 </style>
