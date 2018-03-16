@@ -297,8 +297,8 @@ import Tree from '../../base/tree/tree'
 <style>
 
 .el-checkbox__inner{
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius:50% !important; 
 }
 .el-checkbox__inner::after{
