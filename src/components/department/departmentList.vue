@@ -587,7 +587,7 @@
             // },
             filterNode(value, data) {
                 if (!value) return true;
-                 return data.areaName.indexOf(value) !== -1;
+                 return data.deptName.indexOf(value) !== -1;
             },
             // renderContent(h, { node, data, store }) {
             //     return (
