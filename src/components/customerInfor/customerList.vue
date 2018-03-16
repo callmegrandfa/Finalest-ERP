@@ -328,25 +328,7 @@
 
                 adAr:[],//行政地区下拉框
                 propertyAr:'',//客户性质下拉框
-                
-                options: [{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }],
 
-                
                 pageIndex:-1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
