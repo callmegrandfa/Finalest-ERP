@@ -14,7 +14,7 @@
 
                 <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select  v-model="searchData.OuType" placeholder="">
+                    <el-select filterable   v-model="searchData.OuType" placeholder="">
                         <el-option v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -23,7 +23,7 @@
                 <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属公司</label>
-                    <el-select  v-model="searchData.CompanyOuId" placeholder="">
+                    <el-select filterable   v-model="searchData.CompanyOuId" placeholder="">
                         <el-option 
                         v-for="item in selectData.companys" 
                         :key="item.id" 
@@ -35,7 +35,7 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>行政地区</label>
-                    <el-select  v-model="searchData.AreaId" placeholder="">
+                    <el-select v-model="searchData.AreaId" placeholder="">
                         <!-- <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option> -->
                         <el-input
@@ -62,7 +62,7 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>启用状态</label>
-                    <el-select  v-model="searchData.Status" placeholder="">
+                    <el-select filterable   v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>

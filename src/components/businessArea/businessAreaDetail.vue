@@ -20,7 +20,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select 
+                        <el-select filterable  
                         placeholder=""
                         class="ouId" 
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
@@ -57,7 +57,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>上级业务地区</label>
-                        <el-select 
+                        <el-select filterable  
                         class="areaParentId" 
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
@@ -151,7 +151,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select 
+                        <el-select filterable  
                         class="status" 
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""

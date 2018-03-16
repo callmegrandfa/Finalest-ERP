@@ -44,29 +44,36 @@ export default {
   data(){
       return{
           x:0,
-          go:100
+          go:500,
+          n:1,//点击次数
       }
   },
   methods:{
       right:function(){
-        let left=parseInt($('#longWidth').css('left'))
-        let width=document.getElementById('routerBox').offsetWidth;
-        if(left-this.go+width<0){
-            return false
-        }else{
-            console.log(left-this.go+width)
-            this.x-=this.go;
-            document.getElementById('longWidth').style.left= this.x+'px';
-        }
+        if(!$('#longWidth').is(":animated")){ 
+            let left=parseInt($('#longWidth').css('left'))
+            let width=document.getElementById('routerBox').offsetWidth;
+
+            if(left-this.go+width<0){
+                return false
+            }else{
+                this.x-=this.go;
+                $("#longWidth").animate({left:this.x+'px'},500);
+                // document.getElementById('longWidth').style.left= this.x+'px';
+            }
+        }    
       },
       left:function(){
-        let left=parseInt($('#longWidth').css('left'));
-        if(left<0){
-            this.x+=this.go;
-            document.getElementById('longWidth').style.left=this.x+'px';
-        }else{
-            return false
-        }
+            if(!$('#longWidth').is(":animated")){ 
+                let left=parseInt($('#longWidth').css('left'));
+                if(left<0){
+                    this.x+=this.go;
+                    $("#longWidth").animate({left:this.x+'px'},500);
+                    // document.getElementById('longWidth').style.left=this.x+'px';
+                }else{
+                    return false
+                }
+            }
         
       },
       close:function(e){
@@ -224,10 +231,10 @@ export default {
 #window #longWidth{
     width: 100000px;
     position: relative;
-    transition: all 0.5s;
+    /* transition: all 0.5s;
     -moz-transition: all 0.5s;
     -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s; 
+    -o-transition: all 0.5s;  */
     left: 0;
 }
 #window #routerBox{

@@ -265,7 +265,7 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>会计方案</label>
-                    <el-select class="accCchemeId"
+                    <el-select filterable  class="accCchemeId"
                     
                     
                     @focus="showErrprTipsSelect"
@@ -296,7 +296,7 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>本位币种</label>
-                    <el-select 
+                    <el-select filterable  
                     
                     
                     placeholder=""
@@ -315,7 +315,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select 
+                    <el-select filterable  
                     
                     
                     placeholder=""
@@ -368,7 +368,7 @@
                 </div>
                  <div class="bgcolor">
                     <label>启用状态</label>
-                    <el-select 
+                    <el-select filterable  
                     
                     
                     @focus="showErrprTipsSelect"
@@ -434,7 +434,7 @@
                             
                             <div class="bgcolor">
                                 <label>上级公司</label>
-                                <el-select 
+                                <el-select filterable  
                                 
                                 
                                 @focus="showErrprTipsSelect"
@@ -461,7 +461,7 @@
                             </div>
                             <div class="bgcolor">
                                 <label>启用状态</label>
-                                <el-select 
+                                <el-select filterable  
                                 
                                 
                                 @focus="showErrprTipsSelect"
@@ -763,7 +763,7 @@
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select 
+                                    <el-select filterable  
                                     v-model="test"
                                     placeholder=""
                                     class="status" >
@@ -786,7 +786,7 @@
                             <el-col :span="24"  class="getPadding">
                                 <div class="bgcolor">
                                     <label>上级业务组织</label>
-                                    <el-select
+                                    <el-select filterable 
                                     v-model="test"
                                     placeholder=""
                                     >
@@ -807,7 +807,7 @@
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select 
+                                    <el-select filterable  
                                     v-model="test"
                                     placeholder=""
                                     class="status">

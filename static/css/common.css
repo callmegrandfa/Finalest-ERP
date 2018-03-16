@@ -58,6 +58,9 @@
   height: 30px;
   border-radius: 30px;
 }
+.search_input{
+  width: 100%;
+}
 /* 表单验证 */
 .tipsWrapper{
   display: none;   
@@ -232,7 +235,7 @@
 .bgcolor .el-textarea.is-disabled,
 {
     border-color:#c0c4cc;
-    background-color: #f2f2f2;
+    background-color: #e4e4e4;
 }
 .el-select .el-input.is-disabled .el-input__inner,
 .el-textarea.is-disabled .el-textarea__inner,
@@ -1040,7 +1043,6 @@ end-placeholder="结束日期">
   .bgcolor.bgLongWidth .el-input,
   .bgcolor.bgLongWidth .rangeDate,
  .bgcolor.bgLongWidth .el-textarea,
- .bgcolor.longWidth .addZoo,
  .bgcolor.bgLongWidth .el-select{
     width: calc(100% - 90px)
 }
@@ -1056,8 +1058,9 @@ end-placeholder="结束日期">
  .bgcolor.bgLongWidth .el-textarea{
  font-size: 12px;
 } 
- .bgcolor.bgLongWidth .addZoo{
+.bgcolor.bgLongWidth .addZoo{
  float: left;
+ width: calc(100% - 90px)
 }
  .bgcolor.bgLongWidth .add{
   display: block;
@@ -1085,6 +1088,7 @@ border-radius: 3px;
 font-size: 12px;
 margin-right: 10px;
 cursor: pointer;
+margin-bottom: 10px;
 position: relative;
 }
  .bgcolor.bgLongWidth .add:hover{

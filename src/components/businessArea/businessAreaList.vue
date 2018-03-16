@@ -3,11 +3,19 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
-                    <el-input
+                    <!-- <el-input
                         placeholder="搜索..."
                         v-model="searchLeft" class="search_input">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
+                    </el-input> -->
+                     <el-autocomplete
+                    v-model="searchLeft"
+                    :fetch-suggestions="querySearchAsync"
+                    class="search_input"
+                    placeholder="搜索..."
+                    >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-autocomplete>
                 </el-col>
                 <el-col :span='24' class="tree-container" >
                     <el-tree
@@ -95,7 +103,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
-                            <el-table-column prop="areaParentId" label="上级业务地区"></el-table-column>
+                            <el-table-column prop="areaParentId_AreaName" label="上级业务地区"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
                             <el-table-column prop="statusTValue" label="状态"></el-table-column>
                             <el-table-column prop="createdBy" label="创建人"></el-table-column>
@@ -142,6 +150,8 @@
         data(){
             return {
                 searchLeft:'',
+                timeout:null,
+                restaurants:[],
                 dialogData:{
                     groupId: '1' ,
                     areaType: '1' ,
@@ -254,11 +264,18 @@
                  let _this=this;
                  _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
+                    _this.restaurants=[],
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
-                    console.log(res.result.items)
+                    if(_this.tableData==[]){
+                        _this.pageIndex=0
+                    }
+                    $.each(res.result.items,function(index,value){
+                        let item={'value':value.areaName,'id':value.id};
+                        _this.restaurants.push(item)
+                    })
                     },function(res){
                     _this.tableLoading=false;
                 })
@@ -534,7 +551,21 @@
                 _this.isAdd=true;
                 _this.showParent=true;
                 _this.dialogFormVisible=true;
-            }
+            },
+            querySearchAsync(queryString, cb) {
+                var restaurants = this.restaurants;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                cb(results);
+                }, 100 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (state) => {
+                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
         },
     }
 </script>

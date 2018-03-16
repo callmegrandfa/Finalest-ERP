@@ -39,7 +39,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>子系统</label>
-                        <el-select 
+                        <el-select filterable  
                         class="systemId" 
                         :class="{redBorder : validation.hasError('addData.systemId')}" 
                         placeholder=""
@@ -56,7 +56,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>上级菜单</label>
-                    <el-select 
+                    <el-select
                         class="moduleParentId" 
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
@@ -92,7 +92,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select 
+                        <el-select filterable  
                         v-model="addData.status"
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder="">
@@ -106,13 +106,23 @@
 
             <el-col :span="24"  class="pt15">
                 <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
+                    <div class="bgcolor bgLongWidth" style="position: relative;">
                         <label>图标</label>
-                        <el-input 
+                        <!-- <el-input 
                         class="ico" 
                         :class="{redBorder : validation.hasError('addData.ico')}" 
                         v-model="addData.ico"  
-                        placeholder=""></el-input>
+                        placeholder=""></el-input> -->
+                        <i :class="addData.ico" aria-hidden="true" style="position: absolute;right: 35px;z-index: 10;top: 6px;font-size: 25px;"></i>
+                        <el-select filterable  
+                        class="ico" 
+                        :class="{redBorder : validation.hasError('addData.ico')}" 
+                        placeholder=""
+                        v-model="addData.ico">
+                            <el-option v-for="item in $store.state.icon" :key="item.code" :label="item.code" :value="item.code">
+                                {{item.code}}<i style="float:right;line-height:34px;" :class="item.code" aria-hidden="true"></i>
+                            </el-option>
+                        </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ico') }}</div>
                 </div>    
