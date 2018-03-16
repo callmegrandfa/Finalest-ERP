@@ -25,16 +25,25 @@
                 <div class="bgcolor smallBgcolor"><label>角色名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
-                    <!-- <el-input v-model="searchData.ouId" placeholder=""></el-input> -->
                     <el-select  v-model="searchData.ouId" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor smallBgcolor">
-                    <label>上级用户组(无字段)</label>
-                    <el-select  v-model="searchData.UserType" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        <el-input
+                        placeholder="搜索..."
+                        class="selectSearch"
+                        v-model="search">
+                        </el-input>
+                        <el-tree
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        :data="selectTree"
+                        :props="selectProps"
+                        node-key="id"
+                        default-expand-all
+                        ref="tree"
+                        :filter-node-method="filterNode"
+                        :expand-on-click-node="false"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                        <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -118,7 +127,7 @@
                         </span>
                 </el-dialog>
                 <!-- dialog -->
-                <el-row class="pl10 pt10 pr10 pb10">
+                <el-row>
 
                     <el-col :span='24'>
                         <el-table 
@@ -129,11 +138,25 @@
                         stripe 
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="roleCode" label="角色编码"></el-table-column>
-                            <el-table-column prop="displayName" label="角色名称"></el-table-column>
+                            <el-table-column type="selection" fixed="left"></el-table-column>
+                            <el-table-column prop="roleCode" label="角色编码" fixed="left">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="see(scope.row)">{{scope.row.roleCode}}</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="displayName" label="角色名称" fixed="left">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  @click="see(scope.row)">{{scope.row.displayName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="ouId" label="所属组织"></el-table-column>
-                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
+                                    <span v-else>{{scope.row.statusTValue}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column label="创建时间(无字段)" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker
@@ -174,8 +197,21 @@
     export default{
         data(){
             return {
+                search:'',
+                selectTree:[
+                ],
+                item:{
+                    id:'',
+                    ouFullname:'',
+                },
+                selectProps: {
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+
+
                 tableLoading:false,
-                treeLoading:false,
                 searchData:{
                     OuCode: "",//编码
                     Name: "",//名称
@@ -186,42 +222,9 @@
                 },
                 searchDataClick:{},
                 tableSearchData:{},
-                options: [{
-                    value: '1',
-                    label: '选项1'
-                    }, {
-                    value: '2',
-                    label: '选项2'
-                    }, {
-                    value: '3',
-                    label: '选项3'
-                    }, {
-                    value: '4',
-                    label: '选项4'
-                    }, {
-                    value: '5',
-                    label: '选项5'
-                    }, {
-                    value: '6',
-                    label: '选项6'
-                    }, {
-                    value: '7',
-                    label: '选项7'
-                    }, {
-                    value: '8',
-                    label: '选项8'
-                    }, {
-                    value: '9',
-                    label: '选项9'
-                    }],
+                
                 tableData:[],
 
-                componyTree:  [],
-                defaultProps: {
-                    children: 'items',
-                    label: 'deptName',
-                    id:'id'
-                },
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
@@ -236,8 +239,14 @@
                 dialogUserDefined:false,//dialog
             }
         },
+        watch: {
+            search(val) {
+                this.$refs.tree.filter(val);
+            }
+        },  
         created:function(){       
                 let _this=this;
+                _this.loadTree();
                 _this.loadTableData();
              },
         methods:{
@@ -271,6 +280,46 @@
                     },function(res){
                     _this.tableLoading=false;
                 })
+            },
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
+            },
+            loadTree(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                .then(function(res){
+                    _this.selectTree=res.result;
+                    _this.loadIcon();
+                },function(res){
+                })
+            },
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            nodeClick(data,node,self){
+                let _this=this;
+                _this.item.id=data.id;
+                _this.item.ouFullname=data.ouFullname;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                })
+                    
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // })
             },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
@@ -379,73 +428,26 @@
 </script>
 
 <style scoped>
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
 }
 .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
 .mt20{
     margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
 }
 .pl15{
     padding-left: 15px;
 }
-.pt10{
-    padding-top: 10px;
-}
 .pt5{
     padding-top: 5px;
 }
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
 .fs12{
     font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
@@ -462,35 +464,9 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
 </style>
 
 <style>
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
 .roleList .el-button+.el-button{
     margin-left: 0;
 }

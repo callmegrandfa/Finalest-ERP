@@ -570,19 +570,9 @@
     display: inline-block;
     width: calc(50% - 10px)
 }
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
 }
 .h48{
     height: 48px;
@@ -619,16 +609,9 @@
 </style>
 
 <style>
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
 .userList .el-button+.el-button{
     margin-left: 0;
 }
-
 .halfWidth.left input{
     text-align: right;
 }
