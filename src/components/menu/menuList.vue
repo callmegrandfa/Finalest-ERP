@@ -110,6 +110,11 @@
                             <el-table-column prop="url" label="web地址"></el-table-column>
                             <el-table-column prop="moduleParentId" label="上级菜单"></el-table-column>
                             <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                    <span v-else >冻结</span>
+                                </template>
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
@@ -524,16 +529,10 @@
     background: white;
     border-radius: 3px;
 }
-.pl5{
-    padding-left: 5px;
-}
 .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
-}
-.pr10{
-    padding-right: 10px;
 }
 .pl15{
     padding-left: 15px;

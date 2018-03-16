@@ -124,8 +124,12 @@
                             <span class="btDetail">导出</span>
                             <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                         </button>
-                        <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                        <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
+                        <button class="erp_bt bt_start bt_width">
+                            <div class="btImg"><img src="../../../static/image/common/bt_start.png"></div>
+                            <span class="btDetail">启用</span>
+                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                        </button>
+                        <button class="erp_bt bt_stop bt_width"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
                         <div class="search_input_group">
                             <div class="search_input_wapper">
                                 <el-input
@@ -174,7 +178,7 @@
                         </span>
                 </el-dialog>
                 <!-- dialog -->
-                <el-row class="pl10 pt10 pr10 pb10">
+                <el-row>
 
                     <el-col :span='24'>
                         <el-table 
@@ -202,7 +206,13 @@
                             <el-table-column prop="userTypeTValue" label="身份类型"></el-table-column>
                             <el-table-column prop="languageDisplayName" label="语种"></el-table-column>
                             <el-table-column prop="authTypeTValue" label="认证类型"></el-table-column>
-                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                            <el-table-column prop="statusTValue" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
+                                    <span v-else>{{scope.row.statusTValue}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column label="有效日期" width="200">
                                 <template slot-scope="scope">
                                     <div class="halfWidth left">
@@ -560,7 +570,6 @@
     display: inline-block;
     width: calc(50% - 10px)
 }
-
 .store-data-wrapper{
     width: 100%;
     height: auto;
@@ -580,54 +589,17 @@
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
 .mt20{
     margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
 }
 .pl15{
     padding-left: 15px;
 }
-.pt10{
-    padding-top: 10px;
-}
 .pt5{
     padding-top: 5px;
 }
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
 .fs12{
     font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
@@ -641,16 +613,6 @@
     line-height: 30px;
     background: rgba(130, 170, 252, 1);
     color: white;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
     border-radius: 3px;
     cursor: pointer;
 }

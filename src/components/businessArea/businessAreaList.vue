@@ -37,6 +37,7 @@
                 <el-row class="h48 pt5">
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                    <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
                     <button class="erp_bt bt_out">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
                         <span class="btDetail">导出</span>
@@ -105,7 +106,13 @@
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="areaParentId_AreaName" label="上级业务地区"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                    <span v-else >冻结</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="createdBy" label="创建人"></el-table-column>
                             <el-table-column label="创建时间">
                                 <template slot-scope="scope">
@@ -620,16 +627,10 @@
     background: white;
     border-radius: 3px;
 }
-.pl5{
-    padding-left: 5px;
-}
 .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
-}
-.pr10{
-    padding-right: 10px;
 }
 .pl15{
     padding-left: 15px;
