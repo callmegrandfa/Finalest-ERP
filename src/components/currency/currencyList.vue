@@ -130,7 +130,7 @@
                                 
                             </el-col>
                             <el-col :span="18">
-                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next" :current-page.sync="pageIndex"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
                             </el-col>
                         </el-row>
                         
@@ -170,7 +170,7 @@
                     ids:[]
                 },//复选框选中数据id
                 
-                pageIndex:-1,//分页的当前页码
+                pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
                 page:1,//当前页
@@ -190,6 +190,8 @@
                 redShow:false,//判斷修改过的表格左上角红标
                 redIndex:'',
                 ar:[],
+                turnPage:-1,
+                pageFlag:true,
             }
         },
         created:function(){
@@ -232,23 +234,18 @@
         // ---创建数据，修改数据---------------------------------------------
         save:function(){//点击保存按钮
             let self = this;
+
             if(self.addList.length>0){
-                for(let i in self.addList){
-                    this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.addList[i]).then(function(res){         
+                self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){         
                         self.open('创建货币资料成功','el-icon-circle-check','successERP');
-                        // console.log(res)
                         self.loadAllList();
                         self.addList = [];
                     }),function(res){
                         self.open('创建货币资料失败','el-icon-error','faildERP');
                     };
-                }
-               };
-            
+            }
             if(self.updateList.length>0){
-                for(let i in self.updateList){
-                    if(self.updateList[i].id!=''){
-                        this.$axios.puts('/api/services/app/CurrencyManagement/Update',self.updateList[i]).then(function(res){
+                self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
                             // console.log(res);
                             self.open('修改货币资料成功','el-icon-circle-check','successERP');
                             self.loadAllList()
@@ -257,8 +254,6 @@
                             }),function(res){
                                 self.open('修改货币资料失败','el-icon-error','faildERP');
                         };
-                    }
-                }
             }
         },
         addCol:function(){//增行
@@ -300,22 +295,44 @@
             },
             handleCurrentChange:function(val){//获取点击页码
                 let self = this;
-                if(self.updateList.length==0){
-                    this.pageIndex=val;
-                    console.log(val)
-                    this.page = val;
-                    this.loadAllList();
-                    console.log(self.page)
-                }else if(self.updateList.length>0){
-                    self.page = self.pagex;
-                    console.log(self.page)
-                    alert('您有修改未保存')
-                }
+                if(self.updateList.length>0&&self.pageFlag){
+                    self.$confirm('当前存在未保存修改项，是否继续查看下一页?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.pageIndex=val;
+                            self.page = val;
+                            self.loadAllList();
+                        }).catch(() => {
+                            self.pageIndex=self.turnPage;
+                            self.page = self.turnPage;
+                            this.pageFlag=false;
+                            console.log(self.page)
+   
+                    });
+                }else{
+                    self.pageIndex=val;
+                    self.page = val;
+                    self.loadAllList();
+                } 
+                 setTimeout(() => {self.pageFlag = true}, 1000) 
+                // if(self.updateList.length==0){
+                //     this.pageIndex=val;
+                //     console.log(val)
+                //     this.page = val;
+                //     this.loadAllList();
+                //     console.log(self.page)
+                // }else if(self.updateList.length>0){
+                //     self.page = self.pagex;
+                //     console.log(self.page)
+                //     alert('您有修改未保存')
+                // }
                 
             },
             handleChange:function(index,row){
                 let self = this;
-                // console.log(index)
                 let map = false;
                 if(self.ar.length==0){//修改后表格前红标
                     self.ar.push(row.id)
@@ -331,10 +348,8 @@
                 }
                 if(map){
                     self.ar.push(row.id)
-                    // self.ar.sort();
                     console.log(self.ar)
                 }
-                // self.redIndex = index;
 
 
                 let flag = false;
@@ -354,6 +369,7 @@
 
                 if(flag){
                     self.updateList.push(row);
+                    this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
                     console.log(self.updateList)
                 }
                 

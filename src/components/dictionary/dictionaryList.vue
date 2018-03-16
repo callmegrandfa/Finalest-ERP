@@ -153,6 +153,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.createdTime"
                                             v-else
+                                            disabled
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
                                 </template>
@@ -283,9 +284,6 @@
                 self.loadTableData();
                 self.loadTree();
              },
-        mounted:function(){
-            let self=this;
-        }, 
         // validators: {
         //     'dialogData.dictCode':function(value){//字典编码
         //         return this.Validator.value(value).required().maxLength(50)
@@ -388,27 +386,24 @@
                 
                 let self = this;
                 if(self.addList.length>0){
-                    for(let i in self.addList){
-                        self.$axios.posts('/api/services/app/DictItemManagement/Create',self.addList[i]).then(function(res){
-                            self.open('创建字典系统值成功','el-icon-circle-check','successERP');
-                            self.addList = [];
-                            self.loadTableData();
-                        },function(res){    
-                            console.log('error')
-                        })
-                    }
+                    self.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){
+                        self.open('创建字典系统值成功','el-icon-circle-check','successERP');
+                        self.addList = [];
+                        self.loadTableData();
+                    },function(res){    
+                        console.log('error')
+                    })
+                    
                 }
 
-                if(self.updateList.length>0){
-                    for(let i in self.updateList){
-                        self.$axios.puts('/api/services/app/DictItemManagement/Update',self.updateList[i]).then(function(res){
-                            self.open('修改字典系统值成功','el-icon-circle-check','successERP');
-                            self.updateList = [];
-                            self.loadTableData();
-                        },function(res){    
-                            console.log('error')
-                        })
-                    }
+                if(self.updateList.length>0){   
+                    self.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
+                        self.open('修改字典系统值成功','el-icon-circle-check','successERP');
+                        self.updateList = [];
+                        self.loadTableData();
+                    },function(res){    
+                        console.log('error')
+                    })
                 }
             },
             //----------------------------------------------------------------
@@ -545,7 +540,6 @@
             },
             delRow(){//批量删除
                 let self=this;
-                // let flag;
                 for(let i in self.multipleSelection){
                     self.idArray.ids.push(self.multipleSelection[i].id)
                 }
@@ -635,22 +629,17 @@
                 let self = this;
                 console.log(data)
                 self.dictId = data.id;
-                self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id}).then(function(res){ 
-                    // console.log(data.id)
-                    // console.log(res.result.length)
-                    self.tableData = res.result;
-                    //  $.each(self.tableData,function(index,value){//处理时间格式
-                    //     if(value.createdTime&&value.createdTime!=''){
-                    //         let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
-                    //         self.tableData[index].createdTime=createdTime;
-                    //     } 
-                    // })
-                    self.totalItem=res.result.length
-                    // self.totalPage=Math.ceil(res.result.totalCount/self.oneItem);
-                    // self.tableLoading=false;
+                if(self.dictId==0){
+                    self.loadTableData()
+                }else{
+                    self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id}).then(function(res){ 
+                        self.tableData = res.result;
+                        self.totalItem=res.result.length
                     },function(res){
-                    self.tableLoading=false;
-                })
+                        self.tableLoading=false;
+                    })
+                }
+                
                 
             },
             //---树形操作-----------------------------------------------
