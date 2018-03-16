@@ -364,12 +364,14 @@ import Tree from '../../base/tree/tree'
                             if(delAarry.length==1){//单条删除
                                 _this.$axios.deletes('http://192.168.100.107:8085/api/services/app/CategoryManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
                                     _this.loadTableData();
+                                    _this.loadTree();
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
                             }else{//批量删除
                                 
                                  _this.$axios.posts('http://192.168.100.107:8085/api/services/app/CategoryManagement/BatchDelete',delAarry).then(function(res){
                                     _this.loadTableData();
+                                    _this.loadTree();
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
                             }  
