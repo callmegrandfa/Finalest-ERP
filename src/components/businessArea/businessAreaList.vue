@@ -3,11 +3,19 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
-                    <el-input
+                    <!-- <el-input
                         placeholder="搜索..."
                         v-model="searchLeft" class="search_input">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
+                    </el-input> -->
+                     <el-autocomplete
+                    v-model="searchLeft"
+                    :fetch-suggestions="querySearchAsync"
+                    class="search_input"
+                    placeholder="搜索..."
+                    >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-autocomplete>
                 </el-col>
                 <el-col :span='24' class="tree-container" >
                     <el-tree
@@ -29,6 +37,7 @@
                 <el-row class="h48 pt5">
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                    <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
                     <button class="erp_bt bt_out">
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
                         <span class="btDetail">导出</span>
@@ -95,9 +104,15 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
-                            <el-table-column prop="areaParentId" label="上级业务地区"></el-table-column>
+                            <el-table-column prop="areaParentId_AreaName" label="上级业务地区"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                    <span v-else >冻结</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="createdBy" label="创建人"></el-table-column>
                             <el-table-column label="创建时间">
                                 <template slot-scope="scope">
@@ -142,6 +157,8 @@
         data(){
             return {
                 searchLeft:'',
+                timeout:null,
+                restaurants:[],
                 dialogData:{
                     groupId: '1' ,
                     areaType: '1' ,
@@ -254,11 +271,18 @@
                  let _this=this;
                  _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
+                    _this.restaurants=[],
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
-                    console.log(res.result.items)
+                    if(_this.tableData==[]){
+                        _this.pageIndex=0
+                    }
+                    $.each(res.result.items,function(index,value){
+                        let item={'value':value.areaName,'id':value.id};
+                        _this.restaurants.push(item)
+                    })
                     },function(res){
                     _this.tableLoading=false;
                 })
@@ -534,7 +558,21 @@
                 _this.isAdd=true;
                 _this.showParent=true;
                 _this.dialogFormVisible=true;
-            }
+            },
+            querySearchAsync(queryString, cb) {
+                var restaurants = this.restaurants;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                cb(results);
+                }, 100 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (state) => {
+                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
         },
     }
 </script>
@@ -589,16 +627,10 @@
     background: white;
     border-radius: 3px;
 }
-.pl5{
-    padding-left: 5px;
-}
 .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
-}
-.pr10{
-    padding-right: 10px;
 }
 .pl15{
     padding-left: 15px;
@@ -612,16 +644,6 @@
 .border-left{
     border-left: 1px solid #E4E4E4;
     min-height: 380px;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
 }
 </style>
 

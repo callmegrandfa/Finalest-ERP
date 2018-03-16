@@ -633,8 +633,8 @@ import Tree from '../../base/tree/tree'
     border-color: rgb(51,204,204);
 }
 .el-checkbox__inner{
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     background: #f4f4f5;
 }
 .el-checkbox__inner::after{

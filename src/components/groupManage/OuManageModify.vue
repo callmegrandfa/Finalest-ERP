@@ -4,9 +4,9 @@
      <el-row class="fixed">
          <el-col :span="24">
             <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-            <button v-on:click="Update()" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
+            <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
             <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button v-on:click="Cancel()" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button @click="Cancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button class="erp_bt bt_saveAdd" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
             <button class="erp_bt bt_auxiliary bt_width">
                 <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
@@ -210,7 +210,7 @@
                     <label><small>*</small>名称</label>
                     <el-input class="ouName"
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.ouName')}"
                      v-model="addData.ouName" >
@@ -220,7 +220,7 @@
                     <label><small>*</small>全称</label>
                     <el-input class="ouFullname"  
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.ouFullname')}"
                     v-model="addData.ouFullname" 
@@ -230,7 +230,7 @@
                     <label class="longLabel"><small>*</small>上级业务单元</label>
                     <el-select class="ouParentid"
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
                     placeholder=""
@@ -266,9 +266,9 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>会计方案</label>
-                    <el-select class="accCchemeId"
+                    <el-select filterable  class="accCchemeId"
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.accCchemeId')}"
                     placeholder=""
@@ -285,7 +285,7 @@
                     <label><small>*</small>启用月份</label>
                     <el-date-picker 
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
                     class="accStartMonth datepicker" 
@@ -297,9 +297,9 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>本位币种</label>
-                    <el-select 
+                    <el-select filterable  
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     placeholder=""
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.baseCurrencyId')}"
@@ -316,9 +316,9 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select 
+                    <el-select filterable  
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     placeholder=""
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.companyOuId')}"
@@ -337,7 +337,7 @@
                     <label>联系人</label>
                     <el-input 
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.contactPerson')}"
                     class="contactPerson" 
@@ -349,7 +349,7 @@
                     <label>电话</label>
                     <el-input 
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.phone')}"
                     class="phone" 
@@ -360,7 +360,7 @@
                     <label>地址</label>
                     <el-input 
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.address')}"
                     class="address" 
@@ -369,9 +369,9 @@
                 </div>
                  <div class="bgcolor">
                     <label>启用状态</label>
-                    <el-select 
+                    <el-select filterable  
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.status')}"
                     class="status1" 
@@ -390,7 +390,7 @@
                     <label>备注</label>
                     <el-input
                     :disabled="isEdit" 
-                    @change="isUpdate()"
+                    @change="isUpdate"
                     @focus="showErrprTipsTextArea"
                     :class="{redBorder : validation.hasError('addData.remark')}"
                     class="remark1" 
@@ -412,7 +412,7 @@
         <el-col :span="6">  
             <el-checkbox-group 
             :disabled="isEdit" 
-            @change="isUpdate()"
+            @change="isUpdate"
             v-model="addData.ouTypes"
             :min="1">
             <el-checkbox v-for="item in selectData.OUType" :label="item.itemValue" :key="item.itemValue" @change="change_ouType">{{item.itemName}}</el-checkbox>
@@ -436,9 +436,9 @@
                     <el-col :span="24"  class="getPadding" style="border-bottom:1px solid #e4e4e4; ">
                         <div class="bgcolor">
                             <label>上级公司</label>
-                            <el-select 
+                            <el-select filterable  
                             :disabled="isEdit" 
-                            @change="isUpdate()"
+                            @change="isUpdate"
                             @focus="showErrprTipsSelect"
                             :class="{redBorder : validation.hasError('basCompany.ouParentid')}"
                             placeholder=""
@@ -463,9 +463,9 @@
                         </div>
                         <div class="bgcolor">
                             <label>启用状态</label>
-                            <el-select 
+                            <el-select filterable  
                             :disabled="isEdit" 
-                            @change="isUpdate()"
+                            @change="isUpdate"
                             
                             @focus="showErrprTipsSelect"
                             :class="{redBorder : validation.hasError('basCompany.status')}"
@@ -489,7 +489,7 @@
                                 <label>注册资本</label>
                                 <el-input 
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.regCapital')}"
@@ -501,7 +501,7 @@
                                 <label>法人代表</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.legalPerson')}"
@@ -513,7 +513,7 @@
                                 <label>纳税人登记号</label>
                                 <el-input 
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.vatRegno')}"
@@ -525,7 +525,7 @@
                                 <label>成立日期</label>
                                 <el-date-picker 
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTipsRangedate"
                                 :class="{redBorder : validation.hasError('basCompany.regtime')}"
@@ -540,7 +540,7 @@
                                 <label class="longLabel">法人身份证号码</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.legalPersonIdnr')}"   
@@ -552,7 +552,7 @@
                                 <label>主管部门代码</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.mgtDeptCode')}"
@@ -564,7 +564,7 @@
                                 <label>主管部门名称</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.mgtDeptName')}"
@@ -576,7 +576,7 @@
                                 <label>纳税人类别</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.legalPersonType')}"
@@ -588,7 +588,7 @@
                                 <label>营业地址</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.businessAddress')}"
@@ -601,7 +601,7 @@
                                 <div class="rangeDate">
                                     <el-date-picker
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     
                                     @focus="showErrprTipsRangedate"
                                     :class="{redBorder : validation.hasError('dateRange')}"
@@ -621,7 +621,7 @@
                                 <label>公司简介</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.introduction')}"
@@ -633,7 +633,7 @@
                                 <label>通讯地址</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.contactAddress')}"
@@ -645,7 +645,7 @@
                                 <label>邮政编码</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.zipCode')}"
@@ -657,7 +657,7 @@
                                 <label>联系人</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.contact')}"
@@ -669,7 +669,7 @@
                                 <label>传真</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.fax')}"
@@ -681,7 +681,7 @@
                                 <label>电话</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.phone')}"
@@ -693,7 +693,7 @@
                                 <label>email</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.email')}"
@@ -706,7 +706,7 @@
                                 <el-input
                                 
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.webUrl')}"
                                 class="webUrl"
@@ -717,7 +717,7 @@
                                 <label>备注</label>
                                 <el-input
                                 :disabled="isEdit" 
-                                @change="isUpdate()"
+                                @change="isUpdate"
                                 
                                 @focus="showErrprTipsTextArea"
                                 :class="{redBorder : validation.hasError('basCompany.remark')}"
@@ -741,7 +741,7 @@
                                     <label>国税登记号</label>
                                     <el-input 
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -750,7 +750,7 @@
                                     <label>发税登记号</label>
                                     <el-input 
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -759,7 +759,7 @@
                                     <label>纳税人识别号</label>
                                     <el-input 
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -768,7 +768,7 @@
                                     <label>纳税人编码</label>
                                     <el-input 
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -777,7 +777,7 @@
                                     <label>纳税税种</label>
                                     <el-input 
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -786,7 +786,7 @@
                                     <label>委托税种</label>
                                     <el-input 
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -795,13 +795,13 @@
                                     <label>纳税组织</label>
                                     <el-checkbox
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"></el-checkbox>
+                                    @change="isUpdate"></el-checkbox>
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select 
+                                    <el-select filterable  
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     v-model="test"
                                     placeholder=""
                                     class="status" >
@@ -824,9 +824,9 @@
                             <el-col :span="24"  class="getPadding">
                                 <div class="bgcolor">
                                     <label>上级业务组织</label>
-                                    <el-select
+                                    <el-select filterable 
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     v-model="test"
                                     placeholder=""
                                     >
@@ -842,16 +842,16 @@
                                     <label>结算账务组织</label>
                                     <el-input 
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     class="legalPerson" 
                                     >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select 
+                                    <el-select filterable  
                                     :disabled="isEdit" 
-                                    @change="isUpdate()"
+                                    @change="isUpdate"
                                     v-model="test"
                                     placeholder=""
                                     class="status">
@@ -1176,6 +1176,7 @@ export default({
                 };
                 _this.change_ouType()
                 // _this.basOuTypes=res.result.ouTypes;
+             
                 if(res.result.basCompany){
                     _this.basCompany={
                         "ouParentid": res.result.basCompany.ouParentid,//整数
@@ -1202,11 +1203,10 @@ export default({
                         "webUrl": res.result.basCompany.webUrl,
                         "remark": res.result.basCompany.remark
                     }
-               
-                
-                
                     _this.dateRange=[res.result.basCompany.businessStart,res.result.basCompany.businessEnd]
-                }   
+                }else{
+                    _this.basCompany={}
+                }
                 _this.auditInfo={
                     createdBy:res.result.createdBy,
                     createdTime:res.result.createdTime,
@@ -1364,6 +1364,7 @@ export default({
         Cancel(){
             if(this.isEdit==false){
                 this.isEdit=!this.isEdit;
+                this.validation.reset();
                 this.getData();
             }
         },
@@ -1382,6 +1383,8 @@ export default({
                             _this.basCompany={}
                         }
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
+                            _this.update=false;
+                            _this.isEdit=true;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
                             _this.open('保存失败','el-icon-error','faildERP');
@@ -1393,18 +1396,18 @@ export default({
             }
         },
         saveAdd(){
-             let _this=this;
-            _this.$validate()
-            .then(function (success) {
-                if (success) {
-                    _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
-                        _this.clearData();
-                        _this.open('保存新增成功','el-icon-circle-check','successERP');
-                    },function(res){
-                        _this.open('保存新增失败','el-icon-error','faildERP');
-                    })
-                }
-            });     
+            //  let _this=this;
+            // _this.$validate()
+            // .then(function (success) {
+            //     if (success) {
+            //         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
+            //             _this.clearData();
+            //             _this.open('保存新增成功','el-icon-circle-check','successERP');
+            //         },function(res){
+            //             _this.open('保存新增失败','el-icon-error','faildERP');
+            //         })
+            //     }
+            // });     
         },
         newAdd(){
             this.clearData();

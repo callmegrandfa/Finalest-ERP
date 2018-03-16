@@ -142,7 +142,7 @@ export default {
 }
 </script>
 <style scoped>
-	.topr{padding-right: 1.5rem;}
+	.topr{padding-right: 1.5rem;position: fixed;right: 0px;}
     .loginWrapper .loginForm .lgbox{position: relative;height: 100%;}
     .loginWrapper .loginForm .lgfrom{position:absolute;top:50%;margin-top: -180px;min-width: 288px;}
     .loginWrapper{

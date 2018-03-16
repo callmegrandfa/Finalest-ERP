@@ -909,8 +909,8 @@ export default {
 <style>
 /* 重写checkbox */
 .short-basic-data .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     border-radius:50% !important; 
 }
 .short-basic-data .el-checkbox__inner::after{

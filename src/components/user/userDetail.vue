@@ -125,7 +125,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属用户组</label>
-                    <el-select 
+                    <el-select filterable  
                     class="userGroupId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
@@ -180,7 +180,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>身份类型</label>
-                    <el-select 
+                    <el-select filterable  
                     class="userType" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userType')}"
@@ -197,7 +197,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>语种</label>
-                    <el-select 
+                    <el-select filterable  
                     class="languageId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
@@ -238,7 +238,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label>状态</label>
-                        <el-select 
+                        <el-select filterable  
                         class="status" 
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"

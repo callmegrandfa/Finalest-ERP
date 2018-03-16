@@ -14,7 +14,7 @@
 
                 <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select  v-model="searchData.OuType" placeholder="">
+                    <el-select filterable   v-model="searchData.OuType" placeholder="">
                         <el-option v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -23,7 +23,7 @@
                 <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属公司</label>
-                    <el-select  v-model="searchData.CompanyOuId" placeholder="">
+                    <el-select filterable   v-model="searchData.CompanyOuId" placeholder="">
                         <el-option 
                         v-for="item in selectData.companys" 
                         :key="item.id" 
@@ -35,7 +35,7 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>行政地区</label>
-                    <el-select  v-model="searchData.AreaId" placeholder="">
+                    <el-select v-model="searchData.AreaId" placeholder="">
                         <!-- <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option> -->
                         <el-input
@@ -62,7 +62,7 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>启用状态</label>
-                    <el-select  v-model="searchData.Status" placeholder="">
+                    <el-select filterable   v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -160,7 +160,7 @@
                         </span>
                 </el-dialog>
                 <!-- dialog -->
-                <el-row class="pl10 pt10 pr10 pb10 tableWapper">
+                <el-row>
                     <el-col :span='24'>
                         <el-table 
                         v-loading="tableLoading"
@@ -198,9 +198,11 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="statusTValue" label="状态">
-                                <!-- <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].status" disabled></el-checkbox>
-                                </template> -->
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
+                                    <span v-else>{{scope.row.statusTValue}}</span>
+                                </template>
                             </el-table-column>
                             <el-table-column label="公司">
                                 <template slot-scope="scope">
@@ -569,47 +571,14 @@
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
 .mt20{
     margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
 }
 .pl15{
     padding-left: 15px;
 }
-.pt10{
-    padding-top: 10px;
-}
 .pt5{
     padding-top: 5px;
-}
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
 }
 .fs12{
     font-size: 12px;
@@ -630,26 +599,6 @@
     background: rgba(130, 170, 252, 1);
     color: white;
     border-radius: 3px;
-    cursor: pointer;
-}
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
     cursor: pointer;
 }
 </style>
