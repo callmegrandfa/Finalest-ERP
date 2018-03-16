@@ -21,8 +21,10 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
                         <el-select 
+                        class="ouId" 
+                        :class="{redBorder : validation.hasError('addData.ouId')}" 
+                        v-model="addData.ouId"
                         placeholder=""
-                        v-model="test"
                         >
                             <el-input
                             placeholder="搜索..."
@@ -38,13 +40,16 @@
                             ref="tree"
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
-                            @node-click="nodeClick"
+                            @node-click="nodeClick_ou"
                             >
                             </el-tree>
+                            <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                            </el-option> -->
                             <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
                 </div>    
             </el-col>
 
@@ -71,11 +76,13 @@
                             ref="tree"
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
-                            @node-click="nodeClick"
+                            @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
                             </el-option>
+                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option> -->
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -162,6 +169,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>创建人</label>
                         <el-input 
+                        v-model="info.createdBy"
                         disabled
                         ></el-input>
                     </div>
@@ -175,6 +183,7 @@
                         <el-date-picker
                         type="date"
                         disabled
+                        v-model="info.createdTime"
                         format="yyyy-MM-dd"
                         value-format="yyyy-MM-dd">
                         </el-date-picker>
@@ -191,6 +200,10 @@
       return{
         test:'',
         search_ou:'',
+        item_ou:{
+            id:"",
+            ouFullname:""
+        },
         selectTree_ou:[
         ],
         selectProps_ou: {
@@ -200,6 +213,10 @@
         },
 
         search_area:'',
+        item_area:{
+            id:"",
+            areaName:""
+        },
         selectTree_area:[
         ],
         selectProps_area: {
@@ -208,7 +225,10 @@
             id:'id'
         },
 
-
+        info:{//创建人，创建时间
+            createdBy:'',
+            createdTime:''
+        },
         AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
         addData:{
         "groupId": 1,
@@ -228,7 +248,7 @@
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
             languageId:[],//语种
-            area:[],//上级业务地区
+            // area:[],//上级业务地区
             ou:[],//组织
         },
       }
@@ -254,6 +274,9 @@
     //   },
       'addData.manager': function (value) {//负责人
           return this.Validator.value(value).required().maxLength(20);
+      },
+      'addData.ouId': function (value) {//
+          return this.Validator.value(value).required().integer();
       },
       'addData.areaParentId': function (value) {//上级业务地区
           return this.Validator.value(value).required().integer();
@@ -290,10 +313,10 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            _this.$axios.gets('/api/services/app/AreaManagement/GetAllData',{AreaType:_this.AreaType}).then(function(res){ 
-            // 业务地区
-            _this.selectData.area=res.result;
-            })
+            // _this.$axios.gets('/api/services/app/AreaManagement/GetAllData',{AreaType:_this.AreaType}).then(function(res){ 
+            // // 业务地区
+            // _this.selectData.area=res.result;
+            // })
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 所属组织
             _this.selectData.ou=res.result;
@@ -328,7 +351,14 @@
                     "status":  res.result.status,
                     "remark":  res.result.remark
                     }
-                    console.log(_this.item_area)
+                _this.info={
+                    createdTime:res.result.createdTime,
+                    createdBy:res.result.createdBy,
+                }    
+                _this.item_ou.id=res.result.ouId;
+                 _this.item_ou.ouFullname=res.result.ouFullname;
+                _this.item_area.id=res.result.areaParentId;
+                _this.item_area.areaName=res.result.areaParentId_AreaName;
             },function(res){    
 
             })  
@@ -393,7 +423,7 @@
                  _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.addData)
                 .then(function(res){
                     _this.open('保存成功','el-icon-circle-check','successERP');
-                },function(res){    
+                },function(res){
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
             }
@@ -429,12 +459,25 @@
                 })
             })
         },
-        nodeClick(data,node,self){
+       nodeClick_ou(data,node,self){
             let _this=this;
+            // _this.item_ou.id=data.id;
+            // _this.item_ou.ouFullname=data.ouFullname;
+            // _this.$nextTick(function(){
+            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+            // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 if($(this).attr('date')==data.id){
                     $(this).click()
                 }
+            })
+        },
+        nodeClick_area(data,node,self){
+            let _this=this;
+            _this.item_area.id=data.id;
+            _this.item_area.areaName=data.areaName;
+            _this.$nextTick(function(){
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             })
         },
     }

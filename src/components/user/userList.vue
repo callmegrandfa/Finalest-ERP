@@ -50,10 +50,10 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="count1.id" :label="count1.ouFullname" :value="count1.id" id="OuModifyForm_confirmSelect">
-                        </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                            </el-option>
+                        <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        </el-option>
+                        <!-- <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option> -->
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
@@ -260,6 +260,10 @@
                 search:'',
                 selectTree:[
                 ],
+                item:{
+                    id:'',
+                    ouFullname:'',
+                },
                 selectProps: {
                     children: 'children',
                     label: 'ouFullname',
@@ -285,7 +289,7 @@
                     userGroupId:[],//用户组
                     languageId:[],//语种
                     roles:[],//角色
-                    ou:[],//组织
+                    // ou:[],//组织
                 },
                 options: [{
                     value: '1',
@@ -366,10 +370,10 @@
                 // 语种
                     _this.selectData.roles=res.result.items;
                 })
-                _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-                // 所属组织
-                _this.selectData.ou=res.result;
-                })
+                // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+                // // 所属组织
+                // _this.selectData.ou=res.result;
+                // })
             },
             closeLeft:function(){
                let self = this;
@@ -510,11 +514,17 @@
             },
             nodeClick(data,node,self){
                 let _this=this;
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
+                _this.item.id=data.id;
+                _this.item.ouFullname=data.ouFullname;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 })
+                    
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // })
             },
             see(row){
                 this.$store.state.url='/user/userModify/'+row.id

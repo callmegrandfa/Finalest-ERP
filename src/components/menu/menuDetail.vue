@@ -78,10 +78,10 @@
                             @node-click="selectNodeClick"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="count.id" :label="count.moduleName" :value="count.id" id="menuDetail_confirmSelect">
-                            </el-option> -->
-                            <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            <el-option v-show="false" :key="item.id" :label="item.moduleName" :value="item.id">
                             </el-option>
+                            <!-- <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            </el-option> -->
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.moduleParentId') }}</div>
@@ -250,11 +250,8 @@
                 status:'',
             },
            contain: [{ 
-                value:'1',
-                label: '腾讯'
-            }, {
-                value:'2',
-                label: '阿里'
+                value:'0',
+                label: '测试'
             }],
             componyTree:[],
             defaultProps: {
@@ -264,6 +261,10 @@
             },
             selectTree:[
             ],
+            item:{
+                id:"",
+                moduleName:"",
+            },
             selectProps: {
                 children: 'childNodes',
                 label: 'moduleName',
@@ -280,7 +281,7 @@
             nodeName:'',
             selectData:{//select数据
                 Status001:[],//启用状态
-                menu:[],//菜单
+                // menu:[],//菜单
             },
         }
     },
@@ -326,10 +327,10 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-           _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
-            // 菜单
-            _this.selectData.menu=res.result.items;
-            })
+        //    _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+        //     // 菜单
+        //     _this.selectData.menu=res.result.items;
+        //     })
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -396,11 +397,16 @@
         },
         selectNodeClick(data,node,self){
             let _this=this;
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
+            _this.item.id=data.id;
+            _this.item.moduleName=data.moduleName;
+            _this.$nextTick(function(){
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             })
+            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            //     if($(this).attr('date')==data.id){
+            //         $(this).click()
+            //     }
+            // })
         },
         loadParent(){
             let _this=this;

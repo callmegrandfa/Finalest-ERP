@@ -166,10 +166,10 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="count.id" :label="count.ouFullname" :value="count.id" id="userDetail_confirmSelect">
-                        </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                            </el-option>
+                        <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        </el-option>
+                        <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option> -->
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -329,6 +329,10 @@
         search:'',
         selectTree:[
         ],
+        item:{
+            id:'',
+            ouFullname:''
+        },
         selectProps: {
             children: 'children',
             label: 'ouFullname',
@@ -376,7 +380,7 @@
         checked:[],//已关联角色
         nochecked:[],//未关联角色
         selectData:{//select数据
-            OUType:[],//所属组织
+            // OUType:[],//所属组织
             Status001:[],//启用状态
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
@@ -445,10 +449,10 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-            // 所属组织
-            _this.selectData.OUType=res.result;
-            })
+            // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // // 所属组织
+            // _this.selectData.OUType=res.result;
+            // })
             _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
             // 所属用户组
                 _this.selectData.userGroupId=res.result.items;
@@ -525,11 +529,17 @@
         },
         nodeClick(data,node,self){
             let _this=this;
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
+            _this.item.id=data.id;
+            _this.item.ouFullname=data.ouFullname;
+            _this.$nextTick(function(){
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             })
+            
+            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            //     if($(this).attr('date')==data.id){
+            //         $(this).click()
+            //     }
+            // })
         },
       open(tittle,iconClass,className) {
           this.$notify({
