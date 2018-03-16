@@ -1,11 +1,123 @@
 <template>
-    <div class="customer-infor-wrapper" style="background:#fff;width:100%;float:left">
-        <query :data="querychend"  v-on:listquery="querylog"></query>
+    <div class="commodityProperty" style="background:#fff;width:100%;float:left">
+        <div id="left-box" style="min-width:275px;width:275px;background:#fff;float:left">
+        <el-row class="bg-white"  v-show="ifWidth">
+            <el-col :span="24">
+                <el-row class="h48 pl15">
+                    <el-col :span="18">
+                        <i class="el-icon-search"></i>
+                        <span>查询</span>
+                    </el-col>
+                    <el-col :span="5">
+                        <span class="fs12 open" @click="closeLeft">+ 收起</span>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                <label>属性编码</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="smallBgcolor" style="margin-top:20px">
+                        <el-input placeholder="请录入单号"></el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" >
+                                <label>属性名称</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="smallBgcolor" >
+                        <el-input placeholder="请录入单号"></el-input>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" >
+                                <label>控件类型</label>
+                        </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="bgcolor smallBgcolor">
+                            <el-select  v-model="value" >
+                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+
+                            </el-select>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" >
+                                <label>必填</label>
+                        </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="bgcolor smallBgcolor">
+                            <el-select  v-model="value" >
+                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+
+                            </el-select>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <div class="bgcolor smallBgcolor" >
+                                <label>状态</label>
+                        </div>
+                    </el-col>
+                    <el-col :span="14">
+                        <div class="bgcolor smallBgcolor">
+                            <el-select  v-model="value" >
+                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+
+                            </el-select>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">&nbsp;</el-col>
+                    <el-col style="text-align:center;margin-bottom:20px;" :span="14">
+                        <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+        </div>
         <div id="cp" style="float:left">
         <el-row style="">
             <el-col  class="border-left" :span="24" id="bg-white">
-                <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
-                <tree :datc="componyTree"></tree>
+                <el-col :span="ifWidth?0:2" class="search-block" >
+                    <div @click="openLeft">
+                        <div style="display:inline-block" >
+                            <img src="../../../static/image/common/search_btn.png">
+                        </div>
+                        <div style="display:inline-block;margin-left:2px;font-size:16px;" >
+                            <span>查询</span>
+                        </div>
+                        <div class="out-img" >
+                            <span class="search_info_open" style="margin-left:0">+</span>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="ifWidth?24:22">
+                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                </el-col> 
+                
+                <div style="min-width:200px;width:200px;float:left;">
+                    <el-col :span='24' class="tree-container pl10 pt10">
+                        <el-tree :data="componyTree"></el-tree>
+                    </el-col>
+                </div>
                  <el-row class="table-width pt10 pr10 pb10" style="float:left">
                     <el-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24" class="ml10">
                          <el-table :data="tableData" border style="width: 100%" class="text-center">
@@ -109,73 +221,6 @@ import Tree from '../../base/tree/tree'
                     imgsrc: '../../../static/image/common/bt_stop.png',
                     text: '停用'
                 }]},
-                querychend:{
-                demand:[{
-                    must: '',
-                    title: '属性编码',
-                    place: '请录入单号'                
-                },{
-                    must: '',
-                    title: '属性名称',
-                    place: '请录入单号'                 
-                },{
-                    must: '',
-                    title: '控件类型',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '必填',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '状态',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                }]},
                 options: [{
                     value: '选项1',
                     label: '仓库'
@@ -270,6 +315,7 @@ import Tree from '../../base/tree/tree'
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
+                ifWidth:true,
                 load:true,
                 totalItem:0,//总共有多少条消息
                 tableLoading:true,
@@ -287,6 +333,18 @@ import Tree from '../../base/tree/tree'
             content1.style.minHeight=height1+'px';
         },
         methods:{
+            closeLeft:function(){
+                let self = this;
+                self.ifWidth = false;
+                let obgh=document.getElementById('cp');
+                obgh.style.width="100%";
+            },
+            openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+               let obgh=document.getElementById('cp');
+                obgh.style.width="calc(100% - 275px)";
+            },
             modify(row){
                 this.$store.state.url='/commodity/commodityPropertyDetails/'+row.address5;
                 this.$router.push({path:this.$store.state.url});
@@ -339,6 +397,15 @@ import Tree from '../../base/tree/tree'
 </script>
 
 <style scoped>
+.el-tree{
+        background-color: transparent;
+    }
+    .pt10{
+        padding-top: 10px;
+    }
+    .pl10{
+        padding-left: 10px;
+    }
 .ml10{
     margin-left: 10px;
 }
@@ -354,12 +421,74 @@ import Tree from '../../base/tree/tree'
 .table-width{
     width: calc(100% - 200px);
 }
+.fs14{
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.349019607843137);
+    }
+    .fs12{
+        font-size: 12px;
+    }
+    .open{
+        display: inline-block;
+        width: 49px;
+        height: 22px;
+        line-height: 22px;
+        border: 1px solid #cccccc;
+        color: #cccccc;
+        text-align: center;
+        cursor: pointer;
+    }
+    .pl15{
+        padding-left: 15px;
+    }
+    .search-btn{
+        font-size: 12px;
+        display: inline-block;
+        width: 87px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 3px;
+        background: #4A6997;
+        color: white;
+        cursor: pointer;
+    }
+    .smallBgcolor .el-select{
+        width: 100% !important ;
+        margin-left: 10px;   
+    }
+    .bgcolor label{
+        width: 100% !important ;
+        margin-right: 0; 
+    }
+    .smallBgcolor .el-input--suffix{
+        width: 100% !important ;
+    }
+    .smallBgcolor .el-input{
+        width: 100% !important ;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    .bgcolor{
+        overflow:  visible; 
+    }
+    .bg-white{
+        background: white;
+        border-radius: 3px;
+    } 
+    .h48{
+        height: 48px;
+        line-height: 48px;
+        border-bottom: 1px solid #E4E4E4;
+    }
 </style>
 
 <style>
+.commodityProperty .bgcolor{
+    width: 100%;
+}
 .el-checkbox__inner{
-    width: 16px ;
-    height: 16px ;
+    width: 18px;
+    height: 18px;
     background: #f4f4f5 ;
 }
 .el-checkbox__inner::after{

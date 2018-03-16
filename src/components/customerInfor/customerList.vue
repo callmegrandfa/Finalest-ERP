@@ -222,7 +222,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
-                            <el-table-column prop="contactClassId" label="客户类型"></el-table-column>
+                            <el-table-column prop="contactClassId_ClassName" label="客户类型"></el-table-column>
                             <el-table-column prop="contactWorkPropertyIdTValue" label="客户性质"></el-table-column>
                             <el-table-column prop="isSupplier" label="是否为供应商">
                                 <template slot-scope="scope">
@@ -284,9 +284,9 @@
                     id:'',
                     cuFullname:'',
                 },
-                cuAr:[],//组织单元下拉框
+                cuAr:[],//客户分类下拉框
                 //-----------------------
-                //---组织单元树形下拉-----
+                //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
                     children: 'children',
@@ -297,7 +297,7 @@
                     id:'',
                     ouFullname:'',
                 },
-                ouAr:[],//组织单元下拉框
+                ouAr:[],//所属组织下拉框
                 //-----------------------
                 //---行政地区树形下拉-----
                 adSearch:'',//树形搜索框的
@@ -328,25 +328,7 @@
 
                 adAr:[],//行政地区下拉框
                 propertyAr:'',//客户性质下拉框
-                
-                options: [{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }],
 
-                
                 pageIndex:-1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
@@ -382,10 +364,10 @@
         //---获取数据-------------------------------------------------------
             loadAllList:function(){//获取所有列表数据
                 let self = this;
-                this.$axios.gets('/api/services/app/ContactManagement/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
+                this.$axios.gets('/api/services/app/ContactManagement/QueryByCondition',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
-                    self.allList = res.result.items;
-                    self.total = res.result.totalCount;
+                    self.allList = res.result;
+                    self.total = res.result.length;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
                 },function(res){
                     console.log('err'+res)
@@ -614,6 +596,7 @@
                 $('#op_confirmSelect').click()
             })
         },
+        //-----------------------------------------------------
     }
 }
 </script>

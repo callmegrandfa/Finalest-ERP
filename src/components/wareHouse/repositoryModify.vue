@@ -291,9 +291,9 @@
                                        @focus="showErrprTipsSelect"
                                        class="status">
                                 <el-option v-for="item in status"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
+                                            :key="item.itemValue"
+                                            :label="item.itemName"
+                                            :value="item.itemValue">
                                 </el-option>
                             </el-select>
                         </div>
@@ -480,6 +480,7 @@
         created:function(){
             let self = this;
             self.loadData();
+            self.loadStatus();
         },
         validators: {
             'repositoryData.ouId': function (value) {//所属组织
@@ -590,6 +591,15 @@
                         self.repositoryAddressData = res.result;
                     })
                 }
+            },
+            loadStatus:function(){
+                let self = this;
+                this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                    self.status = res.result;
+                    console.log(self.status);
+                },function(res){
+                    console.log('err'+res)
+                })
             },
             //------------------------------------------------------------
 
@@ -841,16 +851,7 @@
                     value:2,
                     label: '行政地区3'
                 }],
-                status: [{//状态
-                    value:0,
-                    label: '全部'
-                }, {
-                    value:1,
-                    label: '启用'
-                }, {
-                    value:2,
-                    label: '禁用'
-                }],
+                status: [],
 
                 value: '',
                 

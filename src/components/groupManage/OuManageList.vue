@@ -14,7 +14,7 @@
 
                 <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select  v-model="searchData.OuType" placeholder="">
+                    <el-select filterable   v-model="searchData.OuType" placeholder="">
                         <el-option v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -23,7 +23,7 @@
                 <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属公司</label>
-                    <el-select  v-model="searchData.CompanyOuId" placeholder="">
+                    <el-select filterable   v-model="searchData.CompanyOuId" placeholder="">
                         <el-option 
                         v-for="item in selectData.companys" 
                         :key="item.id" 
@@ -35,7 +35,7 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>行政地区</label>
-                    <el-select  v-model="searchData.AreaId" placeholder="">
+                    <el-select v-model="searchData.AreaId" placeholder="">
                         <!-- <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option> -->
                         <el-input
@@ -55,13 +55,14 @@
                             @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
-                            </el-option>
+                            <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id"></el-option>
+                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option> -->
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>启用状态</label>
-                    <el-select  v-model="searchData.Status" placeholder="">
+                    <el-select filterable   v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -69,7 +70,6 @@
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
-                    <span class="search-btn">高级搜索</span>
                 </div>
             </el-col>
             <el-col :span='4' class="border-left" v-loading="treeLoading" id="ouListTree">
@@ -159,7 +159,7 @@
                         </span>
                 </el-dialog>
                 <!-- dialog -->
-                <el-row class="pl10 pt10 pr10 pb10 tableWapper">
+                <el-row>
                     <el-col :span='24'>
                         <el-table 
                         v-loading="tableLoading"
@@ -197,23 +197,25 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="statusTValue" label="状态">
-                                <!-- <template slot-scope="scope">
-                                    <el-checkbox v-model="tableData[scope.$index].status" disabled></el-checkbox>
-                                </template> -->
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
+                                    <span v-else>{{scope.row.statusTValue}}</span>
+                                </template>
                             </el-table-column>
                             <el-table-column label="公司">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==1" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==1" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="业务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==2" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==2" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="财务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==3" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==3" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
@@ -248,6 +250,10 @@
                 search_area:'',
                 selectTree_area:[
                 ],
+                item:{
+                    id:"",
+                    areaName:"",
+                },
                 selectProps_area: {
                     children: 'items',
                     label: 'areaName',
@@ -269,48 +275,11 @@
                     OUType:[],//组织类型
                     Status001:[],//启用状态
                     companys:[],//所属公司
-                    area:[],//业务地区
+                    // area:[],//业务地区
                 },
                 searchDataClick:{},
                 tableSearchData:{},
-                statu:[{
-                    value: '0',
-                    label: '启用'
-                    },{
-                    value: '1',
-                    label: '停用'
-                    },{
-                    value: '2',
-                    label: '冻结'
-                    },],
-                options: [{
-                    value: '1',
-                    label: '选项1'
-                    }, {
-                    value: '2',
-                    label: '选项2'
-                    }, {
-                    value: '3',
-                    label: '选项3'
-                    }, {
-                    value: '4',
-                    label: '选项4'
-                    }, {
-                    value: '5',
-                    label: '选项5'
-                    }, {
-                    value: '6',
-                    label: '选项6'
-                    }, {
-                    value: '7',
-                    label: '选项7'
-                    }, {
-                    value: '8',
-                    label: '选项8'
-                    }, {
-                    value: '9',
-                    label: '选项9'
-                    }],
+               
                 tableData:[],
 
                 componyTree:  [
@@ -397,6 +366,7 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
+                    console.log(res.result.items)
                     _this.$nextTick(function(){
                         _this.getHeight()
                     })
@@ -415,7 +385,7 @@
                },function(res){
                    _this.treeLoading=false;
                })
-                //地区
+                // 地区
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
                 .then(function(res){
                     _this.selectTree_area=res.result;
@@ -521,7 +491,6 @@
                 })
             },
             nodeClick(data){
-                console.log(data)
                  let _this=this;
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuParentid:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
@@ -539,11 +508,17 @@
             },
             nodeClick_area(data,node,self){
                 let _this=this;
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
+                _this.item.id=data.id;
+                _this.item.areaName=data.areaName;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 })
+                
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // })
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
@@ -576,73 +551,26 @@
 </script>
 
 <style scoped>
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
 }
 .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
 .mt20{
     margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
 }
 .pl15{
     padding-left: 15px;
 }
-.pt10{
-    padding-top: 10px;
-}
 .pt5{
     padding-top: 5px;
 }
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
 .fs12{
     font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
@@ -658,35 +586,9 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
 </style>
 
 <style>
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
 .OuListForm .el-button+.el-button{
     margin-left: 0;
 }

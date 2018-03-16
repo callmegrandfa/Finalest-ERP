@@ -125,7 +125,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属用户组</label>
-                    <el-select 
+                    <el-select filterable  
                     class="userGroupId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
@@ -166,10 +166,10 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="count.id" :label="count.ouFullname" :value="count.id" id="userDetail_confirmSelect">
-                        </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                            </el-option>
+                        <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        </el-option>
+                        <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option> -->
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -180,7 +180,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>身份类型</label>
-                    <el-select 
+                    <el-select filterable  
                     class="userType" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userType')}"
@@ -197,7 +197,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>语种</label>
-                    <el-select 
+                    <el-select filterable  
                     class="languageId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
@@ -238,7 +238,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label>状态</label>
-                        <el-select 
+                        <el-select filterable  
                         class="status" 
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"
@@ -284,7 +284,7 @@
                     <label>关联角色</label>
                     <div class="addZoo">
                         <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
-                        <a class="addRole"  v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
+                        <a class="addRole" :key="x.displayName" v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
                     </div>
                 </div>
             </div>
@@ -307,10 +307,10 @@
                         <!-- <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                         <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span> -->
                         <div class="menu_item_wapper menu_item_add">
-                            <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
+                            <span :key="x.displayName" class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                         </div>
                         <div class="menu_item_wapper menu_item_del">
-                            <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
+                            <span :key="x.displayName" class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                         </div>
                         <!-- <el-col :span="24" class="load_more">
                             <button>加载更多</button>
@@ -329,6 +329,10 @@
         search:'',
         selectTree:[
         ],
+        item:{
+            id:'',
+            ouFullname:''
+        },
         selectProps: {
             children: 'children',
             label: 'ouFullname',
@@ -339,17 +343,7 @@
         dialogTableVisible:false,//控制对话框
         menuCheck:true,//未选功能，已选功能
          check:false,//是否授权
-         contain: 
-         [{ 
-            value:0,
-            label: '选项1'
-         },{ 
-            value:1,
-            label: '选项2'
-         }, {
-            value:2,
-            label: '选项3'
-         }],
+        
         addData:{
           "userCode": "",
           "displayName": "",
@@ -376,7 +370,7 @@
         checked:[],//已关联角色
         nochecked:[],//未关联角色
         selectData:{//select数据
-            OUType:[],//所属组织
+            // OUType:[],//所属组织
             Status001:[],//启用状态
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
@@ -445,10 +439,10 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-            // 所属组织
-            _this.selectData.OUType=res.result;
-            })
+            // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // // 所属组织
+            // _this.selectData.OUType=res.result;
+            // })
             _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
             // 所属用户组
                 _this.selectData.userGroupId=res.result.items;
@@ -460,49 +454,48 @@
                 _this.selectData.languageId=res.result.items;
             })
         },
-        showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsSelect(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsRangedate(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.$el).hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-      showErrprTipsTextArea(e){
-            $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
-            })
-      },
+    //     showErrprTips(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //     showErrprTipsSelect(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //     showErrprTipsRangedate(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.$el).hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //   showErrprTipsTextArea(e){
+    //         $('.tipsWrapper').each(function(){
+    //           if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+    //               $(this).addClass('display_block')
+    //           }else{
+    //               $(this).removeClass('display_block')
+    //           }
+    //         })
+    //   },
       filterNode(value, data) {
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
         },
         loadTree(){
             let _this=this;
-            _this.treeLoading=true;
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
@@ -525,11 +518,17 @@
         },
         nodeClick(data,node,self){
             let _this=this;
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
+            _this.item.id=data.id;
+            _this.item.ouFullname=data.ouFullname;
+            _this.$nextTick(function(){
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             })
+            
+            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            //     if($(this).attr('date')==data.id){
+            //         $(this).click()
+            //     }
+            // })
         },
       open(tittle,iconClass,className) {
           this.$notify({

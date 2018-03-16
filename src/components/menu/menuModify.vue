@@ -13,7 +13,6 @@
                         <label><small>*</small>菜单编码</label>
                         <el-input 
                         class="moduleCode" 
-                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.moduleCode')}" 
                         v-model="addData.moduleCode"  
                         placeholder=""></el-input>
@@ -28,7 +27,6 @@
                         <label><small>*</small>菜单名称</label>
                         <el-input 
                         class="moduleName" 
-                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.moduleName')}" 
                         v-model="addData.moduleName"  
                         placeholder=""></el-input>
@@ -41,7 +39,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>子系统</label>
-                        <el-select 
+                        <el-select filterable  
                         class="systemId" 
                         :class="{redBorder : validation.hasError('addData.systemId')}" 
                         placeholder=""
@@ -58,9 +56,8 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>上级菜单</label>
-                    <el-select 
+                    <el-select
                         class="moduleParentId" 
-                        @focus="showErrprTipsSelect"
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                         v-model="addData.moduleParentId"  >
@@ -81,10 +78,10 @@
                             @node-click="selectNodeClick"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="count.id" :label="count.moduleName" :value="count.id" id="menuModify_confirmSelect">
-                            </el-option> -->
-                            <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            <el-option v-show="false" :key="item.id" :label="item.moduleName" :value="item.id">
                             </el-option>
+                            <!-- <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            </el-option> -->
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.moduleParentId') }}</div>
@@ -95,26 +92,37 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select 
+                        <el-select filterable  
                         v-model="addData.status"
+                        :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder="">
                             <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                             </el-option>
                         </el-select>
                     </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
 
             <el-col :span="24"  class="pt15">
                 <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
+                    <div class="bgcolor bgLongWidth" style="position: relative;">
                         <label>图标</label>
-                        <el-input 
+                        <!-- <el-input 
                         class="ico" 
-                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.ico')}" 
                         v-model="addData.ico"  
-                        placeholder=""></el-input>
+                        placeholder=""></el-input> -->
+                        <i :class="addData.ico" aria-hidden="true" style="position: absolute;right: 35px;z-index: 10;top: 6px;font-size: 25px;"></i>
+                        <el-select filterable  
+                        class="ico" 
+                        :class="{redBorder : validation.hasError('addData.ico')}" 
+                        placeholder=""
+                        v-model="addData.ico">
+                            <el-option v-for="item in $store.state.icon" :key="item.code" :label="item.code" :value="item.code">
+                                {{item.code}}<i style="float:right;line-height:34px;" :class="item.code" aria-hidden="true"></i>
+                            </el-option>
+                        </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ico') }}</div>
                 </div>    
@@ -126,7 +134,6 @@
                         <label>web地址</label>
                         <el-input 
                         class="url" 
-                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.url')}" 
                         v-model="addData.url"  
                         placeholder=""></el-input>
@@ -141,10 +148,13 @@
                         <label>备注</label>
                         <el-input
                             type="textarea"
+                            :class="{redBorder : validation.hasError('addData.remark')}" 
                             :autosize="{ minRows: 4, maxRows: 10}"
+                            v-model="addData.remark"
                             placeholder="">
                         </el-input>
                     </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.remark') }}</div>
                 </div>    
             </el-col>
 
@@ -252,17 +262,18 @@
                 // "seq": 0
             },
             contain: [{ 
-                value:'1',
-                label: '腾讯'
-            }, {
-                value:'2',
-                label: '阿里'
+                value:0,
+                label: '测试'
             }],
             componyTree:[],
             defaultProps: {
                 children: 'children',
                 label: 'displayName',
                 value:'permissionName'
+            },
+            item:{
+                id:"",
+                moduleName:""
             },
             selectTree:[
             ],
@@ -294,6 +305,9 @@
       'addData.moduleName': function (value) {//菜单名称
          return this.Validator.value(value).required().maxLength(50);
       },
+      'addData.status': function (value) {//
+         return this.Validator.value(value).required().integer();
+      },
       'addData.ico': function (value) {//图标
          return this.Validator.value(value).required().maxLength(200);
       },
@@ -305,6 +319,9 @@
       },
       'addData.url': function (value) {//web地址
          return this.Validator.value(value).required().maxLength(1000);
+      },
+      'addData.remark': function (value) {//
+         return this.Validator.value(value).required().maxLength(200);
       }
     },
     created:function(){
@@ -314,6 +331,7 @@
             _this.loadParent()
             _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
+                console.log(res)
                 if(res.result.permissionDtos!=null&&res.result.permissionDtos.length>0){
                     _this.checked=res.result.permissionDtos;
                 }
@@ -329,7 +347,11 @@
                     "moduleFullPathId": res.result.moduleFullPathId,
                     "moduleFullPathName": res.result.moduleFullPathName,
                     "seq": res.result.seq,
+                    "remark":res.result.remark,
+                    'status':res.result.status
                 }
+                _this.item.id=res.result.moduleParentId;
+                _this.item.moduleName=res.result.moduleParentId_ModuleName;
                 _this.loadPermission();
             },function(res){
             })
@@ -416,11 +438,16 @@
         },
          selectNodeClick(data,node,self){
             let _this=this;
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
+            _this.item.id=data.id;
+            _this.item.moduleName=data.moduleName;
+            _this.$nextTick(function(){
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             })
+            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            //     if($(this).attr('date')==data.id){
+            //         $(this).click()
+            //     }
+            // })
         },
         loadParent(){
             let _this=this;
@@ -498,6 +525,7 @@
                         permissions.push(value.permissionName)
                     })
                     _this.addData.permissions=permissions;
+                    console.log(_this.addData)
                     // _this.addData.permissionDtos=_this.checked;//权限
                     _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
                     .then(function(res){

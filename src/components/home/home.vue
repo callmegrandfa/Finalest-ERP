@@ -1,10 +1,10 @@
 <template>
     <div class="home-data">
     	<div class="home">
-    		<el-row  class="pd10 mr10">
+    		<el-row  class="pd10">
 	    		<el-col :xl="12" :lg="12" :md="14" :sm="16" :xs="18">
 	    			<div class="left">
-	    				<i class="trumpet"></i>
+	    				<i class="trumpet left"></i>
 	    				<span>消息提醒：</span>
 	    			</div>
 	    			<div class="left indent relative" style="height:21px;width:300px;">
@@ -35,63 +35,61 @@
     	</div>
     	<div class="home-content">
 	    	<el-row>
-	    		<el-col :span="6" v-for="item in items" :key="item.namber" class="home-content-box">
+	    		<el-col :xs="12" :sm="12" :md="6" :lg="6" :xl="6" v-for="item in items" :key="item.namber" class="home-content-box">
 	    			<div class="d1">
 	    				<h4>{{item.title}}</h4>
 	    				<p>{{item.namber}}<span style="font-size:14px">{{item.unit}}</span></p>
-	    			</div>
-	    			
+	    			</div>	    			
 	    		</el-col>
 	    	</el-row>	
+	    	<el-row>
+	    		<el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="center">
+	    			<div class="d1">
+	    			<h4 class="title">品牌销售</h4>
+	    			<div class="relative name">
+	    				<span class="absolute">乔丹</span>
+	    				<span class="absolute red">kapaa</span>
+	    				<span class="absolute">安踏</span>
+	    				<span class="absolute">361</span>
+	    				<span class="absolute">李宁</span>
+	    				<span class="absolute">Nike</span>
+	    				<span class="absolute">adidas</span>
+	    				<span class="absolute">特步</span>
+	    				<canvas class="mycanvas1" width="270" height="270">
+	    					
+	    				</canvas>
+	    				<canvas class="mycanvas" ref="mycanvas" width="270" height="270">
+	    					
+	    					</canvas>
+	    				
+	       			</div>
+	    			</div>
+	    		</el-col>
+	    		<el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="center">
+	    			<div class="d1">
+	    				<h4 class="title">货品销售排行</h4>
+		    			
+	    			<div class="relative name">
+	    				<span class="absolute">乔丹</span>
+	    				<span class="absolute">kapaa</span>
+	    				<span class="absolute">安踏</span>
+	    				<span class="absolute">361</span>
+	    				<span class="absolute">李宁</span>
+	    				<span class="absolute">Nike</span>
+	    				<span class="absolute">adidas</span>
+	    				<span class="absolute">特步</span>
+	    				<canvas class="mycanvas1" width="270" height="270">
+	    					
+	    				</canvas>
+	    				<canvas class="mycanvas" ref="mycanvas" width="270" height="270" >
+	    					
+	    					</canvas>
+	    				
+	       			</div>
+	    			</div>
+	    		</el-col>
+	    	</el-row>
 	    </div>
-    	<el-row>
-    		<el-col :span="12" class="center">
-    			<h4 class="title">品牌销售</h4>
-    			<div class="relative name">
-    				<span class="absolute">乔丹</span>
-    				<span class="absolute red">kapaa</span>
-    				<span class="absolute">安踏</span>
-    				<span class="absolute">361</span>
-    				<span class="absolute">李宁</span>
-    				<span class="absolute">Nike</span>
-    				<span class="absolute">adidas</span>
-    				<span class="absolute">特步</span>
-    				<canvas class="mycanvas1" width="270" height="270">
-    					
-    				</canvas>
-    				<canvas class="mycanvas" ref="mycanvas" width="270" height="270">
-    					
-    					</canvas>
-    				
-       			</div>
-    			
-    		</el-col>
-    		<el-col :span="12" class="center">
-    			
-    				<h4 class="title">货品销售排行</h4>
-	    			
-    			<div class="relative name">
-    				<span class="absolute">乔丹</span>
-    				<span class="absolute">kapaa</span>
-    				<span class="absolute">安踏</span>
-    				<span class="absolute">361</span>
-    				<span class="absolute">李宁</span>
-    				<span class="absolute">Nike</span>
-    				<span class="absolute">adidas</span>
-    				<span class="absolute">特步</span>
-    				<canvas class="mycanvas1" width="270" height="270">
-    					
-    				</canvas>
-    				<canvas class="mycanvas" ref="mycanvas" width="270" height="270" >
-    					
-    					</canvas>
-    				
-       			</div>
-    			
-    			
-    			
-    		</el-col>
-    	</el-row>
     </div>
 </template>
 <script>
@@ -252,16 +250,17 @@
 		background: url('../../../static/image/home/u28.png');
 		display: inline-block;
 		width: 20px;
-		height: 17px;
+		height: 17px;margin-right:10px;
 	}
 	.indent{
 		height: 21px;
 		overflow: hidden;
 	}
 	.pd10{
-		padding:5px 10px;
+		padding:10px;
 		background: #fff;
 		border-radius: 5px;
+		margin-bottom: 10px;;
 	}
 	.tal{
 		text-align: right;
@@ -275,12 +274,12 @@
 	.home-content-box{
 		height: 170px;
 	}
+	.home-content{margin: 0 -10px;}
 	.home-content-box .d1{
-		width: 97%;
-		margin-top: 10px;
 		height: 150px;
 		background: #fff;
 		border-radius: 5px;
+		margin: 10px;
 	}
 	.home-content-box .d1 h4{
 		line-height: 40px;
@@ -292,7 +291,8 @@
 		font-weight: bold;
 		margin-left: 20px;
 		margin-top: 40px;	
-		font-size: 50px
+		font-size: 50px;
+		font-family: fantasy;
 	}
 	.home-content-box:nth-child(1){
 		color: #33CCCC;
@@ -336,12 +336,12 @@
 	}
 	.center{
 		text-align: center;
-		background: #fff;
-		width: 49%;
+		/*width: 49%;
 		margin-right: 1%;
-		border-radius: 10px;
 		height: 410px;
+		border-radius: 10px;*/
 	}
+	.center .d1{margin: 10px;border-radius: 5px;background: #fff;}
 	 .title{
 		text-align: left;
 		padding-top: 15px;
@@ -349,6 +349,7 @@
 	}
 	.name{
 		margin-top: 60px;
+		margin-bottom: 60px;
 		display: inline-block;
 	}
 	.name span{

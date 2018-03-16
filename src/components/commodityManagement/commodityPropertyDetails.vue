@@ -1,10 +1,127 @@
 <template>
-    <div class="group-management-wrapper">
+    <div class="commodityPropertyDetails">
         <el-row class="bg-white">
 
             <el-col :span='24' class="border-left">
                 <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
-                <textbox :data="textboxipt"></textbox>
+                <el-row class="pl10 pr10">
+                    <el-col :span="24">
+                        <el-row>
+                            <el-col :span="2">
+                                <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                        <label >上级属性</label>
+                               </div>
+                            </el-col>
+                            <el-col :span="5">
+                                <div class="smallBgcolor" style="margin-top:20px">
+                                <el-input placeholder="请输入菜单编码" v-model="addData.data"></el-input>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-row>
+                            <el-col :span="2">
+                                <div class="bgcolor smallBgcolor" style="margin-top:0px">
+                                        <label><small>*</small>属性编码</label>
+                               </div>
+                            </el-col>
+                            <el-col :span="5" >
+                                <div class="smallBgcolor" style="margin-top:0px">
+                                <el-input placeholder="请输入菜单编码" v-model="addData.data" id="coding" ></el-input>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-row>
+                            <el-col :span="2">
+                                <div class="bgcolor smallBgcolor" style="margin-top:0px">
+                                       <label> <small>*</small>属性名称</label>
+                               </div>
+                            </el-col>
+                            <el-col :span="5" id="name">
+                                <div class="smallBgcolor" style="margin-top:0px">
+                                <el-input placeholder="" v-model="addData.address"></el-input>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-row>
+                            <el-col :span="2">
+                                <div class="bgcolor smallBgcolor" style="margin-top:0px">
+                                        <label><small>*</small>控件类型</label>
+                               </div>
+                            </el-col>
+                            <el-col :span="5" id="type">
+                                <div class="bgcolor smallBgcolor" style="margin-top:0px">
+                                    <el-select  v-model="addData.address1" >
+                                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                    </el-option>
+
+                                    </el-select>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                <el-row class="pl10  pr10">
+                    <el-col :span="24">
+                        <el-row>
+                            <el-col :span="2">
+                                <div class="bgcolor smallBgcolor" style="margin-top:0px">
+                                        <label><small>*</small>数据源</label>
+                               </div>
+                            </el-col>
+                            <el-col :span="5">
+                                <div class="smallBgcolor" style="margin-top:0px">
+                                <el-input placeholder="" v-model="addData.address2"></el-input>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-row>
+                            <el-col :span="2">
+                                <div class="bgcolor smallBgcolor" style="margin-top:0px">
+                                        <label>显示顺序</label>
+                               </div>
+                            </el-col>
+                            <el-col :span="5" id="order">
+                                <div class="smallBgcolor" style="margin-top:0px">
+                                <el-input placeholder="" v-model="addData.address3"></el-input>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-row>
+                            <el-col :span="2">
+                                <div class="bgcolor smallBgcolor" style="margin-top:0px">
+                                        <label>级联属性</label>
+                               </div>
+                            </el-col>
+                            <el-col :span="5">
+                                <div class="smallBgcolor" style="margin-top:0px">
+                                <el-input placeholder="" v-model="addData.address4"></el-input>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-col :span="2">
+                            <div class="bgcolor smallBgcolor" style="margin-top:0px">
+                                    <label>状态</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="5" id="state">
+                            <div class="smallBgcolor" style="margin-top:0px">
+                            <el-input placeholder="" v-model="addData.address5"></el-input>
+                            </div>
+                        </el-col>
+                    </el-col>
+                </el-row>
                 <el-row class="pl10 pr10">
 
                     <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6" style="margin-left:80px">
@@ -22,7 +139,54 @@
                     <el-col :span="24" style="margin-bottom:30px;">
                         <h4>审计信息</h4>
                     </el-col>
-                    <textbox :data="textboxipt1"></textbox>
+                    <el-col :span="6">
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                    <label>创建人</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="15">
+                            <div class="smallBgcolor" style="margin-top:20px">
+                            <el-input placeholder=""></el-input>
+                            </div>
+                        </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                    <label>创建时间</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="15">
+                            <div class="smallBgcolor" style="margin-top:20px">
+                            <el-input placeholder=""></el-input>
+                            </div>
+                        </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                    <label>修改人</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="15">
+                            <div class="smallBgcolor" style="margin-top:20px">
+                            <el-input placeholder=""></el-input>
+                            </div>
+                        </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-col :span="8">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                    <label>修改时间</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="15">
+                            <div class="smallBgcolor" style="margin-top:20px">
+                            <el-input placeholder=""></el-input>
+                            </div>
+                        </el-col>
+                    </el-col>
                 </el-row>
             </el-col>
         </el-row>
@@ -197,6 +361,30 @@ import Textbox from '../../base/textbox/textbox'
 </script>
 
 <style scoped>
+.smallBgcolor .el-select{
+        width: 100% !important ;
+        margin-left: 10px;
+    }
+    .bgcolor label{
+        width: 100% !important ;
+        margin-right: 0; 
+    }
+    .smallBgcolor .el-input--suffix{
+        width: 100% !important ;
+    }
+    .smallBgcolor .el-input{
+        width: 100% !important ;
+        margin-left: 10px;
+    }
+    .input-need{
+        outline: none;
+        border:none;
+        width: 100%;
+        height: 28px;
+    }
+    .bgcolor{
+        overflow:  visible; 
+    }
 .bg-white{
     background: white;
     border-radius: 3px;
@@ -216,10 +404,16 @@ import Textbox from '../../base/textbox/textbox'
 </style>
 
 <style>
+.commodityPropertyDetails .smallBgcolor .el-input input{
+    height: 33px !important;
+}
+.commodityPropertyDetails .bgcolor{
+        width: 100%; 
+    }
 /* 重写checkbox */
 .el-checkbox__inner{
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius:50% !important; 
 }
 .el-checkbox__inner::after{

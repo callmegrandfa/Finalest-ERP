@@ -1,35 +1,36 @@
 <template>
     <el-row class="loginWrapper" id="loginWrapper">
         
-        <el-col class="leftDiv">
+        <el-col :xm="24" :sm="12" :md="13" :lg="13" :xl="15" class="leftDiv">
              <el-col :span="24">
                 <el-col :span="10" class="ERP" :offset="1">
                     <span>恒康智能云</span>
                 </el-col>
             </el-col>
         </el-col>
-        <el-col class="loginForm">
+        <el-col :sm="12" :md="11" :lg="11" :xl="9" type="flex" class="row-bg loginForm" justify="center">
            
             <div class="code">
                  <img src="../../static/image/login/QRcode.png">
             </div>
-            <el-col :span="3" class="choose">
-               <img src="../../static/image/login/setting.png" alt="设置"><span>设置</span>
-            </el-col>
-            <el-col :span="3" class="choose">
-               <img src="../../static/image/login/language.png" alt="语言"><span>语言</span>
-            </el-col>
             
-                <el-col :span="24" class="formInput name">
+            <el-row type="flex" class="row-bg topr" justify="end">
+			  <el-col class="choose"><img src="../../static/image/login/setting.png" alt="设置"><span>设置</span></el-col>
+			  <el-col class="choose"><img src="../../static/image/login/language.png" alt="语言"><span>语言</span></el-col>
+			</el-row>
+            
+            <el-col :sm="12" :md="12" :lg="12" :xl="12" :offset="6" class="lgbox">   
+            	<el-col class="lgfrom">
+                <el-col class="formInput name">
                     <el-input placeholder="Admin" v-model="login.userNameOrEmailAddress"></el-input>
                 </el-col>
-                <el-col :span="24" class="formInput psw">
+                <el-col class="formInput psw">
                    <el-input placeholder="123qwe" v-model="login.password"></el-input>
                 </el-col>
-                <el-col :span="24" class="formInput bt">
+                <el-col class="formInput bt">
                    <button @click="loginAjax">登&nbsp;&nbsp;录</button> 
                 </el-col>
-                <el-col :span="24" class="formInput go">
+                <el-col class="formInput go">
                     <div class="operate">
                         <el-col :span="12" class="remember">
                             <i class="fa fa-check-circle" aria-hidden="true" :class="{check : ischecked}" @click="ischecked = !ischecked"></i>
@@ -39,7 +40,7 @@
                     </div>
                    
                 </el-col>
-                <el-col :span="24" class="formInput thirdParty">
+                <el-col class="formInput thirdParty">
                     <div class="thirds">
                         <el-col :span="2" :offset="4">
                             <hr>
@@ -52,13 +53,15 @@
                         </el-col>   
                     </div>    
                 </el-col>
-                <el-col class="formInput lg" :span="24">
+                <el-col class="formInput lg">
                     <div class="thirdLogo">
                         <div class="circleLogin weChat" alt="微信"></div>
                         <div class="circleLogin DD" alt="钉钉"></div>
                         <div class="circleLogin QQ" alt="QQ"></div>
                     </div>    
                 </el-col>
+            	</el-col>
+            </el-col>
                 <el-col :span="24" class="copyright">
                     <p>版权制作 广州恒康信息科技有限公司</p>
                 </el-col>
@@ -139,7 +142,9 @@ export default {
 }
 </script>
 <style scoped>
-    
+	.topr{padding-right: 1.5rem;position: fixed;right: 0px;}
+    .loginWrapper .loginForm .lgbox{position: relative;height: 100%;}
+    .loginWrapper .loginForm .lgfrom{position:absolute;top:50%;margin-top: -180px;min-width: 288px;}
     .loginWrapper{
         width: 100%;
         height: 100%;
@@ -149,8 +154,8 @@ export default {
     }
     .loginWrapper .leftDiv{
         position: relative;
-        width: 51%;
-        float: left;
+        /*width: 51%;
+        float: left;*/
         height: 100%;
         background-image: url(../../static/image/login/product.png);
         background-repeat: no-repeat;
@@ -158,8 +163,8 @@ export default {
         background-position: center;
     }
     .loginWrapper .loginForm{
-        float: left;
-        width: 49%;
+        /*float: left;
+        width: 49%;*/
         height: 100%;
         background-repeat: no-repeat;
         background-position: right bottom;
@@ -175,8 +180,8 @@ export default {
         position: absolute;
         right: 0;
         bottom: 0;
-        width: 94px;
-        height: 95px;
+        width: 50px;
+        height: 50px;
         background-repeat: no-repeat;
         background-size: contain;
         background-position: right bottom;
@@ -186,10 +191,16 @@ export default {
         position: relative;
         right: 0;
         bottom: 0;
+        width: 100%;;
     }
     .loginWrapper .loginForm .choose{
         float: right;
         cursor: pointer;
+        margin-top: 2rem!important;
+        margin-top: 20px;
+        width: auto;
+		padding-left: 1rem;
+		padding-right: 1rem;
     }
     .loginWrapper .loginForm .choose span{
         font-size: 16px;
@@ -199,8 +210,8 @@ export default {
     }
     .loginWrapper .loginForm .choose img{
         vertical-align: sub;
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
         margin-right: 10px;
     }
     .loginWrapper .ERP{
@@ -210,6 +221,8 @@ export default {
         background-image: url(../../static/image/login/ERP.png);
         background-repeat: no-repeat;
         background-size: contain;
+        margin-top: 2rem!important;
+        margin-top:20px;        
     }
     .loginWrapper .ERP span{
         color: #fff;
@@ -219,9 +232,11 @@ export default {
         right: -30px;
     }
     .loginWrapper .formInput{
-        position: absolute;
+        /*position: absolute;*/
+       margin-bottom: 1rem!important;
+       margin-bottom:18px ;
     }
-    .loginWrapper .formInput.name{
+    /*.loginWrapper .formInput.name{
         bottom: 66%;
     }
     .loginWrapper .formInput.psw{
@@ -238,7 +253,7 @@ export default {
     }
     .loginWrapper .formInput.lg{
         bottom: 30%;
-    }
+    }*/
      .loginWrapper .copyright{
         position: absolute;
         bottom: 6%;
@@ -246,9 +261,9 @@ export default {
     .loginWrapper .formInput .el-input,
     .loginWrapper .formInput button,
     .loginWrapper .operate{
-        width: 70%;
+        /*width: 70%;
+        left: 15%;*/
         position: relative;
-        left: 15%;
     }
 
     .loginWrapper .formInput button{
@@ -263,6 +278,7 @@ export default {
         display: inline-block;
         font-size: inherit;
         height: 40px;
+        width: 100%;
         line-height: 1;
         outline: 0;
         padding: 0 15px;
@@ -299,16 +315,16 @@ export default {
         text-align: center;
     }
     .loginWrapper .thirdParty .thirds{
-        width: 40%;
+        /*width: 40%;*/
         position: relative;
         margin: auto;
     }
     .loginWrapper .thirdLogo{
-        width: 26%;
+        /*width: 26%;*/
         margin: auto;
         overflow: hidden;
         position: relative;
-        height: 58px    ;
+        min-height: 58px    ;text-align: center;
     }
     .loginWrapper .circleLogin{
         width: 58px;
@@ -319,12 +335,13 @@ export default {
         background-repeat: no-repeat;
         background-position: center;
         cursor: pointer;
-        position: absolute;
+        display: inline-block;margin: 1rem;
+        /*position: absolute;*/
     }
     
-    .loginWrapper .circleLogin:first-child{
+    /*.loginWrapper .circleLogin:first-child{
         margin-left: 0;
-    }
+    }*/
     .weChat{
         background-image: url(../../static/image/login/wechat.png);
         left: 0;

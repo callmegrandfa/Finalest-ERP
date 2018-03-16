@@ -378,8 +378,8 @@
 <style>
 /* 重写checkbox */
 .list-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     border-radius:50% !important; 
 }
 .list-wrapper .el-checkbox__inner::after{

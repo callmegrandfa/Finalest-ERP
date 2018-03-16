@@ -380,8 +380,8 @@ import Btm from '../../base/btm/btm'
 }*/
 /* 重写checkbox */
 .tenant-management-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     border-radius:50% !important; 
 }
 .tenant-management-wrapper .el-checkbox__inner::after{

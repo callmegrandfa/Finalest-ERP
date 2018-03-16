@@ -395,8 +395,8 @@ export default {
     border-radius: 2px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background-color: #fff;
     z-index: 1;

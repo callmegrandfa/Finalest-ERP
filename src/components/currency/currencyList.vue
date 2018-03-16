@@ -149,19 +149,7 @@
         data(){
             return {
                 allList:[],//所有数据列表
-                statusAr:[{
-                    itemName:'停用',
-                    itemValue:0,
-                    itemCode:'Disabled'
-                },{
-                    "itemCode": "Enabled",
-                    "itemName": "启用",
-                    "itemValue": 1
-                },{
-                    "itemCode": "Frozen",
-                    "itemName": "冻结",
-                    "itemValue": 2
-                }],//状态下拉框数据
+                statusAr:[],//状态下拉框数据
                 
                 updateList:[],//修改的数据
                 addList:[],//新增的数据
@@ -196,7 +184,7 @@
         },
         created:function(){
             this.loadAllList();      
-            // this.loadSelect();
+            this.loadSelect();
         },
         methods:{
         //---获取数据-------------------------------------------------------
@@ -220,15 +208,15 @@
             },
         //------------------------------------------------------------------
         //---获取下拉数据----------------------------------------------------
-        // loadSelect:function(){
-        //     let self = this;
-        //     this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
-        //         self.statusAr = res.result;
-        //         console.log(self.statusAr);
-        //     },function(res){
-        //         console.log('err'+res)
-        //     })
-        // },
+        loadSelect:function(){
+            let self = this;
+            this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
+                self.statusAr = res.result;
+                console.log(self.statusAr);
+            },function(res){
+                console.log('err'+res)
+            })
+        },
         //------------------------------------------------------------------
 
         // ---创建数据，修改数据---------------------------------------------
@@ -304,6 +292,8 @@
                         }).then(() => {
                             self.pageIndex=val;
                             self.page = val;
+                            self.updateList = [];
+                            self.ar = [];
                             self.loadAllList();
                         }).catch(() => {
                             self.pageIndex=self.turnPage;

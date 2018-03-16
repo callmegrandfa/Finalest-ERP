@@ -765,8 +765,8 @@ import Textbox from '../../base/textbox/textbox'
 }
 /* 重写checkbox */
 .customer-infor-wrapper .el-checkbox__inner{
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius:50% !important; 
    background-color:  #f4f4f5;
 }
