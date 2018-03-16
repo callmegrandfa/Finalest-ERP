@@ -501,8 +501,8 @@
 }
 /* 重写checkbox */
 .tree-container .el-checkbox__inner {
-        width: 12px;
-        height: 12px;
+    width: 18px;
+    height: 18px;
         border-radius: 0;
     }   
    .tree-container .el-checkbox__inner::after{
