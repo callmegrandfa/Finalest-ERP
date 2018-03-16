@@ -41,46 +41,109 @@
  <el-collapse-transition>
      <div v-show="ifShow">   
         <el-row>
-            <el-col :span="24" class="getPadding"> 
                 <!-- <div class="errorTips">
                     <p class="msgDetail">错误提示：名称不能为特殊字符</p>
                     <div class="closeMsg"><i class="fa fa-times" aria-hidden="true"></i></div>
                 </div> -->
-                <div class="bgcolor">
-                    <label><small>*</small>角色编码</label>
-                    <el-input v-model="addData.roleCode" placeholder=""></el-input>
-                </div> 
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth"><label>
+                            <small>*</small>角色编码</label>
+                            <el-input 
+                            class="roleCode" 
+                            :class="{redBorder : validation.hasError('addData.roleCode')}" 
+                            v-model="addData.roleCode" 
+                            placeholder=""></el-input>
+                        </div>
+                        <div class="error_tips_info">{{ validation.firstError('addData.roleCode') }}</div>
+                    </div>
+                </el-col>
 
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth"><label>
+                            <small>*</small>角色名称</label>
+                            <el-input 
+                            class="displayName" 
+                            :class="{redBorder : validation.hasError('addData.displayName')}" 
+                            v-model="addData.displayName" 
+                            placeholder=""></el-input>
+                        </div>
+                        <div class="error_tips_info">{{ validation.firstError('addData.displayName') }}</div>
+                    </div>
+                </el-col>
+                
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>所属组织</label>
+                        <el-select 
+                        class="ouId" 
+                        placeholder=""
+                        :class="{redBorder : validation.hasError('addData.ouId')}"
+                        v-model="addData.ouId">
+                            <!-- <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
+                            </el-option> -->
+                            <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search_ou">
+                            </el-input>
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="selectTree_ou"
+                            :props="selectProps_ou"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree_ou"
+                            :filter-node-method="filterNode_ou"
+                            :expand-on-click-node="false"
+                            @node-click="nodeClick_ou"
+                            >
+                            </el-tree>
+                            <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                            </el-option>
+                            <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                                </el-option> -->
+                        </el-select>
+                        </div>
+                        <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
+                    </div>
+                </el-col>
 
-                <div class="bgcolor">
-                    <label><small>*</small>角色名称</label>
-                    <el-input v-model="addData.displayName" placeholder=""></el-input>
-                </div>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label>状态</label>
+                            <el-select filterable  
+                            class="status" 
+                            placeholder=""
+                            :class="{redBorder : validation.hasError('addData.status')}"
+                            v-model="addData.status">
+                                <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="error_tips_info">{{ validation.firstError('addData.status') }}</div>
+                    </div>
+                </el-col>
 
-
-                <div class="bgcolor">
-                    <label><small>*</small>所属组织</label>
-                    <el-select v-model="addData.ouId" placeholder="">
-                        <el-option v-for="item in customerNature" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-
-
-                <div class="bgcolor">
-                    <label><small>*</small>状态</label>
-                    <el-select v-model="addData.status" placeholder="">
-                        <el-option v-for="item in customerNature" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="bgcolor moreWidth">
-                    <label>备注</label>
-                    <el-input 
-                    v-model="addData.remark"
-                    placeholder=""></el-input>
-                </div>
-            </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label>备注</label>
+                            <el-input
+                            class="remark" 
+                            :class="{redBorder : validation.hasError('addData.remark')}"
+                            v-model="addData.remark"
+                            type="textarea"
+                            :autosize="{ minRows: 4, maxRows: 10}"
+                            placeholder="">
+                            </el-input>
+                        </div>
+                        <div class="error_tips_info">{{ validation.firstError('addData.remark') }}</div>
+                    </div>
+                </el-col>
         </el-row>
      </div>
  </el-collapse-transition>
@@ -97,7 +160,7 @@
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
-                        <a class="addRole"  v-for="x in roleChecked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
+                        <a class="addRole" :key="x.displayName" v-for="x in roleChecked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
                         <!-- dialog -->
                         <el-dialog :visible.sync="dialogRole" class="dialogRole">
                             <template slot="title">
@@ -115,10 +178,10 @@
                             </template>
                             <el-col :span="24">
                                 <div class="menu_item_wapper menu_item_add">
-                                    <span class="menu_item" v-for="x in roleChecked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
+                                    <span :key="x.displayName" class="menu_item" v-for="x in roleChecked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                                 </div>
                                 <div class="menu_item_wapper menu_item_del">
-                                    <span class="menu_item" v-for="x in roleNochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
+                                    <span :key="x.displayName" class="menu_item" v-for="x in roleNochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                                 </div>
                                 <!-- <el-col :span="24" class="load_more">
                                     <button>加载更多</button>
@@ -396,6 +459,22 @@
 export default({
     data() {
         return{
+            search_ou:'',
+            selectTree_ou:[
+            ],
+            item_ou:{
+                id:'',
+                ouFullname:''
+            },
+            selectProps_ou: {
+                children: 'children',
+                label: 'ouFullname',
+                id:'id'
+            },
+
+            selectData:{//select数据
+                Status001:[],//启用状态
+            },
             ifShow:true, 
             moduleList:['新增','删除','修改'],
             auditInformation:{//审计信息
@@ -480,14 +559,50 @@ export default({
 
         }
     },
+     validators: {
+      'addData.roleCode': function (value) {//用户编码
+         return this.Validator.value(value).required().maxLength(50)
+      },
+      'addData.displayName': function (value) {//用户名称
+         return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.ouId': function (value) {//所属组织
+          return this.Validator.value(value).required().integer();
+      },
+      'addData.status': function (value) {//状态
+         return this.Validator.value(value).required().integer();
+      },
+      'addData.remark': function (value) {//备注
+         return this.Validator.value(value).required().maxLength(200);
+      },
+
+    },
     created () {
       let _this=this;
+      _this.loadTree_ou();
+      _this.getSelectData();
       _this.loadRoleTable();
       _this.loadOuTable();
       _this.loadFnTable();
       _this.fnLoadTree();
     },
+    watch: {
+      search_ou(val) {
+        this.$refs.tree_ou.filter(val);
+      }
+    },
     methods:{
+        getSelectData(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+            // 启用状态
+            _this.selectData.Status001=res.result;
+            })
+        },
+        back(){
+             this.$store.state.url='/role/roleList/default'
+             this.$router.push({path:this.$store.state.url})
+        },
         getRoleData(){
            let _this=this;
            _this.$axios.gets('/api/services/app/Role/Get',{id:_this.$route.params.id})
@@ -752,285 +867,37 @@ export default({
             }
             return result;
         },
-        //---创建完成后刷新页面获取数据----------------------------------
-        loadData:function(){
-            let self = this;
-            this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.backId}).then(function(res){
-                    // console.log(res);
-                    self.createContactParams = res.result;
-            })
-            //获取所有的银行信息，也可以用groupid获取，
-            this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                // console.log(res);
-                self.bankData = res.result.items;
-            })
-            //获取所有的地址信息，也可以用contactId获取
-            this.$axios.gets('/api/services/app/ContactAddressManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                console.log(res);
-                self.addressData = res.result.items;
+        filterNode_ou(value, data) {
+            if (!value) return true;
+            return data.ouFullname.indexOf(value) !== -1;
+        },
+        loadTree_ou(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+            .then(function(res){
+                _this.selectTree_ou=res.result;
+                _this.loadIcon();
+            },function(res){
             })
         },
-        //------------------------------------------------------------
-
-        //---跳转修改页------------------------------------------------
-        goModify:function(id){//点击跳转修改页modify
-            // this.$store.state.url='/customer/customerModify/default'
-            this.$store.state.url='/customer/customerModify/'+id;
-            this.$router.push({path:this.$store.state.url})//点击切换路由
-        },
-        //------------------------------------------------------------
-
-        //---保存数据--------------------------------------------------       
-        save:function(){//点击保存创建客户资料
-            let self = this;
-            console.log(self.createContactParams)
-            this.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
-                    // console.log(res);
-                    self.open('创建客户资料成功','el-icon-circle-check','successERP');
-                    // console.log(res.result.id);
-                    self.backId = res.result.id;
-                    self.createBankParams.contactId = res.result.id;
-                    // console.log(self.createBankParams.contactId)
-                    // console.log(self.createBankParams)
-                    for(let i in self.addBankList){
-                        self.addBankList[i].contactId = res.result.id;
-                    }
-                    self.createBank();
-                    
-                    for(let i in self.addAddressList){
-                        self.addAddressList[i].contactId = res.result.id;
-                    }
-                    self.createBank();
-
-                    for(let i in self.addOuList){
-                        self.addOuList[i].contactId = res.result.id;
-                    }
-                    self.createOu();
-
-                    self.goModify(self.backId);
-              },function(res){
-                  console.log(res)
-                  self.open('创建失败','el-icon-error','faildERP')
-              });
-
-        },
-        //---------------------------------------------------------
-        
-        //---创建数据-----------------------------------------------
-        createBank:function(){//创建银行资料
-            let self = this;
-            if(self.addBankList.length>0){
-                for(let i in self.addBankList){
-                    this.$axios.posts('/api/services/app/ContactBankManagement/Create',self.addBankList[i]).then(function(res){         
-                        self.open('创建银行资料成功','el-icon-circle-check','successERP');
-                        // console.log(res)
-                    }),function(res){
-                        self.open('创建银行资料失败','el-icon-error','faildERP');
-                    };
-                }
-            }
-        },
-        addColbank:function(){//银行增行
-            let self = this;
-                self.x++;
-                let newCol = 'newCol'+self.x;
-                self.xrows.newCol ={
-                    "groupId": 1,
-                    "contactId":'',
-                    "settlementCurrencyId": '',
-                    "accountNo": "",
-                    "accountName": "",
-                    "openingBank": '',
-                    "contactPerson": '',
-                    "phone": '',
-                    "isDefault": true
-                };
-                self.bankData.unshift(self.xrows.newCol);
-                self.addBankList.unshift(self.xrows.newCol)
-        },
-
-        createAddress:function(){//创建地址资料
-            let self = this;
-
-            if(self.addAddressList.length>0){
-                for(let i in self.addAddressList){
-                    this.$axios.posts('/api/services/app/ContactAddressManagement/Create',self.addAddressList[i]).then(function(res){         
-                        self.open('创建地址信息成功','el-icon-circle-check','successERP');
-                        console.log(res)
-                    }),function(res){
-                        self.open('创建地址信息失败','el-icon-error','faildERP');
-                    };
-                }
-            }
-        },
-        addColAddress:function(){//地址增行
-            let self = this;
-                self.y++;
-                let newCol = 'newCol'+self.y;
-                self.yrows.newCol ={
-                    "groupId": 1,
-                    "contactId": '',
-                    "addressType": '',
-                    "addressId": '',
-                    "completeAddress": "",
-                    "contactPerson": "",
-                    "phone": "",
-                    "isDefault": true
-                };
-                self.addressData.unshift(self.yrows.newCol);
-                self.addAddressList.unshift(self.yrows.newCol)
-        },
-
-        createOu:function(){//创建组织资料
-            let self = this;
-            if(self.addOuList.length>0){
-                for(let i in self.addOuList){
-                    this.$axios.posts('/api/services/app/ContactOuManagement/Create',self.addOuList[i]).then(function(res){         
-                        self.open('创建组织信息成功','el-icon-circle-check','successERP');
-                        console.log(res)
-                    }),function(res){
-                        self.open('创建组织信息失败','el-icon-error','faildERP');
-                    };
-                }
-            }
-        },
-        addColOu:function(){//组织增行
-            let self = this;
-            self.z++;
-            let newCol = 'newCol'+self.z;
-            self.zrows.newCol ={
-                "groupId": 1,
-                "contactId": '',
-                "ouId": '',
-                "transport_method_id": '',
-                "is_default": true
-            };
-            self.ouData.unshift(self.zrows.newCol)
-            self.addOuList.unshift(self.zrows.newCol)
-        },
-
-        //------------------------------------------------------------
-        
-        //---控制编辑删除等-------------------------------------------
-        
-        handleBankEdit:function(index,row){//银行信息编辑
+        nodeClick_ou(data,node,self){
+            let _this=this;
+            _this.item_ou.id=data.id;
+            _this.item_ou.ouFullname=data.ouFullname;
+            _this.$nextTick(function(){
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+            })
             
+            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            //     if($(this).attr('date')==data.id){
+            //         $(this).click()
+            //     }
+            // })
         },
-        handleBankChange:function(index,row){
-            let self = this;
-            let flag = false;
-            if(self.updataBankList.length==0){
-                flag = true;
-            }else if(self.updataBankList.length>=1){
-                for(let i in self.updataBankList){
-                    if(row.id != self.updataBankList[i].id){
-                        flag = true;
-                        console.log(flag) 
-                    }else{
-                        flag= false;
-                        break;        
-                    }
-                }
-            }
-
-            if(flag){
-                self.updataBankList.push(row);
-                console.log(self.updataBankList)
-            }
+        save(){
+            let _this=this;
+            console.log(_this.addData)
         },
-        handleBankDelete:function(index,row){//银行表格内删除操作
-            let self = this;
-            this.bankData.splice(index,1);
-            self.addBankList.splice(index,1);
-            // this.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:row.id}).then(function(res){
-            //     console.log(res);
-            //     self.open('删除银行资料成功','el-icon-circle-check','successERP');
-            // }),function(res){
-            //     self.open('删除银行资料失败','el-icon-error','faildERP');
-            // };
-        },
-
-        handleAddressEdit:function(){//地址信息编辑
-            
-        },
-        handleAddressChange:function(index,row){
-            let self = this;
-            let flag = false;
-            if(self.updataAddressList.length==0){
-                flag = true;
-            }else if(self.updataAddressList.length>=1){
-                for(let i in self.updataAddressList){
-                    if(row.id != self.updataAddressList[i].id){
-                        flag = true;
-                        console.log(flag) 
-                    }else{
-                        flag= false;
-                        break;        
-                    }
-                }
-            };
-
-            if(flag){
-                self.updataAddressList.push(row);
-                console.log(self.updataAddressList)
-            }
-        },
-        handleAddressDelete:function(index){//地址表格内删除操作
-            let self = this;
-            self.addressData.splice(index,1);
-            self.addAddressList.splice(index,1)
-            // this.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:row.id}).then(function(res){
-            //     console.log(res);
-            //     self.open('删除地址资料成功','el-icon-circle-check','successERP');
-            // }),function(res){
-            //     self.open('删除地址资料失败','el-icon-error','faildERP');
-            // };
-        },
-
-        handleOuEdit:function(){//地址信息编辑
-            let self = this;
-            self.updataAddressList.push(row)
-        },
-        handleOuChange:function(index,row){
-            let self = this;
-            let flag = false;
-            if(self.updataOuList.length==0){
-                flag = true;
-            }else if(self.updataOuList.length>=1){
-                for(let i in self.updataOuList){
-                    if(row.id != self.updataOuList[i].id){
-                        flag = true;
-                        console.log(flag) 
-                    }else{
-                        flag= false;
-                        break;        
-                    }
-                }
-            };
-
-            if(flag){
-                self.updataOuList.push(row);
-                console.log(self.updataOuList)
-            }
-        },
-        //------------------------------------------------------------
-
-        //---控制跳转------------------------------------------------
-        back(){//点击新增跳转
-            this.$store.state.url='/role/roleList/default'
-            this.$router.push({path:this.$store.state.url})//点击切换路由
-        },
-        open(tittle,iconClass,className) {
-            this.$notify({
-            position: 'bottom-right',
-            iconClass:iconClass,
-            title: tittle,
-            showClose: false,
-            duration: 3000,
-            customClass:className
-            });
-        },
-        //----------------------------------------------------------
         
     }
        

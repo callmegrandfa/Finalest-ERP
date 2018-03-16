@@ -14,7 +14,7 @@
 
                 <!-- <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select  v-model="searchData.OuType">
+                    <el-select filterable   v-model="searchData.OuType">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
@@ -24,7 +24,7 @@
                 <div class="bgcolor smallBgcolor">
                     <label>用户组</label>
                     <!-- <el-input v-model="searchData.UserGroupId" placeholder=""></el-input> -->
-                    <el-select  v-model="searchData.UserGroupId" placeholder="">
+                    <el-select filterable   v-model="searchData.UserGroupId" placeholder="">
                         <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
                         </el-option>
                     </el-select>
@@ -32,7 +32,7 @@
                 <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
                     <!-- <el-input v-model="searchData.OuId" placeholder=""></el-input> -->
-                    <el-select  v-model="searchData.OuId" placeholder="">
+                    <el-select v-model="searchData.OuId" placeholder="">
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
@@ -59,7 +59,7 @@
                 <div class="bgcolor smallBgcolor">
                     <label>身份类型</label>
                     <!-- <el-input v-model="searchData.UserType" placeholder=""></el-input> -->
-                    <el-select  v-model="searchData.UserType" placeholder="">
+                    <el-select filterable   v-model="searchData.UserType" placeholder="">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -67,14 +67,14 @@
                 <div class="bgcolor smallBgcolor">
                     <label>语种</label>
                     <!-- <el-input v-model="searchData.LanguageId" placeholder=""></el-input> -->
-                    <el-select  v-model="searchData.LanguageId" placeholder="">
+                    <el-select filterable   v-model="searchData.LanguageId" placeholder="">
                        <el-option v-for="item in selectData.languageId" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
                 <!-- <div class="bgcolor smallBgcolor">
                     <label>认证类型</label>
-                    <el-select  v-model="searchData.AuthType" placeholder="">
+                    <el-select filterable   v-model="searchData.AuthType" placeholder="">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
@@ -82,7 +82,7 @@
                 <div class="bgcolor smallBgcolor">
                     <label>关联角色</label>
                     <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
-                    <el-select  v-model="searchData.RoleId" placeholder="">
+                    <el-select filterable   v-model="searchData.RoleId" placeholder="">
                         <el-option v-for="item in selectData.roles" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
                     </el-select>
@@ -90,7 +90,7 @@
                 <div class="bgcolor smallBgcolor">
                     <label>状态</label>
                     <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
-                    <el-select  v-model="searchData.Status" placeholder="">
+                    <el-select filterable   v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -124,8 +124,12 @@
                             <span class="btDetail">导出</span>
                             <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                         </button>
-                        <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                        <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
+                        <button class="erp_bt bt_start bt_width">
+                            <div class="btImg"><img src="../../../static/image/common/bt_start.png"></div>
+                            <span class="btDetail">启用</span>
+                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                        </button>
+                        <button class="erp_bt bt_stop bt_width"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
                         <div class="search_input_group">
                             <div class="search_input_wapper">
                                 <el-input
@@ -174,7 +178,7 @@
                         </span>
                 </el-dialog>
                 <!-- dialog -->
-                <el-row class="pl10 pt10 pr10 pb10">
+                <el-row>
 
                     <el-col :span='24'>
                         <el-table 
@@ -202,7 +206,13 @@
                             <el-table-column prop="userTypeTValue" label="身份类型"></el-table-column>
                             <el-table-column prop="languageDisplayName" label="语种"></el-table-column>
                             <el-table-column prop="authTypeTValue" label="认证类型"></el-table-column>
-                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                            <el-table-column prop="statusTValue" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
+                                    <span v-else>{{scope.row.statusTValue}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column label="有效日期" width="200">
                                 <template slot-scope="scope">
                                     <div class="halfWidth left">
@@ -560,74 +570,26 @@
     display: inline-block;
     width: calc(50% - 10px)
 }
-
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
 }
 .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
-.mt5{
-    margin-top: 5px;
-}
-.mt10{
-    margin-top: 10px;
-}
 .mt20{
     margin-top: 20px;
-}
-
-.ml10{
-    margin-left: 10px;
-}
-.pl10{
-    padding-left: 10px;
 }
 .pl15{
     padding-left: 15px;
 }
-.pt10{
-    padding-top: 10px;
-}
 .pt5{
     padding-top: 5px;
 }
-.pt20{
-    padding-top: 20px;
-}
-.pb10{
-    padding-bottom: 10px;
-}
-.pr10{
-    padding-right: 10px;
-}
-.h30{
-    height: 30px;
-    line-height: 30px;
-}
-.fs14{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.349019607843137);
-}
 .fs12{
     font-size: 12px;
-}
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
@@ -644,39 +606,12 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.rbtn{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(242, 242, 242, 1);
-    border-radius: 3px;
-    cursor: pointer;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
 </style>
 
 <style>
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
 .userList .el-button+.el-button{
     margin-left: 0;
 }
-
 .halfWidth.left input{
     text-align: right;
 }

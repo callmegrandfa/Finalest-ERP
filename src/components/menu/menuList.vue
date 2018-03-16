@@ -3,11 +3,19 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
-                    <el-input
+                    <!-- <el-input
                         placeholder="搜索..."
                         v-model="searchLeft" class="search_input">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
+                    </el-input> -->
+                    <el-autocomplete
+                    v-model="searchLeft"
+                    :fetch-suggestions="querySearchAsync"
+                    class="search_input"
+                    placeholder="搜索..."
+                    >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-autocomplete>
                 </el-col>
                 <el-col :span='24' class="tree-container" >
                     <el-tree
@@ -102,6 +110,11 @@
                             <el-table-column prop="url" label="web地址"></el-table-column>
                             <el-table-column prop="moduleParentId" label="上级菜单"></el-table-column>
                             <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                    <span v-else >冻结</span>
+                                </template>
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
@@ -153,34 +166,9 @@
         data(){
             return {
                 searchLeft:'',
-                options: [{
-                    basOuTypes: '1',
-                    label: '1'
-                    }, {
-                    basOuTypes: '2',
-                    label: '2'
-                    }, {
-                    basOuTypes: '3',
-                    label: '3'
-                    }, {
-                    basOuTypes: '4',
-                    label: '4'
-                    }, {
-                    basOuTypes: '5',
-                    label: '5'
-                    }, {
-                    basOuTypes: '6',
-                    label: '6'
-                    }, {
-                    basOuTypes: '7',
-                    label: '7'
-                    }, {
-                    basOuTypes: '8',
-                    label: '8'
-                    }, {
-                    basOuTypes: '9',
-                    label: '9'
-                    }],
+                timeout:null,
+                restaurants:[],
+                
                 tableData:[],
                 dialogData:{},    
                 componyTree:  [],
@@ -236,6 +224,7 @@
                 _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',
                 {SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting})
                 .then(function(res){ 
+                    _this.restaurants=[],
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
@@ -243,6 +232,10 @@
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
+                    $.each(res.result.items,function(index,value){
+                        let item={'value':value.moduleName,'id':value.id};
+                        _this.restaurants.push(item)
+                    })
                     },function(res){
                     _this.tableLoading=false;
                 })
@@ -484,7 +477,21 @@
             clearTreeData(){
                 let _this=this;
                 _this.dialogData={}
-            }
+            },
+            querySearchAsync(queryString, cb) {
+                var restaurants = this.restaurants;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                cb(results);
+                }, 100 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (state) => {
+                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
         },
     }
 </script>
@@ -522,16 +529,10 @@
     background: white;
     border-radius: 3px;
 }
-.pl5{
-    padding-left: 5px;
-}
 .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
-}
-.pr10{
-    padding-right: 10px;
 }
 .pl15{
     padding-left: 15px;
@@ -545,16 +546,6 @@
 .border-left{
     border-left: 1px solid #E4E4E4;
     min-height: 380px;
-}
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
 }
 </style>
 

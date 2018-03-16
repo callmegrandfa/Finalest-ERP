@@ -450,8 +450,8 @@
 }
 /* 重写checkbox */
 .billList .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     border-radius:50% !important; 
 }
 .billList .el-checkbox__inner::after{

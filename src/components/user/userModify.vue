@@ -3,8 +3,7 @@
         <el-row>
             <el-col :span="24">
               <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
-              <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>    
+              <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>  
               <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
               <button @click="Cancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
               <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
@@ -16,6 +15,8 @@
                     <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>用户编码</label>
                         <el-input 
+                        :disabled="isEdit" 
+                        @change="isUpdate"
                         class="userCode" 
                         :class="{redBorder : validation.hasError('addData.userCode')}" 
                         v-model="addData.userCode" 
@@ -30,6 +31,8 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>用户名称</label>
                     <el-input 
+                    :disabled="isEdit" 
+                    @change="isUpdate"
                     class="displayName" 
                     :class="{redBorder : validation.hasError('addData.displayName')}" 
                     v-model="addData.displayName"  
@@ -44,6 +47,8 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>手机号码</label>
                     <el-input 
+                    :disabled="isEdit" 
+                    @change="isUpdate"
                     class="phoneNumber" 
                     :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
                     v-model="addData.phoneNumber"  
@@ -58,6 +63,8 @@
                     <div class="bgcolor bgLongWidth">
                     <label>邮箱</label>
                     <el-input 
+                    :disabled="isEdit" 
+                    @change="isUpdate"
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
                     v-model="addData.email"  
@@ -71,7 +78,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属用户组</label>
-                    <el-select 
+                    <el-select filterable  
+                    :disabled="isEdit" 
+                    @change="isUpdate"
                     class="userGroupId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
@@ -89,6 +98,8 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属组织</label>
                     <el-select 
+                    :disabled="isEdit" 
+                    @change="isUpdate"
                     class="ouId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.ouId')}"
@@ -126,7 +137,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>身份类型</label>
-                    <el-select 
+                    <el-select filterable  
+                    :disabled="isEdit" 
+                    @change="isUpdate"
                     class="userType" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userType')}"
@@ -143,7 +156,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>语种</label>
-                    <el-select 
+                    <el-select filterable  
+                    :disabled="isEdit" 
+                    @change="isUpdate"
                     class="languageId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
@@ -162,6 +177,8 @@
                         <label><small>*</small>有效时间</label>
                         <div class="rangeDate">
                             <el-date-picker
+                            :disabled="isEdit" 
+                            @change="isUpdate"
                             v-model="dateRange"
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
@@ -184,7 +201,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label>状态</label>
-                        <el-select 
+                        <el-select filterable  
+                        :disabled="isEdit" 
+                        @change="isUpdate"
                         class="status" 
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"
@@ -201,7 +220,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor">
                         <label></label>
-                        <el-checkbox v-model="addData.isReg"></el-checkbox>
+                        <el-checkbox :disabled="isEdit" @change="isUpdate" v-model="addData.isReg"></el-checkbox>
                         <span class="isGive">是否注册用户</span>
                     </div>
                 </div>
@@ -212,6 +231,8 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
+                        :disabled="isEdit" 
+                         @change="isUpdate"
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}"
                         v-model="addData.remark"
@@ -229,8 +250,8 @@
                 <div class="bgcolor bgLongWidth">
                     <label>关联角色</label>
                     <div class="addZoo">
-                        <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
-                        <a class="addRole"  v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
+                        <a class="add" href="javascript:;" @click="editDialog()">+</a>
+                        <!-- <a class="addRole" :key="x.displayName" v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a> -->
                     </div>
                 </div>    
             </div>
@@ -251,10 +272,10 @@
                 </template>
                 <el-col :span="24">
                     <div class="menu_item_wapper menu_item_add">
-                        <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
+                        <span :key="x.displayName" class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                     </div>
                     <div class="menu_item_wapper menu_item_del">
-                        <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
+                        <span :key="x.displayName" class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                     </div>
                     <!-- <el-col :span="24" class="load_more" :class="{display_block : isLoadMore}">
                         <button>加载更多</button>
@@ -263,6 +284,17 @@
             </el-dialog>
         </el-col>
 
+
+        <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth" style="overflow: visible;">
+                        <label>&nbsp;</label>
+                        <div class="addZoo">
+                            <a class="addRole" :key="x.displayName"  v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </el-col>
       </el-row>
   </div>
 </template>
@@ -339,6 +371,8 @@
             userGroupId:[],//所属用户组
             languageId:[],//语种
         },
+        update:false,
+        isEdit:true,//是否可编辑
       }
     },
      validators: {
@@ -458,8 +492,8 @@
            },function(res){
 
            })
-       }, 
-       showErrprTips(e){
+        }, 
+        showErrprTips(e){
             $('.tipsWrapper').each(function(){
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                     $(this).addClass('display_block')
@@ -486,7 +520,7 @@
                 }
             })
         },
-      showErrprTipsTextArea(e){
+        showErrprTipsTextArea(e){
             $('.tipsWrapper').each(function(){
               if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
                   $(this).addClass('display_block')
@@ -494,8 +528,8 @@
                   $(this).removeClass('display_block')
               }
             })
-      },
-      filterNode(value, data) {
+        },
+        filterNode(value, data) {
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
         },
@@ -536,92 +570,92 @@
             //     }
             // })
         },
-      open(tittle,iconClass,className) {
-          this.$notify({
-          position: 'bottom-right',
-          iconClass:iconClass,
-          title: tittle,
-          showClose: false,
-          duration: 3000,
-          customClass:className
-          });
-      },
-     uniqueArray(array1, array2){//求差集
-        var result = [];
-        for(var i = 0; i < array1.length; i++){
-            var item = array1[i];
-            var repeat = false;
-            for (var j = 0; j < array2.length; j++) {
-                if (array1[i].id == array2[j].id) {//唯一key
-                    repeat = true;
-                    break;
+        open(tittle,iconClass,className) {
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
+        uniqueArray(array1, array2){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i].id == array2[j].id) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
                 }
             }
-            if (!repeat) {
-                result.push(item);
-            }
-        }
-        return result;
-    },
-      loadTableData(){//表格
-          let _this=this;
-          _this.tableLoading=true
-          _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
-          .then(function(res){ 
-              _this.nochecked=[]  
-            //   _this.tableData=res.result.items;
-              _this.totalItem=res.result.totalCount
-              _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-              _this.tableLoading=false;
-              _this.allNode=res.result.items
-                if(_this.checked.length>0){
-                    _this.nochecked=_this.uniqueArray(_this.allNode,_this.checked)
-                }else{
-                    _this.nochecked=_this.allNode
-                }
-              },function(res){
-              _this.tableLoading=false;
-          })
-      },
-      handleCurrentChange(val) {//页码改变
+            return result;
+        },
+        loadTableData(){//表格
             let _this=this;
-            _this.page=val;
-            _this.loadTableData();
-      },
-      handleSelectionChange(val) {//点击复选框选中的数据
-          this.multipleSelection = val;
-      },
-      delRow(){
-        let _this=this;
-        if(_this.multipleSelection.length>0){//表格
-            for(let i=0;i<_this.multipleSelection.length;i++){
-                _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.multipleSelection[i].id})
-                .then(function(res){
-                    _this.loadTableData();
-                    _this.open('删除成功','el-icon-circle-check','successERP');
+            _this.tableLoading=true
+            _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+            .then(function(res){ 
+                _this.nochecked=[]  
+                //   _this.tableData=res.result.items;
+                _this.totalItem=res.result.totalCount
+                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                _this.tableLoading=false;
+                _this.allNode=res.result.items
+                    if(_this.checked.length>0){
+                        _this.nochecked=_this.uniqueArray(_this.allNode,_this.checked)
+                    }else{
+                        _this.nochecked=_this.allNode
+                    }
                 },function(res){
-                    _this.open('删除失败','el-icon-error','faildERP');
-                })
-            }
-        };
-      },
-      back(row){
-          this.$store.state.url='/user/userList/default'
-          this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
-      },
-      see(row){
-          // this.$store.state.url='/OuManage/OuManageSee/'+row.id
-          // this.$router.push({path:this.$store.state.url})//点击切换路由
-      },
-      delThis(row){//删除行
-          let _this=this;
-          _this.$axios.deletes('/api/services/app/Role/Delete',{id:row.id})
-          .then(function(res){
-              _this.loadTableData();
-          },function(res){
-          })
-      },
-      showNodeadd(){
+                _this.tableLoading=false;
+            })
+        },
+        handleCurrentChange(val) {//页码改变
+                let _this=this;
+                _this.page=val;
+                _this.loadTableData();
+        },
+        handleSelectionChange(val) {//点击复选框选中的数据
+            this.multipleSelection = val;
+        },
+        delRow(){
+            let _this=this;
+            if(_this.multipleSelection.length>0){//表格
+                for(let i=0;i<_this.multipleSelection.length;i++){
+                    _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.multipleSelection[i].id})
+                    .then(function(res){
+                        _this.loadTableData();
+                        _this.open('删除成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        _this.open('删除失败','el-icon-error','faildERP');
+                    })
+                }
+            };
+        },
+        back(row){
+            this.$store.state.url='/user/userList/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
+        },
+        see(row){
+            // this.$store.state.url='/OuManage/OuManageSee/'+row.id
+            // this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        delThis(row){//删除行
+            let _this=this;
+            _this.$axios.deletes('/api/services/app/Role/Delete',{id:row.id})
+            .then(function(res){
+                _this.loadTableData();
+            },function(res){
+            })
+        },
+        showNodeadd(){
             let _this=this;
             _this.menuCheck=!_this.menuCheck
             $('.menu_item_add').css('display','block')
@@ -635,80 +669,116 @@
         },
         addRole(x){
             let _this=this;
-            let flag=false;
-            if(_this.nochecked.length<=0){
-                flag=true;
-            }else{
-                flag=false;
-                $.each(_this.nochecked,function(index,value){
+            if(!_this.isEdit){
+                let flag=false;
+                _this.isUpdate();
+                if(_this.nochecked.length<=0){
+                    flag=true;
+                }else{
+                    flag=false;
+                    $.each(_this.nochecked,function(index,value){
+                        if(x==value){
+                            flag=false;
+                        }else{
+                            flag=true;
+                        }
+                    })
+                }
+                $.each(_this.checked,function(index,value){
                     if(x==value){
-                        flag=false;
-                    }else{
-                        flag=true;
+                        _this.checked.splice(index,1)
                     }
                 })
-            }
-            $.each(_this.checked,function(index,value){
-                if(x==value){
-                    _this.checked.splice(index,1)
+                if(flag){
+                    _this.nochecked.push(x);
                 }
-            })
-            if(flag){
-                _this.nochecked.push(x);
+            }else{
+                return false
             }
         },
         delRole(x){
             let _this=this;
-            let flag=false;
-            if(_this.checked.length<=0){
-                flag=true;
-            }else{
-                flag=false;
-                $.each(_this.checked,function(index,value){
+            if(!_this.isEdit){
+                let flag=false;
+                _this.isUpdate();
+                if(_this.checked.length<=0){
+                    flag=true;
+                }else{
+                    flag=false;
+                    $.each(_this.checked,function(index,value){
+                        if(x==value){
+                            flag=false;
+                        }else{
+                            flag=true;
+                        }
+                    })
+                }
+                $.each(_this.nochecked,function(index,value){
                     if(x==value){
-                        flag=false;
-                    }else{
-                        flag=true;
+                        _this.nochecked.splice(index,1)
                     }
                 })
-            }
-            $.each(_this.nochecked,function(index,value){
-                if(x==value){
-                    _this.nochecked.splice(index,1)
+                if(flag){
+                    _this.checked.push(x);
                 }
-            })
-            if(flag){
-                _this.checked.push(x);
+            }else{
+                return false
             }
         },
+        Update(){//修改
+            if(this.isEdit==true){
+                this.isEdit=!this.isEdit;
+            } 
+        },
+        isUpdate(){//判断是否修改过信息
+            this.update=true;
+        },
         Cancel(){
-            this.getData()
+            if(this.isEdit==false){
+                this.isEdit=!this.isEdit;
+                this.validation.reset();
+                this.getData();
+            }
         },
         save(){
             let _this=this;
-            _this.$validate()
-            .then(function (success) {
-                if (success) {
-                    let roles=[];
-                    $.each(_this.checked,function(index,value){
-                        roles.push(value.roleCode)
-                    })
-                    _this.addData.roleCodes=roles;
-                    _this.addData.effectiveStart=_this.dateRange[0];
-                    _this.addData.effectiveEnd=_this.dateRange[1];
-                    _this.$axios.puts('/api/services/app/User/Update',_this.addData)
-                    .then(function(res){
-                        _this.checkedRoleCode=[]
-                        $.each(_this.checked,function(index,val){
-                            _this.checkedRoleCode.push(val.roleCode)
+            if(_this.update){
+                _this.$validate()
+                .then(function (success) {
+                    if (success) {
+                        let roles=[];
+                        $.each(_this.checked,function(index,value){
+                            roles.push(value.roleCode)
                         })
-                        _this.open('保存成功','el-icon-circle-check','successERP');
-                    },function(res){
-                        _this.open('保存失败','el-icon-error','faildERP');
-                    })
-                }
-            });
+                        _this.addData.roleCodes=roles;
+                        _this.addData.effectiveStart=_this.dateRange[0];
+                        _this.addData.effectiveEnd=_this.dateRange[1];
+                        _this.$axios.puts('/api/services/app/User/Update',_this.addData)
+                        .then(function(res){
+                            _this.checkedRoleCode=[]
+                            $.each(_this.checked,function(index,val){
+                                _this.checkedRoleCode.push(val.roleCode)
+                            })
+                            _this.update=false;
+                            _this.isEdit=true;
+                            _this.open('保存成功','el-icon-circle-check','successERP');
+                        },function(res){
+                            _this.open('保存失败','el-icon-error','faildERP');
+                        })
+                    }
+                });
+            }else{
+                _this.open('没有需要保存的项目','el-icon-warning','noticERP');
+            }    
         },
+        editDialog(){
+            let _this=this;
+            if(!_this.isEdit){
+                _this.dialogTableVisible=true;
+            }else{
+                return false;
+            }
+        }
     }
 
 })
@@ -826,5 +896,8 @@
 }
 .userModify .el-dialog__body{
   overflow: hidden;
+}
+.userModify .bgcolor .el-select .el-input input{
+height: 35px!important;
 }
 </style>
