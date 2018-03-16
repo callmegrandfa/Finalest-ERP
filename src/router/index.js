@@ -177,7 +177,7 @@ const commodityBrand = () =>
     import ('../components/commodityManagement/commodityBrand')
 const commodityClassHeading = () =>
     import ('../components/commodityManagement/commodityClassHeading')
-    // const commodityAttribute= () =>import('../components/commodityManagement/commodityAttribute')
+const commodityAttribute= () =>import('../components/commodityManagement/commodityAttribute')
     // const specificationOfGoods= () =>import('../components/commodityManagement/specificationOfGoods')
     // const specification= () =>import('../components/commodityManagement/specification')
     // const specificationOfGoodsList= () =>import('../components/commodityManagement/specificationOfGoodsList')
@@ -492,7 +492,7 @@ const routes = [
             // { path: '/unitOfMeasurement/:id', component: unitOfMeasurement, name: 'unitOfMeasurement' }, //计量单位
             { path: '/commodityBrand/:id', component: commodityBrand, name: 'commodityBrand' }, //商品品牌
             { path: '/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
-            // { path: '/commodityAttribute/:id', component: commodityAttribute, name: 'commodityAttribute' }, //商品属性
+            { path: '/commodityAttribute/:id', component: commodityAttribute, name: 'commodityAttribute' }, //商品属性
             // { path: '/specificationOfGoods/:id', component: specificationOfGoods, name: 'specificationOfGoods' }, //商品规格
 
             // {
