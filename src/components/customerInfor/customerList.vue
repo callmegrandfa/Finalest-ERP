@@ -222,7 +222,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
-                            <el-table-column prop="contactClassId" label="客户类型"></el-table-column>
+                            <el-table-column prop="contactClassId_ClassName" label="客户类型"></el-table-column>
                             <el-table-column prop="contactWorkPropertyIdTValue" label="客户性质"></el-table-column>
                             <el-table-column prop="isSupplier" label="是否为供应商">
                                 <template slot-scope="scope">
@@ -284,9 +284,9 @@
                     id:'',
                     cuFullname:'',
                 },
-                cuAr:[],//组织单元下拉框
+                cuAr:[],//客户分类下拉框
                 //-----------------------
-                //---组织单元树形下拉-----
+                //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
                     children: 'children',
@@ -297,7 +297,7 @@
                     id:'',
                     ouFullname:'',
                 },
-                ouAr:[],//组织单元下拉框
+                ouAr:[],//所属组织下拉框
                 //-----------------------
                 //---行政地区树形下拉-----
                 adSearch:'',//树形搜索框的
@@ -614,6 +614,7 @@
                 $('#op_confirmSelect').click()
             })
         },
+        //-----------------------------------------------------
     }
 }
 </script>

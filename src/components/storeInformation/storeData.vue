@@ -381,8 +381,8 @@ export default{
 }
 /* 重写checkbox */
 .store-data-wrapper .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
 }
 .store-data-wrapper .el-checkbox__inner::after{
     -webkit-box-sizing: content-box;

@@ -273,8 +273,8 @@
 }
 /* 重写checkbox */
 .orderList .el-checkbox__inner{
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     border-radius:50% !important; 
 }
 .orderList .el-checkbox__inner::after{
