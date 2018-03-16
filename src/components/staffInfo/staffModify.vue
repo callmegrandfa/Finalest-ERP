@@ -1,201 +1,282 @@
 <template>
-     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
+     <div class="customer-modify-wrapper" style="float:left;background:#fff;width:100%;">
         <div id="bgc">
-	        <el-row >
-	            <el-col :span="24">
-	            	<button class="erp_bt bt_back" @click="goBack">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_back.png">
-                            </div>
-                            <span class="btDetail">返回</span>
-                    </button>
-	            	<button class="erp_bt bt_add" @click="add">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_add.png">
-                            </div>
-                            <span class="btDetail">新增</span>
-                    </button>
-	            	<button class="erp_bt bt_modify">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_modify.png">
-                            </div>
-                            <span class="btDetail">修改</span>
-                    </button>
-	            	<button class="erp_bt bt_save">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_save.png">
-                            </div>
-                            <span class="btDetail">保存</span>
-                    </button>
-	            	<button class="erp_bt bt_cancel">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_cancel.png">
-                            </div>
-                            <span class="btDetail">取消</span>
-                    </button>
-	            	<button class="erp_bt bt_print">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_print.png">
-                            </div>
-                            <span class="btDetail">打印</span>
-                    </button>
-	            	<button class="erp_bt bt_version">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_version.png">
-                            </div>
-                            <span class="btDetail">生成用户</span>
-                    </button>
-	            </el-col>
-	        </el-row>
+            <div class="btnBd">
+                <el-row >
+                    <el-col :span="24">
+                        <button class="erp_bt bt_back" @click="goBack">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_back.png">
+                                </div>
+                                <span class="btDetail">返回</span>
+                        </button>
+                        <button class="erp_bt bt_modify" @click="edit">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_modify.png">
+                                </div>
+                                <span class="btDetail">修改</span>
+                        </button>
+                        <button class="erp_bt bt_save" v-show="isShow" @click="save">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_save.png">
+                                </div>
+                                <span class="btDetail">保存</span>
+                        </button>
+                        <button class="erp_bt bt_cancel" @click="cancel">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_cancel.png">
+                                </div>
+                                <span class="btDetail">取消</span>
+                        </button>
+                    </el-col>
+                </el-row>
+            </div>
+	        <div class="customer-modify-form">
+                    <el-form :model="form"  label-width="80px" class="demo-ruleForm pl pt" >
+                        <el-form-item label="职员编码" class="pr">
+                            <el-input v-model="form.employeeCode" label-width="80px" :disabled="isForbid" @change="isUpdate"></el-input>
+                        </el-form-item>
+                        <el-form-item label="职员名称" class="pr">
+                            <el-input v-model="form.employeeName" :disabled="isForbid"  @change="isUpdate"></el-input>
+                        </el-form-item>
+                        <el-form-item label="业务组织" class="pr">
+                            <el-select v-model="form.ouId" :disabled="isForbid" @change="isUpdate">
+                                <el-option label="恒康" :value="0"></el-option>
+                                <el-option label="广东" :value="1"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="手机号码" class="pr">
+                            <el-input v-model="form.mobile" :disabled="isForbid" @change="isUpdate"></el-input>
+                        </el-form-item>
+                        <el-form-item label="部门" class="pr">
+                            <el-select v-model="form.deptId" :disabled="isForbid" @change="isUpdate">
+                                <el-option label="仓库" :value="0"></el-option>
+                                <el-option label="总部1" :value="1"></el-option>
+                                <el-option label="总部2" :value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="性别">
+                            <el-select v-model="form.sex" :disabled="isForbid" @change="isUpdate">
+                                <el-option label="男" :value="1"></el-option>
+                                <el-option label="女" :value="0"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生日" class="pr">
+                            <el-input v-model="form.birthday" :disabled="isForbid" @change="isUpdate"></el-input>
+                        </el-form-item>
+                        <el-form-item label="所属店铺">
+                            <el-select v-model="form.shopId" :disabled="isForbid" @change="isUpdate">
+                            <el-option label="仓库" :value="0"></el-option>
+                            <el-option label="北京烤鸭" :value="1"></el-option>
+                            </el-select>
+                        </el-form-item>                            
+                        <el-form-item label="职员类型">
+                            <el-checkbox-group v-model="employeeTypeIds" :disabled="isForbid" @change="isUpdate">
+                                <el-checkbox  :label="0" name="type">采购</el-checkbox>
+                                <el-checkbox  :label="1" name="type">财务</el-checkbox>
+                                <el-checkbox  :label="2" name="type">销售</el-checkbox>
+                                <el-checkbox  :label="3" name="type">总部</el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="备注">
+                            <el-input type="textarea" :rows="5" resize="none" v-model="form.remark" :disabled="isForbid"  @change="isUpdate"></el-input>
+                        </el-form-item>
+                </el-form>
+            </div>
 
-            <el-form :model="form"   label-width="80px" class="demo-ruleForm pl pt" >
-                <el-form-item label="职员编码" class="pr">
-                    <el-input v-model="form.employeeCode" label-width="80px"></el-input>
-                </el-form-item>
-                <el-form-item label="职员名称" class="pr">
-                    <el-input v-model="form.employeeName"></el-input>
-                </el-form-item>
-                <el-form-item label="手机号码" class="pr">
-                    <el-input v-model="form.mobile"></el-input>
-                </el-form-item>
-                <el-form-item label="部门" class="pr">
-                    <el-select v-model="form.department">
-                    <el-option label="" value=""></el-option>
-                    <el-option label="" value=""></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="性别">
-                    <el-select v-model="form.sex">
-                    <el-option label="sexId" value="sexTValue"></el-option>
-                    <el-option label="sexId" value="sexTValue"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="生日" class="pr">
-                    <el-input v-model="form.birthday"></el-input>
-                </el-form-item>
-                <el-form-item>
-                </el-form-item>
-                <el-form-item>
-                </el-form-item>
-                <el-form-item>
-                </el-form-item>
-               
-
-                <el-form-item label="所属店铺">
-                    <el-select v-model="form.shopName">
-                    <el-option label="广东" value="广东"></el-option>
-                    <el-option label="成都" value="成都"></el-option>
-                    </el-select>
-                </el-form-item>                            
-                <el-form-item label="职员类型">
-                    <el-checkbox-group v-model="form.employeeTypeIds">
-                    <el-checkbox  label="采购" name="type"></el-checkbox>
-                    <el-checkbox label="业务" name="type"></el-checkbox>
-                    <el-checkbox label="仓库" name="type"></el-checkbox>
-                    <el-checkbox label="店员" name="type"></el-checkbox>
-                    </el-checkbox-group>
-                </el-form-item>
-                <el-form-item label="备注">
-                    <el-input type="textarea" rows=5 resize="none" v-model="form.remark"></el-input>
-                </el-form-item>
-            </el-form>
+           
 
         </div>
     </div>
 </template>
 <script>
-    import Btm from '../../base/btm/btm'
     export default{
         name:'staffDetail',
         data(){
             return { 
-                id:'',
-                 form: {
-                        "employeeName":"",
-                        "mobile":"",
-                        "deptId":0,
-                        "sex":0,
-                        "birthday":"",
-                        "discountStart":0,
-                        "discountEnd":0,
-                        "shopId":0,
-                        "remark":"",
-                        "employeeTypeIds":[0],
+                isForbid:true,//是否禁止编辑
+                isShow:false,//是否显示保存按钮
+                update:false,//设置更改信息的初始值
+                form: {
+                        "groupId":0 ,
                         "id":0,
+                        "ouId": 0,
+                        "ouFullname": "",
+                        "deptId":0 ,
+                        "deptName": "",
+                        "shopId":0 ,
+                        "shopName": "",
+                        "employeeCode": "",
+                        "employeeName": "",
+                        "mobile": "",
+                        "sex":0 ,
+                        "sexTValue": "",
+                        "birthday": "",
+                        "remark": "",
+                        "employeeTypes": [
+                            {
+                            "groupId": 0,
+                            "employeeId": 0,
+                            "employeeTypeid": 0,
+                            "employeeTypeidTValue": ""
+                            }
+                        ],
+                        
                 },
+                "employeeTypes": [
+                            {
+                            "groupId": 0,
+                            "employeeId": 0,
+                            "employeeTypeid": 0,
+                            "employeeTypeidTValue": "采购"
+                            },
+                            {
+                            "groupId": 0,
+                            "employeeId": 0,
+                            "employeeTypeid": 1,
+                            "employeeTypeidTValue": "财务"
+                            },
+                            {
+                            "groupId": 0,
+                            "employeeId": 0,
+                            "employeeTypeid": 2,
+                            "employeeTypeidTValue": "销售"
+                            },
+                            {
+                            "groupId": 0,
+                            "employeeId": 0,
+                            "employeeTypeid": 3,
+                            "employeeTypeidTValue": "总部"
+                            },
+                ],
+                updateList:{//保存数据需要的参数
+                            "ouId": 0,
+                            "employeeCode": "",
+                            "employeeName": "",
+                            "mobile": "",
+                            "deptId": 0,
+                            "sex": 0,
+                            "birthday": "",
+                            "discountStart": 0,
+                            "discountEnd": 0,
+                            "shopId": 0,
+                            "remark": "",
+                            "employeeTypeIds": [
+                                0
+                            ],
+                            "id": 0
+                    },
+                employeeTypeIds:[],
+              
+
             }
         },
         created:function(){
-            
+            let _this=this;
+            // 获取数据渲染
+            _this.$axios.gets('/api/services/app/EmployeeManagement/Get',{id:this.$route.params.id})
+            .then(
+                rsp=>{
+                    rsp.result.sex= + rsp.result.sex;
+                    rsp.result.ouId= + rsp.result.ouId;
+                    rsp.result.deptId= + rsp.result.deptId;
+                    _this.employeeTypeIds.push(rsp.result.employeeTypes[0].employeeTypeid);
+                    _this.form=rsp.result;
+                }
+            )
         },
         methods: {
             onSubmit() {
                 console.log('submit!');
             },
-            goBack:function(){//点击切换路由，返回到职员数据列表
+            // 成功的提示框
+             open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            //点击切换路由，返回到职员数据列表
+            goBack:function(){
                 this.$store.state.url='/staff/staffList/default'
                 this.$router.push({path:this.$store.state.url})
             },
-                // 新增
-            add:function(){
+            // 修改，点击修改输入框的编辑状态
+            edit(){
+                this.isForbid=false;
+                this.isShow=true;
+            },
+            isUpdate(){//判断是否修改过信息
+                this.update=true;
+            },
+            // 保存修改的数据
+            save(){
                 let _this=this;
-                if(
-                    _this.form.employeeCode!=''&&
-                    _this.form.employeeName!=''
-                ){
-                    console.log('嘻嘻');
-                    _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.form)
-                    .then(
+                _this.updateList.ouId=_this.form.ouId;
+                _this.updateList.employeeCode=_this.form.employeeCode;
+                _this.updateList.employeeName=_this.form.employeeName;
+                _this.updateList.mobile=_this.form.mobile;
+                _this.updateList.deptId=_this.form.deptId;
+                _this.updateList.sex=_this.form.sex;
+                _this.updateList.birthday=_this.form.birthday;
+                _this.updateList.shopId=_this.form.shopId;
+                _this.updateList.employeeTypeIds=_this.ids;
+                _this.updateList.remark=_this.form.remark;
+                _this.updateList.id=_this.form.id;
+                if(_this.update){
+                    _this.$axios.puts('/api/services/app/EmployeeManagement/Update',_this.updateList).then(
                         rsp=>{
-                            console.log(rsp);
+                             _this.open('修改成功','el-icon-circle-check','successERP');
+                             this.isForbid=!this.isForbid;
+                             _this.update=false;
+                             _this.isShow=!this.isShow;
+                        },
+                        rsp=>{
+                            _this.open('修改失败','el-icon-error','faildERP');
                         }
-                        
                     )
+                }else{
+                    _this.open('没有需要保存的项目','el-icon-warning','noticERP');
+                    
+                }
+               
+
+            },
+            // 取消
+            cancel(){
+                if(this.isForbid==false){
+                    this.isForbid=!this.isForbid;
                 }
             },
         },      
-        components:{
-            Btm,
-        },
+        
     }
 </script>
-<style>
+
+<style scope>
+    .customer-modify-form{
+        width: 70%;
+    }
    .pl{
        padding-left:20%;
    }
    .pt{
        padding-top:10px;
    }
-   .pr{
-       padding-right:30%;
-   }
    .fs{
        font-size:12px;
    }
-   .el-form-item__label {
-        font-size: 12px;
-   }
-   .el-form-item {
-        margin-bottom: 10px;
-   }
-   .el-checkbox__inner {
-        width: 20px;
-        height: 20px;
-   }
-   .el-select .el-input__inner {
-        cursor: pointer;
-        padding-right: 340px;
-    }
-    .el-textarea__inner{
-        width:67%;
-    }
-    .el-col-24 {
+    .customer-modify-wrapper .el-select{
+        display: block;
+    }    
+    .customer-modify-wrapper .btnBd {
     width: 100%;
     border-bottom: 1px solid #E4E4E4;
     padding-bottom: 5px;
     }
 </style>
-
-
-
 

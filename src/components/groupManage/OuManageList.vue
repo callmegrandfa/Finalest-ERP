@@ -55,8 +55,9 @@
                             @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
-                            </el-option>
+                            <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id"></el-option>
+                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option> -->
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
@@ -203,17 +204,17 @@
                             </el-table-column>
                             <el-table-column label="公司">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==1" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==1" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="业务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==2" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==2" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="财务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==3" v-for="i in tableData[scope.$index].basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-if="i.ouType==3" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
@@ -248,6 +249,10 @@
                 search_area:'',
                 selectTree_area:[
                 ],
+                item:{
+                    id:"",
+                    areaName:"",
+                },
                 selectProps_area: {
                     children: 'items',
                     label: 'areaName',
@@ -269,48 +274,11 @@
                     OUType:[],//组织类型
                     Status001:[],//启用状态
                     companys:[],//所属公司
-                    area:[],//业务地区
+                    // area:[],//业务地区
                 },
                 searchDataClick:{},
                 tableSearchData:{},
-                statu:[{
-                    value: '0',
-                    label: '启用'
-                    },{
-                    value: '1',
-                    label: '停用'
-                    },{
-                    value: '2',
-                    label: '冻结'
-                    },],
-                options: [{
-                    value: '1',
-                    label: '选项1'
-                    }, {
-                    value: '2',
-                    label: '选项2'
-                    }, {
-                    value: '3',
-                    label: '选项3'
-                    }, {
-                    value: '4',
-                    label: '选项4'
-                    }, {
-                    value: '5',
-                    label: '选项5'
-                    }, {
-                    value: '6',
-                    label: '选项6'
-                    }, {
-                    value: '7',
-                    label: '选项7'
-                    }, {
-                    value: '8',
-                    label: '选项8'
-                    }, {
-                    value: '9',
-                    label: '选项9'
-                    }],
+               
                 tableData:[],
 
                 componyTree:  [
@@ -397,6 +365,7 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
+                    console.log(res.result.items)
                     _this.$nextTick(function(){
                         _this.getHeight()
                     })
@@ -415,7 +384,7 @@
                },function(res){
                    _this.treeLoading=false;
                })
-                //地区
+                // 地区
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
                 .then(function(res){
                     _this.selectTree_area=res.result;
@@ -521,7 +490,6 @@
                 })
             },
             nodeClick(data){
-                console.log(data)
                  let _this=this;
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuParentid:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
@@ -539,11 +507,17 @@
             },
             nodeClick_area(data,node,self){
                 let _this=this;
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
+                _this.item.id=data.id;
+                _this.item.areaName=data.areaName;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 })
+                
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // })
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id

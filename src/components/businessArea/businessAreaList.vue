@@ -370,7 +370,7 @@
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id})
                 .then(function(res){
                     _this.tableData=res.result;
-                    _this.tableData.unshift(data);
+                    // _this.tableData.unshift(data);
                     _this.totalItem=res.result.length;
                     _this.tableLoading=false;
                     },function(res){

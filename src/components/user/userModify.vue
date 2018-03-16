@@ -112,10 +112,10 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="count.id" :label="count.ouFullname" :value="count.id" id="userModify_confirmSelect">
-                        </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                            </el-option>
+                        <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        </el-option>
+                        <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option> -->
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -272,6 +272,10 @@
     data(){
       return{
         search:'',
+        item:{
+            id:'',
+            ouFullname:'',
+        },
         selectTree:[
         ],
         selectProps: {
@@ -329,7 +333,7 @@
         roleOneItem:10,//每页有多少条信息
         roleTotalItem:0,//总共有多少条消息
         selectData:{//select数据
-            OUType:[],//所属组织
+            // OUType:[],//所属组织
             Status001:[],//启用状态
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
@@ -394,12 +398,11 @@
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
             // 启用状态
             _this.selectData.Status001=res.result;
-            console.log(res.result)
             })
-            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-            // 所属组织
-            _this.selectData.OUType=res.result;
-            })
+            // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // // 所属组织
+            // _this.selectData.OUType=res.result;
+            // })
             _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
             // 所属用户组
                 _this.selectData.userGroupId=res.result.items;
@@ -426,6 +429,7 @@
            let _this=this;
            _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
            .then(function(res){
+               console.log(res)
                 _this.addData= {
                     "userCode": res.result.userCode,
                     "displayName": res.result.displayName,
@@ -444,7 +448,8 @@
                 if(res.result.effectiveStart && res.result.effectiveEnd){
                     _this.dateRange=[res.result.effectiveStart,res.result.effectiveEnd]
                 }
-                
+                _this.item.id=res.result.ouId;
+                _this.item.ouFullname=res.result.ouFullname;
                 // console.log(res.result)
                 // if(res.result.roleCodes.length>0 && res.result.roleCodes.length){
                 //     _this.checkedRoleCode=res.result.roleCodes;
@@ -519,11 +524,17 @@
         },
         nodeClick(data,node,self){
             let _this=this;
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
+            _this.item.id=data.id;
+            _this.item.ouFullname=data.ouFullname;
+            _this.$nextTick(function(){
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             })
+                
+            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            //     if($(this).attr('date')==data.id){
+            //         $(this).click()
+            //     }
+            // })
         },
       open(tittle,iconClass,className) {
           this.$notify({
