@@ -202,7 +202,7 @@
                 <div class="bgcolor" >
                     <label><small>*</small>编码</label>
                     <el-input class="ouCode" 
-                    disabled=""
+                    disabled
                     v-model="addData.ouCode">
                     </el-input>
                 </div>
@@ -255,10 +255,10 @@
                         ref="tree"
                         :filter-node-method="filterNode"
                         :expand-on-click-node="false"
-                        @node-click="nodeClick"
+                        @node-click="nodeClick_ou"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="count1.id" :label="count1.ouFullname" :value="count1.id" id="OuModifyForm_confirmSelect">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
                             </el-option>
@@ -410,14 +410,13 @@
     <el-col :span="24" class="getPadding"> <h4 class="h4">组织类型</h4></el-col>
     <el-col :span="24" class="getPadding"> 
         <el-col :span="6">  
-            <el-checkbox :disabled="isEdit" @change="isUpdate()" v-model="count.isCheckCompany" @focus="checkCompany">公司</el-checkbox>
-            <el-checkbox :disabled="isEdit" @change="isUpdate()" v-model="count.isCheckFinance" @focus="checkFinance">财务</el-checkbox>
-            <el-checkbox :disabled="isEdit" @change="isUpdate()" v-model="count.isCheckBusiness" @focus="checkBusiness">业务</el-checkbox>
-            <!-- <el-checkbox-group 
-            v-model="basOuTypes"
+            <el-checkbox-group 
+            :disabled="isEdit" 
+            @change="isUpdate()"
+            v-model="addData.ouTypes"
             :min="1">
-            <el-checkbox v-for="item in selectData.OUType" :label="item.itemName" :key="item.itemValue">{{item.itemName}}</el-checkbox>
-            </el-checkbox-group> -->
+            <el-checkbox v-for="item in selectData.OUType" :label="item.itemValue" :key="item.itemValue" @change="change_ouType">{{item.itemName}}</el-checkbox>
+            </el-checkbox-group>
         </el-col>              
     </el-col>           
  </el-row> 
@@ -426,298 +425,323 @@
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName">
-                <el-tab-pane label="公司" name="company" v-if="count.isCheckCompany">
-                     <el-col :span="24">
-                          <div class="companyInfo">
-                            <el-col :span="24">
-                                <el-col :span="5"  class="getPadding">
-                                    <el-checkbox 
+                <el-tab-pane v-for="item in selectData.OUType" :label="item.itemName" :key="item.itemValue" :name="item.itemCode" v-if="item.itemValue==1 && Company">
+                <el-col :span="24" v-if="item.itemValue==1 && Company">
+                    <div class="companyInfo">
+                    <el-col :span="24">
+                        <el-col :span="5"  class="getPadding">
+                            <el-checkbox :disabled="isEdit" v-model="basCompany.isGroupCompany" @change="isGroupCompany">集团公司</el-checkbox>
+                        </el-col> 
+                    </el-col>
+                    <el-col :span="24"  class="getPadding" style="border-bottom:1px solid #e4e4e4; ">
+                        <div class="bgcolor">
+                            <label>上级公司</label>
+                            <el-select 
+                            :disabled="isEdit" 
+                            @change="isUpdate()"
+                            @focus="showErrprTipsSelect"
+                            :class="{redBorder : validation.hasError('basCompany.ouParentid')}"
+                            placeholder=""
+                            class="ouParentid" 
+                            v-model="basCompany.ouParentid">
+                                <el-option 
+                                    v-if="!basCompany.isGroupCompany"
+                                v-for="item in selectData.companys" 
+                                :key="item.id" 
+                                :label="item.ouName" 
+                                :value="item.id" 
+                                >
+                                </el-option>
+
+                                <el-option 
+                                v-if="basCompany.isGroupCompany"
+                                :label="groupCompany.label" 
+                                :value="groupCompany.value" 
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="bgcolor">
+                            <label>启用状态</label>
+                            <el-select 
+                            :disabled="isEdit" 
+                            @change="isUpdate()"
+                            
+                            @focus="showErrprTipsSelect"
+                            :class="{redBorder : validation.hasError('basCompany.status')}"
+                            placeholder=""
+                            class="status2" 
+                            v-model="basCompany.status">
+                                <el-option 
+                                v-for="item in selectData.Status001" 
+                                :key="item.itemValue" 
+                                :label="item.itemName" 
+                                :value="item.itemValue" 
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </el-col>
+                    <el-col :span="24" class="getPadding">
+                        <h4 class="h4">其他信息</h4>
+                        <div>
+                            <div class="bgcolor">
+                                <label>注册资本</label>
+                                <el-input 
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.regCapital')}"
+                                class="regCapital"
+                                v-model="basCompany.regCapital"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>法人代表</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.legalPerson')}"
+                                class="legalPerson"
+                                v-model="basCompany.legalPerson"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>纳税人登记号</label>
+                                <el-input 
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.vatRegno')}"
+                                class="vatRegno"
+                                v-model="basCompany.vatRegno"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>成立日期</label>
+                                <el-date-picker 
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTipsRangedate"
+                                :class="{redBorder : validation.hasError('basCompany.regtime')}"
+                                class="regtime datepicker" 
+                                format="yyyy-MM-dd"
+                                v-model="basCompany.regtime"
+                                value-format="yyyy-MM-dd"
+                                type="date" 
+                                placeholder=""></el-date-picker>
+                            </div>
+                            <div class="bgcolor">
+                                <label class="longLabel">法人身份证号码</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.legalPersonIdnr')}"   
+                                class="legalPersonIdnr"
+                                v-model="basCompany.legalPersonIdnr"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>主管部门代码</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.mgtDeptCode')}"
+                                class="mgtDeptCode"
+                                v-model="basCompany.mgtDeptCode"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>主管部门名称</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.mgtDeptName')}"
+                                class="mgtDeptName"
+                                v-model="basCompany.mgtDeptName"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>纳税人类别</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.legalPersonType')}"
+                                class="legalPersonType"
+                                v-model="basCompany.legalPersonType"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>营业地址</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.businessAddress')}"
+                                class="businessAddress"
+                                v-model="basCompany.businessAddress"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label class="longLabel">营业或有效期限</label>
+                                <div class="rangeDate">
+                                    <el-date-picker
                                     :disabled="isEdit" 
                                     @change="isUpdate()"
-                                     v-model="basCompany.isGroupCompany">集团公司</el-checkbox>
-                                </el-col> 
-                            </el-col>
-                            <el-col :span="24"  class="getPadding" style="border-bottom:1px solid #e4e4e4; ">
-                                <div class="bgcolor">
-                                    <label>上级公司</label>
-                                    <el-select 
-                                    :disabled="isEdit" 
-                                    @change="isUpdate()"
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('basCompany.ouParentid')}"
-                                    placeholder=""
-                                    class="ouParentid" 
-                                    v-model="basCompany.ouParentid">
-                                        <el-option 
-                                        v-for="item in selectData.companys" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id" 
-                                        >
-                                        </el-option>
-                                    </el-select>
+                                    
+                                    @focus="showErrprTipsRangedate"
+                                    :class="{redBorder : validation.hasError('dateRange')}"
+                                    v-model="dateRange"
+                                    type="daterange"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd" 
+                                    range-separator="to"
+                                    align="center"
+                                    unlink-panels
+                                    start-placeholder=""
+                                    end-placeholder="">
+                                    </el-date-picker>
                                 </div>
-                                <div class="bgcolor">
-                                    <label>启用状态</label>
-                                    <el-select 
-                                    :disabled="isEdit" 
-                                    @change="isUpdate()"
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('basCompany.status')}"
-                                    placeholder=""
-                                    class="status2" 
-                                    v-model="basCompany.status">
-                                        <el-option 
-                                        v-for="item in selectData.Status001" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue" 
-                                        >
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                            </el-col>
-                            <el-col :span="24" class="getPadding">
-                                <h4 class="h4">其他信息</h4>
-                                <div>
-                                    <div class="bgcolor">
-                                        <label>注册资本</label>
-                                        <el-input 
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                         @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.regCapital')}"
-                                        class="regCapital"
-                                        v-model="basCompany.regCapital"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>法人代表</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                         @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.legalPerson')}"
-                                        class="legalPerson"
-                                        v-model="basCompany.legalPerson"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>纳税人登记号</label>
-                                        <el-input 
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                         @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.vatRegno')}"
-                                        class="vatRegno"
-                                        v-model="basCompany.vatRegno"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>成立日期</label>
-                                        <el-date-picker 
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTipsRangedate"
-                                        :class="{redBorder : validation.hasError('basCompany.regtime')}"
-                                        class="regtime datepicker" 
-                                        format="yyyy-MM-dd"
-                                        v-model="basCompany.regtime"
-                                        value-format="yyyy-MM-dd"
-                                        type="date" 
-                                        placeholder=""></el-date-picker>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label class="longLabel">法人身份证号码</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                         @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.legalPersonIdnr')}"   
-                                        class="legalPersonIdnr"
-                                        v-model="basCompany.legalPersonIdnr"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>主管部门代码</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.mgtDeptCode')}"
-                                        class="mgtDeptCode"
-                                        v-model="basCompany.mgtDeptCode"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>主管部门名称</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.mgtDeptName')}"
-                                        class="mgtDeptName"
-                                        v-model="basCompany.mgtDeptName"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>纳税人类别</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.legalPersonType')}"
-                                        class="legalPersonType"
-                                        v-model="basCompany.legalPersonType"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>营业地址</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.businessAddress')}"
-                                        class="businessAddress"
-                                        v-model="basCompany.businessAddress"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label class="longLabel">营业或有效期限</label>
-                                        <!-- businessStart  businessEnd  -->
-                                        <div class="rangeDate">
-                                            <el-date-picker
-                                            :disabled="isEdit" 
-                                            @change="isUpdate()"
-                                            @focus="showErrprTipsRangedate"
-                                           :class="{redBorder : validation.hasError('dateRange')}"
-                                            v-model="dateRange"
-                                            type="daterange"
-                                            format="yyyy-MM-dd"
-                                            value-format="yyyy-MM-dd" 
-                                            range-separator="to"
-                                            align="center"
-                                            unlink-panels
-                                            start-placeholder=""
-                                            end-placeholder="">
-                                            </el-date-picker>
-                                        </div>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>公司简介</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.introduction')}"
-                                        class="introduction"
-                                        v-model="basCompany.introduction"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>通讯地址</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.contactAddress')}"
-                                        class="contactAddress"
-                                        v-model="basCompany.contactAddress"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>邮政编码</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.zipCode')}"
-                                        class="zipCode"
-                                        v-model="basCompany.zipCode"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>联系人</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.contact')}"
-                                        class="contact"
-                                        v-model="basCompany.contact"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>传真</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.fax')}"
-                                        class="fax"
-                                        v-model="basCompany.fax"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>电话</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.phone')}"
-                                        class="phone"
-                                        v-model="basCompany.phone"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>email</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.email')}"
-                                        class="email"
-                                        v-model="basCompany.email"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor">
-                                        <label>web网址</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTips"
-                                        :class="{redBorder : validation.hasError('basCompany.webUrl')}"
-                                        class="webUrl"
-                                        v-model="basCompany.webUrl"
-                                        ></el-input>
-                                    </div>
-                                    <div class="bgcolor longWidth">
-                                        <label>备注</label>
-                                        <el-input
-                                        :disabled="isEdit" 
-                                        @change="isUpdate()"
-                                        @focus="showErrprTipsTextArea"
-                                        :class="{redBorder : validation.hasError('basCompany.remark')}"
-                                        class="remark2" 
-                                        v-model="basCompany.remark"
-                                        type="textarea"
-                                        :autosize="{ minRows: 4, maxRows: 10}"
-                                        placeholder="">
-                                        </el-input>
-                                    </div>
-                                </div>                                  
-                            </el-col>
-                         </div>
-                     </el-col>
+                            </div>
+                            <div class="bgcolor">
+                                <label>公司简介</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.introduction')}"
+                                class="introduction"
+                                v-model="basCompany.introduction"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>通讯地址</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.contactAddress')}"
+                                class="contactAddress"
+                                v-model="basCompany.contactAddress"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>邮政编码</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.zipCode')}"
+                                class="zipCode"
+                                v-model="basCompany.zipCode"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>联系人</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.contact')}"
+                                class="contact"
+                                v-model="basCompany.contact"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>传真</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.fax')}"
+                                class="fax"
+                                v-model="basCompany.fax"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>电话</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.phone')}"
+                                class="phone"
+                                v-model="basCompany.phone"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>email</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.email')}"
+                                class="email"
+                                v-model="basCompany.email"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor">
+                                <label>web网址</label>
+                                <el-input
+                                
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('basCompany.webUrl')}"
+                                class="webUrl"
+                                v-model="basCompany.webUrl"
+                                ></el-input>
+                            </div>
+                            <div class="bgcolor longWidth">
+                                <label>备注</label>
+                                <el-input
+                                :disabled="isEdit" 
+                                @change="isUpdate()"
+                                
+                                @focus="showErrprTipsTextArea"
+                                :class="{redBorder : validation.hasError('basCompany.remark')}"
+                                class="remark2" 
+                                v-model="basCompany.remark"
+                                type="textarea"
+                                :autosize="{ minRows: 4, maxRows: 10}"
+                                placeholder="">
+                                </el-input>
+                            </div>
+                        </div>                                  
+                    </el-col>
+                    </div>
+                </el-col>
                 </el-tab-pane>
-<!--                  财务                            -->
-                <el-tab-pane label="财务" name="finance" v-if="count.isCheckFinance">
+                <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==2 && Business">
                     <el-col :span="24">
                           <div class="financeInfo">
                             <el-col :span="24"  class="getPadding">
                                 <div class="bgcolor">
                                     <label>国税登记号</label>
                                     <el-input 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -725,6 +749,8 @@
                                 <div class="bgcolor">
                                     <label>发税登记号</label>
                                     <el-input 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -732,6 +758,8 @@
                                 <div class="bgcolor">
                                     <label>纳税人识别号</label>
                                     <el-input 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -739,6 +767,8 @@
                                 <div class="bgcolor">
                                     <label>纳税人编码</label>
                                     <el-input 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -746,6 +776,8 @@
                                 <div class="bgcolor">
                                     <label>纳税税种</label>
                                     <el-input 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -753,17 +785,24 @@
                                 <div class="bgcolor">
                                     <label>委托税种</label>
                                     <el-input 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
                                     class="legalPerson" 
                                     >
                                     </el-input>
                                 </div>
                                 <div class="bgcolor">
                                     <label>纳税组织</label>
-                                    <el-checkbox></el-checkbox>
+                                    <el-checkbox
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"></el-checkbox>
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
                                     <el-select 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
+                                    v-model="test"
                                     placeholder=""
                                     class="status" >
                                         <el-option 
@@ -779,14 +818,16 @@
                          </div>
                      </el-col>   
                 </el-tab-pane>
-                <!-- 业务 -->
-                <el-tab-pane label="业务" name="business" v-if="count.isCheckBusiness">
+                <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==3 && Finance">
                     <el-col :span="24">
                           <div class="companyInfo">
                             <el-col :span="24"  class="getPadding">
                                 <div class="bgcolor">
                                     <label>上级业务组织</label>
                                     <el-select
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
+                                    v-model="test"
                                     placeholder=""
                                     >
                                         <el-option 
@@ -800,6 +841,8 @@
                                 <div class="bgcolor">
                                     <label>结算账务组织</label>
                                     <el-input 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
                                     class="legalPerson" 
                                     >
                                     </el-input>
@@ -807,6 +850,9 @@
                                 <div class="bgcolor">
                                     <label>启用状态</label>
                                     <el-select 
+                                    :disabled="isEdit" 
+                                    @change="isUpdate()"
+                                    v-model="test"
                                     placeholder=""
                                     class="status">
                                         <el-option 
@@ -825,6 +871,7 @@
         </el-col>
     </div>
  </el-row>
+
  <el-row>
     <el-col :span="24" class="getPadding">
         <h4 class="h4">审计信息</h4>
@@ -866,18 +913,26 @@ export default({
             search:'',
              selectTree:[
             ],
+            item_ou:{
+                id:'',
+                ouFullname:''
+            },
             selectProps: {
                 children: 'children',
                 label: 'ouFullname',
                 id:'id'
             },
 
-
+            groupCompany:{
+                value:0,
+                label:"无上级公司"
+            },
+            test:'', 
             dateRange:[],//有效时间
             companys:1,
             show:true,
             ifShow:true,
-            activeName: 'company',
+            activeName: 'Company',
             auditInfo:{},//审计信息
             addData:{
                 "ouCode": "",
@@ -893,8 +948,8 @@ export default({
                 "address": "",
                 "status": "",//整数
                 "remark": "",
+                "ouTypes":[1,3],//组织职能
             },
-             basOuTypes:[1,2,3],//组织职能
             basCompany:{//其他信息
                 "ouParentid": "",//整数
                 "legalPerson": "",
@@ -920,10 +975,9 @@ export default({
                 "webUrl": "",
                 "remark": ""
             },
-            ischeck:{isCheckCompany:true,//公司复选框初始选种状态
-                    isCheckFinance:false,//财务复选框初始选种状态
-                    isCheckBusiness:false}//业务复选框初始选种状态 
-            ,
+            Company:true,//公司 
+            Business:false,//业务   
+            Finance:true,//财务
             
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
@@ -985,88 +1039,76 @@ export default({
 
 
       'basCompany.ouParentid': function (value) {//上级公司
-         return this.Validator.value(value).required().integer();
+      if(this.Company){
+          return this.Validator.value(value).required().integer();
+      }
+        //  return this.Validator.value(value).required().integer();
       },
-      'basCompany.status': function (value) {//启用状态
-         return this.Validator.value(value).required().integer();
-      },
-      'basCompany.regCapital': function (value) {//注册资本
-         return this.Validator.value(value).required().integer();
-      },
-      'basCompany.legalPerson': function (value) {//法人代表
-         return this.Validator.value(value).required().maxLength(50);
-      },
-      'basCompany.vatRegno': function (value) {//纳税人登记号
-         return this.Validator.value(value).required().maxLength(200);
-      },
-      'basCompany.regtime': function (value) {//成立日期
-         return this.Validator.value(value).required();
-      },
-      'basCompany.legalPersonIdnr': function (value) {//法人身份证号码
-         return this.Validator.value(value).required().maxLength(50);
-      },
-      'basCompany.mgtDeptCode': function (value) {//主管部门代码
-         return this.Validator.value(value).required().maxLength(50);
-      },
-      'basCompany.mgtDeptName': function (value) {//主管部门名称
-         return this.Validator.value(value).required().maxLength(50);
-      },
-      'basCompany.legalPersonType': function (value) {//纳税人类别
-         return this.Validator.value(value).required().maxLength(50);
-      },
-      'basCompany.businessAddress': function (value) {//营业地址
-         return this.Validator.value(value).required().maxLength(200);
-      },
-      'dateRange': function (value) {//营业或有效期限
-         return this.Validator.value(value).required();
-      },
-      'basCompany.introduction': function (value) {//公司简介
-         return this.Validator.value(value).required().maxLength(200);
-      },
-      'basCompany.contactAddress': function (value) {//通讯地址
-         return this.Validator.value(value).required().maxLength(200);
-      },
-      'basCompany.zipCode': function (value) {//邮政编码
-         return this.Validator.value(value).required().maxLength(20);
-      },
-      'basCompany.contact': function (value) {//联系人
-         return this.Validator.value(value).required().maxLength(50);
-      },
-      'basCompany.fax': function (value) {//传真
-         return this.Validator.value(value).required().maxLength(50);
-      },
-      'basCompany.phone': function (value) {//电话
-         return this.Validator.value(value).required().integer();
-      },
-      'basCompany.email': function (value) {//email
-         return this.Validator.value(value).required().maxLength(50);
-      },
-      'basCompany.webUrl': function (value) {//web网址
-         return this.Validator.value(value).required().maxLength(200);
-      },
-      'basCompany.remark': function (value) {//备注
-         return this.Validator.value(value).required().maxLength(200);
-      },
-    },
-    watch:{
-        ischeck: {
-        handler: function (val, oldVal) { 
-            var x=val.isCheckCompany || val.isCheckFinance
-            if(val.isCheckCompany || val.isCheckFinance || val.isCheckBusiness){}else{
-                this.ischeck.isCheckCompany=true;
-                this.activeName='company';
-            } },
-        deep: true,
-        immediate: true
-        },
+    //   'basCompany.status': function (value) {//启用状态
+    //      return this.Validator.value(value).required().integer();
+    //   },
+    //   'basCompany.regCapital': function (value) {//注册资本
+    //      return this.Validator.value(value).required().integer();
+    //   },
+    //   'basCompany.legalPerson': function (value) {//法人代表
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
+    //   'basCompany.vatRegno': function (value) {//纳税人登记号
+    //      return this.Validator.value(value).required().maxLength(200);
+    //   },
+    //   'basCompany.regtime': function (value) {//成立日期
+    //      return this.Validator.value(value).required();
+    //   },
+    //   'basCompany.legalPersonIdnr': function (value) {//法人身份证号码
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
+    //   'basCompany.mgtDeptCode': function (value) {//主管部门代码
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
+    //   'basCompany.mgtDeptName': function (value) {//主管部门名称
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
+    //   'basCompany.legalPersonType': function (value) {//纳税人类别
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
+    //   'basCompany.businessAddress': function (value) {//营业地址
+    //      return this.Validator.value(value).required().maxLength(200);
+    //   },
+    //   'dateRange': function (value) {//营业或有效期限
+    //      return this.Validator.value(value).required();
+    //   },
+    //   'basCompany.introduction': function (value) {//公司简介
+    //      return this.Validator.value(value).required().maxLength(200);
+    //   },
+    //   'basCompany.contactAddress': function (value) {//通讯地址
+    //      return this.Validator.value(value).required().maxLength(200);
+    //   },
+    //   'basCompany.zipCode': function (value) {//邮政编码
+    //      return this.Validator.value(value).required().maxLength(20);
+    //   },
+    //   'basCompany.contact': function (value) {//联系人
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
+    //   'basCompany.fax': function (value) {//传真
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
+    //   'basCompany.phone': function (value) {//电话
+    //      return this.Validator.value(value).required().integer();
+    //   },
+    //   'basCompany.email': function (value) {//email
+    //      return this.Validator.value(value).required().maxLength(50);
+    //   },
+    //   'basCompany.webUrl': function (value) {//web网址
+    //      return this.Validator.value(value).required().maxLength(200);
+    //   },
+    //   'basCompany.remark': function (value) {//备注
+    //      return this.Validator.value(value).required().maxLength(200);
+    //   },
     },
     computed:{
         count () {
             return this.ischeck;
-            },
-       count1 () {
-            return this.item;
-            },     
+            },   
     },
     created:function(){
         let _this=this;
@@ -1129,35 +1171,42 @@ export default({
                     "address": res.result.address,
                     "status": res.result.status,//整数
                     "remark": res.result.remark,
-                    "id":res.result.id
+                    "id":res.result.id,
+                    "ouTypes":res.result.ouTypes
                 };
+                _this.change_ouType()
                 // _this.basOuTypes=res.result.ouTypes;
-                _this.basCompany={
-                    "ouParentid": res.result.basCompany.ouParentid,//整数
-                    "legalPerson": res.result.basCompany.legalPerson,
-                    "status": res.result.basCompany.status,//整数
-                    "isGroupCompany": res.result.basCompany.isGroupCompany,
-                    "regCapital": res.result.basCompany.regCapital,//整数
-                    "vatRegno": res.result.basCompany.vatRegno,
-                    "regtime": res.result.basCompany.regtime,
-                    "legalPersonIdnr": res.result.basCompany.legalPersonIdnr,
-                    "mgtDeptCode": res.result.basCompany.mgtDeptCode,
-                    "mgtDeptName": res.result.basCompany.mgtDeptName,
-                    // "businessStart": "2018-03-13T01:03:22.616Z",
-                    // "businessEnd": "2018-03-13T01:03:22.616Z",
-                    "legalPersonType": res.result.basCompany.legalPersonType,
-                    "introduction": res.result.basCompany.introduction,
-                    "contact": res.result.basCompany.contact,
-                    "businessAddress": res.result.basCompany.businessAddress,
-                    "contactAddress": res.result.basCompany.contactAddress,
-                    "zipCode": res.result.basCompany.zipCode,
-                    "phone": res.result.basCompany.phone,
-                    "fax": res.result.basCompany.fax,
-                    "email": res.result.basCompany.email,
-                    "webUrl": res.result.basCompany.webUrl,
-                    "remark": res.result.basCompany.remark
-                }
-                _this.dateRange=[res.result.basCompany.businessStart,res.result.basCompany.businessEnd]
+                if(res.result.basCompany){
+                    _this.basCompany={
+                        "ouParentid": res.result.basCompany.ouParentid,//整数
+                        "legalPerson": res.result.basCompany.legalPerson,
+                        "status": res.result.basCompany.status,//整数
+                        "isGroupCompany": res.result.basCompany.isGroupCompany,
+                        "regCapital": res.result.basCompany.regCapital,//整数
+                        "vatRegno": res.result.basCompany.vatRegno,
+                        "regtime": res.result.basCompany.regtime,
+                        "legalPersonIdnr": res.result.basCompany.legalPersonIdnr,
+                        "mgtDeptCode": res.result.basCompany.mgtDeptCode,
+                        "mgtDeptName": res.result.basCompany.mgtDeptName,
+                        // "businessStart": "2018-03-13T01:03:22.616Z",
+                        // "businessEnd": "2018-03-13T01:03:22.616Z",
+                        "legalPersonType": res.result.basCompany.legalPersonType,
+                        "introduction": res.result.basCompany.introduction,
+                        "contact": res.result.basCompany.contact,
+                        "businessAddress": res.result.basCompany.businessAddress,
+                        "contactAddress": res.result.basCompany.contactAddress,
+                        "zipCode": res.result.basCompany.zipCode,
+                        "phone": res.result.basCompany.phone,
+                        "fax": res.result.basCompany.fax,
+                        "email": res.result.basCompany.email,
+                        "webUrl": res.result.basCompany.webUrl,
+                        "remark": res.result.basCompany.remark
+                    }
+               
+                
+                
+                    _this.dateRange=[res.result.basCompany.businessStart,res.result.basCompany.businessEnd]
+                }   
                 _this.auditInfo={
                     createdBy:res.result.createdBy,
                     createdTime:res.result.createdTime,
@@ -1229,8 +1278,13 @@ export default({
                 })
             })
         },
-        nodeClick(data,node,self){
+        nodeClick_ou(data,node,self){
             let _this=this;
+            // _this.item_ou.id=data.id;
+            // _this.item_ou.ouFullname=data.ouFullname;
+            // _this.$nextTick(function(){
+            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+            // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 if($(this).attr('date')==data.id){
                     $(this).click()
@@ -1251,35 +1305,53 @@ export default({
             customClass:className
             });
         },
-        checkFinance:function(e){
+        change_ouType(){
+            let _this=this;
+            for(let i=0;i<_this.addData.ouTypes.length;i++){
+               if(_this.addData.ouTypes[i]==1){
+                   _this.Company=true
+                   break
+               }else{
+                   _this.Company=false
+               }
+            }
+            for(let i=0;i<_this.addData.ouTypes.length;i++){
+               
+               if(_this.addData.ouTypes[i]==2){
+                    _this.Business=true
+                    break
+               }else{
+                   _this.Business=false
+               }
+               
+            }
+            for(let i=0;i<_this.addData.ouTypes.length;i++){
+               if(_this.addData.ouTypes[i]==3){
+                    _this.Finance=true
+                    break
+               }else{
+                   _this.Finance=false
+               }
+            }
+            if(_this.Company && !_this.Finance){//财务公司联动
+                    _this.Finance=true;
+                    _this.addData.ouTypes.push(3)
+            }
+            if(_this.Company){//激活项
+                _this.activeName="Company"
+            }else{
+                if(_this.Business){
+                    _this.activeName="Business"
+                }else{
+                    _this.activeName="Finance"
+                }
+            }
             
-            if(e){//选中财务
-                this.count.isCheckCompany=true;
-                this.activeName='finance';
-            }else{
-                this.activeName='company';
-            }
         },
-        checkCompany:function(e){
-            if(e){//选中公司
-                this.activeName='company';
-            }else{
-                this.activeName='business';
-                if(this.count.isCheckFinance){
-                     this.count.isCheckFinance=false;
-                }
-            }
-        },
-        checkBusiness:function(e){ 
-            if(e){//选中业务
-                this.activeName='business';
-            }else{
-                if(this.count.isCheckFinance){
-                    this.activeName='finance';
-                }else if(!this.count.isCheckFinance&&this.count.isCheckCompany){
-                    this.activeName='company';
-                }
-            }
+        isGroupCompany(){
+            let _this=this;
+            _this.update=true;
+            _this.basCompany.ouParentid='';
         },
         Update(){//修改
             if(this.isEdit==true){
@@ -1297,15 +1369,18 @@ export default({
         },
         save(){
             let _this=this;
+            // console.log(_this.addData)
             if(_this.update){
                 _this.$validate()
                 .then(function (success) {
                     if (success) {
-                        _this.basCompany.businessStart=_this.dateRange[0];
-                        _this.basCompany.businessEnd=_this.dateRange[1];
-                        _this.addData.ouTypes=_this.basOuTypes;
-                        _this.addData.basCompany=_this.basCompany;
-                        
+                        if(_this.Company){
+                            _this.basCompany.businessStart=_this.dateRange[0];
+                            _this.basCompany.businessEnd=_this.dateRange[1];
+                            _this.addData.basCompany=_this.basCompany;
+                        }else{
+                            _this.basCompany={}
+                        }
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
