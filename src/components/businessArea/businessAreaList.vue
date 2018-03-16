@@ -651,9 +651,6 @@
 .bAreaListForm .el-button+.el-button{
     margin-left: 0;
 }
-/* .bAreaListForm .el-tree-node>.el-tree-node__children{
-    overflow: visible!important;
-} */
 .bAreaListForm .el-dialog__footer{
     padding:0;
 }

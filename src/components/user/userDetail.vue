@@ -284,7 +284,7 @@
                     <label>关联角色</label>
                     <div class="addZoo">
                         <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
-                        <a class="addRole"  v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
+                        <a class="addRole" :key="x.displayName" v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
                     </div>
                 </div>
             </div>
@@ -307,10 +307,10 @@
                         <!-- <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                         <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span> -->
                         <div class="menu_item_wapper menu_item_add">
-                            <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
+                            <span :key="x.displayName" class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                         </div>
                         <div class="menu_item_wapper menu_item_del">
-                            <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
+                            <span :key="x.displayName" class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                         </div>
                         <!-- <el-col :span="24" class="load_more">
                             <button>加载更多</button>
@@ -343,17 +343,7 @@
         dialogTableVisible:false,//控制对话框
         menuCheck:true,//未选功能，已选功能
          check:false,//是否授权
-         contain: 
-         [{ 
-            value:0,
-            label: '选项1'
-         },{ 
-            value:1,
-            label: '选项2'
-         }, {
-            value:2,
-            label: '选项3'
-         }],
+        
         addData:{
           "userCode": "",
           "displayName": "",
@@ -464,49 +454,48 @@
                 _this.selectData.languageId=res.result.items;
             })
         },
-        showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsSelect(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsRangedate(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.$el).hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-      showErrprTipsTextArea(e){
-            $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
-            })
-      },
+    //     showErrprTips(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //     showErrprTipsSelect(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //     showErrprTipsRangedate(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.$el).hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //   showErrprTipsTextArea(e){
+    //         $('.tipsWrapper').each(function(){
+    //           if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+    //               $(this).addClass('display_block')
+    //           }else{
+    //               $(this).removeClass('display_block')
+    //           }
+    //         })
+    //   },
       filterNode(value, data) {
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
         },
         loadTree(){
             let _this=this;
-            _this.treeLoading=true;
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;

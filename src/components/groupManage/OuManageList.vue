@@ -70,7 +70,6 @@
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
-                    <span class="search-btn">高级搜索</span>
                 </div>
             </el-col>
             <el-col :span='4' class="border-left" v-loading="treeLoading" id="ouListTree">
@@ -552,19 +551,9 @@
 </script>
 
 <style scoped>
-.store-data-wrapper{
-    width: 100%;
-    height: auto;
-}
 .bg-white{
     background: white;
     border-radius: 3px;
-}
-.input-need{
-    outline: none;
-    border:none;
-    width: 100%;
-    height: 28px;
 }
 .h48{
     height: 48px;
@@ -583,10 +572,6 @@
 .fs12{
     font-size: 12px;
 }
-.border1{
-    border: 1px solid #999999;
-    border-radius: 3px;
-}
 .border-left{
     border-left: 1px solid #E4E4E4;
 }
@@ -604,12 +589,6 @@
 </style>
 
 <style>
-.tenant-management-wrapper .el-input input{
-    border:none;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 0;
-}
 .OuListForm .el-button+.el-button{
     margin-left: 0;
 }
