@@ -453,8 +453,8 @@
     width: 100%;
 }
 .el-checkbox__inner{
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     background: #f4f4f5;
 }
 .el-checkbox__inner::after{
