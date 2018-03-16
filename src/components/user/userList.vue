@@ -616,16 +616,6 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.open{
-    display: inline-block;
-    width: 49px;
-    height: 22px;
-    line-height: 22px;
-    border: 1px solid #cccccc;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-}
 </style>
 
 <style>
