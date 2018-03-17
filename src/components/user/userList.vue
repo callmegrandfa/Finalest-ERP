@@ -445,6 +445,7 @@
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
+                 _this.tableLoading=true;
                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
                 _this.$axios.gets('/api/services/app/User/GetAll',_this.searchDataClick)
