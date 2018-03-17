@@ -284,7 +284,7 @@
                     <label>关联角色</label>
                     <div class="addZoo">
                         <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
-                        <a class="addRole" :key="x.displayName" v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
+                        <a class="addRole" :key="x.id" v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
                     </div>
                 </div>
             </div>
@@ -307,10 +307,10 @@
                         <!-- <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                         <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span> -->
                         <div class="menu_item_wapper menu_item_add">
-                            <span :key="x.displayName" class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
+                            <span :key="x.id" class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
                         </div>
                         <div class="menu_item_wapper menu_item_del">
-                            <span :key="x.displayName" class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
+                            <span :key="x.id" class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                         </div>
                         <!-- <el-col :span="24" class="load_more">
                             <button>加载更多</button>
