@@ -66,14 +66,15 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
                             <el-table-column type="selection" fixed></el-table-column>
-                            <el-table-column prop="deptCode" label="部门编码" fixed >
+                            <el-table-column prop="deptCode" label="部门编码" fixed > 
                                 <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptCode}}</el-button>
+                                    
                                 </template>
                             </el-table-column>
                             <el-table-column prop="deptName" label="部门名称" fixed>
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptCode}}</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
@@ -500,10 +501,13 @@
                 console.log(data)
                 let self = this;
                 if(data.id){
-                    self.$axios.gets('/api/services/app/DeptManagement/GetTree',{id:data.id}).then(function(res){
+                    self.$axios.gets('/api/services/app/DeptManagement/Get',{id:data.id}).then(function(res){
                         console.log(res)
                         self.tableData=res.result
-                        self.tableData.unshift(data);
+                        // if(data.children!=null&&data.children!=''){
+                            self.tableData.unshift(data);
+                        // }
+                        
                         console.log(self.tableData)
                     },function(res){
                         self.treeLoading=false;

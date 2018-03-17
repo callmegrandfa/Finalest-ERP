@@ -113,15 +113,27 @@
                             <label><small>*</small>所属组织</label>
                             <el-select v-model="repositoryData.ouId"
                                        :class="{redBorder : validation.hasError('repositoryData.ouId')}"
-                                       @focus="showErrprTipsSelect" 
                                        :disabled="isEdit"
                                        class="ouId"
+                                       @change='Modify()'
                                        placeholder="">
-                                <el-option v-for="item in ou"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                </el-option>
+                                <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="ouSearch"></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                        :data="ouAr"
+                                        :props="selectOuProps"
+                                        node-key="id"
+                                        default-expand-all
+                                        ref="tree"
+                                        :filter-node-method="filterNode"
+                                        :expand-on-click-node="false"
+                                        @node-click="ouNodeClick"></el-tree> 
+                                <el-option v-show="false"
+                                           :key="countOu.id" 
+                                           :label="countOu.ouFullname" 
+                                           :value="countOu.id"
+                                           id="ou_confirmSelect"></el-option>
                             </el-select>
                         </div>
                         <div class="bgcolor">
@@ -189,13 +201,25 @@
                                        @change="Modify()"
                                        :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.opAreaId')}"
-                                       @focus="showErrprTipsSelect"
                                        class="opAreaId">
-                                <el-option v-for="item in opArea"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                </el-option>
+                                <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="opSearch"></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="opAr"
+                                     :props="selectOpProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="opNodeClick"></el-tree>
+                                <el-option v-show="false"
+                                       :key="countOp.id" 
+                                       :label="countOp.areaName" 
+                                       :value="countOp.id"
+                                       id="op_confirmSelect"></el-option>
+                                
                             </el-select>
                         </div>
 
@@ -206,13 +230,24 @@
                                        @change="Modify()"
                                        :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.adAreaId')}"
-                                       @focus="showErrprTipsSelect"
                                        class="adAreaId">
-                                <el-option v-for="item in adArea"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                </el-option>
+                                <el-input placeholder=""
+                                      class="selectSearch"
+                                      v-model="adSearch"></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="adAr"
+                                     :props="selectAdProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="adNodeClick"></el-tree>
+                                <el-option v-show="false"
+                                           :key="countAd.id" 
+                                           :label="countAd.areaName" 
+                                           :value="countAd.id"
+                                           id="ad_confirmSelect"></el-option>
                             </el-select>
                         </div>
 
@@ -287,14 +322,13 @@
                             <el-select v-model="repositoryData.status" 
                                        placeholder=""
                                        :disabled="isEdit"
+                                       @change='Modify()'
                                        :class="{redBorder : validation.hasError('repositoryData.status')}"
-                                       @focus="showErrprTipsSelect"
                                        class="status">
-                                <el-option v-for="item in status"
-                                            :key="item.itemValue"
-                                            :label="item.itemName"
-                                            :value="item.itemValue">
-                                </el-option>
+                                <el-option v-for="item in statusAr"  
+                                           :key="item.itemValue" 
+                                           :label="item.itemName" 
+                                           :value="item.itemValue"></el-option>
                             </el-select>
                         </div>
                     </el-col>    
@@ -346,12 +380,6 @@
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
               <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
-
-                    <el-table-column prop="" label="" >
-                        <template slot-scope="scope">
-                            <span>{{scope.$index+1}}</span>
-                        </template>
-                    </el-table-column>
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
@@ -480,7 +508,7 @@
         created:function(){
             let self = this;
             self.loadData();
-            self.loadStatus();
+            self.loadSelect();
         },
         validators: {
             'repositoryData.ouId': function (value) {//所属组织
@@ -529,45 +557,19 @@
                 return this.Validator.value(value).required().integer();
             },
         },
+        computed:{
+            countOu () {
+                return this.ouItem;
+            },
+            countAd () {
+                return this.adItem;
+            },
+            countOp () {
+                return this.opItem;
+            },
+        },
         methods:{
-            //---提示错误----------------------------------------------
-            showErrprTips(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
-            },
-            showErrprTipsSelect(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
-            },
-            showErrprTipsRangedate(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.$el).hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
-            },
-            showErrprTipsTextArea(e){
-                    $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                    })
-            },
-            //-------------------------------------------------------------
+            
             //---加载信息-----------------------------------------------
             loadData:function(){//根据id查找仓库信息和仓库地址信息
                 let self = this;
@@ -577,6 +579,16 @@
                     self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
                         self.repositoryData = res.result;
+
+                        //加载完成拿回的下拉框的默认值
+                        self.ouItem.ouFullname = self.repositoryData.ouId_OuName;
+                        self.ouItem.id =  self.repositoryData.ouId;
+
+                        self.adItem.areaName = self.repositoryData.adAreaId_AreaName;
+                        self.adItem.id = self.repositoryData.adAreaId;
+
+                        self.opItem.areaName = self.repositoryData.opAreaId_AreaName;
+                        self.opItem.id = self.repositoryData.opAreaId;
                         // console.log(self.repositoryData);
                     });
                     // console.log(self.$route.params.id)
@@ -592,23 +604,55 @@
                     })
                 }
             },
-            loadStatus:function(){
+            //------------------------------------------------------------
+            //---下拉的数据------------------------------------------------------
+            loadSelect:function(){
                 let self = this;
-                this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    self.status = res.result;
-                    console.log(self.status);
+                //所属组织
+                self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
+                    // console.log(res);
+                    self.ouAr = res.result;
+                    self.loadIcon();
                 },function(res){
                     console.log('err'+res)
-                })
+                });
+                
+                //行政地区*2
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                    // console.log(res);
+                    self.adAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //业务地区*1
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
+                    // console.log(res);
+                    console.log(res)
+                    self.opAr = res.result;
+                    // self.opAr=[{
+                    //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
+                    // }]
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //状态
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                    // console.log(res);
+                    self.statusAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                
             },
-            //------------------------------------------------------------
+            //------------------------------------------------------------------
 
             //---修改完成保存----------------------------------------------
             saveModify:function(){//修改仓库信息保存
                 let self = this;
-
+                console.log(self.repositoryData)
                 if(self.ifModify){
-                    console.log(1)
                     self.$validate().then(function(success){
                         if(success){
                             console.log(12)
@@ -784,6 +828,90 @@
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             //------------------------------------------------------------
+            //---树-------------------------------------------------------------
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            filterNode(value, data) {
+                // console.log(data)
+                if (!value) return true;
+                    return data.areaName.indexOf(value) !== -1;
+            },
+            ouNodeClick:function(data){
+                console.log(data)
+                let self = this;
+                self.ouItem.id = data.id;
+                self.ouItem.ouFullname = data.ouFullname;
+                self.$nextTick(function(){
+                    $('#ou_confirmSelect').click()
+                })
+            },
+            
+            adNodeClick:function(data){
+                let self = this;
+                self.adItem.id = data.id;
+                self.adItem.areaName = data.areaName;
+                self.$nextTick(function(){
+                    $('#ad_confirmSelect').click()
+                })
+            },
+            opNodeClick:function(data){
+                let self = this;
+                self.opItem.id = data.id;
+                self.opItem.areaName = data.areaName;
+                self.$nextTick(function(){
+                    $('#op_confirmSelect').click()
+                })
+            },
+            //-----------------------------------------------------
+            //---提示错误----------------------------------------------
+            showErrprTips(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsSelect(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsRangedate(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.$el).hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsTextArea(e){
+                    $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                    })
+            },
+            //-------------------------------------------------------------
 
         },
 
@@ -824,6 +952,49 @@
                     value:2,
                     label: '361度'
                 }],
+                //---所属组织树形下拉-----
+                ouSearch:'',
+                selectOuProps:{
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+                ouItem:{
+                    id:'',
+                    ouFullname:'',
+                },
+                ouAr:[],//所属组织下拉框
+                //-----------------------
+                //---行政地区树形下拉-----
+                adSearch:'',//树形搜索框的
+                selectAdProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                adItem:{
+                    id:'',
+                    areaName:'',
+                },
+                adAr:[],//行政地区下拉框
+                //-----------------------
+                //---业务地区树形下拉-----
+                    opSearch:'',//树形搜索框的
+                    selectOpProps:{
+                        children: 'items',
+                        label: 'areaName',
+                        id:'id'
+                    },
+                    opItem:{
+                        id:'',
+                        areaName:'',
+                    },
+                    opAr:[],//业务地区下拉框
+                //-----------------------
+
+                //---普通下拉框-----------
+                statusAr:[],
+                //-----------------------
                 stockType: [{//仓库类型
                     value:0,
                     label: '仓库'
