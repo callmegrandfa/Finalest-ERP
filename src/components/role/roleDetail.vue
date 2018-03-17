@@ -160,33 +160,59 @@
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
-                        <a class="addRole" :key="x.displayName" v-for="x in roleChecked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
+                        <!-- <a class="addRole" :key="x.displayName" v-for="x in roleChecked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a> -->
                         <!-- dialog -->
-                        <el-dialog :visible.sync="dialogRole" class="dialogRole">
-                            <template slot="title">
-                                <span style="float:left;">选取用户</span>
-                                <div class="double_bt">
-                                    <template v-if="dialogRole_menuCheck">
-                                        <div class="menu_btn_choose" :class="{menu_btn_active : !dialogRole_menuCheck}" @click="dialogRole_nodeAdd">已选用户</div>
-                                        <div class="menu_btn_choose" :class="{menu_btn_active : dialogRole_menuCheck}">未选用户</div>
-                                    </template>
-                                    <template v-else>
-                                        <div class="menu_btn_choose" :class="{menu_btn_active : !dialogRole_menuCheck}">已选用户</div>
-                                        <div class="menu_btn_choose" :class="{menu_btn_active : dialogRole_menuCheck}" @click="dialogRole_nodeDel">未选用户</div>
-                                    </template>
+                        <el-dialog :visible.sync="dialogRole" title="选取用户" class="dialogRole">
+                            <el-col :span="11">
+                                <div>
+                                    <div>已选</div>
+                                    <el-table 
+                                    :data="roletableData" 
+                                    @selection-change="selectionChangeRole_checked"
+                                    border 
+                                    style="width: 100%" 
+                                    stripe>
+                                        <el-table-column type="selection"></el-table-column>
+                                        <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                                        <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                                        <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                                    </el-table> 
                                 </div>
-                            </template>
-                            <el-col :span="24">
-                                <div class="menu_item_wapper menu_item_add">
-                                    <span :key="x.displayName" class="menu_item" v-for="x in roleChecked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
-                                </div>
-                                <div class="menu_item_wapper menu_item_del">
-                                    <span :key="x.displayName" class="menu_item" v-for="x in roleNochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
-                                </div>
-                                <!-- <el-col :span="24" class="load_more">
-                                    <button>加载更多</button>
-                                </el-col> -->
+                                  
                             </el-col>
+                            <el-col :span="2">
+                                <div class="el-transfer__buttons">
+                                    <el-button :disabled="isUser_nocheked" @click="noCheck_push_check" type="primary" icon="el-icon-arrow-left"></el-button>
+                                    <el-button :disabled="isUser_cheked" @click="check_push_noCheck" type="primary" icon="el-icon-arrow-right"></el-button>
+                                    <!-- <button :disabled="isUser_nocheked" type="button" class="el-button el-button--primary el-transfer__button">
+                                        <span><i class="el-icon-arrow-left"></i></span>
+                                    </button>
+                                    <button :disabled="isUser_cheked" type="button" class="el-button el-button--primary el-transfer__button">
+                                        <span><i class="el-icon-arrow-right"></i></span>
+                                    </button> -->
+                                </div>
+                            </el-col>
+                            <el-col :span="11">
+                                <div>可选</div>
+                                <div>
+                                    <el-table 
+                                    :data="roletableData" 
+                                    @selection-change="selectionChangeRole_nochecked"
+                                    border 
+                                    style="width: 100%" 
+                                    stripe>
+                                    <el-table-column type="selection"></el-table-column>
+                                    <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                                    <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                                    <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                                </el-table>   
+                                </div>
+                                
+                            </el-col>
+                            <span slot="footer">
+                                <el-button>确认</el-button>
+                                <el-button>取消</el-button>
+                            </span>
                         </el-dialog>
                         <el-table 
                         v-loading="roleTableLoading"
@@ -523,6 +549,12 @@ export default({
             roleNochecked:[],
             roleAllNode:[],//所有角色
             checkedRoleCode:[],//只有当用户修改时此数据不为空，新增页面永远为空，存储用户已经选中所有信息
+
+
+            selectionUser_checked: [],//复选框选中数据
+            selectionUser_nochecked: [],//复选框选中数据
+            isUser_nocheked:true,//可选
+            isUser_cheked:true,//已选
 // -------------分配组织-------------------
             ouTableData:[],//分配组织数据
             ouPageIndex:1,//分页的当前页码
@@ -543,9 +575,9 @@ export default({
             fnTableLoading:true,
             dialogFn:false,
             dialogFn_menuCheck:true,
-            roleChecked:[],
-            roleNochecked:[],
-            roleAllNode:[],//所有权限
+            fnChecked:[],
+            fnNochecked:[],
+            fnAllNode:[],//所有权限
             checkedFnCode:[],
             fnActiveName:'duty',
 // -------------tree-------------------
@@ -580,8 +612,9 @@ export default({
     created () {
       let _this=this;
       _this.loadTree_ou();
+      _this.getUserAllData();
       _this.getSelectData();
-      _this.loadRoleTable();
+
       _this.loadOuTable();
       _this.loadFnTable();
       _this.fnLoadTree();
@@ -592,55 +625,8 @@ export default({
       }
     },
     methods:{
-        getSelectData(){
-            let _this=this;
-            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
-            // 启用状态
-            _this.selectData.Status001=res.result;
-            })
-        },
-        back(){
-             this.$store.state.url='/role/roleList/default'
-             this.$router.push({path:this.$store.state.url})
-        },
-        getRoleData(){
-           let _this=this;
-           _this.$axios.gets('/api/services/app/Role/Get',{id:_this.$route.params.id})
-           .then(function(res){console.log(res.result)
-                _this.addData= res.result
-                if(res.result.userCodes.length>0 && res.result.userCodes.length){
-                    _this.checkedRoleCode=res.result.userCodes;
-                }
-                if(res.result.permissions.length>0 && res.result.permissions.length){
-                    _this.checkedFnCode=res.result.permissions;
-                }
-                
-           },function(res){
-
-           })
-       }, 
-        delThisRole(row){//关联用户 删除
-            let _this=this;
-            _this.$axios.deletes('/api/services/app/User/Delete',{id:row.id})
-            .then(function(res){
-                _this.loadRoleTable();
-            },function(res){
-            })
-        },
-        seeThisRole(row){//关联用户 查看
-            this.$store.state.url='/user/userModify/'+row.id
-            this.$router.push({path:this.$store.state.url})
-        },
-        delThisFn(row){//分配功能 删除
-            let _this=this;
-            _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',{id:row.id})
-            .then(function(res){
-                _this.loadFnTable();
-                _this.fnLoadTree();
-            },function(res){
-            })
-        },
-        loadRoleTable(){//获取关联用户数据
+// --------------------关联用户----------------------
+        getUserAllData(){//获取关联用户数据
             let _this=this;
             _this.roleTableLoading=true
             _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:(_this.rolePage-1)*_this.roleOneItem,MaxResultCount:_this.roleOneItem})
@@ -658,22 +644,60 @@ export default({
                     _this.roleNochecked=_this.uniqueArrayRole(_this.allNode,_this.roleChecked)
                 }else{
                     _this.roleNochecked=_this.roleAllNode
-                }    
-                // if(_this.roleAllNode.length>0 && _this.checkedRoleCode.length>0){
-                //     for(let i=0;i<_this.roleAllNode.length;i++){
-                //             for(let x=0;x<_this.checkedRoleCode.length;x++){
-                //                 if(_this.checkedRoleCode[x]==_this.roleAllNode[i].roleCode){
-                //                     let item=_this.roleAllNode[i]
-                //                     _this.roleChecked.push(item)//获取已选中的角色
-                //                     _this.roleNochecked.splice(i,1);//未选中角色
-                //                 }
-                //             }
-                //         }
-                // }
-                },function(res){
+                }
+            },function(res){
                 _this.roleTableLoading=false;
             })
         },
+        selectionChangeRole_checked(val) {//dialogRole已选
+            let _this=this;
+            _this.selectionUser_checked = val;
+            if(val.length==0){
+                _this.isUser_cheked=true
+            }else{
+                _this.isUser_cheked=false
+            }
+        },
+        selectionChangeRole_nochecked(val) {//dialogRole可选
+            let _this=this;
+            _this.selectionUser_nochecked = val;
+            if(val.length==0){
+                _this.isUser_nocheked=true
+            }else{
+                _this.isUser_nocheked=false
+            }
+        },
+        noCheck_push_check(){
+            
+        },
+        check_push_noCheck(){
+
+        },
+//--------------------角色信息-------------------
+        getSelectData(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+            // 启用状态
+            _this.selectData.Status001=res.result;
+            })
+        },
+        
+        getRoleData(){
+           let _this=this;
+           _this.$axios.gets('/api/services/app/Role/Get',{id:_this.$route.params.id})
+           .then(function(res){
+                _this.addData= res.result
+                if(res.result.userCodes.length>0 && res.result.userCodes.length){
+                    _this.checkedRoleCode=res.result.userCodes;
+                }
+                if(res.result.permissions.length>0 && res.result.permissions.length){
+                    _this.checkedFnCode=res.result.permissions;
+                }
+                
+           },function(res){
+
+           })
+       }, 
         loadOuTable(){//获取分配组织数据
             let _this=this;
             _this.ouTableLoading=true
@@ -898,6 +922,11 @@ export default({
             let _this=this;
             console.log(_this.addData)
         },
+        back(){
+             this.$store.state.url='/role/roleList/default'
+             this.$router.push({path:this.$store.state.url})
+        },
+        
         
     }
        

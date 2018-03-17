@@ -499,27 +499,6 @@ const routes = [
                     { path: '/role/roleModify/:id', component: roleModify, name: 'roleModify' },
                 ]
             },
-            {
-                path: '/tenant',
-                component: tenant,
-                name: 'tenant',
-                redirect: function() { //租户管理
-                    let name = 'tenant';
-                    let activeRouter = store.state.activeRouter;
-
-                    for (let i = 0; i < activeRouter.length; i++) {
-                        if (activeRouter[i].name == name) {
-
-                            return activeRouter[i].url;
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-
-
         ]
     },
 

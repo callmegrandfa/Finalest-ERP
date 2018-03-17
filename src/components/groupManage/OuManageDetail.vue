@@ -19,7 +19,150 @@
         <el-row>
                 <!--公司信息  -->
             <el-col :span="24" class="getPadding">
-               <div class="tipsWrapper" name="ouCode">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span 
+                            :class="{block : !validation.hasError('addData.ouCode')}">
+                            编码{{ validation.firstError('addData.ouCode') }},
+                            </span>
+
+                            <span 
+                            :class="{block : !validation.hasError('addData.ouName')}">
+                            名称{{ validation.firstError('addData.ouName') }},
+                            </span>
+                           <span 
+                            :class="{block : !validation.hasError('addData.ouFullname')}">
+                            全称{{ validation.firstError('addData.ouFullname') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('addData.ouParentid')}">
+                            上级业务单元{{ validation.firstError('addData.ouParentid') }}
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('addData.accCchemeId')}">
+                            会计方案{{ validation.firstError('addData.accCchemeId') }}
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('addData.accStartMonth')}">
+                            启用月份{{ validation.firstError('addData.accStartMonth') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('addData.baseCurrencyId')}">
+                            本位币种{{ validation.firstError('addData.baseCurrencyId') }},
+                            </span> 
+                             <span 
+                            :class="{block : !validation.hasError('addData.companyOuId')}">
+                            所属公司{{ validation.firstError('addData.companyOuId') }},
+                            </span> 
+                            <span 
+                            :class="{block : !validation.hasError('addData.contactPerson')}">
+                            联系人{{ validation.firstError('addData.contactPerson') }},
+                            </span> 
+                            <span 
+                            :class="{block : !validation.hasError('addData.phone')}">
+                            电话{{ validation.firstError('addData.phone') }},
+                            </span>                
+                            <span 
+                            :class="{block : !validation.hasError('addData.address')}">
+                            地址{{ validation.firstError('addData.address') }},
+                            </span> 
+                            <span 
+                            :class="{block : !validation.hasError('addData.status')}">
+                            启用状态{{ validation.firstError('addData.status') }},
+                            </span> 
+                            <span 
+                            :class="{block : !validation.hasError('addData.remark')}">
+                            备注{{ validation.firstError('addData.remark') }},
+                            </span> 
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.ouParentid')}">
+                            公司：上级公司{{ validation.firstError('basCompany.ouParentid') }},
+                            </span> 
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.status')}">
+                            公司：启用状态{{ validation.firstError('basCompany.status') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.regCapital')}">
+                            公司：注册资本{{ validation.firstError('basCompany.regCapital') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.legalPerson')}">
+                            公司：法人代表{{ validation.firstError('basCompany.legalPerson') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.vatRegno')}">
+                            公司：纳税人登记号{{ validation.firstError('basCompany.vatRegno') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.regtime')}">
+                            公司：成立日期{{ validation.firstError('basCompany.regtime') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.legalPersonIdnr')}">
+                            公司：法人身份证号码{{ validation.firstError('basCompany.legalPersonIdnr') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.mgtDeptCode')}">
+                            公司：主管部门代码{{ validation.firstError('basCompany.mgtDeptCode') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.mgtDeptName')}">
+                            公司：主管部门名称{{ validation.firstError('basCompany.mgtDeptName') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.legalPersonType')}">
+                            公司：纳税人类别{{ validation.firstError('basCompany.legalPersonType') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.businessAddress')}">
+                            公司：营业地址{{ validation.firstError('basCompany.businessAddress') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('dateRange')}">
+                            公司：营业或有效期限{{ validation.firstError('dateRange') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.introduction')}">
+                            公司：公司简介{{ validation.firstError('basCompany.introduction') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.contactAddress')}">
+                            公司：通讯地址{{ validation.firstError('basCompany.contactAddress') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.zipCode')}">
+                            公司：邮政编码{{ validation.firstError('basCompany.zipCode') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.contact')}">
+                            公司：联系人{{ validation.firstError('basCompany.contact') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.fax')}">
+                            公司：传真{{ validation.firstError('basCompany.fax') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.phone')}">
+                            公司：电话{{ validation.firstError('basCompany.phone') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.email')}">
+                            公司：email{{ validation.firstError('basCompany.email') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.webUrl')}">
+                            公司：web网址{{ validation.firstError('basCompany.webUrl') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('basCompany.remark')}">
+                            公司：备注{{ validation.firstError('basCompany.remark') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+               <!-- <div class="tipsWrapper" name="ouCode">
                     <div class="errorTips" :class="{block : !validation.hasError('addData.ouCode')}">
                         <p class="msgDetail">错误提示：编码{{ validation.firstError('addData.ouCode') }}</p>
                     </div>
@@ -191,7 +334,7 @@
                     <div class="errorTips" :class="{block : !validation.hasError('basCompany.remark')}">
                         <p class="msgDetail">错误提示：备注{{ validation.firstError('basCompany.remark') }}</p>
                     </div>
-                </div>
+                </div> -->
                 
 
 
@@ -1100,40 +1243,44 @@ export default({
             // })
         },
         showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsSelect(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsRangedate(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.$el).hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.$el).hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsTextArea(e){
-            $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //   if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+            //       $(this).addClass('display_block')
+            //   }else{
+            //       $(this).removeClass('display_block')
+            //   }
+            // })
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -1232,6 +1379,7 @@ export default({
         },
         save(){
             let _this=this;
+            $('.tipsWrapper').css({display:'block'})
             _this.$validate()
             .then(function (success) {
                 if (success) {

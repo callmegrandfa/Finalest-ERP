@@ -35,9 +35,8 @@
                         <el-input v-model="form.employeeName"></el-input>
                     </el-form-item>
                     <el-form-item label="业务组织"  prop="ouFullname">
-                        <el-select v-model="form.ouFullname">
-                        <el-option label="恒康" value="0"></el-option>
-                        <el-option label="总部" value="1"></el-option>
+                        <el-select v-model="form.ouId">
+                        <el-option v-for="item in ouIdMsg" :label="item.ouFullname" :key="item.ouId" :value="item.ouId"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="手机号码" >
@@ -45,14 +44,13 @@
                     </el-form-item>
                     <el-form-item label="部门" >
                         <el-select v-model="form.department">
-                        <el-option label="采购" value="0"></el-option>
-                        <el-option label="店铺" value="1"></el-option>
+                            <el-option v-for="item in depMsg" :key="item.shopId" :label="item.deptName" :value="item.shopId"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="性别">
                         <el-select v-model="form.sex">
                         <el-option label="男" value="1"></el-option>
-                        <el-option label="女" value="0"></el-option>
+                        <el-option label="女" value="2"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="生日" >
@@ -60,16 +58,12 @@
                     </el-form-item>
                     <el-form-item label="所属店铺">
                         <el-select v-model="form.shopName">
-                        <el-option label="测试店铺1" value="2"></el-option>
-                        <el-option label="测试店铺0" value="0"></el-option>
+                        <el-option v-for="item in shopMsg" :key="item.shopId" :label="item.shopName" :value="item.shopId"></el-option>
                         </el-select>
                     </el-form-item>                            
                     <el-form-item label="职员类型">
                         <el-checkbox-group v-model="form.employeeTypes">
-                        <el-checkbox  label="采购" name="type"></el-checkbox>
-                        <el-checkbox label="财务" name="type"></el-checkbox>
-                        <el-checkbox label="销售" name="type"></el-checkbox>
-                        <el-checkbox label="总部" name="type"></el-checkbox>
+                         <el-checkbox v-for="item in employeeIdoptions"  :label="item.label" :key="item.label">{{item.text}}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                     <el-form-item label="备注">
@@ -88,12 +82,15 @@
         data(){
             return { 
                 id:'',
+                SkipCount:0,
+                MaxResultCount:10,
                  form: {
                         employeeCode: '',
                         employeeName: '',
                         mobile: '',
                         department: '',
                         sex:'',
+                        ouId:'',
                         birthday:'',
                         shopName:'',
                         employeeTypes: [],
@@ -107,7 +104,7 @@
                         { required: true, trigger: 'blur' },
                     ],
                     ouFullname: [
-                         { required: true, message: '请选择', trigger: 'change' }
+                         { required: true, message: '请选择', trigger: 'blur' }
                     ],
                     
                 },
@@ -119,6 +116,15 @@
                         return this.Validator.value(value).required().integer();
                     },
                 },
+                 employeeIdoptions:[//------职员类型--------
+                    { label: 1,text: '采购'},
+                    { label: 2,text: '财务'}, 
+                    { label: 3,text: '销售'}, 
+                    { label: 4,text: '总部'}, 
+                ],
+                ouIdMsg:[],// 业务组织信息
+                depMsg:[],//部门信息
+                shopMsg:[],//店铺信息
                 // 增加职员所需列表数据
                 addList:{
                         "ouId": 0,
@@ -140,9 +146,55 @@
              }                                                        
         },
         created:function(){
+            this.getOuIdMsg();
+            this.getDepmsg();
+            this.getShopmsg();
 
         },
         methods: {
+            // 获取业务组织信息
+            getOuIdMsg(){
+                let _this=this;
+                this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount
+                }).then(
+                    rsp=>{
+                        // console.log(rsp.result.items);
+                        for(let val of rsp.result.items){
+                           _this.ouIdMsg.push({ouFullname:val.ouFullname,ouId:val.id})
+                        }
+                        // console.log( _this._this.depMsg);
+                    }
+                )
+            },
+            // 获取部门信息
+            getDepmsg(){
+                let _this=this;
+                this.$axios.gets('/api/services/app/DeptManagement/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount
+                }).then(
+                    rsp=>{
+                        // console.log(rsp.result.items);
+                        for(let val of rsp.result.items){
+                             _this.depMsg.push({deptName:val.deptName,DepId:val.id})
+                        }
+                        // console.log( _this.depMsg);
+                    }
+                )
+            },
+            // 获取店铺信息
+            getShopmsg(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/ShopManagement/GetAll',{
+                    SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount
+                }).then(
+                    rsp=>{
+                        for(let val of rsp.result.items){
+                             _this.shopMsg.push({shopName:val.shopName,shopId:val.id})
+                        }
+                        // console.log( _this.shopMsg);
+                        
+                    }
+                )
+            },
             // 成功的提示框
              open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -176,7 +228,8 @@
                 _this.addList.shopId=_this.form.shopName;
                 _this.addList.remark=_this.form.remark;
                 _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
-                                res=>{
+                                rsp=>{
+                                    // console.log(rsp);
                                     _this.open('新增成功','el-icon-circle-check','successERP');
                                 },
                                 res=>{
@@ -187,26 +240,27 @@
         },
     }
 </script>
+
 <style scope>
     .staff_detail_form{
         width: 70%;
     }
-   .pl{
-       padding-left:20%;
-   }
-   .pt{
-       padding-top:10px;
-   }
-   .fs{
-       font-size:12px;
-   }
+    .pl{
+        padding-left:20%;
+    }
+    .pt{
+        padding-top:10px;
+    }
+    .fs{
+        font-size:12px;
+    }
     .customer-infor-wrapper .el-select{
         display: block;
     }    
     .btnBd {
-    width: 100%;
-    border-bottom: 1px solid #E4E4E4;
-    padding-bottom: 5px;
+        width: 100%;
+        border-bottom: 1px solid #E4E4E4;
+        padding-bottom: 5px;
     }
 </style>
 

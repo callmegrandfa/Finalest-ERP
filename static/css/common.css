@@ -686,7 +686,6 @@ table .el-input__icon{
   position: relative;
   border: 1px solid #f66;
   background-color: #ffdfdf;
-  height: 24px;
 }
 .errorTips .closeMsg{
   width: 15px;

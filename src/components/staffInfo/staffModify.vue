@@ -41,8 +41,8 @@
                         </el-form-item>
                         <el-form-item label="业务组织" class="pr">
                             <el-select v-model="form.ouId" :disabled="isForbid" @change="isUpdate">
-                                <el-option label="恒康" :value="0"></el-option>
-                                <el-option label="广东" :value="1"></el-option>
+                                 <el-option v-for="item in ouIdoptions" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="手机号码" class="pr">
@@ -50,15 +50,14 @@
                         </el-form-item>
                         <el-form-item label="部门" class="pr">
                             <el-select v-model="form.deptId" :disabled="isForbid" @change="isUpdate">
-                                <el-option label="仓库" :value="0"></el-option>
-                                <el-option label="总部1" :value="1"></el-option>
-                                <el-option label="总部2" :value="2"></el-option>
+                               <el-option v-for="item in deptIdoptions" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="性别">
                             <el-select v-model="form.sex" :disabled="isForbid" @change="isUpdate">
                                 <el-option label="男" :value="1"></el-option>
-                                <el-option label="女" :value="0"></el-option>
+                                <el-option label="女" :value="2"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="生日" class="pr">
@@ -66,16 +65,13 @@
                         </el-form-item>
                         <el-form-item label="所属店铺">
                             <el-select v-model="form.shopId" :disabled="isForbid" @change="isUpdate">
-                            <el-option label="仓库" :value="0"></el-option>
-                            <el-option label="北京烤鸭" :value="1"></el-option>
+                           <el-option v-for="item in shopIdoptions" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
                             </el-select>
                         </el-form-item>                            
                         <el-form-item label="职员类型">
                             <el-checkbox-group v-model="employeeTypeIds" :disabled="isForbid" @change="isUpdate">
-                                <el-checkbox  :label="0" name="type">采购</el-checkbox>
-                                <el-checkbox  :label="1" name="type">财务</el-checkbox>
-                                <el-checkbox  :label="2" name="type">销售</el-checkbox>
-                                <el-checkbox  :label="3" name="type">总部</el-checkbox>
+                                <el-checkbox v-for="item in employeeIdoptions"  :label="item.label" :key="item.label">{{item.text}}</el-checkbox>
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="备注">
@@ -123,39 +119,24 @@
                         ],
                         
                 },
-                "employeeTypes": [
-                            {
-                            "groupId": 0,
-                            "employeeId": 0,
-                            "employeeTypeid": 0,
-                            "employeeTypeidTValue": "采购"
-                            },
-                            {
-                            "groupId": 0,
-                            "employeeId": 0,
-                            "employeeTypeid": 1,
-                            "employeeTypeidTValue": "财务"
-                            },
-                            {
-                            "groupId": 0,
-                            "employeeId": 0,
-                            "employeeTypeid": 2,
-                            "employeeTypeidTValue": "销售"
-                            },
-                            {
-                            "groupId": 0,
-                            "employeeId": 0,
-                            "employeeTypeid": 3,
-                            "employeeTypeidTValue": "总部"
-                            },
+                ouIdoptions: [],//------所属组织--------
+                deptIdoptions:[],//------所属部门--------
+                shopIdoptions:[],//------所属店铺--------
+                
+                employeeIdoptions:[//------职员类型--------
+                    { label: 1,text: '采购'},
+                    { label: 2,text: '财务'}, 
+                    { label: 3,text: '销售'}, 
+                    { label: 4,text: '总部'}, 
                 ],
+               
                 updateList:{//保存数据需要的参数
                             "ouId": 0,
                             "employeeCode": "",
                             "employeeName": "",
                             "mobile": "",
                             "deptId": 0,
-                            "sex": 0,
+                            "sex": 1,
                             "birthday": "",
                             "discountStart": 0,
                             "discountEnd": 0,
@@ -172,23 +153,78 @@
             }
         },
         created:function(){
-            let _this=this;
-            // 获取数据渲染
-            _this.$axios.gets('/api/services/app/EmployeeManagement/Get',{id:this.$route.params.id})
-            .then(
-                rsp=>{
-                    rsp.result.sex= + rsp.result.sex;
-                    rsp.result.ouId= + rsp.result.ouId;
-                    rsp.result.deptId= + rsp.result.deptId;
-                    _this.employeeTypeIds.push(rsp.result.employeeTypes[0].employeeTypeid);
-                    _this.form=rsp.result;
-                }
-            )
+            this.getDataList();
+            this.getOuIdMsg();
+            this.getDepmsg();
+            this.getShopmsg();
+            
         },
         methods: {
-            onSubmit() {
-                console.log('submit!');
+            // 获取数据渲染
+            getDataList(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/EmployeeManagement/Get',{id:this.$route.params.id})
+                .then(
+                    rsp=>{
+                        rsp.result.sex= + rsp.result.sex;
+                        rsp.result.ouId= + rsp.result.ouId;
+                        rsp.result.deptId= + rsp.result.deptId;
+                        for(let val of rsp.result.employeeTypes){
+                            _this.employeeTypeIds.push(val.employeeTypeid)
+                        }
+                        // _this.employeeTypeIds.push(rsp.result.employeeTypes[0].employeeTypeid);
+                        // console.log(_this.employeeTypeIds);                    
+                        // console.log(rsp.result.employeeTypes);                    
+                        _this.form=rsp.result;
+                    }
+                )
             },
+            // 获取业务组织信息
+            getOuIdMsg(){
+                let _this=this;
+                this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount
+                }).then(
+                    rsp=>{
+                        // console.log(rsp.result.items);
+                        for(let val of rsp.result.items){
+                           _this.ouIdoptions.push({label:val.ouFullname,value:val.id})
+                        }
+                        // console.log( _this._this.depMsg);
+                    }
+                )
+            },
+            // 获取部门信息
+            getDepmsg(){
+                let _this=this;
+                this.$axios.gets('/api/services/app/DeptManagement/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount
+                }).then(
+                    rsp=>{
+                        // console.log(rsp.result.items);
+                        for(let val of rsp.result.items){
+                             _this.deptIdoptions.push({label:val.deptName,value:val.id})
+                        }
+                        // console.log( _this.depMsg);
+                    }
+                )
+            },
+            // 获取店铺信息
+            getShopmsg(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/ShopManagement/GetAll',{
+                    SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount
+                }).then(
+                    rsp=>{
+                        for(let val of rsp.result.items){
+                             _this.shopIdoptions.push({label:val.shopName,value:val.id})
+                        }
+                        // console.log( _this.shopMsg);
+                        
+                    }
+                )
+            },
+
+
+
             // 成功的提示框
              open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -224,7 +260,7 @@
                 _this.updateList.sex=_this.form.sex;
                 _this.updateList.birthday=_this.form.birthday;
                 _this.updateList.shopId=_this.form.shopId;
-                _this.updateList.employeeTypeIds=_this.ids;
+                _this.updateList.employeeTypeIds=_this.employeeTypeIds;
                 _this.updateList.remark=_this.form.remark;
                 _this.updateList.id=_this.form.id;
                 if(_this.update){

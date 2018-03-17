@@ -418,7 +418,6 @@
             SimpleSearchClick(){
                 let _this=this;
                  _this.load=false;
-                 _this.tableLoading=true;
                  _this.searchDataClick={
                     OuCode:_this.searchData.OuCode,//编码
                     Name: _this.searchData.Name,//名称
@@ -431,6 +430,7 @@
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
+                 _this.tableLoading=true;
                  _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',_this.searchDataClick)

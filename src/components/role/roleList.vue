@@ -334,7 +334,7 @@
                 let _this=this;
                  _this.load=false;
                  _this.searchBtClick=true;
-                 _this.tableLoading=true;
+                 
                  _this.searchDataClick={
                     roleCode:_this.searchData.roleCode,//
                     displayName: _this.searchData.displayName,//
@@ -346,6 +346,7 @@
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
+                 _this.tableLoading=true;
                  _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
                  console.log(_this.searchDataClick)
