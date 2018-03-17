@@ -30,11 +30,11 @@
         <div v-show="ifShow">   
             <el-row>
                 <el-col :span="24" class="getPadding"> 
-                    <div class="tipsWrapper" name="ouId">
+                    <!-- <div class="tipsWrapper" name="ouId">
                         <div class="errorTips" :class="{block : !validation.hasError('createContactParams.ouId')}">
                             <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.ouId') }}</p>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="tipsWrapper" name="contact">
                         <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contact')}">
                             <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contact') }}</p>
@@ -148,7 +148,7 @@
                                     :value="countOu.id"
                                     id="ou_confirmSelect"></el-option>
                         </el-select>
-                    </div> 
+                    </div>
 
 
                     <div class="bgcolor">
@@ -235,10 +235,10 @@
                                 placeholder=""
                                 class="contactGradeId"
                                 :class="{redBorder : validation.hasError('createContactParams.contactGradeId')}">
-                            <el-option v-for="item in gradeAr" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue"></el-option>
+                            <el-option v-for="itema in gradeAr" 
+                                        :key="itema.itemValue" 
+                                        :label="itema.itemName" 
+                                        :value="itema.itemValue"></el-option>
                         </el-select>
                     </div>
                     <div class="bgcolor">
@@ -247,10 +247,10 @@
                                 placeholder=""
                                 class="isCustomer"
                                 :class="{redBorder : validation.hasError('createContactParams.isCustomer')}">
-                            <el-option v-for="item in typeAr" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue"></el-option>
+                            <el-option v-for="itemb in typeAr" 
+                                        :key="itemb.itemValue" 
+                                        :label="itemb.itemName" 
+                                        :value="itemb.itemValue"></el-option>
                         </el-select>
                     </div>   
                     <div class="bgcolor">
@@ -385,10 +385,10 @@
                                    class="status"
                                    placeholder=""
                                    :class="{redBorder : validation.hasError('createContactParams.status')}">
-                            <el-option v-for="item in statusAr"  
-                                       :key="item.itemValue" 
-                                       :label="item.itemName" 
-                                       :value="item.itemValue"></el-option>
+                            <el-option v-for="itemc in statusAr"  
+                                       :key="itemc.itemValue" 
+                                       :label="itemc.itemName" 
+                                       :value="itemc.itemValue"></el-option>
                         </el-select>
                     </div>
                 </el-col>
@@ -863,7 +863,7 @@ export default({
                 'mnemonic':'',//助记码
                 'contactClassId':'',//客户分类
                 'contactWorkPropertyId':'',//客户性质
-                'contactGradeId':'1',//客户/供应商等级ID,
+                'contactGradeId':'1',//客户等级ID,
                 'isSupplier':'1',//是否为供应商
                 'isCustomer':'',//是否客户
                 'ficaOuId':'',//财务组织单元 ID
@@ -1069,7 +1069,7 @@ export default({
                 //行政地区*2
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
                     console.log(res);
-                    self.opAr = res.result;
+                    self.adAr = res.result;
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
@@ -1429,7 +1429,6 @@ export default({
         },
         fiNodeClick:function(data){
             let self = this;
-            console.log(data)
             self.fiItem.id = data.id;
             self.fiItem.fiFullname = data.ouFullname;
             self.$nextTick(function(){
@@ -1446,6 +1445,7 @@ export default({
         },
         opNodeClick:function(data){
             let self = this;
+            console.log(data)
             self.opItem.id = data.id;
             self.opItem.areaName = data.areaName;
             self.$nextTick(function(){

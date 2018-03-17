@@ -65,8 +65,8 @@
                     </el-col>
                     
                     <el-col :span="22" class="border-left">
-                                <el-row class="h48 pt5">
-                                    <el-col :span="16">
+                                <el-row class="h48">
+                                    <el-col :span="18" class="pt5">
                                             <button class="erp_bt bt_add" @click="addStaff">
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/bt_add.png">
@@ -75,7 +75,7 @@
                                         </button>
 
 
-                                        <button class="erp_bt bt_del" @click="confirmDelSelected">
+                                        <button class="erp_bt bt_del" @click="confirmDelSelected" :disabled="isTrue">
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/bt_del.png">
                                             </div>
@@ -105,31 +105,36 @@
                                             <span class="btDetail">打印</span>
                                         </button>
                                     </el-col>
-                                    <el-col :span="8">
+                                    <el-col :span="5">
                                         <div class="search-input">
                                             <el-input
                                                 placeholder="搜索..."
                                                 prefix-icon="el-icon-search"
-                                                v-model="searchContent"
+                                                v-model="searchContent" @change="searchTable"
                                                 >
                                             </el-input>
                                         </div>
                                     </el-col>
+                                    <el-col :span="1" class="defineBtn">
+                                        <el-button round size="mini" icon="el-icon-setting" disabled>自定义</el-button>
+                                    </el-col>
                                 </el-row>
-                                
-                               
                     </el-col>
                 </el-row> 
                  <el-row class="pb10">
                         <div id="bg-white" style="background-color: rgba(251, 252, 253, 1);">
-
-                                    
-                            <el-table :data="allList" border style="width: 100%"  @selection-change="handleSelectionChange"  height="400">
+                            <el-table :data="allList" border style="width: 100%"  @selection-change="handleSelectionChange" height="500"  stripe>
                                 <el-table-column type="selection" width="50">
                                 </el-table-column>
                                 <el-table-column prop="employeeCode" label="职员编码" width="120" fixed>
+                                    <template slot-scope="scope">
+                                        <el-button type="text" size="small" @click="checkDetail(scope.row)">{{allList[scope.$index].employeeCode}}</el-button>
+                                    </template>
                                 </el-table-column>
-                                <el-table-column prop="employeeName" label="职员名称"  width="120">
+                                <el-table-column prop="employeeName" label="职员名称"  width="120" fixed> 
+                                    <template slot-scope="scope">
+                                        <el-button type="text" size="small" @click="checkDetail(scope.row)">{{allList[scope.$index].employeeName}}</el-button>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column prop="ouFullname" label="业务组织"  width="120">
                                 </el-table-column>
@@ -138,7 +143,7 @@
                                 <el-table-column prop="deptName" label="所属部门"
                                             width="120">
                                 </el-table-column>
-                                            <el-table-column prop="sex" label="性别"
+                                            <el-table-column prop="sexTValue" label="性别"
                                             width="120">
                                 </el-table-column>
                                 <el-table-column prop="birthday" label="生日"
@@ -190,6 +195,7 @@
             DeptId:'',
             ShopId:'',
         },
+        isTrue:true,//批量删除键能否点击
         totalCount: 0,
         searchContent: "",
         info: {
@@ -257,34 +263,34 @@
     methods: {
         // 获取所有数据，默认渲染所有数据
         getAllList: function() {
-        let _this = this;
-        _this.$axios
-            .gets("/api/services/app/EmployeeManagement/GetAll", {
-            SkipCount: (_this.pageIndex - 1) * _this.page_size,
-            MaxResultCount: _this.page_size
-            })
-            .then(rsp => {
-            _this.allList = rsp.result.items;
-            _this.totalCount = rsp.result.totalCount;
-            // console.log(_this.allList);
-            });
+            let _this = this;
+            _this.$axios
+                .gets("/api/services/app/EmployeeManagement/GetAll", {
+                SkipCount: (_this.pageIndex - 1) * _this.page_size,
+                MaxResultCount: _this.page_size
+                })
+                .then(rsp => {
+                _this.allList = rsp.result.items;
+                _this.totalCount = rsp.result.totalCount;
+                console.log(_this.allList);
+                // console.log(rsp.result.items);
+                });
         },
 
         // 左侧搜索展开--------------------------------
         closeLeft: function() {
-        let self = this;
-        self.ifWidth = false;
+            let self = this;
+            self.ifWidth = false;
         },
         openLeft: function() {
-        let self = this;
-        self.ifWidth = true;
+            let self = this;
+            self.ifWidth = true;
         },
         // ------------------------------------------
         // 左边查询按钮
         search() {
             let _this=this;
-           
-            console.log( _this.formList)
+            // console.log( _this.formList)
             _this.$axios.gets('/api/services/app/EmployeeManagement/GetAll', 
             { EmployeeCode: _this.formList.EmployeeCode,
                     EmployeeName: _this.formList.EmployeeName,
@@ -302,112 +308,125 @@
                 }
             )
         },
+        // 右边搜索框---只能搜索一个字段
+        searchTable(){
+            let _this=this;
+            this.$axios.gets('/api/services/app/EmployeeManagement/GetAll',{EmployeeName:_this.searchContent,SkipCount:(_this.pageIndex - 1) * _this.page_size,MaxResultCount:_this.page_size}).then(
+                rsp=>{
+                    // console.log(rsp.success);
+                     _this.allList = rsp.result.items;
+                    _this.totalCount = rsp.result.totalCount;
+                    
+                }
+            )
+        },
         // 复选框中选中的数据(用于做批量删除)
         handleSelectionChange: function(arr1) {
-        let _this = this;
-        _this.selectedIds.ids = [];
-        for (let val of arr1) {
-            _this.selectedIds.ids.push(val.id);
-        }
-        // console.log(_this.selectedIds);
+            let _this = this;
+            _this.selectedIds.ids = [];
+            for (let val of arr1) {
+                _this.selectedIds.ids.push(val.id);
+            }
+            _this.isTrue=false;
+            // console.log(_this.selectedIds);
         },
         // 提示信息
         open(tittle, iconClass, className) {
-        this.$notify({
-            position: "bottom-right",
-            iconClass: iconClass,
-            title: tittle,
-            showClose: false,
-            duration: 3000,
-            customClass: className
-        });
+            this.$notify({
+                position: "bottom-right",
+                iconClass: iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass: className
+            });
         },
         // 添加数据
         addStaff: function() {
-        //点击切换路由去添加
-        this.$store.state.url = "/staff/staffDetail/default";
-        this.$router.push({ path: this.$store.state.url });
+            //点击切换路由去添加
+            this.$store.state.url = "/staff/staffDetail/default";
+            this.$router.push({ path: this.$store.state.url });
         },
         // 确认是否按钮删除(删除选中的----批量删除)
         confirmDelSelected: function() {
-        let _this = this;
-        _this
-            .$confirm("确定删除?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-            center: true
-            })
-            .then(() => {
-            //确认
-            _this.delSelected();
-            })
-            .catch(() => {
-            //取消
-            });
+            let _this = this;
+            _this
+                .$confirm("确定删除?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+                center: true
+                })
+                .then(() => {
+                //确认
+                _this.delSelected();
+                })
+                .catch(() => {
+                //取消
+                });
         },
         delSelected: function() {
-        let _this = this;
-        this.$axios
-            .posts(
-            "/api/services/app/EmployeeManagement/BatchDelete",
-            _this.selectedIds
-            )
-            .then(res => {
-            if (!res.success) {
-                _this.open("删除失败", "el-icon-error", "faildERP");
-            }
-            _this.open("删除成功", "el-icon-circle-check", "successERP");
-            this.getAllList();
-            });
+            let _this = this;
+            this.$axios
+                .posts(
+                "/api/services/app/EmployeeManagement/BatchDelete",
+                _this.selectedIds
+                )
+                .then(res => {
+                if (!res.success) {
+                    _this.open("删除失败", "el-icon-error", "faildERP");
+                }
+                _this.open("删除成功", "el-icon-circle-check", "successERP");
+                this.getAllList();
+                });
         },
         // （行内按钮查看）查看详情
         checkDetail: function(row) {
-        // console.log(row.id)
-        this.$store.state.url = "/staff/staffModify/" + row.id;
-        this.$router.push({ path: this.$store.state.url });
+            // console.log(row.id)
+            this.$store.state.url = "/staff/staffModify/" + row.id;
+            this.$router.push({ path: this.$store.state.url });
         },
         // 确认是否删除本条数据
         confirmDelThis: function(row) {
-        let _this = this;
-        _this
-            .$confirm("确定删除?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-            center: true
-            })
-            .then(() => {
-            //确认
-            _this.delRow(row);
-            })
-            .catch(() => {
-            //取消
-            _this.$message({
-                type: "info",
-                message: "已取消删除"
-            });
-            });
+            let _this = this;
+            _this
+                .$confirm("确定删除?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+                center: true
+                })
+                .then(() => {
+                //确认
+                _this.delRow(row);
+                })
+                .catch(() => {
+                //取消
+                _this.$message({
+                    type: "info",
+                    message: "已取消删除"
+                });
+                });
         },
         // 行内删除
         delRow: function(row) {
-        this.$axios
-            .deletes("/api/services/app/EmployeeManagement/Delete", { id: row.id })
-            .then(rsp => {
-            this.getAllList();
-            this.open("删除成功", "el-icon-circle-check", "successERP");
-            });
+            this.$axios
+                .deletes("/api/services/app/EmployeeManagement/Delete", { id: row.id })
+                .then(rsp => {
+                this.getAllList();
+                this.open("删除成功", "el-icon-circle-check", "successERP");
+                });
         },
         // 每页数据条数改变
         handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`);
-        this.page_size = val;
-        this.getAllList();
+            // console.log(`每页 ${val} 条`);
+            this.page_size = val;
+            this.getAllList();
         },
         // 当前页改变
         handleCurrentChange(val) {
-        this.pageIndex = val;
-        this.getAllList();
+            this.pageIndex = val;
+            this.getAllList();
         }
     },
     mounted: function() {
@@ -471,11 +490,9 @@
   color: white;
   cursor: pointer;
 }
-.search-input {
-  position: absolute;
-  bottom: -1px;
+.defineBtn{
+   padding-left: 20px;
 }
-
 .pb10 {
   padding-bottom: 10px;
 }
@@ -510,7 +527,6 @@
   .staffList-wrapper .el-input--prefix .el-input__inner {
         padding-left: 30px;
         border-radius: 30px;
-        margin-bottom:5px;
         border-color:rgb(194, 202, 216);
         height: 30px;
     }
@@ -518,7 +534,7 @@
     content: "\E619";
     font-size: 18px;
     font-weight: 900;
-    color: rgb(153, 157, 166);
+    color: rgb(83, 84, 86);
 }
 </style>
 
