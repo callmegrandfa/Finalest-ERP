@@ -1,5 +1,5 @@
 <template>
-  <div class="data-wrapper">
+  <div class="res-detail">
         <el-row class="pt5 pb5 bb1 fixed bg-white">
             <button class="erp_bt bt_back" @click="back">
                 <div class="btImg">
@@ -292,7 +292,7 @@
         </el-collapse-transition>
       
 
-      <el-row class="bg-white ft12 pr10 pt10 br3 mt10">
+      <el-row class="bg-white ft12 pr10 pt10 br3">
           <el-col :span='24' class="pl10 mb10 bb1">
               <span class="header-title">送货信息</span>
           </el-col>
@@ -304,15 +304,23 @@
                      </div>
                     <span class="btDetail">增行</span>
                 </button>
+
+                <!-- <button class="erp_bt bt_del" @click='delRow'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button> -->
           </el-col>
 
+          
+
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10">
-              <el-table :data="allList" border style="width: 100%" stripe>
+              <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
-                            <!-- <span>{{scope.$index%2}}</span> -->
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 
@@ -330,7 +338,15 @@
                                     type="text"/>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column prop="phoneNum" label="电话"></el-table-column> -->
+                    <el-table-column prop="phoneNum" label="电话">
+                        <template slot-scope="scope">
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.phone" 
+                                    v-on:click='handleEdit(scope.$index)'
+                                    type="text"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="completeAddress" label="送货地址">
                         <template slot-scope="scope">
                             <input class="input-need" 
@@ -343,20 +359,18 @@
 
                     <el-table-column prop="transportMethodId" label="运输方式">
                         <template slot-scope="scope">
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.transportMethodId" 
-                                    v-on:click='handleEdit(scope.$index)'
-                                    type="text"/>
+                            <el-select  v-model="scope.row.transportMethodId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                </el-option>
+                            </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="logisticsCompany" label="物流公司">
+                    <el-table-column prop="transportMethodId" label="物流公司">
                         <template slot-scope="scope">
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.logisticsCompany" 
-                                    v-on:click='handleEdit(scope.$index)'
-                                    type="text"/>
+                            <el-select  v-model="scope.row.logisticsCompanyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                <el-option  v-for="item in logiAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                </el-option>
+                            </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column prop="isDefault" label="默认">
@@ -390,10 +404,10 @@
         <el-col :span="22" class="auditInformation getPadding">
             <h4 class="h4">审计信息</h4>
             <div>
-                <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="创建人" disabled="disabled"></el-input></div>
-                <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="创建时间" disabled="disabled"></el-date-picker></div>
-                <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="修改人" disabled="disabled"></el-input></div>
-                <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="修改时间" disabled="disabled"></el-date-picker></el-input></div>
+                <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="" disabled="disabled"></el-input></div>
+                <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker></div>
+                <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="" disabled="disabled"></el-input></div>
+                <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker></el-input></div>
                 <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
                 <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
                 <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
@@ -521,7 +535,20 @@
                 },function(res){
                     console.log('err'+res)
                 });
-                
+                //运输方式
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
+                    // console.log(res);
+                    self.transAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //物流公司
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'logisticsCompany'}).then(function(res){
+                    // console.log(res);
+                    self.logiAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
             },
             //------------------------------------------------------------------
             
@@ -573,7 +600,7 @@
                 self.$validate().then(function(success){
                     if(success){
                         self.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
-                            // console.log(res);
+                            console.log(res);
                             self.open('创建仓库成功','el-icon-circle-check','successERP');
                             self.createReAddress(res.result);
                             self.goModify(res.result)
@@ -583,12 +610,13 @@
             },
             createReAddress:function(id){//创建新的仓库地址
                 let self = this;
-                // console.log(id)
+                console.log(id)
                 // self.createRepositoryAddressParams.stockId = id;
                 // console.log(self.addList)
                 if(self.addList.length>0){
                     for(let i in self.addList){
                         self.addList[i].stockId = id;
+                        console.log(self.addList)
                         this.$axios.posts('api/services/app/StockAddressManagement/Create',self.addList[i]).then(function(res){
                             // console.log(res);
                             self.open('创建仓库地址成功','el-icon-circle-check','successERP');
@@ -607,13 +635,12 @@
                 self.rows.newCol ={
                     groupId:'1',//集团ID
                     stockId:'',//仓库ID
-                    addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
                     contactPerson:'',//联系人
                     phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
+                    logisticsCompanyId:'',//物流公司
+                    isDefault:false,//是否默认
                     remark:'',//备注
                 };
                 self.allList.unshift(self.rows.newCol);
@@ -625,12 +652,68 @@
 
             },
 
+            handleSelectionChange:function(val){//点击复选框选中的数据
+                this.multipleSelection = val;
+                console.log(this.multipleSelection)
+            },
+
             handleDelete:function(index,id){//表格内删除操作
-                this.allList.splice(index,1);
-                this.addList.splice(index,1);
-                this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:id}).then(function(res){
-                // console.log(res);
-              })
+                let self = this; 
+                self.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.open('删除成功','el-icon-circle-check','successERP');    
+                            self.allList.splice(index,1);
+                            self.addList.splice(index,1);
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                
+            },
+
+            delRow:function(){//删除选中的项
+                let self=this;
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+                if(self.idArray.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                
+                if(self.idArray.ids.length>0){
+                    console.log(self.idArray.ids)
+                    self.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
+                                self.loadAddData();
+                                self.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
+                    });
+                }
             },
             //---open---back----清除--------------------------------------
             open(tittle,iconClass,className) {
@@ -658,13 +741,12 @@
                 self.createParams={
                     groupId:'1',//集团ID
                     stockId:'16',//仓库ID
-                    addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
                     contactPerson:'',//联系人
                     phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
+                    logisticsCompanyId:'',//物流公司
+                    isDefault:false,//是否默认
                     remark:'',//备注
                 };
             },
@@ -819,17 +901,10 @@
 
                 //---普通下拉框-----------
                 statusAr:[],
+                transAr:[],
+                logiAr:[],//物流方式
                 //-----------------------
-                ou: [{//所属组织
-                    value:0,
-                    label: '恒康'
-                }, {
-                    value:1,
-                    label: '恒大'
-                }, {
-                    value:2,
-                    label: '361度'
-                }],
+                
                 stockType: [{//仓库类型
                     value:0,
                     label: '仓库'
@@ -837,27 +912,6 @@
                     value:1,
                     label: '店铺'
                 }],
-                opArea: [{//业务地区
-                    value:0,
-                    label: '业务地区1'
-                }, {
-                    value:1,
-                    label: '业务地区2'
-                }, {
-                    value:2,
-                    label: '业务地区3'
-                }],
-                adArea: [{//行政地区
-                    value:0,
-                    label: '行政地区1'
-                }, {
-                    value:1,
-                    label: '行政地区2'
-                }, {
-                    value:2,
-                    label: '行政地区3'
-                }],
-                status: [],//状态下拉数据
 
                 value: '',
                 tableData:[],
@@ -882,25 +936,25 @@
                 createRepositoryAddressParams:{//创建新的仓库地址参数
                     groupId:'1',//集团ID
                     stockId:'',//仓库ID
-                    addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
                     contactPerson:'',//联系人
                     phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
+                    logisticsCompanyId:'',//物流公司
+                    isDefault:false,//是否默认
                     remark:'',//备注
                 },
                 x:0,//增行的下标
                 rows:[],//增行的数组
                 addList:[],//新增上传的数组
+                multipleSelection:[],//多选的数组
             }
         },
     }
 </script>
 
 <style scoped>
-.data-wrapper{
+.res-detail{
     background: #EEF1F5;
     height: auto;
     width: 100%;
@@ -987,7 +1041,7 @@
 .header-title{
     font-size: 16px;
     display: inline-block;
-    border-bottom: 4px solid #00CAC9;
+    border-bottom: 2px solid #00CAC9;
     padding: 5px 1px;
 }
 .bb1{
@@ -1016,15 +1070,22 @@ input::-webkit-input-placeholder{
 }
 </style>
 <style>
-.mt-10{
-    margin-top: 10px;
-}
-.data-wrapper .tabZoo .auditInformation{
+.res-detail .tabZoo .auditInformation{
      margin-top: 15px;
  }
-.data-wrapper .getPadding,.tabZoo .el-tabs__nav-scroll{
+.res-detail .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 10px;
  }
+.res-detail .bgw .el-input__inner{
+    text-align:center;
+    border:none;
+    background-color:white;
+}
+.res-detail .bgp .el-input__inner{
+    text-align:center;
+    border:none;
+    background-color:#FAFAFA;
+}
 </style>
 
 

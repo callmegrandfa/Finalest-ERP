@@ -200,6 +200,9 @@
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
                 showParent:true,//上级组织单元是否可选
+
+
+                selfAr:[],//根据id获得树形节点本身
             }
         },
         created:function(){       
@@ -498,17 +501,21 @@
             //     }
             // },
             nodeClick:function(data){
-                console.log(data)
                 let self = this;
+
                 if(data.id){
+
                     self.$axios.gets('/api/services/app/DeptManagement/Get',{id:data.id}).then(function(res){
                         console.log(res)
-                        self.tableData=res.result
-                        // if(data.children!=null&&data.children!=''){
-                            self.tableData.unshift(data);
-                        // }
+                        self.selfAr = res.result
+                    },function(res){
                         
-                        console.log(self.tableData)
+                    })
+
+                    self.$axios.gets('/api/services/app/DeptManagement/GetAll',{DeptParentid:data.id,SkipCount:0,MaxResultCount:100}).then(function(res){
+                        console.log(res)
+                        self.tableData=res.result.items
+                        self.tableData.unshift(self.selfAr);
                     },function(res){
                         self.treeLoading=false;
                     })

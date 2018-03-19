@@ -30,7 +30,7 @@
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
                         <el-select placeholder=""
-                                   v-model="queryOp">
+                                   v-model="searchArea">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="opSearch"></el-input>
@@ -95,7 +95,7 @@
                             <span class="btDetail">新增</span>
                         </button>
 
-                        <button @click="confirmDelRow" class="erp_bt bt_del">
+                        <button @click="delRow" class="erp_bt bt_del">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -286,39 +286,33 @@
                     });
                 });
             },
-            confirmDelRow() {
-                let self = this;
-                this.$confirm('确定删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-                }).then(() => {
-                    self.delRow();
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            },
             delRow(){
                 let self=this;
-                if(self.multipleSelection.length>0){//表格
-                    for(let i=0;i<self.multipleSelection.length;i++){
-                        self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.multipleSelection[i].id})
-                        .then(function(res){
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+
+                if(self.idArray.ids.length>0){
+                    this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                        console.log('666')
+                        self.$axios.posts('/api/services/app/StockManagement/BatchDelete',self.idArray).then(function(res){
                             self.getAllList();
                             self.open('删除成功','el-icon-circle-check','successERP');
                         },function(res){
                             self.open('删除失败','el-icon-error','faildERP');
                         })
-                    }
-                };
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                }
             },
 
             goDetail(){
@@ -387,6 +381,9 @@
                 multipleSelection: [],//复选框选中数据
                 listById:'',//根据id获取的list
                 xx:'156416',
+                idArray:{
+                    ids:[]
+                },//复选框选中数据id
                 getAllParam:{
                     OuId:'1',//组织单元ID()
                     Draw:'1',

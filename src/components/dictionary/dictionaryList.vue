@@ -71,6 +71,8 @@
 
                             <el-table-column prop="itemCode" label="编码" fixed>
                                 <template slot-scope="scope">
+                                    
+                                    <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.itemCode"
@@ -169,12 +171,12 @@
                         </el-table>
                         <el-pagination style="margin-top:20px;" 
                                         class="text-right" 
-                                        background layout="total,prev, pager, next,jumper" 
+                                        background 
+                                        layout="total,prev, pager, next,jumper" 
                                         @current-change="handleCurrentChange"
-                                        :current-page="pageIndex"
+                                        :current-page.sync="pageIndex" 
                                         :page-size="oneItem"
-                                        :total="totalItem">
-                        </el-pagination>   
+                                        :total="totalItem"></el-pagination>   
                     </el-col>
                 </el-row>
 
@@ -255,7 +257,6 @@
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
-                load:true,
                 totalItem:0,//总共有多少条消息
                 tableLoading:true,
                 treeLoading:false,
@@ -268,6 +269,8 @@
                 addList:[],//新增上传的数组
                 updateList:[],//修改过的数组
                 dictId:'',//点击左侧树形保存当前的dictId
+                ar:[],//判断修改后的红标出现
+                pageFlag:true,
             }
         },
         created:function(){       
@@ -446,7 +449,10 @@
                     self.addList.unshift(self.rows.newCol);
                     // console.log(self.rows)
                 }else{
-                    alert('未选择字典')
+                    self.$message({
+                        type: 'info',
+                        message: '未选择字典'
+                    });
                 }
             },
             //----------------------------------------------------------------
@@ -474,7 +480,27 @@
             //---控制编辑------分页--------------------------------------------
             handleChange:function(index,row){
                 let self = this;
-                console.log(row)
+                
+                let map = false;
+                if(self.ar.length==0){//修改后表格前红标
+                    self.ar.push(row.id)
+                }else if(self.ar.length>=1){
+                    for(let i in self.ar){
+                        if(row.id!=self.ar[i]){
+                            map = true;
+                        }else{
+                            map = false;
+                            break;
+                        }
+                    }
+                }
+                if(map){
+                    self.ar.push(row.id)
+                    console.log(self.ar)
+                }
+
+
+
                 if(row.id!=0&&row.id!=''){
                     let flag = false;
                     if(self.updateList.length==0){
@@ -493,16 +519,43 @@
 
                     if(flag){
                         self.updateList.push(row);
+                        this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
                     }
                     console.log(self.updateList)
                 }  
             },
             handleCurrentChange(val) {//页码改变
                  let self=this;
-                 self.page=val;
-                 if(self.load){
-                     self.loadTableData();
-                 }
+                //  self.page=val;
+                //  if(self.load){
+                //      self.loadTableData();
+                //  }
+
+                 if(self.updateList.length>0&&self.pageFlag){
+                    self.$confirm('当前存在未保存修改项，是否继续查看下一页?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.pageIndex=val;
+                            self.page = val;
+                            self.updateList = [];
+                            self.ar = [];
+                            self.loadTableData();
+                        }).catch(() => {
+                            self.pageIndex=self.turnPage;
+                            self.page = self.turnPage;
+                            this.pageFlag=false;
+                            console.log(self.page)
+   
+                    });
+                }else{
+                    self.pageIndex=val;
+                    self.page = val;
+                    self.loadTableData();
+                } 
+                 setTimeout(() => {self.pageFlag = true}, 1000)
             },
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
