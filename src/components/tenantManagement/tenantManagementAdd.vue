@@ -41,6 +41,7 @@
                                 class="adAreaId" 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('addData.adAreaId')}" 
+                                :disabled="read"
                                  ></el-input>
                             </div>
                         </el-col>  
@@ -56,6 +57,7 @@
                                 <el-input  placeholder="" 
                                 class="tenantName" 
                                 @focus="showErrprTips"
+                                :disabled="read"
                                 :class="{redBorder : validation.hasError('addData.tenantName')}"
                                  v-model="addData.tenantName" ></el-input>
                             </div>
@@ -72,6 +74,7 @@
                                 <el-input  placeholder=""
                                 class="phoneNumber" 
                                 @focus="showErrprTips"
+                                :disabled="read"
                                 :class="{redBorder : validation.hasError('addData.phoneNumber')}"
                                  v-model="addData.phoneNumber" ></el-input>
                             </div>
@@ -103,7 +106,7 @@
                         </el-col>
                         <el-col :span="14">
                              <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="addData.remark" >
+                                <el-select  v-model="addData.remark" :disabled="read">
                                 <el-option v-for="item in options1"
                                             :key="item.value"
                                             :label="item.label"
@@ -125,6 +128,7 @@
                                 class="status" 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('addData.status')}"
+                                :disabled="read"
                                   v-model="addData.status" >
                                 <el-option v-for="item in options"
                                           :key="item.value"
@@ -143,7 +147,7 @@
                         </el-col>
                         <el-col :span="14">
                             <div class="smallBgcolor">
-                                <el-input  placeholder="" v-model="addData.contactAddress" ></el-input>
+                                <el-input :disabled="read"  placeholder="" v-model="addData.contactAddress" ></el-input>
                             </div>
                         </el-col>  
                       </el-col>
@@ -155,7 +159,7 @@
                         </el-col>
                         <el-col :span="14">
                             <div class="smallBgcolor">
-                                <el-input  placeholder=""  ></el-input>
+                                <el-input  placeholder="" :disabled="read" ></el-input>
                             </div>
                         </el-col>  
                       </el-col>
@@ -255,7 +259,7 @@
                       </el-col>
                       <el-col :span="14">
                           <div class="smallBgcolor">
-                              <el-input  placeholder=""  ></el-input>
+                              <el-input  placeholder="" :disabled="read" ></el-input>
                           </div>
                       </el-col>  
                     </el-col>
@@ -267,7 +271,7 @@
                       </el-col>
                       <el-col :span="14">
                           <div class="smallBgcolor">
-                              <el-input  placeholder=""  ></el-input>
+                              <el-input  placeholder="" :disabled="read" ></el-input>
                           </div>
                       </el-col>  
                     </el-col>
@@ -451,6 +455,7 @@ import Tree from '../../base/tree/tree'
         data(){
             return {
                     abc:'',
+                    read:false,
                     componyTree: [{
                         id:'1',
                         label: '商品规格组',
@@ -710,6 +715,7 @@ import Tree from '../../base/tree/tree'
             loadData:function(){
               let _this=this;
               if(_this.$route.params.id != 'default'){
+                _this.read=true;
                 _this.bottonbox.botton.splice(2,1,{class: 'erp_bt bt_modify', imgsrc: '../../../static/image/common/bt_modify.png',text: '修改'})
                 this.$axios.gets('http://192.168.100.107:8085/api/services/app/TenantManagement/Get',{Id:_this.$route.params.id}).then(function(res){
                   _this.addData=res.result;
@@ -749,6 +755,7 @@ import Tree from '../../base/tree/tree'
                         _this.open('保存失败','el-icon-error','faildERP');
                     })   
                 }else if(data=='修改'){
+                    _this.read=false;
                     _this.bottonbox.botton.splice(3,0,{class: 'erp_bt bt_save amend_save', imgsrc: '../../../static/image/common/bt_save.png',text: '保存'},{class: 'erp_bt bt_auxiliary cancel', imgsrc: '../../../static/image/common/u470.png',text: '取消'})
                 }else if(data == '修改保存'){
                   _this.$validate();
@@ -760,7 +767,7 @@ import Tree from '../../base/tree/tree'
                         _this.open('保存失败','el-icon-error','faildERP');
                     });
                 }else if(data == '取消'){
-
+                  _this.read=true;
                   _this.loadData();
                   _this.bottonbox.botton.splice(3,2);
                 }             
@@ -968,8 +975,8 @@ import Tree from '../../base/tree/tree'
 }
 /* 重写checkbox */
 .tenant-manager-wrapper .el-checkbox__inner{
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
     border-radius:50% !important; 
 }
 .tenant-manager-wrapper .el-checkbox__inner::after{
