@@ -639,7 +639,7 @@
                         
                 
                         <el-table :data="ouData" stripe border style="width: 100%">
-                            <el-table-column prop="addressType" label="地址类型" width="180">
+                            <!-- <el-table-column prop="addressType" label="地址类型" width="180">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -648,7 +648,7 @@
                                         @change='handleOuChange(scope.$index,scope.row)'
                                         v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
                                 </template>
-                            </el-table-column>
+                            </el-table-column> -->
 
                             <el-table-column prop="completeAddress" label="供货地址" width="180">
                                 <template slot-scope="scope">

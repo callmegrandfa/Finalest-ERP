@@ -1,7 +1,7 @@
 <template>
     <div class="dic-list">
         <el-row class="bg-white">
-            <el-col :span="5" class="border-right">
+            <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-input placeholder=""
                               v-model="searchLeft" 
@@ -27,7 +27,7 @@
                 </el-col>   
             </el-col>
             
-            <el-col :span='19'>
+            <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5 pr10 pl5">
                     <button class="erp_bt bt_save" @click="saveValue">
                         <div class="btImg">
@@ -404,6 +404,7 @@
                     self.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
                         self.open('修改字典系统值成功','el-icon-circle-check','successERP');
                         self.updateList = [];
+                        self.ar = [];
                         self.loadTableData();
                     },function(res){    
                         console.log('error')
@@ -862,6 +863,10 @@
 }
 .border-right{
     border-right: 1px solid #E4E4E4;
+    min-height: 380px;
+}
+.border-left{
+    border-left: 1px solid #E4E4E4;
     min-height: 380px;
 }
 .open{
