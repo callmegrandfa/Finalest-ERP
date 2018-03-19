@@ -70,26 +70,32 @@ import Btm from '../../base/btm/btm'
                    botton:[{
                     class: 'erp_bt bt_add',
                     imgsrc: '../../../static/image/common/bt_add.png',
+                    show:true,
                     text: '新增'
                 },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
+                    show:true,
                     text: '删除'
                 },{
                     class: 'erp_bt bt_print',
                     imgsrc: '../../../static/image/common/bt_modify.png',
+                    show:true,
                     text: '打印'
                 },{
                     class: 'erp_bt bt_excel',
                     imgsrc: '../../../static/image/common/bt_excel.png',
+                    show:true,
                     text: 'Excel'
                 },{
                     class: 'erp_bt bt_version',
                     imgsrc: '../../../static/image/common/bt_start.png',
+                    show:true,
                     text: '启用'
                 },{
                     class: 'erp_bt bt_auxiliary',
                     imgsrc: '../../../static/image/common/bt_stop.png',
+                    show:true,
                     text: '停用'
                 }]},
                 value: '',
