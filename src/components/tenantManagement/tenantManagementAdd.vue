@@ -729,7 +729,7 @@ import Tree from '../../base/tree/tree'
               let _this=this;
               if(_this.$route.params.id != 'default'){
                 _this.read=true;
-                _this.bottonbox.botton.splice(2,1,{class: 'erp_bt bt_modify', imgsrc: '../../../static/image/common/bt_modify.png',text: '修改'})
+                _this.bottonbox.botton.splice(2,1,{class: 'erp_bt bt_modify',show:true, imgsrc: '../../../static/image/common/bt_modify.png',text: '修改'})
                 this.$axios.gets('http://192.168.100.107:8085/api/services/app/TenantManagement/Get',{Id:_this.$route.params.id}).then(function(res){
                   _this.addData=res.result;
                   console.log(res)
@@ -769,7 +769,7 @@ import Tree from '../../base/tree/tree'
                     })   
                 }else if(data=='修改'){
                     _this.read=false;
-                    _this.bottonbox.botton.splice(3,0,{class: 'erp_bt bt_save amend_save', imgsrc: '../../../static/image/common/bt_save.png',text: '保存'},{class: 'erp_bt bt_auxiliary cancel', imgsrc: '../../../static/image/common/u470.png',text: '取消'})
+                    _this.bottonbox.botton.splice(3,0,{class: 'erp_bt bt_save amend_save',show:true, imgsrc: '../../../static/image/common/bt_save.png',text: '保存'},{class: 'erp_bt bt_auxiliary cancel', imgsrc: '../../../static/image/common/u470.png',text: '取消'})
                 }else if(data == '修改保存'){
                   _this.$validate();
                   _this.$axios.puts('http://192.168.100.107:8085/api/services/app/TenantManagement/Update',_this.addData).then(function(res){
