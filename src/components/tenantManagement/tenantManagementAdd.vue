@@ -971,6 +971,11 @@ import Tree from '../../base/tree/tree'
 </style>
 
 <style>
+.tenant-manager-wrapper .smallBgcolor{
+    width: 100%;
+    margin-left: 0;
+    margin-right: auto;
+}
 .cancel .btImg{
   top: 14px;
 }
