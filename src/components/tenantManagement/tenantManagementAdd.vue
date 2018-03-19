@@ -617,26 +617,32 @@ import Tree from '../../base/tree/tree'
                     url: '/tenant/tenantManagement',
                    botton:[{
                     class: 'erp_bt bt_back',
+                    show:true,
                     imgsrc: '../../../static/image/common/bt_back.png',
                     text: '返回'
                 },{
                     class: 'erp_bt bt_add',
                     imgsrc: '../../../static/image/common/bt_add.png',
+                    show:true,
                     text: '新增'
                 },{
                     class: 'erp_bt bt_save',
                     imgsrc: '../../../static/image/common/bt_save.png',
+                    show:true,
                     text: '保存'
                 },{
                     class: 'erp_bt bt_excel',
                     imgsrc: '../../../static/image/common/bt_excel.png',
+                    show:true,
                     text: 'Excel'
                 },{
                     class: 'erp_bt bt_print',
                     imgsrc: '../../../static/image/common/bt_modify.png',
+                    show:true,
                     text: '打印'
                 },{
                     class: 'erp_bt bt_save',
+                    show:true,
                     imgsrc: false,
                     text: '注册集团'
                 }]},
@@ -645,32 +651,39 @@ import Tree from '../../base/tree/tree'
                    botton:[{
                     class: 'erp_bt bt_save',
                     imgsrc: '../../../static/image/common/increment.png',
+                    show:true,
                     text: '增行'
                 },{
                     class: 'erp_bt bt_interposition',
                     imgsrc: '../../../static/image/common/interposition.png',
+                    show:true,
                     text: '插行'
                 },{
                     class: 'erp_bt bt_eraseline',
                     imgsrc: '../../../static/image/common/eraseline.png',
+                    show:true,
                     text: '删行'
                 },{
                     class: 'erp_bt bt_excel',
                     imgsrc: '../../../static/image/common/bt_excel.png',
+                    show:true,
                     text: 'Excel'
                 },{
                     class: 'erp_bt bt_auxiliary',
                     imgsrc: '../../../static/image/common/bt_auxiliary.png',
+                    show:true,
                     text: '辅助功能'
                 }]},
                 bottonbox2:{
                     url: '/tenant/tenantManagementAdd',
                    botton:[{
                     class: 'erp_bt bt_excel',
+                    show:true,
                     imgsrc: false,
                     text: '功能增补'
                 },{
                     class: 'erp_bt bt_auxiliary',
+                    show:'true',
                     imgsrc: false,
                     text: '功能延期'
                 }]},
