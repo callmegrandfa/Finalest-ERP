@@ -288,7 +288,7 @@
     //      return this.Validator.value(value).required().maxLength(1000);
     //   },
         'addData.manager': function (value) {//负责人
-            return this.Validator.value(value).required().maxLength(20);
+            return this.Validator.value(value).maxLength(20);
         },
         'addData.ouId': function (value) {//
             return this.Validator.value(value).required().integer();
@@ -300,7 +300,7 @@
             return this.Validator.value(value).required().integer();
         },
         'addData.remark': function (value) {//备注
-            return this.Validator.value(value).required().maxLength(200);
+            return this.Validator.value(value).maxLength(200);
         },
     }, 
     created () {

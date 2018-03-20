@@ -400,10 +400,10 @@
                         @node-click="nodeClick_ou"
                         >
                         </el-tree>
-                        <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
-                        </el-option>
-                        <!-- <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                            </el-option> -->
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        </el-option> -->
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -554,7 +554,7 @@
         <el-col :span="6">
             <el-checkbox-group 
             v-model="addData.ouTypes"
-            :min="1">
+            >
             <el-checkbox v-for="item in selectData.OUType" :label="item.itemValue" :key="item.itemValue" @change="change_ouType">{{item.itemName}}</el-checkbox>
             </el-checkbox-group>
         </el-col>              
@@ -1042,7 +1042,7 @@ export default({
                 "address": "",
                 "status": "",//整数
                 "remark": "",
-                "ouTypes":[1,3],//组织职能
+                "ouTypes":[],//组织职能
             },
             basCompany:{//其他信息
                 "ouParentid": "",//整数
@@ -1069,9 +1069,9 @@ export default({
                 "webUrl": "",
                 "remark": ""
             },
-            Company:true,//公司 
+            Company:false,//公司 
             Business:false,//业务   
-            Finance:true,//财务
+            Finance:false,//财务
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
             
@@ -1083,7 +1083,7 @@ export default({
                 baseCurrencyId:[],//本位币种
                 companys:[],//公司
                 OUType:[],//组织类型
-                // ou:[],
+                ou:[],
             },
             update:false,
             isEdit:true,//是否可编辑
@@ -1112,87 +1112,171 @@ export default({
          return this.Validator.value(value).required().integer();
       },
       'addData.companyOuId': function (value) {//所属公司
-          return this.Validator.value(value).required().integer();
+          return this.Validator.value(value).integer();
       },
       'addData.contactPerson': function (value) {//联系人
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).maxLength(50);
       },
       'addData.phone': function (value) {//电话
-          return this.Validator.value(value).required().maxLength(50);
+          return this.Validator.value(value).maxLength(50);
       },
       'addData.address': function (value) {//地址
-          return this.Validator.value(value).required().maxLength(200);
+          return this.Validator.value(value).maxLength(200);
       },
       'addData.status': function (value) {//用户状态
-         return this.Validator.value(value).required().integer();
+         return this.Validator.value(value).integer();
       },
       'addData.remark': function (value) {//备注
-         return this.Validator.value(value).required().maxLength(200);
+         return this.Validator.value(value).maxLength(200);
       },
 
 
       'basCompany.ouParentid': function (value) {//上级公司
-         return this.Validator.value(value).required().integer();
+        if(this.Company){
+            return this.Validator.value(value).integer().required();
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.status': function (value) {//启用状态
-         return this.Validator.value(value).required().integer();
+        if(this.Company){
+            return this.Validator.value(value).integer();
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.regCapital': function (value) {//注册资本
-         return this.Validator.value(value).required().integer();
+        if(this.Company){
+            return this.Validator.value(value).integer();
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.legalPerson': function (value) {//法人代表
-         return this.Validator.value(value).required().maxLength(50);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.vatRegno': function (value) {//纳税人登记号
-         return this.Validator.value(value).required().maxLength(200);
+        if(this.Company){
+           return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.regtime': function (value) {//成立日期
-         return this.Validator.value(value).required();
+        if(this.Company){
+           return this.Validator.value(value);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.legalPersonIdnr': function (value) {//法人身份证号码
-         return this.Validator.value(value).required().maxLength(50);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.mgtDeptCode': function (value) {//主管部门代码
-         return this.Validator.value(value).required().maxLength(50);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.mgtDeptName': function (value) {//主管部门名称
-         return this.Validator.value(value).required().maxLength(50);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.legalPersonType': function (value) {//纳税人类别
-         return this.Validator.value(value).required().maxLength(50);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.businessAddress': function (value) {//营业地址
-         return this.Validator.value(value).required().maxLength(200);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'dateRange': function (value) {//营业或有效期限
-         return this.Validator.value(value).required();
+        if(this.Company){
+            return this.Validator.value(value);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.introduction': function (value) {//公司简介
-         return this.Validator.value(value).required().maxLength(200);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.contactAddress': function (value) {//通讯地址
-         return this.Validator.value(value).required().maxLength(200);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.zipCode': function (value) {//邮政编码
-         return this.Validator.value(value).required().maxLength(20);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(20);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.contact': function (value) {//联系人
-         return this.Validator.value(value).required().maxLength(50);
+        if(this.Company){
+           return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.fax': function (value) {//传真
-         return this.Validator.value(value).required().maxLength(50);
+        if(this.Company){
+           return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.phone': function (value) {//电话
-         return this.Validator.value(value).required().integer();
+        if(this.Company){
+            return this.Validator.value(value).integer();
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.email': function (value) {//email
-         return this.Validator.value(value).required().maxLength(50);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.webUrl': function (value) {//web网址
-         return this.Validator.value(value).required().maxLength(200);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
       },
       'basCompany.remark': function (value) {//备注
-         return this.Validator.value(value).required().maxLength(200);
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
       },
     },
     computed:{
@@ -1237,10 +1321,13 @@ export default({
             // 组织类型
                 _this.selectData.OUType=res.result;
             })
-            // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-            // // 上级组织
-            // _this.selectData.ou=res.result;
-            // })
+            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // 上级组织
+                _this.selectData.ou=res.result;
+                if(_this.$route.params.id!="default"){
+                    _this.addData.ouParentid=parseInt(_this.$route.params.id);
+                }
+            })
         },
         showErrprTips(e){
             $('.tipsWrapper').css({display:'none'})
@@ -1274,6 +1361,7 @@ export default({
         },
         showErrprTipsTextArea(e){
             $('.tipsWrapper').css({display:'none'})
+            this.validators.reset()
             // $('.tipsWrapper').each(function(){
             //   if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
             //       $(this).addClass('display_block')
@@ -1313,9 +1401,14 @@ export default({
             let _this=this;
             _this.item_ou.id=data.id;
             _this.item_ou.ouFullname=data.ouFullname;
-            _this.$nextTick(function(){
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            })
+            // _this.$nextTick(function(){
+            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+            // })
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            if($(this).attr('date')==data.id){
+                $(this).click()
+            }
+        })
         },
         back(){
             this.$store.state.url='/OuManage/OuManageList/default'
@@ -1383,9 +1476,15 @@ export default({
             _this.$validate()
             .then(function (success) {
                 if (success) {
-                    _this.basCompany.businessStart=_this.dateRange[0];
-                    _this.basCompany.businessEnd=_this.dateRange[1];
-                    _this.addData.basCompany=_this.basCompany;
+                    $('.tipsWrapper').css({display:'none'})
+                   if(_this.Company){
+                        _this.basCompany.businessStart=_this.dateRange[0];
+                        _this.basCompany.businessEnd=_this.dateRange[1];
+                        _this.addData.basCompany=_this.basCompany;
+                    }else{
+                        _this.basCompany={}
+                    }
+                    
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                         _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由

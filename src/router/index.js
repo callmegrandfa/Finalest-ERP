@@ -190,6 +190,7 @@ let redirectRouter = function(routerName) { //重定向
             break;
         }
     }
+    
 }
 Vue.use(Router)
 const routes = [
@@ -362,7 +363,6 @@ const routes = [
                     return redirectRouter('OuManage')
                 },
                 children: [
-                    { path: '/OuManage/OuManageSee/:id', component: OuManageSee, name: 'OuManageSee' },
                     { path: '/OuManage/OuManageModify/:id', component: OuManageModify, name: 'OuManageModify' },
                     { path: '/OuManage/OuManageDetail/:id', component: OuManageDetail, name: 'OuManageDetail' },
                     { path: '/OuManage/OuManageList/:id', component: OuManageList, name: 'OuManageList' },

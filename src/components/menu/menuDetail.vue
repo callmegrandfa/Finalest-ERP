@@ -78,10 +78,10 @@
                             @node-click="selectNodeClick"
                             >
                             </el-tree>
-                            <el-option v-show="false" :key="item.id" :label="item.moduleName" :value="item.id">
-                            </el-option>
-                            <!-- <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            <!-- <el-option v-show="false" :key="item.id" :label="item.moduleName" :value="item.id">
                             </el-option> -->
+                            <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.moduleParentId') }}</div>
@@ -149,10 +149,13 @@
                         <label>备注</label>
                         <el-input
                             type="textarea"
+                            v-model="addData.remark"  
+                            :class="{redBorder : validation.hasError('addData.remark')}" 
                             :autosize="{ minRows: 4, maxRows: 10}"
                             placeholder="">
                         </el-input>
                     </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.remark') }}</div>
                 </div>    
             </el-col>
 
@@ -161,13 +164,78 @@
                     <div class="bgcolor bgLongWidth">
                         <label>功能权限</label>
                         <div class="addZoo">
-                            <a class="add" href="javascript:;" @click="dialogTableVisible = true">+</a>
+                            <a class="add" href="javascript:;" @click="showDialog">+</a>
                         </div>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
                 </div>    
             </el-col>
-                <el-dialog :visible.sync="dialogTableVisible">
+            <el-dialog :visible.sync="dialogTableVisible" title="添加功能">
+                <el-col :span="6" class="dialog_ dialog_l">
+                    <el-col :span="24">
+                        <el-input placeholder="" class="menu_search">
+                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
+                    </el-col>
+                    <el-col :span="24" class="mt_20">
+                        <el-tree
+                        :data="componyTree"
+                        :props="defaultProps"
+                        node-key="id"
+                        default-expand-all
+                        :highlight-current="true"
+                        @node-click="nodeClick"
+                        :expand-on-click-node="false">
+                        </el-tree>
+                    </el-col>
+                </el-col>
+                <el-col :span="18" class="dialog_ dialog_r">
+                    <div class="menu_box" :key="i.displayName" v-for="i in componyTree" :moduleName="i.displayName">
+                        <el-col>{{i.displayName}}</el-col>
+                        <el-col :span="11">
+                                <el-col :span="24">已选</el-col>    
+                                <el-col :span="24">
+                                    <el-table 
+                                    :data="checkedTable" 
+                                    border 
+                                    style="width: 100%" 
+                                    stripe 
+                                    @selection-change="checkedSelect" 
+                                    ref="multipleTable">
+                                        <el-table-column type="selection" fixed="left"></el-table-column>
+                                        <el-table-column prop="displayName" label="功能"></el-table-column>
+                                    </el-table>    
+                                </el-col>
+                        </el-col>
+                        <el-col :span="2">
+                            <div class="el-transfer__buttons">
+                                <el-button :disabled="is_nocheked" @click="noCheck_push_check" type="primary" icon="el-icon-arrow-left"></el-button>
+                                <el-button :disabled="is_cheked" @click="check_push_noCheck" type="primary" icon="el-icon-arrow-right"></el-button>
+                            </div>
+                        </el-col>
+                        <el-col :span="11">
+                            <el-col :span="24">可选</el-col>    
+                            <el-col :span="24">
+                                <el-table 
+                                :data="nocheckedTable" 
+                                border 
+                                style="width: 100%" 
+                                stripe 
+                                @selection-change="nocheckedSelect" 
+                                ref="multipleTable">
+                                    <el-table-column type="selection" fixed="left"></el-table-column>
+                                    <el-table-column prop="displayName" label="功能"></el-table-column>
+                                </el-table>    
+                            </el-col>
+                        </el-col>
+                    </div>    
+                    <el-col :span="24">
+                        <el-button>确认</el-button>
+                        <el-button>取消</el-button>
+                    </el-col>
+                </el-col>
+            </el-dialog>
+                <!-- <el-dialog :visible.sync="dialogTableVisible">
                     <template slot="title">
                         <span style="float:left;">添加功能</span>
                         <div class="double_bt">
@@ -209,11 +277,8 @@
                                 <span class="menu_item" v-for="x in i.children" :permissionName="x.permissionName"><a class="menu_add" @click="delPermission(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                             </div>
                         </div>
-                        <!-- <el-col :span="24" class="load_more">
-                            <button>加载更多</button>
-                        </el-col> -->
                     </el-col>
-                </el-dialog>
+                </el-dialog> -->
              <el-col :span="24">
                  <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
@@ -280,18 +345,20 @@
                 label: 'moduleName',
                 id:'id',
             },
-            treeData:[],
-            Props: {
-                children: 'childNodes',
-                label: 'moduleName',
-                value:'id',
-            },
+
+            checkedTable:[],//表格数据
+            nocheckedTable:[],//表格数据
+            selection_checked: [],//复选框选中数据
+            selection_nochecked: [],//复选框选中数据
             checked:[],//展示所有权限
             nochecked:[],//
+            is_nocheked:true,//可选
+            is_cheked:true,//已选
+
             nodeName:'',
             selectData:{//select数据
                 Status001:[],//启用状态
-                // menu:[],//菜单
+                menu:[],//菜单
             },
         }
     },
@@ -303,7 +370,7 @@
          return this.Validator.value(value).required().maxLength(50);
       },
       'addData.ico': function (value) {//图标
-         return this.Validator.value(value).required().maxLength(200);
+         return this.Validator.value(value).maxLength(200);
       },
       'addData.systemId': function (value) {//子系统
          return this.Validator.value(value).required().integer();
@@ -312,17 +379,19 @@
           return this.Validator.value(value).required().integer();
       },
       'addData.url': function (value) {//web地址
-         return this.Validator.value(value).required().maxLength(1000);
+         return this.Validator.value(value).maxLength(1000);
       },
       'addData.status': function (value) {//状态
          return this.Validator.value(value).required().integer();
+      },
+      'addData.remark': function (value) {//
+         return this.Validator.value(value).maxLength(200);
       }
     },
     created:function(){
         let _this=this;
         _this.getSelectData();
-        _this.loadTree();  
-        _this.loadParent()
+        _this.loadTree();
         _this.loadPermission();
     },
      watch: {
@@ -337,10 +406,15 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-        //    _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
-        //     // 菜单
-        //     _this.selectData.menu=res.result.items;
-        //     })
+           _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+            // 菜单
+            _this.selectData.menu=res.result.items;
+            if(_this.$route.params.id!="default"){
+                _this.addData.moduleParentId=parseInt(_this.$route.params.id);
+                _this.item.moduleName=_this.$route.params.name;
+                _this.item.id=_this.$route.params.id;
+            }
+            })
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -388,7 +462,6 @@
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
             .then(function(res){
                 _this.selectTree=res;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -409,21 +482,13 @@
             let _this=this;
             _this.item.id=data.id;
             _this.item.moduleName=data.moduleName;
-            _this.$nextTick(function(){
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            })
-            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-            //     if($(this).attr('date')==data.id){
-            //         $(this).click()
-            //     }
+            // _this.$nextTick(function(){
+            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
-        },
-        loadParent(){
-            let _this=this;
-            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
-            .then(function(res){
-                _this.treeData=res
-            },function(res){
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
             })
         },
         loadPermission(){
@@ -464,7 +529,6 @@
                     })
                     _this.addData.permissions=permissions;
                     // _this.addData.permissionDtos=_this.checked;//权限
-                    console.log(_this.addData)
                     _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
                         _this.addData.id=res.result.id;
                         _this.$store.state.url='/menu/menuModify/'+res.result.id
@@ -506,16 +570,21 @@
             $('.menu_item_add').css('display','none')
             $('.menu_item_del').css('display','block')
         },
+        showDialog(){
+            let _this=this;
+            _this.dialogTableVisible = true;
+            _this.loadIcon()
+        },
         nodeClick(data,event){
             let _this=this;
             _this.nodeName=data.displayName;
-             $('.menu_box').each(function(x){
-                if($(this).attr('moduleName')==_this.nodeName){
-                    $(this).css('display','block')
-                }else{
-                    $(this).css('display','none')
-                }
-            })
+            //  $('.menu_box').each(function(x){
+            //     if($(this).attr('moduleName')==_this.nodeName){
+            //         $(this).css('display','block')
+            //     }else{
+            //         $(this).css('display','none')
+            //     }
+            // })
         },
         addPermission(x){
             let _this=this;
@@ -585,7 +654,31 @@
             if(flag){
                 _this.checked.push(x);
             }
-        }
+        },
+        checkedSelect(val) {//dialogRole已选
+            let _this=this;
+            _this.selection_checked = val;
+            if(val.length==0){
+                _this.is_cheked=true
+            }else{
+                _this.is_cheked=false
+            }
+        },
+        nocheckedSelect(val) {//dialogRole可选
+            let _this=this;
+            _this.selection_nochecked = val;
+            if(val.length==0){
+                _this.is_nocheked=true
+            }else{
+                _this.is_nocheked=false
+            }
+        },
+        noCheck_push_check:{
+
+        },
+        check_push_noCheck:{
+
+        },
 
     }
 

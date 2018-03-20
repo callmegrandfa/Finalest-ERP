@@ -25,7 +25,6 @@ export default new vuex.Store({
             { name: 'OuManage', url: '/OuManage/OuManageList/:id', parent: '', default: '/OuManage/OuManageList/:id' } , //组织管理
             { name: 'OuManageDetail', url: '/OuManage/OuManageDetail/:id', parent: 'OuManage' } ,
             { name: 'OuManageModify', url: '/OuManage/OuManageModify/:id', parent: 'OuManage' } ,
-            { name: 'OuManageSee', url: '/OuManage/OuManageSee/:id', parent: 'OuManage' } ,
             { name: 'OuManageList', url: '/OuManage/OuManageList/:id', parent: 'OuManage' } ,
 
             { name: 'repository', url: '/repository/repositoryList/:id', parent: '', default: '/repository/repositoryList/:id' } , //仓库管理
