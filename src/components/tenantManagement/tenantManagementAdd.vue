@@ -727,7 +727,6 @@ import Tree from '../../base/tree/tree'
                 addArray1:[],
                     pageIndex:-1,//分页的当前页码
 			        totalPage:20,//当前分页总数
-              yanzheng:true
             }
         },
         validators: {
@@ -761,7 +760,6 @@ import Tree from '../../base/tree/tree'
                
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                 }else{
-                    _this.yanzheng=false;
                     $('.tipsWrapper').css({display:'none'});
                 }
               })
@@ -802,9 +800,7 @@ import Tree from '../../base/tree/tree'
             btmlog:function(data){
                 let _this=this;
                 if(data=='新增保存'){
-                  if(_this.yanzheng){
                     $('.tipsWrapper').css({display:'block'});
-                  }
                   _this.$validate();
                   // _this.addData.adAreaId=parseInt(_this.addData.adAreaId) 
                     _this.$axios.posts('http://192.168.100.107:8085/api/services/app/TenantManagement/Create',_this.addData).then(function(res){
