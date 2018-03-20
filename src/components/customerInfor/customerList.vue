@@ -246,7 +246,13 @@
                                 
                             </el-col>
                             <el-col :span="18">
-                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                                <el-pagination style="margin-top:20px;" 
+                                               class="text-right" 
+                                               background 
+                                               layout="total, prev, pager, next"  
+                                               :page-count="totalPage" 
+                                               :page-size="oneItem"
+                                               @current-change="handleCurrentChange"></el-pagination>
                             </el-col>
                         </el-row>
                         

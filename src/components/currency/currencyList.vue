@@ -130,7 +130,13 @@
                                 
                             </el-col>
                             <el-col :span="18">
-                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next" :current-page.sync="pageIndex"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                                <el-pagination style="margin-top:20px;" 
+                                               class="text-right" 
+                                               background 
+                                               layout="total, prev, pager, next" 
+                                               :current-page.sync="pageIndex"  
+                                               :page-count="totalPage" 
+                                               v-on:current-change="handleCurrentChange"></el-pagination>
                             </el-col>
                         </el-row>
                         
@@ -308,17 +314,6 @@
                     self.loadAllList();
                 } 
                  setTimeout(() => {self.pageFlag = true}, 1000) 
-                // if(self.updateList.length==0){
-                //     this.pageIndex=val;
-                //     console.log(val)
-                //     this.page = val;
-                //     this.loadAllList();
-                //     console.log(self.page)
-                // }else if(self.updateList.length>0){
-                //     self.page = self.pagex;
-                //     console.log(self.page)
-                //     alert('您有修改未保存')
-                // }
                 
             },
             handleChange:function(index,row){

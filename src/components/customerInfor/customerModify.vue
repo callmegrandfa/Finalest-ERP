@@ -358,6 +358,7 @@
                                placeholder=""
                                :disabled="isEdit"
                                @change='Modify()'
+                               class="adAreaId"
                                :class="{redBorder : validation.hasError('customerData.adAreaId')}">
                         <el-input placeholder=""
                                       class="selectSearch"
@@ -373,10 +374,10 @@
                                      :expand-on-click-node="false"
                                      @node-click="adNodeClick"></el-tree>
                         <el-option v-show="false"
-                                       :key="countAd.id" 
-                                       :label="countAd.areaName" 
-                                       :value="countAd.id"
-                                       id="ad_confirmSelect"></el-option>
+                                   :key="countAd.id" 
+                                   :label="countAd.areaName" 
+                                   :value="countAd.id"
+                                   id="ad_confirmSelect"></el-option>
                     </el-select>
                 </div>
 
@@ -459,7 +460,7 @@
             <el-col :span="24">
                <el-tabs v-model="activeName">
                     <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
-                        <button class="erp_bt bt_add" @click="addColbank">
+                        <button class="erp_bt bt_add" @click="addColbank" v-show='!isEdit'>
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
@@ -474,15 +475,14 @@
                         </button>
                         
                 
-                        <el-table :data="bankData" stripe border style="width: 100%">
+                        <el-table :data="bankData" stripe border style="width: 100%" election-change="handleSelectionChange" class="all-table">
+                            <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
                                 <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.settlementCurrencyId" 
-                                        type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                    <el-select  v-model="scope.row.settlementCurrencyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                        <el-option  v-for="item in curencyAr" :key="item.id" :label="item.currencyName" :value="item.id" >
+                                        </el-option>
+                                    </el-select>
                                 </template>
                             </el-table-column>
 
@@ -492,6 +492,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.accountNo" 
                                         type="text"    
+                                        :disabled="isEdit"
                                         @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
@@ -503,6 +504,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.accountName" 
                                         type="text"    
+                                        :disabled="isEdit"
                                         @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
@@ -514,6 +516,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.openingBank" 
                                         type="text"    
+                                        :disabled="isEdit"
                                         @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
@@ -524,7 +527,8 @@
                                     <input class="input-need" 
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.contactPerson" 
-                                        type="text"    
+                                        type="text"   
+                                        :disabled="isEdit" 
                                         @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
@@ -536,6 +540,7 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.phone" 
                                         type="text"    
+                                        :disabled="isEdit"
                                         @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
@@ -543,7 +548,7 @@
 
                             <el-table-column prop="ifDefault" label="默认">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="bankData[scope.$index].ifDefault"></el-checkbox>
+                                    <el-checkbox v-model="bankData[scope.$index].ifDefault" :disabled="isEdit"></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column label='操作'>
@@ -555,14 +560,14 @@
                     </el-tab-pane>
 
                     <el-tab-pane label="送货地址" name="address" class="getPadding" style="z-index:-1000">
-                        <button class="erp_bt bt_add" @click="addColAddress">
+                        <button class="erp_bt bt_add" @click="addColAddress" v-show='!isEdit'>
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
                             <span class="btDetail">增行</span>
                         </button>
 
-                        <button class="erp_bt bt_auxiliary">
+                        <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_auxiliary.png">
                             </div>
@@ -570,18 +575,15 @@
                         </button>
                         
                 
-                        <el-table :data="addressData" stripe border style="width: 100%">
-                            <el-table-column prop="addressType" label="地址类型" width="180">
+                        <el-table :data="addressData" stripe border style="width: 100%;" election-change="handleSelectionChange2" class="all-table">
+                            <!-- <el-table-column prop="addressType" label="地址类型" width="180">
                                 <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.addressType" 
-                                        type="text"    
-                                        @click="handleAddressChange(scope.$index,scope.row)"
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                        <!-- <span>{{scope.row}}</span> -->
+                                    <el-select  v-model="scope.row.addressType" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                        <el-option  v-for="item in addAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                        </el-option>
+                                    </el-select>
                                 </template>
-                            </el-table-column>
+                            </el-table-column> -->
 
                             <el-table-column prop="completeAddress" label="供货地址" width="180">
                                 <template slot-scope="scope">
@@ -661,15 +663,15 @@
                             </el-table-column>
                         </el-table>
                     </el-tab-pane>
-                    <el-tab-pane label="使用组织" name="organization" style="z-index:-1000">
-                        <button class="erp_bt bt_add" @click="addColOu">
+                    <el-tab-pane label="使用组织" name="organization" class="getPadding" style="z-index:-1000">
+                        <button class="erp_bt bt_add" @click="addColOu" v-show='!isEdit'>
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
                             <span class="btDetail">增行</span>
                         </button>
 
-                        <button class="erp_bt bt_auxiliary">
+                        <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_auxiliary.png">
                             </div>
@@ -677,16 +679,10 @@
                         </button>
                         
                 
-                        <el-table :data="ouData" stripe border style="width: 100%">
+                        <el-table :data="ouData" stripe border style="width: 100%" election-change="handleSelectionChange3" class="all-table">
                             <el-table-column type="selection"></el-table-column>
 
-                            <el-table-column prop="" label="" width="180">
-                                <template slot-scope="scope">
-                                    <span>{{scope.$index+1}}</span>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="ouId" label="组织单元" width="180">
+                            <el-table-column prop="ouId" label="业务组织" width="540">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -697,14 +693,12 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="transport_method_id" label="运输方式" width="180">
+                            <el-table-column prop="transport_method_id" label="运输方式" width="540">
                                 <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.transport_method_id" 
-                                        type="text"    
-                                        @click="handleOuChange(scope.$index,scope.row)"  
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
+                                    <el-select  v-model="scope.row.transport_method_id" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                        <el-option  v-for="item in tranAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                        </el-option>
+                                    </el-select>
                                 </template>
                             </el-table-column>
 
@@ -846,6 +840,9 @@ export default({
             gradeAr:[],//客户等级下拉框
             typeAr:[],//客户类型下拉框
             statusAr:[],//状态下拉框
+            curencyAr:[],//币种下拉
+            addAr:[],//地址类型下拉
+            tranAr:[],//运输方式下拉
             //-----------------------
   
             activeName: 'bank',//tabs标签页默认激活name
@@ -870,6 +867,10 @@ export default({
             xrows:[],
             yrows:[],
             zrows:[],
+
+            multipleSelection:[],//需要删除的银行数组
+            multipleSelectionAdd:[],//需要删除的地址数组
+            multipleSelectionOu:[],//需要删除的组织数组
 
             createBankParams:{//创建银行的参数
                 "groupId": 1,
@@ -1041,7 +1042,7 @@ export default({
                 },function(res){
                     console.log('err'+res)
                 });
-                //组织单元
+                //所属组织
                 self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
                     // console.log(res);
                     self.ouAr = res.result;
@@ -1105,7 +1106,28 @@ export default({
                 },function(res){
                     console.log('err'+res)
                 });
-                
+                //币种
+                self.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                    // console.log(res);
+                    self.curencyAr = res.result.items;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //地址类型
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AddressType'}).then(function(res){
+                    console.log(res);
+                    self.addAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //运输方式
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
+                    console.log(res);
+                    self.tranAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+
             },
         //------------------------------------------------------------------
 
@@ -1335,6 +1357,12 @@ export default({
         },
         handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
+        },
+        handleSelectionChange2:function(val){//点击复选框选中的数据
+                this.multipleSelectionAdd = val;
+        },
+        handleSelectionChange3:function(val){//点击复选框选中的数据
+                this.multipleSelectionOu = val;
         },
         handleBankDelete:function(index,row){//银行表格内删除操作
             let self = this;
@@ -1628,6 +1656,22 @@ export default({
 
 .customerBasicForm .el-input__inner{
     height:35px !important;
+    border:1px solid white;
+    /* border-color:white !important; */
+}
+.customerBasicForm .all-table .el-input__inner{
+    height:35px !important;
+    text-align: center !important;
+    border:none !important;
+}
+.customerBasicForm .bgw .el-input__inner{
+    background-color:white;
+}
+.customerBasicForm .bgg .el-input__inner{
+    background-color:#FAFAFA;
+}
+.customerBasicForm .el-select-dropdown__item{
+    text-align: center;
 }
   </style>
   

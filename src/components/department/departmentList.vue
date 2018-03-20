@@ -66,14 +66,15 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
                             <el-table-column type="selection" fixed></el-table-column>
-                            <el-table-column prop="deptCode" label="部门编码" fixed >
+                            <el-table-column prop="deptCode" label="部门编码" fixed > 
                                 <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptCode}}</el-button>
+                                    
                                 </template>
                             </el-table-column>
                             <el-table-column prop="deptName" label="部门名称" fixed>
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptCode}}</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].deptName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
@@ -199,6 +200,9 @@
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
                 showParent:true,//上级组织单元是否可选
+
+
+                selfAr:[],//根据id获得树形节点本身
             }
         },
         created:function(){       
@@ -497,14 +501,21 @@
             //     }
             // },
             nodeClick:function(data){
-                console.log(data)
                 let self = this;
+
                 if(data.id){
-                    self.$axios.gets('/api/services/app/DeptManagement/GetTree',{id:data.id}).then(function(res){
+
+                    self.$axios.gets('/api/services/app/DeptManagement/Get',{id:data.id}).then(function(res){
                         console.log(res)
-                        self.tableData=res.result
-                        self.tableData.unshift(data);
-                        console.log(self.tableData)
+                        self.selfAr = res.result
+                    },function(res){
+                        
+                    })
+
+                    self.$axios.gets('/api/services/app/DeptManagement/GetAll',{DeptParentid:data.id,SkipCount:0,MaxResultCount:100}).then(function(res){
+                        console.log(res)
+                        self.tableData=res.result.items
+                        self.tableData.unshift(self.selfAr);
                     },function(res){
                         self.treeLoading=false;
                     })

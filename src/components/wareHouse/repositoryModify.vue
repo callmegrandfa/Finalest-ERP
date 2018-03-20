@@ -113,15 +113,27 @@
                             <label><small>*</small>所属组织</label>
                             <el-select v-model="repositoryData.ouId"
                                        :class="{redBorder : validation.hasError('repositoryData.ouId')}"
-                                       @focus="showErrprTipsSelect" 
                                        :disabled="isEdit"
                                        class="ouId"
+                                       @change='Modify()'
                                        placeholder="">
-                                <el-option v-for="item in ou"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                </el-option>
+                                <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="ouSearch"></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                        :data="ouAr"
+                                        :props="selectOuProps"
+                                        node-key="id"
+                                        default-expand-all
+                                        ref="tree"
+                                        :filter-node-method="filterNode"
+                                        :expand-on-click-node="false"
+                                        @node-click="ouNodeClick"></el-tree> 
+                                <el-option v-show="false"
+                                           :key="countOu.id" 
+                                           :label="countOu.ouFullname" 
+                                           :value="countOu.id"
+                                           id="ou_confirmSelect"></el-option>
                             </el-select>
                         </div>
                         <div class="bgcolor">
@@ -189,13 +201,25 @@
                                        @change="Modify()"
                                        :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.opAreaId')}"
-                                       @focus="showErrprTipsSelect"
                                        class="opAreaId">
-                                <el-option v-for="item in opArea"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                </el-option>
+                                <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="opSearch"></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="opAr"
+                                     :props="selectOpProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="opNodeClick"></el-tree>
+                                <el-option v-show="false"
+                                       :key="countOp.id" 
+                                       :label="countOp.areaName" 
+                                       :value="countOp.id"
+                                       id="op_confirmSelect"></el-option>
+                                
                             </el-select>
                         </div>
 
@@ -206,13 +230,24 @@
                                        @change="Modify()"
                                        :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.adAreaId')}"
-                                       @focus="showErrprTipsSelect"
                                        class="adAreaId">
-                                <el-option v-for="item in adArea"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                </el-option>
+                                <el-input placeholder=""
+                                      class="selectSearch"
+                                      v-model="adSearch"></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="adAr"
+                                     :props="selectAdProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="adNodeClick"></el-tree>
+                                <el-option v-show="false"
+                                           :key="countAd.id" 
+                                           :label="countAd.areaName" 
+                                           :value="countAd.id"
+                                           id="ad_confirmSelect"></el-option>
                             </el-select>
                         </div>
 
@@ -220,7 +255,6 @@
                             <label>负责人</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.manager"
-                                      @focus="showErrprTips"
                                       @change="Modify()"
                                       :disabled="isEdit"
                                       class="manager"
@@ -231,7 +265,6 @@
                             <label>电话</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.phone"
-                                      @focus="showErrprTips"
                                       @change="Modify()"
                                       :disabled="isEdit"
                                       class="phone"
@@ -242,7 +275,6 @@
                             <label>Email</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.email"
-                                      @focus="showErrprTips"
                                       @change="Modify()"
                                       :disabled="isEdit"
                                       class="email"
@@ -252,7 +284,6 @@
                         <div class="bgcolor">
                             <label>传真</label>
                             <el-input v-model="repositoryData.fax"
-                                      @focus="showErrprTips"
                                       @change="Modify()"
                                       :disabled="isEdit"
                                       placeholder="" 
@@ -287,14 +318,13 @@
                             <el-select v-model="repositoryData.status" 
                                        placeholder=""
                                        :disabled="isEdit"
+                                       @change='Modify()'
                                        :class="{redBorder : validation.hasError('repositoryData.status')}"
-                                       @focus="showErrprTipsSelect"
                                        class="status">
-                                <el-option v-for="item in status"
-                                            :key="item.itemValue"
-                                            :label="item.itemName"
-                                            :value="item.itemValue">
-                                </el-option>
+                                <el-option v-for="item in statusAr"  
+                                           :key="item.itemValue" 
+                                           :label="item.itemName" 
+                                           :value="item.itemValue"></el-option>
                             </el-select>
                         </div>
                     </el-col>    
@@ -302,26 +332,20 @@
             </div>
         </el-collapse-transition>
 
-      <el-row class="ft12 pr10 pt10 br3">
-          <el-col :span='24' class="pl10 mb10">
+      <el-row class="ft12 pr10 pt10 br3 bg-white">
+          <el-col :span='24' class="pl10 mb10 bb1">
               <span class="header-title">送货信息</span>
           </el-col>
 
-          <el-col :span="24" class="bg-white pt10">
-                <button class="erp_bt bt_print" @click='addCol'>
+          <el-col :span="24" class="bg-white pl10">
+                <button class="erp_bt bt_print" @click='addCol' v-show='!isEdit'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_print.png">
                     </div>
                     <span class="btDetail">增行</span>
                 </button>
-                                          <!-- 保存新增的仓库地址信息 -->
-                <!-- <button class="erp_bt bt_save" @click="saveAddress">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_save.png">
-                    </div>
-                    <span class="btDetail">保存</span>
-                </button> -->
-                <button class="erp_bt bt_del">
+                
+                <button class="erp_bt bt_del" @click='delRow' v-show='!isEdit'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
@@ -347,19 +371,12 @@
               <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
-                    <el-table-column prop="" label="" >
-                        <template slot-scope="scope">
-                            <span>{{scope.$index+1}}</span>
-                        </template>
-                    </el-table-column>
-
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
-                            <!-- <span>{{scope.$index%2}}</span> -->
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.contactPerson" 
-                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    v-model="scope.row.contactPerson"
+                                    :disabled='isEdit'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -369,8 +386,8 @@
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.phone" 
-                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    v-model="scope.row.phone"
+                                    :disabled='isEdit'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -381,8 +398,8 @@
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.completeAddress" 
-                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    v-model="scope.row.completeAddress"
+                                    :disabled='isEdit'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text" />
                         </template>
@@ -390,29 +407,25 @@
 
                     <el-table-column prop="transportMethodId" label="运输方式">
                         <template slot-scope="scope">
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.transportMethodId" 
-                                    v-on:click="handleEdit(scope.$index,scope.row)"
-                                    @change='handleChange(scope.$index,scope.row)'
-                                    type="text"/>
+                            <el-select  v-model="scope.row.transportMethodId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
+                                <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                </el-option>
+                            </el-select>
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="logisticsCompany" label="物流公司">
+                    <el-table-column prop="transportMethodId" label="物流公司">
                         <template slot-scope="scope">
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.logisticsCompany" 
-                                    v-on:click="handleEdit(scope.$index,scope.row)"
-                                    @change='handleChange(scope.$index,scope.row)'
-                                    type="text"/>
+                            <el-select  v-model="scope.row.logisticsCompanyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
+                                <el-option  v-for="item in logiAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                </el-option>
+                            </el-select>
                         </template>
                     </el-table-column>
 
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault"></el-checkbox>
+                            <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault" :disabled='isEdit'></el-checkbox>
                         </template>
                     </el-table-column>
 
@@ -421,7 +434,7 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.remark" 
-                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                    :disabled='isEdit'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -429,11 +442,7 @@
 
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <!-- <span>{{scope.row}}</span> -->
-                            <!-- <el-button v-on:click='a(scope.row)'>123</el-button> -->
-                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
-                            <!-- <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button>  -->
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row)" type="text" size="small" :disabled='isEdit'>删除</el-button>
                         </template>
                     </el-table-column>
               </el-table> 
@@ -480,7 +489,7 @@
         created:function(){
             let self = this;
             self.loadData();
-            self.loadStatus();
+            self.loadSelect();
         },
         validators: {
             'repositoryData.ouId': function (value) {//所属组织
@@ -529,45 +538,19 @@
                 return this.Validator.value(value).required().integer();
             },
         },
+        computed:{
+            countOu () {
+                return this.ouItem;
+            },
+            countAd () {
+                return this.adItem;
+            },
+            countOp () {
+                return this.opItem;
+            },
+        },
         methods:{
-            //---提示错误----------------------------------------------
-            showErrprTips(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
-            },
-            showErrprTipsSelect(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
-            },
-            showErrprTipsRangedate(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.$el).hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
-            },
-            showErrprTipsTextArea(e){
-                    $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                    })
-            },
-            //-------------------------------------------------------------
+            
             //---加载信息-----------------------------------------------
             loadData:function(){//根据id查找仓库信息和仓库地址信息
                 let self = this;
@@ -577,6 +560,16 @@
                     self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
                         self.repositoryData = res.result;
+
+                        //加载完成拿回的下拉框的默认值
+                        self.ouItem.ouFullname = self.repositoryData.ouId_OuName;
+                        self.ouItem.id =  self.repositoryData.ouId;
+
+                        self.adItem.areaName = self.repositoryData.adAreaId_AreaName;
+                        self.adItem.id = self.repositoryData.adAreaId;
+
+                        self.opItem.areaName = self.repositoryData.opAreaId_AreaName;
+                        self.opItem.id = self.repositoryData.opAreaId;
                         // console.log(self.repositoryData);
                     });
                     // console.log(self.$route.params.id)
@@ -586,32 +579,94 @@
                         id:self.$route.params.id,
                     }
                     // console.log(self.getRepositoryAddressParams)
-                    this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',self.getRepositoryAddressParams).then(function(res){
+                    self.loadAddData();
+                    
+                }
+            },
+            loadAddData:function(){
+                let self = this;
+                this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',self.getRepositoryAddressParams).then(function(res){
                         // console.log(res);
                         self.repositoryAddressData = res.result;
                     })
-                }
-            },
-            loadStatus:function(){
-                let self = this;
-                this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    self.status = res.result;
-                    console.log(self.status);
-                },function(res){
-                    console.log('err'+res)
-                })
             },
             //------------------------------------------------------------
+            //---下拉的数据------------------------------------------------------
+            loadSelect:function(){
+                let self = this;
+                //所属组织
+                self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
+                    // console.log(res);
+                    self.ouAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                
+                //行政地区*2
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                    // console.log(res);
+                    self.adAr = res.result;
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //业务地区*1
+                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
+                    // console.log(res);
+                    console.log(res)
+                    self.opAr = res.result;
+                    // self.opAr=[{
+                    //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
+                    // }]
+                    self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+                //状态
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                    // console.log(res);
+                    self.statusAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //运输方式
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
+                    // console.log(res);
+                    self.transAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //物流公司
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'logisticsCompany'}).then(function(res){
+                    // console.log(res);
+                    self.logiAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                
+            },
+            //------------------------------------------------------------------
 
             //---修改完成保存----------------------------------------------
             saveModify:function(){//修改仓库信息保存
                 let self = this;
-
+                
+                
+                if(self.updateList.length>0){
+                    self.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
+                        console.log(res);
+                        self.open('修改地址信息成功','el-icon-circle-check','successERP');
+                        self.updateList = [];
+                    })
+                    
+                }
+                
+                self.repositoryData.adAreaId == 1;
+                console.log(self.repositoryData)
                 if(self.ifModify){
-                    console.log(1)
                     self.$validate().then(function(success){
                         if(success){
-                            console.log(12)
                             self.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
                                 console.log(res);
                                 self.open('修改仓库信息成功','el-icon-circle-check','successERP');
@@ -619,19 +674,8 @@
                             })
                         }
                     })
-                    
                 };
-                
 
-                if(self.updateList.length>0){
-                    for(let i in self.updateList){
-                        this.$axios.puts('/api/services/app/StockAddressManagement/Update',self.updateList[i]).then(function(res){
-                            console.log(res);
-                            self.open('修改地址信息成功','el-icon-circle-check','successERP');
-                            self.updateList = [];
-                        })
-                    }
-                }
                 
                 self.createAddress();
             },
@@ -674,13 +718,12 @@
                 self.rows.newCol ={
                     groupId:'1',//集团ID
                     stockId:self.$route.params.id,//仓库ID
-                    addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
                     contactPerson:'',//联系人
                     phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
+                    logisticsCompanyId:'',//物流公司
+                    isDefault:false,//是否默认
                     remark:'',//备注
                 };
                 self.repositoryAddressData.unshift(self.rows.newCol);
@@ -691,28 +734,48 @@
                 // console.log(self.addList)
             },
             delRow:function(){//删除选中的项
-                let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            _this.loadData();
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                            //console.log('err:'+res)
-                        })
-                    }
-                };
+                let self=this;
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+                if(self.idArray.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                
+                if(self.idArray.ids.length>0){
+                    console.log(self.idArray.ids)
+                    self.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
+                                self.loadAddData();
+                                self.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
+                    });
+                }
             },
             handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
                 console.log(this.multipleSelection)
             },
 
-            handleEdit:function(index,row){//表格内编辑操作
-                
-            },
             handleChange:function(index,row){
                 let self = this;
                 let flag = false;
@@ -737,14 +800,25 @@
             },
             handleDelete:function(index,row){//表格内删除操作
                 let self = this;
-                this.repositoryAddressData.splice(index,1);
-                self.addList.splice(index,1);
-                console.log(self.repositoryAddressData)
-                console.log(self.addList)
-                this.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
-                    console.log(res);
-                    self.open('删除仓库地址成功','el-icon-circle-check','successERP');
-              })
+                
+                self.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                        self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
+                            self.repositoryAddressData.splice(index,1)
+                            self.loadAllList();
+                            self.open('删除成功','el-icon-circle-check','successERP');    
+                        })
+                    }).catch(() => {
+                        self.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                
             },
             Modify:function(){
                 let self = this;
@@ -769,13 +843,12 @@
                 self.createParams={
                     groupId:'1',//集团ID
                     stockId:self.$route.params.id,//仓库ID
-                    addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
                     contactPerson:'',//联系人
                     phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
+                    logisticsCompanyId:'',//物流公司
+                    isDefault:false,//是否默认
                     remark:'',//备注
                 };
             },
@@ -784,6 +857,90 @@
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             //------------------------------------------------------------
+            //---树-------------------------------------------------------------
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            filterNode(value, data) {
+                // console.log(data)
+                if (!value) return true;
+                    return data.areaName.indexOf(value) !== -1;
+            },
+            ouNodeClick:function(data){
+                console.log(data)
+                let self = this;
+                self.ouItem.id = data.id;
+                self.ouItem.ouFullname = data.ouFullname;
+                self.$nextTick(function(){
+                    $('#ou_confirmSelect').click()
+                })
+            },
+            
+            adNodeClick:function(data){
+                let self = this;
+                self.adItem.id = data.id;
+                self.adItem.areaName = data.areaName;
+                self.$nextTick(function(){
+                    $('#ad_confirmSelect').click()
+                })
+            },
+            opNodeClick:function(data){
+                let self = this;
+                self.opItem.id = data.id;
+                self.opItem.areaName = data.areaName;
+                self.$nextTick(function(){
+                    $('#op_confirmSelect').click()
+                })
+            },
+            //-----------------------------------------------------
+            //---提示错误----------------------------------------------
+            showErrprTips(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsSelect(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsRangedate(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.$el).hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
+            },
+            showErrprTipsTextArea(e){
+                    $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                    })
+            },
+            //-------------------------------------------------------------
 
         },
 
@@ -824,6 +981,51 @@
                     value:2,
                     label: '361度'
                 }],
+                //---所属组织树形下拉-----
+                ouSearch:'',
+                selectOuProps:{
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+                ouItem:{
+                    id:'',
+                    ouFullname:'',
+                },
+                ouAr:[],//所属组织下拉框
+                //-----------------------
+                //---行政地区树形下拉-----
+                adSearch:'',//树形搜索框的
+                selectAdProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                adItem:{
+                    id:'',
+                    areaName:'',
+                },
+                adAr:[],//行政地区下拉框
+                //-----------------------
+                //---业务地区树形下拉-----
+                    opSearch:'',//树形搜索框的
+                    selectOpProps:{
+                        children: 'items',
+                        label: 'areaName',
+                        id:'id'
+                    },
+                    opItem:{
+                        id:'',
+                        areaName:'',
+                    },
+                    opAr:[],//业务地区下拉框
+                //-----------------------
+
+                //---普通下拉框-----------
+                statusAr:[],//状态
+                transAr:[],//运输方式
+                logiAr:[],//物流公司
+                //-----------------------
                 stockType: [{//仓库类型
                     value:0,
                     label: '仓库'
@@ -831,26 +1033,7 @@
                     value:1,
                     label: '店铺'
                 }],
-                opArea: [{//业务地区
-                    value:0,
-                    label: '业务地区1'
-                }, {
-                    value:1,
-                    label: '业务地区2'
-                }, {
-                    value:2,
-                    label: '业务地区3'
-                }],
-                adArea: [{//行政地区
-                    value:0,
-                    label: '行政地区1'
-                }, {
-                    value:1,
-                    label: '行政地区2'
-                }, {
-                    value:2,
-                    label: '行政地区3'
-                }],
+                
                 status: [],
 
                 value: '',
@@ -858,13 +1041,12 @@
                 createParams:{//创建新的仓库地址
                     groupId:'1',//集团ID
                     stockId:'',//仓库ID
-                    addressId:'2',//地址ID
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
                     contactPerson:'',//联系人
                     phone:'',//联系电话
-                    logisticsCompany:'',//物流公司
-                    isDefault:true,//是否默认
+                    logisticsCompanyId:'',//物流公司
+                    isDefault:false,//是否默认
                     remark:'',//备注
                 },
                 x:0,//增行的下标
@@ -872,6 +1054,9 @@
                 updateList:[],//更新上传的数组
                 addList:[],//新增上传的数组
                 multipleSelection:[],//需要删除的数组
+                idArray:{
+                    ids:[]
+                },//需要删除的数组id
             }
         },
     }
@@ -957,10 +1142,10 @@
     text-align: center;
 }
 .header-title{
-    color: #F55E6E;
+    color: #333333;
     font-size: 16px;
     display: inline-block;
-    border-bottom: 4px solid #F55E6E;
+    border-bottom: 2px solid rgb(51, 204, 204);
     font-weight: bolder;
     padding: 5px 1px;
 }
@@ -986,6 +1171,16 @@
 <style>
 .res-modify .el-input__inner{
     height:35px !important;
+}
+.res-modify .bgw .el-input__inner{
+    text-align:center;
+    border:none;
+    background-color:white;
+}
+.res-modify .bgp .el-input__inner{
+    text-align:center;
+    border:none;
+    background-color:#FAFAFA;
 }
 </style>
 
