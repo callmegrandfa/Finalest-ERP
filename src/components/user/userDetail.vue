@@ -110,7 +110,7 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                    <label><small>*</small>邮箱</label>
+                    <label>邮箱</label>
                     <el-input 
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
@@ -392,7 +392,7 @@
          return this.Validator.value(value).required().maxLength(20);
       },
       'addData.email': function (value) {//邮箱
-         return this.Validator.value(value).required().maxLength(200);
+         return this.Validator.value(value).maxLength(200);
       },
       'addData.userGroupId': function (value) {//所属用户组
          return this.Validator.value(value).required().integer();
@@ -407,10 +407,10 @@
           return this.Validator.value(value).required().integer();
       },
       'addData.status': function (value) {//状态
-         return this.Validator.value(value).required().integer();
+         return this.Validator.value(value).integer();
       },
       'addData.remark': function (value) {//备注
-         return this.Validator.value(value).required().maxLength(200);
+         return this.Validator.value(value).maxLength(200);
       },
       'dateRange':function(value){
           return this.Validator.value(value).required();
