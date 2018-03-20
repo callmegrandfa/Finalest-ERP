@@ -192,12 +192,12 @@
                             <el-table-column type="selection" fixed="left"></el-table-column>
                             <el-table-column label="用户编码">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="see(scope.row)">{{tableData[scope.$index].userCode}}</el-button>
+                                    <el-button type="text"  @click="see(scope.row)">{{tableData[scope.$index].userCode}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column label="用户名称">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="see(scope.row)">{{tableData[scope.$index].displayName}}</el-button>
+                                    <el-button type="text"  @click="see(scope.row)">{{tableData[scope.$index].displayName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
@@ -239,9 +239,9 @@
                             <el-table-column prop="roleString" label="关联角色"></el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
-                                    <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
+                                    <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
+                                    <el-button type="text"  @click="see(scope.row)" >查看</el-button>
+                                    <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
                                 </template>
                             </el-table-column>
                         </el-table>

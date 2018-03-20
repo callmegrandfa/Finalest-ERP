@@ -1,6 +1,11 @@
 <template>
     <div class="header">
-            <div class="menuBtn" @click="showSide"></div>
+            <div class="menuBtn" @click="showSide">
+                <img class="bar_1" src="..\..\static\image\header\bar.png" alt="">
+                <img class="bar_2" src="..\..\static\image\header\bar.png" alt="">
+                <img class="bar_3" src="..\..\static\image\header\bar.png" alt="">
+                <!-- <i class="fa fa-bars" aria-hidden="true"></i> -->
+            </div>
             <div class="pageLogo">
                 <a href="">
                 <img src="../../static/image/login/ERP.png" alt="HKERP">
@@ -94,15 +99,9 @@ export default {
         this.$store.state.url='';
         this.$store.state.temporaryLogin=[];
         this.$store.state.temporary=[];
-        this.$store.state.OrderActiveRouter='/order/orderList/:id';
-        this.$store.state.groupActiveRouter='/groupManage/groupManageList/:id';
-        this.$store.state.resActiveRouter='/repository/repositoryList/:id';
-        this.$store.state.customerActiveRouter='/customer/customerList/:id';
-        this.$store.state.billActiveRouter='/bill/billList/:id';
-        this.$store.state.menuActiveRouter='/menu/menuList/:id';
         this.$store.commit('username');
-         this.$store.commit('slidbarData');
-         this.$router.push({path:'/login'});
+        this.$store.commit('slidbarData');
+        this.$router.push({path:'/login'});
        },
         querySearch(queryString, cb) {
         var restaurants = this.restaurants;
@@ -181,26 +180,35 @@ export default {
     text-decoration: none;
 }        
 .menuBtn{
+    position: relative;
     cursor: pointer;
     width: 50px;
     height: 50px;
     float: left;
     background-color: rgba(65, 78, 97, 1);
-    background-image: url(../assets/sidebar-toggler.png);
-    background-position: center center;
-    background-repeat: no-repeat;
-    opacity: 0.7;
-    filter: alpha(opacity=70);
-    transition: box-shadow .5s;
-    -moz-transition: box-shadow .5s;
-    -webkit-transition: box-shadow .5s;
-    -o-transition: box-shadow .5s;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    font-size: 28px;
+    box-shadow: 1px 1px 1px #0000005c;
 }
-.menuBtn:hover{
-    box-shadow: 1px 1px 1px black;
+.menuBtn img{
+    position: absolute;
+    left: calc(50% - 15px);
+}
+.menuBtn img.bar_1{
+    top:29%;
+}
+.menuBtn img.bar_2{
+    top:50%;
+}
+.menuBtn img.bar_3{
+     top:69%;
+}
+/* .menuBtn:hover{
     opacity: 1;
     filter: alpha(opacity=100);
-}
+} */
 
 /* 搜索框 */
 .header .search{
