@@ -21,6 +21,7 @@
                     <el-tree
                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
                     v-loading="treeLoading" 
+                    :highlight-current="true"
                     :data="componyTree"
                     :props="defaultProps"
                     node-key="id"
@@ -192,6 +193,9 @@
                 dialogFormVisible:false,
                 tittle:'',
                 dialogUserDefined:false,//dialog
+
+                detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
+                detailParentName:'',//tree节点点击获取前往detail新增页上级菜单name
             }
         },
         created:function(){       
@@ -285,8 +289,15 @@
                 })
             },
             goDetail(){
-                this.$store.state.url='/menu/menuDetail/default'
-                this.$router.push({path:this.$store.state.url})//点击切换路由
+                let _this=this;
+                if(typeof(_this.detailParentId)=='number'){
+                    _this.$store.state.url='/menu/menuDetail/'+_this.detailParentId
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                    
+                }else{
+                    _this.$store.state.url='/menu/menuDetail/default'
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                }
             },
              handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
@@ -323,6 +334,8 @@
             },
             nodeClick(data){
                 let _this=this;
+                 _this.detailParentId=data.id;//
+                 _this.detailParentName=data.moduleName;
                 _this.tableData=[];
                 _this.tableData.push(data)
                 _this.totalItem=_this.tableData.length;

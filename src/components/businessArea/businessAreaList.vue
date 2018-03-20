@@ -21,6 +21,7 @@
                     <el-tree
                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                     v-loading="treeLoading" 
+                    :highlight-current="true"
                     :data="componyTree"
                     :props="defaultProps"
                     node-key="id"
@@ -208,6 +209,10 @@
                 tittle:'',//模态框tittle
                 showParent:true,//上级组织单元是否可选
                 dialogUserDefined:false,//dialog
+
+                detailParentId:'default',//tree节点点击获取前往detail新增页上级业务地区ID
+                detailParentName:'default',//tree节点点击获取前往detail新增页上级业务地区name
+                ouId:'default',//tree节点点击获取前往detail新增页组织id
             }
         },
         validators: {
@@ -332,8 +337,19 @@
                 })
             },
             goDetail(){
-                this.$store.state.url='/businessArea/businessAreaDetail/default'
-                this.$router.push({path:this.$store.state.url})//点击切换路由
+                let _this=this;
+                if(typeof(_this.detailParentId)=='number'){
+                    if(_this.detailParentId == 0){
+                        alert(_this.detailParentName+"  是所在集团公司名称，并不是业务地区，请重新选择")
+                    }else{
+                        _this.$store.state.url='/businessArea/businessAreaDetail/'+[_this.detailParentId,_this.ouId];
+                        _this.$router.push({path:this.$store.state.url})//点击切换路由
+                    }
+                }else{
+                    _this.$store.state.url='/businessArea/businessAreaDetail/default'
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                }
+                 
             },
              handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
@@ -391,6 +407,9 @@
             nodeClick(data){
                  let _this=this;
                  _this.tableLoading=true;
+                 _this.detailParentId=data.id;
+                 _this.detailParentName=data.areaName;
+                 _this.ouId=data.ouId;
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id})
                 .then(function(res){
                     _this.tableData=res.result;

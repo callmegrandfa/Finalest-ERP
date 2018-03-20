@@ -190,12 +190,12 @@
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
                             <el-table-column type="selection" fixed="left"></el-table-column>
-                            <el-table-column label="用户编码" fixed="left">
+                            <el-table-column label="用户编码">
                                 <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="see(scope.row)">{{tableData[scope.$index].userCode}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="用户名称" fixed="left">
+                            <el-table-column label="用户名称">
                                 <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="see(scope.row)">{{tableData[scope.$index].displayName}}</el-button>
                                 </template>
@@ -301,34 +301,7 @@
                     roles:[],//角色
                     // ou:[],//组织
                 },
-                options: [{
-                    value: '1',
-                    label: '选项1'
-                    }, {
-                    value: '2',
-                    label: '选项2'
-                    }, {
-                    value: '3',
-                    label: '选项3'
-                    }, {
-                    value: '4',
-                    label: '选项4'
-                    }, {
-                    value: '5',
-                    label: '选项5'
-                    }, {
-                    value: '6',
-                    label: '选项6'
-                    }, {
-                    value: '7',
-                    label: '选项7'
-                    }, {
-                    value: '8',
-                    label: '选项8'
-                    }, {
-                    value: '9',
-                    label: '选项9'
-                    }],
+               
                 tableData:[],
 
                 pageIndex:1,//分页的当前页码

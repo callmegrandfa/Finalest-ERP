@@ -76,6 +76,7 @@
                 <el-tree 
                 :data="componyTree"
                 :props="defaultProps"
+                :highlight-current="true"
                 node-key="treeId"
                 default-expand-all
                 :expand-on-click-node="false"
@@ -301,7 +302,10 @@
                 totalItem:0,//总共有多少条消息
                 ifWidth:true,
                 dialogUserDefined:false,//dialog
-                height:'0px'
+                height:'0px',
+
+                detailParentId:'',//tree节点点击获取前往detail新增页上级业务地区ID
+                detailParentName:'',//tree节点点击获取前往detail新增页上级业务地区name
             }
         },
         created:function(){       
@@ -366,7 +370,6 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
-                    console.log(res.result.items)
                     _this.$nextTick(function(){
                         _this.getHeight()
                     })
@@ -444,8 +447,14 @@
                 })
             },
             goDetail(){
-                this.$store.state.url='/OuManage/OuManageDetail/default'
-                this.$router.push({path:this.$store.state.url})//点击切换路由
+                let _this=this;
+                if(typeof(_this.detailParentId)=='number'){
+                    _this.$store.state.url='/OuManage/OuManageDetail/'+_this.detailParentId
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                }else{
+                    _this.$store.state.url='/OuManage/OuManageDetail/default'
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                }
             },
              handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
@@ -492,6 +501,8 @@
             },
             nodeClick(data){
                  let _this=this;
+                 _this.detailParentId=data.id;
+                 _this.detailParentName=data.ouFullname;
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuParentid:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.tableData=res.result.items;

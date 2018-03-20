@@ -85,12 +85,14 @@ export default {
                 thirdInfo:[
                     {name:'用户资料',address:'user'},
                 ]
-            },{
-                name:'角色管理',
-                thirdInfo:[
-                    {name:'角色资料',address:'role'},
-                ]
-            },{
+            },
+            // {
+            //     name:'角色管理',
+            //     thirdInfo:[
+            //         {name:'角色资料',address:'role'},
+            //     ]
+            // },
+            {
                 name:'采购管理',
                 thirdInfo:[
                      {name:'采购管理列表',address:'order'}, 
@@ -138,18 +140,18 @@ export default {
             },{
                 name:'商品属性',
                 thirdInfo:[
-                    {name:'商品属性列表',address:'commodity'},   
-                    {name:'商品规格列表',address:'commercial'},
-                    {name:'商品类目列表',address:'commodityleimu'},
-                    {name:'类目属性规格列表',address:'Property'},
-                    {name:'计量单位',address:'unitOfMeasurement'},
-                    {name:'商品品牌',address:'commodityBrand'},
-                    {name:'商品类目',address:'commodityleimu'},
-                    {name:'商品属性',address:'commodityAttribute'},
-                    {name:'商品规格',address:'specificationOfGoods'},
-                    {name:'商品规格组',address:'specification'},
-                    {name:'类目属性规格(平台)列表',address:'classPropertyList'},
-                    {name:'商品档案',address:'Record'},
+                    // {name:'商品属性列表',address:'commodity'},   
+                    // {name:'商品规格列表',address:'commercial'},
+                    // {name:'商品类目列表',address:'commodityleimu'},
+                    // {name:'类目属性规格列表',address:'Property'},
+                    // {name:'计量单位',address:'unitOfMeasurement'},
+                    // {name:'商品品牌',address:'commodityBrand'},
+                    // {name:'商品类目',address:'commodityleimu'},
+                    // {name:'商品属性',address:'commodityProperty'},
+                    // {name:'商品规格',address:'specificationOfGoods'},
+                    // {name:'商品规格组',address:'specification'},
+                    // {name:'类目属性规格(平台)列表',address:'classPropertyList'},
+                    // {name:'商品档案',address:'Record'},
                 ]
             },{
                 name:'职员资料',

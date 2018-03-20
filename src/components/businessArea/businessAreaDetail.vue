@@ -43,10 +43,10 @@
                             @node-click="nodeClick_ou"
                             >
                             </el-tree>
-                            <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
-                            </el-option>
-                            <!-- <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullName" :value="item_ou.id">
                             </el-option> -->
+                            <el-option v-show="false"  v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -79,10 +79,10 @@
                             @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
-                            </el-option>
-                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            <!-- <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
                             </el-option> -->
+                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -244,8 +244,8 @@
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
             languageId:[],//语种
-            // area:[],//上级业务地区
-            // ou:[],//组织
+            area:[],//上级业务地区
+            ou:[],//组织
         },
       }
     },
@@ -254,7 +254,7 @@
     //      return this.Validator.value(value).required().integer()
     //   },
       'addData.areaCode': function (value) {//地区代码
-         return this.Validator.value(value).required().maxLength(50)
+         return this.Validator.value(value).required().maxLength(50);
       },
       'addData.areaName': function (value) {//地区名称
          return this.Validator.value(value).required().maxLength(50);
@@ -269,7 +269,7 @@
     //      return this.Validator.value(value).required().maxLength(1000);
     //   },
       'addData.manager': function (value) {//负责人
-          return this.Validator.value(value).required().maxLength(20);
+          return this.Validator.value(value).maxLength(20);
       },
       'addData.ouId': function (value) {//
           return this.Validator.value(value).required().integer();
@@ -281,7 +281,7 @@
          return this.Validator.value(value).required().integer();
       },
       'addData.remark': function (value) {//备注
-          return this.Validator.value(value).required().maxLength(200);
+          return this.Validator.value(value).maxLength(200);
       },
     },
     created () {
@@ -300,7 +300,7 @@
     methods: {
         filterNode_ou(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouFullName.indexOf(value) !== -1;
         },
         filterNode_area(value, data) {
             if (!value) return true;
@@ -316,14 +316,20 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            // _this.$axios.gets('/api/services/app/AreaManagement/GetAllData',{AreaType:_this.AreaType}).then(function(res){ 
-            // // 业务地区
-            // _this.selectData.area=res.result;
-            // })
-            // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-            // // 所属组织
-            // _this.selectData.ou=res.result;
-            // })
+            _this.$axios.gets('/api/services/app/AreaManagement/GetAllData',{AreaType:_this.AreaType}).then(function(res){ 
+            // 业务地区
+                _this.selectData.area=res.result;
+                if(_this.$route.params.id!="default"){
+                    _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
+                }
+            })
+            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // 所属组织
+                _this.selectData.ou=res.result;
+                if(_this.$route.params.id!="default"){
+                    _this.addData.ouId=parseInt(_this.$route.params.id.split(',')[1]);
+                }
+            })
             // _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
             // // 所属用户组
             //     _this.selectData.userGroupId=res.result.items;
@@ -384,6 +390,7 @@
             //组织
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
+                console.log(res)
                 _this.selectTree_ou=res.result;
                 _this.loadIcon();
             },function(res){
@@ -426,17 +433,27 @@
     nodeClick_ou(data,node,self){
         let _this=this;
         _this.item_ou.id=data.id;
-        _this.item_ou.ouFullname=data.ouFullname;
-        _this.$nextTick(function(){
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        _this.item_ou.ouFullName=data.ouFullName;
+        // _this.$nextTick(function(){
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        // })
+        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            if($(this).attr('date')==data.id){
+                $(this).click()
+            }
         })
     },
     nodeClick_area(data,node,self){
         let _this=this;
         _this.item_area.id=data.id;
         _this.item_area.areaName=data.areaName;
-        _this.$nextTick(function(){
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        // _this.$nextTick(function(){
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        // })
+         $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            if($(this).attr('date')==data.id){
+                $(this).click()
+            }
         })
     },
 }

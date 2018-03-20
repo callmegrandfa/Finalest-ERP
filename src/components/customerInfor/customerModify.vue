@@ -576,14 +576,14 @@
                         
                 
                         <el-table :data="addressData" stripe border style="width: 100%;" election-change="handleSelectionChange2" class="all-table">
-                            <el-table-column prop="addressType" label="地址类型" width="180">
+                            <!-- <el-table-column prop="addressType" label="地址类型" width="180">
                                 <template slot-scope="scope">
                                     <el-select  v-model="scope.row.addressType" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
                                         <el-option  v-for="item in addAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                         </el-option>
                                     </el-select>
                                 </template>
-                            </el-table-column>
+                            </el-table-column> -->
 
                             <el-table-column prop="completeAddress" label="供货地址" width="180">
                                 <template slot-scope="scope">
@@ -913,7 +913,7 @@ export default({
             return this.Validator.value(value).required().maxLength(50);
         },
         'customerData.contactFullName': function (value) {//全称
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'customerData.mnemonic': function (value) {//助记码
             return this.Validator.value(value).required().maxLength(50);

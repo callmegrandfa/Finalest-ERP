@@ -109,47 +109,6 @@
 
             </el-col>
         </el-row>
-        <!-- dialog -->
-        <!-- <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
-            
-            <div class="bgcolor smallBgcolor"><label>部门编码</label><el-input :class="{redBorder : validation.hasError('dialogData.deptCode')}" v-model="dialogData.deptCode" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptCode') }}</div>
-            
-            <div class="bgcolor smallBgcolor"><label>部门名称</label><el-input :class="{redBorder : validation.hasError('dialogData.deptName')}" v-model="dialogData.deptName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptName') }}</div>
-            
-            <div class="bgcolor smallBgcolor"><label>负责人</label><el-input :class="{redBorder : validation.hasError('dialogData.director')}" v-model="dialogData.director" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.director') }}</div>
-            
-            <div class="bgcolor smallBgcolor"><label>电话</label><el-input :class="{redBorder : validation.hasError('dialogData.phone')}" v-model="dialogData.phone" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.phone') }}</div>
-            
-            <div class="bgcolor smallBgcolor">
-                <label>上级业务地区</label>
-
-                <el-select v-if="showParent" :class="{redBorder : validation.hasError('dialogData.deptParentid')}" v-model="dialogData.deptParentid">
-                    <el-option v-for="item in deptParentid" :key="item.value" :label="item.label" :value="item.value" placeholder=""></el-option>
-                </el-select>
-                <el-input v-else :class="{redBorder : validation.hasError('dialogData.deptParentid')}"  v-model="dialogData.deptParentid" disabled></el-input>
-            </div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.deptParentid') }}</div>
-            
-            <div class="bgcolor smallBgcolor"><label>备注</label><el-input v-model="dialogData.remark" :class="{redBorder : validation.hasError('dialogData.remark')}" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
-            
-            <div class="bgcolor smallBgcolor">
-                <label>允许使用</label>
-                <el-select :class="{redBorder : validation.hasError('dialogData.status')}"  v-model="dialogData.status">
-                    <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" placeholder="请选择">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.status') }}</div>
-            <div slot="footer" class="dialog-footer">
-                <button class="dialogBtn" @click="save">确认</button>
-                <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
-            </div>
-        </el-dialog> -->
     </div>
 </template>
 
@@ -200,6 +159,9 @@
                 isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
                 showParent:true,//上级组织单元是否可选
+
+
+                selfAr:[],//根据id获得树形节点本身
             }
         },
         created:function(){       
@@ -498,17 +460,22 @@
             //     }
             // },
             nodeClick:function(data){
-                console.log(data)
                 let self = this;
+
                 if(data.id){
+
                     self.$axios.gets('/api/services/app/DeptManagement/Get',{id:data.id}).then(function(res){
                         console.log(res)
-                        self.tableData=res.result
-                        // if(data.children!=null&&data.children!=''){
-                            self.tableData.unshift(data);
-                        // }
+                        self.selfAr = res.result
+                        console.log(self.selfAr)
+                    },function(res){
                         
-                        console.log(self.tableData)
+                    })
+
+                    self.$axios.gets('/api/services/app/DeptManagement/GetAll',{DeptParentid:data.id,SkipCount:0,MaxResultCount:100}).then(function(res){
+                        console.log(res)
+                        self.tableData=res.result.items
+                        self.tableData.unshift(self.selfAr);
                     },function(res){
                         self.treeLoading=false;
                     })

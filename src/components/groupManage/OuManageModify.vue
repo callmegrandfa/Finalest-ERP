@@ -413,8 +413,7 @@
             <el-checkbox-group 
             :disabled="isEdit" 
             @change="isUpdate"
-            v-model="addData.ouTypes"
-            :min="1">
+            v-model="addData.ouTypes">
             <el-checkbox v-for="item in selectData.OUType" :label="item.itemValue" :key="item.itemValue" @change="change_ouType">{{item.itemName}}</el-checkbox>
             </el-checkbox-group>
         </el-col>              
@@ -948,7 +947,7 @@ export default({
                 "address": "",
                 "status": "",//整数
                 "remark": "",
-                "ouTypes":[1,3],//组织职能
+                "ouTypes":[],//组织职能
             },
             basCompany:{//其他信息
                 "ouParentid": "",//整数
@@ -975,9 +974,9 @@ export default({
                 "webUrl": "",
                 "remark": ""
             },
-            Company:true,//公司 
+            Company:false,//公司 
             Business:false,//业务   
-            Finance:true,//财务
+            Finance:false,//财务
             
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
@@ -1019,91 +1018,171 @@ export default({
          return this.Validator.value(value).required().integer();
       },
       'addData.companyOuId': function (value) {//所属公司
-          return this.Validator.value(value).required().integer();
+          return this.Validator.value(value).integer();
       },
       'addData.contactPerson': function (value) {//联系人
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).maxLength(50);
       },
       'addData.phone': function (value) {//电话
-          return this.Validator.value(value).required().maxLength(50);
+          return this.Validator.value(value).maxLength(50);
       },
       'addData.address': function (value) {//地址
-          return this.Validator.value(value).required().maxLength(200);
+          return this.Validator.value(value).maxLength(200);
       },
       'addData.status': function (value) {//用户状态
-         return this.Validator.value(value).required().integer();
+         return this.Validator.value(value).integer();
       },
       'addData.remark': function (value) {//备注
-         return this.Validator.value(value).required().maxLength(200);
+         return this.Validator.value(value).maxLength(200);
       },
 
-
-      'basCompany.ouParentid': function (value) {//上级公司
-      if(this.Company){
-          return this.Validator.value(value).required().integer();
-      }
-        //  return this.Validator.value(value).required().integer();
+          'basCompany.ouParentid': function (value) {//上级公司
+        if(this.Company){
+            return this.Validator.value(value).integer().required();
+        }else{
+            return this.Validator.value(value)
+        }
       },
-    //   'basCompany.status': function (value) {//启用状态
-    //      return this.Validator.value(value).required().integer();
-    //   },
-    //   'basCompany.regCapital': function (value) {//注册资本
-    //      return this.Validator.value(value).required().integer();
-    //   },
-    //   'basCompany.legalPerson': function (value) {//法人代表
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
-    //   'basCompany.vatRegno': function (value) {//纳税人登记号
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
-    //   'basCompany.regtime': function (value) {//成立日期
-    //      return this.Validator.value(value).required();
-    //   },
-    //   'basCompany.legalPersonIdnr': function (value) {//法人身份证号码
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
-    //   'basCompany.mgtDeptCode': function (value) {//主管部门代码
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
-    //   'basCompany.mgtDeptName': function (value) {//主管部门名称
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
-    //   'basCompany.legalPersonType': function (value) {//纳税人类别
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
-    //   'basCompany.businessAddress': function (value) {//营业地址
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
-    //   'dateRange': function (value) {//营业或有效期限
-    //      return this.Validator.value(value).required();
-    //   },
-    //   'basCompany.introduction': function (value) {//公司简介
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
-    //   'basCompany.contactAddress': function (value) {//通讯地址
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
-    //   'basCompany.zipCode': function (value) {//邮政编码
-    //      return this.Validator.value(value).required().maxLength(20);
-    //   },
-    //   'basCompany.contact': function (value) {//联系人
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
-    //   'basCompany.fax': function (value) {//传真
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
-    //   'basCompany.phone': function (value) {//电话
-    //      return this.Validator.value(value).required().integer();
-    //   },
-    //   'basCompany.email': function (value) {//email
-    //      return this.Validator.value(value).required().maxLength(50);
-    //   },
-    //   'basCompany.webUrl': function (value) {//web网址
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
-    //   'basCompany.remark': function (value) {//备注
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
+      'basCompany.status': function (value) {//启用状态
+        if(this.Company){
+            return this.Validator.value(value).integer();
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.regCapital': function (value) {//注册资本
+        if(this.Company){
+            return this.Validator.value(value).integer();
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.legalPerson': function (value) {//法人代表
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.vatRegno': function (value) {//纳税人登记号
+        if(this.Company){
+           return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.regtime': function (value) {//成立日期
+        if(this.Company){
+           return this.Validator.value(value);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.legalPersonIdnr': function (value) {//法人身份证号码
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.mgtDeptCode': function (value) {//主管部门代码
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.mgtDeptName': function (value) {//主管部门名称
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.legalPersonType': function (value) {//纳税人类别
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.businessAddress': function (value) {//营业地址
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'dateRange': function (value) {//营业或有效期限
+        if(this.Company){
+            return this.Validator.value(value);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.introduction': function (value) {//公司简介
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.contactAddress': function (value) {//通讯地址
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.zipCode': function (value) {//邮政编码
+        if(this.Company){
+            return this.Validator.value(value).maxLength(20);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.contact': function (value) {//联系人
+        if(this.Company){
+           return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.fax': function (value) {//传真
+        if(this.Company){
+           return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.phone': function (value) {//电话
+        if(this.Company){
+            return this.Validator.value(value).integer();
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.email': function (value) {//email
+        if(this.Company){
+            return this.Validator.value(value).maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.webUrl': function (value) {//web网址
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
+      'basCompany.remark': function (value) {//备注
+        if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+        }else{
+            return this.Validator.value(value)
+        }
+      },
     },
     computed:{
         count () {
