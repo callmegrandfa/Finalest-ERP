@@ -1114,3 +1114,40 @@ color:#f66;
   height: 35px;
   line-height: 35px;
 }
+/*  商品搜索框公共样式  */
+/*  列表页   */
+.commodity{
+  float:left;background:#fff;width:100%;
+}
+.commodity .left-box{
+  min-width:275px;width:275px;float:left;
+}
+.commodity .bgcolor{
+    height: 35px;
+    font-size: 12px;
+    margin-bottom: 15px;
+    width: 250px;
+    float: left;
+    overflow: hidden;
+    margin-right: 5px;
+}
+.commodity .smallBgcolor{
+  height: 28px;
+  width: 100%;
+}
+.commodity .smallBgcolor .el-input{
+  width: 100%;
+}
+.commodity .bgcolor .el-select{
+  width: 100%;
+}
+/*  详情页   */
+.commodityDetails .smallBgcolor .el-input input{
+    height: 33px!important;
+}
+.commodityDetails .smallBgcolor .el-select .el-input{
+    width: 100%!important;
+}
+.commodityDetails .bgcolor{
+    width: 100%; 
+}
