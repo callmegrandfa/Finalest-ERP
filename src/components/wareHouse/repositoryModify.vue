@@ -143,7 +143,6 @@
                                       v-model="repositoryData.stockCode" 
                                       @change="Modify()"
                                       :disabled="isEdit"
-                                      @focus="showErrprTips"
                                       class="stockCode"
                                       :class="{redBorder : validation.hasError('repositoryData.stockCode')}"></el-input>
                         </div>
@@ -153,7 +152,6 @@
                                       v-model="repositoryData.stockName" 
                                       @change="Modify()"
                                       :disabled="isEdit"
-                                      @focus="showErrprTips"
                                       class="stockName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockName')}"></el-input>
                         </div>
@@ -163,7 +161,6 @@
                                       v-model="repositoryData.stockFullName" 
                                       @change="Modify()"
                                       :disabled="isEdit"
-                                      @focus="showErrprTips"
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockFullName')}"></el-input>
                         </div>
@@ -173,7 +170,6 @@
                                       v-model="repositoryData.mnemonic" 
                                       @change="Modify()"
                                       :disabled="isEdit"
-                                      @focus="showErrprTips"
                                       class="mnemonic"
                                       :class="{redBorder : validation.hasError('repositoryData.mnemonic')}"></el-input>
                         </div>
@@ -185,7 +181,6 @@
                                        @change="Modify()"
                                        :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.stockTypeId')}"
-                                       @focus="showErrprTipsSelect"
                                        class="stockTypeId">
                                 <el-option v-for="item in stockType"
                                             :key="item.value"
@@ -295,7 +290,6 @@
                         <div class="bgcolor">
                             <label>地址</label>
                             <el-input v-model="repositoryData.stockAddress"
-                                      @focus="showErrprTips"
                                       @change="Modify()"
                                       :disabled="isEdit"
                                       placeholder="" 
@@ -307,7 +301,6 @@
                             <label>备注</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.remark"
-                                      @focus="showErrprTips"
                                       :disabled="isEdit"
                                       @change="Modify()"
                                       class="remark"

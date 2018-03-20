@@ -164,14 +164,25 @@
                         </el-table> 
                     
                         <el-row>
-                            <el-col :span='6'>
-                                <div style="margin-top:20px;" class="ml10">
-                                        记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
-                                </div>
+                            <el-col :span='24'>
+                                <!-- <div style="margin-top:20px;" class="ml10">
+                                        共<span style="color:red">{{total}}</span>条，
+                                        当前第<span style="color:red">{{page}}</span>页，
+                                        共<span style="color:red">{{totalPage}}</span>页，
+                                        每页行数<span style="display:inline-block;border:1px solid #cccccc;padding:1px 2px;border-radius:2px;font-size:12px;margin:0 3px;">{{eachPage}}</span>,
+                                        第<span style="display:inline-block;border:1px solid #cccccc;padding:1px 5px;border-radius:2px;font-size:12px;margin:0 3px;">{{page}}</span>页
+                                </div> -->
                                 
-                            </el-col>
-                            <el-col :span="18">
-                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                            <!-- </el-col>
+                            <el-col :span="15"> -->
+                                <el-pagination style="margin-top:20px;" 
+                                               class="text-right" 
+                                               background 
+                                               layout="total, prev, pager, next,jumper"  
+                                               :page-count="totalPage" 
+                                               :current-page="pageIndex"
+                                               :page-size="eachPage"
+                                               @current-change="handleCurrentChange"></el-pagination>
                             </el-col>
                         </el-row>
                   
@@ -394,7 +405,7 @@
                 },
                 queryId:'',//需要查询的stockId
                     
-                pageIndex:-1,//分页的当前页码
+                pageIndex:0,//分页的当前页码
 			    totalPage:0,//当前分页总数
                 page:1,//当前页
                 eachPage:10,//一页显示的数量
