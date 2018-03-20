@@ -1,5 +1,5 @@
 <template>
-    <div class="tenant-manager-wrapper commodity">
+    <div class="tenant-manager-wrapper commodityDetails">
         <el-row class="bg-white tenant">
             <el-col :span='24'>
                 <btm class="fixed" :date="bottonbox" v-on:listbtm="btmlog"> </btm>
@@ -66,7 +66,7 @@
                           </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor">
+                            <div class="bgcolor smallBgcolor">
                                 <el-input v-model="addData.adAreaId" placeholder="" 
                                 class="adAreaId" 
                                 @focus="showErrprTips"
@@ -83,7 +83,7 @@
                           </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor">
+                            <div class="bgcolor smallBgcolor">
                                 <el-input  placeholder="" 
                                 class="tenantName" 
                                 @focus="showErrprTips"
@@ -100,7 +100,7 @@
                           </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor">
+                            <div class="bgcolor smallBgcolor">
                                 <el-input  placeholder=""
                                 class="phoneNumber" 
                                 @focus="showErrprTips"
@@ -117,7 +117,7 @@
                           </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor">
+                            <div class="bgcolor smallBgcolor">
                               <el-date-picker 
                                 class="regtime datepicker"   
                                 format="yyyy-MM-dd"
@@ -179,7 +179,7 @@
                           </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor">
+                            <div class="bgcolor smallBgcolor">
                                 <el-input :disabled="read" 
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('addData.contactAddress')}"
@@ -194,7 +194,7 @@
                           </div>
                         </el-col>
                         <el-col :span="14">
-                            <div class="smallBgcolor">
+                            <div class="bgcolor smallBgcolor">
                                 <el-input  placeholder="" :disabled="read" ></el-input>
                             </div>
                         </el-col>  
@@ -210,7 +210,7 @@
                         </div>
                       </el-col>
                       <el-col :span="14">
-                          <div class="smallBgcolor">
+                          <div class="bgcolor smallBgcolor">
                               <el-input  placeholder="" disabled=""  ></el-input>
                           </div>
                       </el-col>  
@@ -222,7 +222,7 @@
                         </div>
                       </el-col>
                       <el-col :span="14">
-                          <div class="smallBgcolor">
+                          <div class="bgcolor smallBgcolor">
                               <el-input  placeholder="" disabled=""  ></el-input>
                           </div>
                       </el-col>  
@@ -234,7 +234,7 @@
                         </div>
                       </el-col>
                       <el-col :span="14">
-                          <div class="smallBgcolor">
+                          <div class="bgcolor smallBgcolor">
                               <el-input  placeholder="" disabled="" ></el-input>
                           </div>
                       </el-col>  
@@ -246,7 +246,7 @@
                         </div>
                       </el-col>
                       <el-col :span="14">
-                          <div class="smallBgcolor">
+                          <div class="bgcolor smallBgcolor">
                               <el-input  placeholder="" disabled=""  ></el-input>
                           </div>
                       </el-col>  
@@ -258,7 +258,7 @@
                         </div>
                       </el-col>
                       <el-col :span="14">
-                          <div class="smallBgcolor">
+                          <div class="bgcolor smallBgcolor">
                               <el-date-picker 
                                 class="regtime datepicker"   
                                 format="yyyy-MM-dd"
@@ -294,7 +294,7 @@
                         </div>
                       </el-col>
                       <el-col :span="14">
-                          <div class="smallBgcolor">
+                          <div class="bgcolor smallBgcolor">
                               <el-input  placeholder="" :disabled="read" ></el-input>
                           </div>
                       </el-col>  
@@ -306,7 +306,7 @@
                         </div>
                       </el-col>
                       <el-col :span="14">
-                          <div class="smallBgcolor">
+                          <div class="bgcolor smallBgcolor">
                               <el-input  placeholder="" :disabled="read" ></el-input>
                           </div>
                       </el-col>  
@@ -1034,7 +1034,7 @@ import Tree from '../../base/tree/tree'
     margin-left: 20px;
 }
 /* 重写checkbox */
-.tenant-manager-wrapper .el-checkbox__inner{
+/*.tenant-manager-wrapper .el-checkbox__inner{
     width: 24px;
     height: 24px;
     border-radius:50% !important; 
@@ -1059,7 +1059,7 @@ import Tree from '../../base/tree/tree'
     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
     -webkit-transform-origin: center;
     transform-origin: center;
-}
+}*/
 
 /* 重写el-table样式 */
 .tenant-manager-wrapper .el-table th {
