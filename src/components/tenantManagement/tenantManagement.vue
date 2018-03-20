@@ -1,5 +1,5 @@
 <template>
-    <div class="tenant-management-wrapper" style="background:#fff;width:100%;">
+    <div class="tenant-management-wrapper commodity" >
         
         <el-row  id="pbu"  class="border-left">
             <el-col :span='24' >
@@ -11,17 +11,20 @@
                             <el-table-column type="selection" >
                             </el-table-column>
                             <el-table-column prop="adAreaId" label="租户编码" ></el-table-column>
-                            <el-table-column prop="tenantName" label="租户名称"></el-table-column>
+                            <el-table-column prop="tenantName" label="租户名称">
+                                <template slot-scope="scope">
+                                    <el-button type="text" size="small"  >{{scope.row.tenantName}}</el-button>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="phoneNumber" label="手机号码"></el-table-column>
                             <el-table-column prop="regTime" label="启用年月"></el-table-column>
                             <el-table-column prop="remark" label="行政地区"></el-table-column>
                             <el-table-column prop="status" label="当前状态">
-                                <!-- <template slot-scope="scope">
-                                    <el-select  v-model="scope.row.status" @click="onselect()">
-                                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                </template> -->
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='启用'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='停用'" style="color:#FF6666;">停用</span>
+                                    <span v-else >冻结</span>
+                                </template>
                             </el-table-column>
                             <el-table-column  label="操作">
                                 <template slot-scope="scope">
@@ -69,33 +72,33 @@ import Btm from '../../base/btm/btm'
                     url: '/tenant/tenantManagementAdd',
                    botton:[{
                     class: 'erp_bt bt_add',
-                    imgsrc: '../../../static/image/common/bt_add.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_add.png',
                     text: '新增'
                 },{
                     class: 'erp_bt bt_del',
-                    imgsrc: '../../../static/image/common/bt_del.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_del.png',
                     text: '删除'
                 },{
                     class: 'erp_bt bt_print',
-                    imgsrc: '../../../static/image/common/bt_modify.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_modify.png',
                     text: '打印'
                 },{
                     class: 'erp_bt bt_excel',
-                    imgsrc: '../../../static/image/common/bt_excel.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_excel.png',
                     text: 'Excel'
                 },{
                     class: 'erp_bt bt_version',
-                    imgsrc: '../../../static/image/common/bt_start.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_start.png',
                     text: '启用'
                 },{
                     class: 'erp_bt bt_auxiliary',
-                    imgsrc: '../../../static/image/common/bt_stop.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_stop.png',
                     text: '停用'
                 }]},
                 value: '',
@@ -385,9 +388,9 @@ import Btm from '../../base/btm/btm'
     padding-left: 0;
 }*/
 /* 重写checkbox */
-.tenant-management-wrapper .el-checkbox__inner{
-    width: 18px;
-    height: 18px;
+/*.tenant-management-wrapper .el-checkbox__inner{
+    width: 24px;
+    height: 24px;
     border-radius:50% !important; 
 }
 .tenant-management-wrapper .el-checkbox__inner::after{
@@ -410,7 +413,7 @@ import Btm from '../../base/btm/btm'
     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
     -webkit-transform-origin: center;
     transform-origin: center;
-}
+}*/
 
 /* 重写el-table样式 */
 .tenant-management-wrapper .el-table th {

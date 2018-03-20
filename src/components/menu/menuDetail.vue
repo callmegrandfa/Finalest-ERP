@@ -462,6 +462,7 @@
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
             .then(function(res){
                 _this.selectTree=res;
+                _this.loadIcon()
             },function(res){
             })
         },
