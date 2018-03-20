@@ -1,11 +1,41 @@
 <template>
-    <div class="tenant-manager-wrapper">
+    <div class="tenant-manager-wrapper commodity">
         <el-row class="bg-white tenant">
             <el-col :span='24'>
                 <btm class="fixed" :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                 <el-row>
-                  <el-col>
-                    <div class="tipsWrapper" name="adAreaId">
+                  <el-col :span="24">
+                    <div class="tipsWrapper">
+                      <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                          <span 
+                            :class="{block : !validation.hasError('addData.adAreaId')}">
+                            租户编码{{ validation.firstError('addData.adAreaId') }},
+                          </span>
+                          <span 
+                            :class="{block : !validation.hasError('addData.tenantName')}">
+                            租户名称{{ validation.firstError('addData.tenantName') }},
+                          </span>
+                          <span 
+                            :class="{block : !validation.hasError('addData.phoneNumber')}">
+                            手机号{{ validation.firstError('addData.phoneNumber') }},
+                          </span>
+                          <span 
+                            :class="{block : !validation.hasError('addData.status')}">
+                            状态{{ validation.firstError('addData.status') }},
+                          </span>
+                          <span 
+                            :class="{block : !validation.hasError('addData.remark')}">
+                            行政区域{{ validation.firstError('addData.remark') }},
+                          </span>
+                          <span 
+                            :class="{block : !validation.hasError('addData.contactAddress')}">
+                            地址{{ validation.firstError('addData.contactAddress') }},
+                          </span>
+                        </p>
+                      </div>
+                    </div>        
+                    <!-- <div class="tipsWrapper" name="adAreaId">
                       <div class="errorTips" :class="{block : !validation.hasError('addData.adAreaId')}">
                           <p class="msgDetail">错误提示：{{ validation.firstError('addData.adAreaId') }}</p>
                       </div>
@@ -24,7 +54,7 @@
                       <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
                           <p class="msgDetail">错误提示：{{ validation.firstError('addData.status') }}</p>
                       </div>
-                    </div>
+                    </div> -->
                   </el-col>
                 </el-row>
                 <div>
@@ -106,7 +136,10 @@
                         </el-col>
                         <el-col :span="14">
                              <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="addData.remark" :disabled="read">
+                                <el-select  v-model="addData.remark" :disabled="read" 
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('addData.remark')}"
+                                >
                                 <el-option v-for="item in options1"
                                             :key="item.value"
                                             :label="item.label"
@@ -147,7 +180,10 @@
                         </el-col>
                         <el-col :span="14">
                             <div class="smallBgcolor">
-                                <el-input :disabled="read"  placeholder="" v-model="addData.contactAddress" ></el-input>
+                                <el-input :disabled="read" 
+                                @focus="showErrprTips"
+                                :class="{redBorder : validation.hasError('addData.contactAddress')}"
+                                 placeholder="" v-model="addData.contactAddress" ></el-input>
                             </div>
                         </el-col>  
                       </el-col>
@@ -622,23 +658,23 @@ import Tree from '../../base/tree/tree'
                     text: '返回'
                 },{
                     class: 'erp_bt bt_add',
-                    imgsrc: '../../../static/image/common/bt_add.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_add.png',
                     text: '新增'
                 },{
                     class: 'erp_bt bt_save',
-                    imgsrc: '../../../static/image/common/bt_save.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_save.png',
                     text: '保存'
                 },{
                     class: 'erp_bt bt_excel',
-                    imgsrc: '../../../static/image/common/bt_excel.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_excel.png',
                     text: 'Excel'
                 },{
                     class: 'erp_bt bt_print',
-                    imgsrc: '../../../static/image/common/bt_modify.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_modify.png',
                     text: '打印'
                 },{
                     class: 'erp_bt bt_save',
@@ -650,28 +686,28 @@ import Tree from '../../base/tree/tree'
                     url: '/tenant/tenantManagementAdd',
                    botton:[{
                     class: 'erp_bt bt_save',
-                    imgsrc: '../../../static/image/common/increment.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/increment.png',
                     text: '增行'
                 },{
                     class: 'erp_bt bt_interposition',
-                    imgsrc: '../../../static/image/common/interposition.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/interposition.png',
                     text: '插行'
                 },{
                     class: 'erp_bt bt_eraseline',
-                    imgsrc: '../../../static/image/common/eraseline.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/eraseline.png',
                     text: '删行'
                 },{
                     class: 'erp_bt bt_excel',
-                    imgsrc: '../../../static/image/common/bt_excel.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_excel.png',
                     text: 'Excel'
                 },{
                     class: 'erp_bt bt_auxiliary',
-                    imgsrc: '../../../static/image/common/bt_auxiliary.png',
                     show:true,
+                    imgsrc: '../../../static/image/common/bt_auxiliary.png',
                     text: '辅助功能'
                 }]},
                 bottonbox2:{
@@ -683,7 +719,7 @@ import Tree from '../../base/tree/tree'
                     text: '功能增补'
                 },{
                     class: 'erp_bt bt_auxiliary',
-                    show:'true',
+                    show:true,
                     imgsrc: false,
                     text: '功能延期'
                 }]},
@@ -691,20 +727,27 @@ import Tree from '../../base/tree/tree'
                 addArray1:[],
                     pageIndex:-1,//分页的当前页码
 			        totalPage:20,//当前分页总数
+              yanzheng:true
             }
         },
         validators: {
           'addData.adAreaId': function (value) {//租户编码
-             return this.Validator.value(value).required().maxLength(50)
+             return this.Validator.value(value).required().integer()
           },
           'addData.tenantName': function (value) {//租户名称
-             return this.Validator.value(value).required().maxLength(50);
+             return this.Validator.value(value).required().maxLength(20);
           },
           'addData.phoneNumber': function (value) {//手机号码
              return this.Validator.value(value).required().maxLength(20);
           },
           'addData.status': function (value) {//状态
-             return this.Validator.value(value).required().integer();
+             return this.Validator.value(value).required().maxLength(20);
+          },
+          'addData.remark': function (value) {//区域
+             return this.Validator.value(value).required().maxLength(20);
+          },
+          'addData.contactAddress': function (value) {//状态
+             return this.Validator.value(value).required().maxLength(50);
           },
         },
         created:function(){
@@ -713,12 +756,13 @@ import Tree from '../../base/tree/tree'
         },
         methods:{
             showErrprTips(e){
+              let _this=this;
               $('.tipsWrapper').each(function(){
-                
+               
                 if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
                 }else{
-                    $(this).removeClass('display_block')
+                    _this.yanzheng=false;
+                    $('.tipsWrapper').css({display:'none'});
                 }
               })
             },
@@ -758,8 +802,11 @@ import Tree from '../../base/tree/tree'
             btmlog:function(data){
                 let _this=this;
                 if(data=='新增保存'){
+                  if(_this.yanzheng){
+                    $('.tipsWrapper').css({display:'block'});
+                  }
                   _this.$validate();
-                  _this.addData.adAreaId=parseInt(_this.addData.adAreaId) 
+                  // _this.addData.adAreaId=parseInt(_this.addData.adAreaId) 
                     _this.$axios.posts('http://192.168.100.107:8085/api/services/app/TenantManagement/Create',_this.addData).then(function(res){
                         _this.$store.state.url='/tenant/tenantManagement/'+res.result.id;
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
@@ -769,7 +816,7 @@ import Tree from '../../base/tree/tree'
                     })   
                 }else if(data=='修改' && _this.bottonbox.botton[4].text!="取消"){
                     _this.read=false;
-                    _this.bottonbox.botton.splice(3,0,{class: 'erp_bt bt_save amend_save',show:true, imgsrc: '../../../static/image/common/bt_save.png',text: '保存'},{class: 'erp_bt bt_auxiliary cancel', imgsrc: '../../../static/image/common/u470.png',text: '取消'})
+                    _this.bottonbox.botton.splice(3,0,{class: 'erp_bt bt_save amend_save',show:true, imgsrc: '../../../static/image/common/bt_save.png',text: '保存'},{class: 'erp_bt bt_auxiliary cancel',show:true, imgsrc: '../../../static/image/common/u470.png',text: '取消'})
                 }else if(data == '修改保存'){
                   _this.$validate();
                   _this.$axios.puts('http://192.168.100.107:8085/api/services/app/TenantManagement/Update',_this.addData).then(function(res){
@@ -971,11 +1018,6 @@ import Tree from '../../base/tree/tree'
 </style>
 
 <style>
-.tenant-manager-wrapper .smallBgcolor{
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-}
 .cancel .btImg{
   top: 14px;
 }

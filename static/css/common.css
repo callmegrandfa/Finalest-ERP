@@ -1114,6 +1114,39 @@ color:#f66;
   height: 35px;
   line-height: 35px;
 }
+
+/*  复选框样式*/
+.el-checkbox__inner{
+      width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+.el-checkbox__input.is-indeterminate .el-checkbox__inner::before{
+      -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    content: "";
+    border: 3px solid #fff;
+    border-left: 0;
+    border-top: 0;
+    height: 11px;
+    left: 4px;
+    position: absolute;
+    top: -1px;
+    -webkit-transform: rotate(45deg) scaleY(0);
+    transform: rotate(45deg) scaleY(0);
+    width: 6px;
+    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+}
+.el-checkbox__inner::after{
+  left:4px;
+  top:-1px;
+}
 /*  商品搜索框公共样式  */
 /*  列表页   */
 .commodity{
