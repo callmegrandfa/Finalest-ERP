@@ -247,10 +247,10 @@
          return this.Validator.value(value).required().maxLength(20);
       },
       'addData.manager': function (value) {//负责人
-          return this.Validator.value(value).required().maxLength(20);
+          return this.Validator.value(value).maxLength(20);
       },
       'addData.remark': function (value) {//备注
-          return this.Validator.value(value).required().maxLength(200);
+          return this.Validator.value(value).maxLength(200);
       },
       'addData.status': function (value) {//状态
          return this.Validator.value(value).required().integer();

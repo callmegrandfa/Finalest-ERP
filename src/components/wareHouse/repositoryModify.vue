@@ -118,15 +118,16 @@
                                        @change='Modify()'
                                        placeholder="">
                                 <el-input placeholder="搜索..."
-                                      class="selectSearch"
-                                      v-model="ouSearch"></el-input>
+                                          class="selectSearch"
+                                          v-model="ouSearch"></el-input>
+
                                 <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                         :data="ouAr"
                                         :props="selectOuProps"
                                         node-key="id"
                                         default-expand-all
-                                        ref="tree"
-                                        :filter-node-method="filterNode"
+                                        ref="ouTree"
+                                        :filter-node-method="ouFilterNode"
                                         :expand-on-click-node="false"
                                         @node-click="ouNodeClick"></el-tree> 
                                 <el-option v-show="false"
@@ -203,22 +204,22 @@
                                        :class="{redBorder : validation.hasError('repositoryData.opAreaId')}"
                                        class="opAreaId">
                                 <el-input placeholder="搜索..."
-                                      class="selectSearch"
-                                      v-model="opSearch"></el-input>
+                                          class="selectSearch"
+                                          v-model="opSearch"></el-input>
                                 <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="opAr"
-                                     :props="selectOpProps"
-                                     node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="opNodeClick"></el-tree>
+                                         :data="opAr"
+                                         :props="selectOpProps"
+                                         node-key="id"
+                                         default-expand-all
+                                         ref="opTree"
+                                         :filter-node-method="opFilterNode"
+                                         :expand-on-click-node="false"
+                                         @node-click="opNodeClick"></el-tree>
                                 <el-option v-show="false"
-                                       :key="countOp.id" 
-                                       :label="countOp.areaName" 
-                                       :value="countOp.id"
-                                       id="op_confirmSelect"></el-option>
+                                           :key="countOp.id" 
+                                           :label="countOp.areaName" 
+                                           :value="countOp.id"
+                                           id="op_confirmSelect"></el-option>
                                 
                             </el-select>
                         </div>
@@ -458,22 +459,22 @@
               <div>
                 <div class="bgcolor">
                     <label>创建人</label>
-                    <el-input placeholder="请录入创建人" disabled="disabled"></el-input>
+                    <el-input placeholder="" disabled="disabled"></el-input>
                 </div>
 
                 <div class="bgcolor">
                     <label>创建时间</label>
-                    <el-date-picker  type="date" placeholder="选择创建时间" disabled="disabled"></el-date-picker>
+                    <el-date-picker  type="date" placeholder="" disabled="disabled"></el-date-picker>
                 </div>
 
                 <div class="bgcolor">
                     <label>修改人</label>
-                    <el-input placeholder="请录入修改人" disabled="disabled"></el-input>
+                    <el-input placeholder="" disabled="disabled"></el-input>
                 </div>
 
                 <div class="bgcolor">
                     <label>修改时间</label>
-                    <el-date-picker type="date" placeholder="选择修改时间" disabled="disabled"></el-date-picker>
+                    <el-date-picker type="date" placeholder="" disabled="disabled"></el-date-picker>
                 </div>
             </div> 
           </el-col>
@@ -496,46 +497,46 @@
                 return this.Validator.value(value).required().integer();
             },
             'repositoryData.stockCode': function (value) {//仓库编码
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.stockName': function (value) {//仓库名称
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.stockFullName': function (value) {//仓库全称
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.mnemonic': function (value) {//助记码
                 return this.Validator.value(value).required().maxLength(50);
             },
             'repositoryData.stockTypeId': function (value) {//仓库类型
-                return this.Validator.value(value).required().integer();
+                return this.Validator.value(value).integer();
             },
             'repositoryData.opAreaId': function (value) {//业务地区
-                return this.Validator.value(value).required().integer();
+                return this.Validator.value(value).integer();
             },
             'repositoryData.adAreaId': function (value) {//行政地区
-                return this.Validator.value(value).required().integer();
+                return this.Validator.value(value).integer();
             },
             'repositoryData.manager': function (value) {//负责人
                 return this.Validator.value(value).required().maxLength(50);
             },
             'repositoryData.phone': function (value) {//电话
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.email': function (value) {//Email 
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.fax': function (value) {//传真
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.stockAddress': function (value) {//地址
                 return this.Validator.value(value).required().integer();
             },
             'repositoryData.remark': function (value) {//备注
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
-            'repositoryData.status': function (value) {//备注
-                return this.Validator.value(value).required().integer();
+            'repositoryData.status': function (value) {//状态
+                return this.Validator.value(value).integer();
             },
         },
         computed:{
@@ -548,6 +549,14 @@
             countOp () {
                 return this.opItem;
             },
+        },
+        watch: {
+            opSearch(val) {
+                this.$refs.opTree.filter(val);
+            },
+            ouSearch(val) {
+                this.$refs.ouTree.filter(val);
+            }
         },
         methods:{
             
@@ -871,11 +880,6 @@
                     })
                 })
             },
-            filterNode(value, data) {
-                // console.log(data)
-                if (!value) return true;
-                    return data.areaName.indexOf(value) !== -1;
-            },
             ouNodeClick:function(data){
                 console.log(data)
                 let self = this;
@@ -901,6 +905,21 @@
                 self.$nextTick(function(){
                     $('#op_confirmSelect').click()
                 })
+            },
+            ouFilterNode(value, data) {
+                if (!value) return true;
+                    return data.ouFullname.indexOf(value) !== -1;
+            },
+            opFilterNode(value, data) {
+                console.log(value)
+                console.log(data)
+                // if (!value) return true;
+                //     return data.areaName.indexOf(value) !== -1;
+            },
+            filterNode(value, data) {
+                console.log(data)
+                if (!value) return true;
+                    return data.areaName.indexOf(value) !== -1;
             },
             //-----------------------------------------------------
             //---提示错误----------------------------------------------

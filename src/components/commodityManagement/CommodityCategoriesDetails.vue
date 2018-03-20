@@ -1,5 +1,5 @@
 <template>
-    <div class="CommodityCategoriesDetails">
+    <div class="CommodityCategoriesDetails commodityDetails">
         <el-row class="bg-white">
             <el-col :span='24' class="border-left">
                <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
@@ -12,7 +12,7 @@
                                </div>
                             </el-col>
                             <el-col :span="3">
-                                <div class="smallBgcolor">
+                                <div class="bgcolor smallBgcolor">
                                     <el-select 
                                     class="areaParentId" 
                                     :class="{redBorder : validation.hasError('addItem.categoryParentid')}" 
@@ -55,7 +55,7 @@
                                </div>
                             </el-col>
                             <el-col :span="3">
-                                <div class="smallBgcolor" >
+                                <div class="bgcolor smallBgcolor" >
                                     <el-input :class="{redBorder : validation.hasError('addItem.categoryCode')}" :disabled="isEdit" placeholder="" v-model="addItem.categoryCode"></el-input>
                                 </div>
                             </el-col>
@@ -72,7 +72,7 @@
                                </div>
                             </el-col>
                             <el-col :span="3">
-                                <div class="smallBgcolor" >
+                                <div class="bgcolor smallBgcolor" >
                                 <el-input placeholder="" :class="{redBorder : validation.hasError('addItem.categoryName')}" :disabled="isEdit" v-model="addItem.categoryName"></el-input>
                                 </div>
                             </el-col>
@@ -108,7 +108,7 @@
                                </div>
                             </el-col>
                             <el-col :span="3">
-                                <div class="smallBgcolor" >
+                                <div class="bgcolor smallBgcolor" >
                                 <el-select :class="{redBorder : validation.hasError('addItem.status')}"  :disabled="isEdit"  v-model="addItem.status" >
                                     <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
@@ -127,7 +127,7 @@
                                </div>
                             </el-col>
                             <el-col :span="15">
-                                <div class="smallBgcolor" >
+                                <div class="bgcolor smallBgcolor" >
                                 <el-input  :disabled="isEdit" placeholder="" v-model="addItem.remark">
                                 </el-input>
                                 </div>
@@ -157,7 +157,7 @@
                                </div>
                             </el-col>
                             <el-col :span="13">
-                                <div class="smallBgcolor">
+                                <div class="bgcolor smallBgcolor">
                                 <el-input :disabled="isDisabled" placeholder="" v-model="addItem.createdBy"></el-input>
                                 </div>
                             </el-col>
@@ -171,7 +171,7 @@
                                </div>
                             </el-col>
                             <el-col :span="13">
-                                <div class="smallBgcolor">
+                                <div class="bgcolor smallBgcolor">
                                     <el-date-picker
                                     :disabled="isDisabled"
                                     v-model="addItem.createdTime"
@@ -190,7 +190,7 @@
                                </div>
                             </el-col>
                             <el-col :span="13">
-                                <div class="smallBgcolor">
+                                <div class="bgcolor smallBgcolor">
                                 <el-input :disabled="isDisabled" placeholder="" v-model="addItem.modifiedBy"></el-input>
                                 </div>
                             </el-col>
@@ -204,7 +204,7 @@
                                </div>
                             </el-col>
                             <el-col :span="13">
-                                <div class="smallBgcolor" >
+                                <div class="bgcolor smallBgcolor" >
                                     <el-date-picker
                                     :disabled="isDisabled"
                                     v-model="addItem.modifiedTime"
@@ -222,7 +222,6 @@
 
 <script>
 import Btm from '../../base/btm/btm'
-import Textbox from '../../base/textbox/textbox'
     export default{
         name:'customerInfor',
         data(){
@@ -509,8 +508,7 @@ import Textbox from '../../base/textbox/textbox'
             },
         },
         components:{
-            Btm,
-            Textbox
+            Btm
         }
         
  }   
@@ -571,15 +569,7 @@ import Textbox from '../../base/textbox/textbox'
 </style>
 
 <style>
-.CommodityCategoriesDetails .smallBgcolor .el-input input{
-    height: 33px!important;
-}
-.smallBgcolor .el-select .el-input{
-    width: 100%!important;
-}
-.CommodityCategoriesDetails .bgcolor{
-    width: 100%; 
-}
+
 /* 重写checkbox */
 .el-checkbox__inner{
     width: 18px;

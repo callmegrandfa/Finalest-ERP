@@ -123,7 +123,7 @@
                 </el-row> 
                  <el-row class="pb10">
                         <div id="bg-white" style="background-color: rgba(251, 252, 253, 1);">
-                            <el-table :data="allList" border style="width: 100%"  @selection-change="handleSelectionChange" height="500"  stripe>
+                            <el-table :data="allList" border style="width: 100%"  @selection-change="handleSelectionChange"  stripe>
                                 <el-table-column type="selection" width="50">
                                 </el-table-column>
                                 <el-table-column prop="employeeCode" label="职员编码" width="120" fixed>
@@ -272,7 +272,7 @@
                 .then(rsp => {
                 _this.allList = rsp.result.items;
                 _this.totalCount = rsp.result.totalCount;
-                console.log(_this.allList);
+                // console.log(_this.allList);
                 // console.log(rsp.result.items);
                 });
         },
@@ -500,15 +500,6 @@
 .border-left {
   border-left: 1px solid #e4e4e4;
 }
-
-.el-icon-search:before {
-  padding-left: 10px;
-  content: "\E619";
-  font-weight: 900;
-  font-size: 18px;
-  color: rgb(51, 204, 204);
-}
-
 .circleContent {
   display: inline-block;
   position: absolute;
@@ -535,6 +526,9 @@
     font-size: 18px;
     font-weight: 900;
     color: rgb(83, 84, 86);
+}
+.staffList-wrapper .el-input__inner {
+    border: 1px solid #dcdfe6 !important;
 }
 </style>
 

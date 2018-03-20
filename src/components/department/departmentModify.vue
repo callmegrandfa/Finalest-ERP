@@ -8,8 +8,7 @@
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
-                <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
-                <!-- <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>     -->
+                
                 <button @click="save" class="erp_bt bt_save" v-show='!isEdit'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
@@ -277,10 +276,10 @@
          return this.Validator.value(value).required().maxLength(20);
       },
       'departmentData.manager': function (value) {//负责人
-          return this.Validator.value(value).required().maxLength(20);
+          return this.Validator.value(value).maxLength(20);
       },
       'departmentData.remark': function (value) {//备注
-          return this.Validator.value(value).required().maxLength(200);
+          return this.Validator.value(value).maxLength(200);
       },
       'departmentData.status': function (value) {//状态
          return this.Validator.value(value).required().integer();

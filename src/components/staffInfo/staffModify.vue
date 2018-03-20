@@ -22,7 +22,7 @@
                                 </div>
                                 <span class="btDetail">保存</span>
                         </button>
-                        <button class="erp_bt bt_cancel" @click="cancel">
+                        <button class="erp_bt bt_cancel" @click="cancel" v-show="isShow">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_cancel.png">
                                 </div>
@@ -286,6 +286,7 @@
             cancel(){
                 if(this.isForbid==false){
                     this.isForbid=!this.isForbid;
+                    this.getDataList();
                 }
             },
         },      

@@ -1,6 +1,6 @@
 <template>
-    <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
-        <div id="left-box" style="min-width:275px;width:275px;float:left">    
+    <div class="customer-infor-wrapper commodity" >
+        <div id="left-box"  class="left-box">    
             <el-row class="bg-white" v-show="ifWidth">
                 <el-col :span="24">
                     <el-row class="h48 pl15">
@@ -59,7 +59,7 @@
                     <el-row>
                         <el-col :span="7">&nbsp;</el-col>
                         <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                            <span class="search-btn" @click="query"  style="float:left;margin-left:10px;">查询</span>
+                            <span class="search-btn" @click="query"  style="float:left;">查询</span>
                         </el-col>
                     </el-row>
                 </el-col>

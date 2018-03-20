@@ -45,18 +45,19 @@
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column type="selection" fixed></el-table-column>
 
-                            <el-table-column prop="ouId" label="币种编码" fixed>
+                            <el-table-column prop="currencyCode" label="币种编码" fixed>
                                 <template slot-scope="scope">
                                     <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                             
                                             v-model="scope.row.currencyCode"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
+                                            <!-- redBorder : validation.hasError('customerData.contactClassId') -->
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="contact" label="币种名称" fixed>
+                            <el-table-column prop="currencyName" label="币种名称" fixed>
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -191,6 +192,11 @@
         created:function(){
             this.loadAllList();      
             this.loadSelect();
+        },
+        validators:{
+            'allList.currencyCode': function (value) {//币种编码
+                return this.Validator.value(value).required().maxLength(50);
+            },
         },
         methods:{
         //---获取数据-------------------------------------------------------

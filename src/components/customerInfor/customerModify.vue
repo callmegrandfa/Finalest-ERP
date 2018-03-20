@@ -913,7 +913,7 @@ export default({
             return this.Validator.value(value).required().maxLength(50);
         },
         'customerData.contactFullName': function (value) {//全称
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'customerData.mnemonic': function (value) {//助记码
             return this.Validator.value(value).required().maxLength(50);

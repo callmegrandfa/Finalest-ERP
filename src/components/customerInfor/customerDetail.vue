@@ -942,7 +942,7 @@ export default({
             return this.Validator.value(value).required().maxLength(50);
         },
         'createContactParams.contactFullName': function (value) {//全称
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'createContactParams.mnemonic': function (value) {//助记码
             return this.Validator.value(value).required().maxLength(50);
