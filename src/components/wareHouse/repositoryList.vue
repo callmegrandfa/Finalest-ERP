@@ -197,7 +197,7 @@
             },
         }, 
         watch: {
-            queryOp(val) {
+            opSearch(val) {
                 this.$refs.tree.filter(val);
             }
         },
@@ -359,6 +359,8 @@
                 })
             },
             filterNode(value, data) {
+                console.log(value)
+                console.log(data)
                 if (!value) return true;
                     return data.areaName.indexOf(value) !== -1;
             },
@@ -406,7 +408,6 @@
                 ifWidth:true,
 
                 //---业务地区树形下拉-----
-                queryOp:'',
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
                     children: 'items',

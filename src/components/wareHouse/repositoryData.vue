@@ -431,46 +431,46 @@
                 return this.Validator.value(value).required().integer();
             },
             'createRepositoryParams.stockCode': function (value) {//仓库编码
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.stockName': function (value) {//仓库名称
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.stockFullName': function (value) {//仓库全称
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.mnemonic': function (value) {//助记码
                 return this.Validator.value(value).required().maxLength(50);
             },
             'createRepositoryParams.stockTypeId': function (value) {//仓库类型
-                return this.Validator.value(value).required().integer();
+                return this.Validator.value(value).integer();
             },
             'createRepositoryParams.opAreaId': function (value) {//业务地区
-                return this.Validator.value(value).required().integer();
+                return this.Validator.value(value).integer();
             },
             'createRepositoryParams.adAreaId': function (value) {//行政地区
-                return this.Validator.value(value).required().integer();
+                return this.Validator.value(value).integer();
             },
             'createRepositoryParams.manager': function (value) {//负责人
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.phone': function (value) {//电话
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.email': function (value) {//Email 
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.fax': function (value) {//传真
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.stockAddress': function (value) {//地址
                 return this.Validator.value(value).required().maxLength(50);
             },
             'createRepositoryParams.remark': function (value) {//备注
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.status': function (value) {//状态
-                return this.Validator.value(value).required().integer();
+                return this.Validator.value(value).integer();
             },
         },
         computed:{
@@ -766,7 +766,12 @@
                 })
             },
             filterNode(value, data) {
-                // console.log(data)
+                console.log(data)
+                if (!value) return true;
+                    return data.areaName.indexOf(value) !== -1;
+            },
+            opFilterNode(value, data) {
+                console.log(value)
                 if (!value) return true;
                     return data.areaName.indexOf(value) !== -1;
             },
