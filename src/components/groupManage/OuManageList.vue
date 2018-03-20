@@ -173,12 +173,12 @@
                             <el-table-column type="selection" fixed="left"></el-table-column>
                             <el-table-column prop="ouCode" label="编码" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].ouCode}}</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].ouCode}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="ouName" label="名称" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].ouName}}</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].ouName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="ouFullname" label="全称"></el-table-column>
@@ -221,8 +221,8 @@
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="confirmDelThis(scope.row)" >删除</el-button>
-                                    <el-button type="text" size="small"  @click="modify(scope.row)" >查看</el-button>
+                                    <el-button type="text"  @click="confirmDelThis(scope.row)" >删除</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)" >查看</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>

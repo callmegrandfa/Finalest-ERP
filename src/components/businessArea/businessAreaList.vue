@@ -96,12 +96,12 @@
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="areaCode" label="业务地区编码">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].areaCode}}</el-button>
+                                    <el-button type="text" @click="modify(scope.row)">{{tableData[scope.$index].areaCode}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="areaName" label="业务地区名称">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].areaName}}</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].areaName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
@@ -129,9 +129,9 @@
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)" >修改</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="confirmDelThis(scope.row)" >删除</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)" >修改</el-button>
+                                    <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
+                                    <el-button type="text"  @click="confirmDelThis(scope.row)" >删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
