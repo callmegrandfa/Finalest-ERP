@@ -171,11 +171,27 @@ export default {
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
             _this.childNodes=res;
-            console.log(res)
+            _this.$nextTick(function(){
+                let x={}
+                $('.one').each(function(index){
+                    x[index]=[];
+                    $(this).find('.three a').each(function(z){
+                        x[index].push($(this).attr('menuurl'))
+                    })
+                    $(this).attr('data-url',x[index])
+                    if($(this).attr('data-url')!=undefined){
+                        for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
+                            if($(this).attr('data-url').split(',')[i]==_this.$route.path.split('/')[1]){
+                                $(this).addClass('menu_active')
+                                break
+                            }
+                        }
+                    }
+                })
+            })
         },function(res){
 
         })
-        
     },
     mounted:function(){
         let _this=this;
@@ -216,9 +232,6 @@ export default {
         },
         switch(){
             this.$router.push({name:this.$store.state.url,params:{id:'default'}})//点击切换路由
-        },
-        isCheck(){
-
         },
         storageData(e){
             if(e.target.getAttribute("menuurl")&&e.target.getAttribute("menuurl")!=''){
@@ -288,6 +301,10 @@ export default {
     float: left;
     text-align: center;
     cursor: pointer;
+    transition: background 0.5s;
+    -moz-transition: background 0.5s;
+    -webkit-transition: background 0.5s;
+    -o-transition: background 0.5s; 
 }
 
 .menuIcon img{
@@ -461,6 +478,9 @@ export default {
     border-top: 10px solid transparent;
     border-right: 10px solid #354052;
     border-bottom: 10px solid transparent;
+}
+.menuActive .menu_active .menuIcon{
+  background-color: #3cc;
 }
 /* .menu::-webkit-scrollbar {
     display: none;

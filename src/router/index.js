@@ -545,6 +545,16 @@ router.beforeEach((to, from, next) => {
     } else {
         store.state.Alive = true;
     }
+    $('.one').each(function(index){//菜单高亮
+        if($(this).attr('data-url')!=undefined){
+            for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
+                if($(this).attr('data-url').split(',')[i]==to.path.split('/')[1]){
+                    $(this).addClass('menu_active')
+                    break
+                }
+            }
+        }
+    })
     if (store.accessToken != '') {
         document.title = to.name
         let activeRouter = store.state.activeRouter;

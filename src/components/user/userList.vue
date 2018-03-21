@@ -4,7 +4,7 @@
              <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
-                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:10px;">
+                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:-4px;vertical-align: middle;">
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
@@ -50,15 +50,14 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        </el-option> -->
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
                         </el-option>
-                        <!-- <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                            </el-option> -->
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>身份类型</label>
-                    <!-- <el-input v-model="searchData.UserType" placeholder=""></el-input> -->
                     <el-select filterable   v-model="searchData.UserType" placeholder="">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
@@ -66,22 +65,13 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>语种</label>
-                    <!-- <el-input v-model="searchData.LanguageId" placeholder=""></el-input> -->
                     <el-select filterable   v-model="searchData.LanguageId" placeholder="">
                        <el-option v-for="item in selectData.languageId" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
-                <!-- <div class="bgcolor smallBgcolor">
-                    <label>认证类型</label>
-                    <el-select filterable   v-model="searchData.AuthType" placeholder="">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div> -->
                 <div class="bgcolor smallBgcolor">
                     <label>关联角色</label>
-                    <!-- <el-input v-model="searchData.RoleId" placeholder=""></el-input> -->
                     <el-select filterable   v-model="searchData.RoleId" placeholder="">
                         <el-option v-for="item in selectData.roles" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
@@ -89,7 +79,6 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>状态</label>
-                    <!-- <el-input v-model="searchData.Status" placeholder=""></el-input> -->
                     <el-select filterable   v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
@@ -218,7 +207,7 @@
                                     <div class="halfWidth left">
                                         <el-date-picker
                                         format="yyyy.MM.dd"
-                                        v-model="tableData[scope.$index].createdTime " 
+                                        v-model="tableData[scope.$index].effectiveStart" 
                                         type="datetime" 
                                         readonly
                                         align="center"
@@ -228,7 +217,7 @@
                                     <div class="halfWidth right">
                                         <el-date-picker 
                                         format="yyyy.MM.dd" class="halfWidth"
-                                        v-model="tableData[scope.$index].deletedTime" 
+                                        v-model="tableData[scope.$index].effectiveEnd" 
                                         type="datetime" 
                                         readonly
                                         align="center"
@@ -259,7 +248,39 @@
 
             </el-col>
         </el-row>
-        
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
     </div>
 </template>
 
@@ -267,6 +288,25 @@
     export default{
         data(){
             return {
+                 // 错误信息提示开始
+                 option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                detail_message_ifShow:false,
+                errorMessage:false,
+                // 错误信息提示结束
                 search:'',
                 selectTree:[
                 ],
@@ -299,7 +339,7 @@
                     userGroupId:[],//用户组
                     languageId:[],//语种
                     roles:[],//角色
-                    // ou:[],//组织
+                    ou:[],//组织
                 },
                
                 tableData:[],
@@ -353,10 +393,10 @@
                 // 语种
                     _this.selectData.roles=res.result.items;
                 })
-                // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-                // // 所属组织
-                // _this.selectData.ou=res.result;
-                // })
+                _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+                // 所属组织
+                _this.selectData.ou=res.result;
+                })
             },
             closeLeft:function(){
                let self = this;
@@ -429,6 +469,7 @@
                     _this.tableLoading=false;
                     _this.searchBtClick=false;
                 },function(res){
+                    _this.errorMessage=true;
                      _this.tableLoading=false;
                      _this.searchBtClick=false;
                 })
@@ -466,6 +507,7 @@
                         }
                         _this.open('删除成功','el-icon-circle-check','successERP');
                     },function(res){
+                        _this.errorMessage=true;
                         _this.open('删除失败','el-icon-error','faildERP');
                     })
                 }
@@ -500,15 +542,15 @@
                 let _this=this;
                 _this.item.id=data.id;
                 _this.item.ouFullname=data.ouFullname;
-                _this.$nextTick(function(){
-                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-                })
-                    
-                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                //     if($(this).attr('date')==data.id){
-                //         $(this).click()
-                //     }
+                // _this.$nextTick(function(){
+                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 // })
+                    
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
             },
             see(row){
                 this.$store.state.url='/user/userModify/'+row.id
@@ -533,6 +575,7 @@
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
+                    _this.errorMessage=true;
                 })
              },
         },

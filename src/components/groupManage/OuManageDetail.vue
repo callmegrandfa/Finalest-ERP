@@ -369,7 +369,7 @@
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label class="longLabel"><small>*</small>上级业务单元</label>
+                    <label><small>*</small>上级业务单元</label>
                     <el-select class="ouParentid"
                     
                     
@@ -554,6 +554,7 @@
         <el-col :span="6">
             <el-checkbox-group 
             v-model="addData.ouTypes"
+            :min="1"
             >
             <el-checkbox v-for="item in selectData.OUType" :label="item.itemValue" :key="item.itemValue" @change="change_ouType">{{item.itemName}}</el-checkbox>
             </el-checkbox-group>
@@ -673,7 +674,7 @@
                                     placeholder=""></el-date-picker>
                                 </div>
                                 <div class="bgcolor">
-                                    <label class="longLabel">法人身份证号码</label>
+                                    <label>法人身份证号码</label>
                                     <el-input
                                     
                                     
@@ -728,7 +729,7 @@
                                     ></el-input>
                                 </div>
                                 <div class="bgcolor">
-                                    <label class="longLabel">营业或有效期限</label>
+                                    <label>营业或有效期限</label>
                                     <div class="rangeDate">
                                         <el-date-picker
                                         
@@ -747,7 +748,7 @@
                                         </el-date-picker>
                                     </div>
                                 </div>
-                                <div class="bgcolor">
+                                <div class="bgcolor longWidth">
                                     <label>公司简介</label>
                                     <el-input
                                     
@@ -824,7 +825,7 @@
                                     v-model="basCompany.email"
                                     ></el-input>
                                 </div>
-                                <div class="bgcolor">
+                                <div class="bgcolor longWidth">
                                     <label>web网址</label>
                                     <el-input
                                     
@@ -1000,7 +1001,40 @@
             </div>
         </div>                                  
     </el-col>
-</el-row>                                                           
+</el-row>          
+<!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->                                                 
 </div>
 </template>
 
@@ -1008,6 +1042,25 @@
 export default({
     data() {
         return{
+            // 错误信息提示开始
+            option: {
+                vRail: {
+                    width: '5px',
+                    pos: 'right',
+                    background: "#9093994d",
+                },
+                vBar: {
+                    width: '5px',
+                    pos: 'right',
+                    background: '#9093994d',
+                },
+                hRail: {
+                    height: '0',
+                },
+            },
+            detail_message_ifShow:false,
+            errorMessage:false,
+            // 错误信息提示结束
             search:'',
              selectTree:[
             ],
@@ -1042,7 +1095,7 @@ export default({
                 "address": "",
                 "status": "",//整数
                 "remark": "",
-                "ouTypes":[],//组织职能
+                "ouTypes":[1,3],//组织职能
             },
             basCompany:{//其他信息
                 "ouParentid": "",//整数
@@ -1069,9 +1122,9 @@ export default({
                 "webUrl": "",
                 "remark": ""
             },
-            Company:false,//公司 
+            Company:true,//公司 
             Business:false,//业务   
-            Finance:false,//财务
+            Finance:true,//财务
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
             
@@ -1133,7 +1186,7 @@ export default({
 
       'basCompany.ouParentid': function (value) {//上级公司
         if(this.Company){
-            return this.Validator.value(value).integer().required();
+            return this.Validator.value(value).integer();
         }else{
             return this.Validator.value(value)
         }
@@ -1361,7 +1414,6 @@ export default({
         },
         showErrprTipsTextArea(e){
             $('.tipsWrapper').css({display:'none'})
-            this.validators.reset()
             // $('.tipsWrapper').each(function(){
             //   if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
             //       $(this).addClass('display_block')
@@ -1490,28 +1542,29 @@ export default({
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
+                        _this.errorMessage=true;
                         _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });    
         },
         saveAdd(){
-             let _this=this;
-            _this.$validate()
-            .then(function (success) {
-                if (success) {
-                    _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
-                        _this.clearData();
-                        _this.open('保存新增成功','el-icon-circle-check','successERP');
-                    },function(res){
-                        _this.open('保存新增失败','el-icon-error','faildERP');
-                    })
-                }
-            });     
+            //  let _this=this;
+            // _this.$validate()
+            // .then(function (success) {
+            //     if (success) {
+            //         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
+            //             _this.clearData();
+            //             _this.open('保存新增成功','el-icon-circle-check','successERP');
+            //         },function(res){
+            //             _this.open('保存新增失败','el-icon-error','faildERP');
+            //         })
+            //     }
+            // });     
         },
         newAdd(){
-            this.clearData();
-            this.open('新增成功','el-icon-circle-check','successERP');
+            // this.clearData();
+            // this.open('新增成功','el-icon-circle-check','successERP');
         },
         clearData(){
             
@@ -1528,11 +1581,11 @@ export default({
   }
 
 .OuDetailForm .bgcolor.longWidth{
-    width: 100%;
+    width: 505px;
     height:auto;
  }
 .OuDetailForm .bgcolor.longWidth .el-textarea{
-    width: 423px;
+    width: calc(100% - 94px);
     font-size: 12px;
  } 
 /*表单提示信息*/

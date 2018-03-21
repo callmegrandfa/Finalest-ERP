@@ -146,9 +146,59 @@
                         </el-pagination>   
                     </el-col>
                 </el-row>
-
             </el-col>
         </el-row>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
     </div>
 </template>
 
@@ -157,6 +207,25 @@
         name:'customerInfor',
         data(){
             return {
+                // 错误信息提示开始
+                 option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                detail_message_ifShow:false,
+                errorMessage:false,
+                // 错误信息提示结束
                 searchLeft:'',
                 timeout:null,
                 restaurants:[],
@@ -213,6 +282,10 @@
                 detailParentId:'default',//tree节点点击获取前往detail新增页上级业务地区ID
                 detailParentName:'default',//tree节点点击获取前往detail新增页上级业务地区name
                 ouId:'default',//tree节点点击获取前往detail新增页组织id
+
+                dialogUserConfirm:false,//用户删除保存提示信息
+
+                row:{},
             }
         },
         validators: {
@@ -333,6 +406,7 @@
                     _this.tableData=res.result.basOus;
                     _this.tableLoading=false;
                 },function(res){
+                    _this.errorMessage=true;
                     _this.tableLoading=false;
                 })
             },
@@ -379,12 +453,15 @@
                             _this.loadTree();
                         }
                     },function(res){
+                        _this.errorMessage=true;
                         _this.open('删除失败','el-icon-error','faildERP');
                     })
                 }
             },
             confirmDelThis(row){
                 let _this=this;
+                _this.row=row;
+                // _this.dialogUserConfirm=true;
                 _this.$confirm('确定删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -402,6 +479,8 @@
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
+                    _this.errorMessage=true;
+                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             nodeClick(data){
@@ -417,6 +496,7 @@
                     _this.totalItem=res.result.length;
                     _this.tableLoading=false;
                     },function(res){
+                    _this.errorMessage=true;
                     _this.tableLoading=false;
                 })
             },
@@ -523,7 +603,6 @@
             showTable(event,node,data){
                 let _this=this;
                  _this.tableLoading=true;
-                 console.log(data)
                 _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id})
                 .then(function(res){
                     _this.tableData=res.result;
@@ -679,5 +758,4 @@
 .bAreaListForm .bgcolor{
     margin-bottom: 0
 }
-
 </style>
