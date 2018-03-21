@@ -4,8 +4,8 @@
             <el-col :span="24">
               <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
               <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>  
-              <button @click="save" v-show="update" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button @click="Cancel" v-show="update" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button @click="save" v-show="update_click" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+              <button @click="Cancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
               <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
             </el-col>
         </el-row>
@@ -123,10 +123,10 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
-                        </el-option>
-                        <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                            </el-option> -->
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        </el-option> -->
+                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -296,6 +296,39 @@
                 </div>
             </el-col>
       </el-row>
+      <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
   </div>
 </template>
 
@@ -303,6 +336,25 @@
   export default({
     data(){
       return{
+    // 错误信息提示开始
+        option: {
+            vRail: {
+                width: '5px',
+                pos: 'right',
+                background: "#9093994d",
+            },
+            vBar: {
+                width: '5px',
+                pos: 'right',
+                background: '#9093994d',
+            },
+            hRail: {
+                height: '0',
+            },
+        },
+        detail_message_ifShow:false,
+        errorMessage:false,
+        // 错误信息提示结束
         search:'',
         item:{
             id:'',
@@ -365,7 +417,7 @@
         roleOneItem:10,//每页有多少条信息
         roleTotalItem:0,//总共有多少条消息
         selectData:{//select数据
-            // OUType:[],//所属组织
+            OUType:[],//所属组织
             Status001:[],//启用状态
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
@@ -433,10 +485,10 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-            // // 所属组织
-            // _this.selectData.OUType=res.result;
-            // })
+            _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+            // 所属组织
+            _this.selectData.OUType=res.result;
+            })
             _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
             // 所属用户组
                 _this.selectData.userGroupId=res.result.items;
@@ -560,15 +612,15 @@
             let _this=this;
             _this.item.id=data.id;
             _this.item.ouFullname=data.ouFullname;
-            _this.$nextTick(function(){
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            })
-                
-            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-            //     if($(this).attr('date')==data.id){
-            //         $(this).click()
-            //     }
+            // _this.$nextTick(function(){
+            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
+                
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
+            })
         },
         open(tittle,iconClass,className) {
             this.$notify({
@@ -726,6 +778,7 @@
             }
         },
         Update(){//修改
+            this.update_click=true;
             if(this.isEdit==true){
                 this.isEdit=!this.isEdit;
             } 
@@ -739,6 +792,7 @@
                 this.validation.reset();
                 this.getData();
                 this.update=false;
+                this.update_click=false;
             }
         },
         save(){
@@ -762,8 +816,10 @@
                             })
                             _this.update=false;
                             _this.isEdit=true;
+                            _this.update_click=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
+                            _this.errorMessage=true;
                             _this.open('保存失败','el-icon-error','faildERP');
                         })
                     }
