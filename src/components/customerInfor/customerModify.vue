@@ -551,6 +551,15 @@
                                     <el-checkbox v-model="bankData[scope.$index].ifDefault" :disabled="isEdit"></el-checkbox>
                                 </template>
                             </el-table-column>
+                            <el-table-column prop="ifDefault" label="默认">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="bankData[scope.$index].ifDefault" :disabled="isEdit"></el-checkbox>
+                                </template>
+                                <template scope="scope">
+                                    <el-radio :label="scope.$index" v-model="radio" @change.native="getCurrentRow(scope.$index)"></el-radio>
+                                </template>
+                            </el-table-column>
+
                             <el-table-column label='操作'>
                                 <template slot-scope="scope" >
                                     <el-button v-on:click="handleBankDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
@@ -719,22 +728,22 @@
         <div>
             <div class="bgcolor">
                 <label>创建人</label>
-                <el-input v-model="auditInformation.createName" placeholder="请录入创建人" disabled="disabled"></el-input>
+                <el-input v-model="auditInformation.createName" placeholder="" disabled="disabled"></el-input>
             </div>
 
             <div class="bgcolor">
                 <label>创建时间</label>
-                <el-date-picker v-model="auditInformation.createTime" type="date" placeholder="选择创建时间" disabled="disabled"></el-date-picker>
+                <el-date-picker v-model="auditInformation.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
             </div>
 
             <div class="bgcolor">
                 <label>修改人</label>
-                <el-input v-model="auditInformation.modifyName" placeholder="请录入修改人" disabled="disabled"></el-input>
+                <el-input v-model="auditInformation.modifyName" placeholder="" disabled="disabled"></el-input>
             </div>
 
             <div class="bgcolor">
                 <label>修改时间</label>
-                <el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="选择修改时间" disabled="disabled"></el-date-picker>
+                <el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
             </div>
             <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
             <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
@@ -755,7 +764,7 @@ export default({
     },
     data() {
         return{
-            ifShow:true,
+            ifShow:true,radio:'',
             ifModify:false,//判断主表是否修改过
             isEdit:true,//判断是否要修改
             auditInformation:{//审计信息
@@ -983,7 +992,6 @@ export default({
         loadData:function(){
             let self = this;
             if(self.$route.params.id!='default'){
-                self.$destroy();
                 //根据id获得的客户信息
                 this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
                     
@@ -1499,6 +1507,9 @@ export default({
             self.ouData.unshift(self.zrows.newCol)
             self.addOuList.unshift(self.zrows.newCol)
         },    
+        getCurrentRow:function(){
+            
+        },
         //-----------------------------------------------------------
 
         //---路由------open------------------------------------------

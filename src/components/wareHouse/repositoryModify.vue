@@ -557,7 +557,6 @@
             loadData:function(){//根据id查找仓库信息和仓库地址信息
                 let self = this;
                 if(self.$route.params.id!='default'){
-                    self.$destroy()
                     //根据仓库id获取仓库信息
                     self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               

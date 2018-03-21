@@ -108,12 +108,14 @@ export default {
                 thirdInfo:[
                     {name:'币种资料',address:'currency'},
                 ]
-            },{
-                name:'会计期间',
-                thirdInfo:[
-                    {name:'会计期间',address:'account'},
-                ]
-            },{
+            },
+            // {
+            //     name:'会计期间',
+            //     thirdInfo:[
+            //         {name:'会计期间',address:'account'},
+            //     ]
+            // },
+            {
                 name:'单据模板',
                 thirdInfo:[
                      {name:'单据开单模板',address:'bill'}, 

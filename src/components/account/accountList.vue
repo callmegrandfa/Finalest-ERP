@@ -74,12 +74,12 @@
                 </el-row>
 
                 <el-collapse-transition>
-                    <div v-show="ifShow" class="bb1">
+                    <el-row v-show="ifShow" class="mt10 bb1">
                         <div class="bgcolor">
                             <label><small>*</small>会计年份</label>
                             <el-input placeholder=""
                                       class="periodYear" 
-                                      v-model="eachPage"></el-input>
+                                      v-model="periodYear"></el-input>
                                       <!-- :class="{redBorder : validation.hasError('createAccountParams.periodYear')}" -->
                         </div>
 
@@ -87,57 +87,101 @@
                             <label><small>*</small>期间个数</label>
                             <el-input placeholder=""
                                       class="periodNum"
-                                      v-model="eachPage"></el-input>
+                                      v-model="periodNum"></el-input>
+                                      <!-- :class="{redBorder : validation.hasError('createAccountParams.periodNum')}" -->
+                        </div>
+                        
+                        <div class="time">
+                            <label><small style="color:#FF669B;margin-right:2px">*</small>日期</label>
+                            <el-date-picker v-model="chooseDate"
+                                            type="daterange"
+                                            unlink-panels
+                                            range-separator="至"
+                                            start-placeholder="开始日期"
+                                            end-placeholder="结束日期"></el-date-picker>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>备注</label>
+                            <el-input placeholder=""
+                                      class="remark"
+                                      v-model="remark"></el-input>
                                       <!-- :class="{redBorder : validation.hasError('createAccountParams.periodNum')}" -->
                         </div>
 
-                    </div>
-                </el-collapse-transition>
-                <el-row class="pl10 pt10 pr10 pb10">
-                    <el-col :span="24">
-                        <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
+                        <el-col :span="3" class="mt10 mb10 ml80">
+                            <div @click="createMonth">
+                                <span class="makeMonth">生成会计月份</span>
+                            </div>
+                        </el-col>
 
-                            <el-table-column type="selection"></el-table-column>
+                    </el-row>
+                </el-collapse-transition> 
 
-                            <el-table-column prop="periodYear" label="会计年份"></el-table-column>
 
-                            <el-table-column prop="periodNum" label="期间个数"></el-table-column>
+                <el-row class="pb10">
+                    <el-col :span='24'>
+                        <div class="pe-month">
+                            <span>会计月份</span>
+                        </div>
 
-                            <el-table-column prop="beginDate" label="开始日期"></el-table-column>
+                        <div class="toggle-btn">
+                            <span @click='ifShowTable = !ifShowTable'>收起</span>
+                            <i class="el-icon-arrow-up"></i>
+                        </div>
+                    </el-col>
+                    <el-collapse-transition>
+                        <el-row v-show='!ifShowTable'>
+                            <el-col :span="24" >
+                                <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
 
-                            <el-table-column prop="endDate" label="结束日期"></el-table-column>
+                                    <!-- <el-table-column type="selection"></el-table-column> -->
 
-                            <!-- <el-table-column prop="contactClassId" label="备注">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.remark" 
-                                            v-on:click="handleEdit(scope.$index,scope.row)"
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column> -->
-                            <el-table-column label="操作">
-                                <template slot-scope="scope">
-                                    <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button v-on:click="handleDel(scope.row.id)" type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
+                                    <el-table-column prop="periodYear" label="会计月份"></el-table-column>
 
-                        <el-row>
-                            <el-col :span='6'>
-                                <div style="margin-top:20px;" class="ml10">
-                                        记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
-                                </div>
+                                    <el-table-column prop="periodNum" label="期间个数"></el-table-column>
+
+                                    <el-table-column prop="beginDate" label="开始日期"></el-table-column>
+
+                                    <el-table-column prop="endDate" label="结束日期"></el-table-column>
+
+                                    <el-table-column prop="contactClassId" label="备注">
+                                        <template slot-scope="scope">
+                                            <input class="input-need" 
+                                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                                    v-model="scope.row.remark" 
+                                                    v-on:click="handleEdit(scope.$index,scope.row)"
+                                                    @change='handleChange(scope.$index,scope.row)'
+                                                    type="text"/>
+                                        </template>
+                                    </el-table-column>
+
+                                    <el-table-column prop="endDate" label="修改人"></el-table-column>
+
+                                    <el-table-column prop="endDate" label="修改时间"></el-table-column>
+                                    <el-table-column label="操作">
+                                        <template slot-scope="scope">
+                                            <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
+                                            <el-button v-on:click="handleDel(scope.row.id)" type="text" size="small">删除</el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+
+                                <el-row>
+                                    <el-col :span='6'>
+                                        <div style="margin-top:20px;" class="ml10">
+                                                记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
+                                        </div>
+                                        
+                                    </el-col>
+                                    <el-col :span="18">
+                                        <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
+                                    </el-col>
+                                </el-row>
                                 
                             </el-col>
-                            <el-col :span="18">
-                                <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
-                            </el-col>
                         </el-row>
-                        
-                    </el-col>
+                    </el-collapse-transition>
                 </el-row>
 
             </el-col>
@@ -163,6 +207,13 @@
                 x:0,//增行的下标
                 rows:[],//增行的数组
                 ifShow:true,//控制折叠页面
+                ifShowTable:true,//控制折叠页面
+                
+                periodYear:'',//会计年份
+                periodNum:'',//会计月份
+                chooseDate:'',//选择日期
+                remark:'',//备注
+
                 createParams:{
                     "group_id": 1,
                     "currency_code": "",
@@ -369,6 +420,9 @@
 .mt5{
     margin-top: 5px;
 }
+.mb10{
+    margin-bottom: 10px;
+}
 .mt10{
     margin-top: 10px;
 }
@@ -423,6 +477,17 @@
     border-left: 1px solid #E4E4E4;
     min-height: 380px;
 }
+.pe-month{
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+}
+.pe-month span{
+    display: inline-block;
+    margin-left:5px;
+    height:36px;
+    border-bottom:2px solid rgb(9, 218, 218);
+}
 .toggle-btn{
     cursor: pointer;
     font-size: 12px;
@@ -433,6 +498,68 @@
 }
 .bb1{
     border-bottom: 1px solid #cccccc;
+}
+.time{
+    height: 35px;
+    font-size: 12px;
+    margin-bottom: 15px;
+    float: left;
+    overflow: hidden;
+    margin-right: 5px;
+}
+.time label .small{
+    color: #FF669B;
+    margin-right: 2px;
+}
+.time label{
+    margin-right: 10px;
+    text-align: right;
+    line-height: 35px;
+    display: block;
+    width: 72px;
+    height: 100%;
+    float: left;
+    color: #333333;
+    font-family: 'microsoft yahei';
+    font-weight: 400;
+    font-style: normal
+}
+.list-wrapper .only-remark{
+    height: 35px;
+    font-size: 12px;
+    margin-bottom: 15px;
+    width: 500px;
+    float: left;
+    overflow: hidden;
+    margin-right: 5px;
+}
+.only-remark label{
+    margin-right: 10px;
+    text-align: right;
+    line-height: 35px;
+    display: block;
+    width: 72px;
+    height: 100%;
+    float: left;
+    color: #333333;
+    font-family: 'microsoft yahei';
+    font-weight: 400;
+    font-style: normal;
+}
+.makeMonth{
+    display: inline-block;
+    height: 35px;
+    line-height: 35px;
+    background: #00CA7A;
+    color: white;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.ml80{
+    margin-left: 80px;
 }
 </style>
 
@@ -480,5 +607,14 @@
 }
 .list-wrapper .el-table__body{
     text-align: center;
+}
+.list-wrapper .el-range-editor.el-input__inner{
+    height:35px;
+    line-height:30px;
+}
+.only-remark .remark .el-input__inner{
+    display: block;
+    float: left;
+    height:35px;
 }
 </style>

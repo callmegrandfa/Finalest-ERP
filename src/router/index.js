@@ -320,6 +320,18 @@ const routes = [
             },
 
             {
+                path: '/account',
+                component: account,
+                name: 'account',
+                redirect: function() { //会计期间
+                    return redirectRouter('account')
+                },
+                children: [
+                    { path: '/account/accountList/:id', component: accountList, name: 'accountList' },
+                ]
+            },
+
+            {
                 path: '/order',
                 component: order,
                 name: 'order',

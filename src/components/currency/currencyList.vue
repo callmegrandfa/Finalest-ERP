@@ -45,7 +45,7 @@
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column type="selection" fixed></el-table-column>
 
-                            <el-table-column prop="currencyCode" label="币种编码" fixed>
+                            <el-table-column prop="currencyCode" label="*币种编码" fixed>
                                 <template slot-scope="scope">
                                     <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need"
@@ -58,7 +58,7 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="currencyName" label="币种名称" fixed>
+                            <el-table-column prop="currencyName" label="*币种名称" fixed>
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -78,7 +78,7 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="status" label="状态">
+                            <el-table-column prop="status" label="*状态">
                                 <template slot-scope="scope">
                                     <el-select  v-model="scope.row.status" @change="handleChange(scope.$index,scope.row)" :class="scope.$index%2==0?'bgw':'bgg'">
                                         <el-option  v-for="item in statusAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">

@@ -244,9 +244,14 @@
                 let self = this;
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
                     console.log(res);
-                    self.queryList=res.data;
-                    self.allList = self.queryList;
-                    self.total = res.total;
+                    if(res.total>0){
+                        self.queryList=res.data;
+                        self.allList = res.data;
+                        self.total = res.total;
+                    }else{
+                        self.getAllList();
+                    }
+
                 })
             },
 
