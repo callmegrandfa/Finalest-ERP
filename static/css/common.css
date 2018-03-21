@@ -1,7 +1,6 @@
 .el-col-24{
   border-bottom: none;
 }
-
 /* 搜索 */
 /* <el-input
     placeholder="搜索..."
@@ -189,7 +188,7 @@
     text-align: right;
     line-height:35px;
     display: block;
-    width:72px;
+    width:84px;
     height: 100%;
     float: left;
     color: #333333; 
@@ -209,14 +208,14 @@
 }
 .bgcolor .el-input{
     display: block;
-    width: calc(100% - 82px);
+    width: calc(100% - 94px);
     height: 35px;
     float: left;
     font-size: 12px;
 }
 
 .smallBgcolor .el-input{
-  width: calc(100% - 82px);
+  width: calc(100% - 94px);
     height: 35px;
 }
 .bgcolor .el-input input{
@@ -293,7 +292,7 @@ table .el-input__icon{
 }
 .bgcolor .el-select{
     display: block;
-    width: calc(100% - 82px);
+    width: calc(100% - 94px);
     height: 35px;
     float: left;
 }
@@ -302,7 +301,7 @@ table .el-input__icon{
 }
 /* 级联选择器 */
 .bgcolor .el-cascader{
-  width:calc(100% - 82px);
+  width:calc(100% - 94px);
   line-height: 0;
 }
 .bgcolor .el-cascader .el-input.el-input--suffix{
@@ -829,7 +828,7 @@ end-placeholder="结束日期">
 </el-date-picker>
 </div>  */
 .rangeDate{
-  width: calc(100% - 82px);
+  width: calc(100% - 94px);
   height: 35px;
   float: left;
 }
@@ -853,7 +852,7 @@ end-placeholder="结束日期">
   display: none;
 }
 .rangeDate input.el-range-input{
-  width: 73px;
+  width: calc(50% - 10px);
   top:-1px;
   height: 31px;
   position: relative;
@@ -1053,9 +1052,7 @@ end-placeholder="结束日期">
 .bgcolor.bgLongWidth .el-select .el-input{
   width: 100%;
 }
-.bgcolor.bgLongWidth .rangeDate input.el-range-input{
-  width: calc(50% - 10px)
-}
+
  .bgcolor.bgLongWidth label{
   width:80px;
 }

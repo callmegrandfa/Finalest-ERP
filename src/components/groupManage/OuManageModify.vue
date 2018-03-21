@@ -227,7 +227,7 @@
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label class="longLabel"><small>*</small>上级业务单元</label>
+                    <label><small>*</small>上级业务单元</label>
                     <el-select class="ouParentid"
                     :disabled="isEdit" 
                     @change="isUpdate"
@@ -400,7 +400,6 @@
                     >
                     </el-input>
                 </div>
-               
             </el-col> 
         </el-row>
      </div>    
@@ -413,7 +412,8 @@
             <el-checkbox-group 
             :disabled="isEdit" 
             @change="isUpdate"
-            v-model="addData.ouTypes">
+            v-model="addData.ouTypes"
+            :min="1">
             <el-checkbox v-for="item in selectData.OUType" :label="item.itemValue" :key="item.itemValue" @change="change_ouType">{{item.itemName}}</el-checkbox>
             </el-checkbox-group>
         </el-col>              
@@ -536,7 +536,7 @@
                                 placeholder=""></el-date-picker>
                             </div>
                             <div class="bgcolor">
-                                <label class="longLabel">法人身份证号码</label>
+                                <label>法人身份证号码</label>
                                 <el-input
                                 :disabled="isEdit" 
                                 @change="isUpdate"
@@ -596,7 +596,7 @@
                                 ></el-input>
                             </div>
                             <div class="bgcolor">
-                                <label class="longLabel">营业或有效期限</label>
+                                <label>营业或有效期限</label>
                                 <div class="rangeDate">
                                     <el-date-picker
                                     :disabled="isEdit" 
@@ -616,7 +616,7 @@
                                     </el-date-picker>
                                 </div>
                             </div>
-                            <div class="bgcolor">
+                            <div class="bgcolor longWidth">
                                 <label>公司简介</label>
                                 <el-input
                                 :disabled="isEdit" 
@@ -700,7 +700,7 @@
                                 v-model="basCompany.email"
                                 ></el-input>
                             </div>
-                            <div class="bgcolor">
+                            <div class="bgcolor longWidth">
                                 <label>web网址</label>
                                 <el-input
                                 
@@ -1038,7 +1038,7 @@ export default({
 
           'basCompany.ouParentid': function (value) {//上级公司
         if(this.Company){
-            return this.Validator.value(value).integer().required();
+            return this.Validator.value(value).integer();
         }else{
             return this.Validator.value(value)
         }
@@ -1548,11 +1548,11 @@ export default({
   }
 
 .OuModifyForm .bgcolor.longWidth{
-    width: 100%;
+    width: 505px;
     height:auto;
  }
 .OuModifyForm .bgcolor.longWidth .el-textarea{
-    width: 423px;
+    width: calc(100% - 94px);
     font-size: 12px;
  } 
 /*表单提示信息*/
