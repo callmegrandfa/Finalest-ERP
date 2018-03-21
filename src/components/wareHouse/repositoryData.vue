@@ -305,6 +305,18 @@
                     <span class="btDetail">增行</span>
                 </button>
 
+                <button class="erp_bt bt_excel">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_excel.png">
+                    </div>
+                    <span class="btDetail">Excel</span>
+                </button>
+
+                <button class="erp_bt bt_auxiliary bt_width">
+                    <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
+                    <span class="btDetail">辅助功能</span>
+                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                </button>
                 <!-- <button class="erp_bt bt_del" @click='delRow'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">

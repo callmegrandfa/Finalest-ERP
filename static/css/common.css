@@ -176,6 +176,9 @@
 .bgcolor .el-input__suffix{
   line-height: 35px;
 }
+.redBorder{
+  border-color: #f66;
+}
 .smallBgcolor{
   height: 28px;
   width: 75%;

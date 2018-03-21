@@ -48,11 +48,12 @@
                             <el-table-column prop="currencyCode" label="币种编码" fixed>
                                 <template slot-scope="scope">
                                     <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
-                                    <input class="input-need" 
-                                             
+                                    <input class="input-need"
+                                            :class="{'input-bgw':scope.$index%2==0,'input-bgp':scope.$index%2!=0,'redBorder' : validation.hasError('allList.currencyCode')}"
                                             v-model="scope.row.currencyCode"
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
+                                            <!-- :class="[scope.$index%2==0?'input-bgw':'input-bgp']"  -->
                                             <!-- redBorder : validation.hasError('customerData.contactClassId') -->
                                 </template>
                             </el-table-column>
@@ -67,7 +68,7 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="contactFullName" label="最小递增额">
+                            <el-table-column prop="increment" label="最小递增额">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -86,7 +87,7 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="contactClassId" label="备注">
+                            <el-table-column prop="remark" label="备注">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -195,7 +196,7 @@
         },
         validators:{
             'allList.currencyCode': function (value) {//币种编码
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).required();
             },
         },
         methods:{
@@ -220,43 +221,48 @@
             },
         //------------------------------------------------------------------
         //---获取下拉数据----------------------------------------------------
-        loadSelect:function(){
-            let self = this;
-            this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
-                self.statusAr = res.result;
-                console.log(self.statusAr);
-            },function(res){
-                console.log('err'+res)
-            })
-        },
+            loadSelect:function(){
+                let self = this;
+                this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
+                    self.statusAr = res.result;
+                    console.log(self.statusAr);
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
         //------------------------------------------------------------------
 
         // ---创建数据，修改数据---------------------------------------------
-        save:function(){//点击保存按钮
-            let self = this;
-
-            if(self.addList.length>0){
-                self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){         
-                        self.open('创建货币资料成功','el-icon-circle-check','successERP');
-                        self.loadAllList();
-                        self.addList = [];
-                    }),function(res){
-                        self.open('创建货币资料失败','el-icon-error','faildERP');
-                    };
-            }
-            if(self.updateList.length>0){
-                self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
-                            // console.log(res);
-                            self.open('修改货币资料成功','el-icon-circle-check','successERP');
-                            self.loadAllList()
-                            self.ar = [];
-                            self.updateList = [];
+            save:function(){//点击保存按钮
+                let self = this;
+                
+                if(self.addList.length>0){
+                    // self.$validate().then(function(success){
+                    //     if(success){
+                            self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){         
+                                self.open('创建货币资料成功','el-icon-circle-check','successERP');
+                                self.loadAllList();
+                                self.addList = [];
                             }),function(res){
-                                self.open('修改货币资料失败','el-icon-error','faildERP');
-                        };
-            }
-        },
-        addCol:function(){//增行
+                                self.open('创建货币资料失败','el-icon-error','faildERP');
+                            };
+                    //     }
+                    // })
+                }
+                
+                if(self.updateList.length>0){
+                    self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
+                                // console.log(res);
+                                self.open('修改货币资料成功','el-icon-circle-check','successERP');
+                                self.loadAllList()
+                                self.ar = [];
+                                self.updateList = [];
+                                }),function(res){
+                                    self.open('修改货币资料失败','el-icon-error','faildERP');
+                            };
+                }
+            },
+            addCol:function(){//增行
                 let self = this;
                 self.x++;
                 let newCol = 'newCol'+self.x;
@@ -437,6 +443,17 @@
                 }
             },
         //------------------------------------------------------------------
+        //---错误提示-------------------------------------------------------
+        showErrprTips(e){
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
+        },
+        //-----------------------------------------------------------------
     }
 }
 </script>

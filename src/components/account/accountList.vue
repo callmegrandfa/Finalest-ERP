@@ -1,7 +1,36 @@
 <template>
     <div class="list-wrapper">
         <el-row class="bg-white">
-            <el-col :span='24'>
+            <el-col :span="5">
+                <el-col class="pl15 pr15" :span="24">
+                    <el-input placeholder="请选择会计方案"
+                              v-model="searchLeft" 
+                              class="bAreaSearch">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                    <el-input placeholder="搜索..."
+                              v-model="searchLeft" 
+                              class="bAreaSearch">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-col>
+
+                <el-col :span='24' class="tree-container" >
+                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                             v-loading="treeLoading" 
+                             :data="componyTree"
+                             :props="defaultProps"
+                             node-key="id"
+                             default-expand-all
+                             ref="tree"
+                             :expand-on-click-node="false"
+                             :filter-node-method="filterNode"
+                             @node-click="nodeClick">
+                    </el-tree>
+                </el-col> 
+            </el-col>
+
+            <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
                     <button class="erp_bt bt_add" @click="goDetail">
                         <div class="btImg">
@@ -10,44 +39,60 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <!-- <button class="erp_bt bt_save" @click="save">
-                        <div class="btImg">
-                        <img src="../../../static/image/common/bt_save.png">
-                        </div>
-                        <span class="btDetail">保存</span>
-                    </button> -->
-
                     <button class="erp_bt bt_del" @click="delRow">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
                         <span class="btDetail">删除</span>
                     </button>
-
-                    <button class="erp_bt bt_excel">
+                    <!-- @click="save" -->
+                    <button class="erp_bt bt_save" >
                         <div class="btImg">
-                            <img src="../../../static/image/common/bt_excel.png">
+                        <img src="../../../static/image/common/bt_save.png">
                         </div>
-                        <span class="btDetail">Excel</span>
+                        <span class="btDetail">保存</span>
                     </button>
-
                     
-
-                    <button class="erp_bt bt_auxiliary">
+                    <button class="erp_bt bt_saveAdd">
                         <div class="btImg">
-                            <img src="../../../static/image/common/bt_auxiliary.png">
+                            <img src="../../../static/image/common/bt_saveAdd.png">
                         </div>
-                        <span class="btDetail">辅助功能</span>
+                        <span class="btDetail">保存并新增</span>
                     </button>
 
-                    <button class="erp_bt bt_print">
+                    <button class="erp_bt bt_out">
                         <div class="btImg">
-                            <img src="../../../static/image/common/bt_print.png">
+                            <img src="../../../static/image/common/bt_inOut.png">
                         </div>
-                        <span class="btDetail">打印</span>
+                        <span class="btDetail">导出</span>
                     </button>
+
+                    <div class="toggle-btn">
+                        <span @click='ifShow = !ifShow'>收起</span>
+                        <i class="el-icon-arrow-up"></i>
+                    </div>
                 </el-row>
 
+                <el-collapse-transition>
+                    <div v-show="ifShow" class="bb1">
+                        <div class="bgcolor">
+                            <label><small>*</small>会计年份</label>
+                            <el-input placeholder=""
+                                      class="periodYear" 
+                                      v-model="eachPage"></el-input>
+                                      <!-- :class="{redBorder : validation.hasError('createAccountParams.periodYear')}" -->
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>期间个数</label>
+                            <el-input placeholder=""
+                                      class="periodNum"
+                                      v-model="eachPage"></el-input>
+                                      <!-- :class="{redBorder : validation.hasError('createAccountParams.periodNum')}" -->
+                        </div>
+
+                    </div>
+                </el-collapse-transition>
                 <el-row class="pl10 pt10 pr10 pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
@@ -117,6 +162,7 @@
                 eachPage:10,//一页显示的数量
                 x:0,//增行的下标
                 rows:[],//增行的数组
+                ifShow:true,//控制折叠页面
                 createParams:{
                     "group_id": 1,
                     "currency_code": "",
@@ -372,6 +418,21 @@
 .input-bgp{
     background: #FAFAFA;
     text-align: center;
+}
+.border-left{
+    border-left: 1px solid #E4E4E4;
+    min-height: 380px;
+}
+.toggle-btn{
+    cursor: pointer;
+    font-size: 12px;
+    float: right;
+    margin-right: 20px;
+    height: 36px;
+    line-height: 36px;
+}
+.bb1{
+    border-bottom: 1px solid #cccccc;
 }
 </style>
 
