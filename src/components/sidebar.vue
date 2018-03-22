@@ -6,48 +6,48 @@
             <a class="oneA" href="javascript:;">版本动态</a>
             <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
         </li>
-       <vue-scroll :ops="ops">
+       <!-- <vue-scroll :ops="ops"> -->
             <li class="one" @mouseenter="enter1">
                 <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
                 <a class="oneA" href="javascript:;">测试</a>
                 <ul class="slidUl slid1">
-                    <vue-scroll :ops="ops">
+                    <!-- <vue-scroll :ops="ops"> -->
                         <li class="two" v-for="i in secondLevel1" @mouseenter="enter2">
                             <a href="javascript:;">{{i.name}}</a>
                             <diV class="triangle"></diV> 
                             <ul class="slidUl slid2" >
-                                <vue-scroll :ops="ops">
+                                <!-- <vue-scroll :ops="ops"> -->
                                 <li class="three" v-for="it in i.thirdInfo">
                                     <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
                                 </li>
-                                </vue-scroll> 
+                                <!-- </vue-scroll>  -->
                             </ul>
                         </li>
-                    </vue-scroll> 
+                    <!-- </vue-scroll>  -->
                 </ul>
             </li>
             <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1">
                 <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
                 <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
                 <ul class="slidUl slid1">
-                    <vue-scroll :ops="ops">
+                    <!-- <vue-scroll :ops="ops"> -->
                         <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
                             <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
                             <a href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{i.moduleName}}</a>
                             <diV class="triangle"></diV>
                             <ul class="slidUl slid2" >
-                                <vue-scroll :ops="ops">
+                                <!-- <vue-scroll :ops="ops"> -->
                                     <li class="three" v-for="it in i.childNodes">
                                         <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
                                         <a href="javascript:;" :menuId="it.id" :moduleParentId="it.moduleParentId" :menuUrl="it.url" :menuname="it.moduleName" @click="storageData">{{it.moduleName}}</a>
                                     </li>
-                                </vue-scroll> 
+                                <!-- </vue-scroll>  -->
                             </ul>
                         </li>
-                    </vue-scroll>     
+                    <!-- </vue-scroll>      -->
                 </ul>
             </li>
-        </vue-scroll> 
+        <!-- </vue-scroll>  -->
     </ul>
 
 </template>
