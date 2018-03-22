@@ -5,56 +5,56 @@
                 <el-col :span="24">
                     <el-row class="h48 pl15">
                         <el-col :span="18">
-                            <i class="el-icon-search"></i>
+                            <img src="../../../static/image/common/search_btn.png" class="closeLeft" >
                             <span>查询</span>
                         </el-col>
                         <el-col :span="5">
-                            <span class="fs12 open" @click="closeLeft">+ 收起</span>
+                            <span class="fs12 search_info_open" @click="closeLeft">-</span>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="8">
-                            <div class="bgcolor" style="margin-top:20px">
-                            <label style="width:86px">品牌编码</label>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                            <label >品牌编码</label>
                            </div>
                         </el-col>
-                        <el-col :span="14">
+                        <el-col :span="12">
                             <div class="bgcolor smallBgcolor" style="margin-top:20px">
                             <el-input v-model="searchItem.BrandCode"></el-input>
                             </div>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="8">
+                        <el-col :span="9">
                             <div class="bgcolor smallBgcolor" >
-                            <label style="width:86px">品牌名称(中文)</label>
+                            <label >品牌名称(中文)</label>
                            </div>
                         </el-col>
-                        <el-col :span="14">
+                        <el-col :span="12">
                             <div class="bgcolor smallBgcolor" >
                             <el-input placeholder="" v-model="searchItem.BrandName"></el-input>
                             </div>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="8">
+                        <el-col :span="9">
                             <div class="bgcolor smallBgcolor" >
-                                    <label style="width:86px">品牌名称(英文)</label>
+                                    <label >品牌名称(英文)</label>
                            </div>
                         </el-col>
-                        <el-col :span="14">
+                        <el-col :span="12">
                             <div class="bgcolor smallBgcolor" >
                             <el-input placeholder=""></el-input>
                             </div>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="8">
+                        <el-col :span="9">
                             <div class="bgcolor smallBgcolor" >
-                            <label style="width:86px">状态</label>
+                            <label >状态</label>
                             </div>
                         </el-col>
-                        <el-col :span="14">
+                        <el-col :span="12">
                             <div class="bgcolor smallBgcolor">
                                 <el-select  v-model="searchItem.Status" >
                                     <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
@@ -64,7 +64,11 @@
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="8">&nbsp;</el-col>
+                        <el-col :span="9">
+                            <div class="height1">
+                                
+                            </div>
+                        </el-col>
                         <el-col style="text-align:center;margin-bottom:20px;" :span="14">
                             <span class="search-btn" style="float:left; " @click="search()">查询</span>
                         </el-col>
@@ -317,13 +321,13 @@ import Btm from '../../base/btm/btm'
                let self = this;
                self.ifWidth = true;
                let obgh=document.getElementById('bgh');
-                obgh.style.width="calc(100% - 275px)";
+                obgh.style.width="calc(100% - 340px)";
             },
             btmlog:function(data){
                 let oleftBox=document.getElementById('left-box');
                 oleftBox.style.display="block";
                 let ocate= document.getElementById('bgh')
-                ocate.style.width="calc(100% - 275px)";
+                ocate.style.width="calc(100% - 340px)";
             },
             querylog:function(data){
                 let _this=this;
@@ -685,7 +689,7 @@ import Btm from '../../base/btm/btm'
 }
 #bgh{
    float: left;
-   width: calc(100% - 275px); 
+   width: calc(100% - 340px); 
 }
 .search-btn{
     display: inline-block;

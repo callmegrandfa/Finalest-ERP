@@ -1,11 +1,11 @@
 <template>
     <div class="userModify">
-        <el-row>
+        <el-row  class="fixed">
             <el-col :span="24">
-              <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+              <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
               <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>  
               <button @click="save" v-show="update_click" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button @click="Cancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button @click="isCancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
               <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
             </el-col>
         </el-row>
@@ -251,11 +251,10 @@
                     <label>关联角色</label>
                     <div class="addZoo">
                         <a class="add" href="javascript:;" @click="editDialog()">+</a>
-                        <!-- <a class="addRole" :key="x.id" v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a> -->
                     </div>
                 </div>    
             </div>
-            <el-dialog :visible.sync="dialogTableVisible">
+            <!-- <el-dialog :visible.sync="dialogTableVisible">
                 <template slot="title">
                     <span style="float:left;">选取角色</span>
                     <div class="double_bt">
@@ -277,31 +276,95 @@
                     <div class="menu_item_wapper menu_item_del">
                         <span :key="x.id" class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
                     </div>
-                    <!-- <el-col :span="24" class="load_more" :class="{display_block : isLoadMore}">
-                        <button>加载更多</button>
-                    </el-col> -->
                 </el-col>
-            </el-dialog>
+            </el-dialog> -->
         </el-col>
-
-
-        <el-col :span="24">
-                <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth" style="overflow: visible;">
-                        <label>&nbsp;</label>
-                        <div class="addZoo">
-                            <a class="addRole" :key="x.id"  v-for="x in checked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a>
-                        </div>
+        <!-- 关联角色 -->
+        <el-dialog :visible.sync="dialogTableVisible" title="关联角色">
+            <el-col :span="24">
+                <el-col :span="11">
+                        <el-col :span="24">已选</el-col>    
+                        <el-col :span="24">
+                            <el-table 
+                            :data="checkedTable" 
+                            border 
+                            style="width: 100%" 
+                            stripe 
+                            max-height="350"
+                            @selection-change="checkedSelect" 
+                            ref="multipleTable">
+                                <el-table-column type="selection" fixed="left"></el-table-column>
+                                <el-table-column prop="roleCode" label="角色编码"></el-table-column>
+                                <el-table-column prop="displayName" label="角色名称"></el-table-column>
+                                <el-table-column prop="ouName" label="所属组织"></el-table-column>
+                            </el-table>    
+                        </el-col>
+                </el-col>
+                <el-col :span="2">
+                    <el-button class="el_transfer" :disabled="is_nocheked" @click="noCheck_push_check" type="primary" icon="el-icon-arrow-left" round></el-button>
+                    <el-button class="el_transfer" :disabled="is_cheked" @click="check_push_noCheck" type="primary" icon="el-icon-arrow-right" round></el-button>
+               
+                </el-col>
+                <el-col :span="11">
+                    <el-col :span="24">可选</el-col>    
+                    <el-col :span="24">
+                        <el-table 
+                        :data="nocheckedTable" 
+                        border 
+                        style="width: 100%" 
+                        stripe 
+                        max-height="350"
+                        @selection-change="nocheckedSelect" 
+                        ref="multipleTable">
+                            <el-table-column type="selection" fixed="left"></el-table-column>
+                            <el-table-column prop="roleCode" label="角色编码"></el-table-column>
+                            <el-table-column prop="displayName" label="角色名称"></el-table-column>
+                            <el-table-column prop="ouName" label="所属组织"></el-table-column>
+                        </el-table>    
+                    </el-col>
+                </el-col>
+            <el-col :span="24">
+                <el-button @click="dialogTableVisible = false">确认</el-button>
+                <el-button @click="cancelPush">取消</el-button>
+            </el-col>
+        </el-col>
+    </el-dialog>
+    
+    <el-col :span="24">
+            <div class="bgMarginAuto">
+                <div class="bgcolor bgLongWidth" style="overflow: visible;">
+                    <label>&nbsp;</label>
+                    <div class="addZoo">
+                        <a class="addRole" :key="x.id"  v-for="x in checkedTable">{{x.displayName}}<i @click="check_push_noCheckThis(x)" class="el-icon-error"></i></a>
                     </div>
                 </div>
+            </div>
+        </el-col>
+    </el-row>
+    <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
             </el-col>
-      </el-row>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
       <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -355,6 +418,8 @@
         detail_message_ifShow:false,
         errorMessage:false,
         // 错误信息提示结束
+        dialogUserConfirm:false,//信息更改提示控制
+        choseDoing:'',//存储点击按钮判断信息
         search:'',
         item:{
             id:'',
@@ -411,7 +476,7 @@
         nochecked:[],//未关联角色
         allNode:[],//所有角色
         checkedRoleCode:[],
-        
+         update_click:false,   
         rolePageIndex:1,//分页的当前页码
         rolePage:0,//当前页
         roleOneItem:10,//每页有多少条信息
@@ -425,6 +490,17 @@
         },
         update:false,
         isEdit:true,//是否可编辑
+
+// ------------关联角色dialog-------------
+        checkedTable:[],//表格数据
+        nocheckedTable:[],//表格数据
+        allRoles:[],//所有数据
+        selection_checked: [],//复选框选中数据
+        selection_nochecked: [],//复选框选中数据
+        checked:[],//展示所有权限
+        nochecked:[],//
+        is_nocheked:true,//可选
+        is_cheked:true,//已选
       }
     },
      validators: {
@@ -503,10 +579,14 @@
         GetRoles(){
             let _this=this;
             _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id})
-           .then(function(resp){
-                _this.roleTotalItem=resp.result.totalCount;//暂时未用到
-                _this.checked=resp.result.items;
-                _this.loadTableData()
+           .then(function(resp){//获取已选角色
+              
+                _this.checkedTable=resp.result.items
+                _this.getAllRoleData()
+                // _this.roleTotalItem=resp.result.totalCount;//暂时未用到
+                // _this.checked=resp.result.items;
+                // console.log(resp)
+                // 
            },function(resp){
 
            })
@@ -515,7 +595,6 @@
            let _this=this;
            _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
            .then(function(res){
-               console.log(res)
                 _this.addData= {
                     "userCode": res.result.userCode,
                     "displayName": res.result.displayName,
@@ -649,133 +728,64 @@
             }
             return result;
         },
-        loadTableData(){//表格
+        getAllRoleData(){
             let _this=this;
             _this.tableLoading=true
-            _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+            _this.$axios.gets('/api/services/app/Role/GetAll')//获取所有角色
             .then(function(res){ 
-                _this.nochecked=[]  
+                // _this.nochecked=[]  
+                _this.nocheckedTable=[]
                 //   _this.tableData=res.result.items;
-                _this.totalItem=res.result.totalCount
-                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                _this.tableLoading=false;
-                _this.allNode=res.result.items
-                    if(_this.checked.length>0){
-                        _this.nochecked=_this.uniqueArray(_this.allNode,_this.checked)
+                // _this.totalItem=res.result.totalCount
+                // _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                // _this.tableLoading=false;
+                // _this.allNode=res.result.items;
+                _this.allRoles=res.result.items;
+                    // if(_this.checked.length>0){
+                    //     _this.nochecked=_this.uniqueArray(_this.allNode,_this.checked)
+                    // }else{
+                        
+                    //     _this.nochecked=_this.allNode
+                    // }
+                    if(_this.checkedTable.length>0){//获取可选角色
+                        _this.nocheckedTable=_this.uniqueArray(_this.allRoles,_this.checkedTable)
                     }else{
-                        _this.nochecked=_this.allNode
+                        _this.nocheckedTable=_this.allRoles
                     }
                 },function(res){
-                _this.tableLoading=false;
-            })
+                })
         },
-        handleCurrentChange(val) {//页码改变
-                let _this=this;
-                _this.page=val;
-                _this.loadTableData();
-        },
-        handleSelectionChange(val) {//点击复选框选中的数据
-            this.multipleSelection = val;
-        },
-        delRow(){
+        isBack(){
             let _this=this;
-            if(_this.multipleSelection.length>0){//表格
-                for(let i=0;i<_this.multipleSelection.length;i++){
-                    _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.multipleSelection[i].id})
-                    .then(function(res){
-                        _this.loadTableData();
-                        _this.open('删除成功','el-icon-circle-check','successERP');
-                    },function(res){
-                        _this.open('删除失败','el-icon-error','faildERP');
-                    })
-                }
-            };
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='back'
+            }else{
+                _this.back()
+            }
+        },
+        isCancel(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='Cancel'
+            }else{
+                _this.Cancel()
+            }
+        },
+        sureDoing(){
+            let _this=this;
+            if(_this.choseDoing=='back'){
+                _this.back()
+                _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='Cancel'){
+                _this.Cancel();
+                _this.dialogUserConfirm=false;
+            }
         },
         back(row){
             this.$store.state.url='/user/userList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
-        },
-        see(row){
-            // this.$store.state.url='/OuManage/OuManageSee/'+row.id
-            // this.$router.push({path:this.$store.state.url})//点击切换路由
-        },
-        delThis(row){//删除行
-            let _this=this;
-            _this.$axios.deletes('/api/services/app/Role/Delete',{id:row.id})
-            .then(function(res){
-                _this.loadTableData();
-            },function(res){
-            })
-        },
-        showNodeadd(){
-            let _this=this;
-            _this.menuCheck=!_this.menuCheck
-            $('.menu_item_add').css('display','block')
-            $('.menu_item_del').css('display','none')
-        },
-        showNodedel(){
-            let _this=this;
-            _this.menuCheck=!_this.menuCheck
-            $('.menu_item_add').css('display','none')
-            $('.menu_item_del').css('display','block')
-        },
-        addRole(x){
-            let _this=this;
-            if(!_this.isEdit){
-                let flag=false;
-                _this.isUpdate();
-                if(_this.nochecked.length<=0){
-                    flag=true;
-                }else{
-                    flag=false;
-                    $.each(_this.nochecked,function(index,value){
-                        if(x==value){
-                            flag=false;
-                        }else{
-                            flag=true;
-                        }
-                    })
-                }
-                $.each(_this.checked,function(index,value){
-                    if(x==value){
-                        _this.checked.splice(index,1)
-                    }
-                })
-                if(flag){
-                    _this.nochecked.push(x);
-                }
-            }else{
-                return false
-            }
-        },
-        delRole(x){
-            let _this=this;
-            if(!_this.isEdit){
-                let flag=false;
-                _this.isUpdate();
-                if(_this.checked.length<=0){
-                    flag=true;
-                }else{
-                    flag=false;
-                    $.each(_this.checked,function(index,value){
-                        if(x==value){
-                            flag=false;
-                        }else{
-                            flag=true;
-                        }
-                    })
-                }
-                $.each(_this.nochecked,function(index,value){
-                    if(x==value){
-                        _this.nochecked.splice(index,1)
-                    }
-                })
-                if(flag){
-                    _this.checked.push(x);
-                }
-            }else{
-                return false
-            }
         },
         Update(){//修改
             this.update_click=true;
@@ -791,6 +801,7 @@
                 this.isEdit=!this.isEdit;
                 this.validation.reset();
                 this.getData();
+                this.GetRoles()
                 this.update=false;
                 this.update_click=false;
             }
@@ -802,7 +813,7 @@
                 .then(function (success) {
                     if (success) {
                         let roles=[];
-                        $.each(_this.checked,function(index,value){
+                        $.each(_this.checkedTable,function(index,value){
                             roles.push(value.roleCode)
                         })
                         _this.addData.roleCodes=roles;
@@ -810,10 +821,6 @@
                         _this.addData.effectiveEnd=_this.dateRange[1];
                         _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                         .then(function(res){
-                            _this.checkedRoleCode=[]
-                            $.each(_this.checked,function(index,val){
-                                _this.checkedRoleCode.push(val.roleCode)
-                            })
                             _this.update=false;
                             _this.isEdit=true;
                             _this.update_click=false;
@@ -835,6 +842,57 @@
             }else{
                 return false;
             }
+        },
+        checkedSelect(val) {//dialogRole选中已选角色
+            let _this=this;
+            _this.selection_checked = val;
+            if(val.length==0){
+                _this.is_cheked=true
+            }else{
+                _this.is_cheked=false
+            }
+        },
+        nocheckedSelect(val) {//dialogRole选中可选角色
+            let _this=this;
+            _this.selection_nochecked = val;
+            if(val.length==0){
+                _this.is_nocheked=true
+            }else{
+                _this.is_nocheked=false
+            }
+        },
+        noCheck_push_check(){
+            let _this=this;
+            _this.update=true;
+            $.each(_this.selection_nochecked,function(index,val){
+                _this.checkedTable.push(val)
+            })
+            _this.nocheckedTable=_this.uniqueArray(_this.nocheckedTable,_this.selection_nochecked)
+        },
+        check_push_noCheck(){
+            let _this=this;
+            _this.update=true;
+            $.each(_this.selection_checked,function(index,val){
+                _this.nocheckedTable.push(val)
+            })
+            _this.checkedTable=_this.uniqueArray(_this.checkedTable,_this.selection_checked)
+        },
+        check_push_noCheckThis(val){
+            let _this=this;
+            if(!_this.isEdit){
+                let json=[val]
+                _this.update=true;
+                _this.nocheckedTable.push(val)
+                _this.checkedTable=_this.uniqueArray(_this.checkedTable,json)
+            }else{
+                return false
+            }
+            
+        },
+        cancelPush(){
+            let _this=this;
+            _this.dialogTableVisible=false;
+            _this.GetRoles()
         }
     }
 
