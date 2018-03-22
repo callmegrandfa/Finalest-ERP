@@ -178,7 +178,6 @@ export default {
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
             _this.childNodes=res;
-            console.log(2)
             _this.$nextTick(function(){
                 let x={}
                 $('.one').each(function(index){
@@ -198,7 +197,25 @@ export default {
                 })
             })
         },function(res){
-            console.log(res)
+            _this.childNodes=res.data;
+            _this.$nextTick(function(){
+                let x={}
+                $('.one').each(function(index){
+                    x[index]=[];
+                    $(this).find('.three a').each(function(z){
+                        x[index].push($(this).attr('menuurl'))
+                    })
+                    $(this).attr('data-url',x[index])
+                    if($(this).attr('data-url')!=undefined){
+                        for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
+                            if($(this).attr('data-url').split(',')[i]==_this.$route.path.split('/')[1]){
+                                $(this).addClass('menu_active')
+                                break
+                            }
+                        }
+                    }
+                })
+            })
         })
     },
     mounted:function(){

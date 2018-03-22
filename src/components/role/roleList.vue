@@ -224,10 +224,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -311,6 +310,12 @@
                 searchBtClick:false,
                 ifWidth:true,
                 dialogUserDefined:false,//dialog
+
+                response:{
+                details:'',
+                message:'',
+                validationErrors:[],
+            },
             }
         },
         watch: {
@@ -465,6 +470,21 @@
                     _this.delRow()
                 }
             },
+            getErrorMessage(message,details,validationErrors){
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
+            },
             delThis(){//删除行
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.row.id})
@@ -473,6 +493,7 @@
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                      _this.dialogUserConfirm=false;
                       _this.errorMessage=true;
                      _this.open('删除失败','el-icon-error','faildERP');
@@ -491,6 +512,7 @@
                         _this.dialogUserConfirm=false;
                         _this.open('删除成功','el-icon-circle-check','successERP');
                     },function(res){
+                        _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         _this.dialogUserConfirm=false;
                          _this.errorMessage=true;
                         _this.open('删除失败','el-icon-error','faildERP');

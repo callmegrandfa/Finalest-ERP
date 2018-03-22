@@ -45,6 +45,7 @@ axios.interceptors.request.use((config) => {
       return Promise.reject('Error', error.message);
     }
     return Promise.reject(error.config);
+    // return Promise.reject(error);
   });
 // //公共方法：
 //   export function posts(url, params) {
