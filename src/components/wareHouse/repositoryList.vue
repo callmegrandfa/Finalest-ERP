@@ -588,6 +588,7 @@ input::-webkit-input-placeholder{
     min-height: 380px;
 }
 </style>
+
 <style>
 .res-list .open-search{
     background-image: url(../../../static/image/common/btn-circle.png);
