@@ -1,6 +1,6 @@
 <template>
     <div class="userDetail">
-        <el-row>
+        <el-row  class="fixed">
             <el-col :span="24">
               <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
               <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->   
@@ -287,43 +287,83 @@
                     </div>
                 </div>
             </div>
-            <el-dialog :visible.sync="dialogTableVisible">
-                    <template slot="title">
-                        <span style="float:left;">选取角色</span>
-                        <div class="double_bt">
-                            <template v-if="menuCheck">
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="showNodeadd">已选角色</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}">未选角色</div>
-                            </template>
-                            <template v-else>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选角色</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选角色</div>
-                            </template>
-                            
-                        </div>
-                    </template>
-                    <el-col :span="24">
-                        <!-- <span class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
-                        <span class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span> -->
-                        <div class="menu_item_wapper menu_item_add">
-                            <span :key="x.id" class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
-                        </div>
-                        <div class="menu_item_wapper menu_item_del">
-                            <span :key="x.id" class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
-                        </div>
-                        <!-- <el-col :span="24" class="load_more">
-                            <button>加载更多</button>
-                        </el-col> -->
-                    </el-col>
-                </el-dialog>
           </el-col>
       </el-row>
+      <!-- 关联角色 -->
+      <!-- <el-dialog :visible.sync="dialogTableVisible" title="关联角色">
+            <el-col :span="24">
+                <el-col :span="11">
+                        <el-col :span="24">已选</el-col>    
+                        <el-col :span="24">
+                            <el-table 
+                            :data="checkedTable" 
+                            border 
+                            style="width: 100%" 
+                            stripe 
+                            @selection-change="checkedSelect" 
+                            ref="multipleTable">
+                                <el-table-column type="selection" fixed="left"></el-table-column>
+                                <el-table-column prop="displayName" label="功能"></el-table-column>
+                            </el-table>    
+                        </el-col>
+                </el-col>
+                <el-col :span="2">
+                    <div class="el-transfer__buttons">
+                        <el-button :disabled="is_nocheked" @click="noCheck_push_check" type="primary" icon="el-icon-arrow-left"></el-button>
+                        <el-button :disabled="is_cheked" @click="check_push_noCheck" type="primary" icon="el-icon-arrow-right"></el-button>
+                    </div>
+                </el-col>
+                <el-col :span="11">
+                    <el-col :span="24">可选</el-col>    
+                    <el-col :span="24">
+                        <el-table 
+                        :data="nocheckedTable" 
+                        border 
+                        style="width: 100%" 
+                        stripe 
+                        @selection-change="nocheckedSelect" 
+                        ref="multipleTable">
+                            <el-table-column type="selection" fixed="left"></el-table-column>
+                            <el-table-column prop="displayName" label="功能"></el-table-column>
+                        </el-table>    
+                    </el-col>
+                </el-col>
+            <el-col :span="24">
+                <el-button>确认</el-button>
+                <el-button>取消</el-button>
+            </el-col>
+        </el-col>
+    </el-dialog> -->
+      <el-dialog :visible.sync="dialogTableVisible">
+        <template slot="title">
+            <span style="float:left;">选取角色</span>
+            <div class="double_bt">
+                <template v-if="menuCheck">
+                    <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="showNodeadd">已选角色</div>
+                    <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}">未选角色</div>
+                </template>
+                <template v-else>
+                    <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选角色</div>
+                    <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选角色</div>
+                </template>
+                
+            </div>
+        </template>
+        <el-col :span="24">
+            <div class="menu_item_wapper menu_item_add">
+                <span :key="x.id" class="menu_item" v-for="x in checked"><a class="menu_add" @click="addRole(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
+            </div>
+            <div class="menu_item_wapper menu_item_del">
+                <span :key="x.id" class="menu_item" v-for="x in nochecked"><a class="menu_add" @click="delRole(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
+            </div>
+        </el-col>
+    </el-dialog>
       <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -402,7 +442,7 @@
           "email": "",
           "userGroupId": "",
           "ouId": "",
-          "status": "",
+          "status": 1,
           "userType": "",
           "languageId": "",
           "isReg": false,

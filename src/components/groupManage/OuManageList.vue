@@ -240,12 +240,30 @@
 
             </el-col>
         </el-row>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -298,7 +316,13 @@
             },
             detail_message_ifShow:false,
             errorMessage:false,
-            // 错误信息提示结束               
+            // 错误信息提示结束      
+//--------------确认删除开始-----------------               
+                dialogUserConfirm:false,//用户删除保存提示信息
+                row:{},//存储用户点击删除条目数据
+                choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
+                multipleSelection: [],//复选框选中数据
+//--------------确认删除开始-----------------             
                 search_area:'',
                 selectTree_area:[
                 ],
@@ -345,7 +369,6 @@
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
-                multipleSelection: [],//复选框选中数据
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
@@ -386,9 +409,9 @@
                 // 公司
                     _this.selectData.companys=res.result;
                 })    
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAllData',{AreaType:_this.AreaType}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
                 // 业务地区
-                _this.selectData.area=res.result;
+                _this.selectData.area=res.result.items;
                 })
             },
             filterNode_area(value, data) {
@@ -510,40 +533,68 @@
                 }
             },
              handleSelectionChange(val) {//点击复选框选中的数据
-                this.multipleSelection = val;
-                //console.log(val)
-            },
-            confirm(){
                 let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    _this.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                    }).then(() => {//确认
-                        _this.delRow()
-                    }).catch(() => {//取消
-                    });
+                _this.multipleSelection=[];
+                $.each(val,function(index,value){
+                    _this.multipleSelection.push({'id':value.id})
+                })
+            },
+            confirm(){//多项删除
+                let _this=this;
+                _this.choseAjax='rows'
+                if(_this.multipleSelection.length>0){
+                _this.dialogUserConfirm=true;
                 }
+            },
+            confirmDelThis(row){//单项删除
+                let _this=this;
+                _this.choseAjax='row'
+                _this.row=row;
+                _this.dialogUserConfirm=true;
+            },
+            sureAjax(){
+                let _this=this;
+                if(_this.choseAjax=='row'){
+                    _this.delThis()
+                }else if(_this.choseAjax=='rows'){
+                    _this.delRow()
+                }
+            },
+            delThis(){//删除行
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.row.id})
+                .then(function(res){
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                    _this.loadTableData();
+                    _this.loadTree();
+                    _this.dialogUserConfirm=false;
+                },function(res){
+                    _this.dialogUserConfirm=false;
+                    _this.errorMessage=true;
+                    _this.open('删除失败','el-icon-error','faildERP');
+                })
             },
             delRow(){
                 let _this=this;
-                for(let i=0;i<_this.multipleSelection.length;i++){
-                    _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
-                    .then(function(res){
-                        _this.open('删除成功','el-icon-circle-check','successERP');
-                        if(_this.load){
-                            _this.loadTableData();
-                        }else{
-                            _this.SimpleSearch();
-                        }
-                    },function(res){
-                        _this.errorMessage=true;
-                        _this.open('删除失败','el-icon-error','faildERP');
-                        //console.log('err:'+res)
-                    })
+                let data={
+                    "createList": [],
+                    "updateList": [],
+                    "deleteList": _this.multipleSelection
                 }
+                _this.$axios.deletes('/api/services/app/OuManagement/Delete',data)
+                .then(function(res){
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                    if(_this.load){
+                        _this.loadTableData();
+                    }else{
+                        _this.SimpleSearch();
+                    }
+                        _this.dialogUserConfirm=false;
+                },function(res){
+                    _this.errorMessage=true;
+                        _this.dialogUserConfirm=false;
+                    _this.open('删除失败','el-icon-error','faildERP');
+                })
             },
             getHeight(){
                 $("#ouListTree").css({
@@ -587,29 +638,7 @@
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
-            confirmDelThis(row){
-                let _this=this;
-                _this.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                }).then(() => {//确认
-                    _this.delThis(row)
-                }).catch(() => {//取消
-                });
-            },
-            delThis(row){//删除行
-                let _this=this;
-                _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:row.id})
-                .then(function(res){
-                    _this.open('删除成功','el-icon-circle-check','successERP');
-                    _this.loadTableData();
-                    _this.loadTree();
-                },function(res){
-                    _this.errorMessage=true;
-                })
-            },
+            
         },
     }
 </script>

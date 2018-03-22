@@ -1,6 +1,6 @@
 <template>
     <div class="businessAreaDetail">
-        <el-row>
+        <el-row  class="fixed">
             <el-col :span="24">
               <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
               <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
@@ -194,7 +194,7 @@
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -288,7 +288,7 @@
         "areaFullPathId": "string",
         "areaFullPathName": "string",
         "manager": "",
-        "status": '',
+        "status":1,
         "remark": ""
         },
         selectData:{//select数据
@@ -368,9 +368,9 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            _this.$axios.gets('/api/services/app/AreaManagement/GetAllData',{AreaType:_this.AreaType}).then(function(res){ 
+            _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
             // 业务地区
-                _this.selectData.area=res.result;
+                _this.selectData.area=res.result.items;
                 if(_this.$route.params.id!="default"){
                     _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
                 }
