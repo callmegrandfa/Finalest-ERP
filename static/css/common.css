@@ -1010,7 +1010,6 @@ end-placeholder="结束日期">
   text-align: center;
   cursor: pointer;
   border-radius: 50%;
-  margin-left: 20px;
 }
 
 .out-img{
@@ -1254,4 +1253,42 @@ color:#f66;
 }
 .dialog_confirm_message .el-dialog__footer .dialog_footer_bt:focus{
   outline: none;
+}
+/* 搜索按钮样式 */
+.btn-for-search{
+  /* vertical-align: middle; */
+  height:48px;
+  line-height: 48px;
+}
+.btn-for-search img{
+    display: inline-block;
+    margin-top: -4px;
+    vertical-align: middle;
+}
+.btn-for-search span{
+  font-size: 18px;
+  display: inline-block;
+}
+.search-block{
+  border-right:1px solid #E3E3E3;
+  line-height:47px;
+  /* text-align:center; */
+  cursor: pointer;
+  height: 47px;
+}
+.search-block div{
+  display: inline-block;
+  width: 100%;
+}
+.search-block img{
+  display: inline-block;
+  margin-top: 13px;
+  margin-left:10px;
+  float: left;
+}
+.search-block span{
+  font-size: 18px;
+  display: inline-block;
+  float: left;
+  margin-left: 10px;
 }

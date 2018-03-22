@@ -199,26 +199,39 @@
 
             </el-col>
         </el-row>
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
         <!-- dialog -->
-        <!-- <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
-            
-            <div class="bgcolor smallBgcolor"><label>字典编码</label><el-input :class="{redBorder : validation.hasError('dialogData.dictCode')}" v-model="dialogData.dictCode" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.dictCode') }}</div>
-            
-            <div class="bgcolor smallBgcolor"><label>字典名称</label><el-input :class="{redBorder : validation.hasError('dialogData.dictName')}" v-model="dialogData.dictName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.dictName') }}</div>
-            
-            <div class="bgcolor smallBgcolor"><label>排序</label><el-input :class="{redBorder : validation.hasError('dialogData.seq')}" v-model="dialogData.seq" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.seq') }}</div>
-            
-            <div class="bgcolor smallBgcolor"><label>备注</label><el-input :class="{redBorder : validation.hasError('dialogData.remark')}" v-model="dialogData.remark" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor error_tips"><label></label>{{ validation.firstError('dialogData.remark') }}</div>
-               
-            <div slot="footer" class="dialog-footer">
-                <button class="dialogBtn" @click="save">确认</button>
-                <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
-            </div>
-        </el-dialog> -->
     </div>
 </template>
 
@@ -228,12 +241,6 @@
         data(){
             return {
                 searchLeft:'',
-                // dialogData:{//dialog数据
-                //     dictCode:'',//字典编码 
-                //     dictName:'',//字典名称
-                //     seq:'',//排序
-                //     remark:'',//备注
-                // },
                 valueData:{//创建字典值的参数
                     groupId: 0,
                     dictId: 0,
@@ -289,6 +296,11 @@
                 dictId_DictName:'',//点击左侧树形保存当前的dictId_DictName
                 ar:[],//判断修改后的红标出现
                 pageFlag:true,
+
+                //---提示错误dialog---------
+                detail_message_ifShow:false,
+                errorMessage:false,
+                //-------------------------
             }
         },
         created:function(){       
@@ -611,7 +623,7 @@
                     self.open('删除成功','el-icon-circle-check','successERP');
                     self.loadTableData();
                 },function(res){
-                
+                    self.errorMessage=true;
                 })
             },
             delRow(){//批量删除
@@ -636,6 +648,8 @@
                             self.$axios.posts('/api/services/app/DictItemManagement/BatchDelete',self.idArray).then(function(res){
                                 self.loadTableData();
                                 self.open('删除成功','el-icon-circle-check','successERP');    
+                            },function(res){
+                                self.errorMessage=true;
                             })
                         }).catch(() => {
                             self.$message({
