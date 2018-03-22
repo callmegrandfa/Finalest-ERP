@@ -1,7 +1,6 @@
 .el-col-24{
   border-bottom: none;
 }
-
 /* 搜索 */
 /* <el-input
     placeholder="搜索..."
@@ -177,6 +176,9 @@
 .bgcolor .el-input__suffix{
   line-height: 35px;
 }
+.redBorder{
+  border-color: #f66;
+}
 .smallBgcolor{
   height: 28px;
   width: 75%;
@@ -189,7 +191,7 @@
     text-align: right;
     line-height:35px;
     display: block;
-    width:72px;
+    width:84px;
     height: 100%;
     float: left;
     color: #333333; 
@@ -209,14 +211,14 @@
 }
 .bgcolor .el-input{
     display: block;
-    width: calc(100% - 82px);
+    width: calc(100% - 94px);
     height: 35px;
     float: left;
     font-size: 12px;
 }
 
 .smallBgcolor .el-input{
-  width: calc(100% - 82px);
+  width: calc(100% - 94px);
     height: 35px;
 }
 .bgcolor .el-input input{
@@ -293,7 +295,7 @@ table .el-input__icon{
 }
 .bgcolor .el-select{
     display: block;
-    width: calc(100% - 82px);
+    width: calc(100% - 94px);
     height: 35px;
     float: left;
 }
@@ -302,7 +304,7 @@ table .el-input__icon{
 }
 /* 级联选择器 */
 .bgcolor .el-cascader{
-  width:calc(100% - 82px);
+  width:calc(100% - 94px);
   line-height: 0;
 }
 .bgcolor .el-cascader .el-input.el-input--suffix{
@@ -829,7 +831,7 @@ end-placeholder="结束日期">
 </el-date-picker>
 </div>  */
 .rangeDate{
-  width: calc(100% - 82px);
+  width: calc(100% - 94px);
   height: 35px;
   float: left;
 }
@@ -853,7 +855,7 @@ end-placeholder="结束日期">
   display: none;
 }
 .rangeDate input.el-range-input{
-  width: 73px;
+  width: calc(50% - 10px);
   top:-1px;
   height: 31px;
   position: relative;
@@ -1053,9 +1055,7 @@ end-placeholder="结束日期">
 .bgcolor.bgLongWidth .el-select .el-input{
   width: 100%;
 }
-.bgcolor.bgLongWidth .rangeDate input.el-range-input{
-  width: calc(50% - 10px)
-}
+
  .bgcolor.bgLongWidth label{
   width:80px;
 }
@@ -1113,4 +1113,145 @@ color:#f66;
   float: left;
   height: 35px;
   line-height: 35px;
+}
+
+/*  复选框样式*/
+.el-checkbox__inner{
+      width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+.el-checkbox__input.is-indeterminate .el-checkbox__inner::before{
+      -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    content: "";
+    border: 3px solid #fff;
+    border-left: 0;
+    border-top: 0;
+    height: 11px;
+    left: 4px;
+    position: absolute;
+    top: -1px;
+    -webkit-transform: rotate(45deg) scaleY(0);
+    transform: rotate(45deg) scaleY(0);
+    width: 6px;
+    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+}
+.el-checkbox__inner::after{
+  left:4px;
+  top:-1px;
+}
+/*  商品搜索框公共样式  */
+/*  列表页   */
+.commodity{
+  float:left;background:#fff;width:100%;
+}
+.commodity .left-box{
+  min-width:275px;width:275px;float:left;
+}
+.commodity .bgcolor{
+    height: 35px;
+    font-size: 12px;
+    margin-bottom: 15px;
+    width: 250px;
+    float: left;
+    overflow: hidden;
+    margin-right: 5px;
+}
+.commodity .smallBgcolor{
+  height: 28px;
+  width: 100%;
+}
+.commodity .smallBgcolor .el-input{
+  width: 100%;
+}
+.commodity .bgcolor .el-select{
+  width: 100%;
+}
+/*  详情页   */
+.commodityDetails .smallBgcolor .el-input input{
+    height: 33px!important;
+}
+.commodityDetails .smallBgcolor .el-select .el-input{
+    width: 100%!important;
+}
+.commodityDetails .bgcolor{
+    width: 100%; 
+}
+.el-radio__label{
+  display:none;
+}
+/* dialog */
+.dialog_confirm_message .el-dialog__headerbtn{
+  font-size: 50px;
+  right:0;
+  top:0;
+}
+.dialog_confirm_message .el-dialog{
+  border-radius: 10px;
+}
+
+.dialog_confirm_message .el-dialog__header{
+  border-bottom: 1px solid #e4e4e4;
+}
+.dialog_confirm_message .dialog_font{
+  font-family: 'microsoft yahei';
+  font-size: 18px;
+  color: #000;
+}
+.dialog_confirm_message .dialog_font_bold{
+  font-weight: bold
+}
+.dialog_confirm_message .el-dialog__body{
+  padding: 40px 20px 50px 20px;
+}
+.dialog_confirm_message .dialog_body_message{
+  text-align: center;
+}
+.dialog_confirm_message .dialog_body_detail_message{
+  position: absolute;
+  background-color: #f0f0eff0;
+  height: 100%;
+}
+.dialog_confirm_message .dialog_body_detail_message .dialog_font{
+  font-size: 12px;
+}
+.dialog_confirm_message .dialog_body_icon{
+  text-align: center;
+  color: #f90;
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+.dialog_confirm_message .el-dialog__footer{
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 0;
+  overflow: hidden;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt{
+ width: 50%;
+ float: left;
+ margin: 0;  
+ background-color: #fff;
+ outline: none;
+ border: none;
+ cursor: pointer;
+ padding: 15px 0px;
+ border-top: 1px solid #e4e4e4;
+ color: #c0c4cc;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt:hover{
+  color: #000;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt:first-child{
+  border-right: 1px solid #e4e4e4;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt:focus{
+  outline: none;
 }

@@ -4,7 +4,7 @@
             <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
-                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:10px;">
+                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:-4px;vertical-align: middle;">
                         <span>查询</span>
                     </el-col>
                    <el-col :span="5">
@@ -141,12 +141,12 @@
                             <el-table-column type="selection" fixed="left"></el-table-column>
                             <el-table-column prop="roleCode" label="角色编码" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="see(scope.row)">{{scope.row.roleCode}}</el-button>
+                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.roleCode}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="displayName" label="角色名称" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="see(scope.row)">{{scope.row.displayName}}</el-button>
+                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.displayName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="ouId" label="所属组织"></el-table-column>
@@ -169,9 +169,9 @@
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
-                                     <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
-                                    <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
+                                     <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
+                                    <el-button type="text"  @click="see(scope.row)" >查看</el-button>
+                                    <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
                                 </template>
                             </el-table-column>
                         </el-table>

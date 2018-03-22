@@ -98,12 +98,12 @@
                         </el-table>
                         <el-pagination style="margin-top:20px;" 
                                         class="text-right" 
-                                        background layout="total,prev, pager, next,jumper" 
+                                        background 
+                                        layout="total,prev, pager, next,jumper" 
                                         @current-change="handleCurrentChange"
                                         :current-page="pageIndex"
                                         :page-size="oneItem"
-                                        :total="totalItem">
-                        </el-pagination>   
+                                        :total="totalItem"></el-pagination>   
                     </el-col>
                 </el-row>
 

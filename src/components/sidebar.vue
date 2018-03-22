@@ -1,12 +1,12 @@
 <template>
 
    <ul class="slidUl menu" :class="{menuActive : $store.state.show}">
+        <li class="one">
+            <span class="menuIcon"><img src="../../static/image/siderbar/版本动态.png" alt="版本动态"></span>
+            <a class="oneA" href="javascript:;">版本动态</a>
+            <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
+        </li>
        <vue-scroll :ops="ops">
-            <li class="one">
-                <span class="menuIcon"><img src="../../static/image/siderbar/版本动态.png" alt="版本动态"></span>
-                <a class="oneA" href="javascript:;">版本动态</a>
-                <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
-            </li>
             <li class="one" @mouseenter="enter1">
                 <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
                 <a class="oneA" href="javascript:;">测试</a>
@@ -64,6 +64,7 @@ export default {
                 height: '0',
             },
         },
+        ids:[],
         secondLevel1:[{
                 name:'租户管理',
                 thirdInfo:[
@@ -107,12 +108,14 @@ export default {
                 thirdInfo:[
                     {name:'币种资料',address:'currency'},
                 ]
-            },{
-                name:'会计期间',
-                thirdInfo:[
-                    {name:'会计期间',address:'account'},
-                ]
-            },{
+            },
+            // {
+            //     name:'会计期间',
+            //     thirdInfo:[
+            //         {name:'会计期间',address:'account'},
+            //     ]
+            // },
+            {
                 name:'单据模板',
                 thirdInfo:[
                      {name:'单据开单模板',address:'bill'}, 
@@ -140,18 +143,18 @@ export default {
             },{
                 name:'商品属性',
                 thirdInfo:[
-                    // {name:'商品属性列表',address:'commodity'},   
-                    // {name:'商品规格列表',address:'commercial'},
-                    // {name:'商品类目列表',address:'commodityleimu'},
-                    // {name:'类目属性规格列表',address:'Property'},
-                    // {name:'计量单位',address:'unitOfMeasurement'},
-                    // {name:'商品品牌',address:'commodityBrand'},
-                    // {name:'商品类目',address:'commodityleimu'},
-                    // {name:'商品属性',address:'commodityProperty'},
-                    // {name:'商品规格',address:'specificationOfGoods'},
-                    // {name:'商品规格组',address:'specification'},
-                    // {name:'类目属性规格(平台)列表',address:'classPropertyList'},
-                    // {name:'商品档案',address:'Record'},
+                    {name:'商品属性列表',address:'commodity'},   
+                    {name:'商品规格列表',address:'commercial'},
+                    {name:'商品类目列表',address:'commodityleimu'},
+                    {name:'类目属性规格列表',address:'Property'},
+                    {name:'计量单位',address:'unitOfMeasurement'},
+                    {name:'商品品牌',address:'commodityBrand'},
+                    {name:'商品类目',address:'commodityleimu'},
+                    {name:'商品属性',address:'commodityProperty'},
+                    {name:'商品规格',address:'specificationOfGoods'},
+                    {name:'商品规格组',address:'specification'},
+                    {name:'类目属性规格(平台)列表',address:'classPropertyList'},
+                    {name:'商品档案',address:'Record'},
                 ]
             },{
                 name:'职员资料',
@@ -173,10 +176,27 @@ export default {
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
             _this.childNodes=res;
+            _this.$nextTick(function(){
+                let x={}
+                $('.one').each(function(index){
+                    x[index]=[];
+                    $(this).find('.three a').each(function(z){
+                        x[index].push($(this).attr('menuurl'))
+                    })
+                    $(this).attr('data-url',x[index])
+                    if($(this).attr('data-url')!=undefined){
+                        for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
+                            if($(this).attr('data-url').split(',')[i]==_this.$route.path.split('/')[1]){
+                                $(this).addClass('menu_active')
+                                break
+                            }
+                        }
+                    }
+                })
+            })
         },function(res){
 
         })
-        
     },
     mounted:function(){
         let _this=this;
@@ -270,7 +290,7 @@ export default {
     font-family: 'microsoft yahei';
     width: 235px;
     height: auto;
-    background-color: #414e61;
+    background-color: #354052;
     display: none;
 }
 .slidUl:not(.slid2){
@@ -286,6 +306,10 @@ export default {
     float: left;
     text-align: center;
     cursor: pointer;
+    transition: background 0.5s;
+    -moz-transition: background 0.5s;
+    -webkit-transition: background 0.5s;
+    -o-transition: background 0.5s; 
 }
 
 .menuIcon img{
@@ -315,6 +339,7 @@ export default {
 .menuActive .slid1 .slid2{
     left: 285px;
 }
+
 .slid1{
     transition: left 0.5s;
     -moz-transition: left 0.5s;
@@ -345,7 +370,14 @@ export default {
     position: relative;
 }
 .menu .one{
+    transition: border-bottom 0.5s;
+    -moz-transition: border-bottom 0.5s;
+    -webkit-transition: border-bottom 0.5s;
+    -o-transition: border-bottom 0.5s;
     border-bottom:1px solid #26344b; 
+}
+.menuActive .one{
+    border-bottom:none; 
 }
 .one:first-child{
     height: 43px;
@@ -354,8 +386,8 @@ export default {
     height: 43px;
 }
 .one:first-child .menuIcon img{
-    width: 26px;
-    height: 21px;
+    max-width: 26px;
+    max-height: 21px;
 }
 .one .versionInfo{
     z-index: 9999;
@@ -385,7 +417,7 @@ export default {
 }
 .menu .one:hover{
     background: #415c84;
-    box-shadow: 0 4px 0 #3b4758;
+    /* box-shadow: 0 4px 0 #3b4758; */
 }
 .menu .one:hover>a{
     color: #33cbcb;
@@ -449,8 +481,11 @@ export default {
     width: 0;
     height: 0;
     border-top: 10px solid transparent;
-    border-right: 10px solid #414e61;
+    border-right: 10px solid #354052;
     border-bottom: 10px solid transparent;
+}
+.menuActive .menu_active .menuIcon{
+  background-color: #3cc;
 }
 /* .menu::-webkit-scrollbar {
     display: none;
@@ -458,20 +493,20 @@ export default {
     height:10px;
 }
 .menu::-webkit-scrollbar-button    {
-    background-color:#414e61;
+    background-color:#354052;
 }
 .menu::-webkit-scrollbar-track     {
-    background:#414e61;
+    background:#354052;
 }
 .menu::-webkit-scrollbar-thumb{
     background:#000;
     border-radius:4px;
 }
 .menu::-webkit-scrollbar-corner {
-    background:#414e61;
+    background:#354052;
 }
 .menu::-webkit-scrollbar-resizer  {
-    background:#414e61;
+    background:#354052;
 }
 
 .slid1::-webkit-scrollbar {
@@ -480,20 +515,20 @@ export default {
     height:10px;
 }
 .slid1::-webkit-scrollbar-button    {
-    background-color:#414e61;
+    background-color:#354052;
 }
 .slid1::-webkit-scrollbar-track     {
-    background:#414e61;
+    background:#354052;
 }
 .slid1::-webkit-scrollbar-thumb{
     background:#000;
     border-radius:4px;
 }
 .slid1::-webkit-scrollbar-corner {
-    background:#414e61;
+    background:#354052;
 }
 .slid1::-webkit-scrollbar-resizer  {
-    background:#414e61;
+    background:#354052;
 }
 
 .slid2::-webkit-scrollbar {
@@ -502,19 +537,19 @@ export default {
     height:10px;
 }
 .slid2::-webkit-scrollbar-button    {
-    background-color:#414e61;
+    background-color:#354052;
 }
 .slid2::-webkit-scrollbar-track     {
-    background:#414e61;
+    background:#354052;
 }
 .slid2::-webkit-scrollbar-thumb{
     background:#000;
     border-radius:4px;
 }
 .slid2::-webkit-scrollbar-corner {
-    background:#414e61;
+    background:#354052;
 }
 .slid2::-webkit-scrollbar-resizer  {
-    background:#414e61;
+    background:#354052;
 } */
 </style>

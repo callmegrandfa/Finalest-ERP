@@ -100,12 +100,12 @@
                             <el-table-column prop="systemId" label="系统"></el-table-column>
                             <el-table-column prop="moduleCode" label="模块编码">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{scope.row.moduleCode}}</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)">{{scope.row.moduleCode}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="moduleName" label="模块名称">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{scope.row.moduleName}}</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)">{{scope.row.moduleName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="url" label="web地址"></el-table-column>
@@ -119,9 +119,9 @@
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">修改</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="confirmDelThis(scope.row)">删除</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)">修改</el-button>
+                                    <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
+                                    <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -158,6 +158,39 @@
                 <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
             </div>
         </el-dialog>
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
     </div>
 </template>
 
@@ -166,6 +199,25 @@
         name:'customerInfor',
         data(){
             return {
+            // 错误信息提示开始
+            option: {
+                vRail: {
+                    width: '5px',
+                    pos: 'right',
+                    background: "#9093994d",
+                },
+                vBar: {
+                    width: '5px',
+                    pos: 'right',
+                    background: '#9093994d',
+                },
+                hRail: {
+                    height: '0',
+                },
+            },
+            detail_message_ifShow:false,
+            errorMessage:false,
+            // 错误信息提示结束
                 searchLeft:'',
                 timeout:null,
                 restaurants:[],
@@ -285,6 +337,7 @@
                     _this.tableData=res.result.basOus;
                     _this.tableLoading=false;
                 },function(res){
+                    _this.errorMessage=true;
                     _this.tableLoading=false;
                 })
             },
@@ -325,8 +378,8 @@
                         if(_this.load){
                             _this.loadTableData();
                         }
-                        
                     },function(res){
+                        _this.errorMessage=true;
                         _this.open('删除失败','el-icon-error','faildERP');
                     })
                 }
@@ -368,6 +421,8 @@
                     _this.loadTableData();
                     _this.loadTree();
                 },function(res){
+                    _this.errorMessage=true;
+                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
              whichButton(event,node, data){
@@ -450,7 +505,7 @@
                         _this.loadTree();
                         _this.loadTableData();
                     },function(res){    
-
+                        _this.errorMessage=true;
                     })
                 }else{
                      _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.dialogData)
@@ -459,7 +514,7 @@
                         _this.loadTree();
                         _this.loadTableData();
                     },function(res){    
-
+                        _this.errorMessage=true;
                     })
                 }
                 

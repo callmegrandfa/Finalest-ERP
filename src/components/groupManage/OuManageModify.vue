@@ -5,9 +5,9 @@
          <el-col :span="24">
             <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
-            <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button @click="Cancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-            <button class="erp_bt bt_saveAdd" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+            <button class="erp_bt bt_save" v-show="update_click" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <button @click="Cancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button class="erp_bt bt_saveAdd" v-show="update_click" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
             <button class="erp_bt bt_auxiliary bt_width">
                 <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
                 <span class="btDetail">辅助功能</span>
@@ -227,7 +227,7 @@
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label class="longLabel"><small>*</small>上级业务单元</label>
+                    <label><small>*</small>上级业务单元</label>
                     <el-select class="ouParentid"
                     :disabled="isEdit" 
                     @change="isUpdate"
@@ -400,7 +400,6 @@
                     >
                     </el-input>
                 </div>
-               
             </el-col> 
         </el-row>
      </div>    
@@ -413,7 +412,8 @@
             <el-checkbox-group 
             :disabled="isEdit" 
             @change="isUpdate"
-            v-model="addData.ouTypes">
+            v-model="addData.ouTypes"
+            :min="1">
             <el-checkbox v-for="item in selectData.OUType" :label="item.itemValue" :key="item.itemValue" @change="change_ouType">{{item.itemName}}</el-checkbox>
             </el-checkbox-group>
         </el-col>              
@@ -536,7 +536,7 @@
                                 placeholder=""></el-date-picker>
                             </div>
                             <div class="bgcolor">
-                                <label class="longLabel">法人身份证号码</label>
+                                <label>法人身份证号码</label>
                                 <el-input
                                 :disabled="isEdit" 
                                 @change="isUpdate"
@@ -596,7 +596,7 @@
                                 ></el-input>
                             </div>
                             <div class="bgcolor">
-                                <label class="longLabel">营业或有效期限</label>
+                                <label>营业或有效期限</label>
                                 <div class="rangeDate">
                                     <el-date-picker
                                     :disabled="isEdit" 
@@ -616,7 +616,7 @@
                                     </el-date-picker>
                                 </div>
                             </div>
-                            <div class="bgcolor">
+                            <div class="bgcolor longWidth">
                                 <label>公司简介</label>
                                 <el-input
                                 :disabled="isEdit" 
@@ -700,7 +700,7 @@
                                 v-model="basCompany.email"
                                 ></el-input>
                             </div>
-                            <div class="bgcolor">
+                            <div class="bgcolor longWidth">
                                 <label>web网址</label>
                                 <el-input
                                 
@@ -901,7 +901,40 @@
             </div>
         </div>                                  
     </el-col>
-</el-row>                                                           
+</el-row>       
+<!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->                                                    
 </div>
 </template>
 
@@ -909,6 +942,25 @@
 export default({
     data() {
         return{
+            // 错误信息提示开始
+            option: {
+                vRail: {
+                    width: '5px',
+                    pos: 'right',
+                    background: "#9093994d",
+                },
+                vBar: {
+                    width: '5px',
+                    pos: 'right',
+                    background: '#9093994d',
+                },
+                hRail: {
+                    height: '0',
+                },
+            },
+            detail_message_ifShow:false,
+            errorMessage:false,
+            // 错误信息提示结束
             search:'',
              selectTree:[
             ],
@@ -993,6 +1045,7 @@ export default({
             },
             update:false,
             isEdit:true,//是否可编辑
+            update_click:false,//修改按钮点击改变状态
         }
     },
     validators: {
@@ -1038,7 +1091,7 @@ export default({
 
           'basCompany.ouParentid': function (value) {//上级公司
         if(this.Company){
-            return this.Validator.value(value).integer().required();
+            return this.Validator.value(value).integer();
         }else{
             return this.Validator.value(value)
         }
@@ -1433,6 +1486,7 @@ export default({
             _this.basCompany.ouParentid='';
         },
         Update(){//修改
+            this.update_click=true;
             if(this.isEdit==true){
                 this.isEdit=!this.isEdit;
             } 
@@ -1445,6 +1499,8 @@ export default({
                 this.isEdit=!this.isEdit;
                 this.validation.reset();
                 this.getData();
+                this.update=false;
+                this.update_click=false;
             }
         },
         save(){
@@ -1464,8 +1520,10 @@ export default({
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                             _this.update=false;
                             _this.isEdit=true;
+                            _this.update_click=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
+                            _this.errorMessage=true;
                             _this.open('保存失败','el-icon-error','faildERP');
                         })
                     }
@@ -1547,11 +1605,11 @@ export default({
   }
 
 .OuModifyForm .bgcolor.longWidth{
-    width: 100%;
+    width: 505px;
     height:auto;
  }
 .OuModifyForm .bgcolor.longWidth .el-textarea{
-    width: 423px;
+    width: calc(100% - 94px);
     font-size: 12px;
  } 
 /*表单提示信息*/

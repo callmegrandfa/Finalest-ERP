@@ -4,7 +4,7 @@
             <el-col :span="ifWidth ? 5 : 0" v-show="ifWidth">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
-                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:10px;">
+                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:-4px;vertical-align: middle;">
                         <span>查询</span>
                     </el-col>
                     <el-col :span="5">
@@ -55,9 +55,9 @@
                             @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id"></el-option>
-                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
-                            </el-option> -->
+                            <!-- <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id"></el-option> -->
+                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
@@ -173,12 +173,12 @@
                             <el-table-column type="selection" fixed="left"></el-table-column>
                             <el-table-column prop="ouCode" label="编码" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].ouCode}}</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].ouCode}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="ouName" label="名称" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="modify(scope.row)">{{tableData[scope.$index].ouName}}</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].ouName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="ouFullname" label="全称"></el-table-column>
@@ -221,8 +221,8 @@
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="confirmDelThis(scope.row)" >删除</el-button>
-                                    <el-button type="text" size="small"  @click="modify(scope.row)" >查看</el-button>
+                                    <el-button type="text"  @click="confirmDelThis(scope.row)" >删除</el-button>
+                                    <el-button type="text"  @click="modify(scope.row)" >查看</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -240,7 +240,39 @@
 
             </el-col>
         </el-row>
-        
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
     </div>
 </template>
 
@@ -248,6 +280,25 @@
     export default{
         data(){
             return {
+            // 错误信息提示开始
+            option: {
+                vRail: {
+                    width: '5px',
+                    pos: 'right',
+                    background: "#9093994d",
+                },
+                vBar: {
+                    width: '5px',
+                    pos: 'right',
+                    background: '#9093994d',
+                },
+                hRail: {
+                    height: '0',
+                },
+            },
+            detail_message_ifShow:false,
+            errorMessage:false,
+            // 错误信息提示结束               
                 search_area:'',
                 selectTree_area:[
                 ],
@@ -276,7 +327,7 @@
                     OUType:[],//组织类型
                     Status001:[],//启用状态
                     companys:[],//所属公司
-                    // area:[],//业务地区
+                    area:[],//业务地区
                 },
                 searchDataClick:{},
                 tableSearchData:{},
@@ -374,6 +425,7 @@
                         _this.getHeight()
                     })
                     },function(res){
+                        _this.getHeight()
                     _this.tableLoading=false;
                 })
             },
@@ -443,6 +495,7 @@
                     _this.tableData=res.result.items;
                     _this.tableLoading=false;
                 },function(res){
+                    _this.errorMessage=true;
                      _this.tableLoading=false;
                 })
             },
@@ -486,6 +539,7 @@
                             _this.SimpleSearch();
                         }
                     },function(res){
+                        _this.errorMessage=true;
                         _this.open('删除失败','el-icon-error','faildERP');
                         //console.log('err:'+res)
                     })
@@ -509,10 +563,8 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
-                    _this.$nextTick(function(){
-                        // _this.getHeight()
-                    })
                     },function(res){
+                    _this.errorMessage=true;
                     _this.tableLoading=false;
                 })
                  
@@ -521,15 +573,15 @@
                 let _this=this;
                 _this.item.id=data.id;
                 _this.item.areaName=data.areaName;
-                _this.$nextTick(function(){
-                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-                })
-                
-                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                //     if($(this).attr('date')==data.id){
-                //         $(this).click()
-                //     }
+                // _this.$nextTick(function(){
+                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 // })
+                
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
@@ -555,6 +607,7 @@
                     _this.loadTableData();
                     _this.loadTree();
                 },function(res){
+                    _this.errorMessage=true;
                 })
             },
         },

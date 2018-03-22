@@ -322,6 +322,18 @@ const routes = [
             },
 
             {
+                path: '/account',
+                component: account,
+                name: 'account',
+                redirect: function() { //会计期间
+                    return redirectRouter('account')
+                },
+                children: [
+                    { path: '/account/accountList/:id', component: accountList, name: 'accountList' },
+                ]
+            },
+
+            {
                 path: '/order',
                 component: order,
                 name: 'order',
@@ -547,6 +559,16 @@ router.beforeEach((to, from, next) => {
     } else {
         store.state.Alive = true;
     }
+    $('.one').each(function(index){//菜单高亮
+        if($(this).attr('data-url')!=undefined){
+            for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
+                if($(this).attr('data-url').split(',')[i]==to.path.split('/')[1]){
+                    $(this).addClass('menu_active')
+                    break
+                }
+            }
+        }
+    })
     if (store.accessToken != '') {
         document.title = to.name
         let activeRouter = store.state.activeRouter;

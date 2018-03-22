@@ -35,6 +35,7 @@ export default new vuex.Store({
             { name: 'customer', url: '/customer/customerList/:id', parent: '', default: '/customer/customerList/:id' } , //客户管理
             { name: 'customerList', url: '/customer/customerList/:id', parent: 'customer' } ,
             { name: 'customerDetail', url: '/customer/customerDetail/:id', parent: 'customer' } ,
+            { name: 'customerModify', url: '/customer/customerModify/:id', parent: 'customer' } ,
 
             { name: 'account', url: '/account/accountList/:id', parent: '', default: '/account/accountList/:id' } , //会计期间
             { name: 'accountList', url: '/account/accountList/:id', parent: 'account' } ,
