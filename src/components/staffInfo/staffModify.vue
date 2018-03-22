@@ -117,17 +117,16 @@
                             "employeeTypeidTValue": ""
                             }
                         ],
-                        
                 },
                 ouIdoptions: [],//------所属组织--------
                 deptIdoptions:[],//------所属部门--------
                 shopIdoptions:[],//------所属店铺--------
                 
                 employeeIdoptions:[//------职员类型--------
-                    { label: 1,text: '采购'},
-                    { label: 2,text: '财务'}, 
-                    { label: 3,text: '销售'}, 
-                    { label: 4,text: '总部'}, 
+                    { label:1,text: '采购'},
+                    { label: 2,text: '业务'}, 
+                    { label: 3,text: '仓库'}, 
+                    { label: 4,text: '店员'}, 
                 ],
                
                 updateList:{//保存数据需要的参数
@@ -142,14 +141,10 @@
                             "discountEnd": 0,
                             "shopId": 0,
                             "remark": "",
-                            "employeeTypeIds": [
-                                0
-                            ],
+                            "employeeTypeIds": [],
                             "id": 0
                     },
                 employeeTypeIds:[],
-              
-
             }
         },
         created:function(){
@@ -169,13 +164,15 @@
                         rsp.result.sex= + rsp.result.sex;
                         rsp.result.ouId= + rsp.result.ouId;
                         rsp.result.deptId= + rsp.result.deptId;
-                        for(let val of rsp.result.employeeTypes){
+                        _this.form=rsp.result;
+                         for(let val of rsp.result.employeeTypes){
                             _this.employeeTypeIds.push(val.employeeTypeid)
                         }
-                        // _this.employeeTypeIds.push(rsp.result.employeeTypes[0].employeeTypeid);
-                        // console.log(_this.employeeTypeIds);                    
-                        // console.log(rsp.result.employeeTypes);                    
-                        _this.form=rsp.result;
+                        _this.form['employeeTypeIds']=_this.employeeTypeIds;
+                        // console.log( _this.form);
+                        // console.log(_this.form.employeeTypeIds);
+                        
+                        
                     }
                 )
             },
@@ -223,8 +220,6 @@
                 )
             },
 
-
-
             // 成功的提示框
              open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -260,13 +255,14 @@
                 _this.updateList.sex=_this.form.sex;
                 _this.updateList.birthday=_this.form.birthday;
                 _this.updateList.shopId=_this.form.shopId;
-                _this.updateList.employeeTypeIds=_this.employeeTypeIds;
+                _this.updateList.employeeTypeIds=_this.form.employeeTypeIds;
                 _this.updateList.remark=_this.form.remark;
                 _this.updateList.id=_this.form.id;
                 if(_this.update){
                     _this.$axios.puts('/api/services/app/EmployeeManagement/Update',_this.updateList).then(
                         rsp=>{
                              _this.open('修改成功','el-icon-circle-check','successERP');
+                             console.log(_this.updateList);
                              this.isForbid=!this.isForbid;
                              _this.update=false;
                              _this.isShow=!this.isShow;
