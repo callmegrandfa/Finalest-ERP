@@ -1154,16 +1154,27 @@ color:#f66;
   float:left;background:#fff;width:100%;
 }
 .commodity .left-box{
-  min-width:275px;width:275px;float:left;
+  min-width:340px;width:340px;float:left;
+}
+.commodity .height1{
+  height: 1px;
+}
+.commodity .closeLeft{
+  display:inline-block;
+  margin-top:-4px;
+  vertical-align: middle;
 }
 .commodity .bgcolor{
     height: 35px;
     font-size: 12px;
     margin-bottom: 15px;
-    width: 250px;
+    width: 100%;
     float: left;
     overflow: hidden;
     margin-right: 5px;
+}
+.commodity .bgcolor>label{
+      width: 117px;
 }
 .commodity .smallBgcolor{
   height: 28px;

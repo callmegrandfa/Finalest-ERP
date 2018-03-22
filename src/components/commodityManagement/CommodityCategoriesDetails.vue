@@ -126,7 +126,7 @@
                                         <label >备注</label>
                                </div>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="3">
                                 <div class="bgcolor smallBgcolor" >
                                 <el-input  :disabled="isEdit" placeholder="" v-model="addItem.remark">
                                 </el-input>
