@@ -105,6 +105,23 @@
                                 </template>
                             </el-table-column>
 
+                            <el-table-column prop="dictId_DictName" label="类型">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.dictId_DictName"
+                                            v-if="scope.row.isSystem"
+                                            disabled
+                                            type="text"/>     
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.dictId_DictName"
+                                            v-else
+                                            @change='handleChange(scope.$index,scope.row)'
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
                             <el-table-column prop="manager" label="系统默认">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="scope.row.isSystem" disabled v-if="scope.row.isSystem"></el-checkbox>
@@ -269,6 +286,7 @@
                 addList:[],//新增上传的数组
                 updateList:[],//修改过的数组
                 dictId:'',//点击左侧树形保存当前的dictId
+                dictId_DictName:'',//点击左侧树形保存当前的dictId_DictName
                 ar:[],//判断修改后的红标出现
                 pageFlag:true,
             }
@@ -389,10 +407,12 @@
             saveValue:function(){//保存值表的修改和新增
                 
                 let self = this;
+                console.log(self.addList)
                 if(self.addList.length>0){
                     self.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){
                         self.open('创建字典系统值成功','el-icon-circle-check','successERP');
                         self.addList = [];
+                        self.ar = [];
                         self.loadTableData();
                     },function(res){    
                         console.log('error')
@@ -440,7 +460,8 @@
                             dictId: self.dictId,
                             itemName: "",
                             itemCode: "",
-                            itemValue: 0,
+                            itemValue: 1,
+                            dictId_DictName:self.dictId_DictName,
                             seq: 0,
                             remark: "",
                             status: '',
@@ -684,10 +705,12 @@
                 let self = this;
                 console.log(data)
                 self.dictId = data.id;
+                self.dictId_DictName = data.dictName;
                 if(self.dictId==0){
                     self.loadTableData()
                 }else{
                     self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id}).then(function(res){ 
+                        console.log(res)
                         self.tableData = res.result;
                         self.totalItem=res.result.length
                     },function(res){

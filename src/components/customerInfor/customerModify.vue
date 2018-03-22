@@ -9,6 +9,13 @@
                 <span class="btDetail">返回</span>
             </button>
 
+            <button @click="Update()" class="erp_bt bt_modify">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_modify.png">
+                </div>
+                <span class="btDetail">修改</span>
+            </button>
+
             <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_save.png">
@@ -16,19 +23,14 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button @click="Cancel()" class="erp_bt bt_cancel">
+            <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
                 <span class="btDetail">取消</span>
             </button>
 
-            <button @click="Update()" class="erp_bt bt_modify">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_modify.png">
-                </div>
-                <span class="btDetail">修改</span>
-            </button>
+            
             
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
@@ -467,7 +469,7 @@
                             <span class="btDetail">增行</span>
                         </button>
 
-                        <button class="erp_bt bt_auxiliary mb10">
+                        <button class="erp_bt bt_auxiliary mb10" @click='test'>
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_auxiliary.png">
                             </div>
@@ -493,8 +495,7 @@
                                         v-model="scope.row.accountNo" 
                                         type="text"    
                                         :disabled="isEdit"
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                        @change="handleBankChange(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
 
@@ -505,8 +506,7 @@
                                         v-model="scope.row.accountName" 
                                         type="text"    
                                         :disabled="isEdit"
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                        @change="handleBankChange(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
 
@@ -517,8 +517,7 @@
                                         v-model="scope.row.openingBank" 
                                         type="text"    
                                         :disabled="isEdit"
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                        @change="handleBankChange(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
 
@@ -529,8 +528,7 @@
                                         v-model="scope.row.contactPerson" 
                                         type="text"   
                                         :disabled="isEdit" 
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                        @change="handleBankChange(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
 
@@ -541,28 +539,24 @@
                                         v-model="scope.row.phone" 
                                         type="text"    
                                         :disabled="isEdit"
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                        @change="handleBankChange(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="ifDefault" label="默认">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="bankData[scope.$index].ifDefault" :disabled="isEdit"></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="ifDefault" label="默认">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="bankData[scope.$index].ifDefault" :disabled="isEdit"></el-checkbox>
-                                </template>
+                            <el-table-column prop="isDefault" label="默认">
                                 <template scope="scope">
-                                    <el-radio :label="scope.$index" v-model="radio" @change.native="getCurrentRow(scope.$index)"></el-radio>
+                                    <el-radio  :label="true" 
+                                                v-model="scope.row.isDefault" 
+                                                @change.native="getCurrentRow(scope.$index,scope.row)" 
+                                                @change="handleBankChange(scope.$index,scope.row)"
+                                                :disabled="isEdit"></el-radio>
                                 </template>
                             </el-table-column>
 
                             <el-table-column label='操作'>
                                 <template slot-scope="scope" >
-                                    <el-button v-on:click="handleBankDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                    <!-- <span>{{scope.row.isDefault}}</span> -->
+                                    <el-button @click="handleBankDelete(scope.$index,scope.row)" type="text" size="small" :disabled="isEdit">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -909,6 +903,7 @@ export default({
                 "transport_method_id": '',
                 "is_default": true
             },
+            checkedAr:[],
         }
     },
     validators: {
@@ -922,49 +917,49 @@ export default({
             return this.Validator.value(value).required().maxLength(50);
         },
         'customerData.contactFullName': function (value) {//全称
-            return this.Validator.value(value).maxLength(50);
+            return this.Validator.value(value).required().maxLength(50);
         },
         'customerData.mnemonic': function (value) {//助记码
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'customerData.contactClassId': function (value) {//客户分类
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'customerData.contactWorkPropertyId': function (value) {//客户性质
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'customerData.contactGradeId': function (value) {//客户等级
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'customerData.isCustomer': function (value) {//客户类型
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'customerData.ficaOuId': function (value) {//对应财务组织
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'customerData.taxCode': function (value) {//纳税登记号 
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'customerData.opAreaId': function (value) {//业务地区区号
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'customerData.adAreaId': function (value) {//行政地区
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'customerData.legalPerson': function (value) {//法人代表
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'customerData.regAddress': function (value) {//注册地址
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'customerData.manager': function (value) {//负责人
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'customerData.phone': function (value) {//电话
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'customerData.remark': function (value) {//备注
-            return this.Validator.value(value).required().maxLength(200);
+            return this.Validator.value(value).maxLength(200);
         },
         'customerData.status': function (value) {//状态
             return this.Validator.value(value).required().maxLength(200);
@@ -1020,8 +1015,13 @@ export default({
                 })
                 //获取所有的银行信息，也可以用groupid获取，
                 this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                    // console.log(res);
+                    console.log(res);
                     self.bankData = res.result.items;
+                    for(let i in self.bankData){
+                        if(self.bankData[i].isDefault == true){
+                            self.checkedAr = self.bankData[i]
+                        }
+                    }
                 })
 
                 //获取所有的地址信息，也可以用contactId获取
@@ -1098,7 +1098,6 @@ export default({
                 //业务地区*1
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
                     // console.log(res);
-                    console.log(res)
                     self.opAr = res.result;
                     // self.opAr=[{
                     //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
@@ -1123,14 +1122,14 @@ export default({
                 });
                 //地址类型
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AddressType'}).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.addAr = res.result;
                 },function(res){
                     console.log('err'+res)
                 });
                 //运输方式
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.tranAr = res.result;
                 },function(res){
                     console.log('err'+res)
@@ -1235,15 +1234,22 @@ export default({
         saveBankModify:function(){//修改银行资料
             let self = this;
             if(self.updataBankList.length>0){
-                for(let i in self.updataBankList){
-                    this.$axios.puts('/api/services/app/ContactBankManagement/Update',self.updataBankList[i]).then(function(res){
-                        // console.log(res);
+                self.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:[],updateList:self.updataBankList,deleteList:[]}).then(function(res){
+                        console.log(res);
                         self.open('修改银行信息成功','el-icon-circle-check','successERP');
                         self.updataBankList = [];
                     }),function(res){
                         self.open('修改银行信息失败','el-icon-error','faildERP');
                     }
-                }
+                // for(let i in self.updataBankList){
+                //     this.$axios.puts('/api/services/app/ContactBankManagement/Update',self.updataBankList[i]).then(function(res){
+                //         // console.log(res);
+                //         self.open('修改银行信息成功','el-icon-circle-check','successERP');
+                //         self.updataBankList = [];
+                //     }),function(res){
+                //         self.open('修改银行信息失败','el-icon-error','faildERP');
+                //     }
+                // }
             }
         },
         saveAddressModify:function(){//修改地址
@@ -1338,15 +1344,15 @@ export default({
             let self = this;
             self.ifModify = true;
         },
-        handleBankEdit:function(index,row){//银行信息编辑
         
-        },
         handleBankChange:function(index,row){
+            // console.log(index)
             let self = this;
             let flag = false;
-            if(self.updataBankList.length==0){
+            if(self.updataBankList.length==0&&row.id>0){
                 flag = true;
-            }else if(self.updataBankList.length>=1){
+            }else if(self.updataBankList.length>=1&&row.id>0){
+                console.log('dada')
                 for(let i in self.updataBankList){
                     if(row.id != self.updataBankList[i].id){
                         flag = true;
@@ -1363,6 +1369,16 @@ export default({
                 // console.log(self.updataBankList)
             }
         },
+        getCurrentRow:function(index,row){//银行默认单选框
+            let self = this;
+            for(let i in self.bankData){
+                self.bankData[i].isDefault = false;
+            }
+            self.bankData[index].isDefault = true;
+            // self.updataBankList.push(row);
+            self.updataBankList.push(self.checkedAr)
+            
+        },
         handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
         },
@@ -1374,14 +1390,27 @@ export default({
         },
         handleBankDelete:function(index,row){//银行表格内删除操作
             let self = this;
-            this.bankData.splice(index,1);
-            self.addBankList.splice(index,1);
-            this.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:row.id}).then(function(res){
-                // console.log(res);
-                self.open('删除银行资料成功','el-icon-circle-check','successERP');
-            }),function(res){
-                self.open('删除银行资料失败','el-icon-error','faildERP');
-            };
+
+            self.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            self.bankData.splice(index,1);
+                            self.addBankList.splice(index,1);
+                            self.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:row.id}).then(function(res){
+                                self.open('删除银行资料成功','el-icon-circle-check','successERP');
+                            }),function(res){
+                                self.open('删除银行资料失败','el-icon-error','faildERP');
+                            };
+                        }).catch(() => {
+                            self.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                    });
+            
         },
         addColbank:function(){//银行增行
             let self = this;
@@ -1396,7 +1425,7 @@ export default({
                     "openingBank": '',
                     "contactPerson": '',
                     "phone": '',
-                    "isDefault": true
+                    "isDefault": false
                 };
                 self.bankData.unshift(self.xrows.newCol);
                 self.addBankList.unshift(self.xrows.newCol)
@@ -1450,7 +1479,7 @@ export default({
                 "completeAddress": "",
                 "contactPerson": "",
                 "phone": "",
-                "isDefault": true
+                "isDefault": false
             };
             self.addressData.unshift(self.yrows.newCol)
             self.addAddressList.unshift(self.yrows.newCol)
@@ -1507,9 +1536,7 @@ export default({
             self.ouData.unshift(self.zrows.newCol)
             self.addOuList.unshift(self.zrows.newCol)
         },    
-        getCurrentRow:function(){
-            
-        },
+        
         //-----------------------------------------------------------
 
         //---路由------open------------------------------------------
@@ -1566,7 +1593,12 @@ export default({
                 })
         },
         //-------------------------------------------------------------
-        
+        test:function(){
+            let self = this;
+            console.log(self.checkedAr)
+            console.log(self.addBankList)
+            console.log(self.updataBankList)
+        },
     }
        
 
