@@ -3,11 +3,11 @@
       <el-row class="bg-white">
             <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <i class="el-icon-search"></i>
+                    <el-col :span="18" class="btn-for-search">
+                        <img src="../../../static/image/common/search_btn.png">
                         <span>查询</span>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="2" :offset="4">
                         <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
@@ -75,16 +75,13 @@
 
             <el-col :span="ifWidth?19:24" class="border-left">
                 <el-row class="h48">
-                    <el-col :span="2" class="search-block"  v-show="!ifWidth">
-                        <div style="display:inline-block;line-height:47px" @click="openLeft">
+                    <el-col :span='2' class="search-block"  v-show="!ifWidth">
+                        <div @click="openLeft">
                             <img src="../../../static/image/common/search_btn.png">
-                        </div>
-                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
                             <span>查询</span>
+                            <span class='open-search'>+</span>
                         </div>
-                        <div class="out-img" @click="openLeft">
-                            <span>+</span>
-                        </div>
+                        
                     </el-col>
 
                     <el-col :span="22" class="pt5">
@@ -119,7 +116,7 @@
                     
                 </el-row>
 
-                <el-row class="pl10 pt10 pr10 pb10">
+                <el-row class="pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border @selection-change="handleSelectionChange" style="width: 100%" stripe>
                             <el-table-column type="selection" fixed></el-table-column>
@@ -190,6 +187,39 @@
                 </el-row>
             </el-col>   
       </el-row>
+      <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
   </div>
 </template>
 
@@ -260,18 +290,6 @@
             console.log(index)
             },
 
-            handleDelete:function(index,id){//表格内删除操作
-                let self = this;
-                this.allList.splice(index,1);
-                console.log(id)
-                this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:id}).then(function(res){
-                    console.log(res);
-                    self.open('删除仓库成功','el-icon-circle-check','successERP')
-                }).then(function(){
-
-                })
-            },
-
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
             },
@@ -302,6 +320,18 @@
                     });
                 });
             },
+            handleDelete:function(index,id){//表格内删除操作
+                let self = this;
+                console.log(id)
+                this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:id}).then(function(res){
+                    console.log(res);
+                    this.allList.splice(index,1);
+                    self.open('删除仓库成功','el-icon-circle-check','successERP')
+                },function(){
+                    self.errorMessage=true;
+                    self.open('删除失败','el-icon-error','faildERP');
+                })
+            },
             delRow(){
                 let self=this;
                 for(let i in self.multipleSelection){
@@ -320,6 +350,7 @@
                             self.getAllList();
                             self.open('删除成功','el-icon-circle-check','successERP');
                         },function(res){
+                            self.errorMessage=true;
                             self.open('删除失败','el-icon-error','faildERP');
                         })
                     }).catch(() => {
@@ -437,6 +468,11 @@
                 opAr:[],//业务地区下拉框
                 //-----------------------
 
+                //---提示错误dialog---------
+                detail_message_ifShow:false,
+                errorMessage:false,
+                //-------------------------
+
                 status: [{
                     value:"",
                     label: '全部'
@@ -547,41 +583,23 @@ input::-webkit-input-placeholder{
 .fs12{
     font-size: 12px;
 }
-.search_info_open{
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    border: 1px solid #E3E3E3;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 50%;
-    margin-left: 20px;
-}
 .border-left{
     border-left: 1px solid #E4E4E4;
     min-height: 380px;
 }
 </style>
+
 <style>
-.search-block{
-    border-right:1px solid #E3E3E3;
-    line-height:47px;
-    text-align:center;
-    cursor: pointer;
-}
-.out-img{
-    display: inline-block;
-    width: 16px;
-}
-.out-img span{
-    display: block;
+.res-list .open-search{
     background-image: url(../../../static/image/common/btn-circle.png);
     background-repeat: no-repeat;
     background-position: center;
     color: #E3E3E3;
-}
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
+} 
 .res-list .cell .el-input__inner{
     border:none;
     text-align:center;

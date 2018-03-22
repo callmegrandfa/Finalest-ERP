@@ -826,6 +826,8 @@
                 for(let i in self.repositoryAddressData){
                     self.repositoryAddressData[i].isDefault = false;
                 }
+
+                
                 self.repositoryAddressData[index].isDefault = true;
                 self.updateList.push(self.checkedAr)
             },
