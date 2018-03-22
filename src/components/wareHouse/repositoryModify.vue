@@ -7,6 +7,13 @@
                 </div>
                 <span class="btDetail">返回</span>
             </button>
+
+            <button @click="Update()" class="erp_bt bt_modify">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_modify.png">
+                </div>
+                <span class="btDetail">修改</span>
+            </button> 
                                             <!-- 保存修改 -->
             <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
                 <div class="btImg">
@@ -15,19 +22,14 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button @click="Cancel()" class="erp_bt bt_cancel">
+            <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
                 <span class="btDetail">取消</span>
             </button>
 
-            <button @click="Update()" class="erp_bt bt_modify">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_modify.png">
-                </div>
-                <span class="btDetail">修改</span>
-            </button> 
+            
 
             <div class="toggle-btn">
                 <span @click='ifShow = !ifShow'>收起</span>
@@ -353,7 +355,7 @@
                     <span class="btDetail">Excel</span>
                 </button>
 
-                <button class="erp_bt bt_auxiliary">
+                <button class="erp_bt bt_auxiliary" @click='test'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_auxiliary.png">
                     </div>
@@ -376,7 +378,18 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="phone" label="手机" >
+                    <el-table-column prop="phone" label="手机">
+                        <template slot-scope="scope">
+                            <input class="input-need" 
+                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                    v-model="scope.row.moblie"
+                                    :disabled='isEdit'
+                                    @change='handleChange(scope.$index,scope.row)'
+                                    type="text"/>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column prop="phone" label="电话">
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -386,7 +399,6 @@
                                     type="text"/>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="phoneNum" label="电话"></el-table-column>
 
                     <el-table-column prop="completeAddress" label="送货地址">
                         <template slot-scope="scope">
@@ -419,7 +431,12 @@
 
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault" :disabled='isEdit'></el-checkbox>
+                            <!-- <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault" :disabled='isEdit'></el-checkbox> -->
+                            <el-radio  :label="true" 
+                                                v-model="scope.row.isDefault" 
+                                                @change.native="getCurrentRow(scope.$index,scope.row)" 
+                                                @change="handleChange(scope.$index,scope.row)"
+                                                :disabled="isEdit"></el-radio>
                         </template>
                     </el-table-column>
 
@@ -589,6 +606,11 @@
                 this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',self.getRepositoryAddressParams).then(function(res){
                         // console.log(res);
                         self.repositoryAddressData = res.result;
+                        for(let i in self.repositoryAddressData){
+                            if(self.repositoryAddressData[i].isDefault == true){
+                                self.checkedAr = self.repositoryAddressData[i]
+                            }
+                        }
                     })
             },
             //------------------------------------------------------------
@@ -633,7 +655,7 @@
                 });
                 //运输方式
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
-                    // console.log(res);
+                    console.log(res);
                     self.transAr = res.result;
                 },function(res){
                     console.log('err'+res)
@@ -684,14 +706,13 @@
             createAddress:function(){//保存新增的仓库地址信息
                 let self = this;
                 if(self.addList.length>0){
-                    for(let i in self.addList){
-                        this.$axios.posts('/api/services/app/StockAddressManagement/Create',self.addList[i]).then(function(res){//创建
-                            console.log(res);
-                            self.open('新增仓库成功','el-icon-circle-check','successERP');
-                            self.loadData();
-                            self.clearData();
-                        })
-                    }
+                    this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
+                        console.log(res);
+                        self.open('新增仓库成功','el-icon-circle-check','successERP');
+                        self.addList = [];
+                        self.loadData();
+                        self.clearData();
+                    })
                 }
             },
             //------------------------------------------------------------
@@ -722,7 +743,8 @@
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
                     contactPerson:'',//联系人
-                    phone:'',//联系电话
+                    phone:'',
+                    moblie:'',
                     logisticsCompanyId:'',//物流公司
                     isDefault:false,//是否默认
                     remark:'',//备注
@@ -780,9 +802,9 @@
             handleChange:function(index,row){
                 let self = this;
                 let flag = false;
-                if(self.updateList.length==0){
+                if(self.updateList.length==0&&row.id>0){
                     flag = true;
-                }else if(self.updateList.length>=1){
+                }else if(self.updateList.length>=1&&row.id>0){
                     for(let i in self.updateList){
                         if(row.id != self.updateList[i].id){
                             flag = true;
@@ -798,6 +820,14 @@
                     self.updateList.push(row);
                     console.log(self.updateList)
                 }
+            },
+            getCurrentRow:function(index,row){//银行默认单选框
+                let self = this;
+                for(let i in self.repositoryAddressData){
+                    self.repositoryAddressData[i].isDefault = false;
+                }
+                self.repositoryAddressData[index].isDefault = true;
+                self.updateList.push(self.checkedAr)
             },
             handleDelete:function(index,row){//表格内删除操作
                 let self = this;
@@ -839,20 +869,20 @@
                 });
             },
 
-            clearData:function(){//清除创建的参数
-                let self = this;
-                self.createParams={
-                    groupId:'1',//集团ID
-                    stockId:self.$route.params.id,//仓库ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    phone:'',//联系电话
-                    logisticsCompanyId:'',//物流公司
-                    isDefault:false,//是否默认
-                    remark:'',//备注
-                };
-            },
+            // clearData:function(){//清除创建的参数
+            //     let self = this;
+            //     self.createParams={
+            //         groupId:'1',//集团ID
+            //         stockId:self.$route.params.id,//仓库ID
+            //         completeAddress:'',//详情地址
+            //         transportMethodId:'',//运输方式
+            //         contactPerson:'',//联系人
+            //         phone:'',//联系电话
+            //         logisticsCompanyId:'',//物流公司
+            //         isDefault:false,//是否默认
+            //         remark:'',//备注
+            //     };
+            // },
             back(){
                 this.$store.state.url='/repository/repositoryList/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -952,7 +982,12 @@
                     })
             },
             //-------------------------------------------------------------
-
+            test:function(){
+                let self = this;
+                console.log(self.checkedAr)
+                console.log(self.addList)
+                console.log(self.updateList)
+            },
         },
 
         data(){
@@ -1068,6 +1103,7 @@
                 idArray:{
                     ids:[]
                 },//需要删除的数组id
+                checkedAr:[],//加载时从表默认选择的数组
             }
         },
     }
