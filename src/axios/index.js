@@ -21,16 +21,31 @@ axios.interceptors.request.use((config) => {
     return Promise.reject(error);
   });
   
-//   //返回状态判断
-//   axios.interceptors.response.use((res) =>{
-//     if(!res.data.success){
-//       return Promise.reject(res);
-//     }
-//     return res;
-//   }, (error) => {
-//     //404等问题可以在这里处理
-//     return Promise.reject(error);
-//   });
+  //返回状态判断
+  axios.interceptors.response.use((res) =>{
+    if(!res.data.success){
+      return Promise.reject(res);
+    }
+    return res;
+  }, (error) => {
+    //404等问题可以在这里处理
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      return Promise.reject(error.response.data);
+      return Promise.reject(error.response.status);
+      return Promise.reject(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      return Promise.reject(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      return Promise.reject('Error', error.message);
+    }
+    return Promise.reject(error.config);
+  });
 // //公共方法：
 //   export function posts(url, params) {
 //     return new Promise((resolve, reject) => {
@@ -47,6 +62,25 @@ axios.interceptors.request.use((config) => {
 //   }
 
 //业务方法
+// axios.post(url, {'params':params})
+//       .catch(function (error) {
+//         if (error.response) {
+//           // The request was made and the server responded with a status code
+//           // that falls out of the range of 2xx
+//           console.log(error.response.data);
+//           console.log(error.response.status);
+//           console.log(error.response.headers);
+//         } else if (error.request) {
+//           // The request was made but no response was received
+//           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+//           // http.ClientRequest in node.js
+//           console.log(error.request);
+//         } else {
+//           // Something happened in setting up the request that triggered an Error
+//           console.log('Error', error.message);
+//         }
+//         console.log(error.config);
+//   });
   export default {
     posts(url, params) {
       return new Promise((resolve, reject) => {
@@ -70,7 +104,22 @@ axios.interceptors.request.use((config) => {
             reject(err);
           })
           .catch((error) => {
-            reject(error)
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+              console.log(error.request);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
           })
       })
     },
@@ -91,7 +140,7 @@ axios.interceptors.request.use((config) => {
       return new Promise((resolve, reject) => {
         axios.put(url, params)
           .then(response => {
-            resolve(response.data);
+            resolve(response.message);
           }, err => {
             reject(err);
           })

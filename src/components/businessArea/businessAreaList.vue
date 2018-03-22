@@ -473,6 +473,7 @@
                         _this.loadTree();
                     }
                 },function(res){
+                    console.log(res)
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -486,7 +487,7 @@
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
-                    alert(1)
+                    console.log(res)
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');

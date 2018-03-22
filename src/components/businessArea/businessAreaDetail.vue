@@ -476,6 +476,7 @@
                     _this.$store.state.url='/businessArea/businessAreaModify/'+res.result.id
                     _this.$router.push({path:_this.$store.state.url})//点击切换路由
                 },function(res){   
+                    console.log(res)
                     _this.errorMessage=true; 
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
