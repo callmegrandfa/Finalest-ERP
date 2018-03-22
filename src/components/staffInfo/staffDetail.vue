@@ -10,17 +10,18 @@
                                 </div>
                                 <span class="btDetail">返回</span>
                         </button>
-                        <button class="erp_bt bt_add" @click="addNew">
-                                <div class="btImg">
-                                    <img src="../../../static/image/common/bt_add.png">
-                                </div>
-                                <span class="btDetail">新增</span>
-                        </button>
+                        
                         <button class="erp_bt bt_save" @click="save">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_save.png">
                                 </div>
                                 <span class="btDetail">保存</span>
+                        </button>
+                        <button class="erp_bt bt_saveAdd" @click="addNew">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_saveAdd.png">
+                                </div>
+                                <span class="btDetail">保存并新增</span>
                         </button>
                     </el-col>
                 </el-row>
@@ -332,30 +333,74 @@
             },
             // 新增按钮：重新新增一个数据对象
             addNew(){
-              return   this.form={};
+                 let _this=this;
+                _this.$validate().then(
+                    function (success) {
+                        if (success) {
+                             _this.addList.employeeCode=_this.form.employeeCode;
+                            _this.addList.employeeName=_this.form.employeeName;
+                            _this.addList.ouId=_this.form.ouId;
+                            _this.addList.mobile=_this.form.mobile;
+                            _this.addList.deptId=_this.form.department;
+                            _this.addList.sex=_this.form.sex;
+                            _this.addList.birthday=_this.form.birthday;
+                            _this.addList.shopId=_this.form.shopName;
+                            _this.addList.remark=_this.form.remark;
+                            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
+                                            rsp=>{
+                                                // console.log(rsp);
+                                                _this.open('新增成功','el-icon-circle-check','successERP');
+                                                 _this.validation.reset();
+                                            },
+                                            res=>{
+                                                _this.open('新增失败','el-icon-error','faildERP');
+                                            }
+                            )
+                        }
+                      
+                    }
+                );
+                // this.save().then(
+                //     (success)=>{
+                //          this.validation.reset();
+                //     }
+                // );
+                // this.form={};
+               
             },
             // 保存---新增并保存
             save(){
                 let _this=this;
-                _this.$validate();
-                _this.addList.employeeCode=_this.form.employeeCode;
-                _this.addList.employeeName=_this.form.employeeName;
-                _this.addList.ouId=_this.form.ouId;
-                _this.addList.mobile=_this.form.mobile;
-                _this.addList.deptId=_this.form.department;
-                _this.addList.sex=_this.form.sex;
-                _this.addList.birthday=_this.form.birthday;
-                _this.addList.shopId=_this.form.shopName;
-                _this.addList.remark=_this.form.remark;
-                _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
-                                rsp=>{
-                                    // console.log(rsp);
-                                    _this.open('新增成功','el-icon-circle-check','successERP');
-                                },
-                                res=>{
-                                    _this.open('新增失败','el-icon-error','faildERP');
-                                }
-                )
+                _this.$validate().then(
+                    function (success) {
+                        if (success) {
+                             _this.addList.employeeCode=_this.form.employeeCode;
+                            _this.addList.employeeName=_this.form.employeeName;
+                            _this.addList.ouId=_this.form.ouId;
+                            _this.addList.mobile=_this.form.mobile;
+                            _this.addList.deptId=_this.form.department;
+                            _this.addList.sex=_this.form.sex;
+                            _this.addList.birthday=_this.form.birthday;
+                            _this.addList.shopId=_this.form.shopName;
+                            _this.addList.remark=_this.form.remark;
+                            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
+                                            rsp=>{
+                                                // console.log(rsp);
+                                                _this.open('新增成功','el-icon-circle-check','successERP');
+                                            },
+                                            res=>{
+                                                _this.open('新增失败','el-icon-error','faildERP');
+                                            }
+                            )
+                        }
+                      
+                    }
+                );
+
+
+
+
+                
                 
                 // _this.$validate();
                 

@@ -4,8 +4,8 @@
             <el-row class="bg_White" id="left-box">
                     <el-col>
                         <el-row class="h48 topSearch">
-                            <el-col :span="18">
-                                <i class="el-icon-search"></i>
+                            <el-col :span="18" class="pl10">
+                                <img src="../../../static/image/common/search_btn.png">
                                 <span class="topSearch">查询</span>
                             </el-col>
                             <el-col :span="5">
@@ -13,7 +13,7 @@
                             </el-col>
                         </el-row>
                         <div style="margin-top:20px" class="formWrap">
-                           <el-form ref="form" :model="formList" label-width="80px" size="mini">
+                           <el-form ref="form" :model="formList" label-width="80px" size="mini">      
                                 <el-form-item label="职员编码">
                                     <el-input v-model="formList.EmployeeCode"></el-input>
                                 </el-form-item>
@@ -38,7 +38,7 @@
                                     <el-option label="测试店铺0" value="0"></el-option>
                                     </el-select>
                                 </el-form-item>
-                            </el-form>
+                          </el-form>
                         </div>
                         <el-row>
                             <el-col :span="8">&nbsp;</el-col>
@@ -175,7 +175,6 @@
                                       
                          </div> 
                 </el-row>
-                   
             </div>
         </el-col>   	    
        
@@ -448,6 +447,10 @@
 .topSearch {
   font-size: 18px;
 }
+.topSearch .pl10 {
+  padding-left: 10px;
+}
+
 .circle {
   display: inline-block;
   height: 15px;

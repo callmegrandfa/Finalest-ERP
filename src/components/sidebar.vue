@@ -158,7 +158,12 @@ export default {
                 thirdInfo:[
                     {name:'职员资料',address:'staff'}
                 ]
-            }],
+            },{
+                name:'商品管理',
+                thirdInfo:[
+                    {name:'计量单位',address:'count'}
+                ]
+            },],
             childNodes:[],//菜单数据
         }
         

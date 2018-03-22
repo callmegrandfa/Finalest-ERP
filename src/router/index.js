@@ -181,6 +181,8 @@ const staffDetail = () =>
     import ('../components/staffInfo/staffDetail')
 const staffModify = () =>
     import ('../components/staffInfo/staffModify')
+const count=()=>import('../components/count/count')
+const countList=()=>import('../components/count/countList')
 
 let redirectRouter = function(routerName) { //重定向
     let activeRouter = store.state.activeRouter;
@@ -516,6 +518,18 @@ const routes = [
                     { path: '/role/roleDetail/:id', component: roleDetail, name: 'roleDetail' },
                     { path: '/role/roleModify/:id', component: roleModify, name: 'roleModify' },
                 ]
+            },
+            {
+                path: '/count',
+                component: count,
+                name: 'count',
+                redirect: function () { //计量单位
+                    return redirectRouter('count')
+                },
+                children:[
+                    { path: '/count/countList/:id', component: countList, name:'countList'}
+                ],
+
             },
         ]
     },
