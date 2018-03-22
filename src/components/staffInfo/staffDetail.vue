@@ -216,10 +216,10 @@
                 // },
                 
                  employeeIdoptions:[//------职员类型--------
-                    { label: 1,text: '采购'},
-                    { label: 2,text: '财务'}, 
-                    { label: 3,text: '销售'}, 
-                    { label: 4,text: '总部'}, 
+                    { label: '1',text: '采购'},
+                    { label: '2',text: '业务'}, 
+                    { label: '3',text: '仓库'}, 
+                    { label: '4',text: '店员'}, 
                 ],
                 ouIdMsg:[],// 业务组织信息
                 depMsg:[],//部门信息
@@ -238,7 +238,7 @@
                         "shopId": 0,
                         "remark": "string",
                         "employeeTypeIds": [
-                            0
+                            
                         ],
                         "id": 0
                         }
@@ -333,11 +333,11 @@
             },
             // 新增按钮：重新新增一个数据对象
             addNew(){
-                 let _this=this;
+                let _this=this;
                 _this.$validate().then(
                     function (success) {
                         if (success) {
-                             _this.addList.employeeCode=_this.form.employeeCode;
+                            _this.addList.employeeCode=_this.form.employeeCode;
                             _this.addList.employeeName=_this.form.employeeName;
                             _this.addList.ouId=_this.form.ouId;
                             _this.addList.mobile=_this.form.mobile;
@@ -345,27 +345,22 @@
                             _this.addList.sex=_this.form.sex;
                             _this.addList.birthday=_this.form.birthday;
                             _this.addList.shopId=_this.form.shopName;
+                            _this.addList.employeeTypeIds=_this.form.employeeTypes;
                             _this.addList.remark=_this.form.remark;
                             _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
                                             rsp=>{
                                                 // console.log(rsp);
-                                                _this.open('新增成功','el-icon-circle-check','successERP');
-                                                 _this.validation.reset();
+                                                _this.open('保存成功','el-icon-circle-check','successERP');
+                                                _this.reset();
                                             },
                                             res=>{
-                                                _this.open('新增失败','el-icon-error','faildERP');
+                                                _this.open('保存失败','el-icon-error','faildERP');
                                             }
                             )
                         }
                       
                     }
                 );
-                // this.save().then(
-                //     (success)=>{
-                //          this.validation.reset();
-                //     }
-                // );
-                // this.form={};
                
             },
             // 保存---新增并保存
@@ -374,7 +369,7 @@
                 _this.$validate().then(
                     function (success) {
                         if (success) {
-                             _this.addList.employeeCode=_this.form.employeeCode;
+                            _this.addList.employeeCode=_this.form.employeeCode;
                             _this.addList.employeeName=_this.form.employeeName;
                             _this.addList.ouId=_this.form.ouId;
                             _this.addList.mobile=_this.form.mobile;
@@ -382,14 +377,15 @@
                             _this.addList.sex=_this.form.sex;
                             _this.addList.birthday=_this.form.birthday;
                             _this.addList.shopId=_this.form.shopName;
+                            _this.addList.employeeTypeIds=_this.form.employeeTypes;
                             _this.addList.remark=_this.form.remark;
                             _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
                                             rsp=>{
-                                                // console.log(rsp);
-                                                _this.open('新增成功','el-icon-circle-check','successERP');
+                                                console.log(_this.addList);
+                                                _this.open('保存成功','el-icon-circle-check','successERP');
                                             },
                                             res=>{
-                                                _this.open('新增失败','el-icon-error','faildERP');
+                                                _this.open('保存失败','el-icon-error','faildERP');
                                             }
                             )
                         }
@@ -404,7 +400,20 @@
                 
                 // _this.$validate();
                 
-            }
+            },
+            // 重新验证并设置值
+            reset(){
+                    this.form.employeeCode='';
+                    this.form.employeeName='';
+                    this.form.ouId='';
+                    this.form.mobile='';
+                    this.form.department='';
+                    this.form.sex='';
+                    this.form.birthday='';
+                    this.form.shopName='';
+                    this.form.remark=''; 
+                    this.validation.reset();               
+            },
         },
     }
 </script>
@@ -454,6 +463,7 @@
 .staff_detail_form .el-input__inner{
     height:30px;
     font-size:12px;
+    border: 1px solid #dcdfe6 !important;
 }
 </style>
 

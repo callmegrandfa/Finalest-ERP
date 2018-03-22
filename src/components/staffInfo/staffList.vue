@@ -66,7 +66,7 @@
                     
                     <el-col :span="22" class="border-left">
                                 <el-row class="h48">
-                                    <el-col :span="18" class="pt5">
+                                    <el-col :span="16" class="pt5">
                                             <button class="erp_bt bt_add" @click="addStaff">
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/bt_add.png">
@@ -123,56 +123,64 @@
                 </el-row> 
                  <el-row class="pb10">
                         <div id="bg-white" style="background-color: rgba(251, 252, 253, 1);">
-                            <el-table :data="allList" border style="width: 100%"  @selection-change="handleSelectionChange"  stripe>
+                            <el-table  :data="allList" border style="width: 100%"  @selection-change="handleSelectionChange"  stripe>
                                 <el-table-column type="selection" width="50">
                                 </el-table-column>
-                                <el-table-column prop="employeeCode" label="职员编码" width="120" fixed>
+                                <el-table-column prop="employeeCode" label="职员编码"  >
                                     <template slot-scope="scope">
                                         <el-button type="text" size="small" @click="checkDetail(scope.row)">{{allList[scope.$index].employeeCode}}</el-button>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="employeeName" label="职员名称"  width="120" fixed> 
+                                <el-table-column prop="employeeName" label="职员名称"   > 
                                     <template slot-scope="scope">
                                         <el-button type="text" size="small" @click="checkDetail(scope.row)">{{allList[scope.$index].employeeName}}</el-button>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="ouFullname" label="业务组织"  width="120">
+                                <el-table-column prop="ouFullname" label="业务组织"  >
                                 </el-table-column>
-                                <el-table-column prop="mobile" label="手机号码" width="120">
+                                <el-table-column prop="mobile" label="手机号码" >
                                 </el-table-column>
                                 <el-table-column prop="deptName" label="所属部门"
-                                            width="120">
+                                            >
                                 </el-table-column>
                                             <el-table-column prop="sexTValue" label="性别"
-                                            width="120">
+                                            >
                                 </el-table-column>
                                 <el-table-column prop="birthday" label="生日"
-                                            width="120">
+                                            >
                                 </el-table-column>
-                                <el-table-column prop="employeeTypes.employeeTypeidTValue" label="职员类型"
-                                            width="120">
+                                <el-table-column prop="employeeTypes[0].employeeTypeidTValue" label="职员类型" >
                                 </el-table-column>
                                 <el-table-column prop="shopName" label="所属店铺"
-                                            width="120">
+                                            >
                                 </el-table-column>
-                                <el-table-column label="操作" width="120" fixed="right">
+                                <el-table-column label="操作" width="120">
                                 <template slot-scope="scope">
                                     <el-button @click="checkDetail(scope.row)" type="text" size="small">查看</el-button>
                                     <el-button type="text" size="small" @click="confirmDelThis(scope.row)">删除</el-button>
                                 </template>
                                 </el-table-column>
                             </el-table>
-                            <div class="fenyeqi">
+                            <!-- 分页器 -->
+                            <!-- <div class="fenyeqi">
                                 <el-row :gutter="24">
                                     <el-col  :offset="12">
                                         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageIndex" :page-sizes="[10, 20, 30, 40]" :page-size="page_size" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
                                         </el-pagination>
                                     </el-col>
                                 </el-row> 
-                            </div>  
+                            </div>   -->
+                            <el-row class="fenyeqi">
+                                <el-col :span="18">
+                                     <p>共<span class="colorRed">{{totalCount}}</span>条，当前第<span class="colorRed">{{pageIndex}}</span>页，共<span class="colorRed">{{totalPage}}</span>页，每页行数<button class="bgC">{{page_size}}</button>，第<button class="bgC">{{pageIndex}}</button>页 </p>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-pagination  background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageIndex" :page-sizes="[10, 20, 30, 40]" :page-size="page_size" layout=" prev, pager, next" :total="totalCount">
+                                        </el-pagination>
+                                    
+                                </el-col>
 
-
-                                      
+                            </el-row>
                          </div> 
                 </el-row>
             </div>
@@ -271,6 +279,7 @@
                 .then(rsp => {
                 _this.allList = rsp.result.items;
                 _this.totalCount = rsp.result.totalCount;
+                _this.totalPage=Math.ceil(rsp.result.totalCount/_this.page_size);
                 // console.log(_this.allList);
                 // console.log(rsp.result.items);
                 });
@@ -514,7 +523,21 @@
 }
 .fenyeqi{
     margin-top:10px;
+    padding-left: 10px;
+    font-size: 12px;
 }
+.colorRed{
+    color:red ;
+}
+.bgC{
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    width: 30px;
+    border-radius: 3px;
+
+}
+
 </style>
 
 <style>
@@ -532,6 +555,14 @@
 }
 .staffList-wrapper .el-input__inner {
     border: 1px solid #dcdfe6 !important;
+}
+.staffList-wrapper .el-form-item__label{
+    font-size: 12px;
+    color: #000;
+}
+.staffList-wrapper  .el-table th>.cell{
+    color: #000;
+    font-size: 12px;
 }
 </style>
 
