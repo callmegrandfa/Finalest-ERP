@@ -8,6 +8,13 @@
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
+
+                <button @click="Update()" class="erp_bt bt_modify">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_modify.png">
+                    </div>
+                    <span class="btDetail">修改</span>
+                </button> 
                 
                 <button @click="save" class="erp_bt bt_save" v-show='!isEdit'>
                     <div class="btImg">
@@ -23,21 +30,13 @@
                     <span class="btDetail">保存并新增</span>
                 </button>
 
-                <button @click="Cancel()" class="erp_bt bt_cancel">
+                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
                     <span class="btDetail">取消</span>
                 </button>
 
-                <button @click="Update()" class="erp_bt bt_modify">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_modify.png">
-                    </div>
-                    <span class="btDetail">修改</span>
-                </button> 
-
-                
 
                 <button class="erp_bt bt_auxiliary bt_width">
                     <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>

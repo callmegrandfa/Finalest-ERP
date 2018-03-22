@@ -161,7 +161,7 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
                 <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
             </span>
         </el-dialog>
@@ -171,7 +171,7 @@
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -226,6 +226,12 @@
                 detail_message_ifShow:false,
                 errorMessage:false,
                 // 错误信息提示结束
+ //--------------确认删除开始-----------------               
+                dialogUserConfirm:false,//用户删除保存提示信息
+                row:{},//存储用户点击删除条目数据
+                choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
+                multipleSelection: [],//复选框选中数据
+//--------------确认删除开始-----------------    
                 searchLeft:'',
                 timeout:null,
                 restaurants:[],
@@ -263,7 +269,7 @@
                 pageIndex:0,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
-                multipleSelection: [],//复选框选中数据
+                
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
@@ -283,9 +289,7 @@
                 detailParentName:'default',//tree节点点击获取前往detail新增页上级业务地区name
                 ouId:'default',//tree节点点击获取前往detail新增页组织id
 
-                dialogUserConfirm:false,//用户删除保存提示信息
-
-                row:{},
+                
             }
         },
         validators: {
@@ -426,59 +430,65 @@
                  
             },
              handleSelectionChange(val) {//点击复选框选中的数据
-                this.multipleSelection = val;
-            },
-            confirm(){
                 let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    _this.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                    }).then(() => {//确认
-                        _this.delRow()
-                    }).catch(() => {//取消
-                    });
+                _this.multipleSelection=[];
+                $.each(val,function(index,value){
+                    _this.multipleSelection.push({'id':value.id})
+                })
+            },
+            confirm(){//多项删除
+                let _this=this;
+                _this.choseAjax='rows'
+                if(_this.multipleSelection.length>0){
+                _this.dialogUserConfirm=true;
                 }
             },
-            delRow(){
+            confirmDelThis(row){//单项删除
                 let _this=this;
-                for(let i=0;i<_this.multipleSelection.length;i++){
-                    _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:_this.multipleSelection[i].id})
-                    .then(function(res){
-                        _this.open('删除成功','el-icon-circle-check','successERP');
-                        if(_this.load){
-                            _this.loadTableData();
-                            _this.loadTree();
-                        }
-                    },function(res){
-                        _this.errorMessage=true;
-                        _this.open('删除失败','el-icon-error','faildERP');
-                    })
-                }
-            },
-            confirmDelThis(row){
-                let _this=this;
+                _this.choseAjax='row'
                 _this.row=row;
-                // _this.dialogUserConfirm=true;
-                _this.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                }).then(() => {//确认
-                    _this.delThis(row)
-                }).catch(() => {//取消
-                });
+                _this.dialogUserConfirm=true;
             },
-            delThis(row){//删除行
+            sureAjax(){
                 let _this=this;
-                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:row.id})
+                if(_this.choseAjax=='row'){
+                    _this.delThis()
+                }else if(_this.choseAjax=='rows'){
+                    _this.delRow()
+                }
+            },
+            delRow(){//多项删除
+                let _this=this;
+                let data={
+                    "createList": [],
+                    "updateList": [],
+                    "deleteList": _this.multipleSelection
+                }
+                _this.$axios.posts('/api/services/app/AreaManagement/CUDAggregate',data)
                 .then(function(res){
+                     _this.dialogUserConfirm=false;
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                    if(_this.load){
+                        _this.loadTableData();
+                        _this.loadTree();
+                    }
+                },function(res){
+                    console.log(res)
+                    _this.dialogUserConfirm=false;
+                    _this.errorMessage=true;
+                    _this.open('删除失败','el-icon-error','faildERP');
+                })
+            },
+            delThis(){//单项删除
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:_this.row.id})
+                .then(function(res){
+                    _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
+                    console.log(res)
+                    _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
@@ -530,108 +540,13 @@
                 })
                 }
             },
-            TreeAdd(event,node,data){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
-                let _this=this;
-                _this.clearTreeData();
-                _this.tittle='新增';
-                _this.isAdd=true;
-                _this.showParent=false;
-                _this.dialogFormVisible=true;
-                _this.dialogData.groupId=data.groupId;//集团id
-                _this.dialogData.areaParentId=data.id;//父级id
-                
-            },
-            TreeDel(event,node,data){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
-                let _this=this;
-                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
-                .then(function(res){
-                    _this.loadTree();
-                    _this.loadTableData();
-                },function(res){    
-
-                })
-            },
-            TreeModify(event,node,data){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
-                let _this=this;
-                _this.clearTreeData();
-                _this.tittle='修改';
-                _this.isAdd=false;
-                _this.dialogFormVisible=true;
-                 _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
-                    .then(function(res){
-                        _this.dialogData=res.result;
-                    },function(res){    
-
-                    })
-            },
-            sendAjax(){
-                let _this=this;
-                _this.$validate()
-                .then(function (success) {
-                    if (success) {
-                        if(_this.isAdd){
-                            _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.dialogData)
-                            .then(function(res){
-                                _this.dialogFormVisible=false;
-                                _this.loadTree();
-                                _this.loadTableData();
-                            },function(res){    
-
-                            })
-                        }else{
-                            _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.dialogData)
-                            .then(function(res){
-                                _this.dialogFormVisible=false;
-                                _this.loadTree();
-                                _this.loadTableData();
-                            },function(res){    
-
-                            })
-                        }
-                    }    
-                })
-            },
-            showTable(event,node,data){
-                let _this=this;
-                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id})
-                .then(function(res){
-                    _this.tableData=res.result;
-                    _this.tableData.unshift(data);
-                    _this.totalItem=res.result.length;
-                    _this.tableLoading=false;
-                    },function(res){
-                    _this.tableLoading=false;
-                })
-            },
+            
+            
             filterNode(value, data) {
                 if (!value) return true;
                  return data.areaName.indexOf(value) !== -1;
             },
-            renderContent(h, { node, data, store }) {
-                return (
-                <span class="TreeNode el-tree-node__label"
-                on-mousedown ={ (event) => this.whichButton(event,node, data) } 
-                on-click={ (event) => this.showTable(event,node, data) }
-                style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
-                  {node.label}
-                   <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
-                    </div>
-                </span>);
-                
-            },
+            
             clearTreeData(){
                 let _this=this;
                 _this.dialogData={

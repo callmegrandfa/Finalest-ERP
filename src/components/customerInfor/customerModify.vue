@@ -9,6 +9,13 @@
                 <span class="btDetail">返回</span>
             </button>
 
+            <button @click="Update()" class="erp_bt bt_modify">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_modify.png">
+                </div>
+                <span class="btDetail">修改</span>
+            </button>
+
             <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_save.png">
@@ -16,19 +23,14 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button @click="Cancel()" class="erp_bt bt_cancel">
+            <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
                 <span class="btDetail">取消</span>
             </button>
 
-            <button @click="Update()" class="erp_bt bt_modify">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_modify.png">
-                </div>
-                <span class="btDetail">修改</span>
-            </button>
+            
             
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
@@ -467,7 +469,7 @@
                             <span class="btDetail">增行</span>
                         </button>
 
-                        <button class="erp_bt bt_auxiliary mb10">
+                        <button class="erp_bt bt_auxiliary mb10" @click='test'>
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_auxiliary.png">
                             </div>
@@ -541,12 +543,6 @@
                                 </template>
                             </el-table-column>
 
-                            <!-- <el-table-column prop="ifDefault" label="默认">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="bankData[scope.$index].ifDefault" :disabled="isEdit"></el-checkbox>
-                                </template>
-                            </el-table-column> -->
-
                             <el-table-column prop="isDefault" label="默认">
                                 <template scope="scope">
                                     <el-radio  :label="true" 
@@ -559,8 +555,8 @@
 
                             <el-table-column label='操作'>
                                 <template slot-scope="scope" >
-                                    <span>{{scope.row.isDefault}}</span>
-                                    <el-button @click="handleBankDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                    <!-- <span>{{scope.row.isDefault}}</span> -->
+                                    <el-button @click="handleBankDelete(scope.$index,scope.row)" type="text" size="small" :disabled="isEdit">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -907,6 +903,7 @@ export default({
                 "transport_method_id": '',
                 "is_default": true
             },
+            checkedAr:[],
         }
     },
     validators: {
@@ -1020,6 +1017,11 @@ export default({
                 this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
                     console.log(res);
                     self.bankData = res.result.items;
+                    for(let i in self.bankData){
+                        if(self.bankData[i].isDefault == true){
+                            self.checkedAr = self.bankData[i]
+                        }
+                    }
                 })
 
                 //获取所有的地址信息，也可以用contactId获取
@@ -1096,7 +1098,6 @@ export default({
                 //业务地区*1
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
                     // console.log(res);
-                    console.log(res)
                     self.opAr = res.result;
                     // self.opAr=[{
                     //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
@@ -1121,14 +1122,14 @@ export default({
                 });
                 //地址类型
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AddressType'}).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.addAr = res.result;
                 },function(res){
                     console.log('err'+res)
                 });
                 //运输方式
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.tranAr = res.result;
                 },function(res){
                     console.log('err'+res)
@@ -1345,12 +1346,13 @@ export default({
         },
         
         handleBankChange:function(index,row){
-            console.log(index)
+            // console.log(index)
             let self = this;
             let flag = false;
-            if(self.updataBankList.length==0){
+            if(self.updataBankList.length==0&&row.id>0){
                 flag = true;
-            }else if(self.updataBankList.length>=1){
+            }else if(self.updataBankList.length>=1&&row.id>0){
+                console.log('dada')
                 for(let i in self.updataBankList){
                     if(row.id != self.updataBankList[i].id){
                         flag = true;
@@ -1373,7 +1375,8 @@ export default({
                 self.bankData[i].isDefault = false;
             }
             self.bankData[index].isDefault = true;
-            self.updataBankList
+            // self.updataBankList.push(row);
+            self.updataBankList.push(self.checkedAr)
             
         },
         handleSelectionChange:function(val){//点击复选框选中的数据
@@ -1590,7 +1593,12 @@ export default({
                 })
         },
         //-------------------------------------------------------------
-        
+        test:function(){
+            let self = this;
+            console.log(self.checkedAr)
+            console.log(self.addBankList)
+            console.log(self.updataBankList)
+        },
     }
        
 

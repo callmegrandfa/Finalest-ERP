@@ -17,26 +17,33 @@
                             <diV class="triangle"></diV> 
                             <ul class="slidUl slid2" >
                                 <vue-scroll :ops="ops">
-                                <li class="three" v-for="it in i.thirdInfo">
-                                    <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
-                                </li>
+                                    <li class="three" v-for="it in i.thirdInfo">
+                                        <a href="javascript:;" :menuUrl="it.address" :menuname="it.name" @click="storageData">{{it.name}}</a>
+                                    </li>
                                 </vue-scroll> 
                             </ul>
                         </li>
                     </vue-scroll> 
                 </ul>
             </li>
+
+
+
+
+
+
+
             <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1">
                 <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
                 <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
                 <ul class="slidUl slid1">
-                    <vue-scroll :ops="ops">
+                    <vue-scroll :key="item.id" :ops="ops">
                         <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
                             <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
                             <a href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{i.moduleName}}</a>
                             <diV class="triangle"></diV>
                             <ul class="slidUl slid2" >
-                                <vue-scroll :ops="ops">
+                                <vue-scroll :key="i.id" :ops="ops">
                                     <li class="three" v-for="it in i.childNodes">
                                         <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
                                         <a href="javascript:;" :menuId="it.id" :moduleParentId="it.moduleParentId" :menuUrl="it.url" :menuname="it.moduleName" @click="storageData">{{it.moduleName}}</a>
@@ -87,12 +94,12 @@ export default {
                     {name:'用户资料',address:'user'},
                 ]
             },
-            // {
-            //     name:'角色管理',
-            //     thirdInfo:[
-            //         {name:'角色资料',address:'role'},
-            //     ]
-            // },
+            {
+                name:'角色管理',
+                thirdInfo:[
+                    {name:'角色资料',address:'role'},
+                ]
+            },
             {
                 name:'采购管理',
                 thirdInfo:[
@@ -176,6 +183,7 @@ export default {
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
             _this.childNodes=res;
+            console.log(2)
             _this.$nextTick(function(){
                 let x={}
                 $('.one').each(function(index){
@@ -195,7 +203,7 @@ export default {
                 })
             })
         },function(res){
-
+            console.log(res)
         })
     },
     mounted:function(){
@@ -238,13 +246,31 @@ export default {
         switch(){
             this.$router.push({name:this.$store.state.url,params:{id:'default'}})//点击切换路由
         },
+        uniqueArray(array1, array2){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i].id == array2[j].id) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
+                }
+            }
+            return result;
+        },
         storageData(e){
+            let _this=this;
             if(e.target.getAttribute("menuurl")&&e.target.getAttribute("menuurl")!=''){
                 var flag=false;
-                if(this.$store.state.slidbarData){
-                    this.$store.state.temporary=this.$store.state.slidbarData;
+                if(_this.$store.state.slidbarData){
+                    _this.$store.state.temporary=_this.$store.state.slidbarData;
                 }
-                var temporary=this.$store.state.temporary;
+                var temporary=_this.$store.state.temporary;
                 var name=e.target.getAttribute("menuname");
                 var menuUrl=e.target.getAttribute("menuurl");
                 if(temporary.length==0){//temporary为空
@@ -260,24 +286,22 @@ export default {
                     }
                 }
                 var pushItem={'name':name,'url':menuUrl};
-                this.$store.state.url=menuUrl;//储存当前url在router里的name
+                _this.$store.state.url=menuUrl;//储存当前url在router里的name
                 // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
                 if(flag){
                     temporary.push(pushItem);
-                    // let closeItem=this.$store.state.closeItem;
-                    // if(closeItem.length>0){
-                    //     for(let i=0;i<closeItem.length;i++){
-                    //         if(closeItem[i]==menuUrl){
-                    //             closeItem.splice(i,1)
-                    //         }
-                    //     }
-                    // }
                 }
                 window.localStorage.setItem('ERP',JSON.stringify(temporary));
-
+                _this.switch();
+                if(_this.$route.fullPath=='/'){
+                    $.each(temporary,function(index,val){
+                        if(val.name==pushItem.name){
+                            temporary.splice(index,1)
+                        }
+                    })
+                    window.localStorage.setItem('ERP',JSON.stringify(temporary));
+                }
                 
-                 
-                this.switch();
             }
         }     
     }

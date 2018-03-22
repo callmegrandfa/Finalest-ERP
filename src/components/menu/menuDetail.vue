@@ -1,6 +1,6 @@
 <template>
     <div class="menuDetail">
-        <el-row>
+        <el-row  class="fixed">
             <el-col :span="24">
                 <button @click="back" class="goBack"><i class="fa fa-angle-left" aria-hidden="true"></i> </button>
                 <span class="pageName">添加模块(菜单)</span>
@@ -306,7 +306,7 @@
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -374,7 +374,7 @@
                 systemId:'',
                 moduleParentId:'',
                 url:'',
-                status:'',
+                status:1,
             },
            contain: [{ 
                 value:'0',
@@ -727,10 +727,10 @@
                 _this.is_nocheked=false
             }
         },
-        noCheck_push_check:{
+        noCheck_push_check(){
 
         },
-        check_push_noCheck:{
+        check_push_noCheck(){
 
         },
 

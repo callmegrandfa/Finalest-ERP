@@ -1010,7 +1010,6 @@ end-placeholder="结束日期">
   text-align: center;
   cursor: pointer;
   border-radius: 50%;
-  margin-left: 20px;
 }
 
 .out-img{
@@ -1086,9 +1085,9 @@ line-height: 35px;
 display: inline-block;
 width: 66px;
 height: 35px;
-background-color: #f2f2f2;
-border: none;
-border-radius: 3px;
+background-color: #fff;
+border: 1px solid #c9d1d1;
+border-radius: 5px;
 font-size: 12px;
 margin-right: 10px;
 cursor: pointer;
@@ -1103,6 +1102,7 @@ position: absolute;
 right: -4px;
 top: -4px;
 color: #cccccc;
+background-color: #fff;
 }
  .bgcolor.bgLongWidth .addRole:hover i{
 color:#f66;
@@ -1153,16 +1153,27 @@ color:#f66;
   float:left;background:#fff;width:100%;
 }
 .commodity .left-box{
-  min-width:275px;width:275px;float:left;
+  min-width:340px;width:340px;float:left;
+}
+.commodity .height1{
+  height: 1px;
+}
+.commodity .closeLeft{
+  display:inline-block;
+  margin-top:-4px;
+  vertical-align: middle;
 }
 .commodity .bgcolor{
     height: 35px;
     font-size: 12px;
     margin-bottom: 15px;
-    width: 250px;
+    width: 100%;
     float: left;
     overflow: hidden;
     margin-right: 5px;
+}
+.commodity .bgcolor>label{
+      width: 117px;
 }
 .commodity .smallBgcolor{
   height: 28px;
@@ -1193,11 +1204,11 @@ color:#f66;
   right:0;
   top:0;
 }
-.dialog_confirm_message .el-dialog{
+.el-dialog{
   border-radius: 10px;
 }
 
-.dialog_confirm_message .el-dialog__header{
+.el-dialog__header{
   border-bottom: 1px solid #e4e4e4;
 }
 .dialog_confirm_message .dialog_font{
@@ -1209,7 +1220,13 @@ color:#f66;
   font-weight: bold
 }
 .dialog_confirm_message .el-dialog__body{
+  position: relative;
   padding: 40px 20px 50px 20px;
+}
+.dialog_confirm_message .el-dialog__body .detail_message_btnWapper{
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .dialog_confirm_message .dialog_body_message{
   text-align: center;
@@ -1228,7 +1245,7 @@ color:#f66;
   font-size: 50px;
   margin-bottom: 20px;
 }
-.dialog_confirm_message .el-dialog__footer{
+.el-dialog__footer{
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   padding: 0;
@@ -1254,4 +1271,51 @@ color:#f66;
 }
 .dialog_confirm_message .el-dialog__footer .dialog_footer_bt:focus{
   outline: none;
+}
+/* 搜索按钮样式 */
+.btn-for-search{
+  /* vertical-align: middle; */
+  height:48px;
+  line-height: 48px;
+}
+.btn-for-search img{
+    display: inline-block;
+    margin-top: -4px;
+    vertical-align: middle;
+}
+.btn-for-search span{
+  font-size: 18px;
+  display: inline-block;
+}
+.search-block{
+  border-right:1px solid #E3E3E3;
+  line-height:47px;
+  cursor: pointer;
+  height: 47px;
+}
+.search-block div{
+  display: inline-block;
+  width: 100%;
+}
+.search-block img{
+  display: inline-block;
+  margin-top: 13px;
+  margin-left:10px;
+  float: left;
+}
+.search-block span{
+  font-size: 18px;
+  display: inline-block;
+  float: left;
+  margin-left: 10px;
+}
+/* 自定义穿梭框 */
+.el_transfer.el-button.is-round{
+  padding: 10px;
+  margin: auto;
+  display: block;
+}
+.el_transfer.el-button.is-round:first-child{
+  margin-top: 60px;
+  margin-bottom: 10px;
 }

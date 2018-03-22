@@ -5,33 +5,33 @@
                 <el-col :span="24">
                     <el-row class="h48 pl15">
                         <el-col :span="18">
-                            <i class="el-icon-search"></i>
+                            <img src="../../../static/image/common/search_btn.png"  class="closeLeft">
                             <span>查询</span>
                         </el-col>
                         <el-col :span="5">
-                            <span class="fs12 open" @click="closeLeft">+ 收起</span>
+                            <span class="fs12 search_info_open" @click="closeLeft">-</span>
                         </el-col>
                     </el-row>
                     <div style="margin-top:20px">
                         <el-row>
-                            <el-col :span="7">
+                            <el-col :span="9">
                                 <div class="bgcolor smallBgcolor">
                                 <label >商品类目</label>
                             </div>
                             </el-col>
-                            <el-col :span="14">
+                            <el-col :span="12">
                                 <div class="bgcolor smallBgcolor">
                                 <el-input v-model="search.CategoryName"></el-input>
                                 </div>
                             </el-col>
                         </el-row>
                         <el-row >
-                            <el-col :span="7" >
+                            <el-col :span="9" >
                                 <div class="bgcolor smallBgcolor">
                                     <label><small></small>服务类(虚拟)</label>
                                 </div>
                             </el-col>
-                            <el-col :span="14">
+                            <el-col :span="12">
                                 <div class="bgcolor smallBgcolor">
                                     <el-select  v-model="search.IsService">
                                         <el-option v-for="item in SystemOptions" :key="item.value" :label="item.label" :value="item.value">
@@ -41,12 +41,12 @@
                             </el-col>
                         </el-row>
                         <el-row >
-                            <el-col :span="7" >
+                            <el-col :span="9" >
                                 <div class="bgcolor smallBgcolor">
                                     <label><small></small>状态</label>
                                 </div>
                             </el-col>
-                            <el-col :span="14">
+                            <el-col :span="12">
                                 <div class="bgcolor smallBgcolor">
                                     <el-select  v-model="search.Status" >
                                         <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value">
@@ -57,7 +57,9 @@
                         </el-row>
                     </div>
                     <el-row>
-                        <el-col :span="7">&nbsp;</el-col>
+                        <el-col :span="9">
+                            <div class="height1"></div>
+                        </el-col>
                         <el-col style="text-align:center;margin-bottom:20px;" :span="14">
                             <span class="search-btn" @click="query"  style="float:left;">查询</span>
                         </el-col>
@@ -239,7 +241,7 @@ import Tree from '../../base/tree/tree'
                let self = this;
                self.ifWidth = true;
                let obgh=document.getElementById('bgj');
-                obgh.style.width="calc(100% - 275px)";
+                obgh.style.width="calc(100% - 340px)";
             },
             btmlog:function(data){
                 if(data=="启用"){
@@ -250,7 +252,7 @@ import Tree from '../../base/tree/tree'
                 let oleftBox=document.getElementById('left-box');
                 oleftBox.style.display="block";
                 let ocate= document.getElementById('bgj')
-                ocate.style.width="calc(100% - 275px)";
+                ocate.style.width="calc(100% - 340px)";
             },
             querylog:function(data){
                 let _this=this;
@@ -269,6 +271,7 @@ import Tree from '../../base/tree/tree'
                 _this.tableLoading=true;
                 _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
+                    console.log(_this.tableData);
                     let countPage=res.result.totalCount;
                     _this.tableLoading=false;
                     _this.totalPage = Math.ceil(countPage/_this.eachPage);
@@ -424,7 +427,7 @@ import Tree from '../../base/tree/tree'
 }
 #bgj{
     float: left;
-    width: calc(100% - 275px);
+    width: calc(100% - 340px);
 }
 </style>
 

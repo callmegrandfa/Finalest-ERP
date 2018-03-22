@@ -3,11 +3,11 @@
         <el-row class="bg-white">
             <el-col :span="ifWidth?5:0" v-show="ifWidth">
                 <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:10px;">
+                    <el-col :span="18" class="btn-for-search">
+                        <img src="../../../static/image/common/search_btn.png">
                         <span>查询</span>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="2" :offset="4">
                         <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
@@ -162,15 +162,12 @@
             <el-col :span="ifWidth?19:24" class="border-left">
                 <el-row class="h48">
                     <el-col :span='2' class="search-block"  v-show="!ifWidth">
-                        <div style="display:inline-block" @click="openLeft">
+                        <div @click="openLeft">
                             <img src="../../../static/image/common/search_btn.png">
-                        </div>
-                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
                             <span>查询</span>
+                            <span class='open-search'>+</span>
                         </div>
-                        <div class="out-img" @click="openLeft">
-                            <span>+</span>
-                        </div>
+                        
                     </el-col>
 
                     <el-col :span='22' class="pt5">
@@ -455,9 +452,14 @@
             let self = this;
             this.$axios.gets('/api/services/app/ContactManagement/QueryByCondition',{ContactClassId:self.queryClass,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
                 console.log(res);
-                self.allList = res.result;
-                self.total = res.result.length;
-                self.totalPage = Math.ceil(self.total/self.eachPage)
+                if(res.length>0){
+                    self.allList = res.result;
+                    self.total = res.result.length;
+                    self.totalPage = Math.ceil(self.total/self.eachPage)
+                }else{
+                    self.loadAllList();
+                }
+                
             },function(res){
                 console.log('err'+res)
             })
@@ -714,38 +716,21 @@ w100{
     border-radius: 3px;
     cursor: pointer;
 }
-.search_info_open{
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    border: 1px solid #E3E3E3;
-    color: #cccccc;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 50%;
-    margin-left: 20px;
-}
+
 .text-right{
     text-align: right;
 }
-.search-block{
-    border-right:1px solid #E3E3E3;
-    line-height:47px;
-    text-align:center;
-    cursor: pointer;
-}
-.out-img{
-    display: inline-block;
-    width: 16px;
-}
-.out-img span{
-    display: block;
+
+.open-search{
     background-image: url(../../../static/image/common/btn-circle.png);
     background-repeat: no-repeat;
     background-position: center;
     color: #E3E3E3;
-}
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
+} 
 </style>
 
 <style>

@@ -1007,7 +1007,7 @@
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -1093,14 +1093,14 @@ export default({
                 "contactPerson": "",
                 "phone": "",
                 "address": "",
-                "status": "",//整数
+                "status": 1,//整数
                 "remark": "",
                 "ouTypes":[1,3],//组织职能
             },
             basCompany:{//其他信息
                 "ouParentid": "",//整数
                 "legalPerson": "",
-                "status": "",//整数
+                "status": 1,//整数
                 "isGroupCompany": false,
                 "regCapital": "",//整数
                 "vatRegno": "",
