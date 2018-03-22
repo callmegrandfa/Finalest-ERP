@@ -378,7 +378,7 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="phone" label="手机">
+                    <el-table-column prop="moblie" label="手机">
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -708,7 +708,7 @@
                 if(self.addList.length>0){
                     this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
                         console.log(res);
-                        self.open('新增仓库成功','el-icon-circle-check','successERP');
+                        self.open('新增地址成功','el-icon-circle-check','successERP');
                         self.addList = [];
                         self.loadData();
                         self.clearData();
@@ -821,7 +821,7 @@
                     console.log(self.updateList)
                 }
             },
-            getCurrentRow:function(index,row){//银行默认单选框
+            getCurrentRow:function(index,row){//默认单选框
                 let self = this;
                 for(let i in self.repositoryAddressData){
                     self.repositoryAddressData[i].isDefault = false;

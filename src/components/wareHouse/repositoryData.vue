@@ -341,16 +341,18 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="phone" label="手机" >
+                    <el-table-column prop="moblie" label="手机" >
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.phone" 
+                                    v-model="scope.row.moblie" 
                                     v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="phoneNum" label="电话">
+
+                    
+                    <el-table-column prop="phone" label="电话">
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -371,7 +373,7 @@
 
                     <el-table-column prop="transportMethodId" label="运输方式">
                         <template slot-scope="scope">
-                            <el-select  v-model="scope.row.transportMethodId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                            <el-select  v-model="scope.row.transportMethodId" :class="[scope.$index%2==0?'bgw':'bgp']">
                                 <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
                             </el-select>
@@ -387,7 +389,10 @@
                     </el-table-column>
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
-                            <el-checkbox v-model="allList[scope.$index].isDefault"></el-checkbox>
+                            <el-radio  :label="true" 
+                                        v-model="scope.row.isDefault" 
+                                        @change.native="getCurrentRow(scope.$index,scope.row)"
+                                        :disabled="isEdit"></el-radio>
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" label="备注">
@@ -623,17 +628,26 @@
             createReAddress:function(id){//创建新的仓库地址
                 let self = this;
                 console.log(id)
-                // self.createRepositoryAddressParams.stockId = id;
-                // console.log(self.addList)
                 if(self.addList.length>0){
                     for(let i in self.addList){
                         self.addList[i].stockId = id;
-                        console.log(self.addList)
-                        this.$axios.posts('api/services/app/StockAddressManagement/Create',self.addList[i]).then(function(res){
-                            // console.log(res);
-                            self.open('创建仓库地址成功','el-icon-circle-check','successERP');
-                        })
                     }
+                    // for(let i in self.addList){
+                    //     self.addList[i].stockId = id;
+                    //     console.log(self.addList)
+                    //     this.$axios.posts('api/services/app/StockAddressManagement/Create',self.addList[i]).then(function(res){
+                    //         // console.log(res);
+                    //         self.open('创建仓库地址成功','el-icon-circle-check','successERP');
+                    //     })
+                    // }
+
+                    this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
+                        console.log(res);
+                        self.open('创建仓库地址成功','el-icon-circle-check','successERP');
+                        self.addList = [];
+                        // self.loadData();
+                        // self.clearData();
+                    })
                 }
                 
             },
@@ -650,6 +664,7 @@
                     completeAddress:'',//详情地址
                     transportMethodId:'',//运输方式
                     contactPerson:'',//联系人
+                    moblie:'',
                     phone:'',//联系电话
                     logisticsCompanyId:'',//物流公司
                     isDefault:false,//是否默认
@@ -662,6 +677,15 @@
 
             handleEdit:function(index){//表格内编辑操作
 
+            },
+
+            getCurrentRow:function(index,row){//默认单选框
+                let self = this;
+                for(let i in self.addList){
+                    self.addList[i].isDefault = false;
+                }
+                self.addList[index].isDefault = true;
+                // self.updateList.push(self.checkedAr)
             },
 
             handleSelectionChange:function(val){//点击复选框选中的数据
