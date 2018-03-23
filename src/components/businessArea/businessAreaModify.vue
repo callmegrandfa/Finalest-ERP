@@ -280,9 +280,8 @@
         detail_message_ifShow:false,
         errorMessage:false,
         // 错误信息提示结束
-        dialogUserConfirm:false,//信息更改提示控制
-        choseDoing:'',//存储点击按钮判断信息
-        test:'',
+       
+
         search_ou:'',
         item_ou:{
             id:"",
@@ -336,7 +335,10 @@
             ou:[],//组织
         },
         update:false,
-        isEdit:true,//是否可编辑
+        isEdit:true,//是否可编辑 
+        dialogUserConfirm:false,//信息更改提示控制
+        choseDoing:'',//存储点击按钮判断信息
+        update_click:false,   
         response:{
             details:'',
             message:'',

@@ -101,6 +101,11 @@ export default new vuex.Store({
             { name: 'userDetail', url: '/user/userDetail/:id', parent: 'user' } ,
             { name: 'userModify', url: '/user/userModify/:id', parent: 'user' } ,
 
+            { name: 'userGroup', url: '/userGroup/userGroupList/:id', parent: '', default: '/userGroup/userGroupList/:id' } , //用户组
+            { name: 'userGroupList', url: '/userGroup/userGroupList/:id', parent: 'userGroup' } ,
+            { name: 'userGroupDetail', url: '/userGroup/userGroupDetail/:id', parent: 'userGroup' } ,
+            { name: 'userGroupModify', url: '/userGroup/userGroupModify/:id', parent: 'userGroup' } ,
+
             { name: 'role', url: '/role/roleList/:id', parent: '', default: '/role/roleList/:id' } , //角色资料
             { name: 'roleList', url: '/role/roleList/:id', parent: 'role' } ,
             { name: 'roleDetail', url: '/role/roleDetail/:id', parent: 'role' } ,

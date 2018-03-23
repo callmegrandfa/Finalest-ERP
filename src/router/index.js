@@ -82,6 +82,15 @@ const userDetail = () =>
     import ('../components/user/userDetail')
 const userModify = () =>
     import ('../components/user/userModify')
+//用户组管理
+const userGroup = () =>
+    import ( /* webpackChunkName: "group-userGroup" */ '../components/userGroup/userGroup')
+const userGroupList = () =>
+    import ( /* webpackChunkName: "group-userGroup" */ '../components/userGroup/userGroupList')
+const userGroupDetail = () =>
+    import ('../components/userGroup/userGroupDetail')
+const userGroupModify = () =>
+    import ('../components/userGroup/userGroupModify')
     //角色管理
 const role = () =>
     import ( /* webpackChunkName: "group-role" */ '../components/role/role')
@@ -520,10 +529,23 @@ const routes = [
                 ]
             },
             {
+                path: '/userGroup',
+                component: userGroup,
+                name: 'userGroup',
+                redirect: function() { //用户组资料
+                    return redirectRouter('userGroup')
+                },
+                children: [
+                    { path: '/userGroup/userGroupList/:id', component: userGroupList, name: 'userGroupList' },
+                    { path: '/userGroup/userGroupDetail/:id', component: userGroupDetail, name: 'userGroupDetail' },
+                    { path: '/userGroup/userGroupModify/:id', component: userGroupModify, name: 'userGroupModify' },
+                ]
+            },
+            {
                 path: '/role',
                 component: role,
                 name: 'role',
-                redirect: function() { //用户资料
+                redirect: function() { //角色资料
                     return redirectRouter('role')
                 },
                 children: [
