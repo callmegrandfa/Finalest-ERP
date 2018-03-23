@@ -1730,9 +1730,11 @@ export default({
 }
 .customerBasicForm .bgw .el-input__inner{
     background-color:white;
+    text-align: center;
 }
 .customerBasicForm .bgg .el-input__inner{
     background-color:#FAFAFA;
+    text-align: center;
 }
 .customerBasicForm .el-select-dropdown__item{
     text-align: center;

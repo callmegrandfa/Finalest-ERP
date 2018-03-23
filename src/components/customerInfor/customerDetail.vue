@@ -533,12 +533,10 @@
                         <el-table :data="bankData" stripe border style="width: 100%">
                             <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
                                 <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.settlementCurrencyId" 
-                                        type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
-                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                   <el-select  v-model="scope.row.settlementCurrencyId" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                        <el-option  v-for="item in curencyAr" :key="item.id" :label="item.currencyName" :value="item.id" >
+                                        </el-option>
+                                    </el-select>
                                 </template>
                             </el-table-column>
 
@@ -548,7 +546,6 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.accountNo" 
                                         type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -559,7 +556,6 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.accountName" 
                                         type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -570,7 +566,6 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.openingBank" 
                                         type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -581,7 +576,6 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.contactPerson" 
                                         type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
@@ -592,14 +586,17 @@
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.phone" 
                                         type="text"    
-                                        @click="handleBankChange(scope.$index,scope.row)"
                                         v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="ifDefault" label="默认">
+                            <el-table-column prop="isDefault" label="默认">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="bankData[scope.$index].ifDefault"></el-checkbox>
+                                    <!-- <el-checkbox v-model="bankData[scope.$index].ifDefault"></el-checkbox> -->
+                                    <el-radio  :label="true" 
+                                                v-model="scope.row.isDefault" 
+                                                @change.native="getCurrentRow(scope.$index,scope.row)"
+                                                :disabled="isEdit"></el-radio>
                                 </template>
                             </el-table-column>
                             <el-table-column label='操作'>
@@ -704,9 +701,14 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="ifDefault" label="默认">
+                            <el-table-column prop="isDefault" label="默认">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="addressData[scope.$index].ifDefault"></el-checkbox>
+                                    <!-- <el-radio  :label="true" 
+                                                v-model="scope.row.isDefault" 
+                                                @change.native="getCurrentRow(scope.$index,scope.row)" 
+                                                @change="handleBankChange(scope.$index,scope.row)"
+                                                :disabled="isEdit"></el-radio> -->
                                 </template>
                             </el-table-column>
                             <el-table-column label='操作'>
@@ -944,6 +946,9 @@ export default({
             gradeAr:[],//客户等级下拉框
             typeAr:[],//客户类型下拉框
             statusAr:[],//状态下拉框
+            curencyAr:[],//币种下拉
+            addAr:[],//地址类型下拉
+            tranAr:[],//运输方式下拉
             //-----------------------
             
             activeName: 'bank',//tabs标签页默认激活name
@@ -1005,7 +1010,7 @@ export default({
                 is_default: true
             },
             bankData:[],//银行数据列表，开始为空
-            updataBankList:[],//需要修改的银行信息
+            // updataBankList:[],//需要修改的银行信息
             addBankList:[],//需要添加的银行信息
 
             addressData:[],//地址数据列表，开始为空
@@ -1185,6 +1190,27 @@ export default({
                 },function(res){
                     console.log('err'+res)
                 });
+                //币种
+                self.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                    // console.log(res);
+                    self.curencyAr = res.result.items;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //地址类型
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AddressType'}).then(function(res){
+                    // console.log(res);
+                    self.addAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
+                //运输方式
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
+                    // console.log(res);
+                    self.tranAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
                 
             },
         //------------------------------------------------------------------
@@ -1264,15 +1290,13 @@ export default({
         //---创建数据-----------------------------------------------
         createBank:function(){//创建银行资料
             let self = this;
-            if(self.addBankList.length>0){
-                for(let i in self.addBankList){
-                    this.$axios.posts('/api/services/app/ContactBankManagement/Create',self.addBankList[i]).then(function(res){         
-                        self.open('创建银行资料成功','el-icon-circle-check','successERP');
-                        // console.log(res)
-                    }),function(res){
-                        self.open('创建银行资料失败','el-icon-error','faildERP');
-                    };
-                }
+            if(self.addBankList.length>0){    
+                this.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:self.addBankList,updateList:[],deleteList:[]}).then(function(res){         
+                    self.open('创建银行资料成功','el-icon-circle-check','successERP');
+                    // console.log(res)
+                }),function(res){
+                    self.open('创建银行资料失败','el-icon-error','faildERP');
+                };
             }
         },
         addColbank:function(){//银行增行
@@ -1288,7 +1312,7 @@ export default({
                     "openingBank": '',
                     "contactPerson": '',
                     "phone": '',
-                    "isDefault": true
+                    "isDefault": false
                 };
                 self.bankData.unshift(self.xrows.newCol);
                 self.addBankList.unshift(self.xrows.newCol)
@@ -1320,7 +1344,7 @@ export default({
                     "completeAddress": "",
                     "contactPerson": "",
                     "phone": "",
-                    "isDefault": true
+                    "isDefault": false
                 };
                 self.addressData.unshift(self.yrows.newCol);
                 self.addAddressList.unshift(self.yrows.newCol)
@@ -1361,27 +1385,41 @@ export default({
         handleBankEdit:function(index,row){//银行信息编辑
             
         },
-        handleBankChange:function(index,row){
-            let self = this;
-            let flag = false;
-            if(self.updataBankList.length==0){
-                flag = true;
-            }else if(self.updataBankList.length>=1){
-                for(let i in self.updataBankList){
-                    if(row.id != self.updataBankList[i].id){
-                        flag = true;
-                        console.log(flag) 
-                    }else{
-                        flag= false;
-                        break;        
-                    }
-                }
-            }
+        // handleBankChange:function(index,row){
+        //     let self = this;
+        //     let flag = false;
+        //     if(self.updataBankList.length==0){
+        //         flag = true;
+        //     }else if(self.updataBankList.length>=1){
+        //         for(let i in self.updataBankList){
+        //             if(row.id != self.updataBankList[i].id){
+        //                 flag = true;
+        //                 console.log(flag) 
+        //             }else{
+        //                 flag= false;
+        //                 break;        
+        //             }
+        //         }
+        //     }
 
-            if(flag){
-                self.updataBankList.push(row);
-                console.log(self.updataBankList)
+        //     if(flag){
+        //         self.updataBankList.push(row);
+        //         console.log(self.updataBankList)
+        //     }
+        // },
+        getCurrentRow:function(index,row){//银行默认单选框
+            let self = this;
+            for(let i in self.bankData){
+                self.bankData[i].isDefault = false;
             }
+            self.bankData[index].isDefault = true;
+            for(let i in addBankList){
+                self.addBankList[i].isDefault = false;
+            }
+            self.addBankList[index].isDefault = true;
+            // self.updataBankList.push(row);
+            // self.updataBankList.push(self.checkedAr)
+            
         },
         handleBankDelete:function(index,row){//银行表格内删除操作
             let self = this;
@@ -1694,15 +1732,15 @@ export default({
 .mb10{
     margin-bottom: 10px;
 }
-.input-need{
+/* .input-need{
     border:none;
     outline: none;
     width: 100%;
     height: 23px;
     line-height: 23px;
     text-align: center
-}
-.customerBasicForm .el-table th {
+} */
+/* .customerBasicForm .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -1710,7 +1748,25 @@ export default({
     padding: 5px 0;
     text-align: center;
     background-color: #ececec;
+} */
+.customerBasicForm .el-input__inner{
+    height:35px !important;
+    border:1px solid white;
+    /* border-color:white !important; */
 }
-
+.customerBasicForm .all-table .el-input__inner{
+    height:35px !important;
+    text-align: center !important;
+    border:none !important;
+}
+.customerBasicForm .bgw .el-input__inner{
+    background-color:white;
+}
+.customerBasicForm .bgg .el-input__inner{
+    background-color:#FAFAFA;
+}
+.customerBasicForm .el-select-dropdown__item{
+    text-align: center;
+}
   </style>
   
