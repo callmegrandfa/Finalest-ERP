@@ -148,6 +148,11 @@ export default {
                      {name:'部门资料',address:'department'}, 
                 ]
             },{
+                name:'店铺资料',
+                thirdInfo:[
+                     {name:'店铺资料',address:'shop'}, 
+                ]
+            },{
                 name:'商品属性',
                 thirdInfo:[
                     {name:'商品属性列表',address:'commodity'},   
