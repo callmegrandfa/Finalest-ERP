@@ -590,10 +590,9 @@
             // 所属组织
             _this.selectData.OUType=res.result;
             })
-            _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
+            _this.$axios.gets('/api/services/app/UserGroup/GetAll').then(function(res){ 
             // 所属用户组
                 _this.selectData.userGroupId=res.result.items;
-                _this.totalCount=res.result.totalCount;
             })
             ///api/services/app/Language/GetLanguages
             _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
