@@ -41,97 +41,97 @@
             <el-col :span="24" class="getPadding"> 
                 <div class="tipsWrapper" name="ouId">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.ouId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.ouId') }}</p>
+                        <p class="msgDetail">错误提示：所属组织{{ validation.firstError('customerData.ouId') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="contactCode">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.contactCode')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactCode') }}</p>
+                        <p class="msgDetail">错误提示：编码{{ validation.firstError('customerData.contactCode') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="contactName">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.contactName')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactName') }}</p>
+                        <p class="msgDetail">错误提示：名称{{ validation.firstError('customerData.contactName') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="contactFullName">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.contactFullName')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactFullName') }}</p>
+                        <p class="msgDetail">错误提示：全称{{ validation.firstError('customerData.contactFullName') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="mnemonic">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.mnemonic')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.mnemonic') }}</p>
+                        <p class="msgDetail">错误提示：助记码{{ validation.firstError('customerData.mnemonic') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="contactClassId">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.contactClassId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactClassId') }}</p>
+                        <p class="msgDetail">错误提示：客户分类{{ validation.firstError('customerData.contactClassId') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="contactWorkPropertyId">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.contactWorkPropertyId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactWorkPropertyId') }}</p>
+                        <p class="msgDetail">错误提示：客户性质{{ validation.firstError('customerData.contactWorkPropertyId') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="contactGradeId">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.contactGradeId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.contactGradeId') }}</p>
+                        <p class="msgDetail">错误提示：客户等级{{ validation.firstError('customerData.contactGradeId') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="isCustomer">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.isCustomer')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.isCustomer') }}</p>
+                        <p class="msgDetail">错误提示：客户类型{{ validation.firstError('customerData.isCustomer') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="ficaOuId">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.ficaOuId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.ficaOuId') }}</p>
+                        <p class="msgDetail">错误提示：对应财务组织{{ validation.firstError('customerData.ficaOuId') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="taxCode">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.taxCode')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.taxCode') }}</p>
+                        <p class="msgDetail">错误提示：纳税登记号{{ validation.firstError('customerData.taxCode') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="opAreaId">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.opAreaId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.opAreaId') }}</p>
+                        <p class="msgDetail">错误提示：业务地区{{ validation.firstError('customerData.opAreaId') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="adAreaId">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.adAreaId')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.adAreaId') }}</p>
+                        <p class="msgDetail">错误提示：行政地区{{ validation.firstError('customerData.adAreaId') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="legalPerson">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.legalPerson')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.legalPerson') }}</p>
+                        <p class="msgDetail">错误提示：法人代表{{ validation.firstError('customerData.legalPerson') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="regAddress">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.regAddress')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.regAddress') }}</p>
+                        <p class="msgDetail">错误提示：注册地址{{ validation.firstError('customerData.regAddress') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="manager">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.manager')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.manager') }}</p>
+                        <p class="msgDetail">错误提示：负责人{{ validation.firstError('customerData.manager') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="phone">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.phone')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.phone') }}</p>
+                        <p class="msgDetail">错误提示：电话{{ validation.firstError('customerData.phone') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="remark">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.remark')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.remark') }}</p>
+                        <p class="msgDetail">错误提示：备注{{ validation.firstError('customerData.remark') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="status">
                     <div class="errorTips" :class="{block : !validation.hasError('customerData.status')}">
-                        <p class="msgDetail">错误提示：{{ validation.firstError('customerData.status') }}</p>
+                        <p class="msgDetail">错误提示：状态{{ validation.firstError('customerData.status') }}</p>
                     </div>
                 </div>
 
@@ -141,6 +141,7 @@
                                placeholder=""
                                class="ouId"
                                :disabled="isEdit"
+                               @focus="showErrprTipsSelect"
                                @change='Modify()'
                                :class="{redBorder : validation.hasError('customerData.ouId')}">
 
@@ -172,6 +173,7 @@
                     <el-input v-model="customerData.contactCode" 
                               placeholder="" 
                               :disabled="isEdit"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.contactCode')}"
                               class="contactCode"
                               @change='Modify()'></el-input>
@@ -183,6 +185,7 @@
                     <el-input v-model="customerData.contactName" 
                               placeholder=""
                               :disabled="isEdit"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.contactName')}"
                               class="contact"
                               @change='Modify()'></el-input>
@@ -194,6 +197,7 @@
                     <el-input v-model="customerData.contactFullName" 
                               placeholder=""
                               :disabled="isEdit"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.contactFullName')}"
                               class="contactFullName" 
                               @change='Modify()'></el-input>
@@ -204,6 +208,7 @@
                     <el-input v-model="customerData.mnemonic" 
                               placeholder=""
                               :disabled="isEdit"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.mnemonic')}"
                               class="mnemonic"
                               @change='Modify()'></el-input>
@@ -217,6 +222,7 @@
                                placeholder=""
                                :disabled="isEdit"
                                @change='Modify()'
+                               @focus="showErrprTipsSelect"
                                class="contactClassId"
                                :class="{redBorder : validation.hasError('customerData.contactClassId')}">
                         <el-input placeholder="搜索..."
@@ -249,6 +255,7 @@
                                placeholder=""
                                :disabled="isEdit"
                                @change='Modify()'
+                               @focus="showErrprTipsSelect"
                                class="contactWorkPropertyId"
                                :class="{redBorder : validation.hasError('customerData.contactWorkPropertyId')}">
                         <el-option v-for="item in propertyAr" 
@@ -264,6 +271,7 @@
                                placeholder=""
                                :disabled="isEdit"
                                @change='Modify()'
+                               @focus="showErrprTipsSelect"
                                class="contactGradeId"
                                :class="{redBorder : validation.hasError('customerData.contactGradeId')}">
                         <el-option v-for="item in gradeAr" 
@@ -279,6 +287,7 @@
                                placeholder=""
                                :disabled="isEdit"
                                @change='Modify()'
+                               @focus="showErrprTipsSelect"
                                class="contactTypeId"
                                :class="{redBorder : validation.hasError('customerData.contactTypeId')}">
                         <el-option v-for="item in typeAr" 
@@ -294,6 +303,7 @@
                                placeholder=""
                                :disabled="isEdit"
                                class="ficaOuId"
+                               @focus="showErrprTipsSelect"
                                @change='Modify()'
                                :class="{redBorder : validation.hasError('customerData.ficaOuId')}">
                         <el-input placeholder="搜索..."
@@ -321,6 +331,7 @@
                     <el-input v-model="customerData.taxCode" 
                               placeholder=""
                               :disabled="isEdit"
+                              @focus="showErrprTips"
                               class="taxCode"
                               :class="{redBorder : validation.hasError('customerData.taxCode')}"
                               @change='Modify()'></el-input>
@@ -331,6 +342,7 @@
                     <el-select v-model="customerData.opAreaId"
                                class="opAreaId"
                                :disabled="isEdit"
+                               @focus="showErrprTipsSelect"
                                placeholder=""
                                @change='Modify()'
                                :class="{redBorder : validation.hasError('customerData.opAreaId')}">
@@ -360,6 +372,7 @@
                                placeholder=""
                                :disabled="isEdit"
                                @change='Modify()'
+                               @focus="showErrprTipsSelect"
                                class="adAreaId"
                                :class="{redBorder : validation.hasError('customerData.adAreaId')}">
                         <el-input placeholder=""
@@ -389,6 +402,7 @@
                               placeholder=""
                               :disabled="isEdit" 
                               class="legalPerson"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.legalPerson')}"
                               @change='Modify()'></el-input>
                 </div>
@@ -399,6 +413,7 @@
                               placeholder=""
                               :disabled="isEdit" 
                               class="regAddress"
+                              @focus="showErrprTips"
                               :class="{redBorder : validation.hasError('customerData.regAddress')}"
                               @change='Modify()'></el-input>
                 </div>
@@ -408,6 +423,7 @@
                     <el-input v-model="customerData.manager" 
                               placeholder=""
                               :disabled="isEdit" 
+                              @focus="showErrprTips"
                               class="manager"
                               :class="{redBorder : validation.hasError('customerData.manager')}"
                               @change='Modify()'></el-input>
@@ -418,6 +434,7 @@
                     <el-input v-model="customerData.phone" 
                               placeholder=""
                               :disabled="isEdit" 
+                              @focus="showErrprTips"
                               class="phone"
                               :class="{redBorder : validation.hasError('customerData.phone')}"
                               @change='Modify()'></el-input>
@@ -428,6 +445,7 @@
                     <el-input v-model="customerData.remark" 
                               placeholder=""
                               :disabled="isEdit" 
+                              @focus="showErrprTips"
                               class="remark"
                               :class="{redBorder : validation.hasError('customerData.remark')}"
                               @change='Modify()'></el-input>
@@ -439,6 +457,7 @@
                                class="status"
                                placeholder=""
                                @change='Modify()'
+                               @focus="showErrprTipsSelect"
                                :disabled="isEdit" 
                                :class="{redBorder : validation.hasError('customerData.status')}">
                         <el-option v-for="item in statusAr"  
@@ -1204,6 +1223,8 @@ export default({
             let self = this;
             if(self.ifModify){
                 self.saveCustomerModify();
+            }else{
+                self.open('没有需要保存的项目','el-icon-warning','noticERP');
             }
             
             self.saveBankModify();

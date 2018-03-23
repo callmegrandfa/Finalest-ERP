@@ -40,75 +40,75 @@
         <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
                 <el-row class="bg-white ft12 pr10 pt10">
-                    <el-col :span="24">
+                    <el-col :span="24" class="getPadding">
                         <div class="tipsWrapper" name="ouId">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.ouId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.ouId') }}</p>
+                                <p class="msgDetail">错误提示：所属组织{{ validation.firstError('repositoryData.ouId') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="stockCode">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.stockCode')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.stockCode') }}</p>
+                                <p class="msgDetail">错误提示：编码{{ validation.firstError('repositoryData.stockCode') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="stockName">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.stockName')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.stockName') }}</p>
+                                <p class="msgDetail">错误提示：名称{{ validation.firstError('repositoryData.stockName') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="stockFullName">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.stockFullName')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.stockFullName') }}</p>
+                                <p class="msgDetail">错误提示：全称{{ validation.firstError('repositoryData.stockFullName') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="mnemonic">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.mnemonic')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.mnemonic') }}</p>
+                                <p class="msgDetail">错误提示：助记码{{ validation.firstError('repositoryData.mnemonic') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="stockTypeId">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.stockTypeId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.stockTypeId') }}</p>
+                                <p class="msgDetail">错误提示：仓库类型{{ validation.firstError('repositoryData.stockTypeId') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="opAreaId">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.opAreaId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.opAreaId') }}</p>
+                                <p class="msgDetail">错误提示：业务地区{{ validation.firstError('repositoryData.opAreaId') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="adAreaId">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.adAreaId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.adAreaId') }}</p>
+                                <p class="msgDetail">错误提示：行政地区{{ validation.firstError('repositoryData.adAreaId') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="manager">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.manager')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.manager') }}</p>
+                                <p class="msgDetail">错误提示：负责人{{ validation.firstError('repositoryData.manager') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="phone">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.phone')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.phone') }}</p>
+                                <p class="msgDetail">错误提示：电话{{ validation.firstError('repositoryData.phone') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="email">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.email')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.email') }}</p>
+                                <p class="msgDetail">错误提示：email{{ validation.firstError('repositoryData.email') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="fax">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.fax')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.fax') }}</p>
+                                <p class="msgDetail">错误提示：传真{{ validation.firstError('repositoryData.fax') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="remark">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.remark')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.remark') }}</p>
+                                <p class="msgDetail">错误提示：备注{{ validation.firstError('repositoryData.remark') }}</p>
                             </div>
                         </div>
                         <div class="tipsWrapper" name="status">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.status')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('repositoryData.status') }}</p>
+                                <p class="msgDetail">错误提示：状态{{ validation.firstError('repositoryData.status') }}</p>
                             </div>
                         </div>
                         <div class="bgcolor">
@@ -117,6 +117,7 @@
                                        :class="{redBorder : validation.hasError('repositoryData.ouId')}"
                                        :disabled="isEdit"
                                        class="ouId"
+                                       @focus="showErrprTipsSelect"
                                        @change='Modify()'
                                        placeholder="">
                                 <el-input placeholder="搜索..."
@@ -145,6 +146,7 @@
                                       v-model="repositoryData.stockCode" 
                                       @change="Modify()"
                                       :disabled="isEdit"
+                                      @focus="showErrprTips"
                                       class="stockCode"
                                       :class="{redBorder : validation.hasError('repositoryData.stockCode')}"></el-input>
                         </div>
@@ -154,6 +156,7 @@
                                       v-model="repositoryData.stockName" 
                                       @change="Modify()"
                                       :disabled="isEdit"
+                                      @focus="showErrprTips"
                                       class="stockName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockName')}"></el-input>
                         </div>
@@ -162,6 +165,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockFullName" 
                                       @change="Modify()"
+                                      @focus="showErrprTips"
                                       :disabled="isEdit"
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockFullName')}"></el-input>
@@ -171,6 +175,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.mnemonic" 
                                       @change="Modify()"
+                                      @focus="showErrprTips"
                                       :disabled="isEdit"
                                       class="mnemonic"
                                       :class="{redBorder : validation.hasError('repositoryData.mnemonic')}"></el-input>
@@ -181,6 +186,7 @@
                             <el-select v-model="repositoryData.stockTypeId" 
                                        placeholder=""
                                        @change="Modify()"
+                                       @focus="showErrprTipsSelect"
                                        :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.stockTypeId')}"
                                        class="stockTypeId">
@@ -197,6 +203,7 @@
                             <el-select v-model="repositoryData.opAreaId" 
                                        placeholder=""
                                        @change="Modify()"
+                                       @focus="showErrprTipsSelect"
                                        :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.opAreaId')}"
                                        class="opAreaId">
@@ -226,6 +233,7 @@
                             <el-select v-model="repositoryData.adAreaId" 
                                        placeholder=""
                                        @change="Modify()"
+                                       @focus="showErrprTipsSelect"
                                        :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.adAreaId')}"
                                        class="adAreaId">
@@ -254,6 +262,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.manager"
                                       @change="Modify()"
+                                      @focus="showErrprTips"
                                       :disabled="isEdit"
                                       class="manager"
                                       :class="{redBorder : validation.hasError('repositoryData.manager')}"></el-input>
@@ -264,6 +273,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.phone"
                                       @change="Modify()"
+                                      @focus="showErrprTips"
                                       :disabled="isEdit"
                                       class="phone"
                                       :class="{redBorder : validation.hasError('repositoryData.phone')}"></el-input>
@@ -274,6 +284,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.email"
                                       @change="Modify()"
+                                      @focus="showErrprTips"
                                       :disabled="isEdit"
                                       class="email"
                                       :class="{redBorder : validation.hasError('repositoryData.email')}"></el-input>
@@ -284,6 +295,7 @@
                             <el-input v-model="repositoryData.fax"
                                       @change="Modify()"
                                       :disabled="isEdit"
+                                      @focus="showErrprTips"
                                       placeholder="" 
                                       class="fax"
                                       :class="{redBorder : validation.hasError('repositoryData.fax')}"></el-input>
@@ -293,6 +305,7 @@
                             <label>地址</label>
                             <el-input v-model="repositoryData.stockAddress"
                                       @change="Modify()"
+                                      @focus="showErrprTips"
                                       :disabled="isEdit"
                                       placeholder="" 
                                       class="stockAddress"
@@ -304,6 +317,7 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.remark"
                                       :disabled="isEdit"
+                                      @focus="showErrprTips"
                                       @change="Modify()"
                                       class="remark"
                                       :class="{redBorder : validation.hasError('repositoryData.remark')}"></el-input>
@@ -315,6 +329,7 @@
                                        placeholder=""
                                        :disabled="isEdit"
                                        @change='Modify()'
+                                       @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('repositoryData.status')}"
                                        class="status">
                                 <el-option v-for="item in statusAr"  
@@ -334,9 +349,9 @@
           </el-col>
 
           <el-col :span="24" class="bg-white pl10">
-                <button class="erp_bt bt_print" @click='addCol' v-show='!isEdit'>
+                <button class="erp_bt bt_add" @click='addCol' v-show='!isEdit'>
                     <div class="btImg">
-                        <img src="../../../static/image/common/bt_print.png">
+                        <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">增行</span>
                 </button>
@@ -516,7 +531,7 @@
                 return this.Validator.value(value).required().maxLength(50);
             },
             'repositoryData.mnemonic': function (value) {//助记码
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.stockTypeId': function (value) {//仓库类型
                 return this.Validator.value(value).required().integer();
@@ -539,8 +554,8 @@
             'repositoryData.fax': function (value) {//传真
                 return this.Validator.value(value).maxLength(50);
             },
-            'createRepositoryParams.stockAddress': function (value) {//地址
-                return this.Validator.value(value).integer();
+            'repositoryData.stockAddress': function (value) {//地址
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.remark': function (value) {//备注
                 return this.Validator.value(value).maxLength(50);
@@ -697,6 +712,8 @@
                             })
                         }
                     })
+                }else{
+                     self.open('没有需要保存的项目','el-icon-warning','noticERP');
                 };
 
                 

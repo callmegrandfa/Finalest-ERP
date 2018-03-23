@@ -30,14 +30,95 @@
         <div v-show="ifShow">   
             <el-row>
                 <el-col :span="24" class="getPadding"> 
+                    <div class="tipsWrapper">
+                        <div class="errorTips">
+                            <p class="msgDetail">
+                                <span :class="{block : !validation.hasError('createContactParams.ouId')}">
+                                     所属组织{{ validation.firstError('createContactParams.ouId') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.contactCode')}">
+                                     编码{{ validation.firstError('createContactParams.contactCode') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.contactName')}">
+                                     名称{{ validation.firstError('createContactParams.contactName') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.contactFullName')}">
+                                     全称{{ validation.firstError('createContactParams.contactFullName') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.mnemonic')}">
+                                     助记码{{ validation.firstError('createContactParams.mnemonic') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.contactClassId')}">
+                                     客户分类{{ validation.firstError('createContactParams.contactClassId') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.contactWorkPropertyId')}">
+                                     客户性质{{ validation.firstError('createContactParams.contactWorkPropertyId') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.contactGradeId')}">
+                                     客户等级{{ validation.firstError('createContactParams.contactGradeId') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.isCustomer')}">
+                                     客户类型{{ validation.firstError('createContactParams.isCustomer') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.ficaOuId')}">
+                                     对应财务组织{{ validation.firstError('createContactParams.ficaOuId') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.taxCode')}">
+                                     纳税登记号{{ validation.firstError('createContactParams.taxCode') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.opAreaId')}">
+                                     业务地区{{ validation.firstError('createContactParams.opAreaId') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.adAreaId')}">
+                                     行政地区{{ validation.firstError('createContactParams.adAreaId') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.legalPerson')}">
+                                     法人代表{{ validation.firstError('createContactParams.legalPerson') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.regAddress')}">
+                                     注册地址{{ validation.firstError('createContactParams.regAddress') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.manager')}">
+                                     负责人{{ validation.firstError('createContactParams.manager') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.phone')}">
+                                     电话{{ validation.firstError('createContactParams.phone') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.remark')}">
+                                     备注{{ validation.firstError('createContactParams.remark') }},
+                                </span>
+
+                                <span :class="{block : !validation.hasError('createContactParams.status')}">
+                                     状态{{ validation.firstError('createContactParams.status') }},
+                                </span>
+                            </p>
+                        </div>
+                    </div>
                     <!-- <div class="tipsWrapper" name="ouId">
                         <div class="errorTips" :class="{block : !validation.hasError('createContactParams.ouId')}">
                             <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.ouId') }}</p>
                         </div>
                     </div> -->
-                    <div class="tipsWrapper" name="contact">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contact')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contact') }}</p>
+                    <!-- <div class="tipsWrapper" name="contactCode">
+                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactCode')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactCode') }}</p>
                         </div>
                     </div>
                     <div class="tipsWrapper" name="contactName">
@@ -119,7 +200,7 @@
                         <div class="errorTips" :class="{block : !validation.hasError('createContactParams.remark')}">
                             <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.remark') }}</p>
                         </div>
-                    </div>
+                    </div> -->
                     
 
                     <div class="bgcolor">
@@ -127,8 +208,9 @@
                         <el-select v-model="createContactParams.ouId" 
                                 placeholder=""
                                 class="ouId"
+                                @focus="showErrprTipsSelect"
                                 :class="{redBorder : validation.hasError('createContactParams.ouId')}">
-                                <!-- @focus="showErrprTipsSelect" -->
+                                <!--  -->
 
                             <el-input placeholder="搜索..."
                                     class="selectSearch"
@@ -155,9 +237,10 @@
                         <label><small>*</small>编码</label>
                         <el-input v-model="createContactParams.contactCode" 
                                 placeholder=""
+                                @focus="showErrprTips" 
                                 :class="{redBorder : validation.hasError('createContactParams.contactCode')}"
                                 class="contactCode"></el-input>
-                                <!-- @focus="showErrprTips" -->
+                                <!-- -->
                     </div>
 
 
@@ -165,6 +248,7 @@
                         <label><small>*</small>名称</label>
                         <el-input v-model="createContactParams.contactName" 
                                 placeholder=""
+                                @focus="showErrprTips" 
                                 :class="{redBorder : validation.hasError('createContactParams.contactName')}"
                                 class="contactName"></el-input>
                     </div>
@@ -174,6 +258,7 @@
                         <label><small>*</small>全称</label>
                         <el-input v-model="createContactParams.contactFullName" 
                                 placeholder=""
+                                @focus="showErrprTips" 
                                 :class="{redBorder : validation.hasError('createContactParams.contactFullName')}"
                                 class="contactFullName"></el-input>
                     </div>
@@ -182,6 +267,7 @@
                         <label>助记码</label>
                         <el-input v-model="createContactParams.mnemonic" 
                                 placeholder=""
+                                @focus="showErrprTips" 
                                 :class="{redBorder : validation.hasError('createContactParams.mnemonic')}"
                                 class="mnemonic"></el-input>
                     </div>
@@ -220,8 +306,9 @@
                         <el-select v-model="createContactParams.contactWorkPropertyId" 
                                 placeholder=""
                                 class="contactWorkPropertyId"
+                                @focus="showErrprTipsSelect"
                                 :class="{redBorder : validation.hasError('createContactParams.contactWorkPropertyId')}">
-                                <!-- @focus="showErrprTipsSelect" -->
+                                <!--  -->
                             <el-option v-for="item in propertyAr" 
                                         :key="item.itemValue" 
                                         :label="item.itemName" 
@@ -234,6 +321,7 @@
                         <el-select v-model="createContactParams.contactGradeId" 
                                 placeholder=""
                                 class="contactGradeId"
+                                @focus="showErrprTipsSelect"
                                 :class="{redBorder : validation.hasError('createContactParams.contactGradeId')}">
                             <el-option v-for="itema in gradeAr" 
                                         :key="itema.itemValue" 
@@ -246,6 +334,7 @@
                         <el-select v-model='createContactParams.isCustomer'
                                 placeholder=""
                                 class="isCustomer"
+                                @focus="showErrprTipsSelect"
                                 :class="{redBorder : validation.hasError('createContactParams.isCustomer')}">
                             <el-option v-for="itemb in typeAr" 
                                         :key="itemb.itemValue" 
@@ -257,6 +346,7 @@
                         <label>对应财务组织</label>
                         <el-select v-model="createContactParams.ficaOuId" 
                                 placeholder=""
+                                @focus="showErrprTipsSelect"
                                 class="ficaOuId"
                                 :class="{redBorder : validation.hasError('createContactParams.ficaOuId')}">
                             <el-input placeholder="搜索..."
@@ -283,6 +373,7 @@
                         <el-input v-model="createContactParams.taxCode" 
                                 placeholder=""
                                 class="taxCode"
+                                @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('createContactParams.taxCode')}"></el-input>
                     </div>
                     <div class="bgcolor">
@@ -290,6 +381,7 @@
                         <el-select v-model="createContactParams.opAreaId"
                                     class="opAreaId"
                                     placeholder=""
+                                    @focus="showErrprTipsSelect"
                                     :class="{redBorder : validation.hasError('createContactParams.opAreaId')}">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -315,6 +407,7 @@
                         <el-select v-model="createContactParams.adAreaId" 
                                    placeholder=""
                                    class="adAreaId"
+                                   @focus="showErrprTipsSelect"
                                    :class="{redBorder : validation.hasError('createContactParams.adAreaId')}">
                             <el-input placeholder=""
                                       class="selectSearch"
@@ -339,6 +432,7 @@
                         <label>法人代表</label>
                         <el-input v-model="createContactParams.legalPerson" 
                                 placeholder=""
+                                @focus="showErrprTips"
                                 class="legalPerson"
                                 :class="{redBorder : validation.hasError('createContactParams.legalPerson')}"></el-input>
                     </div>
@@ -384,6 +478,7 @@
                         <el-select v-model="createContactParams.status"
                                    class="status"
                                    placeholder=""
+                                   @focus="showErrprTipsSelect"
                                    :class="{redBorder : validation.hasError('createContactParams.status')}">
                             <el-option v-for="itemc in statusAr"  
                                        :key="itemc.itemValue" 
@@ -942,49 +1037,49 @@ export default({
             return this.Validator.value(value).required().maxLength(50);
         },
         'createContactParams.contactFullName': function (value) {//全称
-            return this.Validator.value(value).maxLength(50);
+            return this.Validator.value(value).required().maxLength(50);
         },
         'createContactParams.mnemonic': function (value) {//助记码
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'createContactParams.contactClassId': function (value) {//客户分类
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'createContactParams.contactWorkPropertyId': function (value) {//客户性质
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'createContactParams.contactGradeId': function (value) {//客户等级
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'createContactParams.isCustomer': function (value) {//客户类型
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'createContactParams.ficaOuId': function (value) {//对应财务组织
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'createContactParams.taxCode': function (value) {//纳税登记号 
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'createContactParams.opAreaId': function (value) {//业务地区区号
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'createContactParams.adAreaId': function (value) {//行政地区
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'createContactParams.legalPerson': function (value) {//法人代表
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'createContactParams.regAddress': function (value) {//注册地址
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'createContactParams.manager': function (value) {//负责人
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'createContactParams.phone': function (value) {//电话
-            return this.Validator.value(value).required().maxLength(50);
+            return this.Validator.value(value).maxLength(50);
         },
         'createContactParams.remark': function (value) {//备注
-            return this.Validator.value(value).required().maxLength(200);
+            return this.Validator.value(value).maxLength(200);
         },
         'createContactParams.status': function (value) {//备注
             return this.Validator.value(value).required().integer();
@@ -1125,10 +1220,11 @@ export default({
         //---保存数据--------------------------------------------------       
         save:function(){//点击保存创建客户资料
             let self = this;
-            console.log(self.createContactParams)
+            $('.tipsWrapper').css({display:'block'})
+            // console.log(self.createContactParams)
             self.$validate().then(function(success){
                 if(success){
-                    console.log(2)
+                    $('.tipsWrapper').css({display:'none'})
                     self.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
                         // console.log(res);
                         self.open('创建客户资料成功','el-icon-circle-check','successERP');
@@ -1455,40 +1551,44 @@ export default({
         //-----------------------------------------------------
         //---提示错误----------------------------------------------
         showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsSelect(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsRangedate(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.$el).hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.$el).hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsTextArea(e){
-                $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-                })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            // if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+            //     $(this).addClass('display_block')
+            // }else{
+            //     $(this).removeClass('display_block')
+            // }
+            // })
         },
         //-------------------------------------------------------------
     }
