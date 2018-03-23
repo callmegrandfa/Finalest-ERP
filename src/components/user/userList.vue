@@ -366,11 +366,12 @@
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
-                page:1,//当前页
+                page:1,//当前页 
+                totalItem:0,//总共有多少条消息
                 treeCheck:[],
                 isClick:[],
                 load:true,
-                totalItem:0,//总共有多少条消息
+               
                 searchBtClick:false,
                 ifWidth:true,
                 dialogUserDefined:false,//dialog

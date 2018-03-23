@@ -359,16 +359,16 @@
             loadTableData(){//表格
                  let _this=this;
                  _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting,ParentId:0,AreaType:1}).then(function(res){ 
                     _this.restaurants=[],
-                    _this.tableData=res.result.items;
+                    _this.tableData=res.result;
                     _this.totalItem=res.result.totalCount;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
-                    $.each(res.result.items,function(index,value){
+                    $.each(res.result,function(index,value){
                         let item={'value':value.areaName,'id':value.id};
                         _this.restaurants.push(item)
                     })
