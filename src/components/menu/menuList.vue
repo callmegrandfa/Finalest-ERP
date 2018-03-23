@@ -333,9 +333,7 @@
                     _this.treeLoading=false;
                     _this.loadIcon()
                },function(res){
-                   _this.componyTree=res.data
                     _this.treeLoading=false;
-                    _this.loadIcon()
                })
             },
             loadIcon(){

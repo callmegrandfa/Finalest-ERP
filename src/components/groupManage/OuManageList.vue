@@ -3,11 +3,11 @@
         <el-row class="bg-white">
             <el-col :span="ifWidth ? 5 : 0" v-show="ifWidth">
                 <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:-4px;vertical-align: middle;">
+                    <el-col :span="18" class="btn-for-search">
+                        <img src="../../../static/image/common/search_btn.png">
                         <span>查询</span>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="2" :offset="4">
                         <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
@@ -86,14 +86,10 @@
              <el-col :span="ifWidth ? 15:20" class="border-left" id="ouListTable">
                 <el-row class="h48">
                     <el-col :span="ifWidth?0:2" class="search-block">
-                        <div style="display:inline-block" @click="openLeft">
+                        <div @click="openLeft">
                             <img src="../../../static/image/common/search_btn.png">
-                        </div>
-                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
                             <span>查询</span>
-                        </div>
-                        <div class="out-img" @click="openLeft">
-                            <span class="search_info_open" style="margin-left:0">+</span>
+                            <span class='open-search'>+</span>
                         </div>
                     </el-col>
                     <el-col :span="ifWidth?24:22" class="pt5">
@@ -699,6 +695,16 @@
     border-radius: 3px;
     cursor: pointer;
 }
+.open-search{
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #E3E3E3;
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
+} 
 </style>
 
 <style>
