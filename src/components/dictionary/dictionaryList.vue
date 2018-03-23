@@ -297,10 +297,25 @@
                 ar:[],//判断修改后的红标出现
                 pageFlag:true,
 
-                //---提示错误dialog---------
+                // 错误信息提示开始
+                 option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
                 detail_message_ifShow:false,
                 errorMessage:false,
-                //-------------------------
+                // 错误信息提示结束
             }
         },
         created:function(){       

@@ -140,7 +140,7 @@
                             </el-select>
                         </div>
                         <div class="bgcolor">
-                            <label>编码</label>
+                            <label><small>*</small>编码</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockCode" 
                                       @change="Modify()"
@@ -149,7 +149,7 @@
                                       :class="{redBorder : validation.hasError('repositoryData.stockCode')}"></el-input>
                         </div>
                         <div class="bgcolor">
-                            <label>名称</label>
+                            <label><small>*</small>名称</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockName" 
                                       @change="Modify()"
@@ -158,7 +158,7 @@
                                       :class="{redBorder : validation.hasError('repositoryData.stockName')}"></el-input>
                         </div>
                         <div class="bgcolor">
-                            <label>全称</label>
+                            <label><small>*</small>全称</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockFullName" 
                                       @change="Modify()"
@@ -193,7 +193,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label><small>*</small>业务地区</label>
+                            <label>业务地区</label>
                             <el-select v-model="repositoryData.opAreaId" 
                                        placeholder=""
                                        @change="Modify()"
@@ -222,7 +222,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label><small>*</small>行政地区</label>
+                            <label>行政地区</label>
                             <el-select v-model="repositoryData.adAreaId" 
                                        placeholder=""
                                        @change="Modify()"
@@ -507,19 +507,19 @@
                 return this.Validator.value(value).required().integer();
             },
             'repositoryData.stockCode': function (value) {//仓库编码
-                return this.Validator.value(value).maxLength(50);
+                return this.Validator.value(value).required().maxLength(50);
             },
             'repositoryData.stockName': function (value) {//仓库名称
-                return this.Validator.value(value).maxLength(50);
+                return this.Validator.value(value).required().maxLength(50);
             },
             'repositoryData.stockFullName': function (value) {//仓库全称
-                return this.Validator.value(value).maxLength(50);
+                return this.Validator.value(value).required().maxLength(50);
             },
             'repositoryData.mnemonic': function (value) {//助记码
                 return this.Validator.value(value).required().maxLength(50);
             },
             'repositoryData.stockTypeId': function (value) {//仓库类型
-                return this.Validator.value(value).integer();
+                return this.Validator.value(value).required().integer();
             },
             'repositoryData.opAreaId': function (value) {//业务地区
                 return this.Validator.value(value).integer();
@@ -540,13 +540,13 @@
                 return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.stockAddress': function (value) {//地址
-                return this.Validator.value(value).required().integer();
+                return this.Validator.value(value).integer();
             },
             'repositoryData.remark': function (value) {//备注
                 return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.status': function (value) {//状态
-                return this.Validator.value(value).integer();
+                return this.Validator.value(value).required().integer();
             },
         },
         computed:{

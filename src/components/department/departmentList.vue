@@ -192,10 +192,25 @@
                 tittle:'',//模态框tittle
                 showParent:true,//上级组织单元是否可选
 
-                //---提示错误dialog---------
+                // 错误信息提示开始
+                 option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
                 detail_message_ifShow:false,
                 errorMessage:false,
-                //-------------------------
+                // 错误信息提示结束
 
                 selfAr:[],//根据id获得树形节点本身
 
