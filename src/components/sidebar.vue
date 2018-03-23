@@ -94,12 +94,12 @@ export default {
                     {name:'用户资料',address:'user'},
                 ]
             },
-            {
-                name:'角色管理',
-                thirdInfo:[
-                    {name:'角色资料',address:'role'},
-                ]
-            },
+            // {
+            //     name:'角色管理',
+            //     thirdInfo:[
+            //         {name:'角色资料',address:'role'},
+            //     ]
+            // },
             {
                 name:'采购管理',
                 thirdInfo:[
@@ -146,6 +146,11 @@ export default {
                 name:'部门资料',
                 thirdInfo:[
                      {name:'部门资料',address:'department'}, 
+                ]
+            },{
+                name:'店铺资料',
+                thirdInfo:[
+                     {name:'店铺资料',address:'shop'}, 
                 ]
             },{
                 name:'商品属性',
