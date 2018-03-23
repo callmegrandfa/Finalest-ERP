@@ -8,7 +8,7 @@
                             <img src="../../../static/image/common/search_btn.png"  class="closeLeft">
                             <span>查询</span>
                         </el-col>
-                        <el-col :span="5">
+                        <el-col :span="2" :offset="4">
                             <span class="fs12 search_info_open" @click="closeLeft">-</span>
                         </el-col>
                     </el-row>
@@ -70,19 +70,13 @@
         <div id="bgj">
             <el-row >
                 <el-col :span="24" class="border-left" id="bg-white" style="background-color:rgb(249,249,249)">
-                	<el-col :span="ifWidth?0:2" class="search-block" >
-	                    <div @click="openLeft">
-	                        <div style="display:inline-block" @click="openLeft">
-	                            <img src="../../../static/image/common/search_btn.png">
-	                        </div>
-	                        <div style="display:inline-block;margin-left:2px;font-size:16px;" >
-	                            <span>查询</span>
-	                        </div>
-	                        <div class="out-img" >
-	                            <span class="search_info_open" style="margin-left:0">+</span>
-	                        </div>
-	                    </div>
-	                </el-col>
+                	<el-col :span="ifWidth?0:2" class="search-block">
+                        <div @click="openLeft">
+                            <img src="../../../static/image/common/search_btn.png">
+                            <span>查询</span>
+                            <span class='open-search'>+</span>
+                        </div>
+                    </el-col>
 	                <el-col :span="ifWidth?24:22">
 	                	<btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
 	                </el-col>

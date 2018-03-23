@@ -36,10 +36,6 @@ const supplierEdit = () =>
     import ('../components/supplierData/supplierEdit')
 const goodsData = () =>
     import ('../components/goodsData/goodsData')
-const storeData = () =>
-    import ('../components/storeInformation/storeData')
-const storeBasicInfor = () =>
-    import ('../components/storeInformation/storeBasicInfor')
 
 const customer = () =>
     import ( /* webpackChunkName: "group-customer" */ '../components/customerInfor/customer')
@@ -160,6 +156,15 @@ const departmentDetail = () =>
     import ( /* webpackChunkName: "group-department" */ '../components/department/departmentDetail')
 const departmentModify = () =>
     import ( /* webpackChunkName: "group-department" */ '../components/department/departmentModify')
+    //店铺资料
+const shop = () =>
+    import ( /* webpackChunkName: "group-department" */ '../components/shop/shop')
+const shopList = () =>
+    import ( /* webpackChunkName: "group-department" */ '../components/shop/shopList')
+const shopDetail = () =>
+    import ( /* webpackChunkName: "group-department" */ '../components/shop/shopDetail')
+const shopModify = () =>
+    import ( /* webpackChunkName: "group-department" */'../components/shop/shopModify')
     // 系统字典
 const dictionary = () =>
     import ( /* webpackChunkName: "group-dictionary" */ '../components/dictionary/dictionary')
@@ -288,8 +293,6 @@ const routes = [
             },
             { path: '/supplierEdit/:id', component: supplierEdit, name: 'supplierEdit' },
             { path: '/goodsData/:id', component: goodsData, name: 'goodsData' },
-            { path: '/storeData/:id', component: storeData, name: 'storeData' },
-            { path: '/storeBasicInfor/:id', component: storeBasicInfor, name: 'storeBasicInfor' },
 
             {
                 path: '/customer',
@@ -432,6 +435,19 @@ const routes = [
                     { path: '/department/departmentList/:id', component: departmentList, name: 'departmentList' },
                     { path: '/department/departmentDetail/:id', component: departmentDetail, name: 'departmentDetail' },
                     { path: '/department/departmentModify/:id', component: departmentModify, name: 'departmentModify' },
+                ]
+            },
+            {
+                path: '/shop',
+                component: shop,
+                name: 'shop',
+                redirect: function() { //店铺资料
+                    return redirectRouter('shop')
+                },
+                children: [
+                    { path: '/shop/shopList/:id', component: shopList, name: 'shopList' },
+                    { path: '/shop/shopDetail/:id', component: shopDetail, name: 'shopDetail' },
+                    { path: '/shop/shopModify/:id', component: shopModify, name: 'shopModify' },
                 ]
             },
 

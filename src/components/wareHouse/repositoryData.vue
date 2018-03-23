@@ -30,9 +30,75 @@
 
         <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
-                <el-row class="bg-white ft12 pr10 pt10">
-                    <el-col :span="24">
-                        <div class="tipsWrapper" name="ouId">
+                 <!-- ft12 pr10  -->
+                <el-row class="bg-white pt10">
+                    <el-col :span="24" class="getPadding">
+                        <div class="tipsWrapper mb10">
+                            <div class="errorTips">
+                                <p class="msgDetail">错误提示：
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.ouId')}">
+                                        所属组织{{ validation.firstError('createRepositoryParams.ouId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockCode')}">
+                                        编码{{ validation.firstError('createRepositoryParams.stockCode') }},
+                                    </span>
+                                    
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockName')}">
+                                        名称{{ validation.firstError('createRepositoryParams.stockName') }},
+                                    </span>
+                                    
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockFullName')}">
+                                        全称{{ validation.firstError('createRepositoryParams.stockFullName') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.mnemonic')}">
+                                        助记码{{ validation.firstError('createRepositoryParams.mnemonic') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockTypeId')}">
+                                        仓库类型{{ validation.firstError('createRepositoryParams.stockTypeId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.opAreaId')}">
+                                        业务地区{{ validation.firstError('createRepositoryParams.opAreaId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.adAreaId')}">
+                                        行政地区{{ validation.firstError('createRepositoryParams.adAreaId') }},
+                                    </span>
+                                    
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.manager')}">
+                                        负责人{{ validation.firstError('createRepositoryParams.manager') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.phone')}">
+                                        电话{{ validation.firstError('createRepositoryParams.phone') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.email')}">
+                                        Email{{ validation.firstError('createRepositoryParams.email') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.fax')}">
+                                        传真{{ validation.firstError('createRepositoryParams.fax') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress')}">
+                                        地址{{ validation.firstError('createRepositoryParams.stockAddress') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.remark')}">
+                                        备注{{ validation.firstError('createRepositoryParams.remark') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.status')}">
+                                        状态{{ validation.firstError('createRepositoryParams.status') }},
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- <div class="tipsWrapper" name="ouId">
                             <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.ouId')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.ouId') }}</p>
                             </div>
@@ -101,12 +167,13 @@
                             <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.status')}">
                                 <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.status') }}</p>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="bgcolor">
                             <label><small>*</small>所属组织</label>
                             <el-select v-model="createRepositoryParams.ouId"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.ouId')}"
                                        class="ouId"
+                                       @focus="showErrprTipsSelect"
                                        placeholder="">
                                 <el-input placeholder="搜索..."
                                           class="selectSearch"
@@ -133,6 +200,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockCode"
                                       class="stockCode"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockCode')}"></el-input>
                         </div>
 
@@ -141,6 +209,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockName"
                                       class="stockName"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockName')}"></el-input>
                         </div>
 
@@ -149,6 +218,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockFullName"
                                       class="stockFullName"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockFullName')}"></el-input>
                         </div>
 
@@ -157,6 +227,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.mnemonic"
                                       class="mnemonic"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.mnemonic')}"></el-input>
                         </div>
 
@@ -164,6 +235,7 @@
                             <label><small>*</small>仓库类型</label>
                             <el-select v-model="createRepositoryParams.stockTypeId" 
                                        placeholder=""
+                                       @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.stockTypeId')}"
                                        class="stockTypeId">
                                 <el-option v-for="item in stockType"
@@ -178,6 +250,7 @@
                             <label>业务地区</label>
                             <el-select v-model="createRepositoryParams.opAreaId" 
                                        placeholder=""
+                                       @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.opAreaId')}"
                                        class="opAreaId">
                                 <el-input placeholder="搜索..."
@@ -204,6 +277,7 @@
                             <label>行政地区</label>
                             <el-select v-model="createRepositoryParams.adAreaId" 
                                        placeholder=""
+                                       @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.adAreaId')}"
                                        class="adAreaId">
                                 <el-input placeholder=""
@@ -231,6 +305,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.manager"
                                       class="manager"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.manager')}"></el-input>
                         </div>
 
@@ -239,6 +314,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.phone"
                                       class="phone"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.phone')}"></el-input>
                         </div>
 
@@ -247,6 +323,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.email"
                                       class="email"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.email')}"></el-input>
                         </div>
 
@@ -255,6 +332,7 @@
                             <el-input v-model="createRepositoryParams.fax"
                                       placeholder="" 
                                       class="fax"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.fax')}"></el-input>
                         </div>
 
@@ -263,6 +341,7 @@
                             <el-input v-model="createRepositoryParams.stockAddress"
                                       placeholder="" 
                                       class="stockAddress"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockAddress')}"></el-input>
                         </div>
 
@@ -271,6 +350,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.remark"
                                       class="remark"
+                                      @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.remark')}"></el-input>
                         </div>
 
@@ -278,6 +358,7 @@
                             <label><small>*</small>状态</label>
                             <el-select v-model="createRepositoryParams.status" 
                                        placeholder=""
+                                       @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.status')}"
                                        class="status">
                                 <el-option v-for="item in statusAr"  
@@ -457,7 +538,7 @@
                 return this.Validator.value(value).required().maxLength(50);
             },
             'createRepositoryParams.mnemonic': function (value) {//助记码
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.stockTypeId': function (value) {//仓库类型
                 return this.Validator.value(value).required().integer();
@@ -614,6 +695,7 @@
             //---创建------------------------------------------------
             createRepository:function(){//创建新仓库
                 let self = this;
+                $('.tipsWrapper').css({display:'block'})
                 self.$validate().then(function(success){
                     if(success){
                         self.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
@@ -840,40 +922,44 @@
             //-----------------------------------------------------
             //---提示错误----------------------------------------------
             showErrprTips(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
+                $('.tipsWrapper').css({display:'none'})
+                // $('.tipsWrapper').each(function(){
+                //     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                //         $(this).addClass('display_block')
+                //     }else{
+                //         $(this).removeClass('display_block')
+                //     }
+                // })
             },
             showErrprTipsSelect(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
+                $('.tipsWrapper').css({display:'none'})
+                // $('.tipsWrapper').each(function(){
+                //     if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                //         $(this).addClass('display_block')
+                //     }else{
+                //         $(this).removeClass('display_block')
+                //     }
+                // })
             },
             showErrprTipsRangedate(e){
-                $('.tipsWrapper').each(function(){
-                    if($(e.$el).hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                })
+                $('.tipsWrapper').css({display:'none'})
+                // $('.tipsWrapper').each(function(){
+                //     if($(e.$el).hasClass($(this).attr('name'))){
+                //         $(this).addClass('display_block')
+                //     }else{
+                //         $(this).removeClass('display_block')
+                //     }
+                // })
             },
             showErrprTipsTextArea(e){
-                    $('.tipsWrapper').each(function(){
-                    if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                        $(this).addClass('display_block')
-                    }else{
-                        $(this).removeClass('display_block')
-                    }
-                    })
+                $('.tipsWrapper').css({display:'none'})
+                // $('.tipsWrapper').each(function(){
+                // if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                //     $(this).addClass('display_block')
+                // }else{
+                //     $(this).removeClass('display_block')
+                // }
+                // })
             },
             //-------------------------------------------------------------
             
