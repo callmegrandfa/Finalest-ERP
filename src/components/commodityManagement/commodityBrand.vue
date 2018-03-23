@@ -8,7 +8,7 @@
                             <img src="../../../static/image/common/search_btn.png" class="closeLeft" >
                             <span>查询</span>
                         </el-col>
-                        <el-col :span="5">
+                        <el-col :span="2" :offset="4">
                             <span class="fs12 search_info_open" @click="closeLeft">-</span>
                         </el-col>
                     </el-row>
@@ -80,19 +80,13 @@
             <el-row style="width:100%;" >
                 <el-col id="bg-white"  class="border-left" :span="24" >
                     <el-row class="h48 ">
-                            <el-col :span="ifWidth?0:2" class="search-block" >
+                            <el-col :span="ifWidth?0:2" class="search-block">
                                 <div @click="openLeft">
-                                    <div style="display:inline-block" >
-                                        <img src="../../../static/image/common/search_btn.png">
-                                    </div>
-                                    <div style="display:inline-block;margin-left:2px;font-size:16px;" >
-                                        <span>查询</span>
-                                    </div>
-                                    <div class="out-img" >
-                                        <span class="search_info_open" style="margin-left:0">+</span>
-                                    </div>
+                                    <img src="../../../static/image/common/search_btn.png">
+                                    <span>查询</span>
+                                    <span class='open-search'>+</span>
                                 </div>
-                            </el-col> 
+                            </el-col>
                             <el-col :span="ifWidth?24:22" class="pt5">         
                             <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
                             <button v-show="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
