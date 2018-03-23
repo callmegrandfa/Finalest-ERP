@@ -8,7 +8,7 @@
                             <img src="../../../static/image/common/search_btn.png"  class="closeLeft">
                             <span>查询</span>
                         </el-col>
-                        <el-col :span="2" :offset="4">
+                        <el-col :span="2" :offset="4" >
                             <span class="fs12 search_info_open" @click="closeLeft">-</span>
                         </el-col>
                     </el-row>
