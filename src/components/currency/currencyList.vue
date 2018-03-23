@@ -147,7 +147,39 @@
 
             </el-col>
         </el-row>
-        
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
+                       
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
     </div>
 </template>
 
@@ -188,6 +220,26 @@
                 ar:[],
                 turnPage:-1,
                 pageFlag:true,
+
+                // 错误信息提示开始
+                 option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                detail_message_ifShow:false,
+                errorMessage:false,
+                // 错误信息提示结束
             }
         },
         created:function(){
@@ -393,14 +445,17 @@
             },
             handleDel:function(index,row){//每行右边的删除
                 let self = this;
-                self.allList.splice(index,1);
-                self.addList.splice(index,1);
                 console.log(row.id)
                 if(row.id>=0){
                     self.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:row.id}).then(function(res){
                         console.log(res);
+                        self.allList.splice(index,1);
+                        self.addList.splice(index,1);
                         self.open('删除成功','el-icon-circle-check','successERP');
                         self.loadAllList();
+                    },function(){
+                        self.errorMessage=true;
+                        self.open('删除失败','el-icon-error','faildERP');
                     })
                 }
                 
@@ -428,6 +483,9 @@
                             self.$axios.posts('/api/services/app/CurrencyManagement/BatchDelete',self.idArray).then(function(res){
                                 self.loadAllList();
                                 self.open('删除成功','el-icon-circle-check','successERP');    
+                            },function(){
+                                self.errorMessage=true;
+                                self.open('删除失败','el-icon-error','faildERP');
                             })
                         }).catch(() => {
                             self.$message({

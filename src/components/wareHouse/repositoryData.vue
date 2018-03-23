@@ -129,7 +129,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>编码</label>
+                            <label><small>*</small>编码</label>
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockCode"
                                       class="stockCode"
@@ -137,7 +137,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>名称</label>
+                            <label><small>*</small>名称</label>
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockName"
                                       class="stockName"
@@ -145,7 +145,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>全称</label>
+                            <label><small>*</small>全称</label>
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockFullName"
                                       class="stockFullName"
@@ -175,7 +175,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label><small>*</small>业务地区</label>
+                            <label>业务地区</label>
                             <el-select v-model="createRepositoryParams.opAreaId" 
                                        placeholder=""
                                        :class="{redBorder : validation.hasError('createRepositoryParams.opAreaId')}"
@@ -201,7 +201,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label><small>*</small>行政地区</label>
+                            <label>行政地区</label>
                             <el-select v-model="createRepositoryParams.adAreaId" 
                                        placeholder=""
                                        :class="{redBorder : validation.hasError('createRepositoryParams.adAreaId')}"
@@ -448,19 +448,19 @@
                 return this.Validator.value(value).required().integer();
             },
             'createRepositoryParams.stockCode': function (value) {//仓库编码
-                return this.Validator.value(value).maxLength(50);
+                return this.Validator.value(value).required().maxLength(50);
             },
             'createRepositoryParams.stockName': function (value) {//仓库名称
-                return this.Validator.value(value).maxLength(50);
+                return this.Validator.value(value).required().maxLength(50);
             },
             'createRepositoryParams.stockFullName': function (value) {//仓库全称
-                return this.Validator.value(value).maxLength(50);
+                return this.Validator.value(value).required().maxLength(50);
             },
             'createRepositoryParams.mnemonic': function (value) {//助记码
                 return this.Validator.value(value).required().maxLength(50);
             },
             'createRepositoryParams.stockTypeId': function (value) {//仓库类型
-                return this.Validator.value(value).integer();
+                return this.Validator.value(value).required().integer();
             },
             'createRepositoryParams.opAreaId': function (value) {//业务地区
                 return this.Validator.value(value).integer();
@@ -481,13 +481,13 @@
                 return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.stockAddress': function (value) {//地址
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.remark': function (value) {//备注
                 return this.Validator.value(value).maxLength(50);
             },
             'createRepositoryParams.status': function (value) {//状态
-                return this.Validator.value(value).integer();
+                return this.Validator.value(value).required().integer();
             },
         },
         computed:{

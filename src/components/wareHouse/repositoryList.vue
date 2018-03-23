@@ -188,7 +188,7 @@
             </el-col>   
       </el-row>
       <!-- dialog错误信息提示 -->
-        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+        <!-- <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
@@ -218,7 +218,7 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
         <!-- dialog -->
   </div>
 </template>
@@ -244,16 +244,15 @@
         },
         methods:{
             //---获取数据------------------------------------------
-            getAllList:function(){//获取所有仓库列表
-
+            getAllList:function(){//获取所有仓库列表0
                 let self = this;
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Draw:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.data;
                     self.total = res.total;
                     self.totalPage = Math.ceil(res.total/self.eachPage)
                 },function(res){
-                    console.log('err'+res)
+                    console.log(res)
                 })
             },
             //---------------------------------------------------------
@@ -328,7 +327,7 @@
                     this.allList.splice(index,1);
                     self.open('删除仓库成功','el-icon-circle-check','successERP')
                 },function(){
-                    self.errorMessage=true;
+                    // self.errorMessage=true;
                     self.open('删除失败','el-icon-error','faildERP');
                 })
             },
@@ -350,7 +349,7 @@
                             self.getAllList();
                             self.open('删除成功','el-icon-circle-check','successERP');
                         },function(res){
-                            self.errorMessage=true;
+                            // self.errorMessage=true;
                             self.open('删除失败','el-icon-error','faildERP');
                         })
                     }).catch(() => {
@@ -468,10 +467,25 @@
                 opAr:[],//业务地区下拉框
                 //-----------------------
 
-                //---提示错误dialog---------
-                detail_message_ifShow:false,
-                errorMessage:false,
-                //-------------------------
+                // 错误信息提示开始
+                //  option: {
+                //     vRail: {
+                //         width: '5px',
+                //         pos: 'right',
+                //         background: "#9093994d",
+                //     },
+                //     vBar: {
+                //         width: '5px',
+                //         pos: 'right',
+                //         background: '#9093994d',
+                //     },
+                //     hRail: {
+                //         height: '0',
+                //     },
+                // },
+                // detail_message_ifShow:false,
+                // errorMessage:false,
+                // 错误信息提示结束
 
                 status: [{
                     value:"",
