@@ -173,7 +173,12 @@ export default {
                 thirdInfo:[
                     {name:'计量单位',address:'count'}
                 ]
-            },],
+            },{
+                name:'行政地区',
+                thirdInfo:[
+                    {name:'行政地区',address:'adminstrArea'}
+                ]
+            }],
             childNodes:[],//菜单数据
         }
         
@@ -183,7 +188,7 @@ export default {
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
             _this.childNodes=res;
-            console.log(2)
+            // console.log(2)
             _this.$nextTick(function(){
                 let x={}
                 $('.one').each(function(index){
@@ -203,7 +208,7 @@ export default {
                 })
             })
         },function(res){
-            console.log(res)
+            // console.log(res)
         })
     },
     mounted:function(){

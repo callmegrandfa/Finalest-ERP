@@ -184,6 +184,12 @@ const staffModify = () =>
     // 计量单位
 const count=()=>import('../components/count/count')
 const countList=()=>import('../components/count/countList')
+    // 行政地区
+const adminstrArea = () => import('../components/administrativeArea/adminstrArea')
+const adminstrAreaList = () => import('../components/administrativeArea/adminstrAreaList')
+const adminstrAreaDetail = () => import('../components/administrativeArea/adminstrAreaDetail')
+const adminstrAreaModify = () => import('../components/administrativeArea/adminstrAreaModify')
+    
 
 let redirectRouter = function(routerName) { //重定向
     let activeRouter = store.state.activeRouter;
@@ -541,6 +547,20 @@ const routes = [
                 },
                 children:[
                     { path: '/count/countList/:id', component: countList, name:'countList'}
+                ],
+
+            },
+            {
+                path: '/adminstrArea',
+                component: adminstrArea,
+                name: 'adminstrArea',
+                redirect: function () { //行政地区
+                    return redirectRouter('adminstrArea')
+                },
+                children:[
+                    { path: '/adminstrArea/adminstrAreaList/:id', component: adminstrAreaList, name:'adminstrAreaList'},
+                    { path: '/adminstrArea/adminstrAreaDetail/:id', component: adminstrAreaDetail, name:'adminstrAreaDetail'},
+                    { path: '/adminstrArea/adminstrAreaModify/:id', component: adminstrAreaModify, name:'adminstrAreaModify'},
                 ],
 
             },

@@ -1,14 +1,14 @@
 <template>
     <div class="staffList-wrapper" style="float:left;background:#fff;width:100%;">
-        <el-col  :span="ifWidth?6:0" v-show="ifWidth">
+        <el-col  :span="ifWidth?5:0" v-show="ifWidth">
             <el-row class="bg_White" id="left-box">
                     <el-col>
                         <el-row class="h48 topSearch">
-                            <el-col :span="18" class="pl10">
+                            <el-col :span="18" class="pl10 btn-for-search">
                                 <img src="../../../static/image/common/search_btn.png">
                                 <span class="topSearch">查询</span>
                             </el-col>
-                            <el-col :span="5">
+                            <el-col :span="2" :offset="4" style="padding-right:10px">
                                 <div class="circle" @click="closeLeft"><span class="circleContent">-</span></div>
                             </el-col>
                         </el-row>
@@ -49,19 +49,21 @@
                     </el-col>
             </el-row>
         </el-col>
-        <el-col :span="ifWidth?18:24">
+        <el-col :span="ifWidth?19:24">
             <div id="bgc">
                 <el-row class="h48">
                      <el-col :span='2' class="search-block"  v-show="!ifWidth">
-                        <div style="display:inline-block" @click="openLeft">
+                        <div @click="openLeft">
                             <img src="../../../static/image/common/search_btn.png">
+                            <span>查询</span>
+                             <span @click="openLeft">+</span>
                         </div>
-                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
+                        <!-- <div  style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
                             <span>查询</span>
                         </div>
-                        <div class="out-img" @click="openLeft">
+                        <div style="display:inline-block" class="out-img" @click="openLeft">
                             <span>+</span>
-                        </div>
+                        </div> -->
                     </el-col>
                     
                     <el-col :span="22" class="border-left">
