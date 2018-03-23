@@ -448,10 +448,8 @@
                 _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',data)
                 .then(function(res){
                     _this.open('删除成功','el-icon-circle-check','successERP');
-                    if(_this.load){
                         _this.loadTableData();
                         _this.loadTree();
-                    }
                         _this.dialogUserConfirm=false;
                 },function(res){
                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -465,9 +463,17 @@
                 let _this=this;
                  _this.detailParentId=data.id;//
                  _this.detailParentName=data.moduleName;
-                _this.tableData=[];
-                _this.tableData.push(data)
-                _this.totalItem=_this.tableData.length;
+                _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesChildData',{ModuleParentId:data.id})
+                .then(function(res){ 
+                    _this.tableData=res;
+                    _this.totalItem=res.length;
+                    // _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.tableLoading=false;
+                    },function(res){
+                    _this.errorMessage=true;
+                    _this.tableLoading=false;
+                })
+
             },
             modify(row){
                 this.$store.state.url='/menu/menuModify/'+row.id

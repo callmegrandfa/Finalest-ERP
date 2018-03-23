@@ -299,8 +299,8 @@
                                 <el-table-column prop="ouName" label="所属组织"></el-table-column>
                             </el-table>   
                             <span>总共有{{totalItemLeft}}条数据</span>
-                            <el-button>&lt;</el-button>
-                            <el-button>&gt;</el-button>
+                            <el-button @click="pageDownLeft">&lt;</el-button>
+                            <el-button @click="pageAddLeft">&gt;</el-button>
                         </el-col>
                 </el-col>
                 <el-col :span="2">
@@ -325,8 +325,8 @@
                             <el-table-column prop="ouName" label="所属组织"></el-table-column>
                         </el-table>  
                         <span>总共有{{totalItemRight}}条数据</span>
-                        <el-button>&lt;</el-button>
-                        <el-button>&gt;</el-button>
+                        <el-button @click="pageDownRight">&lt;</el-button>
+                        <el-button @click="pageAddRight">&gt;</el-button>
                     </el-col>
                 </el-col>
             <el-col :span="24">
@@ -507,10 +507,10 @@
         is_nocheked:true,//可选
         is_cheked:true,//已选
 //---------left表格-------------
-        pageIndexleft:1,//分页的当前页码
-        totalPageleft:0,//当前分页总数
-        oneItemleft:10,//每页有多少条信息
-        pageleft:1,//当前页 
+        pageIndexLeft:1,//分页的当前页码
+        totalPageLeft:0,//当前分页总数
+        oneItemLeft:10,//每页有多少条信息
+        pageLeft:1,//当前页 
         totalItemLeft:0,//总共有多少条消息  
  //---------right表格-------------         
         totalItemRight:0,//总共有多少条消息 
@@ -590,10 +590,9 @@
             // 所属组织
             _this.selectData.OUType=res.result;
             })
-            _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
+            _this.$axios.gets('/api/services/app/UserGroup/GetAll').then(function(res){ 
             // 所属用户组
                 _this.selectData.userGroupId=res.result.items;
-                _this.totalCount=res.result.totalCount;
             })
             ///api/services/app/Language/GetLanguages
             _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
@@ -601,11 +600,25 @@
                 _this.selectData.languageId=res.result.items;
             })
         },
+        GetRolesOnly(){//获取左侧表格数据
+            let _this=this;
+            _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:(_this.pageLeft-1)*_this.oneItemLeft,MaxResultCount:_this.oneItemLeft})
+           .then(function(resp){//获取已选角色
+                _this.checkedTable=resp.result.items
+                _this.totalItemLeft=resp.result.totalCount
+                _this.totalPageLeft=Math.ceil(resp.result.totalCount/_this.oneItemLeft);
+                // _this.getAllRoleData()//获取所有角色数据
+           },function(resp){
+
+           })
+        },
         GetRoles(){//获取左侧表格数据
             let _this=this;
             _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:(_this.pageLeft-1)*_this.oneItemLeft,MaxResultCount:_this.oneItemLeft})
            .then(function(resp){//获取已选角色
                 _this.checkedTable=resp.result.items
+                _this.totalItemLeft=resp.result.totalCount
+                _this.totalPageLeft=Math.ceil(resp.result.totalCount/_this.oneItemLeft);
                 _this.getAllRoleData()//获取所有角色数据
            },function(resp){
 
@@ -751,10 +764,13 @@
         getAllRoleData(){
             let _this=this;
             _this.tableLoading=true
-            _this.$axios.gets('/api/services/app/Role/GetAll')//获取所有角色
+            _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.pageRight-1)*_this.oneItemRight,MaxResultCount:_this.oneItemRight})//获取所有角色
             .then(function(res){ 
                 _this.nocheckedTable=[]
                 _this.allRoles=res.result.items;
+                console.log(res)
+                _this.totalItemRight=res.result.totalCount
+                _this.totalPageRight=Math.ceil(res.result.totalCount/_this.oneItemRight);
                     if(_this.checkedTable.length>0){//获取可选角色
                         _this.nocheckedTable=_this.uniqueArray(_this.allRoles,_this.checkedTable)
                     }else{
@@ -917,7 +933,35 @@
             let _this=this;
             _this.dialogTableVisible=false;
             _this.GetRoles()
-        }
+        },
+        pageDownLeft(){
+            let _this=this;
+            if(_this.pageLeft>1){
+                _this.pageLeft--
+                _this.GetRolesOnly()
+            }
+        },
+        pageAddLeft(){
+            let _this=this;
+            if(_this.pageLeft<_this.totalPageLeft){
+                _this.pageLeft++
+                _this.GetRolesOnly()
+            }
+        },
+        pageDownRight(){
+            let _this=this;
+            if(_this.pageRight>1){
+                _this.pageRight--
+                _this.getAllRoleData()
+            }    
+        },
+        pageAddRight(){
+            let _this=this;
+            if(_this.pageRight<_this.totalPageRight){
+                _this.pageRight++
+                _this.getAllRoleData()
+            }
+        },
     }
 
 })

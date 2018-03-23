@@ -1430,7 +1430,7 @@ export default({
             // 会计期间方案
                 _this.selectData.accCchemeId=res.result.items;
             })
-            _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:0,MaxResultCount:10}).then(function(res){ 
+            _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
                 _this.selectData.baseCurrencyId=res.result.items;
             })

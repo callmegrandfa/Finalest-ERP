@@ -101,6 +101,11 @@ export default new vuex.Store({
             { name: 'userDetail', url: '/user/userDetail/:id', parent: 'user' } ,
             { name: 'userModify', url: '/user/userModify/:id', parent: 'user' } ,
 
+            { name: 'userGroup', url: '/userGroup/userGroupList/:id', parent: '', default: '/userGroup/userGroupList/:id' } , //用户组
+            { name: 'userGroupList', url: '/userGroup/userGroupList/:id', parent: 'userGroup' } ,
+            { name: 'userGroupDetail', url: '/userGroup/userGroupDetail/:id', parent: 'userGroup' } ,
+            { name: 'userGroupModify', url: '/userGroup/userGroupModify/:id', parent: 'userGroup' } ,
+
             { name: 'role', url: '/role/roleList/:id', parent: '', default: '/role/roleList/:id' } , //角色资料
             { name: 'roleList', url: '/role/roleList/:id', parent: 'role' } ,
             { name: 'roleDetail', url: '/role/roleDetail/:id', parent: 'role' } ,
@@ -111,6 +116,10 @@ export default new vuex.Store({
             { name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' } ,
             
             { name: 'count', url: '/count/countList/:id', parent: '' , default: '/count/countList/:id' }, //计量单位
+
+            { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaList/:id', parent: '', default: '/adminstrArea/adminstrAreaList/:id' }, //行政地区
+            { name: 'adminstrAreaDetail', url: '/adminstrArea/adminstrAreaDetail/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaList/:id' }, 
+            { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaModify/:id', parent: '', default: '/adminstrArea/adminstrAreaModify/:id' },
         ],
         icon:[
             {code:'fa fa-address-book',label:"",},

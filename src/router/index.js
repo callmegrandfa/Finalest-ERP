@@ -78,6 +78,15 @@ const userDetail = () =>
     import ('../components/user/userDetail')
 const userModify = () =>
     import ('../components/user/userModify')
+//用户组管理
+const userGroup = () =>
+    import ( /* webpackChunkName: "group-userGroup" */ '../components/userGroup/userGroup')
+const userGroupList = () =>
+    import ( /* webpackChunkName: "group-userGroup" */ '../components/userGroup/userGroupList')
+const userGroupDetail = () =>
+    import ('../components/userGroup/userGroupDetail')
+const userGroupModify = () =>
+    import ('../components/userGroup/userGroupModify')
     //角色管理
 const role = () =>
     import ( /* webpackChunkName: "group-role" */ '../components/role/role')
@@ -189,6 +198,12 @@ const staffModify = () =>
     // 计量单位
 const count=()=>import('../components/count/count')
 const countList=()=>import('../components/count/countList')
+    // 行政地区
+const adminstrArea = () => import('../components/administrativeArea/adminstrArea')
+const adminstrAreaList = () => import('../components/administrativeArea/adminstrAreaList')
+const adminstrAreaDetail = () => import('../components/administrativeArea/adminstrAreaDetail')
+const adminstrAreaModify = () => import('../components/administrativeArea/adminstrAreaModify')
+    
 
 let redirectRouter = function(routerName) { //重定向
     let activeRouter = store.state.activeRouter;
@@ -536,6 +551,19 @@ const routes = [
                 ]
             },
             {
+                path: '/userGroup',
+                component: userGroup,
+                name: 'userGroup',
+                redirect: function() { //用户组资料
+                    return redirectRouter('userGroup')
+                },
+                children: [
+                    { path: '/userGroup/userGroupList/:id', component: userGroupList, name: 'userGroupList' },
+                    { path: '/userGroup/userGroupDetail/:id', component: userGroupDetail, name: 'userGroupDetail' },
+                    { path: '/userGroup/userGroupModify/:id', component: userGroupModify, name: 'userGroupModify' },
+                ]
+            },
+            {
                 path: '/role',
                 component: role,
                 name: 'role',
@@ -557,6 +585,20 @@ const routes = [
                 },
                 children:[
                     { path: '/count/countList/:id', component: countList, name:'countList'}
+                ],
+
+            },
+            {
+                path: '/adminstrArea',
+                component: adminstrArea,
+                name: 'adminstrArea',
+                redirect: function () { //行政地区
+                    return redirectRouter('adminstrArea')
+                },
+                children:[
+                    { path: '/adminstrArea/adminstrAreaList/:id', component: adminstrAreaList, name:'adminstrAreaList'},
+                    { path: '/adminstrArea/adminstrAreaDetail/:id', component: adminstrAreaDetail, name:'adminstrAreaDetail'},
+                    { path: '/adminstrArea/adminstrAreaModify/:id', component: adminstrAreaModify, name:'adminstrAreaModify'},
                 ],
 
             },

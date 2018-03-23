@@ -300,47 +300,47 @@
             }
         },
         validators: {
-    //    'dialogData.areaType': function (value) {//地区分类
-    //      return this.Validator.value(value).required().integer()
-    //   },
-      'dialogData.areaCode': function (value) {//地区代码
-         return this.Validator.value(value).required().maxLength(50)
-      },
-      'dialogData.areaName': function (value) {//地区名称
-         return this.Validator.value(value).required().maxLength(50);
-      },
-    //   'dialogData.areaFullName': function (value) {//地区全称
-    //      return this.Validator.value(value).required().maxLength(200);
-    //   },
-    //   'dialogData.areaFullPathId': function (value) {//全路径ID
-    //      return this.Validator.value(value).required().maxLength(1000);
-    //   },
-    //   'dialogData.areaFullPathName': function (value) {//全路径名称
-    //      return this.Validator.value(value).required().maxLength(1000);
-    //   },
-      'dialogData.manager': function (value) {//负责人
-          return this.Validator.value(value).required().maxLength(20);
-      },
-      'dialogData.areaParentId': function (value) {//上级业务地区
-          return this.Validator.value(value).required().integer();
-      },
-      'dialogData.status': function (value) {//启用状态
-         return this.Validator.value(value).required().integer();
-      },
-      'dialogData.remark': function (value) {//备注
-          return this.Validator.value(value).required().maxLength(200);
-      },
-    },
+            //    'dialogData.areaType': function (value) {//地区分类
+            //      return this.Validator.value(value).required().integer()
+            //   },
+            'dialogData.areaCode': function (value) {//地区代码
+                return this.Validator.value(value).required().maxLength(50)
+            },
+            'dialogData.areaName': function (value) {//地区名称
+                return this.Validator.value(value).required().maxLength(50);
+            },
+            //   'dialogData.areaFullName': function (value) {//地区全称
+            //      return this.Validator.value(value).required().maxLength(200);
+            //   },
+            //   'dialogData.areaFullPathId': function (value) {//全路径ID
+            //      return this.Validator.value(value).required().maxLength(1000);
+            //   },
+            //   'dialogData.areaFullPathName': function (value) {//全路径名称
+            //      return this.Validator.value(value).required().maxLength(1000);
+            //   },
+            'dialogData.manager': function (value) {//负责人
+                return this.Validator.value(value).required().maxLength(20);
+            },
+            'dialogData.areaParentId': function (value) {//上级业务地区
+                return this.Validator.value(value).required().integer();
+            },
+            'dialogData.status': function (value) {//启用状态
+                return this.Validator.value(value).required().integer();
+            },
+            'dialogData.remark': function (value) {//备注
+                return this.Validator.value(value).required().maxLength(200);
+            },
+        },
         created:function(){       
-                let _this=this;
-                _this.loadTableData();
-                _this.loadTree();
-             },
+            let _this=this;
+            _this.loadTableData();
+            _this.loadTree();
+        },
         mounted:function(){
             let _this=this;
             
         },  
-         watch: {
+        watch: {
             searchLeft(val) {
                 this.$refs.tree.filter(val);
             }
@@ -465,20 +465,20 @@
                 }
             },
             getErrorMessage(message,details,validationErrors){
-            let _this=this;
-            _this.response.message='';
-            _this.response.details='';
-            _this.response.validationErrors=[];
-            if(details!=null && details){
-                _this.response.details=details;
-            }
-            if(message!=null && message){
-                _this.response.message=message;
-            }
-            if(message!=null && message){
-                _this.response.validationErrors=validationErrors;
-            }
-        },
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
+            },
             delRow(){//多项删除
                 let _this=this;
                 let data={
@@ -490,10 +490,8 @@
                 .then(function(res){
                      _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
-                    if(_this.load){
                         _this.loadTableData();
                         _this.loadTree();
-                    }
                 },function(res){
                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
@@ -508,6 +506,7 @@
                     _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
+                    _this.loadTree();
                 },function(res){
                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
