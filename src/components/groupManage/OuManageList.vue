@@ -3,11 +3,11 @@
         <el-row class="bg-white">
             <el-col :span="ifWidth ? 5 : 0" v-show="ifWidth">
                 <el-row class="h48 pl15">
-                    <el-col :span="18">
-                        <img src="../../../static/image/common/search_btn.png" style="display:inline-block;margin-top:-4px;vertical-align: middle;">
+                    <el-col :span="18" class="btn-for-search">
+                        <img src="../../../static/image/common/search_btn.png">
                         <span>查询</span>
                     </el-col>
-                    <el-col :span="5">
+                    <el-col :span="2" :offset="4">
                         <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
@@ -86,14 +86,10 @@
              <el-col :span="ifWidth ? 15:20" class="border-left" id="ouListTable">
                 <el-row class="h48">
                     <el-col :span="ifWidth?0:2" class="search-block">
-                        <div style="display:inline-block" @click="openLeft">
+                        <div @click="openLeft">
                             <img src="../../../static/image/common/search_btn.png">
-                        </div>
-                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
                             <span>查询</span>
-                        </div>
-                        <div class="out-img" @click="openLeft">
-                            <span class="search_info_open" style="margin-left:0">+</span>
+                            <span class='open-search'>+</span>
                         </div>
                     </el-col>
                     <el-col :span="ifWidth?24:22" class="pt5">
@@ -275,10 +271,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                               <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -380,6 +375,10 @@
 
                 detailParentId:'',//tree节点点击获取前往detail新增页上级业务地区ID
                 detailParentName:'',//tree节点点击获取前往detail新增页上级业务地区name
+                response:{
+                    details:'',
+                    message:'',
+                },
             }
         },
         created:function(){       
@@ -560,6 +559,21 @@
                     _this.delRow()
                 }
             },
+            getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
+        },
             delThis(){//删除行
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.row.id})
@@ -569,6 +583,7 @@
                     _this.loadTree();
                     _this.dialogUserConfirm=false;
                 },function(res){
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -591,8 +606,9 @@
                     }
                         _this.dialogUserConfirm=false;
                 },function(res){
+                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.errorMessage=true;
-                        _this.dialogUserConfirm=false;
+                    _this.dialogUserConfirm=false;
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
@@ -679,6 +695,16 @@
     border-radius: 3px;
     cursor: pointer;
 }
+.open-search{
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #E3E3E3;
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
+} 
 </style>
 
 <style>

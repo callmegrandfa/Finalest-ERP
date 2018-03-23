@@ -24,7 +24,7 @@ EOF'''
     }
     stage('Depoly') {
       steps {
-        sh 'docker run -d -p 8084:8080 --name=web_test web_test'
+        sh 'docker run -d -p 8086:5000 --name=web_test web_test'
       }
     }
   }

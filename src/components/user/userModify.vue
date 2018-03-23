@@ -297,7 +297,10 @@
                                 <el-table-column prop="roleCode" label="角色编码"></el-table-column>
                                 <el-table-column prop="displayName" label="角色名称"></el-table-column>
                                 <el-table-column prop="ouName" label="所属组织"></el-table-column>
-                            </el-table>    
+                            </el-table>   
+                            <span>总共有{{totalItemLeft}}条数据</span>
+                            <el-button>&lt;</el-button>
+                            <el-button>&gt;</el-button>
                         </el-col>
                 </el-col>
                 <el-col :span="2">
@@ -320,7 +323,10 @@
                             <el-table-column prop="roleCode" label="角色编码"></el-table-column>
                             <el-table-column prop="displayName" label="角色名称"></el-table-column>
                             <el-table-column prop="ouName" label="所属组织"></el-table-column>
-                        </el-table>    
+                        </el-table>  
+                        <span>总共有{{totalItemRight}}条数据</span>
+                        <el-button>&lt;</el-button>
+                        <el-button>&gt;</el-button>
                     </el-col>
                 </el-col>
             <el-col :span="24">
@@ -376,10 +382,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -501,6 +506,26 @@
         nochecked:[],//
         is_nocheked:true,//可选
         is_cheked:true,//已选
+//---------left表格-------------
+        pageIndexleft:1,//分页的当前页码
+        totalPageleft:0,//当前分页总数
+        oneItemleft:10,//每页有多少条信息
+        pageleft:1,//当前页 
+        totalItemLeft:0,//总共有多少条消息  
+ //---------right表格-------------         
+        totalItemRight:0,//总共有多少条消息 
+        pageIndexRight:1,//分页的当前页码
+        totalPageRight:0,//当前分页总数
+        oneItemRight:10,//每页有多少条信息
+        pageRight:1,//当前页 
+
+
+
+        response:{
+            details:'',
+            message:'',
+            validationErrors:[],
+        },
       }
     },
      validators: {
@@ -576,17 +601,12 @@
                 _this.selectData.languageId=res.result.items;
             })
         },
-        GetRoles(){
+        GetRoles(){//获取左侧表格数据
             let _this=this;
-            _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id})
+            _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:(_this.pageLeft-1)*_this.oneItemLeft,MaxResultCount:_this.oneItemLeft})
            .then(function(resp){//获取已选角色
-              
                 _this.checkedTable=resp.result.items
-                _this.getAllRoleData()
-                // _this.roleTotalItem=resp.result.totalCount;//暂时未用到
-                // _this.checked=resp.result.items;
-                // console.log(resp)
-                // 
+                _this.getAllRoleData()//获取所有角色数据
            },function(resp){
 
            })
@@ -733,20 +753,8 @@
             _this.tableLoading=true
             _this.$axios.gets('/api/services/app/Role/GetAll')//获取所有角色
             .then(function(res){ 
-                // _this.nochecked=[]  
                 _this.nocheckedTable=[]
-                //   _this.tableData=res.result.items;
-                // _this.totalItem=res.result.totalCount
-                // _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                // _this.tableLoading=false;
-                // _this.allNode=res.result.items;
                 _this.allRoles=res.result.items;
-                    // if(_this.checked.length>0){
-                    //     _this.nochecked=_this.uniqueArray(_this.allNode,_this.checked)
-                    // }else{
-                        
-                    //     _this.nochecked=_this.allNode
-                    // }
                     if(_this.checkedTable.length>0){//获取可选角色
                         _this.nocheckedTable=_this.uniqueArray(_this.allRoles,_this.checkedTable)
                     }else{
@@ -806,6 +814,21 @@
                 this.update_click=false;
             }
         },
+        getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
+        },
         save(){
             let _this=this;
             if(_this.update){
@@ -826,6 +849,7 @@
                             _this.update_click=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
+                            _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             _this.errorMessage=true;
                             _this.open('保存失败','el-icon-error','faildERP');
                         })
