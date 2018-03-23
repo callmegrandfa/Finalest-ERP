@@ -937,10 +937,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -1066,6 +1065,11 @@ export default({
             update:false,
             isEdit:true,//是否可编辑
             update_click:false,//修改按钮点击改变状态
+            response:{
+                details:'',
+                message:'',
+                validationErrors:[],
+            },
         }
     },
     validators: {
@@ -1553,6 +1557,21 @@ export default({
                 _this.update_click=false;
             }
         },
+        getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
+        },
         save(){
             let _this=this;
             // console.log(_this.addData)
@@ -1573,6 +1592,7 @@ export default({
                             _this.update_click=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
+                            _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             _this.errorMessage=true;
                             _this.open('保存失败','el-icon-error','faildERP');
                         })

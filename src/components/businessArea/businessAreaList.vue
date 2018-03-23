@@ -43,11 +43,15 @@
                         <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
                         <span class="btDetail">导出</span>
                     </button>
+                    <!-- <input @keyup.enter="submitSearch" type="text"> -->
                     <div class="search_input_group">
                         <div class="search_input_wapper">
                             <el-input
                                 placeholder="搜索..."
-                                class="search_input">
+                                class="search_input"
+                                v-model="AreaNameOrAreaCode"
+                                @keyup="submitSearch"
+                                >
                                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
                             </el-input>
                         </div>
@@ -183,10 +187,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -207,6 +210,7 @@
         name:'customerInfor',
         data(){
             return {
+                AreaNameOrAreaCode:'',//查询条件：地区名称/地区编码模糊查询关键字
                 // 错误信息提示开始
                  option: {
                     vRail: {
@@ -288,7 +292,10 @@
                 detailParentId:'default',//tree节点点击获取前往detail新增页上级业务地区ID
                 detailParentName:'default',//tree节点点击获取前往detail新增页上级业务地区name
                 ouId:'default',//tree节点点击获取前往detail新增页组织id
-
+                response:{
+                    details:'',
+                    message:'',
+                },
                 
             }
         },
@@ -457,6 +464,21 @@
                     _this.delRow()
                 }
             },
+            getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
+        },
             delRow(){//多项删除
                 let _this=this;
                 let data={
@@ -473,7 +495,7 @@
                         _this.loadTree();
                     }
                 },function(res){
-                    console.log(res)
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -487,7 +509,7 @@
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
-                    console.log(res)
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -499,7 +521,7 @@
                  _this.detailParentId=data.id;
                  _this.detailParentName=data.areaName;
                  _this.ouId=data.ouId;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id})
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id,OuId:data.ouId,AreaType:1})
                 .then(function(res){
                     _this.tableData=res.result;
                     // _this.tableData.unshift(data);
@@ -586,6 +608,18 @@
                 return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
                 };
             },
+            submitSearch(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{AreaType:1,AreaNameOrAreaCode:_this.AreaNameOrAreaCode})
+                .then(function(res){
+                    _this.tableData=res.result;
+                    _this.totalItem=res.result.length;
+                    _this.tableLoading=false;
+                    },function(res){
+                    _this.errorMessage=true;
+                    _this.tableLoading=false;
+                })
+            }
         },
     }
 </script>

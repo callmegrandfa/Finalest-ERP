@@ -193,11 +193,10 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
-                            </vue-scroll> 
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll>  
                         </el-col>
                       
                 </el-collapse-transition>   
@@ -271,6 +270,12 @@
 
                 detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
                 detailParentName:'',//tree节点点击获取前往detail新增页上级菜单name
+
+                response:{
+                details:'',
+                message:'',
+                validationErrors:[],
+            },
             }
         },
         created:function(){       
@@ -328,7 +333,7 @@
                     _this.treeLoading=false;
                     _this.loadIcon()
                },function(res){
-                   _this.treeLoading=false;
+                    _this.treeLoading=false;
                })
             },
             loadIcon(){
@@ -403,6 +408,21 @@
                     _this.delRow()
                 }
             },
+            getErrorMessage(message,details,validationErrors){
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
+            },
             delThis(){//删除行
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',{id:_this.row.id})
@@ -412,6 +432,7 @@
                     _this.loadTableData();
                     _this.loadTree();
                 },function(res){
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -433,8 +454,9 @@
                     }
                         _this.dialogUserConfirm=false;
                 },function(res){
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.errorMessage=true;
-                        _this.dialogUserConfirm=false;
+                    _this.dialogUserConfirm=false;
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
                 
