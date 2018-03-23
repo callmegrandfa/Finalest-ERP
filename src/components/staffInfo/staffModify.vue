@@ -309,7 +309,13 @@
     .customer-modify-wrapper .btnBd {
     width: 100%;
     border-bottom: 1px solid #E4E4E4;
-    padding-bottom: 5px;
+    padding: 5px;
     }
 </style>
+<style>
+ .customer-modify-wrapper  .el-input__inner{
+         border: 1px solid #dcdfe6 !important;
+ }
+</style>
+
 

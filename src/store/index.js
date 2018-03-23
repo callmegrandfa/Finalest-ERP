@@ -116,6 +116,10 @@ export default new vuex.Store({
             { name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' } ,
             
             { name: 'count', url: '/count/countList/:id', parent: '' , default: '/count/countList/:id' }, //计量单位
+
+            { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaList/:id', parent: '', default: '/adminstrArea/adminstrAreaList/:id' }, //行政地区
+            { name: 'adminstrAreaDetail', url: '/adminstrArea/adminstrAreaDetail/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaList/:id' }, 
+            { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaModify/:id', parent: '', default: '/adminstrArea/adminstrAreaModify/:id' },
         ],
         icon:[
             {code:'fa fa-address-book',label:"",},
