@@ -309,7 +309,7 @@
     .customer-modify-wrapper .btnBd {
     width: 100%;
     border-bottom: 1px solid #E4E4E4;
-    padding-bottom: 5px;
+    padding: 5px;
     }
 </style>
 <style>

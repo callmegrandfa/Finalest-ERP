@@ -169,9 +169,25 @@
 <script>
     export default {
         name:'adminstrAreaList',
-        data(){},
-        created(){},
+        data(){
+            return{
+                SkipCount:0,
+                MaxResultCount:10,
+                allList:[],//所有数据
+            }
+            
+        },
+        created(){
+             this.getAllList();
+        },
         methods:{
+            // 获取所有数据
+            getAllList(){
+                let _this=this;
+                _this.$axios.gets('')
+                
+            },
+
             // 左边搜索框
             leftSearch(){},
             // 按钮增加----去新增页面(detail)

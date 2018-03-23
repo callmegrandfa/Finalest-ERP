@@ -6,7 +6,18 @@
 
 <script>
     export default {
-        
+        name:'adminstrAreaModify',
+        data(){
+            return {
+
+            }
+        },
+        created(){
+
+        },
+        methods:{
+            
+        },
     }
 </script>
 

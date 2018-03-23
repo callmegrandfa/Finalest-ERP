@@ -26,6 +26,7 @@
                     </el-col>
                 </el-row>
             </div>
+            <!-- 错误提示信息 -->
 	        <el-row>
                 <el-col>
                     <div class="errTipsWrapper" name="employeeCode">
@@ -420,6 +421,11 @@
 
 
 <style scoped>
+.btnBd{
+    /* height: 48px; */
+    padding: 5px;
+    border-bottom: 1px solid #e4e4e4 !important;
+}
 .block{
     display: none;
 }
