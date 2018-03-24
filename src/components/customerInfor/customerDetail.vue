@@ -204,7 +204,7 @@
                     
 
                     <div class="bgcolor">
-                        <label><small>*</small>所属组织</label>
+                        <label><small>*</small>所属组织{{createContactParams.ouId}}</label>
                         <el-select v-model="createContactParams.ouId" 
                                 placeholder=""
                                 class="ouId"
@@ -1310,7 +1310,7 @@ export default({
                 if(success){
                     $('.tipsWrapper').css({display:'none'})
                     self.$axios.posts('/api/services/app/ContactManagement/Create',self.createContactParams).then(function(res){
-                        // console.log(res);
+                        console.log(res);
                         self.open('创建客户资料成功','el-icon-circle-check','successERP');
                         // console.log(res.result.id);
                         self.backId = res.result.id;
@@ -1341,7 +1341,7 @@ export default({
                     });
                 }
             })
-            console.log(self.createContactParams)
+            // console.log(self.createContactParams)
             
 
         },

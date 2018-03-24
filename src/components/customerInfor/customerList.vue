@@ -263,7 +263,7 @@
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -275,10 +275,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -290,7 +289,8 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
         </el-dialog>
-        <!-- dialog -->
+    <!-- dialog -->  
+        
     </div>
 </template>
 
@@ -375,8 +375,8 @@
                 },//复选框选中数据id
                 ifWidth:true,//控制左侧搜索展开
 
-                // 错误信息提示开始
-                 option: {
+                //---错误提示框----------------
+                option: {
                     vRail: {
                         width: '5px',
                         pos: 'right',
@@ -391,9 +391,14 @@
                         height: '0',
                     },
                 },
-                detail_message_ifShow:false,
                 errorMessage:false,
-                // 错误信息提示结束
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
             }
         },
         created:function(){
@@ -542,6 +547,8 @@
                 self.loadAllList();
             },function(res){
                 self.errorMessage=true;
+                self.open('删除失败','el-icon-error','faildERP')
+                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
             })
         },
         delRow(){//批量删除
@@ -568,6 +575,8 @@
                             self.open('删除成功','el-icon-circle-check','successERP');    
                         },function(res){
                             self.errorMessage=true;
+                            self.open('删除失败','el-icon-error','faildERP')
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         })
                     }).catch(() => {
                         self.$message({
@@ -657,6 +666,24 @@
             self.$nextTick(function(){
                 $('#op_confirmSelect').click()
             })
+        },
+        //-----------------------------------------------------
+
+        //---获取错误信息---------------------------------------
+        getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
         },
         //-----------------------------------------------------
     }
