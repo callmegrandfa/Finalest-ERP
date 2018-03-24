@@ -1,770 +1,832 @@
 <template>
- <div class="customerBasicForm">
-     <el-row class="fixed">
-         <el-col :span="24" >
-            <button class="erp_bt bt_back" @click="back">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_back.png">
-                </div>
-                <span class="btDetail">返回</span>
-            </button>
-
-            <button @click="Update()" class="erp_bt bt_modify">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_modify.png">
-                </div>
-                <span class="btDetail">修改</span>
-            </button>
-
-            <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_save.png">
-                </div>
-                <span class="btDetail">保存</span>
-            </button>
-
-            <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_cancel.png">
-                </div>
-                <span class="btDetail">取消</span>
-            </button>
-
-            
-            
-            <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
-        </el-col>
-    </el-row>
- <el-collapse-transition>
-     <div v-show="ifShow">   
-        <el-row>
-            <el-col :span="24" class="getPadding"> 
-                <div class="tipsWrapper" name="ouId">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.ouId')}">
-                        <p class="msgDetail">错误提示：所属组织{{ validation.firstError('customerData.ouId') }}</p>
+    <div class="customerBasicForm">
+        <el-row class="fixed">
+            <el-col :span="24" >
+                <button class="erp_bt bt_back" @click="isBack">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_back.png">
                     </div>
-                </div>
-                <div class="tipsWrapper" name="contactCode">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactCode')}">
-                        <p class="msgDetail">错误提示：编码{{ validation.firstError('customerData.contactCode') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="contactName">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactName')}">
-                        <p class="msgDetail">错误提示：名称{{ validation.firstError('customerData.contactName') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="contactFullName">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactFullName')}">
-                        <p class="msgDetail">错误提示：全称{{ validation.firstError('customerData.contactFullName') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="mnemonic">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.mnemonic')}">
-                        <p class="msgDetail">错误提示：助记码{{ validation.firstError('customerData.mnemonic') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="contactClassId">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactClassId')}">
-                        <p class="msgDetail">错误提示：客户分类{{ validation.firstError('customerData.contactClassId') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="contactWorkPropertyId">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactWorkPropertyId')}">
-                        <p class="msgDetail">错误提示：客户性质{{ validation.firstError('customerData.contactWorkPropertyId') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="contactGradeId">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.contactGradeId')}">
-                        <p class="msgDetail">错误提示：客户等级{{ validation.firstError('customerData.contactGradeId') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="isCustomer">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.isCustomer')}">
-                        <p class="msgDetail">错误提示：客户类型{{ validation.firstError('customerData.isCustomer') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="ficaOuId">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.ficaOuId')}">
-                        <p class="msgDetail">错误提示：对应财务组织{{ validation.firstError('customerData.ficaOuId') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="taxCode">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.taxCode')}">
-                        <p class="msgDetail">错误提示：纳税登记号{{ validation.firstError('customerData.taxCode') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="opAreaId">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.opAreaId')}">
-                        <p class="msgDetail">错误提示：业务地区{{ validation.firstError('customerData.opAreaId') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="adAreaId">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.adAreaId')}">
-                        <p class="msgDetail">错误提示：行政地区{{ validation.firstError('customerData.adAreaId') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="legalPerson">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.legalPerson')}">
-                        <p class="msgDetail">错误提示：法人代表{{ validation.firstError('customerData.legalPerson') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="regAddress">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.regAddress')}">
-                        <p class="msgDetail">错误提示：注册地址{{ validation.firstError('customerData.regAddress') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="manager">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.manager')}">
-                        <p class="msgDetail">错误提示：负责人{{ validation.firstError('customerData.manager') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="phone">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.phone')}">
-                        <p class="msgDetail">错误提示：电话{{ validation.firstError('customerData.phone') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="remark">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.remark')}">
-                        <p class="msgDetail">错误提示：备注{{ validation.firstError('customerData.remark') }}</p>
-                    </div>
-                </div>
-                <div class="tipsWrapper" name="status">
-                    <div class="errorTips" :class="{block : !validation.hasError('customerData.status')}">
-                        <p class="msgDetail">错误提示：状态{{ validation.firstError('customerData.status') }}</p>
-                    </div>
-                </div>
+                    <span class="btDetail">返回</span>
+                </button>
 
-                <div class="bgcolor">
-                    <label><small>*</small>所属组织</label>
-                    <el-select v-model="customerData.ouId"
-                               placeholder=""
-                               class="ouId"
-                               :disabled="isEdit"
-                               @focus="showErrprTipsSelect"
-                               @change='Modify()'
-                               :class="{redBorder : validation.hasError('customerData.ouId')}">
+                <button @click="Update()" class="erp_bt bt_modify">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_modify.png">
+                    </div>
+                    <span class="btDetail">修改</span>
+                </button>
 
-                        <el-input placeholder="搜索..."
-                                      class="selectSearch"
-                                      v-model="ouSearch"></el-input>  
+                <button class="erp_bt bt_add" @click="goDetail">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
 
-                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="ouAr"
-                                     :props="selectOuProps"
-                                     node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="ouNodeClick"></el-tree> 
+                <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_save.png">
+                    </div>
+                    <span class="btDetail">保存</span>
+                </button>
 
-                        <el-option v-show="false"
-                                    :key="countOu.id" 
-                                    :label="countOu.ouFullname" 
-                                    :value="countOu.id"
-                                    id="ou_confirmSelect"></el-option>
-                    </el-select>
-                </div> 
+                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
 
-
-                <div class="bgcolor">
-                    <label><small>*</small>编码</label>
-                    <el-input v-model="customerData.contactCode" 
-                              placeholder="" 
-                              :disabled="isEdit"
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('customerData.contactCode')}"
-                              class="contactCode"
-                              @change='Modify()'></el-input>
-                </div>
-
-
-                <div class="bgcolor">
-                    <label><small>*</small>名称</label>
-                    <el-input v-model="customerData.contactName" 
-                              placeholder=""
-                              :disabled="isEdit"
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('customerData.contactName')}"
-                              class="contact"
-                              @change='Modify()'></el-input>
-                </div>
-
-
-                <div class="bgcolor">
-                    <label><small>*</small>全称</label>
-                    <el-input v-model="customerData.contactFullName" 
-                              placeholder=""
-                              :disabled="isEdit"
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('customerData.contactFullName')}"
-                              class="contactFullName" 
-                              @change='Modify()'></el-input>
-                </div>
-
-                <div class="bgcolor">
-                    <label>助记码</label>
-                    <el-input v-model="customerData.mnemonic" 
-                              placeholder=""
-                              :disabled="isEdit"
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('customerData.mnemonic')}"
-                              class="mnemonic"
-                              @change='Modify()'></el-input>
-                </div>
-                    
-
-
-                <div class="bgcolor">
-                    <label>客户分类</label>
-                    <el-select v-model="customerData.contactClassId"
-                               placeholder=""
-                               :disabled="isEdit"
-                               @change='Modify()'
-                               @focus="showErrprTipsSelect"
-                               class="contactClassId"
-                               :class="{redBorder : validation.hasError('customerData.contactClassId')}">
-                        <el-input placeholder="搜索..."
-                                      class="selectSearch"
-                                      v-model="cuSearch"></el-input>
-
-                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="cuAr"
-                                     :props="selectCuProps"
-                                     node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="cuNodeClick"></el-tree>
-
-                        <el-option v-show="false"
-                                    :key="countCu.id" 
-                                    :label="countCu.cuFullname" 
-                                    :value="countCu.id"
-                                    id="cu_confirmSelect"></el-option>
-                    </el-select>
-                </div>
                 
                 
-                
-                <div class="bgcolor">
-                    <label>客户性质</label>
-                    <el-select v-model="customerData.contactWorkPropertyId"
-                               placeholder=""
-                               :disabled="isEdit"
-                               @change='Modify()'
-                               @focus="showErrprTipsSelect"
-                               class="contactWorkPropertyId"
-                               :class="{redBorder : validation.hasError('customerData.contactWorkPropertyId')}">
-                        <el-option v-for="item in propertyAr" 
-                                   :key="item.itemValue" 
-                                   :label="item.itemName" 
-                                   :value="item.itemValue"></el-option>
-                    </el-select>
-                </div>
-
-                <div class="bgcolor">
-                    <label>客户等级</label>
-                    <el-select v-model="customerData.contactGradeId"
-                               placeholder=""
-                               :disabled="isEdit"
-                               @change='Modify()'
-                               @focus="showErrprTipsSelect"
-                               class="contactGradeId"
-                               :class="{redBorder : validation.hasError('customerData.contactGradeId')}">
-                        <el-option v-for="item in gradeAr" 
-                                   :key="item.itemValue" 
-                                   :label="item.itemName" 
-                                   :value="item.itemValue"></el-option>
-                    </el-select>
-                </div>
-
-                <div class="bgcolor">
-                    <label>客户类型</label>
-                    <el-select v-model="customerData.contactTypeId"
-                               placeholder=""
-                               :disabled="isEdit"
-                               @change='Modify()'
-                               @focus="showErrprTipsSelect"
-                               class="contactTypeId"
-                               :class="{redBorder : validation.hasError('customerData.contactTypeId')}">
-                        <el-option v-for="item in typeAr" 
-                                   :key="item.itemValue" 
-                                   :label="item.itemName" 
-                                   :value="item.itemValue"></el-option>
-                    </el-select>
-                </div>   
-
-                <div class="bgcolor">
-                    <label>对应财务组织</label>
-                    <el-select v-model="customerData.ficaOuId"
-                               placeholder=""
-                               :disabled="isEdit"
-                               class="ficaOuId"
-                               @focus="showErrprTipsSelect"
-                               @change='Modify()'
-                               :class="{redBorder : validation.hasError('customerData.ficaOuId')}">
-                        <el-input placeholder="搜索..."
-                                      class="selectSearch"
-                                      v-model="fiSearch"></el-input>
-                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="fiAr"
-                                     :props="selectFiProps"
-                                     node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="fiNodeClick"></el-tree>
-                        <el-option v-show="false"
-                                    :key="countFi.id" 
-                                    :label="countFi.fiFullname" 
-                                    :value="countFi.id"
-                                    id="fi_confirmSelect"></el-option>
-                    </el-select>
-                </div>
-
-                <div class="bgcolor">
-                    <label>纳税登记号</label>
-                    <el-input v-model="customerData.taxCode" 
-                              placeholder=""
-                              :disabled="isEdit"
-                              @focus="showErrprTips"
-                              class="taxCode"
-                              :class="{redBorder : validation.hasError('customerData.taxCode')}"
-                              @change='Modify()'></el-input>
-                </div>
-
-                <div class="bgcolor">
-                    <label>业务地区</label>
-                    <el-select v-model="customerData.opAreaId"
-                               class="opAreaId"
-                               :disabled="isEdit"
-                               @focus="showErrprTipsSelect"
-                               placeholder=""
-                               @change='Modify()'
-                               :class="{redBorder : validation.hasError('customerData.opAreaId')}">
-                        <el-input placeholder="搜索..."
-                                class="selectSearch"
-                                v-model="opSearch"></el-input>
-                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="opAr"
-                                     :props="selectOpProps"
-                                     node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="opNodeClick"></el-tree>
-                        <el-option v-show="false"
-                                       :key="countOp.id" 
-                                       :label="countOp.areaName" 
-                                       :value="countOp.id"
-                                       id="op_confirmSelect"></el-option>
-                    </el-select>
-                </div>
-
-                <div class="bgcolor">
-                    <label>行政地区</label>
-                    <el-select v-model="customerData.adAreaId"
-                               placeholder=""
-                               :disabled="isEdit"
-                               @change='Modify()'
-                               @focus="showErrprTipsSelect"
-                               class="adAreaId"
-                               :class="{redBorder : validation.hasError('customerData.adAreaId')}">
-                        <el-input placeholder=""
-                                      class="selectSearch"
-                                      v-model="adSearch"></el-input>
-                        
-                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="adAr"
-                                     :props="selectAdProps"
-                                     node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="adNodeClick"></el-tree>
-                        <el-option v-show="false"
-                                   :key="countAd.id" 
-                                   :label="countAd.areaName" 
-                                   :value="countAd.id"
-                                   id="ad_confirmSelect"></el-option>
-                    </el-select>
-                </div>
-
-                <div class="bgcolor">
-                    <label>法人代表</label>
-                    <el-input v-model="customerData.legalPerson" 
-                              placeholder=""
-                              :disabled="isEdit" 
-                              class="legalPerson"
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('customerData.legalPerson')}"
-                              @change='Modify()'></el-input>
-                </div>
-
-                <div class="bgcolor">
-                    <label>注册地址</label>
-                    <el-input v-model="customerData.regAddress" 
-                              placeholder=""
-                              :disabled="isEdit" 
-                              class="regAddress"
-                              @focus="showErrprTips"
-                              :class="{redBorder : validation.hasError('customerData.regAddress')}"
-                              @change='Modify()'></el-input>
-                </div>
-
-                <div class="bgcolor">
-                    <label>负责人</label>
-                    <el-input v-model="customerData.manager" 
-                              placeholder=""
-                              :disabled="isEdit" 
-                              @focus="showErrprTips"
-                              class="manager"
-                              :class="{redBorder : validation.hasError('customerData.manager')}"
-                              @change='Modify()'></el-input>
-                </div>
-
-                <div class="bgcolor">
-                    <label>电话</label>
-                    <el-input v-model="customerData.phone" 
-                              placeholder=""
-                              :disabled="isEdit" 
-                              @focus="showErrprTips"
-                              class="phone"
-                              :class="{redBorder : validation.hasError('customerData.phone')}"
-                              @change='Modify()'></el-input>
-                </div>
-                
-                <div class="bgcolor">
-                    <label>备注</label>
-                    <el-input v-model="customerData.remark" 
-                              placeholder=""
-                              :disabled="isEdit" 
-                              @focus="showErrprTips"
-                              class="remark"
-                              :class="{redBorder : validation.hasError('customerData.remark')}"
-                              @change='Modify()'></el-input>
-                </div>
-
-                <div class="bgcolor">
-                    <label><small>*</small>状态</label>
-                    <el-select v-model="customerData.status"
-                               class="status"
-                               placeholder=""
-                               @change='Modify()'
-                               @focus="showErrprTipsSelect"
-                               :disabled="isEdit" 
-                               :class="{redBorder : validation.hasError('customerData.status')}">
-                        <el-option v-for="item in statusAr"  
-                                   :key="item.itemValue" 
-                                   :label="item.itemName" 
-                                   :value="item.itemValue"></el-option>
-                    </el-select>
-                </div>
+                <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
             </el-col>
         </el-row>
-     </div>
- </el-collapse-transition>     
-<el-row>
-    <el-col :span="2" :offset="1"><el-checkbox v-model="supplier">同为供应商</el-checkbox></el-col>
-    <el-col :span="2"><el-checkbox v-model="customerData.creditMgt">信用管理</el-checkbox></el-col>   
-</el-row>
-
-    <!-- 公司业务财务bootTab标签页 -->
-    <el-row class="nopadding"> 
-        <div class="tabZoo">
-            <el-col :span="24">
-               <el-tabs v-model="activeName">
-                    <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
-                        <button class="erp_bt bt_add" @click="addColbank" v-show='!isEdit'>
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_add.png">
+        
+        <el-collapse-transition>
+            <div v-show="ifShow">   
+                <el-row>
+                    <el-col :span="24" class="getPadding"> 
+                        <div class="tipsWrapper" name="ouId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.ouId')}">
+                                <p class="msgDetail">错误提示：所属组织{{ validation.firstError('customerData.ouId') }}</p>
                             </div>
-                            <span class="btDetail">增行</span>
-                        </button>
-
-                        <button class="erp_bt bt_auxiliary mb10" @click='test'>
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_auxiliary.png">
+                        </div>
+                        <div class="tipsWrapper" name="contactCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactCode')}">
+                                <p class="msgDetail">错误提示：编码{{ validation.firstError('customerData.contactCode') }}</p>
                             </div>
-                            <span class="btDetail">辅助功能</span>
-                        </button>
+                        </div>
+                        <div class="tipsWrapper" name="contactName">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactName')}">
+                                <p class="msgDetail">错误提示：名称{{ validation.firstError('customerData.contactName') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="contactFullName">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactFullName')}">
+                                <p class="msgDetail">错误提示：全称{{ validation.firstError('customerData.contactFullName') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="mnemonic">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.mnemonic')}">
+                                <p class="msgDetail">错误提示：助记码{{ validation.firstError('customerData.mnemonic') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="contactClassId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactClassId')}">
+                                <p class="msgDetail">错误提示：客户分类{{ validation.firstError('customerData.contactClassId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="contactWorkPropertyId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactWorkPropertyId')}">
+                                <p class="msgDetail">错误提示：客户性质{{ validation.firstError('customerData.contactWorkPropertyId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="contactGradeId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactGradeId')}">
+                                <p class="msgDetail">错误提示：客户等级{{ validation.firstError('customerData.contactGradeId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="isCustomer">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.isCustomer')}">
+                                <p class="msgDetail">错误提示：客户类型{{ validation.firstError('customerData.isCustomer') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="ficaOuId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.ficaOuId')}">
+                                <p class="msgDetail">错误提示：对应财务组织{{ validation.firstError('customerData.ficaOuId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="taxCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.taxCode')}">
+                                <p class="msgDetail">错误提示：纳税登记号{{ validation.firstError('customerData.taxCode') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="opAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.opAreaId')}">
+                                <p class="msgDetail">错误提示：业务地区{{ validation.firstError('customerData.opAreaId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="adAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.adAreaId')}">
+                                <p class="msgDetail">错误提示：行政地区{{ validation.firstError('customerData.adAreaId') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="legalPerson">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.legalPerson')}">
+                                <p class="msgDetail">错误提示：法人代表{{ validation.firstError('customerData.legalPerson') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="regAddress">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.regAddress')}">
+                                <p class="msgDetail">错误提示：注册地址{{ validation.firstError('customerData.regAddress') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="manager">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.manager')}">
+                                <p class="msgDetail">错误提示：负责人{{ validation.firstError('customerData.manager') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="phone">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.phone')}">
+                                <p class="msgDetail">错误提示：电话{{ validation.firstError('customerData.phone') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="remark">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.remark')}">
+                                <p class="msgDetail">错误提示：备注{{ validation.firstError('customerData.remark') }}</p>
+                            </div>
+                        </div>
+                        <div class="tipsWrapper" name="status">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.status')}">
+                                <p class="msgDetail">错误提示：状态{{ validation.firstError('customerData.status') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>所属组织</label>
+                            <el-select v-model="customerData.ouId"
+                                    placeholder=""
+                                    class="ouId"
+                                    :disabled="isEdit"
+                                    @focus="showErrprTipsSelect"
+                                    @change='Modify()'
+                                    :class="{redBorder : validation.hasError('customerData.ouId')}">
+
+                                <el-input placeholder="搜索..."
+                                            class="selectSearch"
+                                            v-model="ouSearch"></el-input>  
+
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                            :data="ouAr"
+                                            :props="selectOuProps"
+                                            node-key="id"
+                                            default-expand-all
+                                            ref="tree"
+                                            :filter-node-method="filterNode"
+                                            :expand-on-click-node="false"
+                                            @node-click="ouNodeClick"></el-tree> 
+
+                                <el-option v-show="false"
+                                            :key="countOu.id" 
+                                            :label="countOu.ouFullname" 
+                                            :value="countOu.id"
+                                            id="ou_confirmSelect"></el-option>
+                            </el-select>
+                        </div> 
+
+
+                        <div class="bgcolor">
+                            <label><small>*</small>编码</label>
+                            <el-input v-model="customerData.contactCode" 
+                                    placeholder="" 
+                                    :disabled="isEdit"
+                                    @focus="showErrprTips"
+                                    :class="{redBorder : validation.hasError('customerData.contactCode')}"
+                                    class="contactCode"
+                                    @change='Modify()'></el-input>
+                        </div>
+
+
+                        <div class="bgcolor">
+                            <label><small>*</small>名称</label>
+                            <el-input v-model="customerData.contactName" 
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @focus="showErrprTips"
+                                    :class="{redBorder : validation.hasError('customerData.contactName')}"
+                                    class="contact"
+                                    @change='Modify()'></el-input>
+                        </div>
+
+
+                        <div class="bgcolor">
+                            <label><small>*</small>全称</label>
+                            <el-input v-model="customerData.contactFullName" 
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @focus="showErrprTips"
+                                    :class="{redBorder : validation.hasError('customerData.contactFullName')}"
+                                    class="contactFullName" 
+                                    @change='Modify()'></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>助记码</label>
+                            <el-input v-model="customerData.mnemonic" 
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @focus="showErrprTips"
+                                    :class="{redBorder : validation.hasError('customerData.mnemonic')}"
+                                    class="mnemonic"
+                                    @change='Modify()'></el-input>
+                        </div>
+                            
+
+
+                        <div class="bgcolor">
+                            <label>客户分类</label>
+                            <el-select v-model="customerData.contactClassId"
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @change='Modify()'
+                                    @focus="showErrprTipsSelect"
+                                    class="contactClassId"
+                                    :class="{redBorder : validation.hasError('customerData.contactClassId')}">
+                                <el-input placeholder="搜索..."
+                                            class="selectSearch"
+                                            v-model="cuSearch"></el-input>
+
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                            :data="cuAr"
+                                            :props="selectCuProps"
+                                            node-key="id"
+                                            default-expand-all
+                                            ref="tree"
+                                            :filter-node-method="filterNode"
+                                            :expand-on-click-node="false"
+                                            @node-click="cuNodeClick"></el-tree>
+
+                                <el-option v-show="false"
+                                            :key="countCu.id" 
+                                            :label="countCu.cuFullname" 
+                                            :value="countCu.id"
+                                            id="cu_confirmSelect"></el-option>
+                            </el-select>
+                        </div>
                         
-                
-                        <el-table :data="bankData" stripe border style="width: 100%" election-change="handleSelectionChange" class="all-table">
-                            <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
-                                <template slot-scope="scope">
-                                    <el-select  v-model="scope.row.settlementCurrencyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
-                                        <el-option  v-for="item in curencyAr" :key="item.id" :label="item.currencyName" :value="item.id" >
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="accountNo" label="银行账号" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.accountNo" 
-                                        type="text"    
-                                        :disabled="isEdit"
-                                        @change="handleBankChange(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="accountName" label="银行账户" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.accountName" 
-                                        type="text"    
-                                        :disabled="isEdit"
-                                        @change="handleBankChange(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="openingBank" label="开户银行" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.openingBank" 
-                                        type="text"    
-                                        :disabled="isEdit"
-                                        @change="handleBankChange(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="contactPerson" label="联系人" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
-                                        type="text"   
-                                        :disabled="isEdit" 
-                                        @change="handleBankChange(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="phone" label="联系电话" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.phone" 
-                                        type="text"    
-                                        :disabled="isEdit"
-                                        @change="handleBankChange(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="isDefault" label="默认">
-                                <template scope="scope">
-                                    <el-radio  :label="true" 
-                                                v-model="scope.row.isDefault" 
-                                                @change.native="getCurrentRow(scope.$index,scope.row)" 
-                                                @change="handleBankChange(scope.$index,scope.row)"
-                                                :disabled="isEdit"></el-radio>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column label='操作'>
-                                <template slot-scope="scope" >
-                                    <!-- <span>{{scope.row.isDefault}}</span> -->
-                                    <el-button @click="handleBankDelete(scope.$index,scope.row)" type="text" size="small" :disabled="isEdit">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-tab-pane>
-
-                    <el-tab-pane label="送货地址" name="address" class="getPadding" style="z-index:-1000">
-                        <button class="erp_bt bt_add" @click="addColAddress" v-show='!isEdit'>
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_add.png">
-                            </div>
-                            <span class="btDetail">增行</span>
-                        </button>
-
-                        <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_auxiliary.png">
-                            </div>
-                            <span class="btDetail">辅助功能</span>
-                        </button>
                         
-                
-                        <el-table :data="addressData" stripe border style="width: 100%;" election-change="handleSelectionChange2" class="all-table">
-                            <!-- <el-table-column prop="addressType" label="地址类型" width="180">
-                                <template slot-scope="scope">
-                                    <el-select  v-model="scope.row.addressType" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
-                                        <el-option  v-for="item in addAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-table-column> -->
-
-                            <el-table-column prop="completeAddress" label="供货地址" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.completeAddress" 
-                                        type="text"    
-                                        @click="handleAddressChange(scope.$index,scope.row)"
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="completeAddress" label="省" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.completeAddress" 
-                                        type="text"    
-                                        @click="handleAddressChange(scope.$index,scope.row)"
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="id" label="市" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.id" 
-                                        type="text"    
-                                        @click="handleAddressChange(scope.$index,scope.row)"
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="phone" label="区" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.phone" 
-                                        type="text"   
-                                        @click="handleAddressChange(scope.$index,scope.row)" 
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="contactPerson" label="联系人" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
-                                        type="text"    
-                                        @click="handleAddressChange(scope.$index,scope.row)"
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="contactPerson" label="联系电话" width="180">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.phone" 
-                                        type="text"    
-                                        @click="handleAddressChange(scope.$index,scope.row)"
-                                        v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="ifDefault" label="默认">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="addressData[scope.$index].ifDefault"></el-checkbox>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label='操作'>
-                                <template slot-scope="scope" >
-                                    <el-button v-on:click="handleAddressDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-tab-pane>
-                    <el-tab-pane label="使用组织" name="organization" class="getPadding" style="z-index:-1000">
-                        <button class="erp_bt bt_add" @click="addColOu" v-show='!isEdit'>
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_add.png">
-                            </div>
-                            <span class="btDetail">增行</span>
-                        </button>
-
-                        <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_auxiliary.png">
-                            </div>
-                            <span class="btDetail">辅助功能</span>
-                        </button>
                         
-                
-                        <el-table :data="ouData" stripe border style="width: 100%" election-change="handleSelectionChange3" class="all-table">
-                            <el-table-column type="selection"></el-table-column>
+                        <div class="bgcolor">
+                            <label>客户性质</label>
+                            <el-select v-model="customerData.contactWorkPropertyId"
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @change='Modify()'
+                                    @focus="showErrprTipsSelect"
+                                    class="contactWorkPropertyId"
+                                    :class="{redBorder : validation.hasError('customerData.contactWorkPropertyId')}">
+                                <el-option v-for="item in propertyAr" 
+                                        :key="item.itemValue" 
+                                        :label="item.itemName" 
+                                        :value="item.itemValue"></el-option>
+                            </el-select>
+                        </div>
 
-                            <el-table-column prop="ouId" label="业务组织" width="540">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.ouId" 
-                                        type="text"    
-                                        @click="handleOuChange(scope.$index,scope.row)"  
-                                        v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
-                                </template>
-                            </el-table-column>
+                        <div class="bgcolor">
+                            <label>客户等级</label>
+                            <el-select v-model="customerData.contactGradeId"
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @change='Modify()'
+                                    @focus="showErrprTipsSelect"
+                                    class="contactGradeId"
+                                    :class="{redBorder : validation.hasError('customerData.contactGradeId')}">
+                                <el-option v-for="item in gradeAr" 
+                                        :key="item.itemValue" 
+                                        :label="item.itemName" 
+                                        :value="item.itemValue"></el-option>
+                            </el-select>
+                        </div>
 
-                            <el-table-column prop="transport_method_id" label="运输方式" width="540">
-                                <template slot-scope="scope">
-                                    <el-select  v-model="scope.row.transport_method_id" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
-                                        <el-option  v-for="item in tranAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-table-column>
+                        <div class="bgcolor">
+                            <label>客户类型</label>
+                            <el-select v-model="customerData.contactTypeId"
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @change='Modify()'
+                                    @focus="showErrprTipsSelect"
+                                    class="contactTypeId"
+                                    :class="{redBorder : validation.hasError('customerData.contactTypeId')}">
+                                <el-option v-for="item in typeAr" 
+                                        :key="item.itemValue" 
+                                        :label="item.itemName" 
+                                        :value="item.itemValue"></el-option>
+                            </el-select>
+                        </div>   
 
-                            <el-table-column label='操作'>
-                                <template slot-scope="scope" >
-                                    <el-button v-on:click="handleOuDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-tab-pane>
-                </el-tabs>
+                        <div class="bgcolor">
+                            <label>对应财务组织</label>
+                            <el-select v-model="customerData.ficaOuId"
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    class="ficaOuId"
+                                    @focus="showErrprTipsSelect"
+                                    @change='Modify()'
+                                    :class="{redBorder : validation.hasError('customerData.ficaOuId')}">
+                                <el-input placeholder="搜索..."
+                                            class="selectSearch"
+                                            v-model="fiSearch"></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                            :data="fiAr"
+                                            :props="selectFiProps"
+                                            node-key="id"
+                                            default-expand-all
+                                            ref="tree"
+                                            :filter-node-method="filterNode"
+                                            :expand-on-click-node="false"
+                                            @node-click="fiNodeClick"></el-tree>
+                                <el-option v-show="false"
+                                            :key="countFi.id" 
+                                            :label="countFi.fiFullname" 
+                                            :value="countFi.id"
+                                            id="fi_confirmSelect"></el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>纳税登记号</label>
+                            <el-input v-model="customerData.taxCode" 
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @focus="showErrprTips"
+                                    class="taxCode"
+                                    :class="{redBorder : validation.hasError('customerData.taxCode')}"
+                                    @change='Modify()'></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>业务地区</label>
+                            <el-select v-model="customerData.opAreaId"
+                                    class="opAreaId"
+                                    :disabled="isEdit"
+                                    @focus="showErrprTipsSelect"
+                                    placeholder=""
+                                    @change='Modify()'
+                                    :class="{redBorder : validation.hasError('customerData.opAreaId')}">
+                                <el-input placeholder="搜索..."
+                                        class="selectSearch"
+                                        v-model="opSearch"></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                            :data="opAr"
+                                            :props="selectOpProps"
+                                            node-key="id"
+                                            default-expand-all
+                                            ref="tree"
+                                            :filter-node-method="filterNode"
+                                            :expand-on-click-node="false"
+                                            @node-click="opNodeClick"></el-tree>
+                                <el-option v-show="false"
+                                            :key="countOp.id" 
+                                            :label="countOp.areaName" 
+                                            :value="countOp.id"
+                                            id="op_confirmSelect"></el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>行政地区</label>
+                            <el-select v-model="customerData.adAreaId"
+                                    placeholder=""
+                                    :disabled="isEdit"
+                                    @change='Modify()'
+                                    @focus="showErrprTipsSelect"
+                                    class="adAreaId"
+                                    :class="{redBorder : validation.hasError('customerData.adAreaId')}">
+                                <el-input placeholder=""
+                                            class="selectSearch"
+                                            v-model="adSearch"></el-input>
+                                
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                            :data="adAr"
+                                            :props="selectAdProps"
+                                            node-key="id"
+                                            default-expand-all
+                                            ref="tree"
+                                            :filter-node-method="filterNode"
+                                            :expand-on-click-node="false"
+                                            @node-click="adNodeClick"></el-tree>
+                                <el-option v-show="false"
+                                        :key="countAd.id" 
+                                        :label="countAd.areaName" 
+                                        :value="countAd.id"
+                                        id="ad_confirmSelect"></el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>法人代表</label>
+                            <el-input v-model="customerData.legalPerson" 
+                                    placeholder=""
+                                    :disabled="isEdit" 
+                                    class="legalPerson"
+                                    @focus="showErrprTips"
+                                    :class="{redBorder : validation.hasError('customerData.legalPerson')}"
+                                    @change='Modify()'></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>注册地址</label>
+                            <el-input v-model="customerData.regAddress" 
+                                    placeholder=""
+                                    :disabled="isEdit" 
+                                    class="regAddress"
+                                    @focus="showErrprTips"
+                                    :class="{redBorder : validation.hasError('customerData.regAddress')}"
+                                    @change='Modify()'></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>负责人</label>
+                            <el-input v-model="customerData.manager" 
+                                    placeholder=""
+                                    :disabled="isEdit" 
+                                    @focus="showErrprTips"
+                                    class="manager"
+                                    :class="{redBorder : validation.hasError('customerData.manager')}"
+                                    @change='Modify()'></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label>电话</label>
+                            <el-input v-model="customerData.phone" 
+                                    placeholder=""
+                                    :disabled="isEdit" 
+                                    @focus="showErrprTips"
+                                    class="phone"
+                                    :class="{redBorder : validation.hasError('customerData.phone')}"
+                                    @change='Modify()'></el-input>
+                        </div>
+                        
+                        <div class="bgcolor">
+                            <label>备注</label>
+                            <el-input v-model="customerData.remark" 
+                                    placeholder=""
+                                    :disabled="isEdit" 
+                                    @focus="showErrprTips"
+                                    class="remark"
+                                    :class="{redBorder : validation.hasError('customerData.remark')}"
+                                    @change='Modify()'></el-input>
+                        </div>
+
+                        <div class="bgcolor">
+                            <label><small>*</small>状态</label>
+                            <el-select v-model="customerData.status"
+                                    class="status"
+                                    placeholder=""
+                                    @change='Modify()'
+                                    @focus="showErrprTipsSelect"
+                                    :disabled="isEdit" 
+                                    :class="{redBorder : validation.hasError('customerData.status')}">
+                                <el-option v-for="item in statusAr"  
+                                        :key="item.itemValue" 
+                                        :label="item.itemName" 
+                                        :value="item.itemValue"></el-option>
+                            </el-select>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+        </el-collapse-transition>     
+        
+        <el-row>
+            <el-col :span="2" :offset="1"><el-checkbox v-model="supplier">同为供应商</el-checkbox></el-col>
+            <el-col :span="2"><el-checkbox v-model="customerData.creditMgt">信用管理</el-checkbox></el-col>   
+        </el-row>
+
+        <!-- 公司业务财务bootTab标签页 -->
+        <el-row class="nopadding"> 
+            <div class="tabZoo">
+                <el-col :span="24">
+                <el-tabs v-model="activeName">
+                        <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
+                            <button class="erp_bt bt_add" @click="addColbank" v-show='!isEdit'>
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_add.png">
+                                </div>
+                                <span class="btDetail">增行</span>
+                            </button>
+
+                            <button class="erp_bt bt_auxiliary mb10" @click='test'>
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_auxiliary.png">
+                                </div>
+                                <span class="btDetail">辅助功能</span>
+                            </button>
+                            
+                    
+                            <el-table :data="bankData" stripe border style="width: 100%" election-change="handleSelectionChange" class="all-table">
+                                <el-table-column type="selection"></el-table-column>
+                                <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
+                                    <template slot-scope="scope">
+                                        <el-select  v-model="scope.row.settlementCurrencyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                            <el-option  v-for="item in curencyAr" :key="item.id" :label="item.currencyName" :value="item.id" >
+                                            </el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="accountNo" label="银行账号" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.accountNo" 
+                                            type="text"    
+                                            :disabled="isEdit"
+                                            @change="handleBankChange(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="accountName" label="银行账户" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.accountName" 
+                                            type="text"    
+                                            :disabled="isEdit"
+                                            @change="handleBankChange(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="openingBank" label="开户银行" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.openingBank" 
+                                            type="text"    
+                                            :disabled="isEdit"
+                                            @change="handleBankChange(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="contactPerson" label="联系人" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.contactPerson" 
+                                            type="text"   
+                                            :disabled="isEdit" 
+                                            @change="handleBankChange(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="phone" label="联系电话" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.phone" 
+                                            type="text"    
+                                            :disabled="isEdit"
+                                            @change="handleBankChange(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="isDefault" label="默认">
+                                    <template scope="scope">
+                                        <el-radio  :label="true" 
+                                                    v-model="scope.row.isDefault" 
+                                                    @change.native="getCurrentRow(scope.$index,scope.row)" 
+                                                    @change="handleBankChange(scope.$index,scope.row)"
+                                                    :disabled="isEdit"></el-radio>
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column label='操作'>
+                                    <template slot-scope="scope" >
+                                        <!-- <span>{{scope.row.isDefault}}</span> -->
+                                        <el-button @click="handleBankDelete(scope.$index,scope.row)" type="text" size="small" :disabled="isEdit">删除</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+
+                        <el-tab-pane label="送货地址" name="address" class="getPadding" style="z-index:-1000">
+                            <button class="erp_bt bt_add" @click="addColAddress" v-show='!isEdit'>
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_add.png">
+                                </div>
+                                <span class="btDetail">增行</span>
+                            </button>
+
+                            <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_auxiliary.png">
+                                </div>
+                                <span class="btDetail">辅助功能</span>
+                            </button>
+                            
+                    
+                            <el-table :data="addressData" stripe border style="width: 100%;" election-change="handleSelectionChange2" class="all-table">
+                                <!-- <el-table-column prop="addressType" label="地址类型" width="180">
+                                    <template slot-scope="scope">
+                                        <el-select  v-model="scope.row.addressType" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                            <el-option  v-for="item in addAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                            </el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column> -->
+
+                                <el-table-column prop="completeAddress" label="供货地址" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.completeAddress" 
+                                            type="text"    
+                                            @click="handleAddressChange(scope.$index,scope.row)"
+                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="completeAddress" label="省" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.completeAddress" 
+                                            type="text"    
+                                            @click="handleAddressChange(scope.$index,scope.row)"
+                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="id" label="市" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.id" 
+                                            type="text"    
+                                            @click="handleAddressChange(scope.$index,scope.row)"
+                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="phone" label="区" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.phone" 
+                                            type="text"   
+                                            @click="handleAddressChange(scope.$index,scope.row)" 
+                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="contactPerson" label="联系人" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.contactPerson" 
+                                            type="text"    
+                                            @click="handleAddressChange(scope.$index,scope.row)"
+                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="contactPerson" label="联系电话" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.phone" 
+                                            type="text"    
+                                            @click="handleAddressChange(scope.$index,scope.row)"
+                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="ifDefault" label="默认">
+                                    <template slot-scope="scope">
+                                        <el-checkbox v-model="addressData[scope.$index].ifDefault"></el-checkbox>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label='操作'>
+                                    <template slot-scope="scope" >
+                                        <el-button v-on:click="handleAddressDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="使用组织" name="organization" class="getPadding" style="z-index:-1000">
+                            <button class="erp_bt bt_add" @click="addColOu" v-show='!isEdit'>
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_add.png">
+                                </div>
+                                <span class="btDetail">增行</span>
+                            </button>
+
+                            <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_auxiliary.png">
+                                </div>
+                                <span class="btDetail">辅助功能</span>
+                            </button>
+                            
+                    
+                            <el-table :data="ouData" stripe border style="width: 100%" election-change="handleSelectionChange3" class="all-table">
+                                <el-table-column type="selection"></el-table-column>
+
+                                <el-table-column prop="ouId" label="业务组织" width="540">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.ouId" 
+                                            type="text"    
+                                            @click="handleOuChange(scope.$index,scope.row)"  
+                                            v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="transport_method_id" label="运输方式" width="540">
+                                    <template slot-scope="scope">
+                                        <el-select  v-model="scope.row.transport_method_id" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                            <el-option  v-for="item in tranAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                            </el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column label='操作'>
+                                    <template slot-scope="scope" >
+                                        <el-button v-on:click="handleOuDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                    </el-tabs>
+                </el-col>
+            </div>
+        </el-row>   
+
+        <el-row>
+            <el-col :span="22" class="auditInformation getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor">
+                        <label>创建人</label>
+                        <el-input v-model="auditInformation.createName" placeholder="" disabled="disabled"></el-input>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-date-picker v-model="auditInformation.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>修改人</label>
+                        <el-input v-model="auditInformation.modifyName" placeholder="" disabled="disabled"></el-input>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                    </div>
+                    <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
+                    <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
+                    <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+                </div>                                  
             </el-col>
-        </div>
-    </el-row>    
- <el-row>
-    <el-col :span="22" class="auditInformation getPadding">
-        <h4 class="h4">审计信息</h4>
-        <div>
-            <div class="bgcolor">
-                <label>创建人</label>
-                <el-input v-model="auditInformation.createName" placeholder="" disabled="disabled"></el-input>
-            </div>
+        </el-row>
 
-            <div class="bgcolor">
-                <label>创建时间</label>
-                <el-date-picker v-model="auditInformation.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
-            </div>
+        <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            <!--  -->
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
 
-            <div class="bgcolor">
-                <label>修改人</label>
-                <el-input v-model="auditInformation.modifyName" placeholder="" disabled="disabled"></el-input>
-            </div>
-
-            <div class="bgcolor">
-                <label>修改时间</label>
-                <el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
-            </div>
-            <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-            <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
-        </div>                                  
-    </el-col>
-</el-row>                                                                       
-</div>
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+    <!-- dialog -->                                                                        
+    </div>
 </template>
 
 <script>
@@ -922,7 +984,34 @@ export default({
                 "transport_method_id": '',
                 "is_default": true
             },
-            checkedAr:[],
+            checkedAr:[],//进来时数据选中的默认框
+            //---信息修改提示框------------
+            dialogUserConfirm:false,//信息更改提示控制
+            //----------------------------
+            //---错误提示框----------------
+            option: {
+                vRail: {
+                    width: '5px',
+                    pos: 'right',
+                    background: "#9093994d",
+                },
+                vBar: {
+                    width: '5px',
+                    pos: 'right',
+                    background: '#9093994d',
+                },
+                hRail: {
+                    height: '0',
+                },
+            },
+            errorMessage:false,
+            detail_message_ifShow:false,
+            response:{
+                details:'',
+                message:'',
+                validationErrors:[],
+            },
+            //-----------------------------
         }
     },
     validators: {
@@ -1347,9 +1436,12 @@ export default({
 
         //---控制是否可编辑---------------------------------------
             Update(){//修改
-                if(this.isEdit==true){
-                    this.isEdit=!this.isEdit;
+                let self = this;
+                console.log(self.isEdit)
+                if(self.isEdit==true){
+                    self.isEdit=!self.isEdit;
                 }
+                console.log(self.isEdit)
             },        
             Cancel(){
                 let self = this;
@@ -1565,17 +1657,37 @@ export default({
             this.$store.state.url='/customer/customerList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
+        goDetail(){//点击新增跳转
+            this.$store.state.url='/customer/customerDetail/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
         open(tittle,iconClass,className) {
-                this.$notify({
-                position: 'bottom-right',
-                iconClass:iconClass,
-                title: tittle,
-                showClose: false,
-                duration: 3000,
-                customClass:className
-                });
-            },
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
         //------------------------------------------------------
+
+        //---修改返回提示-----------------------------------------
+        isBack(){
+            let self=this;
+            if(self.ifModify){
+                self.dialogUserConfirm=true;
+                // self.choseDoing='back'
+            }else{
+                self.back()
+            }
+        },
+        sureDoing:function(){
+            let self = this;
+            self.back();
+        },
+        //-------------------------------------------------------
         //---提示错误----------------------------------------------
         showErrprTips(e){
             $('.tipsWrapper').each(function(){
@@ -1612,6 +1724,21 @@ export default({
                     $(this).removeClass('display_block')
                 }
                 })
+        },
+        getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
         },
         //-------------------------------------------------------------
         test:function(){

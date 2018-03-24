@@ -158,13 +158,13 @@ const departmentModify = () =>
     import ( /* webpackChunkName: "group-department" */ '../components/department/departmentModify')
     //店铺资料
 const shop = () =>
-    import ( /* webpackChunkName: "group-department" */ '../components/shop/shop')
+    import ( /* webpackChunkName: "group-shop" */ '../components/shop/shop')
 const shopList = () =>
-    import ( /* webpackChunkName: "group-department" */ '../components/shop/shopList')
+    import ( /* webpackChunkName: "group-shop" */ '../components/shop/shopList')
 const shopDetail = () =>
-    import ( /* webpackChunkName: "group-department" */ '../components/shop/shopDetail')
+    import ( /* webpackChunkName: "group-shop" */ '../components/shop/shopDetail')
 const shopModify = () =>
-    import ( /* webpackChunkName: "group-department" */'../components/shop/shopModify')
+    import ( /* webpackChunkName: "group-shop" */'../components/shop/shopModify')
     // 系统字典
 const dictionary = () =>
     import ( /* webpackChunkName: "group-dictionary" */ '../components/dictionary/dictionary')
