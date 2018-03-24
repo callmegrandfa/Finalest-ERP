@@ -286,7 +286,7 @@
                         <el-col :span="24">已选</el-col>    
                         <el-col :span="24">
                             <el-table 
-                            :data="checkedTable" 
+                            :data="showChecked" 
                             border 
                             style="width: 100%" 
                             stripe 
@@ -298,9 +298,9 @@
                                 <el-table-column prop="displayName" label="角色名称"></el-table-column>
                                 <el-table-column prop="ouName" label="所属组织"></el-table-column>
                             </el-table>   
-                            <span>总共有{{totalItemLeft}}条数据</span>
-                            <el-button @click="pageDownLeft">&lt;</el-button>
-                            <el-button @click="pageAddLeft">&gt;</el-button>
+                            <span>总共有条数据</span>
+                            <el-button :disabled="leftDownBtn" @click="pageDownLeft">&lt;</el-button>
+                            <el-button :disabled="leftAddBtn" @click="pageAddLeft">&gt;</el-button>
                         </el-col>
                 </el-col>
                 <el-col :span="2">
@@ -312,7 +312,7 @@
                     <el-col :span="24">可选</el-col>    
                     <el-col :span="24">
                         <el-table 
-                        :data="nocheckedTable" 
+                        :data="showNoChecked" 
                         border 
                         style="width: 100%" 
                         stripe 
@@ -324,9 +324,9 @@
                             <el-table-column prop="displayName" label="角色名称"></el-table-column>
                             <el-table-column prop="ouName" label="所属组织"></el-table-column>
                         </el-table>  
-                        <span>总共有{{totalItemRight}}条数据</span>
-                        <el-button @click="pageDownRight">&lt;</el-button>
-                        <el-button @click="pageAddRight">&gt;</el-button>
+                        <span>总共有条数据</span>
+                        <el-button :disabled="rightDownBtn" @click="pageDownRight">&lt;</el-button>
+                        <el-button :disabled="rightAddBtn" @click="pageAddRight">&gt;</el-button>
                     </el-col>
                 </el-col>
             <el-col :span="24">
@@ -497,8 +497,11 @@
         isEdit:true,//是否可编辑
 
 // ------------关联角色dialog-------------
-        checkedTable:[],//表格数据
-        nocheckedTable:[],//表格数据
+        checkedTable:[],//可选所有数据
+        showChecked:[],//右侧表格展示的数据
+        // roleCodesCancel:[],//表格数据，用于取消操作
+        nocheckedTable:[],//已选所有数据
+        showNoChecked:[],//左侧表格展示的数据
         allRoles:[],//所有数据
         selection_checked: [],//复选框选中数据
         selection_nochecked: [],//复选框选中数据
@@ -512,14 +515,16 @@
         oneItemLeft:10,//每页有多少条信息
         pageLeft:1,//当前页 
         totalItemLeft:0,//总共有多少条消息  
+        leftDownBtn:true,//分页按钮是否显示
+        leftAddBtn:false,//分页按钮是否显示
  //---------right表格-------------         
         totalItemRight:0,//总共有多少条消息 
         pageIndexRight:1,//分页的当前页码
         totalPageRight:0,//当前分页总数
         oneItemRight:10,//每页有多少条信息
         pageRight:1,//当前页 
-
-
+        rightDownBtn:true,//分页按钮是否显示
+        rightAddBtn:false,//分页按钮是否显示
 
         response:{
             details:'',
@@ -600,30 +605,6 @@
                 _this.selectData.languageId=res.result.items;
             })
         },
-        GetRolesOnly(){//获取左侧表格数据
-            let _this=this;
-            _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:(_this.pageLeft-1)*_this.oneItemLeft,MaxResultCount:_this.oneItemLeft})
-           .then(function(resp){//获取已选角色
-                _this.checkedTable=resp.result.items
-                _this.totalItemLeft=resp.result.totalCount
-                _this.totalPageLeft=Math.ceil(resp.result.totalCount/_this.oneItemLeft);
-                // _this.getAllRoleData()//获取所有角色数据
-           },function(resp){
-
-           })
-        },
-        GetRoles(){//获取左侧表格数据
-            let _this=this;
-            _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:(_this.pageLeft-1)*_this.oneItemLeft,MaxResultCount:_this.oneItemLeft})
-           .then(function(resp){//获取已选角色
-                _this.checkedTable=resp.result.items
-                _this.totalItemLeft=resp.result.totalCount
-                _this.totalPageLeft=Math.ceil(resp.result.totalCount/_this.oneItemLeft);
-                _this.getAllRoleData()//获取所有角色数据
-           },function(resp){
-
-           })
-        },
        getData(){
            let _this=this;
            _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
@@ -648,11 +629,6 @@
                 }
                 _this.item.id=res.result.ouId;
                 _this.item.ouFullname=res.result.ouFullname;
-                // console.log(res.result)
-                // if(res.result.roleCodes.length>0 && res.result.roleCodes.length){
-                //     _this.checkedRoleCode=res.result.roleCodes;
-                // }
-                
            },function(res){
 
            })
@@ -761,24 +737,6 @@
             }
             return result;
         },
-        getAllRoleData(){
-            let _this=this;
-            _this.tableLoading=true
-            _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.pageRight-1)*_this.oneItemRight,MaxResultCount:_this.oneItemRight})//获取所有角色
-            .then(function(res){ 
-                _this.nocheckedTable=[]
-                _this.allRoles=res.result.items;
-                console.log(res)
-                _this.totalItemRight=res.result.totalCount
-                _this.totalPageRight=Math.ceil(res.result.totalCount/_this.oneItemRight);
-                    if(_this.checkedTable.length>0){//获取可选角色
-                        _this.nocheckedTable=_this.uniqueArray(_this.allRoles,_this.checkedTable)
-                    }else{
-                        _this.nocheckedTable=_this.allRoles
-                    }
-                },function(res){
-                })
-        },
         isBack(){
             let _this=this;
             if(_this.update){
@@ -883,6 +841,129 @@
                 return false;
             }
         },
+        LeftbtnIsShow(){
+            let _this=this;
+            if(_this.pageLeft>1){
+                _this.leftDownBtn=false;
+            }else{
+                _this.leftDownBtn=true;
+            }
+            
+            if(_this.totalPageLeft>_this.pageLeft){
+                _this.leftAddBtn=false;
+            }else{
+                _this.leftAddBtn=true;
+            }
+            
+        },
+        RightbtnIsShow(){
+            let _this=this;
+            if(_this.pageRight>1){
+                _this.rightDownBtn=false;
+            }else{
+                _this.rightDownBtn=true;
+            }
+            if(_this.totalPageRight>_this.pageRight){
+                _this.rightAddBtn=false;
+            }else{
+                _this.rightAddBtn=true;
+            }
+        },
+        pagination(addData,delData,oneItem,thisPage,LeftOrRight){//数据分页
+            //data需要被分页的数据,类型为[{}]
+            //addData被添加的数据数据,类型为[{}]
+            //delData被移走的数据,类型为[{}]
+            //totalItem总共有多少条消息  
+            //pageIndex分页的当前页码
+            //totalPages当前分页总数
+            //oneItem每页有多少条信息
+            //thisPage当前页
+            
+            let _this=this;
+            let nowData=[];
+            let startIndex=(thisPage-1)*oneItem;//起始数据所在位置
+            let endIndex=startIndex + oneItem;
+            
+            if(LeftOrRight=='right'){ 
+                if(addData.length>0){
+                    _this.nocheckedTable=addData.concat(_this.nocheckedTable);
+                }
+                if(delData.length>0){
+                    _this.nocheckedTable=_this.uniqueArray(_this.nocheckedTable,delData);
+                }
+                if(_this.nocheckedTable.length>0){
+                    if(endIndex>_this.nocheckedTable.length){
+                        endIndex=_this.nocheckedTable.length;
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        nowData.push(_this.nocheckedTable[startIndex])
+                    }
+                }
+            }else if(LeftOrRight=='left'){
+                if(addData.length>0){
+                    _this.checkedTable=addData.concat(_this.checkedTable);
+                }
+                if(delData.length>0){
+                    _this.checkedTable=_this.uniqueArray(_this.checkedTable,delData)
+                }
+                if(_this.checkedTable.length>0){
+                    if(endIndex>_this.checkedTable.length){
+                        endIndex=_this.checkedTable.length;
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        nowData.push(_this.checkedTable[startIndex])
+                    }
+                }
+            }
+            //左侧
+            _this.totalItemLeft=_this.checkedTable.length;//左侧总共多少条数据
+            _this.totalPageLeft=Math.ceil(_this.totalItemLeft/_this.oneItemLeft);//有多少页
+            _this.LeftbtnIsShow()
+            //右侧
+            _this.totalItemRight=_this.nocheckedTable.length;//右侧总共多少条数据
+            _this.totalPageRight=Math.ceil(_this.totalItemRight/_this.oneItemRight);//有多少页
+            _this.RightbtnIsShow()
+            
+            
+            return nowData
+        },
+        getAllRoleData(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:1})//获取所有角色
+            .then(function(re){ 
+                let totalAll=re.result.totalCount;//获取总共当前关联角色条数
+                _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:totalAll})//获取所有角色
+                .then(function(res){ 
+                    _this.nocheckedTable=[]
+                    _this.allRoles=res.result.items;
+                    _this.totalItemRight=res.result.totalCount
+                        if(_this.checkedTable.length>0){//获取可选角色
+                            _this.nocheckedTable=_this.uniqueArray(_this.allRoles,_this.checkedTable)
+                           
+                            _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
+                            _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
+                        }else{
+                            _this.nocheckedTable=_this.allRoles;
+                            _this.showChecked=[];
+                            _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
+                            
+                        }
+                    })
+            })        
+        },
+        GetRoles(){//获取左侧表格数据
+            let _this=this;
+            _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
+           .then(function(response){//获取已选角色
+                let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
+                _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
+                .then(function(resp){//获取已选角色
+                    _this.checkedTable=resp.result.items
+                    _this.getAllRoleData()//获取所有角色数据
+                })
+                
+           })
+        },
         checkedSelect(val) {//dialogRole选中已选角色
             let _this=this;
             _this.selection_checked = val;
@@ -901,65 +982,64 @@
                 _this.is_nocheked=false
             }
         },
-        noCheck_push_check(){
+        noCheck_push_check(){//从右往左添加数据
             let _this=this;
             _this.update=true;
-            $.each(_this.selection_nochecked,function(index,val){
-                _this.checkedTable.push(val)
-            })
-            _this.nocheckedTable=_this.uniqueArray(_this.nocheckedTable,_this.selection_nochecked)
+            
+            _this.showChecked=_this.pagination(_this.selection_nochecked,[],_this.oneItemLeft,_this.pageLeft,'left')
+            _this.showNoChecked=_this.pagination([],_this.selection_nochecked,_this.oneItemRight,_this.pageRight,'right')
         },
-        check_push_noCheck(){
+        check_push_noCheck(){//从左往右添加数据
             let _this=this;
             _this.update=true;
-            $.each(_this.selection_checked,function(index,val){
-                _this.nocheckedTable.push(val)
-            })
-            _this.checkedTable=_this.uniqueArray(_this.checkedTable,_this.selection_checked)
+            _this.showChecked=_this.pagination([],_this.selection_checked,_this.oneItemLeft,_this.pageLeft,'left')
+            _this.showNoChecked=_this.pagination(_this.selection_checked,[],_this.oneItemRight,_this.pageRight,'right')
+           
         },
-        check_push_noCheckThis(val){
+        check_push_noCheckThis(val){//删除一个关联角色
             let _this=this;
             if(!_this.isEdit){
                 let json=[val]
                 _this.update=true;
-                _this.nocheckedTable.push(val)
-                _this.checkedTable=_this.uniqueArray(_this.checkedTable,json)
+                _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
+                _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
+                _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
             }else{
                 return false
             }
-            
         },
-        cancelPush(){
+        cancelPush(){//取消
             let _this=this;
             _this.dialogTableVisible=false;
             _this.GetRoles()
         },
-        pageDownLeft(){
+        pageDownLeft(){//左侧表格向左翻页
             let _this=this;
             if(_this.pageLeft>1){
                 _this.pageLeft--
-                _this.GetRolesOnly()
+                
+                _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
             }
         },
-        pageAddLeft(){
+        pageAddLeft(){//左侧表格向右翻页
             let _this=this;
-            if(_this.pageLeft<_this.totalPageLeft){
+            if(_this.pageLeft<=_this.totalPageLeft){
                 _this.pageLeft++
-                _this.GetRolesOnly()
+                _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
             }
         },
-        pageDownRight(){
+        pageDownRight(){//右侧表格向左翻页
             let _this=this;
             if(_this.pageRight>1){
                 _this.pageRight--
-                _this.getAllRoleData()
+                _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
             }    
         },
-        pageAddRight(){
+        pageAddRight(){//右侧表格向右翻页
             let _this=this;
             if(_this.pageRight<_this.totalPageRight){
                 _this.pageRight++
-                _this.getAllRoleData()
+                _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
             }
         },
     }
