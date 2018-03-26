@@ -8,7 +8,7 @@
                             <img src="../../../static/image/common/search_btn.png"  class="closeLeft">
                             <span>查询</span>
                         </el-col>
-                        <el-col :span="2" :offset="4" >
+                        <el-col :span="2" :offset="4">
                             <span class="fs12 search_info_open" @click="closeLeft">-</span>
                         </el-col>
                     </el-row>
@@ -397,6 +397,16 @@ import Tree from '../../base/tree/tree'
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
+.open-search{
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #E3E3E3;
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
+} 
 .pl10{
     padding-left: 10px;
 }
