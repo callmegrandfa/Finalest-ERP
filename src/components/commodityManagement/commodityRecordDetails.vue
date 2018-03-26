@@ -1,12 +1,142 @@
 <template>
-    <div class="customer-infor-wrapper">
+    <div class="commodityRecordDetails commodity">
             <el-col :span='24' class="border-left">
-                <btm :date="bottonbox" > </btm>
-                <el-row style="background:#fff">
-                    <textbox :data="textboxipt4"></textbox>
+                <btm :date="bottonbox" style="background-color:#fff"> </btm>
+                <el-row style="background:#fff;margin-top:20px; ">
+                  <el-col :span="6">
+                    <el-col :span="7">
+                        <div class="bgcolor smallBgcolor" >
+                                <label><small>*</small>类目</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="15" >
+                        <div class="smallBgcolor" >
+                        <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                        </div>
+                    </el-col>
+                  </el-col>
                 </el-row>
-                <el-row style=" background: rgb(249,249,249);">
-                    <textbox :data="textboxipt"></textbox>
+                <el-row style=" background: rgb(249,249,249);padding-top:20px;">
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>商品编码</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>商品名称</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>品牌</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>单位</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>商品条码</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>助记码</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>上市时间</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>单位</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>体质期</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>备注</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
                 </el-row>
                 <el-row style="    background: rgb(249,249,249); padding-bottom:20px">
                     <el-col :span="2">&nbsp;</el-col>
@@ -48,8 +178,67 @@
                 </el-row>
                 <el-collapse-transition>
                         <div v-show="ifShow">
-                <el-row style=" background: rgb(249,249,249);">
-                    <textbox :data="textboxipt1"></textbox>
+                <el-row style=" background: rgb(249,249,249); padding-top:20px;">
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>进货价</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>批发价</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>会员价</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>零售价</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-col :span="7">
+                          <div class="bgcolor smallBgcolor" >
+                                  <label><small>*</small>折扣率</label>
+                         </div>
+                      </el-col>
+                      <el-col :span="15" >
+                          <div class="smallBgcolor" >
+                          <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                          </div>
+                      </el-col>
+                    </el-col>
                 </el-row>
             </div>
         </el-collapse-transition>
@@ -133,7 +322,78 @@
                             <el-collapse-transition> 
                                 <div v-show="ifShow2"> 
                                     <el-row style=" background: rgb(249,249,249);">
-                                        <textbox :data="textboxipt2"></textbox>
+                                      <el-col :span="6">
+                                        <el-col :span="7">
+                                            <div class="bgcolor smallBgcolor" >
+                                                    <label><small>*</small>品类</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="15" >
+                                            <div class="smallBgcolor" >
+                                            <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                                            </div>
+                                        </el-col>
+                                      </el-col>
+                                      <el-col :span="6">
+                                        <el-col :span="7">
+                                            <div class="bgcolor smallBgcolor" >
+                                                    <label><small>*</small>系列</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="15" >
+                                            <div class="smallBgcolor" >
+                                            <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                                            </div>
+                                        </el-col>
+                                      </el-col>
+                                      <el-col :span="6">
+                                        <el-col :span="7">
+                                            <div class="bgcolor smallBgcolor" >
+                                                    <label><small>*</small>性别</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="15" >
+                                            <div class="smallBgcolor" >
+                                            <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                                            </div>
+                                        </el-col>
+                                      </el-col>
+                                      <el-col :span="6">
+                                        <el-col :span="7">
+                                            <div class="bgcolor smallBgcolor" >
+                                                    <label><small>*</small>季节</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="15" >
+                                            <div class="smallBgcolor" >
+                                            <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                                            </div>
+                                        </el-col>
+                                      </el-col>
+                                      <el-col :span="6">
+                                        <el-col :span="7">
+                                            <div class="bgcolor smallBgcolor" >
+                                                    <label><small>*</small>年份</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="15" >
+                                            <div class="smallBgcolor" >
+                                            <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                                            </div>
+                                        </el-col>
+                                      </el-col>
+                                      <el-col :span="6">
+                                        <el-col :span="7">
+                                            <div class="bgcolor smallBgcolor" >
+                                                    <label><small>*</small>其他属性</label>
+                                           </div>
+                                        </el-col>
+                                        <el-col :span="15" >
+                                            <div class="smallBgcolor" >
+                                            <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                                            </div>
+                                        </el-col>
+                                      </el-col>
                                     </el-row>
                                 </div>
                             </el-collapse-transition>
@@ -277,8 +537,55 @@
                         </span>
                     </el-col>
                 </el-row>
-                <el-row style=" background: rgb(249,249,249);" class="pt20">
-                    <textbox :data="textboxipt3"></textbox>
+                <el-row style=" background: rgb(249,249,249); padding-top:20px;" class="pt20">
+                  <el-col :span="6">
+                    <el-col :span="7">
+                        <div class="bgcolor smallBgcolor" >
+                                <label><small>*</small>创建人</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="15" >
+                        <div class="smallBgcolor" >
+                        <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                        </div>
+                    </el-col>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-col :span="7">
+                        <div class="bgcolor smallBgcolor" >
+                                <label><small>*</small>创建时间</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="15" >
+                        <div class="smallBgcolor" >
+                        <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                        </div>
+                    </el-col>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-col :span="7">
+                        <div class="bgcolor smallBgcolor" >
+                                <label><small>*</small>修改人</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="15" >
+                        <div class="smallBgcolor" >
+                        <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                        </div>
+                    </el-col>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-col :span="7">
+                        <div class="bgcolor smallBgcolor" >
+                                <label><small>*</small>修改时间</label>
+                       </div>
+                    </el-col>
+                    <el-col :span="15" >
+                        <div class="smallBgcolor" >
+                        <el-input placeholder="" v-model="value" id="coding" ></el-input>
+                        </div>
+                    </el-col>
+                  </el-col>
                 </el-row>
             </el-col>
         </el-row>
@@ -312,219 +619,42 @@ import Textbox from '../../base/textbox/textbox'
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-                textboxipt4:[{
-                    must: '*',
-                    title: '类目',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },],
-                textboxipt:[{
-                    must: '*',
-                    title: '商品编码',
-                    place: ''                
-                },{
-                    must: '*',
-                    title: '商品名称',
-                    place: ''                 
-                },{
-                    must: '*',
-                    title: '品牌',
-                    place: ''                 
-                },{
-                    must: '*',
-                    title: '单位',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '商品条码',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '助记码',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '上市时间',
-                    place: ''                 
-                },{
-                    must: '*',
-                    title: '单位',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '体质期',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '备注',
-                    place: ''                 
-                }],
-                textboxipt2:[{
-                    must: '',
-                    title: '品类',
-                    place: ''                
-                },{
-                    must: '',
-                    title: '系列',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '性别',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '季节',
-                    options:[{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }]                
-                },{
-                    must: '',
-                    title: '年份',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '其他属性',
-                    place: ''                 
-                }],
-                textboxipt1:[{
-                    must: '',
-                    title: '进货价',
-                    place: ''                
-                },{
-                    must: '',
-                    title: '批发价',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '会员价',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '零售价',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '折扣率',
-                    place: ''                 
-                }],
-                textboxipt3:[{
-                    must: '',
-                    title: '创建人',
-                    place: ''                
-                },{
-                    must: '',
-                    title: '创建时间',
-                    place: ''                 
-                },{
-                    must: '',
-                    title: '修改人',
-                    place: ''                                
-                },{
-                    must: '',
-                    title: '修改时间',
-                    place: ''                 
-                }],
                 bottonbox:{
                     url: '/Record/commodityRecord',
                    botton:[{
                     class: 'erp_bt bt_back',
                     imgsrc: '../../../static/image/common/bt_back.png',
+                    show:true,
                     text: '返回'
                 },{
                     class: 'erp_bt bt_modify',
                     imgsrc: '../../../static/image/common/bt_modify.png',
+                    show:true,
                     text: '修改'
                 },{
                     class: 'erp_bt bt_save',
                     imgsrc: '../../../static/image/common/bt_save.png',
+                    show:true,
                     text: '保存'
                 },{
                     class: 'erp_bt bt_save_add',
                     imgsrc: '../../../static/image/common/bt_save_add.png',
+                    show:true,
                     text: '保存并新增'
                 },{
                     class: 'erp_bt bt_add',
                     imgsrc: '../../../static/image/common/bt_save_add.png',
+                    show:true,
                     text: '新增'
                 },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
+                    show:true,
                     text: '删除'
                 },{
                     class: 'erp_bt bt_auxiliary',
                     imgsrc: '../../../static/image/common/bt_audit.png',
+                    show:true,
                     text: '审核'
                 }]},
                 options: [{
@@ -710,6 +840,24 @@ import Textbox from '../../base/textbox/textbox'
 </script>
 
 <style scoped>
+.smallBgcolor .el-select{
+    width: 100% !important ;
+    margin-left: 10px;
+}
+.bgcolor label{
+    width: 100% !important ;
+    margin-right: 0; 
+}
+.smallBgcolor .el-input--suffix{
+    width: 100% !important ;
+}
+.smallBgcolor .el-input{
+    width: 100% !important ;
+    margin-left: 10px;
+}
+.bgcolor{
+        overflow:  visible; 
+    }
 .bg-white{
     background: white;
     border-radius: 3px;
@@ -718,6 +866,7 @@ import Textbox from '../../base/textbox/textbox'
     background: white;
     border-radius: 3px;
 }
+
 .mt10{
     margin-top: 10px;
 }
@@ -756,6 +905,9 @@ import Textbox from '../../base/textbox/textbox'
 </style>
 
 <style>
+.commodityRecordDetails .smallBgcolor .el-input input{
+    height: 33px !important;
+}
 .el-tabs__nav{
     margin-left: 20px;
 }
