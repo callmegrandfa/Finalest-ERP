@@ -8,7 +8,7 @@
                             <img src="../../../static/image/common/search_btn.png"  class="closeLeft">
                             <span>查询</span>
                         </el-col>
-                        <el-col :span="2" :offset="4" >
+                        <el-col :span="2" :offset="4">
                             <span class="fs12 search_info_open" @click="closeLeft">-</span>
                         </el-col>
                     </el-row>
@@ -115,6 +115,7 @@
                                 <el-table-column prop="address12" label="操作" width="">
                                     <template slot-scope="scope">
                                         <el-button @click="modify(scope.row)" type="text" size="small"  >查看</el-button>
+                                        <el-button @click="del(scope.row)" type="text" size="small"  >删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -263,7 +264,7 @@ import Tree from '../../base/tree/tree'
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
-                _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
+                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
                     console.log(_this.tableData);
                     let countPage=res.result.totalCount;
@@ -275,7 +276,7 @@ import Tree from '../../base/tree/tree'
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetCategoryTree')
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryTree')
                     .then(function(res){
                         _this.classTree=res
                         console.log(_this.classTree)
@@ -288,7 +289,7 @@ import Tree from '../../base/tree/tree'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){       
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){       
                         console.log(res.result);                
                         _this.tableData = res.result;
                         _this.totalCount=res.result.length
@@ -311,7 +312,7 @@ import Tree from '../../base/tree/tree'
             },
             query(){//条件查询
                 let _this=this;
-                _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
+                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
                     console.log(res.result);
                     _this.tableData=res.result;                   
                 })
@@ -338,7 +339,32 @@ import Tree from '../../base/tree/tree'
                 customClass:className
                 });
             },
-            delData(){//删除
+            del(data){//单条删除
+                let id=data.id;
+                let _this=this;
+                _this.$confirm('确定删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                    }).then(() => {
+                        _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:id}).then(function(res){
+                            _this.loadTableData();
+                            _this.open('删除成功','el-icon-circle-check','successERP');    
+                        }).catch(function(err){
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                        })  
+                    }).catch(() => {
+                        _this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                });
+            },
+            delData(){//选取(批量)删除
                 let _this=this;
                 if(_this.SelectionChange.length==0){
                     _this.$message({
@@ -359,13 +385,13 @@ import Tree from '../../base/tree/tree'
                         center: true
                         }).then(() => {
                             if(delAarry.length==1){//单条删除
-                                _this.$axios.deletes('http://192.168.100.107:8085/api/services/app/CategoryManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
+                                _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
                                     _this.loadTableData();
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
                             }else{//批量删除
                                 
-                                 _this.$axios.posts('http://192.168.100.107:8085/api/services/app/CategoryManagement/BatchDelete',delAarry).then(function(res){
+                                 _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/BatchDelete',delAarry).then(function(res){
                                     _this.loadTableData();
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
@@ -397,6 +423,16 @@ import Tree from '../../base/tree/tree'
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
+.open-search{
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #E3E3E3;
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
+} 
 .pl10{
     padding-left: 10px;
 }

@@ -43,7 +43,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button @click="delRow" class="erp_bt bt_del">
+                    <button @click="delMore(2)" class="erp_bt bt_del">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -180,9 +180,7 @@
 
                             <el-table-column label="操作" fixed='right'>
                                  <template slot-scope="scope">
-                                    <!-- <el-button type="text" size="small"   @click="modify(scope.row)" >修改</el-button> -->
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small" v-show='scope.row.isSystem==false' @click="confirmDel(scope.row)" >删除</el-button>
+                                    <el-button type="text" size="small" v-show='scope.row.isSystem==false' @click="delRow(scope.$index,scope.row,1)" >删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -199,12 +197,31 @@
 
             </el-col>
         </el-row>
+
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -216,10 +233,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -231,7 +247,7 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
         </el-dialog>
-        <!-- dialog -->
+        <!-- dialog -->  
     </div>
 </template>
 
@@ -280,13 +296,12 @@
                 },//复选框选中数据id
                 page:1,//当前页
                 treeCheck:[],
-                isClick:[],
                 totalItem:0,//总共有多少条消息
                 tableLoading:true,
                 treeLoading:false,
                 Sorting:'',//table搜索
                 dialogFormVisible:false,
-                isAdd:true,//判断是增加还是修改
+                // isAdd:true,//判断是增加还是修改
                 tittle:'',//模态框tittle
                 x:0,//增行的下标
                 rows:[],//增行的数组
@@ -297,8 +312,11 @@
                 ar:[],//判断修改后的红标出现
                 pageFlag:true,
 
-                // 错误信息提示开始
-                 option: {
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //-------------------- ------
+                //---错误提示框----------------
+                option: {
                     vRail: {
                         width: '5px',
                         pos: 'right',
@@ -313,17 +331,25 @@
                         height: '0',
                     },
                 },
-                detail_message_ifShow:false,
                 errorMessage:false,
-                // 错误信息提示结束
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
             }
         },
         created:function(){       
-                let self=this;
-                self.loadTableData();
-                self.loadTree();
-                self.loadSelect();
-             },
+            let self=this;
+            self.loadTableData();
+            self.loadTree();
+            self.loadSelect();
+        },
         // validators: {
         //     'dialogData.dictCode':function(value){//字典编码
         //         return this.Validator.value(value).required().maxLength(50)
@@ -405,32 +431,32 @@
             //---------------------------------------------------------------
 
             //---保存--------------------------------------------------------
-            save:function(){
-                let self = this;
-                console.log(self.dialogData)
-                self.$validate().then(function(success){
-                    if(success){
-                        if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
-                            self.$axios.puts('/api/services/app/DictManagement/Update',self.dialogData).then(function(res){
-                                self.dialogFormVisible=false;
-                                // self.loadTableData();
-                                self.loadTree();
-                            },function(res){    
-                                console.log('error')
-                            })
-                        }else{
-                            self.$axios.posts('/api/services/app/DictManagement/Create',self.dialogData).then(function(res){
-                                self.dialogFormVisible=false;
-                                self.loadTree();
-                                // self.loadTableData();
-                                // self.clearAddDate();
-                            },function(res){    
-                                console.log('error')
-                            })
-                        }
-                    }
-                })
-            },
+            // save:function(){
+            //     let self = this;
+            //     console.log(self.dialogData)
+            //     self.$validate().then(function(success){
+            //         if(success){
+            //             if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
+            //                 self.$axios.puts('/api/services/app/DictManagement/Update',self.dialogData).then(function(res){
+            //                     self.dialogFormVisible=false;
+            //                     // self.loadTableData();
+            //                     self.loadTree();
+            //                 },function(res){    
+            //                     console.log('error')
+            //                 })
+            //             }else{
+            //                 self.$axios.posts('/api/services/app/DictManagement/Create',self.dialogData).then(function(res){
+            //                     self.dialogFormVisible=false;
+            //                     self.loadTree();
+            //                     // self.loadTableData();
+            //                     // self.clearAddDate();
+            //                 },function(res){    
+            //                     console.log('error')
+            //                 })
+            //             }
+            //         }
+            //     })
+            // },
             saveValue:function(){//保存值表的修改和新增
                 
                 let self = this;
@@ -440,9 +466,11 @@
                         self.open('创建字典系统值成功','el-icon-circle-check','successERP');
                         self.addList = [];
                         self.ar = [];
-                        self.loadTableData();
-                    },function(res){    
-                        console.log('error')
+                        // self.loadTableData();
+                    },function(res){ 
+                        self.open('创建失败','el-icon-error','faildERP');   
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                     
                 }
@@ -452,9 +480,11 @@
                         self.open('修改字典系统值成功','el-icon-circle-check','successERP');
                         self.updateList = [];
                         self.ar = [];
-                        self.loadTableData();
+                        // self.loadTableData();
                     },function(res){    
-                        console.log('error')
+                        self.open('修改失败','el-icon-error','faildERP');  
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }
             },
@@ -491,7 +521,7 @@
                             dictId_DictName:self.dictId_DictName,
                             seq: 0,
                             remark: "",
-                            status: '',
+                            status: 1,
                             isSystem: false,
                         };
                     self.tableData.unshift(self.rows.newCol);
@@ -503,26 +533,6 @@
                         message: '未选择字典'
                     });
                 }
-            },
-            //----------------------------------------------------------------
-
-            //---修改---------------------------------------------------------
-            modify:function(row){
-                // console.log(row)
-                let self = this;
-
-                self.tittle='修改';
-                self.dialogFormVisible = true;
-                self.dialogData.id = row.id;
-                self.dialogData.groupId = row.groupId;
-                self.dialogData.ouId = row.ouId;
-                self.dialogData.deptCode = row.deptCode;
-                self.dialogData.deptName = row.deptName;
-                self.dialogData.director = row.director;
-                self.dialogData.phone = row.phone;
-                self.dialogData.deptParentid = row.deptParentid;
-                self.dialogData.status = row.status;
-                console.log(self.dialogData)
             },
             //----------------------------------------------------------------
 
@@ -606,72 +616,82 @@
                 } 
                  setTimeout(() => {self.pageFlag = true}, 1000)
             },
+            //-----------------------------------------------------
+
+            //---复选框--------------------------------------------
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
             },
-            confirmDel(row) {
+            //-----------------------------------------------------
+
+            //---确认删除-------------------------------------------
+            sureDel:function(){
                 let self = this;
-                console.log(row)
-                self.$confirm('确定删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-                }).then(() => {
-                    self.delThis(row);
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                if(self.who == 1){
+                    if(self.whoId>0){
+                        self.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:self.whoId}).then(function(res){
+                            
+                            self.tableData.splice(self.whoIndex,1);
+                            self.dialogDelConfirm = false;
+                            self.open('删除成功','el-icon-circle-check','successERP');
+                            // self.loadTableData();
+                        },function(res){
+                            self.open('删除失败','el-icon-error','faildERP');
+                            self.dialogDelConfirm = false;
+                            self.errorMessage=true;
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        })
+                    }else{
+                        self.dialogDelConfirm = false;
+                        self.tableData.splice(self.whoIndex,1);
+                        self.addList.splice(self.whoIndex,1);
+                        self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    }
+                };
+
+                if(self.who == 2){
+                    self.$axios.posts('/api/services/app/DictItemManagement/BatchDelete',self.idArray).then(function(res){
+                        self.loadTableData();
+                        self.dialogDelConfirm = false;
+                        self.open('删除成功','el-icon-circle-check','successERP');    
+                    },function(res){
+                        self.open('删除失败','el-icon-error','faildERP');
+                        self.dialogDelConfirm = false;
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })
+                }
             },
-            delThis(row){//删除字典值行
-                let self=this;
-                // self.tableData.splice(index,1);
-                // self.addList.splice(index,1);
-                self.$axios.deletes('/api/services/app/DictItemManagement/Delete',{id:row.id}).then(function(res){
-                    self.open('删除成功','el-icon-circle-check','successERP');
-                    self.loadTableData();
-                },function(res){
-                    self.errorMessage=true;
-                })
+            //-----------------------------------------------------
+
+            //---行内删除-------------------------------------------
+            delRow:function(index,row,who){
+                let self = this;
+                self.who = who;
+                self.whoIndex = index;
+                self.whoId = row.id;
+                self.dialogDelConfirm = true;
             },
-            delRow(){//批量删除
-                let self=this;
+            //-----------------------------------------------------
+
+            //---多项删除-------------------------------------------
+            delMore:function(num){
+                let self = this;
+                self.idArray.ids = [];
                 for(let i in self.multipleSelection){
                     self.idArray.ids.push(self.multipleSelection[i].id)
                 }
-                if(self.idArray.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
-                }
+
                 if(self.idArray.ids.length>0){
-                    self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.$axios.posts('/api/services/app/DictItemManagement/BatchDelete',self.idArray).then(function(res){
-                                self.loadTableData();
-                                self.open('删除成功','el-icon-circle-check','successERP');    
-                            },function(res){
-                                self.errorMessage=true;
-                            })
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
+                    if(self.idArray.ids.indexOf(undefined)!=-1){
+                        self.$message({
+                            type: 'warning',
+                            message: '新增数据请在行内删除'
+                        });
+                        return;
+                    }
+                    self.dialogDelConfirm = true;   
+                    self.who = num;
                 }else{
                     self.$message({
                         type: 'info',
@@ -679,7 +699,9 @@
                     });
                 }
             },
-            //---------------------------------------------------------------
+            //-----------------------------------------------------
+
+            //-----------------------------------------------------
             // SimpleSearch(){//简单搜索
             //      let self=this;
             //      self.tableLoading=true;
@@ -693,7 +715,7 @@
             //     })
             // },
 
-            //---open-----路由切换------------------------------------------
+            //---open-----路由切换-----------------------------------
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -704,32 +726,15 @@
                 customClass:className
                 });
             },
-            // goDetail(){
-            //     this.$store.state.url='/OuManage/OuManageDetail/default'
-            //     this.$router.push({path:this.$store.state.url})//点击切换路由
-            // },
-            
-            // see(row){
-            //     this.$store.state.url='/OuManage/OuManageSee/'+row.id
-            //     this.$router.push({path:this.$store.state.url})//点击切换路由
-            // },
             //-------------------------------------------------------------
             
             
+            //---树形操作-----------------------------------------------
             
-            // checkChange(data,check){
-            //     let self=this;
-            //     let add=false;
-            //     if(check){
-            //         self.treeCheck.push(data.treeId);
-            //     }else{
-            //         for(let i=0;i<self.treeCheck.length;i++){
-            //             if(self.treeCheck[i]==data.treeId){
-            //                 self.treeCheck.splice(i,1);
-            //             }
-            //         }
-            //     }
-            // },
+            filterNode(value, data) {
+                if (!value) return true;
+                 return data.dictName.indexOf(value) !== -1;
+            },
             nodeClick:function(data){
                 let self = this;
                 console.log(data)
@@ -747,98 +752,35 @@
                     })
                 }
                 
-                
             },
-            //---树形操作-----------------------------------------------
-            // TreeAdd(event,node,data){
-            //     // console.log(data)
-            //     $('.TreeMenu').css({
-            //         display:'none'
-            //     })
-            //     let self=this;
-            //     // self.clearTreeData();
-            //     self.tittle='新增';
-            //     self.isAdd=true;
-            //     self.dialogFormVisible=true;
-            //     self.dialogData.id=data.id;
-            // },
-            // TreeDel(event,node,data){
-            //     $('.TreeMenu').css({
-            //         display:'none'
-            //     })
-            //     let self=this;
-            //     self.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
-            //     .then(function(res){
-            //         self.loadTree();
-            //         self.loadTableData();
-            //     },function(res){    
-
-            //     })
-            // },
-            // TreeModify(event,node,data){
-            //     $('.TreeMenu').css({
-            //         display:'none'
-            //     })
-            //     let self=this;
-            //     self.clearTreeData();
-            //     self.tittle='修改';
-            //     self.isAdd=false;
-            //     self.dialogFormVisible=true;
-            //      self.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
-            //         .then(function(res){
-            //             self.dialogData=res.result;
-            //         },function(res){    
-
-            //         })
-            // },
-            filterNode(value, data) {
-                if (!value) return true;
-                 return data.dictName.indexOf(value) !== -1;
+            //--------------------------------------------------------- 
+            
+            //---错误提示-------------------------------------------------------
+            showErrprTips(e){
+                $('.tipsWrapper').each(function(){
+                    if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                        $(this).addClass('display_block')
+                    }else{
+                        $(this).removeClass('display_block')
+                    }
+                })
             },
-            // renderContent(h, { node, data, store }) {
-            //     return (
-            //     <span class="TreeNode el-tree-node__label"
-            //     on-mousedown ={ (event) => this.whichButton(event,node, data) }
-            //     style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
-            //       {node.label}
-            //        <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
-            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
-            //         </div>
-            //     </span>);
-            // },
-            // whichButton(event,node, data){
-            //     let e = event || window.event;
-            //     let btnNum = e.button;
-            //     if(e.target.className!='TreeMenuBtn'){
-            //         $('.TreeMenu').css({
-            //             display:'none'
-            //         })
-            //     }else{
-            //         return false;
-            //     }
-            //     if (btnNum==2){
-            //     e.target.id= data.id
-            //     let clickDom=$('#'+e.target.id);
-            //     let x = e.clientX
-            //     let y = e.clientY
-            //     let left=clickDom.offset().left;
-            //     clickDom.children('.TreeMenu').css({
-            //         display:'block',
-            //         left:x-left+'px',
-            //         top:'0px'
-            //     })
-            //     $('.el-tree-node>.el-tree-node__children').css({
-            //         overflow:'visible'
-            //     })
-            //     }
-            // },
-            // clearTreeData(){
-            //     let self=this;
-            //     self.dialogData={}
-            // }
-            //-------------------------------------------------------------------       
+            getErrorMessage(message,details,validationErrors){
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
+            },
+            //-----------------------------------------------------------------
         },
     }
 </script>

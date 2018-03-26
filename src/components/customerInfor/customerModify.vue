@@ -9,28 +9,42 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button @click="Update()" class="erp_bt bt_modify">
+                <!-- <button @click="Update()" class="erp_bt bt_modify">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_modify.png">
                     </div>
                     <span class="btDetail">修改</span>
-                </button>
+                </button> -->
 
-                <button class="erp_bt bt_add" @click="goDetail">
+                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">新增</span>
                 </button>
 
-                <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
+                <button class="erp_bt bt_del" @click="delCustomer(7)" v-show='!ifModify'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+
+                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
+                <button class="erp_bt bt_saveAdd" v-show='ifModify'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_saveAdd.png">
+                    </div>
+                    <span class="btDetail">保存并新增</span>
+                </button>
+
+                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -47,108 +61,94 @@
             <div v-show="ifShow">   
                 <el-row>
                     <el-col :span="24" class="getPadding"> 
-                        <div class="tipsWrapper" name="ouId">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.ouId')}">
-                                <p class="msgDetail">错误提示：所属组织{{ validation.firstError('customerData.ouId') }}</p>
+                        <div class="tipsWrapper">
+                            <div class="errorTips">
+                                <p class="msgDetail">错误提示：
+                                    <span :class="{block : !validation.hasError('customerData.ouId')}">
+                                        所属组织{{ validation.firstError('customerData.ouId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.contactCode')}">
+                                        编码{{ validation.firstError('customerData.contactCode') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.contactName')}">
+                                        名称{{ validation.firstError('customerData.contactName') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.contactFullName')}">
+                                        全称{{ validation.firstError('customerData.contactFullName') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.mnemonic')}">
+                                        助记码{{ validation.firstError('customerData.mnemonic') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.contactClassId')}">
+                                        客户分类{{ validation.firstError('customerData.contactClassId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.contactWorkPropertyId')}">
+                                        客户性质{{ validation.firstError('customerData.contactWorkPropertyId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.contactGradeId')}">
+                                        客户等级{{ validation.firstError('customerData.contactGradeId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.contactTypeId')}">
+                                        客户类型{{ validation.firstError('customerData.contactTypeId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.ficaOuId')}">
+                                        对应财务组织{{ validation.firstError('customerData.ficaOuId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.taxCode')}">
+                                        纳税登记号{{ validation.firstError('customerData.taxCode') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.opAreaId')}">
+                                        业务地区{{ validation.firstError('customerData.opAreaId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.adAreaId')}">
+                                        行政地区{{ validation.firstError('customerData.adAreaId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.legalPerson')}">
+                                        法人代表{{ validation.firstError('customerData.legalPerson') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.regAddress')}">
+                                        注册地址{{ validation.firstError('customerData.regAddress') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.manager')}">
+                                        负责人{{ validation.firstError('customerData.manager') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.phone')}">
+                                        电话{{ validation.firstError('customerData.phone') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.remark')}">
+                                        备注{{ validation.firstError('customerData.remark') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('customerData.status')}">
+                                        状态{{ validation.firstError('customerData.status') }},
+                                    </span>
+                                </p>
                             </div>
                         </div>
-                        <div class="tipsWrapper" name="contactCode">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactCode')}">
-                                <p class="msgDetail">错误提示：编码{{ validation.firstError('customerData.contactCode') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="contactName">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactName')}">
-                                <p class="msgDetail">错误提示：名称{{ validation.firstError('customerData.contactName') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="contactFullName">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactFullName')}">
-                                <p class="msgDetail">错误提示：全称{{ validation.firstError('customerData.contactFullName') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="mnemonic">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.mnemonic')}">
-                                <p class="msgDetail">错误提示：助记码{{ validation.firstError('customerData.mnemonic') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="contactClassId">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactClassId')}">
-                                <p class="msgDetail">错误提示：客户分类{{ validation.firstError('customerData.contactClassId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="contactWorkPropertyId">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactWorkPropertyId')}">
-                                <p class="msgDetail">错误提示：客户性质{{ validation.firstError('customerData.contactWorkPropertyId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="contactGradeId">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactGradeId')}">
-                                <p class="msgDetail">错误提示：客户等级{{ validation.firstError('customerData.contactGradeId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="isCustomer">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.isCustomer')}">
-                                <p class="msgDetail">错误提示：客户类型{{ validation.firstError('customerData.isCustomer') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="ficaOuId">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.ficaOuId')}">
-                                <p class="msgDetail">错误提示：对应财务组织{{ validation.firstError('customerData.ficaOuId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="taxCode">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.taxCode')}">
-                                <p class="msgDetail">错误提示：纳税登记号{{ validation.firstError('customerData.taxCode') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="opAreaId">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.opAreaId')}">
-                                <p class="msgDetail">错误提示：业务地区{{ validation.firstError('customerData.opAreaId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="adAreaId">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.adAreaId')}">
-                                <p class="msgDetail">错误提示：行政地区{{ validation.firstError('customerData.adAreaId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="legalPerson">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.legalPerson')}">
-                                <p class="msgDetail">错误提示：法人代表{{ validation.firstError('customerData.legalPerson') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="regAddress">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.regAddress')}">
-                                <p class="msgDetail">错误提示：注册地址{{ validation.firstError('customerData.regAddress') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="manager">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.manager')}">
-                                <p class="msgDetail">错误提示：负责人{{ validation.firstError('customerData.manager') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="phone">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.phone')}">
-                                <p class="msgDetail">错误提示：电话{{ validation.firstError('customerData.phone') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="remark">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.remark')}">
-                                <p class="msgDetail">错误提示：备注{{ validation.firstError('customerData.remark') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="status">
-                            <div class="errorTips" :class="{block : !validation.hasError('customerData.status')}">
-                                <p class="msgDetail">错误提示：状态{{ validation.firstError('customerData.status') }}</p>
-                            </div>
-                        </div>
+                        
 
                         <div class="bgcolor">
                             <label><small>*</small>所属组织</label>
                             <el-select v-model="customerData.ouId"
                                     placeholder=""
                                     class="ouId"
-                                    :disabled="isEdit"
                                     @focus="showErrprTipsSelect"
                                     @change='Modify()'
                                     :class="{redBorder : validation.hasError('customerData.ouId')}">
@@ -179,8 +179,7 @@
                         <div class="bgcolor">
                             <label><small>*</small>编码</label>
                             <el-input v-model="customerData.contactCode" 
-                                    placeholder="" 
-                                    :disabled="isEdit"
+                                    placeholder=""
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactCode')}"
                                     class="contactCode"
@@ -192,7 +191,6 @@
                             <label><small>*</small>名称</label>
                             <el-input v-model="customerData.contactName" 
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactName')}"
                                     class="contact"
@@ -204,7 +202,6 @@
                             <label><small>*</small>全称</label>
                             <el-input v-model="customerData.contactFullName" 
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactFullName')}"
                                     class="contactFullName" 
@@ -215,7 +212,6 @@
                             <label>助记码</label>
                             <el-input v-model="customerData.mnemonic" 
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.mnemonic')}"
                                     class="mnemonic"
@@ -228,7 +224,6 @@
                             <label>客户分类</label>
                             <el-select v-model="customerData.contactClassId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactClassId"
@@ -261,7 +256,6 @@
                             <label>客户性质</label>
                             <el-select v-model="customerData.contactWorkPropertyId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactWorkPropertyId"
@@ -277,7 +271,6 @@
                             <label>客户等级</label>
                             <el-select v-model="customerData.contactGradeId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactGradeId"
@@ -293,7 +286,6 @@
                             <label>客户类型</label>
                             <el-select v-model="customerData.contactTypeId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactTypeId"
@@ -309,7 +301,6 @@
                             <label>对应财务组织</label>
                             <el-select v-model="customerData.ficaOuId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     class="ficaOuId"
                                     @focus="showErrprTipsSelect"
                                     @change='Modify()'
@@ -338,7 +329,6 @@
                             <label>纳税登记号</label>
                             <el-input v-model="customerData.taxCode" 
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @focus="showErrprTips"
                                     class="taxCode"
                                     :class="{redBorder : validation.hasError('customerData.taxCode')}"
@@ -349,7 +339,6 @@
                             <label>业务地区</label>
                             <el-select v-model="customerData.opAreaId"
                                     class="opAreaId"
-                                    :disabled="isEdit"
                                     @focus="showErrprTipsSelect"
                                     placeholder=""
                                     @change='Modify()'
@@ -378,7 +367,6 @@
                             <label>行政地区</label>
                             <el-select v-model="customerData.adAreaId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="adAreaId"
@@ -408,7 +396,6 @@
                             <label>法人代表</label>
                             <el-input v-model="customerData.legalPerson" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     class="legalPerson"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.legalPerson')}"
@@ -419,7 +406,6 @@
                             <label>注册地址</label>
                             <el-input v-model="customerData.regAddress" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     class="regAddress"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.regAddress')}"
@@ -430,7 +416,6 @@
                             <label>负责人</label>
                             <el-input v-model="customerData.manager" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     @focus="showErrprTips"
                                     class="manager"
                                     :class="{redBorder : validation.hasError('customerData.manager')}"
@@ -441,7 +426,6 @@
                             <label>电话</label>
                             <el-input v-model="customerData.phone" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     @focus="showErrprTips"
                                     class="phone"
                                     :class="{redBorder : validation.hasError('customerData.phone')}"
@@ -452,7 +436,6 @@
                             <label>备注</label>
                             <el-input v-model="customerData.remark" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     @focus="showErrprTips"
                                     class="remark"
                                     :class="{redBorder : validation.hasError('customerData.remark')}"
@@ -466,7 +449,6 @@
                                     placeholder=""
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
-                                    :disabled="isEdit" 
                                     :class="{redBorder : validation.hasError('customerData.status')}">
                                 <el-option v-for="item in statusAr"  
                                         :key="item.itemValue" 
@@ -490,11 +472,18 @@
                 <el-col :span="24">
                 <el-tabs v-model="activeName">
                         <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
-                            <button class="erp_bt bt_add" @click="addColbank" v-show='!isEdit'>
+                            <button class="erp_bt bt_add" @click="addColbank">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">增行</span>
+                            </button>
+                            
+                            <button class="erp_bt bt_del" @click="delMoreBank(4)">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_del.png">
+                                </div>
+                                <span class="btDetail">删除</span>
                             </button>
 
                             <button class="erp_bt bt_auxiliary mb10" @click='test'>
@@ -505,11 +494,11 @@
                             </button>
                             
                     
-                            <el-table :data="bankData" stripe border style="width: 100%" election-change="handleSelectionChange" class="all-table">
+                            <el-table :data="bankData" stripe border style="width: 100%" @selection-change="handleSelectionChange" class="all-table">
                                 <el-table-column type="selection"></el-table-column>
                                 <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
                                     <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.settlementCurrencyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                        <el-select  v-model="scope.row.settlementCurrencyId" :class="[scope.$index%2==0?'bgw':'bgp']">
                                             <el-option  v-for="item in curencyAr" :key="item.id" :label="item.currencyName" :value="item.id" >
                                             </el-option>
                                         </el-select>
@@ -521,8 +510,7 @@
                                         <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.accountNo" 
-                                            type="text"    
-                                            :disabled="isEdit"
+                                            type="text"
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -533,7 +521,6 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.accountName" 
                                             type="text"    
-                                            :disabled="isEdit"
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -544,7 +531,6 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.openingBank" 
                                             type="text"    
-                                            :disabled="isEdit"
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -555,7 +541,6 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.contactPerson" 
                                             type="text"   
-                                            :disabled="isEdit" 
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -566,36 +551,40 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.phone" 
                                             type="text"    
-                                            :disabled="isEdit"
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
                                 <el-table-column prop="isDefault" label="默认">
-                                    <template scope="scope">
+                                    <template slot-scope="scope">
                                         <el-radio  :label="true" 
                                                     v-model="scope.row.isDefault" 
                                                     @change.native="getCurrentRow(scope.$index,scope.row)" 
-                                                    @change="handleBankChange(scope.$index,scope.row)"
-                                                    :disabled="isEdit"></el-radio>
+                                                    @change="handleBankChange(scope.$index,scope.row)"></el-radio>
                                     </template>
                                 </el-table-column>
 
                                 <el-table-column label='操作'>
                                     <template slot-scope="scope" >
-                                        <!-- <span>{{scope.row.isDefault}}</span> -->
-                                        <el-button @click="handleBankDelete(scope.$index,scope.row)" type="text" size="small" :disabled="isEdit">删除</el-button>
+                                        <el-button @click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
                         </el-tab-pane>
 
                         <el-tab-pane label="送货地址" name="address" class="getPadding" style="z-index:-1000">
-                            <button class="erp_bt bt_add" @click="addColAddress" v-show='!isEdit'>
+                            <button class="erp_bt bt_add" @click="addColAddress">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">增行</span>
+                            </button>
+
+                            <button class="erp_bt bt_del" @click="delMoreAdd(5)">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_del.png">
+                                </div>
+                                <span class="btDetail">删除</span>
                             </button>
 
                             <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
@@ -607,14 +596,6 @@
                             
                     
                             <el-table :data="addressData" stripe border style="width: 100%;" election-change="handleSelectionChange2" class="all-table">
-                                <!-- <el-table-column prop="addressType" label="地址类型" width="180">
-                                    <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.addressType" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
-                                            <el-option  v-for="item in addAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
-                                            </el-option>
-                                        </el-select>
-                                    </template>
-                                </el-table-column> -->
 
                                 <el-table-column prop="completeAddress" label="供货地址" width="180">
                                     <template slot-scope="scope">
@@ -622,8 +603,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.completeAddress" 
                                             type="text"    
-                                            @click="handleAddressChange(scope.$index,scope.row)"
-                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
@@ -633,8 +613,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.completeAddress" 
                                             type="text"    
-                                            @click="handleAddressChange(scope.$index,scope.row)"
-                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
@@ -644,8 +623,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.id" 
                                             type="text"    
-                                            @click="handleAddressChange(scope.$index,scope.row)"
-                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
@@ -655,8 +633,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.phone" 
                                             type="text"   
-                                            @click="handleAddressChange(scope.$index,scope.row)" 
-                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
@@ -666,8 +643,7 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.contactPerson" 
                                             type="text"    
-                                            @click="handleAddressChange(scope.$index,scope.row)"
-                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
@@ -677,29 +653,35 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.phone" 
                                             type="text"    
-                                            @click="handleAddressChange(scope.$index,scope.row)"
-                                            v-on:click="handleAddressEdit(scope.$index,scope.row)"/> 
+                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="ifDefault" label="默认">
+                                <el-table-column prop="isDefault" label="默认">
                                     <template slot-scope="scope">
-                                        <el-checkbox v-model="addressData[scope.$index].ifDefault"></el-checkbox>
+                                        <el-checkbox v-model="addressData[scope.$index].isDefault"></el-checkbox>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label='操作'>
                                     <template slot-scope="scope" >
-                                        <el-button v-on:click="handleAddressDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                        <el-button v-on:click="handleDelete(scope.$index,scope.row,2)" type="text" size="small">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="使用组织" name="organization" class="getPadding" style="z-index:-1000">
-                            <button class="erp_bt bt_add" @click="addColOu" v-show='!isEdit'>
+                            <button class="erp_bt bt_add" @click="addColOu">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">增行</span>
+                            </button>
+
+                            <button class="erp_bt bt_del" @click="delMoreAdd(6)">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_del.png">
+                                </div>
+                                <span class="btDetail">删除</span>
                             </button>
 
                             <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
@@ -719,14 +701,15 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.ouId" 
                                             type="text"    
-                                            @click="handleOuChange(scope.$index,scope.row)"  
-                                            v-on:click="handleOuEdit(scope.$index,scope.row)"/> 
+                                            @change="handleOuChange(scope.$index,scope.row)" /> 
                                     </template>
                                 </el-table-column>
 
                                 <el-table-column prop="transport_method_id" label="运输方式" width="540">
                                     <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.transport_method_id" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                        <el-select  v-model="scope.row.transport_method_id" 
+                                                    @change="handleOuChange(scope.$index,scope.row)"
+                                                    :class="[scope.$index%2==0?'bgw':'bgp']">
                                             <el-option  v-for="item in tranAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                             </el-option>
                                         </el-select>
@@ -735,7 +718,7 @@
 
                                 <el-table-column label='操作'>
                                     <template slot-scope="scope" >
-                                        <el-button v-on:click="handleOuDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                        <el-button v-on:click="handleDelete(scope.$index,scope.row,3)" type="text" size="small">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -794,6 +777,25 @@
         </el-dialog>
         <!-- dialog -->
 
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -825,7 +827,7 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
         </el-dialog>
-    <!-- dialog -->                                                                        
+        <!-- dialog -->                                                                        
     </div>
 </template>
 
@@ -839,9 +841,11 @@ export default({
     },
     data() {
         return{
-            ifShow:true,radio:'',
+            ifShow:true,
+            radio:'',
             ifModify:false,//判断主表是否修改过
-            isEdit:true,//判断是否要修改
+            // isEdit:true,//判断是否要修改
+            ifBtn:true,//判断顶部按钮的显示与隐藏
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -956,6 +960,16 @@ export default({
             multipleSelectionAdd:[],//需要删除的地址数组
             multipleSelectionOu:[],//需要删除的组织数组
 
+            idArrayBank:{//银行多项删除的id
+                ids:[]
+            },
+            idArrayAdd:{//地址多项删除的id
+                ids:[]
+            },
+            idArrayOu:{//组织多项删除的id
+                ids:[]
+            },
+
             createBankParams:{//创建银行的参数
                 "groupId": 1,
                 "contactId":'',
@@ -985,6 +999,10 @@ export default({
                 "is_default": true
             },
             checkedAr:[],//进来时数据选中的默认框
+            //---确认删除-----------------               
+            dialogDelConfirm:false,//用户删除保存提示信息
+            //--------------------  
+
             //---信息修改提示框------------
             dialogUserConfirm:false,//信息更改提示控制
             //----------------------------
@@ -1012,6 +1030,9 @@ export default({
                 validationErrors:[],
             },
             //-----------------------------
+            who:'',//删除的是谁以及是否是多项删除
+            whoId:'',//单项删除的id
+            whoIndex:'',//单项删除的index
         }
     },
     validators: {
@@ -1039,7 +1060,7 @@ export default({
         'customerData.contactGradeId': function (value) {//客户等级
             return this.Validator.value(value).integer();
         },
-        'customerData.isCustomer': function (value) {//客户类型
+        'customerData.contactTypeId': function (value) {//客户类型
             return this.Validator.value(value).integer();
         },
         'customerData.ficaOuId': function (value) {//对应财务组织
@@ -1070,7 +1091,7 @@ export default({
             return this.Validator.value(value).maxLength(200);
         },
         'customerData.status': function (value) {//状态
-            return this.Validator.value(value).required().maxLength(200);
+            return this.Validator.value(value).required().integer();
         },
     },
     computed:{
@@ -1099,11 +1120,10 @@ export default({
                 this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
                     
                     self.customerData = res.result;
-                    console.log(self.customerData);
+                    // console.log(self.customerData);
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
-                    // console.log(self.createBankParams)
 
                     //加载完成拿回的下拉框的默认值
                     self.ouItem.ouFullname = self.customerData.ouId_OuName;
@@ -1121,129 +1141,141 @@ export default({
                     self.fiItem.fiFullname = self.customerData.ficaOuId_OuName;
                     self.fiItem.id = self.customerData.ficaOuId;
                 })
-                //获取所有的银行信息，也可以用groupid获取，
-                this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                    console.log(res);
-                    self.bankData = res.result.items;
-                    for(let i in self.bankData){
-                        if(self.bankData[i].isDefault == true){
-                            self.checkedAr = self.bankData[i]
-                        }
-                    }
-                })
-
-                //获取所有的地址信息，也可以用contactId获取
-                this.$axios.gets('/api/services/app/ContactAddressManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                    // console.log(res);
-                    self.addressData = res.result.items;
-                })
                 
-                //获取所有的组织信息，也可以用contactId获取
-                this.$axios.gets('/api/services/app/ContactOuManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                    // console.log(res);
-                    self.ouData = res.result.items;
-                })
+                self.loadBankData();//加载银行数据
+                self.loadAddData();//加载地址数据
+                self.loadOuData();//加载使用组织数据
+                
 
             }
         },
+        loadBankData:function(){//银行数据
+            let self = this;
+            //获取所有的银行信息，也可以用groupid获取，
+            this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                console.log(res);
+                self.bankData = res.result.items;
+                for(let i in self.bankData){
+                    if(self.bankData[i].isDefault == true){
+                        self.checkedAr = self.bankData[i]
+                    }
+                }
+            })
+        },
+        loadAddData:function(){//地址数据
+            let self = this;
+            //获取所有的地址信息，也可以用contactId获取
+            self.$axios.gets('/api/services/app/ContactAddressManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                // console.log(res);
+                self.addressData = res.result.items;
+            })
+        },
+        loadOuData:function(){//使用组织数据
+            let self = this;
+            //获取所有的组织信息，也可以用contactId获取
+            self.$axios.gets('/api/services/app/ContactOuManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                // console.log(res);
+                self.ouData = res.result.items;
+            })
+        },
         //------------------------------------------------------
         //---下拉的数据------------------------------------------------------
-            loadSelect:function(){
-                let self = this;
-                //客户分类
-                self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
-                    // console.log(res);
-                    self.cuAr = res;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
-                //所属组织
-                self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
-                    // console.log(res);
-                    self.ouAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
-                //对应财务组织
-                self.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:3}).then(function(res){
-                    // console.log(res);
-                    self.fiAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
-                //客户性质
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerWorkProperty'}).then(function(res){
-                    // console.log(res);
-                    self.propertyAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
-                //客户等级
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerGrade'}).then(function(res){
-                    // console.log(res);
-                    self.gradeAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
-                //客户类型
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerType'}).then(function(res){
-                    // console.log(res);
-                    self.typeAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
-                //行政地区*2
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                    // console.log(res);
-                    self.adAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
-                //业务地区*1
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
-                    // console.log(res);
-                    self.opAr = res.result;
-                    // self.opAr=[{
-                    //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
-                    // }]
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
-                //状态
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    // console.log(res);
-                    self.statusAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
-                //币种
-                self.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                    // console.log(res);
-                    self.curencyAr = res.result.items;
-                },function(res){
-                    console.log('err'+res)
-                });
-                //地址类型
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AddressType'}).then(function(res){
-                    // console.log(res);
-                    self.addAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
-                //运输方式
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
-                    // console.log(res);
-                    self.tranAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
+        loadSelect:function(){
+            let self = this;
+            //客户分类
+            self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
+                // console.log(res);
+                self.cuAr = res;
+                self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+            //所属组织
+            self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
+                // console.log(res);
+                self.ouAr = res.result;
+                self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+            //对应财务组织
+            self.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:3}).then(function(res){
+                // console.log(res);
+                self.fiAr = res.result;
+                self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+            //客户性质
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerWorkProperty'}).then(function(res){
+                // console.log(res);
+                self.propertyAr = res.result;
+            },function(res){
+                console.log('err'+res)
+            });
+            //客户等级
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerGrade'}).then(function(res){
+                // console.log(res);
+                self.gradeAr = res.result;
+            },function(res){
+                console.log('err'+res)
+            });
+            //客户类型
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerType'}).then(function(res){
+                // console.log(res);
+                self.typeAr = res.result;
+            },function(res){
+                console.log('err'+res)
+            });
+            //行政地区*2
+            self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                // console.log(res);
+                self.adAr = res.result;
+                self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+            //业务地区*1
+            self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
+                // console.log(res);
+                self.opAr = res.result;
+                // self.opAr=[{
+                //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
+                // }]
+                self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+            //状态
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                // console.log(res);
+                self.statusAr = res.result;
+            },function(res){
+                console.log('err'+res)
+            });
+            //币种
+            self.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+                // console.log(res);
+                self.curencyAr = res.result.items;
+            },function(res){
+                console.log('err'+res)
+            });
+            //地址类型
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AddressType'}).then(function(res){
+                // console.log(res);
+                self.addAr = res.result;
+            },function(res){
+                console.log('err'+res)
+            });
+            //运输方式
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
+                // console.log(res);
+                self.tranAr = res.result;
+            },function(res){
+                console.log('err'+res)
+            });
 
-            },
+        },
         //------------------------------------------------------------------
 
         //---树-------------------------------------------------------------
@@ -1307,7 +1339,7 @@ export default({
         },
         //-----------------------------------------------------
 
-        //---保存数据---------------------------------------------
+        //---保存、修改数据---------------------------------------------
         saveModify:function(){
             let self = this;
             if(self.ifModify){
@@ -1333,46 +1365,55 @@ export default({
         },
         saveCustomerModify:function(){//修改客户信息
             let self = this;
-
-            this.$axios.puts('/api/services/app/ContactManagement/Update',self.customerData).then(function(res){
-                self.open('修改客户信息成功','el-icon-circle-check','successERP');
-                self.ifModify = false;
-            }),function(res){
-                self.open('修改失败','el-icon-error','faildERP');
-            }
+            $('.tipsWrapper').css({display:'block'});
+            // console.log(self.customerData)
+            self.$validate().then(function(success){
+                if(success){
+                    console.log(99999999)
+                    $('.tipsWrapper').css({display:'none'});
+                    // this.$axios.puts('/api/services/app/ContactManagement/Update',self.customerData).then(function(res){
+                    //     self.open('修改客户信息成功','el-icon-circle-check','successERP');
+                    //     self.ifModify = false;
+                    // },
+                    self.$axios.posts('/api/services/app/ContactManagement/CUDAggregate',{createList:[],updateList:self.customerData,deleteList:[]}).then(function(res){
+                        self.open('修改客户信息成功','el-icon-circle-check','successERP');
+                        self.ifModify = false;
+                    },function(res){
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                        self.open('修改失败','el-icon-error','faildERP');
+                    })
+                }
+            });
+            
         },
         saveBankModify:function(){//修改银行资料
             let self = this;
             if(self.updataBankList.length>0){
                 self.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:[],updateList:self.updataBankList,deleteList:[]}).then(function(res){
                         console.log(res);
-                        self.open('修改银行信息成功','el-icon-circle-check','successERP');
+                        self.open('修改银行资料成功','el-icon-circle-check','successERP');
                         self.updataBankList = [];
-                    }),function(res){
-                        self.open('修改银行信息失败','el-icon-error','faildERP');
-                    }
-                // for(let i in self.updataBankList){
-                //     this.$axios.puts('/api/services/app/ContactBankManagement/Update',self.updataBankList[i]).then(function(res){
-                //         // console.log(res);
-                //         self.open('修改银行信息成功','el-icon-circle-check','successERP');
-                //         self.updataBankList = [];
-                //     }),function(res){
-                //         self.open('修改银行信息失败','el-icon-error','faildERP');
-                //     }
-                // }
+                    },function(res){
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                        self.open('修改银行资料失败','el-icon-error','faildERP');
+                    })
             }
         },
         saveAddressModify:function(){//修改地址
             let self = this;
             if(self.updataAddressList.length>0){
                 for(let i in self.updataAddressList){
-                    this.$axios.puts('/api/services/app/ContactAddressManagement/Update',self.updataAddressList[i]).then(function(res){
+                    self.$axios.posts('/api/services/app/ContactAddressManagement/CUDAggregate',{createList:[],updateList:self.updataAddressList,deleteList:[]}).then(function(res){
                         // console.log(res);
                         self.open('修改地址信息成功','el-icon-circle-check','successERP');
                         self.updataAddressList = [];
-                    }),function(res){
+                    },function(res){
                         self.open('修改地址信息失败','el-icon-error','faildERP');
-                    }
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                    })
                 }
             }
         },
@@ -1380,13 +1421,15 @@ export default({
             let self = this;
             if(self.updataOuList.length>0){
                 for(let i in self.updataOuList){
-                    this.$axios.puts('/api/services/app/ContactOuManagement/Update',self.updataOuList[i]).then(function(res){
+                    self.$axios.posts('/api/services/app/CurrencyManagement/CUDAggregate',{createList:[],updateList:self.updataOuList,deleteList:[]}).then(function(res){
                         // console.log(res);
                         self.open('修改组织信息成功','el-icon-circle-check','successERP');
                         self.updataOuList = [];
-                    }),function(res){
+                    },function(res){
                         self.open('修改组织信息失败','el-icon-error','faildERP');
-                    }
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                    })
                 }
             }
         },
@@ -1394,137 +1437,66 @@ export default({
             let self = this;
 
             if(self.addBankList.length>0){
-                for(let i in self.addBankList){
-                    this.$axios.posts('/api/services/app/ContactBankManagement/Create',self.addBankList[i]).then(function(res){         
+                    self.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:self.addBankList,updateList:[],deleteList:[]}).then(function(res){         
                         self.open('创建银行资料成功','el-icon-circle-check','successERP');
-                        // console.log(res)
-                    }),function(res){
+                        self.addBankList = [];
+                    },function(res){
                         self.open('创建银行资料失败','el-icon-error','faildERP');
-                    };
-                }
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                    })
             }
         },
         createAddress:function(){//创建地址资料
             let self = this;
 
             if(self.addAddressList.length>0){
-                for(let i in self.addAddressList){
-                    this.$axios.posts('/api/services/app/ContactAddressManagement/Create',self.addAddressList[i]).then(function(res){         
-                        self.open('创建地址信息成功','el-icon-circle-check','successERP');
-                        // console.log(res)
-                    }),function(res){
-                        self.open('创建地址信息失败','el-icon-error','faildERP');
-                    };
-                }
+                self.$axios.posts('/api/services/app/ContactAddressManagement/CUDAggregate',{createList:self.addAddressList,updateList:[],deleteList:[]}).then(function(res){         
+                    self.open('创建地址信息成功','el-icon-circle-check','successERP');
+                    self.addAddressList = [];
+                },function(res){
+                    self.open('创建地址信息失败','el-icon-error','faildERP');
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    self.errorMessage=true;
+                })
             }
         },
         createOu:function(){//创建组织资料
             let self = this;
 
             if(self.addOuList.length>0){
-                for(let i in self.addOuList){
-                    this.$axios.posts('/api/services/app/ContactOuManagement/Create',self.addOuList[i]).then(function(res){         
-                        self.open('创建组织信息成功','el-icon-circle-check','successERP');
-                        // console.log(res)
-                    }),function(res){
-                        self.open('创建组织信息失败','el-icon-error','faildERP');
-                    };
-                }
+                self.$axios.posts('/api/services/app/ContactOuManagement/CUDAggregate',{createList:self.addOuList,updateList:[],deleteList:[]}).then(function(res){         
+                    self.open('创建组织信息成功','el-icon-circle-check','successERP');
+                    self.addOuList = [];
+                },function(res){
+                    self.open('创建组织信息失败','el-icon-error','faildERP');
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    self.errorMessage=true;
+                })
+               
             }
         },
         //-------------------------------------------------------
 
-        //---控制是否可编辑---------------------------------------
-            Update(){//修改
-                let self = this;
-                console.log(self.isEdit)
-                if(self.isEdit==true){
-                    self.isEdit=!self.isEdit;
-                }
-                console.log(self.isEdit)
-            },        
-            Cancel(){
-                let self = this;
-                if(self.isEdit==false){
-                    self.isEdit=!self.isEdit;
-                    self.loadData();
-                }
-            },
+        //---控制按钮显示及隐藏-----------------------------------     
+        Cancel(){
+            let self = this;
+            // if(self.isEdit==false){
+                // self.isEdit=!self.isEdit;
+                self.loadData();
+                self.ifModify = false;
+                $('.tipsWrapper').css({display:'none'})
+            // }
+        },
         //-------------------------------------------------------
 
-        // ---控制表格编辑----------------------------------------
+        // ---控制编辑----------------------------------------
         Modify:function(){//判断主表是否修改过
             let self = this;
             self.ifModify = true;
         },
-        
-        handleBankChange:function(index,row){
-            // console.log(index)
-            let self = this;
-            let flag = false;
-            if(self.updataBankList.length==0&&row.id>0){
-                flag = true;
-            }else if(self.updataBankList.length>=1&&row.id>0){
-                console.log('dada')
-                for(let i in self.updataBankList){
-                    if(row.id != self.updataBankList[i].id){
-                        flag = true;
-                        // console.log(flag) 
-                    }else{
-                        flag= false;
-                        break;        
-                    }
-                }
-            };
-
-            if(flag){
-                self.updataBankList.push(row);
-                // console.log(self.updataBankList)
-            }
-        },
-        getCurrentRow:function(index,row){//银行默认单选框
-            let self = this;
-            for(let i in self.bankData){
-                self.bankData[i].isDefault = false;
-            }
-            self.bankData[index].isDefault = true;
-            // self.updataBankList.push(row);
-            self.updataBankList.push(self.checkedAr)
-            
-        },
-        handleSelectionChange:function(val){//点击复选框选中的数据
-                this.multipleSelection = val;
-        },
-        handleSelectionChange2:function(val){//点击复选框选中的数据
-                this.multipleSelectionAdd = val;
-        },
-        handleSelectionChange3:function(val){//点击复选框选中的数据
-                this.multipleSelectionOu = val;
-        },
-        handleBankDelete:function(index,row){//银行表格内删除操作
-            let self = this;
-
-            self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.bankData.splice(index,1);
-                            self.addBankList.splice(index,1);
-                            self.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:row.id}).then(function(res){
-                                self.open('删除银行资料成功','el-icon-circle-check','successERP');
-                            }),function(res){
-                                self.open('删除银行资料失败','el-icon-error','faildERP');
-                            };
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
-            
-        },
+        //---------------------------------------------------
+        //---从表增行--------------------------------------------
         addColbank:function(){//银行增行
             let self = this;
                 self.x++;
@@ -1544,10 +1516,65 @@ export default({
                 self.addBankList.unshift(self.xrows.newCol)
         },
 
-        handleAddressEdit:function(index,row){//地址信息编辑
-            
+        addColAddress:function(){//地址增行
+            let self = this;
+            self.y++;
+            let newCol = 'newCol'+self.y;
+            self.yrows.newCol ={
+                "groupId": 1,
+                "contactId": self.createAddressParams.contactId,
+                "addressType": '',
+                "addressId": '3',
+                "completeAddress": "",
+                "contactPerson": "",
+                "phone": "",
+                "isDefault": false
+            };
+            self.addressData.unshift(self.yrows.newCol)
+            self.addAddressList.unshift(self.yrows.newCol)
         },
-        handleAddressChange:function(index,row){
+
+        addColOu:function(){//组织增行
+            let self = this;
+            self.z++;
+            let newCol = 'newCol'+self.z;
+            self.zrows.newCol ={
+                "groupId": 1,
+                "contactId": self.createOuParams.contactId,
+                "ouId": '',
+                "transport_method_id": '',
+                "is_default": true
+            };
+            self.ouData.unshift(self.zrows.newCol)
+            self.addOuList.unshift(self.zrows.newCol)
+        },  
+        //---------------------------------------------------
+
+        //---从表修改-----------------------------------------
+        handleBankChange:function(index,row){//银行修改
+            // console.log(index)
+            let self = this;
+            let flag = false;
+            if(self.updataBankList.length==0&&row.id>0){
+                flag = true;
+            }else if(self.updataBankList.length>=1&&row.id>0){
+                for(let i in self.updataBankList){
+                    if(row.id != self.updataBankList[i].id){
+                        flag = true;
+                        // console.log(flag) 
+                    }else{
+                        flag= false;
+                        break;        
+                    }
+                }
+            };
+
+            if(flag){
+                self.updataBankList.push(row);
+                // console.log(self.updataBankList)
+            }
+        },
+        handleAddressChange:function(index,row){//地址修改
             let self = this;
             let flag = false;
             if(self.updataAddressList.length==0){
@@ -1569,40 +1596,7 @@ export default({
                 // console.log(self.updataAddressList)
             }
         },
-        handleAddressDelete:function(index,row){//地址表格内删除操作
-            let self = this;
-            this.addressData.splice(index,1);
-            this.addAddressList.splice(index,1)
-            this.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:row.id}).then(function(res){
-                // console.log(res);
-                self.open('删除地址资料成功','el-icon-circle-check','successERP');
-            }),function(res){
-                self.open('删除地址资料失败','el-icon-error','faildERP');
-            };
-        },
-        addColAddress:function(){//地址增行
-            let self = this;
-            self.y++;
-            let newCol = 'newCol'+self.y;
-            self.yrows.newCol ={
-                "groupId": 1,
-                "contactId": self.createAddressParams.contactId,
-                "addressType": '',
-                "addressId": '3',
-                "completeAddress": "",
-                "contactPerson": "",
-                "phone": "",
-                "isDefault": false
-            };
-            self.addressData.unshift(self.yrows.newCol)
-            self.addAddressList.unshift(self.yrows.newCol)
-        },
-
-
-        handleOuEdit:function(index,row){//组织信息编辑
-            
-        },
-        handleOuChange:function(index,row){
+        handleOuChange:function(index,row){//使用组织修改
             let self = this;
             let flag = false;
             if(self.updataOuList.length==0){
@@ -1624,31 +1618,257 @@ export default({
                 // console.log(self.updataOuList)
             }
         },
-        handleOuDelete:function(index,row){//组织表格内删除操作
+        //---------------------------------------------------
+
+        //---从表默认单选框-----------------------------------
+        getCurrentRow:function(index,row){//银行默认单选框
             let self = this;
-            this.ouData.splice(index,1);
-            this.addOuList.splice(index,1)
-            this.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:row.id}).then(function(res){
-                // console.log(res);
-                self.open('删除地址资料成功','el-icon-circle-check','successERP');
-            }),function(res){
-                self.open('删除地址资料失败','el-icon-error','faildERP');
-            };
+            for(let i in self.bankData){
+                self.bankData[i].isDefault = false;
+            }
+            self.bankData[index].isDefault = true;
+            // self.updataBankList.push(row);
+            self.updataBankList.push(self.checkedAr)
+            
         },
-        addColOu:function(){//组织增行
+        //---------------------------------------------------
+
+        //---从表复选框---------------------------------------
+        handleSelectionChange:function(val){//点击复选框选中的数据
+                this.multipleSelection = val;
+                console.log(this.multipleSelection)
+        },
+        handleSelectionChange2:function(val){//点击复选框选中的数据
+                this.multipleSelectionAdd = val;
+        },
+        handleSelectionChange3:function(val){//点击复选框选中的数据
+                this.multipleSelectionOu = val;
+        },
+        //---------------------------------------------------
+
+        //---从表单项删除-------------------------------------
+
+        handleDelete:function(index,row,who){//银行表格内删除操作
             let self = this;
-            self.z++;
-            let newCol = 'newCol'+self.z;
-            self.zrows.newCol ={
-                "groupId": 1,
-                "contactId": self.createOuParams.contactId,
-                "ouId": '',
-                "transport_method_id": '',
-                "is_default": true
-            };
-            self.ouData.unshift(self.zrows.newCol)
-            self.addOuList.unshift(self.zrows.newCol)
-        },    
+            self.who = who;
+            self.whoIndex = index;
+            self.whoId = row.id;
+            self.dialogDelConfirm = true;
+        },
+        //---------------------------------------------------
+
+        //---确认删除-----------------------------------------
+        sureDel:function(){
+            let self = this;
+            console.log(self.who)
+            if(self.who == 1){//银行单项删除
+                // console.log(self.whoId)
+                if(self.whoId>0){
+                    // console.log(self.dialogDelConfirm)
+                    self.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:self.whoId}).then(function(res){
+                        self.open('删除银行资料成功','el-icon-circle-check','successERP');
+                        self.bankData.splice(self.whoIndex,1);
+                        self.dialogDelConfirm = false;
+                        console.log(self.dialogDelConfirm)
+                    },function(res){
+                        self.open('删除银行资料失败','el-icon-error','faildERP');
+                        self.dialogDelConfirm = false;
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })
+                }else{
+                    self.bankData.splice(self.whoIndex,1);
+                    self.addBankList.splice(self.whoIndex,1);
+                    self.dialogDelConfirm = false;
+                    self.open('删除新增行成功','el-icon-circle-check','successERP');
+                }
+            }
+
+            if(self.who == 2){//地址单项删除
+                if(self.whoId>0){
+                    self.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:self.whoId}).then(function(res){
+                        self.open('删除地址资料成功','el-icon-circle-check','successERP');
+                        self.addressData.splice(self.whoIndex,1);
+                        self.dialogDelConfirm = false;
+                    },function(res){
+                        self.open('删除地址资料失败','el-icon-error','faildERP');
+                        self.dialogDelConfirm = false;
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        
+                    })
+                }else{
+                    self.addressData.splice(self.whoIndex,1);
+                    self.addAddressList.splice(self.whoIndex,1);
+                    self.dialogDelConfirm = false;
+                    self.open('删除新增行成功','el-icon-circle-check','successERP');
+                }
+            }
+
+            if(self.who == 3){//使用组织单项删除
+                if(self.whoId>0){
+                    self.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:self.whoId}).then(function(res){
+                        self.open('删除使用组织成功','el-icon-circle-check','successERP');
+                        self.ouData.splice(self.whoIndex,1);
+                        self.dialogDelConfirm = false;
+                    },function(res){
+                        self.open('删除使用组织失败','el-icon-error','faildERP');
+                        self.dialogDelConfirm = false;
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })
+                }else{
+                    self.ouData.splice(self.whoIndex,1);
+                    self.addOuList.splice(self.whoIndex,1);
+                    self.dialogDelConfirm = false;
+                    self.open('删除新增行成功','el-icon-circle-check','successERP');
+                }
+            }
+
+            if(self.who == 4){//银行多项删除  
+                self.$axios.posts('/api/services/app/ContactBankManagement/BatchDelete',self.idArrayBank).then(function(res){
+                    self.open('删除银行资料成功','el-icon-circle-check','successERP');
+                    self.loadBankData();
+                    self.dialogDelConfirm = false;
+                },function(res){
+                    self.open('删除银行资料失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage = true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })    
+            }
+
+            if(self.who == 5){//地址多项删除  
+                self.$axios.posts('/api/services/app/ContactAddressManagement/BatchDelete',self.idArrayAdd).then(function(res){
+                    self.open('删除地址成功','el-icon-circle-check','successERP');
+                    self.loadAddData();
+                    self.dialogDelConfirm = false;
+                },function(res){
+                    self.open('删除地址失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage = true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })    
+            }
+
+            if(self.who == 6){//使用组织多项删除  
+                self.$axios.posts('/api/services/app/ContactOuManagement/BatchDelete',self.idArrayOu).then(function(res){
+                    self.open('删除使用组织成功','el-icon-circle-check','successERP');
+                    self.loadOuData();
+                    self.dialogDelConfirm = false;
+                },function(res){
+                    self.open('删除使用组织失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage = true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })    
+            }
+
+            if(self.who == 7){//删除
+                self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:self.$route.params.id}).then(function(res){
+                    self.open('删除资料成功','el-icon-circle-check','successERP');
+                    self.back();
+                    self.dialogDelConfirm = false;
+                },function(res){
+                    self.open('删除使用组织失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage = true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                }) 
+            }
+
+
+        },
+        //---------------------------------------------------
+        
+        
+        //---从表多项删除---------------------------------------------
+        delMoreBank:function(num){//银行多项删除
+            let self = this;
+
+            for(let i in self.multipleSelection){
+                self.idArrayBank.ids.push(self.multipleSelection[i].id)
+            }
+
+            if(self.idArrayBank.ids.length>0){
+                if(self.idArrayBank.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                self.dialogDelConfirm = true;   
+                self.who = num;
+            }else{
+                self.$message({
+                    type: 'info',
+                    message: '请勾选需要删除的数据！'
+                });
+            }
+            
+        },
+
+        delMoreAdd:function(num){
+            let self = this;
+
+            for(let i in self.multipleSelectionAdd){
+                self.idArrayAdd.ids.push(self.multipleSelectionAdd[i].id)
+            }
+
+            if(self.idArrayAdd.ids.length>0){
+                if(self.idArrayAdd.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                self.dialogDelConfirm = true;   
+                self.who = num;
+            }else{
+                self.$message({
+                    type: 'info',
+                    message: '请勾选需要删除的数据！'
+                });
+            }
+        },
+
+        delMoreOu:function(num){
+            let self = this;
+
+            for(let i in self.multipleSelectionOu){
+                self.idArrayOu.ids.push(self.multipleSelectionOu[i].id)
+            }
+
+            if(self.idArrayOu.ids.length>0){
+                if(self.idArrayOu.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                self.dialogDelConfirm = true;   
+                self.who = num;
+            }else{
+                self.$message({
+                    type: 'info',
+                    message: '请勾选需要删除的数据！'
+                });
+            }
+        },
+
+        
+        delCustomer:function(num){//删除此页客户资料
+            let self = this;
+
+            self.who = num;
+            self.dialogDelConfirm = true;  
+        },
+        
+        
+          
         
         //-----------------------------------------------------------
 
@@ -1690,40 +1910,44 @@ export default({
         //-------------------------------------------------------
         //---提示错误----------------------------------------------
         showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsSelect(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsRangedate(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.$el).hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            //     if($(e.$el).hasClass($(this).attr('name'))){
+            //         $(this).addClass('display_block')
+            //     }else{
+            //         $(this).removeClass('display_block')
+            //     }
+            // })
         },
         showErrprTipsTextArea(e){
-                $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-                })
+            $('.tipsWrapper').css({display:'none'})
+            // $('.tipsWrapper').each(function(){
+            // if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+            //     $(this).addClass('display_block')
+            // }else{
+            //     $(this).removeClass('display_block')
+            // }
+            // })
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;

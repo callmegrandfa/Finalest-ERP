@@ -644,6 +644,16 @@ import Btm from '../../base/btm/btm'
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
 }
+.open-search{
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #E3E3E3;
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
+} 
 .mt5{
     margin-top: 5px;
 }
@@ -724,6 +734,9 @@ import Btm from '../../base/btm/btm'
 .el-checkbox__inner::after{
     left: 4px;
     top: -2px;
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background:#ecf5ff;
 }
 .text-left{
     text-align: left;
