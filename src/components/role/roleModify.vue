@@ -1,5 +1,5 @@
 <template>
- <div class="roleDetail">
+ <div class="roleModify">
      <el-row class="fixed">
          <el-col :span="24">
             <button class="erp_bt bt_back" @click="back">
@@ -154,69 +154,105 @@
                <el-tabs v-model="activeName">
 <!-- - - - - - - - - - - - - - - - - - - - 关联用户- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="关联用户" name="role" class="getPadding" style="z-index:-10">
-                        <button class="erp_bt bt_add"  @click="dialogRole = true">
+                        <button class="erp_bt bt_add"  @click="dialogUser = true">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
-                        <!-- <a class="addRole" :key="x.displayName" v-for="x in roleChecked">{{x.displayName}}<i @click="addRole(x)" class="el-icon-error"></i></a> -->
-                        <!-- dialog -->
-                        <el-dialog :visible.sync="dialogRole" title="选取用户" class="dialogRole">
-                            <el-col :span="11">
-                                <div>
-                                    <div>已选</div>
-                                    <el-table 
-                                    :data="roletableData" 
-                                    @selection-change="selectionChangeRole_checked"
-                                    border 
-                                    style="width: 100%" 
-                                    stripe>
-                                        <el-table-column type="selection"></el-table-column>
-                                        <el-table-column prop="userCode" label="用户编码"></el-table-column>
-                                        <el-table-column prop="displayName" label="用户名称"></el-table-column>
-                                        <el-table-column prop="ouId" label="所属组织"></el-table-column>
-                                    </el-table> 
-                                </div>
-                                  
-                            </el-col>
-                            <el-col :span="2">
-                                <div class="el-transfer__buttons">
-                                    <el-button :disabled="isRole_nocheked" @click="noCheck_push_check" type="primary" icon="el-icon-arrow-left"></el-button>
-                                    <el-button :disabled="isRole_cheked" @click="check_push_noCheck" type="primary" icon="el-icon-arrow-right"></el-button>
-                                    <!-- <button :disabled="isRole_nocheked" type="button" class="el-button el-button--primary el-transfer__button">
-                                        <span><i class="el-icon-arrow-left"></i></span>
-                                    </button>
-                                    <button :disabled="isRole_cheked" type="button" class="el-button el-button--primary el-transfer__button">
-                                        <span><i class="el-icon-arrow-right"></i></span>
-                                    </button> -->
-                                </div>
-                            </el-col>
-                            <el-col :span="11">
-                                <div>可选</div>
-                                <div>
-                                    <el-table 
-                                    :data="roletableData" 
-                                    @selection-change="selectionChangeRole_nochecked"
-                                    border 
-                                    style="width: 100%" 
-                                    stripe>
-                                    <el-table-column type="selection"></el-table-column>
-                                    <el-table-column prop="userCode" label="用户编码"></el-table-column>
-                                    <el-table-column prop="displayName" label="用户名称"></el-table-column>
-                                    <el-table-column prop="ouId" label="所属组织"></el-table-column>
-                                </el-table>   
-                                </div>
-                                
-                            </el-col>
-                            <span slot="footer">
-                                <el-button>确认</el-button>
-                                <el-button>取消</el-button>
-                            </span>
-                        </el-dialog>
+                       
+    <!-- 关联角色 -->
+<el-dialog :visible.sync="dialogUser" title="关联用户" class="transfer_dialog">
+    <el-col :span="24">
+        <el-col :span="11" class="transfer_warapper">
+                <el-col :span="24" class="transfer_header">
+                    <span>已选</span>
+                    <div class="transfer_search">
+                        <el-autocomplete
+                        class="search_input"
+                        placeholder="搜索..."
+                        >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-autocomplete>
+                    </div>    
+                </el-col>    
+                <el-col :span="24" class="transfer_table">
+                    <el-table 
+                    :data="showCheckedUser" 
+                    border 
+                    style="width: 100%" 
+                    stripe 
+                    @selection-change="checkedSelect" 
+                    ref="roleTableLeft">
+                        <el-table-column type="selection" fixed="left"></el-table-column>
+                        <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                        <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                        <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                    </el-table>   
+                </el-col>
+                <el-col :span="24" class="transfer_footer">
+                    <el-col :span="18">
+                        <span>总共有{{totalItemLeftUser}}条数据</span>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
+                        <el-button class="el_transfer" :disabled="leftAddBtnUser" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right" round></el-button>
+                    </el-col>
+                </el-col>
+        </el-col>
+        <el-col :span="2" class="transfer_btns">
+            <el-col :span="24" class="transfer_btn_wrapper">
+                <el-button class="el_transfer" :disabled="is_user_nocheked" @click="noCheck_push_check_user" type="primary" icon="el-icon-arrow-left" round></el-button>
+                <el-button class="el_transfer" :disabled="is_user_cheked" @click="check_push_noCheck_user" type="primary" icon="el-icon-arrow-right" round></el-button>
+            </el-col>
+        </el-col>
+        <el-col :span="11" class="transfer_warapper">
+            <el-col :span="24" class="transfer_header">
+                <span>可选</span>
+                <div class="transfer_search">
+                    <el-autocomplete
+                    class="search_input"
+                    placeholder="搜索..."
+                    >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-autocomplete>
+                </div>
+            </el-col>    
+            <el-col :span="24" class="transfer_table">
+                <el-table 
+                :data="showNoCheckedUser" 
+                border 
+                style="width: 100%" 
+                stripe 
+                @selection-change="nocheckedSelect" 
+                ref="roleTabRight">
+                    <el-table-column type="selection" fixed="left"></el-table-column>
+                    <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                    <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                    <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                </el-table>  
+                
+            </el-col>
+            <el-col :span="24" class="transfer_footer">
+                <el-col :span="18">
+                    <span>总共有{{totalItemRightUser}}条数据</span>
+                </el-col>
+                <el-col :span="6">
+                    <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button>
+                    <el-button class="el_transfer" :disabled="rightAddBtnUser" @click="pageAddRightUser" type="primary" icon="el-icon-arrow-right" round></el-button>
+                </el-col>
+            </el-col>
+        </el-col>
+    </el-col>
+    <span slot="footer">
+        <button class="transfer_footer_btn transfer_confirm" @click="dialogUser = false">确 认</button>
+        <button class="transfer_footer_btn" @click="cancelPushUser">取 消</button>
+    </span>
+</el-dialog>
+<!--dialog结束  -->
                         <el-table 
-                        v-loading="roleTableLoading"
-                        :data="roletableData" 
+                        v-loading="userTableLoading"
+                        :data="showCheckedUser" 
                         border 
                         style="width: 100%" 
                         stripe>
@@ -229,9 +265,7 @@
 
                              <el-table-column label="操作">
                                  <template slot-scope="scope">
-                                     <el-button type="text" size="small"  @click="delThisRole(scope.row)">删除</el-button>
-                                    <el-button type="text" size="small"  @click="seeThisRole(scope.row)" >查看</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
+                                     <el-button type="text"   @click="check_push_noCheck_userThis(scope.row)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -239,48 +273,125 @@
                         style="margin-top:20px;" 
                         class="text-right" 
                         background layout="total,prev, pager, next,jumper" 
-                        @current-change="roleHandleCurrentChange"
-                        :current-page="rolePageIndex"
-                        :page-size="roleOneItem"
-                        :total="roleTotalItem">
+                        @current-change="userLeftPageChange"
+                        :current-page="pageIndexLeftUser"
+                        :page-size="oneItemLeftUser"
+                        :total="totalItemLeftUser">
                         </el-pagination>   
                     </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - 分配组织- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="分配组织" name="ou" class="getPadding" style="z-index:-1000">
-                        <button class="erp_bt bt_add" @click="dialogOu = true">
+                        <button class="erp_bt bt_add" @click="dialogOuIsShow">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
-                        <!-- dialog -->
-                        <el-dialog :visible.sync="dialogOu" class="dialogOu">
-                            <template slot="title">
-                                <span>关联组织（业务组织+部门）</span>
-                            </template>
-                            <el-col :span="12">
-                                <el-tree
-                                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                                v-loading="fnTreeLoading" 
-                                :data="fnTreeData"
-                                :props="defaultProps"
-                                node-key="id"
-                                default-expand-all
-                                ref="tree"
-                                :expand-on-click-node="false"
-                                >
-                            </el-tree>
-                            </el-col>
-                            <el-col :span="12">
-                                
-                            </el-col>
-                            <span slot="footer" class="dialog-footer">
-                                <el-button>刷 新</el-button>
-                                <el-button>取 消</el-button>
-                                <el-button type="primary">确 定</el-button>
-                            </span>
-                        </el-dialog>
-                        <!-- dialog -->
+                           <!-- 关联角色 -->
+<el-dialog :visible.sync="dialogOu" title="关联用户" class="transfer_dialog">
+    <el-col :span="24">
+        <el-col :span="11" class="transfer_warapper">
+                <el-col :span="24" class="transfer_header">
+                    <span>已选</span>
+                    <div class="transfer_search">
+                        <el-autocomplete
+                        class="search_input"
+                        placeholder="搜索..."
+                        >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-autocomplete>
+                    </div>    
+                </el-col>    
+                <el-col :span="24" class="transfer_table">
+                    <!-- <el-table 
+                    :data="showCheckedUser" 
+                    border 
+                    style="width: 100%" 
+                    stripe 
+                    @selection-change="checkedSelect" 
+                    ref="roleTableLeft">
+                        <el-table-column type="selection" fixed="left"></el-table-column>
+                        <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                        <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                        <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                    </el-table>    -->
+                </el-col>
+                <!-- <el-col :span="24" class="transfer_footer">
+                    <el-col :span="18">
+                        <span>总共有{{totalItemLeftUser}}条数据</span>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
+                        <el-button class="el_transfer" :disabled="leftAddBtnUser" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right" round></el-button>
+                    </el-col>
+                </el-col> -->
+        </el-col>
+        <el-col :span="2" class="transfer_btns">
+            <el-col :span="24" class="transfer_btn_wrapper">
+                <el-button class="el_transfer" :disabled="is_user_nocheked" @click="noCheck_push_check_user" type="primary" icon="el-icon-arrow-left" round></el-button>
+                <el-button class="el_transfer" :disabled="is_user_cheked" @click="check_push_noCheck_user" type="primary" icon="el-icon-arrow-right" round></el-button>
+            </el-col>
+        </el-col>
+        <el-col :span="11" class="transfer_warapper">
+            <el-col :span="24" class="transfer_header">
+                <span>可选</span>
+                <div class="transfer_search">
+                    <el-autocomplete
+                    class="search_input"
+                    placeholder="搜索..."
+                    >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-autocomplete>
+                </div>
+            </el-col>    
+            <el-col :span="24" class="transfer_table">
+                <vue-scroll :ops="$store.state.option">
+                <el-tree
+                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                :data="ouTreeDataRight"
+                :props="ouDefaultProps"
+                node-key="id"
+                default-expand-all
+                show-checkbox
+                @check-change="ouCheckChangeRight"
+                ref="ouTreeRight"
+                :expand-on-click-node="false"
+                @node-click="ouNodeClickRight">
+                </el-tree>  
+                </vue-scroll>
+            </el-col>
+            <!-- <el-col :span="24" class="transfer_footer">
+                <el-col :span="18">
+                    <span>总共有{{totalItemRightUser}}条数据</span>
+                </el-col>
+                <el-col :span="6">
+                    <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button>
+                    <el-button class="el_transfer" :disabled="rightAddBtnUser" @click="pageAddRightUser" type="primary" icon="el-icon-arrow-right" round></el-button>
+                </el-col>
+            </el-col> -->
+        </el-col>
+    </el-col>
+    <span slot="footer">
+        <el-col :span="12" class="checkType_wrapper">
+            <span class="checkTips">节点选中方式</span>
+            <el-select filterable
+            class="checkTypeSelect"
+            placeholder=""
+            :class="{redBorder : validation.hasError('addData.status')}"
+            v-model="nodeCheckType">
+                <el-option v-for="item in nodeCheckTypes" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+            </el-select>
+            <button class="transfer_footer_btn transfer_newAdd">新增组织</button>
+        </el-col>
+        <el-col :span="12" class="isConfirm_wrapper">
+            <button class="transfer_footer_btn transfer_confirm" @click="dialogUser = false">确 认</button>
+            <button class="transfer_footer_btn" @click="cancelPushUser">取 消</button>
+        </el-col>
+        
+    </span>
+</el-dialog>
+<!--dialog结束  -->
                         <el-table 
                         v-loading="ouTableLoading"
                         :data="ouTableData" 
@@ -290,7 +401,11 @@
 
                             <el-table-column prop="ouCode" label="组织编码"></el-table-column>
 
-                            <el-table-column prop="basOuTypes" label="组织类型"></el-table-column>
+                            <el-table-column prop="basOuTypes" label="组织类型">
+                                <template slot-scope="scope">
+                                    <span v-for="(x,index) in scope.row.basOuTypes" :key="index">{{x.ouTypeTValue}}</span>
+                                </template>
+                            </el-table-column>
 
                             <el-table-column prop="createdBy" label="授权人"></el-table-column>
 
@@ -302,6 +417,11 @@
                                     type="datetime" 
                                     readonly
                                     align="center"></el-date-picker>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                 <template slot-scope="scope">
+                                     <el-button type="text">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -318,7 +438,7 @@
 <!-- - - - - - - - - - - - - - - - - - - - 分配功能- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="分配功能" name="fn" class="getPadding" style="z-index:-1000">
                         <el-col :span="24">
-                            <button class="erp_bt bt_add" @click="dialogFn = true">
+                            <button class="erp_bt bt_add" @click="dialogFnIsShow">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
@@ -326,76 +446,50 @@
                             </button>
                         </el-col>
 
-                        <!-- dialogFn -->
-                        <el-dialog :visible.sync="dialogFn">
-                            <template slot="title">
-                                <span style="float:left;">添加功能</span>
-                                <div class="double_bt">
-                                    <template v-if="dialogFn_menuCheck">
-                                        <div class="menu_btn_choose" :class="{menu_btn_active : !dialogFn_menuCheck}" @click="dialogFn_nodeAdd">已选功能</div>
-                                        <div class="menu_btn_choose" :class="{menu_btn_active : dialogFn_menuCheck}">可选功能</div>
-                                    </template>
-                                    <template v-else>
-                                        <div class="menu_btn_choose" :class="{menu_btn_active : !dialogFn_menuCheck}">已选功能</div>
-                                        <div class="menu_btn_choose" :class="{menu_btn_active : dialogFn_menuCheck}" @click="dialogFn_nodeDel">可选功能</div>
-                                    </template>
-                                </div>
-                            </template>
-                            <el-col :span="6" class="dialog_ dialog_l">
-                                <el-col :span="24">
-                                    <el-tabs v-model="fnActiveName">
-                                        <el-tab-pane label="按职责" name="duty" class="getPadding" style="z-index:-10">  
+<!-- - - - - - - - - - - - - - - - - - - - 分配功能- - - - - - - - - - - - - - - - - - - - -  -->
+                        <el-dialog :visible.sync="dialogFn" title="分配功能" class="transfer_dialog">
+                            <el-col :span="24">
+                                <el-col :span="6" class="transfer_warapper">
+                                    <el-col :span="24" class="transfer_fixed">
+                                        <vue-scroll :ops="$store.state.option">  
                                             <el-tree
-                                                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                                                v-loading="fnTreeLoading" 
-                                                :data="fnTreeData"
-                                                :props="defaultProps"
-                                                node-key="id"
-                                                default-expand-all
-                                                ref="tree"
-                                                :expand-on-click-node="false"
-                                                @node-click="fnNodeClick">
+                                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                                            :data="ouTreeDataRight"
+                                            :props="ouDefaultProps"
+                                            node-key="id"
+                                            default-expand-all
+                                            show-checkbox
+                                            @check-change="ouCheckChangeRight"
+                                            ref="ouTreeRight"
+                                            :expand-on-click-node="false"
+                                            @node-click="ouNodeClickRight">
                                             </el-tree>  
-                                        </el-tab-pane>
-                                        <el-tab-pane label="按功能" name="function" class="getPadding" style="z-index:-10">
-                                        </el-tab-pane>            
-                                    </el-tabs>    
+                                        </vue-scroll>
+                                    </el-col>
+                                </el-col>
+                                <el-col :span="18" class="transfer_warapper">
+                                    <el-col :span="24" class="transfer_fixed">
+                                        <el-col :span="24" class="transfer_header">
+                                            <el-col :span="12" class="header_displayName">
+                                                <span>CRM</span>
+                                            </el-col>
+                                            <el-col :span="12" class="header_ops">
+                                            <el-checkbox></el-checkbox>
+                                            <span>全选</span>     
+                                            </el-col>
+                                        </el-col>  
+                                        <el-col :span="24" class="checkbox_group">
+                                                <el-checkbox v-for="item in moduleList" :label="item" :key="item">{{item}}</el-checkbox>
+                                        </el-col>    
+                                    </el-col>
                                 </el-col>
                             </el-col>
-                            <el-col :span="18" class="dialog_ dialog_r">
-                                <el-table 
-                                v-loading="fnTableLoading"
-                                :data="fnTableData" 
-                                border 
-                                style="width: 100%" 
-                                stripe>
-
-                                    <el-table-column prop="moduleName" label="模块名称"></el-table-column>
-
-                                    <el-table-column prop="permissionDtos" label="功能名称">
-                                        <template slot-scope="scope">
-                                            <a class="addRole" v-for="i in fnTableData[scope.$index].permissionDtos">{{i.displayName}}</a>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <el-pagination
-                                style="margin-top:20px;" 
-                                class="text-right" 
-                                background layout="total,prev, pager, next,jumper" 
-                                @current-change="fnHandleCurrentChange"
-                                :current-page="fnPageIndex"
-                                :page-size="fnOneItem"
-                                :total="fnTotalItem">
-                                </el-pagination>      
-                            </el-col>
-                            <span slot="footer" class="dialog-footer">
-                                <el-button>刷 新</el-button>
-                                <el-button>取 消</el-button>
-                                <el-button type="primary">确 定</el-button>
+                            <span slot="footer">
+                                <button class="transfer_footer_btn transfer_confirm">确 认</button>
+                                <button class="transfer_footer_btn">取 消</button>
                             </span>
-                            
                         </el-dialog>
-                        <!-- dialogFn -->
+                        <!--dialog结束  -->
 
                         <!-- tree -->
                         <el-col :span="5">
@@ -440,9 +534,9 @@
 
                                 <el-table-column label="操作">
                                     <template slot-scope="scope">
-                                        <el-button type="text" size="small"  @click="delThisFn(scope.row)">删除</el-button>
-                                        <!-- <el-button type="text" size="small"  @click="seeThisRole(scope.row)" >查看</el-button> -->
-                                        <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
+                                        <el-button type="text"   @click="delThisFn(scope.row)">删除</el-button>
+                                        <!-- <el-button type="text"   @click="seeThisRole(scope.row)" >查看</el-button> -->
+                                        <!-- <el-button type="text"   @click="see(scope.row)" >查看</el-button> -->
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -502,7 +596,7 @@ export default({
                 Status001:[],//启用状态
             },
             ifShow:true, 
-            moduleList:['新增','删除','修改'],
+            moduleList:['新增','删除','修改','审核','启用','禁用','停用','1','2','3'],
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -535,33 +629,29 @@ export default({
                 "permissions": [],
                 "userCodes": []
             },
-// -------------关联用户-------------------
-            roletableData:[],//关联用户数据
-            rolePageIndex:1,//分页的当前页码
-            roleTotalPage:0,//当前分页总数
-            roleOneItem:10,//每页有多少条信息
-            rolePage:1,//当前页
-            roleTotalItem:0,//总共有多少条消息
-            roleTableLoading:true,
-            dialogRole:false,
-            dialogRole_menuCheck:true,
-            roleChecked:[],
-            roleNochecked:[],
-            roleAllNode:[],//所有角色
-            checkedRoleCode:[],//只有当用户修改时此数据不为空，新增页面永远为空，存储用户已经选中所有信息
 
-            selectionRole_checked: [],//复选框选中数据
-            selectionRole_nochecked: [],//复选框选中数据
-            isRole_nocheked:true,
-            isRole_cheked:true,
 // -------------分配组织-------------------
+            ouTreeDataRight:[],//
+            ouDefaultProps:{
+                children: 'children',
+                label: 'ouFullname',
+                id:'id'
+            },
+            nodeCheckTypes:[{//客户性质
+                value:1,
+                label: '包含所有下级'
+            }, {
+                value:2,
+                label: '只包含当前选项'
+            }],
+            nodeCheckType:1,
             ouTableData:[],//分配组织数据
             ouPageIndex:1,//分页的当前页码
             ouTotalPage:0,//当前分页总数
             ouOneItem:10,//每页有多少条信息
             ouPage:1,//当前页
             ouTotalItem:0,//总共有多少条消息
-            ouTableLoading:true,
+            ouTableLoading:false,
             dialogOu:false,
 // -------------分配功能-------------------
             fnTableData:[],//分配功能数据
@@ -571,23 +661,52 @@ export default({
             fnOneItem:10,//每页有多少条信息
             fnPage:1,//当前页
             fnTotalItem:0,//总共有多少条消息
-            fnTableLoading:true,
+            fnTableLoading:false,
             dialogFn:false,
             dialogFn_menuCheck:true,
-            roleChecked:[],
-            roleNochecked:[],
-            roleAllNode:[],//所有权限
+            fnChecked:[],
+            fnNochecked:[],
+            fnAllNode:[],//所有权限
             checkedFnCode:[],
             fnActiveName:'duty',
 // -------------tree-------------------
-            fnTreeLoading:true,
+            fnTreeLoading:false,
             fnTreeData:[],
             defaultProps: {
                 children: 'childNodes',
                 label: 'moduleName',
                 id:'id',
             },
-
+// ------------关联用户dialog-------------
+        dialogUser:false,//控制对话框
+        checkedUserTable:[],//已选所有数据
+        showCheckedUser:[],//右侧表格展示的数据
+        // roleCodesCancel:[],//表格数据，用于取消操作
+        nocheckedUserTable:[],//可选所有数据
+        showNoCheckedUser:[],//左侧表格展示的数据
+        allUsers:[],//所有数据
+        selection_user_checked: [],//复选框选中数据
+        selection_user_nochecked: [],//复选框选中数据
+        is_user_nocheked:true,//可选
+        is_user_cheked:true,//已选
+//---------left表格-------------
+        pageIndexLeftUser:1,//分页的当前页码
+        totalPageLeftUser:0,//当前分页总数
+        oneItemLeftUser:10,//每页有多少条信息
+        pageLeftUser:1,//当前页 
+        totalItemLeftUser:0,//总共有多少条消息  
+        leftDownBtnUser:true,//分页按钮是否显示
+        leftAddBtnUser:true,//分页按钮是否显示
+ //---------right表格-------------         
+        totalItemRightUser:0,//总共有多少条消息 
+        pageIndexRightUser:1,//分页的当前页码
+        totalPageRightUser:0,//当前分页总数
+        oneItemRightUser:10,//每页有多少条信息
+        pageRightUser:1,//当前页 
+        rightDownBtnUser:true,//分页按钮是否显示
+        rightAddBtnUser:true,//分页按钮是否显示            
+//----------初始表格--------------
+        userTableLoading:true,
         }
     },
      validators: {
@@ -611,8 +730,10 @@ export default({
     created () {
       let _this=this;
       _this.loadTree_ou();
+      _this.GetUsers()
+    //   _this.getUserAllData();
       _this.getSelectData();
-      _this.loadRoleTable();
+
       _this.loadOuTable();
       _this.loadFnTable();
       _this.fnLoadTree();
@@ -630,80 +751,17 @@ export default({
             _this.selectData.Status001=res.result;
             })
         },
-        back(){
-             this.$store.state.url='/role/roleList/default'
-             this.$router.push({path:this.$store.state.url})
+//-------------关联组织-----------
+        dialogOuIsShow(){
+            let _this=this;
+            _this.dialogOu=true;
+            _this.loadOuTreeRight()
         },
-        getRoleData(){
-           let _this=this;
-           _this.$axios.gets('/api/services/app/Role/Get',{id:_this.$route.params.id})
-           .then(function(res){console.log(res.result)
-                _this.addData= res.result
-                if(res.result.userCodes.length>0 && res.result.userCodes.length){
-                    _this.checkedRoleCode=res.result.userCodes;
-                }
-                if(res.result.permissions.length>0 && res.result.permissions.length){
-                    _this.checkedFnCode=res.result.permissions;
-                }
-                
-           },function(res){
+        ouCheckChangeRight(data, checked, indeterminate){
+            console.log(data, checked, indeterminate);
+        },      
+        ouNodeClickRight(){
 
-           })
-       }, 
-        delThisRole(row){//关联用户 删除
-            let _this=this;
-            _this.$axios.deletes('/api/services/app/User/Delete',{id:row.id})
-            .then(function(res){
-                _this.loadRoleTable();
-            },function(res){
-            })
-        },
-        seeThisRole(row){//关联用户 查看
-            this.$store.state.url='/user/userModify/'+row.id
-            this.$router.push({path:this.$store.state.url})
-        },
-        delThisFn(row){//分配功能 删除
-            let _this=this;
-            _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',{id:row.id})
-            .then(function(res){
-                _this.loadFnTable();
-                _this.fnLoadTree();
-            },function(res){
-            })
-        },
-        loadRoleTable(){//获取关联用户数据
-            let _this=this;
-            _this.roleTableLoading=true
-            _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:(_this.rolePage-1)*_this.roleOneItem,MaxResultCount:_this.roleOneItem})
-            .then(function(res){
-                _this.roleNochecked=[]  
-                _this.roletableData=res.result.items;
-                _this.roleTotalItem=res.result.totalCount
-                _this.roleTotalPage=Math.ceil(res.result.totalCount/_this.roleOneItem);
-                _this.roleTableLoading=false;
-                $.each(_this.roletableData,function(index,value){
-                    _this.roleAllNode.push(value)//获取所有角色
-                })
-                _this.roleNochecked=_this.roleAllNode;
-                if(_this.roleChecked.length>0){
-                    _this.roleNochecked=_this.uniqueArrayRole(_this.allNode,_this.roleChecked)
-                }else{
-                    _this.roleNochecked=_this.roleAllNode
-                }    
-                // if(_this.roleAllNode.length>0 && _this.checkedRoleCode.length>0){
-                //     for(let i=0;i<_this.roleAllNode.length;i++){
-                //             for(let x=0;x<_this.checkedRoleCode.length;x++){
-                //                 if(_this.checkedRoleCode[x]==_this.roleAllNode[i].roleCode){
-                //                     let item=_this.roleAllNode[i]
-                //                     _this.roleChecked.push(item)//获取已选中的角色
-                //                     _this.roleNochecked.splice(i,1);//未选中角色
-                //                 }
-                //             }
-                //         }
-                // }
-                },function(res){
-                _this.roleTableLoading=false;
-            })
         },
         loadOuTable(){//获取分配组织数据
             let _this=this;
@@ -718,6 +776,18 @@ export default({
                 _this.ouTableLoading=false;
             })
         },
+        loadOuTreeRight(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                .then(function(res){
+                    _this.ouTreeDataRight=res.result;
+                    // _this.treeLoading=false;
+                    _this.loadIcon()
+               },function(res){
+                //    _this.treeLoading=false;
+               })
+        },
+//---------------分配权限--------------
         loadFnTable(){//获取分配功能数据
             let _this=this;
             _this.fnTableLoading=true
@@ -747,10 +817,11 @@ export default({
                 _this.fnTableLoading=false;
             })
         },
-        roleHandleCurrentChange(val){//页码改变
+        dialogFnIsShow(){
             let _this=this;
-            _this.rolePage=val;
-            _this.loadRoleTable();
+            _this.dialogFn=true;
+            // _this.fnLoadTree()
+             _this.loadIcon()
         },
         ouHandleCurrentChange(val){//页码改变
             let _this=this;
@@ -760,7 +831,7 @@ export default({
         fnHandleCurrentChange(val){//页码改变
             let _this=this;
             _this.fnPage=val;
-            _this.loadFnTable();
+            // _this.loadFnTable();
         },
 
         fnLoadTree(){
@@ -881,23 +952,6 @@ export default({
                 _this.roleChecked.push(x);
             }
         },
-        uniqueArrayRole(array1, array2){//求差集
-            var result = [];
-            for(var i = 0; i < array1.length; i++){
-                var item = array1[i];
-                var repeat = false;
-                for (var j = 0; j < array2.length; j++) {
-                    if (array1[i].roleCode == array2[j]) {//唯一key
-                        repeat = true;
-                        break;
-                    }
-                }
-                if (!repeat) {
-                    result.push(item);
-                }
-            }
-            return result;
-        },
         filterNode_ou(value, data) {
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
@@ -927,31 +981,244 @@ export default({
         },
         save(){
             let _this=this;
-            console.log(_this.addData)
         },
-        selectionChangeRole_checked(val) {//dialogRole已选
+        back(){
+             this.$store.state.url='/role/roleList/default'
+             this.$router.push({path:this.$store.state.url})
+        },
+// ----------关联用户--------------
+        editDialog(){
             let _this=this;
-            _this.selectionRole_checked = val;
-            if(val.length==0){
-                _this.isRole_cheked=true
+            if(!_this.isEdit){
+                _this.dialogUser=true;
             }else{
-                _this.isRole_cheked=false
+                return false;
             }
         },
-        selectionChangeRole_nochecked(val) {//dialogRole可选
+        LeftbtnIsShow(){
             let _this=this;
-            _this.selectionRole_nochecked = val;
-            if(val.length==0){
-                _this.isRole_nocheked=true
+            if(_this.pageLeftUser>1){
+                _this.leftDownBtnUser=false;
             }else{
-                _this.isRole_nocheked=false
+                _this.leftDownBtnUser=true;
             }
-        },
-        noCheck_push_check(){
+            
+            if(_this.totalPageLeftUser>_this.pageLeftUser){
+                _this.leftAddBtnUser=false;
+            }else{
+                _this.leftAddBtnUser=true;
+            }
             
         },
-        check_push_noCheck(){
-
+        RightbtnIsShow(){
+            let _this=this;
+            if(_this.pageRightUser>1){
+                _this.rightDownBtnUser=false;
+            }else{
+                _this.rightDownBtnUser=true;
+            }
+            if(_this.totalPageRightUser>_this.pageRightUser){
+                _this.rightAddBtnUser=false;
+            }else{
+                _this.rightAddBtnUser=true;
+            }
+        },
+        userLeftPageChange(val){//页码改变
+            let _this=this;
+            _this.pageLeftUser=val;
+            _this.showCheckedUser=_this.pagination([],[],_this.oneItemLeftUser,_this.pageLeftUser,'left')
+        },
+        uniqueArray(array1, array2){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i].id == array2[j].id) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
+                }
+            }
+            return result;
+        },
+        pagination(addData,delData,oneItem,thisPage,LeftOrRight){//数据分页
+            //data需要被分页的数据,类型为[{}]
+            //addData被添加的数据数据,类型为[{}]
+            //delData被移走的数据,类型为[{}]
+            //totalItem总共有多少条消息  
+            //pageIndex分页的当前页码
+            //totalPages当前分页总数
+            //oneItem每页有多少条信息
+            //thisPage当前页
+            
+            let _this=this;
+            let nowData=[];
+            let startIndex=(thisPage-1)*oneItem;//起始数据所在位置
+            let endIndex=startIndex + oneItem;
+            if(LeftOrRight=='right'){
+                if(addData.length>0){
+                    _this.nocheckedUserTable=addData.concat(_this.nocheckedUserTable);
+                }
+                if(delData.length>0){
+                    _this.nocheckedUserTable=_this.uniqueArray(_this.nocheckedUserTable,delData);
+                }
+                
+                if(_this.nocheckedUserTable.length>0){
+                    if(endIndex>_this.nocheckedUserTable.length){
+                        endIndex=_this.nocheckedUserTable.length;
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        nowData.push(_this.nocheckedUserTable[startIndex])
+                    }
+                }
+            }else if(LeftOrRight=='left'){
+                if(addData.length>0){
+                    _this.checkedUserTable=addData.concat(_this.checkedUserTable);
+                }
+                if(delData.length>0){
+                    _this.checkedUserTable=_this.uniqueArray(_this.checkedUserTable,delData)
+                }
+                if(_this.checkedUserTable.length>0){
+                    if(endIndex>_this.checkedUserTable.length){
+                        endIndex=_this.checkedUserTable.length;
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        nowData.push(_this.checkedUserTable[startIndex])
+                    }
+                }
+            }
+            //左侧
+            _this.totalItemLeftUser=_this.checkedUserTable.length;//左侧总共多少条数据
+            _this.totalPageLeftUser=Math.ceil(_this.totalItemLeftUser/_this.oneItemLeftUser);//有多少页
+            _this.LeftbtnIsShow()
+            //右侧
+            _this.totalItemRightUser=_this.nocheckedUserTable.length;//右侧总共多少条数据
+            _this.totalPageRightUser=Math.ceil(_this.totalItemRightUser/_this.oneItemRightUser);//有多少页
+            _this.RightbtnIsShow()
+            return nowData
+            
+        },
+       
+        GetUsers(){//获取左侧表格数据
+            let _this=this;
+            _this.userTableLoading=true;
+            _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
+           .then(function(response){//获取已选角色
+                let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
+                _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
+                .then(function(resp){//获取已选角色
+                    _this.checkedUserTable=resp.result.items
+                    _this.getAllUserData()//获取所有角色数据
+                })
+                
+           })
+        },
+        getAllUserData(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:0,MaxResultCount:1})//获取所有角色
+            .then(function(re){ 
+                let totalAll=re.result.totalCount;//获取总共当前关联角色条数
+                _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:0,MaxResultCount:totalAll})//获取所有角色
+                .then(function(res){ 
+                    _this.nocheckedUserTable=[]
+                    _this.allUsers=res.result.items;
+                    _this.totalItemRightUser=res.result.totalCount;
+                    if(_this.checkedUserTable.length>0){//获取可选角色
+                        _this.nocheckedUserTable=_this.uniqueArray(_this.allUsers,_this.checkedUserTable)
+                        _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')
+                        _this.showCheckedUser=_this.pagination([],[],_this.oneItemLeftUser,_this.pageLeftUser,'left')
+                    }else{
+                        _this.nocheckedUserTable=_this.allUsers;
+                        _this.showCheckedUser=[];
+                        _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')
+                        
+                    }
+                    _this.userTableLoading=false;
+                },function(res){
+                    _this.userTableLoading=false;
+                })
+            })        
+        },
+        checkedSelect(val) {//dialogRole选中已选角色
+            let _this=this;
+            _this.selection_user_checked = val;
+            if(val.length==0){
+                _this.is_user_cheked=true
+            }else{
+                _this.is_user_cheked=false
+            }
+        },
+        nocheckedSelect(val) {//dialogRole选中可选角色
+            let _this=this;
+            _this.selection_user_nochecked = val;
+            if(val.length==0){
+                _this.is_user_nocheked=true
+            }else{
+                _this.is_user_nocheked=false
+            }
+        },
+        noCheck_push_check_user(){//从右往左添加数据
+            let _this=this;
+            _this.update=true;
+            _this.showCheckedUser=_this.pagination(_this.selection_user_nochecked,[],_this.oneItemLeftUser,_this.pageLeftUser,'left')
+            _this.showNoCheckedUser=_this.pagination([],_this.selection_user_nochecked,_this.oneItemRightUser,_this.pageRightUser,'right')
+        },
+        check_push_noCheck_user(){//从左往右添加数据
+            let _this=this;
+            _this.update=true;
+            _this.showCheckedUser=_this.pagination([],_this.selection_user_checked,_this.oneItemLeftUser,_this.pageLeftUser,'left')
+            _this.showNoCheckedUser=_this.pagination(_this.selection_user_checked,[],_this.oneItemRightUser,_this.pageRightUser,'right')
+           
+        },
+        check_push_noCheck_userThis(val){//删除一个关联角色
+            let _this=this;
+            if(!_this.isEdit){
+                let json=[val]
+                _this.update=true;
+                _this.checkedUserTable=_this.uniqueArray(_this.checkedUserTable,json);
+                _this.showNoCheckedUser=_this.pagination(json,[],_this.oneItemRightUser,_this.pageRightUser,'right')
+                _this.showCheckedUser=_this.pagination([],json,_this.oneItemLeftUser,_this.pageLeftUser,'left')
+            }else{
+                return false
+            }
+        },
+        cancelPushUser(){//取消
+            let _this=this;
+            _this.dialogUser=false;
+            _this.GetUsers()
+        },
+        pageDownLeftUser(){//左侧表格向左翻页
+            let _this=this;
+            if(_this.pageLeftUser>1){
+                _this.pageLeftUser--
+                
+                _this.showCheckedUser=_this.pagination([],[],_this.oneItemLeftUser,_this.pageLeftUser,'left')
+            }
+        },
+        pageAddLeftUser(){//左侧表格向右翻页
+            let _this=this;
+            if(_this.pageLeftUser<=_this.totalPageLeftUser){
+                _this.pageLeftUser++
+                _this.showCheckedUser=_this.pagination([],[],_this.oneItemLeftUser,_this.pageLeftUser,'left')
+            }
+        },
+        pageDownRightUser(){//右侧表格向左翻页
+            let _this=this;
+            if(_this.pageRightUser>1){
+                _this.pageRightUser--
+                _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')
+            }    
+        },
+        pageAddRightUser(){//右侧表格向右翻页
+            let _this=this;
+            if(_this.pageRightUser<_this.totalPageRightUser){
+                _this.pageRightUser++
+                _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')
+            }
         },
         
     }
@@ -961,18 +1228,18 @@ export default({
   </script>
 
   <style>
-  .roleDetail{
+  .roleModify{
       font-family: 'microsoft yahei';
   }
  /*收起*/
- .roleDetail .upBt{
+ .roleModify .upBt{
      font-size: 12px;
      float: right;
      margin-right: 10px;
      margin-top: 10px;
      cursor: pointer;
  }
- .roleDetail .upBt i{
+ .roleModify .upBt i{
     transition: all 0.5s;
     -moz-transition: all 0.5s;
     -webkit-transition: all 0.5s;
@@ -980,7 +1247,7 @@ export default({
     color:#cacaca;
     margin-left: 5px;
  }
- .roleDetail .upBt i.rotate{
+ .roleModify .upBt i.rotate{
      transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
@@ -988,37 +1255,37 @@ export default({
     -moz-transform: rotate(-90deg);	
  }
 
-.roleDetail  .errorTips{
+.roleModify  .errorTips{
     margin-bottom: 10px;
 }  
-.roleDetail .el-row:first-child{
+.roleModify .el-row:first-child{
       padding:5px 0;
 }
-  .roleDetail .el-row{
+  .roleModify .el-row{
      padding:15px 0;
      border-bottom: 1px solid #e4e4e4;
      background-color: #fff;
   }
 
-.roleDetail .tabZoo{
+.roleModify .tabZoo{
      overflow: hidden;
      background-color: #fff;
  }
 
- .roleDetail  .getPadding,.tabZoo .el-tabs__nav-scroll{
+ .roleModify  .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 10px;
  }
- .roleDetail .tabZoo .auditInformation{
+ .roleModify .tabZoo .auditInformation{
      margin-top: 15px;
  }
 
-.roleDetail .tabZoo .erp_bt:first-child{
+.roleModify .tabZoo .erp_bt:first-child{
     margin-left: 0;
 }
-.roleDetail .nopadding{
+.roleModify .nopadding{
     padding-top: 0;
 }
-.roleDetail .el-table th {
+.roleModify .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -1027,13 +1294,13 @@ export default({
     text-align: center;
     background-color: #ececec;
 }
-.roleDetail .el-table td{
+.roleModify .el-table td{
     padding: 3px 0;
 }
-.roleDetail .el-table__body{
+.roleModify .el-table__body{
     text-align: center;
 }
-.roleDetail .el-table .cell{
+.roleModify .el-table .cell{
     padding-left:0px;
     padding-right:0px;
 }
@@ -1048,7 +1315,7 @@ export default({
     line-height: 23px;
     text-align: center
 }
-.roleDetail .el-table th {
+.roleModify .el-table th {
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
@@ -1058,10 +1325,10 @@ export default({
     background-color: #ececec;
 }
 
-.roleDetail .bgcolor.moreWidth{
+.roleModify .bgcolor.moreWidth{
      width: 505px;
  }
-  .roleDetail .bgcolor.moreWidth .el-input{
+  .roleModify .bgcolor.moreWidth .el-input{
       width: 423px;
   }
 
@@ -1182,17 +1449,17 @@ export default({
   </style>
   
   <style>
-  .roleDetail .el-tab-pane .bt_add{
+  .roleModify .el-tab-pane .bt_add{
       margin-bottom:15px;
   }
-  .roleDetail .el-dialog__headerbtn{
+  .roleModify .el-dialog__headerbtn{
     top:3px;
     font-size:50px;
 }
-.roleDetail .el-dialog__body{
+.roleModify .el-dialog__body{
   overflow: hidden;
 }
-.roleDetail .el-tree-node__content{
+.roleModify .el-tree-node__content{
     background-color: #F9F9F9;
 }
   </style>

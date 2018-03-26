@@ -73,7 +73,7 @@ export default {
               zIndex:'998',
               width:'calc(100% - 265px)',
               transition: 'width 0s'
-            }).next('div').css({marginTop:$('.fixed').height()})
+            }).next('div').css({marginTop:'47px'})
           }else{
              $('.fixed').css({
               position:'fixed',
@@ -81,7 +81,7 @@ export default {
               zIndex:'998',
               width:'calc(100% - 80px)',
               transition: 'width 0s'
-            }).next('div').css({marginTop:$('.fixed').height()})
+            }).next('div').css({marginTop:'47px'})
           }
           _this.$store.commit('go1');
         }else{
