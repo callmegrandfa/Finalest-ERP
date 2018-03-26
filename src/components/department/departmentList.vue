@@ -450,13 +450,6 @@
                 for(let i in self.multipleSelection){
                     self.idArray.ids.push(self.multipleSelection[i].id)
                 }
-                // if(self.idArray.ids.indexOf(undefined)!=-1){
-                //     self.$message({
-                //         type: 'warning',
-                //         message: '新增数据请在行内删除'
-                //     });
-                //     return;
-                // }
                 if(self.idArray.ids.length>0){
                     self.$confirm('确定删除?', '提示', {
                         confirmButtonText: '确定',
@@ -500,20 +493,6 @@
             //         self.tableLoading=false;
             //     })
             // },
-      
-            // checkChange(data,check){
-            //     let self=this;
-            //     let add=false;
-            //     if(check){
-            //         self.treeCheck.push(data.treeId);
-            //     }else{
-            //         for(let i=0;i<self.treeCheck.length;i++){
-            //             if(self.treeCheck[i]==data.treeId){
-            //                 self.treeCheck.splice(i,1);
-            //             }
-            //         }
-            //     }
-            // },
             nodeClick:function(data){
                 let self = this;
 
@@ -538,127 +517,13 @@
                     self.loadTableData();
                 }
                 
-                //  let self=this;
-                //  let flag=false;
-                //  if(self.isClick.length>0){
-                //      for(let i=0;i<self.isClick.length;i++){
-                //         if(self.isClick[i]==data.treeId){
-                //             flag=false
-                //             break;
-                //         }else{
-                //             flag=true;
-                //         }
-                //     }
-                //  }else{
-                //      flag=true;
-                //  }
-                 
-                //  if(data.treeId!=1&&flag){
-                //      self.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:data.treeId})
-                //     .then(function(res){
-                //         self.isClick.push(data.treeId);
-                //         if(res.result.length>0){
-                //             for(let i=0;i<res.result.length;i++){
-                //                 let label=res.result[i].deptName;
-                //                 let treeId=res.result[i].id;
-                //                 let child={'treeId':treeId,'label':label,children:[]}
-                //                 data.children.push(child)
-                //             }
-                //         }
-                //     })
-                //  }
-                
             },
             //---树形操作-----------------------------------------------
-            // TreeAdd(event,node,data){
-            //     $('.TreeMenu').css({
-            //         display:'none'
-            //     })
-            //     let self=this;
-            //     self.clearTreeData();
-            //     self.tittle='新增';
-            //     self.isAdd=true;
-            //     self.dialogFormVisible=true;
-            //     self.dialogData.groupId=data.groupId;//集团id
-            //     self.dialogData.areaParentId=data.id;//父级id
-            // },
-            // TreeDel(event,node,data){
-            //     $('.TreeMenu').css({
-            //         display:'none'
-            //     })
-            //     let self=this;
-            //     self.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:data.id})
-            //     .then(function(res){
-            //         self.loadTree();
-            //         self.loadTableData();
-            //     },function(res){    
-
-            //     })
-            // },
-            // TreeModify(event,node,data){
-            //     $('.TreeMenu').css({
-            //         display:'none'
-            //     })
-            //     let self=this;
-            //     self.clearTreeData();
-            //     self.tittle='修改';
-            //     self.isAdd=false;
-            //     self.dialogFormVisible=true;
-            //      self.$axios.gets('/api/services/app/AreaManagement/Get',{id:data.id})
-            //         .then(function(res){
-            //             self.dialogData=res.result;
-            //         },function(res){    
-
-            //         })
-            // },
+            
             filterNode(value, data) {
                 if (!value) return true;
                  return data.deptName.indexOf(value) !== -1;
             },
-            // renderContent(h, { node, data, store }) {
-            //     return (
-            //     <span class="TreeNode el-tree-node__label"
-            //     on-mousedown ={ (event) => this.whichButton(event,node, data) } 
-            //     on-click={ (event) => this.showTable(event,node, data) }
-            //     style="flex: 1; display: flex;align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
-            //       {node.label}
-            //        <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
-            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-            //             <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
-            //         </div>
-            //     </span>);
-            // },
-            // whichButton(event,node, data){
-            //     let e = event || window.event;
-            //     let btnNum = e.button;
-            //     if(e.target.className!='TreeMenuBtn'){
-            //         $('.TreeMenu').css({
-            //             display:'none'
-            //         })
-            //     }else{
-            //         return false;
-            //     }
-            //     if (btnNum==2){
-            //     e.target.id= data.id
-            //     let clickDom=$('#'+e.target.id);
-            //     let x = e.clientX
-            //     let y = e.clientY
-            //     let left=clickDom.offset().left;
-            //     clickDom.children('.TreeMenu').css({
-            //         display:'block',
-            //         left:x-left+'px',
-            //         top:'0px'
-            //     })
-            //     $('.el-tree-node>.el-tree-node__children').css({
-            //         overflow:'visible'
-            //     })
-            //     }
-            // },
-            // clearTreeData(){
-            //     let self=this;
-            //     self.dialogData={}
-            // }
             //-------------------------------------------------------------------       
         },
     }

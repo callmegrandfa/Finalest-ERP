@@ -360,9 +360,9 @@
                     group_id: 1,
                     currencyCode: "",
                     currencyName: "",
-                    increment: '',
+                    increment: 0,
                     seq: 0,
-                    status: '',
+                    status: 1,
                     remark: ""
                 };
                 self.allList.unshift(self.rows.newCol);

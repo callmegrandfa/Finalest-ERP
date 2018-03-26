@@ -431,32 +431,32 @@
             //---------------------------------------------------------------
 
             //---保存--------------------------------------------------------
-            save:function(){
-                let self = this;
-                console.log(self.dialogData)
-                self.$validate().then(function(success){
-                    if(success){
-                        if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
-                            self.$axios.puts('/api/services/app/DictManagement/Update',self.dialogData).then(function(res){
-                                self.dialogFormVisible=false;
-                                // self.loadTableData();
-                                self.loadTree();
-                            },function(res){    
-                                console.log('error')
-                            })
-                        }else{
-                            self.$axios.posts('/api/services/app/DictManagement/Create',self.dialogData).then(function(res){
-                                self.dialogFormVisible=false;
-                                self.loadTree();
-                                // self.loadTableData();
-                                // self.clearAddDate();
-                            },function(res){    
-                                console.log('error')
-                            })
-                        }
-                    }
-                })
-            },
+            // save:function(){
+            //     let self = this;
+            //     console.log(self.dialogData)
+            //     self.$validate().then(function(success){
+            //         if(success){
+            //             if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
+            //                 self.$axios.puts('/api/services/app/DictManagement/Update',self.dialogData).then(function(res){
+            //                     self.dialogFormVisible=false;
+            //                     // self.loadTableData();
+            //                     self.loadTree();
+            //                 },function(res){    
+            //                     console.log('error')
+            //                 })
+            //             }else{
+            //                 self.$axios.posts('/api/services/app/DictManagement/Create',self.dialogData).then(function(res){
+            //                     self.dialogFormVisible=false;
+            //                     self.loadTree();
+            //                     // self.loadTableData();
+            //                     // self.clearAddDate();
+            //                 },function(res){    
+            //                     console.log('error')
+            //                 })
+            //             }
+            //         }
+            //     })
+            // },
             saveValue:function(){//保存值表的修改和新增
                 
                 let self = this;
@@ -466,9 +466,11 @@
                         self.open('创建字典系统值成功','el-icon-circle-check','successERP');
                         self.addList = [];
                         self.ar = [];
-                        self.loadTableData();
-                    },function(res){    
-                        console.log('error')
+                        // self.loadTableData();
+                    },function(res){ 
+                        self.open('创建失败','el-icon-error','faildERP');   
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                     
                 }
@@ -478,9 +480,11 @@
                         self.open('修改字典系统值成功','el-icon-circle-check','successERP');
                         self.updateList = [];
                         self.ar = [];
-                        self.loadTableData();
+                        // self.loadTableData();
                     },function(res){    
-                        console.log('error')
+                        self.open('修改失败','el-icon-error','faildERP');  
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }
             },
@@ -517,7 +521,7 @@
                             dictId_DictName:self.dictId_DictName,
                             seq: 0,
                             remark: "",
-                            status: '',
+                            status: 1,
                             isSystem: false,
                         };
                     self.tableData.unshift(self.rows.newCol);
@@ -696,7 +700,8 @@
                 }
             },
             //-----------------------------------------------------
-            //---------------------------------------------------------------
+
+            //-----------------------------------------------------
             // SimpleSearch(){//简单搜索
             //      let self=this;
             //      self.tableLoading=true;
@@ -710,7 +715,7 @@
             //     })
             // },
 
-            //---open-----路由切换------------------------------------------
+            //---open-----路由切换-----------------------------------
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -746,7 +751,6 @@
                         self.tableLoading=false;
                     })
                 }
-                
                 
             },
             //--------------------------------------------------------- 
