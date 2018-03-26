@@ -735,6 +735,9 @@ import Btm from '../../base/btm/btm'
     left: 4px;
     top: -2px;
 }
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background:#ecf5ff;
+}
 .text-left{
     text-align: left;
 }

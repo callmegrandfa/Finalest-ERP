@@ -566,7 +566,7 @@
                                 </el-table-column>
 
                                 <el-table-column prop="isDefault" label="默认">
-                                    <template scope="scope">
+                                    <template slot-scope="scope">
                                         <el-radio  :label="true" 
                                                     v-model="scope.row.isDefault" 
                                                     @change.native="getCurrentRow(scope.$index,scope.row)" 
