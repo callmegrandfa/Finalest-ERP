@@ -17,7 +17,7 @@
                         <span class="btDetail">保存</span>
                     </button>
 
-                    <button class="erp_bt bt_del" @click="delRow">
+                    <button class="erp_bt bt_del" @click="delMore(2)">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -119,7 +119,7 @@
                             
                             <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
-                                    <el-button v-on:click="confirmDel(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="delRow(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -147,12 +147,32 @@
 
             </el-col>
         </el-row>
+
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -164,10 +184,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -179,7 +198,7 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
         </el-dialog>
-        <!-- dialog -->
+        <!-- dialog -->  
     </div>
 </template>
 
@@ -220,9 +239,12 @@
                 ar:[],
                 turnPage:-1,
                 pageFlag:true,
-
-                // 错误信息提示开始
-                 option: {
+               
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //-------------------- ------
+                //---错误提示框----------------
+                option: {
                     vRail: {
                         width: '5px',
                         pos: 'right',
@@ -237,9 +259,17 @@
                         height: '0',
                     },
                 },
-                detail_message_ifShow:false,
                 errorMessage:false,
-                // 错误信息提示结束
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
             }
         },
         created:function(){
@@ -256,7 +286,7 @@
             loadAllList:function(){//获取所有列表数据
                 let self = this;
                 this.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.allList = res.result.items;
                     $.each(self.allList,function(index,value){
                         // console.log(value.createdTime)
@@ -277,7 +307,6 @@
                 let self = this;
                 this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
                     self.statusAr = res.result;
-                    console.log(self.statusAr);
                 },function(res){
                     console.log('err'+res)
                 })
@@ -295,23 +324,30 @@
                                 self.open('创建货币资料成功','el-icon-circle-check','successERP');
                                 self.loadAllList();
                                 self.addList = [];
-                            }),function(res){
+                            },function(res){
+                                // console.log(res)
                                 self.open('创建货币资料失败','el-icon-error','faildERP');
-                            };
+                                self.errorMessage = true;
+                                // console.log(res.error.message)
+                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            })
                     //     }
                     // })
                 }
                 
                 if(self.updateList.length>0){
                     self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
-                                // console.log(res);
-                                self.open('修改货币资料成功','el-icon-circle-check','successERP');
-                                self.loadAllList()
-                                self.ar = [];
-                                self.updateList = [];
-                                }),function(res){
-                                    self.open('修改货币资料失败','el-icon-error','faildERP');
-                            };
+                        // console.log(res);
+                        self.open('修改货币资料成功','el-icon-circle-check','successERP');
+                        self.loadAllList()
+                        self.ar = [];
+                        self.updateList = [];
+                    },function(res){
+                        // console.log(res)
+                        self.open('修改货币资料失败','el-icon-error','faildERP');
+                        self.errorMessage = true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })
                 }
             },
             addCol:function(){//增行
@@ -351,6 +387,7 @@
             handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
             },
+
             handleCurrentChange:function(val){//获取点击页码
                 let self = this;
                 if(self.updateList.length>0&&self.pageFlag){
@@ -380,6 +417,7 @@
                  setTimeout(() => {self.pageFlag = true}, 1000) 
                 
             },
+
             handleChange:function(index,row){
                 let self = this;
                 let map = false;
@@ -402,9 +440,9 @@
 
 
                 let flag = false;
-                if(self.updateList.length==0&&row.id!=''){//修改过的数据
+                if(self.updateList.length==0&&row.id>0){//修改过的数据
                     flag = true;
-                }else if(self.updateList.length>=1&&row.id!=''){
+                }else if(self.updateList.length>=1&&row.id>0){
                     for(let i in self.updateList){
                         if(row.id != self.updateList[i].id){
                             flag = true;
@@ -423,49 +461,69 @@
                 }
                 
             },
-            confirmDel(index,row) {
-                let self = this;
-                this.$confirm('确定删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-                }).then(() => {
-                    self.handleDel(index,row);
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            },
-            handleDel:function(index,row){//每行右边的删除
-                let self = this;
-                console.log(row.id)
-                if(row.id>=0){
-                    self.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:row.id}).then(function(res){
-                        console.log(res);
-                        self.allList.splice(index,1);
-                        self.addList.splice(index,1);
+        //------------------------------------------------------------------
+
+        //---确认删除-------------------------------------------------------
+        sureDel:function(){
+            let self = this;
+            if(self.who == 1){
+                if(self.whoId>0){
+                    self.$axios.deletes('/api/services/app/CurrencyManagement/Delete',{id:self.whoId}).then(function(res){
+                        // console.log(res);
+                        self.allList.splice(self.whoIndex,1);
+                        self.dialogDelConfirm = false;
                         self.open('删除成功','el-icon-circle-check','successERP');
                         self.loadAllList();
-                    },function(){
-                        self.errorMessage=true;
+                    },function(res){
                         self.open('删除失败','el-icon-error','faildERP');
+                        self.dialogDelConfirm = false;
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
+                }else{
+                    self.allList.splice(self.whoIndex,1);
+                    self.addList.splice(self.whoIndex,1);
+                    self.dialogDelConfirm = false;
+                    self.open('删除新增行成功','el-icon-circle-check','successERP');
                 }
-                
-            },
-            delRow:function(){//删除选中的项
-                let self=this;
-                // let flag;
-                for(let i in self.multipleSelection){
-                    self.idArray.ids.push(self.multipleSelection[i].id)
-                }
+            };
+
+            if(self.who == 2){
+                self.$axios.posts('/api/services/app/CurrencyManagement/BatchDelete',self.idArray).then(function(res){
+                    self.loadAllList();
+                    self.dialogDelConfirm = false;
+                    self.open('删除成功','el-icon-circle-check','successERP');    
+                },function(res){
+                    self.open('删除失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage=true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })
+            }
+        },
+        //-----------------------------------------------------------------
+
+        //---行内删除-------------------------------------------------------
+        delRow:function(index,row,who){
+            let self = this;
+
+            self.who = who;
+            self.whoIndex = index;
+            self.whoId = row.id;
+            self.dialogDelConfirm = true;
+
+        },
+        //-----------------------------------------------------------------
+
+        //---多项删除-------------------------------------------------------
+        delMore:function(num){
+            let self = this;
+            self.idArray.ids = [];
+            for(let i in self.multipleSelection){
+                self.idArray.ids.push(self.multipleSelection[i].id)
+            }
+
+            if(self.idArray.ids.length>0){
                 if(self.idArray.ids.indexOf(undefined)!=-1){
                     self.$message({
                         type: 'warning',
@@ -473,34 +531,16 @@
                     });
                     return;
                 }
-                if(self.idArray.ids.length>0){
-                    self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.$axios.posts('/api/services/app/CurrencyManagement/BatchDelete',self.idArray).then(function(res){
-                                self.loadAllList();
-                                self.open('删除成功','el-icon-circle-check','successERP');    
-                            },function(){
-                                self.errorMessage=true;
-                                self.open('删除失败','el-icon-error','faildERP');
-                            })
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
-                }else{
-                    self.$message({
-                        type: 'info',
-                        message: '请勾选需要删除的数据！'
-                    });
-                }
-            },
-        //------------------------------------------------------------------
+                self.dialogDelConfirm = true;   
+                self.who = num;
+            }else{
+                self.$message({
+                    type: 'info',
+                    message: '请勾选需要删除的数据！'
+                });
+            }
+        },
+        //-----------------------------------------------------------------
         //---错误提示-------------------------------------------------------
         showErrprTips(e){
             $('.tipsWrapper').each(function(){
@@ -510,6 +550,21 @@
                     $(this).removeClass('display_block')
                 }
             })
+        },
+        getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
         },
         //-----------------------------------------------------------------
     }

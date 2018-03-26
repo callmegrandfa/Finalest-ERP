@@ -86,7 +86,7 @@
                                     <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[1].itemName' disabled=""></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop='createBy' label="创建人"></el-table-column>
+                            <el-table-column prop='createdBy' label="创建人"></el-table-column>
                             <el-table-column prop='createdTime' width="180" label="创建时间"></el-table-column>
                             <el-table-column label="操作" fixed='right'>
                                  <template slot-scope="scope">

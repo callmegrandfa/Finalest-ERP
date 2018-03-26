@@ -827,7 +827,7 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
         </el-dialog>
-    <!-- dialog -->                                                                        
+        <!-- dialog -->                                                                        
     </div>
 </template>
 
@@ -1000,9 +1000,7 @@ export default({
             },
             checkedAr:[],//进来时数据选中的默认框
             //---确认删除-----------------               
-                dialogDelConfirm:false,//用户删除保存提示信息
-                // row:{},//存储用户点击删除条目数据
-                // choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
+            dialogDelConfirm:false,//用户删除保存提示信息
             //--------------------  
 
             //---信息修改提示框------------
@@ -1666,7 +1664,7 @@ export default({
             if(self.who == 1){//银行单项删除
                 // console.log(self.whoId)
                 if(self.whoId>0){
-                    console.log(self.dialogDelConfirm)
+                    // console.log(self.dialogDelConfirm)
                     self.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:self.whoId}).then(function(res){
                         self.open('删除银行资料成功','el-icon-circle-check','successERP');
                         self.bankData.splice(self.whoIndex,1);

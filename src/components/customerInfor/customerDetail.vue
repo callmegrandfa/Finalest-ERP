@@ -540,7 +540,7 @@
                             <span class="btDetail">Excel</span>
                         </button>
 
-                        <button class="erp_bt bt_del">
+                        <button class="erp_bt bt_del" @click='delMoreBank(4)'>
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -626,7 +626,7 @@
                             </el-table-column>
                             <el-table-column label='操作'>
                                 <template slot-scope="scope" >
-                                    <el-button v-on:click="handleBankDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -738,7 +738,7 @@
                             </el-table-column>
                             <el-table-column label='操作'>
                                 <template slot-scope="scope" >
-                                    <el-button v-on:click="handleAddressDelete(scope.$index)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="handleDelete(scope.$index,scope.row,2)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -846,7 +846,7 @@
 
                             <el-table-column label='操作'>
                                 <template slot-scope="scope" >
-                                    <el-button v-on:click="handleOuDelete(scope.$index)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="handleDelete(scope.$index,scope.row,3)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -1053,15 +1053,15 @@ export default({
 
             createContactParams:{//创建客户资料参数
                 'groupId':1,//集团Id
-                'ouId':'',//组织单元id
+                'ouId':1,//组织单元id
                 'contactCode':'',//客户编码
                 'contactName':'',//客户名称
                 'contactFullName':'',//客户全称
                 'mnemonic':'',//助记码
                 'contactClassId':'',//客户分类
-                'contactTypeId':'',//客户类型
-                'contactWorkPropertyId':'',//客户性质
-                'contactGradeId':0,//客户等级ID,
+                'contactTypeId':0,//客户类型
+                'contactWorkPropertyId':0,//客户性质
+                'contactGradeId':'',//客户等级ID,
                 'isSupplier':'1',//是否为供应商
                 'isCustomer':'1',//是否客户
                 'ficaOuId':'',//财务组织单元 ID
@@ -1074,7 +1074,7 @@ export default({
                 'phone':'',//电话
                 'remark':'',//备注
                 'creditMgt':true,//信用管理
-                'status':'',//状态
+                'status':'未启用',//状态
             },
 
             createBankParams:{//创建银行的参数
@@ -1116,6 +1116,14 @@ export default({
             ouData:[],//组织数据列表，开始为空
             updataOuList:[],//修改的组织信息
             addOuList:[],//需要添加的组织信息
+
+            multipleSelection:[],//需要删除的银行数组
+            multipleSelectionAdd:[],//需要删除的地址数组
+            multipleSelectionOu:[],//需要删除的组织数组
+
+            bankIndex:[],
+            addIndex:[],
+            ouIndex:[],
 
             x:0,
             y:0,
@@ -1456,7 +1464,8 @@ export default({
                     "openingBank": '',
                     "contactPerson": '',
                     "phone": '',
-                    "isDefault": false
+                    "isDefault": false,
+                    index:self.x,
                 };
                 self.bankData.unshift(self.xrows.newCol);
                 self.addBankList.unshift(self.xrows.newCol)
@@ -1500,88 +1509,60 @@ export default({
         //---确认删除-------------------------------------------
         sureDel:function(){
             let self = this;
+
+            if(self.who == 1){//银行单项删除
+                self.bankData.splice(self.whoIndex,1);
+                self.addBankList.splice(self.whoIndex,1);
+                self.dialogDelConfirm = false;
+            };
+            if(self.who == 2){
+                self.addressData.splice(self.whoIndex,1);
+                self.addAddressList.splice(self.whoIndex,1)
+                self.dialogDelConfirm = false;
+            };
+            if(self.who == 3){
+                self.ouData.splice(self.whoIndex,1);
+                self.addOuList.splice(self.whoIndex,1);
+                self.dialogDelConfirm = false;
+            }
+            // if(self.who == 4){
+            //     for(let i in self.bankIndex){
+            //         self.bankData.splice(self.bankIndex[i],1)
+            //     }
+            //     console.log(self.bankIndex[i])
+            //     self.dialogDelConfirm = false;
+            // }
+
         },
         //-----------------------------------------------------
         
-        //---从表删除-------------------------------------------
-        handleBankDelete:function(index,row){//银行表格内删除操作
+        //---从表表格内删除-------------------------------------------
+        handleBankDelete:function(index,row,who){//表格内删除操作 who:1银行 2地址 3使用组织
             let self = this;
-            this.bankData.splice(index,1);
-            self.addBankList.splice(index,1);
-        },
-
-        handleAddressDelete:function(index){//地址表格内删除操作
-            let self = this;
-            self.addressData.splice(index,1);
-            self.addAddressList.splice(index,1)
-        },
-
-        handleOuDelete:function(index){//地址表格内删除操作
-            let self = this;
-            self.ouData.splice(index,1);
-            self.addOuList.splice(index,1);
+            self.who = who;
+            self.whoIndex = index;
+            self.dialogDelConfirm = true;
         },
         //-------------------------------------------------------
 
-        // handleAddressEdit:function(){//地址信息编辑
-            
-        // },
-        // handleAddressChange:function(index,row){
-        //     let self = this;
-        //     let flag = false;
-        //     if(self.updataAddressList.length==0){
-        //         flag = true;
-        //     }else if(self.updataAddressList.length>=1){
-        //         for(let i in self.updataAddressList){
-        //             if(row.id != self.updataAddressList[i].id){
-        //                 flag = true;
-        //                 console.log(flag) 
-        //             }else{
-        //                 flag= false;
-        //                 break;        
-        //             }
-        //         }
-        //     };
-
-        //     if(flag){
-        //         self.updataAddressList.push(row);
-        //         console.log(self.updataAddressList)
-        //     }
-        // },
-        
-
-        // handleOuEdit:function(){//地址信息编辑
-        //     let self = this;
-        //     self.updataAddressList.push(row)
-        // },
-        // handleOuChange:function(index,row){
-        //     let self = this;
-        //     let flag = false;
-        //     if(self.updataOuList.length==0){
-        //         flag = true;
-        //     }else if(self.updataOuList.length>=1){
-        //         for(let i in self.updataOuList){
-        //             if(row.id != self.updataOuList[i].id){
-        //                 flag = true;
-        //                 console.log(flag) 
-        //             }else{
-        //                 flag= false;
-        //                 break;        
-        //             }
-        //         }
-        //     };
-
-        //     if(flag){
-        //         self.updataOuList.push(row);
-        //         console.log(self.updataOuList)
-        //     }
-        // },
-
-        // handleBankEdit:function(index,row){//银行信息编辑
-            
-        // },
-        
-        //------------------------------------------------------------
+        //---从表多项删除-----------------------------------------
+        delMoreBank:function(num){
+            let self = this;
+            for(let i in self.multipleSelection){
+                self.bankIndex.push(self.multipleSelection[i].index)
+            }
+            if(self.bankIndex.length>0){
+                self.dialogDelConfirm = true; 
+                self.who = num;
+                console.log(self.bankIndex)
+            }else{
+                self.$message({
+                    type: 'info',
+                    message: '请勾选需要删除的数据！'
+                });
+            }
+        },
+        //------------------------------------------------------
 
         //----------------------------------------------------------
         
@@ -1627,9 +1608,9 @@ export default({
                 'contactFullName':'',//客户全称
                 'mnemonic':'',//助记码
                 'contactClassId':'',//客户分类
-                'contactTypeId':'',//客户类型
-                'contactWorkPropertyId':'',//客户性质
-                'contactGradeId':0,//客户等级ID,
+                'contactTypeId':0,//客户类型
+                'contactWorkPropertyId':0,//客户性质
+                'contactGradeId':'',//客户等级ID,
                 'isSupplier':'1',//是否为供应商
                 'isCustomer':'1',//是否客户
                 'ficaOuId':'',//财务组织单元 ID
@@ -1642,7 +1623,7 @@ export default({
                 'phone':'',//电话
                 'remark':'',//备注
                 'creditMgt':true,//信用管理
-                'status':'',//状态
+                'status':'未启用',//状态
             }
         },
         //--------------------------------------------------
