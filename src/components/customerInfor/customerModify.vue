@@ -9,28 +9,42 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button @click="Update()" class="erp_bt bt_modify">
+                <!-- <button @click="Update()" class="erp_bt bt_modify">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_modify.png">
                     </div>
                     <span class="btDetail">修改</span>
-                </button>
+                </button> -->
 
-                <button class="erp_bt bt_add" @click="goDetail">
+                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">新增</span>
                 </button>
 
-                <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
+                <button class="erp_bt bt_del" @click="delCustomer(7)" v-show='!ifModify'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+
+                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
+                <button class="erp_bt bt_saveAdd" v-show='ifModify'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_saveAdd.png">
+                    </div>
+                    <span class="btDetail">保存并新增</span>
+                </button>
+
+                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -135,7 +149,6 @@
                             <el-select v-model="customerData.ouId"
                                     placeholder=""
                                     class="ouId"
-                                    :disabled="isEdit"
                                     @focus="showErrprTipsSelect"
                                     @change='Modify()'
                                     :class="{redBorder : validation.hasError('customerData.ouId')}">
@@ -166,8 +179,7 @@
                         <div class="bgcolor">
                             <label><small>*</small>编码</label>
                             <el-input v-model="customerData.contactCode" 
-                                    placeholder="" 
-                                    :disabled="isEdit"
+                                    placeholder=""
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactCode')}"
                                     class="contactCode"
@@ -179,7 +191,6 @@
                             <label><small>*</small>名称</label>
                             <el-input v-model="customerData.contactName" 
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactName')}"
                                     class="contact"
@@ -191,7 +202,6 @@
                             <label><small>*</small>全称</label>
                             <el-input v-model="customerData.contactFullName" 
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactFullName')}"
                                     class="contactFullName" 
@@ -202,7 +212,6 @@
                             <label>助记码</label>
                             <el-input v-model="customerData.mnemonic" 
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.mnemonic')}"
                                     class="mnemonic"
@@ -215,7 +224,6 @@
                             <label>客户分类</label>
                             <el-select v-model="customerData.contactClassId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactClassId"
@@ -248,7 +256,6 @@
                             <label>客户性质</label>
                             <el-select v-model="customerData.contactWorkPropertyId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactWorkPropertyId"
@@ -264,7 +271,6 @@
                             <label>客户等级</label>
                             <el-select v-model="customerData.contactGradeId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactGradeId"
@@ -280,7 +286,6 @@
                             <label>客户类型</label>
                             <el-select v-model="customerData.contactTypeId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactTypeId"
@@ -296,7 +301,6 @@
                             <label>对应财务组织</label>
                             <el-select v-model="customerData.ficaOuId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     class="ficaOuId"
                                     @focus="showErrprTipsSelect"
                                     @change='Modify()'
@@ -325,7 +329,6 @@
                             <label>纳税登记号</label>
                             <el-input v-model="customerData.taxCode" 
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @focus="showErrprTips"
                                     class="taxCode"
                                     :class="{redBorder : validation.hasError('customerData.taxCode')}"
@@ -336,7 +339,6 @@
                             <label>业务地区</label>
                             <el-select v-model="customerData.opAreaId"
                                     class="opAreaId"
-                                    :disabled="isEdit"
                                     @focus="showErrprTipsSelect"
                                     placeholder=""
                                     @change='Modify()'
@@ -365,7 +367,6 @@
                             <label>行政地区</label>
                             <el-select v-model="customerData.adAreaId"
                                     placeholder=""
-                                    :disabled="isEdit"
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="adAreaId"
@@ -395,7 +396,6 @@
                             <label>法人代表</label>
                             <el-input v-model="customerData.legalPerson" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     class="legalPerson"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.legalPerson')}"
@@ -406,7 +406,6 @@
                             <label>注册地址</label>
                             <el-input v-model="customerData.regAddress" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     class="regAddress"
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.regAddress')}"
@@ -417,7 +416,6 @@
                             <label>负责人</label>
                             <el-input v-model="customerData.manager" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     @focus="showErrprTips"
                                     class="manager"
                                     :class="{redBorder : validation.hasError('customerData.manager')}"
@@ -428,7 +426,6 @@
                             <label>电话</label>
                             <el-input v-model="customerData.phone" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     @focus="showErrprTips"
                                     class="phone"
                                     :class="{redBorder : validation.hasError('customerData.phone')}"
@@ -439,7 +436,6 @@
                             <label>备注</label>
                             <el-input v-model="customerData.remark" 
                                     placeholder=""
-                                    :disabled="isEdit" 
                                     @focus="showErrprTips"
                                     class="remark"
                                     :class="{redBorder : validation.hasError('customerData.remark')}"
@@ -453,7 +449,6 @@
                                     placeholder=""
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
-                                    :disabled="isEdit" 
                                     :class="{redBorder : validation.hasError('customerData.status')}">
                                 <el-option v-for="item in statusAr"  
                                         :key="item.itemValue" 
@@ -477,14 +472,14 @@
                 <el-col :span="24">
                 <el-tabs v-model="activeName">
                         <el-tab-pane label="银行信息" name="bank" class="getPadding" style="z-index:-10">
-                            <button class="erp_bt bt_add" @click="addColbank" v-show='!isEdit'>
+                            <button class="erp_bt bt_add" @click="addColbank">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">增行</span>
                             </button>
                             
-                            <button class="erp_bt bt_del" @click="delMoreBank(4)" v-show='!isEdit'>
+                            <button class="erp_bt bt_del" @click="delMoreBank(4)">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_del.png">
                                 </div>
@@ -503,7 +498,7 @@
                                 <el-table-column type="selection"></el-table-column>
                                 <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
                                     <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.settlementCurrencyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                        <el-select  v-model="scope.row.settlementCurrencyId" :class="[scope.$index%2==0?'bgw':'bgp']">
                                             <el-option  v-for="item in curencyAr" :key="item.id" :label="item.currencyName" :value="item.id" >
                                             </el-option>
                                         </el-select>
@@ -515,8 +510,7 @@
                                         <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.accountNo" 
-                                            type="text"    
-                                            :disabled="isEdit"
+                                            type="text"
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -527,7 +521,6 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.accountName" 
                                             type="text"    
-                                            :disabled="isEdit"
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -538,7 +531,6 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.openingBank" 
                                             type="text"    
-                                            :disabled="isEdit"
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -549,7 +541,6 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.contactPerson" 
                                             type="text"   
-                                            :disabled="isEdit" 
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -560,7 +551,6 @@
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.phone" 
                                             type="text"    
-                                            :disabled="isEdit"
                                             @change="handleBankChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
@@ -570,25 +560,31 @@
                                         <el-radio  :label="true" 
                                                     v-model="scope.row.isDefault" 
                                                     @change.native="getCurrentRow(scope.$index,scope.row)" 
-                                                    @change="handleBankChange(scope.$index,scope.row)"
-                                                    :disabled="isEdit"></el-radio>
+                                                    @change="handleBankChange(scope.$index,scope.row)"></el-radio>
                                     </template>
                                 </el-table-column>
 
                                 <el-table-column label='操作'>
                                     <template slot-scope="scope" >
-                                        <el-button @click="handleDelete(scope.$index,scope.row,1)" type="text" size="small" :disabled="isEdit">删除</el-button>
+                                        <el-button @click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
                         </el-tab-pane>
 
                         <el-tab-pane label="送货地址" name="address" class="getPadding" style="z-index:-1000">
-                            <button class="erp_bt bt_add" @click="addColAddress" v-show='!isEdit'>
+                            <button class="erp_bt bt_add" @click="addColAddress">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">增行</span>
+                            </button>
+
+                            <button class="erp_bt bt_del" @click="delMoreAdd(5)">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_del.png">
+                                </div>
+                                <span class="btDetail">删除</span>
                             </button>
 
                             <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
@@ -674,11 +670,18 @@
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="使用组织" name="organization" class="getPadding" style="z-index:-1000">
-                            <button class="erp_bt bt_add" @click="addColOu" v-show='!isEdit'>
+                            <button class="erp_bt bt_add" @click="addColOu">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">增行</span>
+                            </button>
+
+                            <button class="erp_bt bt_del" @click="delMoreAdd(6)">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_del.png">
+                                </div>
+                                <span class="btDetail">删除</span>
                             </button>
 
                             <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
@@ -705,7 +708,6 @@
                                 <el-table-column prop="transport_method_id" label="运输方式" width="540">
                                     <template slot-scope="scope">
                                         <el-select  v-model="scope.row.transport_method_id" 
-                                                    disabled="isEdit" 
                                                     @change="handleOuChange(scope.$index,scope.row)"
                                                     :class="[scope.$index%2==0?'bgw':'bgp']">
                                             <el-option  v-for="item in tranAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
@@ -839,9 +841,11 @@ export default({
     },
     data() {
         return{
-            ifShow:true,radio:'',
+            ifShow:true,
+            radio:'',
             ifModify:false,//判断主表是否修改过
-            isEdit:true,//判断是否要修改
+            // isEdit:true,//判断是否要修改
+            ifBtn:true,//判断顶部按钮的显示与隐藏
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -995,7 +999,7 @@ export default({
                 "is_default": true
             },
             checkedAr:[],//进来时数据选中的默认框
-            //---确认删除开始-----------------               
+            //---确认删除-----------------               
                 dialogDelConfirm:false,//用户删除保存提示信息
                 // row:{},//存储用户点击删除条目数据
                 // choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
@@ -1437,6 +1441,7 @@ export default({
             if(self.addBankList.length>0){
                     self.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:self.addBankList,updateList:[],deleteList:[]}).then(function(res){         
                         self.open('创建银行资料成功','el-icon-circle-check','successERP');
+                        self.addBankList = [];
                     },function(res){
                         self.open('创建银行资料失败','el-icon-error','faildERP');
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1450,6 +1455,7 @@ export default({
             if(self.addAddressList.length>0){
                 self.$axios.posts('/api/services/app/ContactAddressManagement/CUDAggregate',{createList:self.addAddressList,updateList:[],deleteList:[]}).then(function(res){         
                     self.open('创建地址信息成功','el-icon-circle-check','successERP');
+                    self.addAddressList = [];
                 },function(res){
                     self.open('创建地址信息失败','el-icon-error','faildERP');
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1463,6 +1469,7 @@ export default({
             if(self.addOuList.length>0){
                 self.$axios.posts('/api/services/app/ContactOuManagement/CUDAggregate',{createList:self.addOuList,updateList:[],deleteList:[]}).then(function(res){         
                     self.open('创建组织信息成功','el-icon-circle-check','successERP');
+                    self.addOuList = [];
                 },function(res){
                     self.open('创建组织信息失败','el-icon-error','faildERP');
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1473,22 +1480,16 @@ export default({
         },
         //-------------------------------------------------------
 
-        //---控制是否可编辑---------------------------------------
-            Update(){//修改
-                let self = this;
-                console.log(self.isEdit)
-                if(self.isEdit==true){
-                    self.isEdit=!self.isEdit;
-                }
-                console.log(self.isEdit)
-            },        
-            Cancel(){
-                let self = this;
-                if(self.isEdit==false){
-                    self.isEdit=!self.isEdit;
-                    self.loadData();
-                }
-            },
+        //---控制按钮显示及隐藏-----------------------------------     
+        Cancel(){
+            let self = this;
+            // if(self.isEdit==false){
+                // self.isEdit=!self.isEdit;
+                self.loadData();
+                self.ifModify = false;
+                $('.tipsWrapper').css({display:'none'})
+            // }
+        },
         //-------------------------------------------------------
 
         // ---控制编辑----------------------------------------
@@ -1739,13 +1740,52 @@ export default({
                 })    
             }
 
+            if(self.who == 5){//地址多项删除  
+                self.$axios.posts('/api/services/app/ContactAddressManagement/BatchDelete',self.idArrayAdd).then(function(res){
+                    self.open('删除地址成功','el-icon-circle-check','successERP');
+                    self.loadAddData();
+                    self.dialogDelConfirm = false;
+                },function(res){
+                    self.open('删除地址失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage = true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })    
+            }
+
+            if(self.who == 6){//使用组织多项删除  
+                self.$axios.posts('/api/services/app/ContactOuManagement/BatchDelete',self.idArrayOu).then(function(res){
+                    self.open('删除使用组织成功','el-icon-circle-check','successERP');
+                    self.loadOuData();
+                    self.dialogDelConfirm = false;
+                },function(res){
+                    self.open('删除使用组织失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage = true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })    
+            }
+
+            if(self.who == 7){//删除
+                self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:self.$route.params.id}).then(function(res){
+                    self.open('删除资料成功','el-icon-circle-check','successERP');
+                    self.back();
+                    self.dialogDelConfirm = false;
+                },function(res){
+                    self.open('删除使用组织失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage = true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                }) 
+            }
+
 
         },
         //---------------------------------------------------
         
         
         //---从表多项删除---------------------------------------------
-        delMoreBank:function(num){//多项删除
+        delMoreBank:function(num){//银行多项删除
             let self = this;
 
             for(let i in self.multipleSelection){
@@ -1771,51 +1811,63 @@ export default({
             
         },
 
+        delMoreAdd:function(num){
+            let self = this;
 
+            for(let i in self.multipleSelectionAdd){
+                self.idArrayAdd.ids.push(self.multipleSelectionAdd[i].id)
+            }
 
-        // sureDelMoreBank:function(){
-        //     for(let i in self.multipleSelection){
-        //         self.idArrayBank.ids.push(self.multipleSelection[i].id)
-        //     }
+            if(self.idArrayAdd.ids.length>0){
+                if(self.idArrayAdd.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                self.dialogDelConfirm = true;   
+                self.who = num;
+            }else{
+                self.$message({
+                    type: 'info',
+                    message: '请勾选需要删除的数据！'
+                });
+            }
+        },
 
-        //     console.log(self.idArrayBank)
-        //     if(self.idArrayBank.ids.indexOf(undefined)!=-1){
-        //         self.$message({
-        //             type: 'warning',
-        //             message: '新增数据请在行内删除'
-        //         });
-        //         return;
-        //     }
-        //     if(self.idArrayBank.ids.length>0){
-        //         // self.$confirm('确定删除?', '提示', {
-        //         //     confirmButtonText: '确定',
-        //         //     cancelButtonText: '取消',
-        //         //     type: 'warning',
-        //         //     center: true
-        //         //     }).then(() => {
-                
-        //                 self.$axios.posts('/api/services/app/ContactBankManagement/BatchDelete').then(function(res){
-        //                     self.open('删除银行资料成功','el-icon-circle-check','successERP');
-        //                     self.loadBankData();
-        //                 },function(res){
-        //                     self.open('删除银行资料失败','el-icon-error','faildERP');
-        //                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-        //                     self.errorMessage=true;
-        //                 })
-        //             // }).catch(() => {
-        //             //     self.$message({
-        //             //         type: 'info',
-        //             //         message: '已取消删除'
-        //             //     });
-        //             // });
-        //     }else{
-        //         self.$message({
-        //             type: 'info',
-        //             message: '请勾选需要删除的数据！'
-        //         });
-        //     }
-        // },
+        delMoreOu:function(num){
+            let self = this;
+
+            for(let i in self.multipleSelectionOu){
+                self.idArrayOu.ids.push(self.multipleSelectionOu[i].id)
+            }
+
+            if(self.idArrayOu.ids.length>0){
+                if(self.idArrayOu.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                self.dialogDelConfirm = true;   
+                self.who = num;
+            }else{
+                self.$message({
+                    type: 'info',
+                    message: '请勾选需要删除的数据！'
+                });
+            }
+        },
+
         
+        delCustomer:function(num){//删除此页客户资料
+            let self = this;
+
+            self.who = num;
+            self.dialogDelConfirm = true;  
+        },
         
         
           

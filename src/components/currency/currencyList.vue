@@ -61,7 +61,7 @@
                             <el-table-column prop="currencyName" label="*币种名称" fixed>
                                 <template slot-scope="scope">
                                     <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']"
                                             v-model="scope.row.currencyName" 
                                             @change='handleChange(scope.$index,scope.row)'
                                             type="text"/>
