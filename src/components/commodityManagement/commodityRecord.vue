@@ -1,11 +1,146 @@
 <template>
-    <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%">
-        <query :data="querychend" v-on:listquery="querylog" ></query>       
+    <div class="customer-infor-wrapper commodity" style="float:left;background:#fff;width:100%">
+        <div id="left-box" class="left-box">
+            <el-row class="bg-white"  v-show="ifWidth">
+                <el-col :span="24">
+                    <el-row class="h48 pl15">
+                        <el-col :span="18">
+                            <img src="../../../static/image/common/search_btn.png" class="closeLeft" >
+                            <span>查询</span>
+                        </el-col>
+                        <el-col :span="2" :offset="4">
+                            <span class="fs12 search_info_open" @click="closeLeft">-</span>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                                    <label>商品编码</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="smallBgcolor" style="margin-top:20px">
+                            <el-input placeholder="请录入单号" v-model="value"></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>商品名称</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="smallBgcolor" >
+                            <el-input placeholder="请录入单号" v-model="value"></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>助记码</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="smallBgcolor" >
+                            <el-input placeholder="请录入单号" v-model="value"></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                     <el-row>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>上市时间(起)</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="smallBgcolor" >
+                            <el-input placeholder="请录入单号" v-model="value"></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                     <el-row>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>上市时间(终)</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="smallBgcolor" >
+                            <el-input placeholder="请录入单号" v-model="value"></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>状态</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="value" >
+                                    <el-option  >
+                                    </el-option>
+
+                                </el-select>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>品牌</label>
+                           </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="smallBgcolor" >
+                            <el-input placeholder="请录入单号" v-model="value"></el-input>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="9">
+                            <div class="bgcolor smallBgcolor" >
+                                    <label>状态</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select  v-model="value" >
+                                <el-option  >
+                                </el-option>
+
+                                </el-select>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="9">
+                            <div class="height1"></div>
+                        </el-col>
+                        <el-col style="text-align:center;margin-bottom:20px;" :span="14">
+                            <span class="search-btn" style="float:left;margin-left:10px;" @click="query()">查询</span>
+                        </el-col>
+                    </el-row>
+                </el-col>
+            </el-row>
+        </div>     
         <div id="bgv">
             <el-row >
                 <el-col :span="24" class="border-left" id="bg-white">
-                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
-                    <el-row >
+                    <el-col :span="ifWidth?0:2" class="search-block">
+                        <div @click="openLeft">
+                            <img src="../../../static/image/common/search_btn.png">
+                            <span>查询</span>
+                            <span class='open-search'>+</span>
+                        </div>
+                    </el-col>
+                    <el-col :span="ifWidth?24:22">
+                        <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                    </el-col> 
+                    
                         <el-col :span="24">
                              <el-table @selection-change="handleSelectionChange" :data="tableData" border style="width: 100%">
                                 <el-table-column prop="date" label="序号" width="60">
@@ -47,7 +182,7 @@
                             </el-row> 
                             
                         </el-col>
-                    </el-row>
+                    
 
                 </el-col>
             </el-row>
@@ -74,6 +209,7 @@ import Btm from '../../base/btm/btm'
                 "isDefault": true,
                 "remark": "st54ring"
                 },
+                ifWidth:true,
                 querychend:{
                     up:'',
                     demand:[{
@@ -144,30 +280,37 @@ import Btm from '../../base/btm/btm'
                    botton:[{
                     class: 'erp_bt bt_add',
                     imgsrc: '../../../static/image/common/bt_add.png',
+                    show:true,
                     text: '新增'
                 },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
+                    show:true,
                     text: '删除'
                 },{
                     class: 'erp_bt bt_audit',
                     imgsrc: '../../../static/image/common/bt_audit.png',
+                    show:true,
                     text: '审核'
                 },{
                     class: 'erp_bt bt_in',
                     imgsrc: '../../../static/image/common/bt_in.png',
+                    show:true,
                     text: '导入'
                 },{
                     class: 'erp_bt bt_out',
                     imgsrc: '../../../static/image/common/bt_inOut.png',
+                    show:true,
                     text: '导出'
                 },{
                     class: 'erp_bt bt_version',
                     imgsrc: '../../../static/image/common/bt_start.png',
+                    show:true,
                     text: '启用'
                 },{
                     class: 'erp_bt bt_auxiliary',
                     imgsrc: '../../../static/image/common/bt_stop.png',
+                    show:true,
                     text: '停用'
                 }]},
                 options: [{
@@ -186,7 +329,6 @@ import Btm from '../../base/btm/btm'
                     value: '选项5',
                     label: '北京烤鸭'
                     }],
-
                 value: '',
                 tableData: [{
                                  date: '1',
@@ -255,6 +397,18 @@ import Btm from '../../base/btm/btm'
             handleSelectionChange(val) {//点击复选框选中的数据
                
             },
+            closeLeft:function(){
+                let self = this;
+                self.ifWidth = false;
+                let obgh=document.getElementById('bgv');
+                obgh.style.width="100%";
+            },
+            openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+               let obgh=document.getElementById('bgv');
+                obgh.style.width="calc(100% - 340px)";
+            },
             btmlog:function(data){
                 let oleftBox=document.getElementById('left-box');
                 oleftBox.style.display="block";
@@ -285,6 +439,24 @@ import Btm from '../../base/btm/btm'
 </script>
 
 <style scoped>
+.h48{
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #E4E4E4;
+}
+.open-search{
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #E3E3E3;
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
+}
+.pl15{
+    padding-left: 15px;
+}
 .bg-white{
     background: white;
     border-radius: 3px;
@@ -308,7 +480,7 @@ import Btm from '../../base/btm/btm'
 
 <style>
 #bgv{
-    width: calc(100% - 275px);
+    width: calc(100% - 340px);
     float: left;
 }
 .el-checkbox__inner{
