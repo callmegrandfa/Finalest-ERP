@@ -404,7 +404,7 @@ import Btm from '../../base/btm/btm'
                 if(_this.$route.params.id=="default"){
                     return;
                 }else{
-                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
                         _this.updateId=res.result.id;
                         _this.treeNode.categoryParentid=res.result.categoryParentid;
                         _this.treeNode.categoryName=res.result.categoryName;
@@ -428,7 +428,7 @@ import Btm from '../../base/btm/btm'
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/CategoryManagement/GetCategoryTree')
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryTree')
                     .then(function(res){
                         _this.classTree=res
                         _this.loadIcon();
@@ -486,7 +486,7 @@ import Btm from '../../base/btm/btm'
                 if(_this.isUpdate){
                     let updateData=_this.addItem;
                     _this.$set(updateData, 'id', _this.updateId);
-                    _this.$axios.puts('http://192.168.100.107:8085/api/services/app/CategoryManagement/Update',updateData).then(function(res){
+                    _this.$axios.puts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Update',updateData).then(function(res){
                         _this.InitModify();
                         _this.validation.reset();
                         _this.isEdit=true;
@@ -497,7 +497,7 @@ import Btm from '../../base/btm/btm'
                         return;   
                     }); 
                 }else{
-                    _this.$axios.posts('http://192.168.100.107:8085/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
+                    _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
                         _this.InitModify();
                         _this.InitData();
                         _this.validation.reset();
