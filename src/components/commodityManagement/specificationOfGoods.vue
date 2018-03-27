@@ -357,7 +357,7 @@ import Tree from '../../base/tree/tree'
                             }
                         }
                         if(_this.addArray.length==1){//单条新增
-                            _this.$axios.posts('/api/services/app/SpecManagement/Create',_this.addArray[0]).then(function(res){
+                            _this.$axios.posts('http://192.168.100.107:8082/api/services/app/SpecManagement/Create',_this.addArray[0]).then(function(res){
                                 _this.loadTableData();
                                 _this.loadTree(); 
                                 _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
@@ -365,7 +365,7 @@ import Tree from '../../base/tree/tree'
                             }); 
                         }else{//批量新增 
                             _this.aggregate.createList=_this.addArray;                     
-                            _this.$axios.posts('/api/services/app/SpecManagement/CUDAggregate',_this.aggregate).then(function(res){
+                            _this.$axios.posts('http://192.168.100.107:8082/api/services/app/SpecManagement/CUDAggregate',_this.aggregate).then(function(res){
                                 _this.loadTableData();
                                 _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
@@ -379,7 +379,7 @@ import Tree from '../../base/tree/tree'
                                     updataIndex = i;
                                 }
                             }
-                            _this.$axios.puts('/api/services/app/SpecManagement/Update',_this.tableData[updataIndex]).then(function(res){
+                            _this.$axios.puts('http://192.168.100.107:8082/api/services/app/SpecManagement/Update',_this.tableData[updataIndex]).then(function(res){
                                 _this.loadTableData();
                                 _this.loadTree();
                                 _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
@@ -389,7 +389,7 @@ import Tree from '../../base/tree/tree'
                             
                             _this.aggregate.updateList=_this.tableData;
                             console.log(_this.aggregate)
-                            _this.$axios.posts('/api/services/app/SpecManagement/CUDAggregate',_this.aggregate).then(function(res){
+                            _this.$axios.posts('http://192.168.100.107:8082/api/services/app/SpecManagement/CUDAggregate',_this.aggregate).then(function(res){
                                 _this.loadTableData();
                                 _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
@@ -419,7 +419,7 @@ import Tree from '../../base/tree/tree'
                             type: 'warning',
                             center: true
                             }).then(() => {
-                                _this.$axios.posts('/api/services/app/SpecManagement/BatchDelete',_this.idArray).then(function(res){
+                                _this.$axios.posts('http://192.168.100.107:8082/api/services/app/SpecManagement/BatchDelete',_this.idArray).then(function(res){
                                     _this.loadTableData();
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
@@ -453,7 +453,7 @@ import Tree from '../../base/tree/tree'
                             console.log(this.addArray);
                         }else{
                             let _this=this;
-                            _this.$axios.deletes('/api/services/app/SpecManagement/Delete',{Id:row.id}).then(function(res){
+                            _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/SpecManagement/Delete',{Id:row.id}).then(function(res){
                                 _this.loadTableData();
                                 _this.loadTree();
                                 _this.open('删除成功','el-icon-circle-check','successERP');              
@@ -469,7 +469,7 @@ import Tree from '../../base/tree/tree'
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:(_this.page-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
+                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/SpecManagement/GetAll',{SkipCount:(_this.page-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
                     // console.log(res.result.items)
                     let countPage=res.result.totalCount;
@@ -481,7 +481,7 @@ import Tree from '../../base/tree/tree'
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
-                    _this.$axios.gets('api/services/app/SpecManagement/GetDictionaryTree')
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/SpecManagement/GetDictionaryTree')
                     .then(function(res){
                         _this.componyTree=res.result;
                         _this.treeLoading=false;
@@ -493,7 +493,7 @@ import Tree from '../../base/tree/tree'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/SpecManagement/Get',{Id:data.id}).then(function(res){ 
+                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/SpecManagement/Get',{Id:data.id}).then(function(res){ 
                       _this.tableData.splice(0,_this.tableData.length);             
                     _this.tableData.push(res.result) ;
                     console.log(_this.tableData)
@@ -531,7 +531,7 @@ import Tree from '../../base/tree/tree'
             },
             search(){//按条件查询
                 let _this=this;
-                _this.$axios.gets('/api/services/app/SpecManagement/GetSearch',_this.searchItem).then(function(res){
+                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/SpecManagement/GetSearch',_this.searchItem).then(function(res){
                     _this.tableData=res.result;                   
                 })
             },
