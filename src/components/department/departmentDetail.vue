@@ -2,7 +2,7 @@
     <div class="departmentDetail">
         <el-row>
             <el-col :span="24">
-                <button @click="back" class="erp_bt bt_back">
+                <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
@@ -39,6 +39,7 @@
                         <el-select class="ouId" 
                                    :class="{redBorder : validation.hasError('addData.ouId')}" 
                                    placeholder=""
+                                   @change='Modify()'
                                    v-model="addData.ouId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -72,6 +73,7 @@
                         <el-select class="deptParentid" 
                                    :class="{redBorder : validation.hasError('addData.deptParentid')}" 
                                    placeholder=""
+                                   @change='Modify()'
                                    v-model="addData.deptParentid">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -102,6 +104,7 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>部门编码</label>
                         <el-input class="deptCode" 
+                                  @change='Modify()'
                                   :class="{redBorder : validation.hasError('addData.deptCode')}" 
                                   v-model="addData.deptCode"></el-input>
                     </div>
@@ -113,7 +116,8 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>部门名称</label>
-                        <el-input  class="deptName" 
+                        <el-input  class="deptName"
+                                   @change='Modify()' 
                                    :class="{redBorder : validation.hasError('addData.deptName')}" 
                                    v-model="addData.deptName"></el-input>
                     </div>
@@ -126,7 +130,8 @@
                     <div class="bgcolor longWidth">
                         <label>负责人</label>
                         <el-input class="manager" 
-                                  :class="{redBorder : validation.hasError('addData.manager')}" 
+                                  :class="{redBorder : validation.hasError('addData.manager')}"
+                                  @change='Modify()' 
                                   v-model="addData.manager"  
                         ></el-input>
                     </div>
@@ -141,6 +146,7 @@
                         <el-input class="remark" 
                                   :class="{redBorder : validation.hasError('addData.remark')}" 
                                   v-model="addData.remark"
+                                  @change='Modify()'
                                   type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 4}">
                         </el-input>
@@ -156,6 +162,7 @@
                         <el-select  class="status" 
                                     :class="{redBorder : validation.hasError('addData.status')}" 
                                     placeholder=""
+                                    @change='Modify()'
                                     v-model="addData.status">
                             <el-option v-for="item in status" 
                                        :key="item.itemValue" 
@@ -166,14 +173,67 @@
                     <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
-      </el-row>
-  </div>
+        </el-row>
+
+        <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            <!--  -->
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog --> 
+    </div>
 </template>
 
 <script>
     export default({
         data(){
             return{
+                ifModify:false,//判断是否修改过
                 //---组织单元树--------
                 ouTree:[],
                 ouSearch:'',
@@ -231,6 +291,34 @@
                     "remark": "",
                     "status": ''
                 },
+
+                //---信息修改提示框------------
+                dialogUserConfirm:false,//信息更改提示控制
+                //----------------------------
+                //---错误提示框----------------
+                option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                errorMessage:false,
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
             }
         },
      validators: {
@@ -321,25 +409,23 @@
         //-----------------------------------------------------
         
         //---保存新增---------------------------------------------
+        Modify:function(){//判断数据是否修改过
+            let self = this;
+            self.ifModify = true;
+            // console.log(self.ifModify)
+        },
         save(){
             let self=this;
             self.$validate().then(function (success) {
                 if (success) {
                     self.$axios.posts('/api/services/app/DeptManagement/Create',self.addData).then(function(res){
-                        console.log(res)
+                        // console.log(res)
                         self.open('保存成功','el-icon-circle-check','successERP');
-                        // self.addData = {
-                        //     "ouId": '',
-                        //     "deptCode": "",
-                        //     "deptName": "",
-                        //     "manager": "",
-                        //     "deptParentid": '',
-                        //     "remark": "",
-                        //     "status": ''
-                        // },
                         self.goModify(res.result.id)
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }
             });
@@ -349,16 +435,36 @@
             self.$validate().then(function (success) {
                 if (success) {
                     self.$axios.posts('/api/services/app/DeptManagement/Create',self.addData).then(function(res){
-                        console.log(res)
+                        // console.log(res)
                         self.open('保存成功','el-icon-circle-check','successERP');
                         self.goDetail();
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }
             });
         },
         //-------------------------------------------------------
+
+
+        //---修改返回提示-----------------------------------------
+        isBack(){
+            let self=this;
+            if(self.ifModify){
+                self.dialogUserConfirm=true;
+                // self.choseDoing='back'
+            }else{
+                self.back()
+            }
+        },
+        sureDoing:function(){
+            let self = this;
+            self.back();
+        },
+        //-------------------------------------------------------
+
         //---open---路由切换--------------------------------------
         open(tittle,iconClass,className) {
             this.$notify({
@@ -436,6 +542,21 @@
                     $(this).removeClass('display_block')
                 }
             })
+        },
+        getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
         },
         //------------------------------------------------------
     }

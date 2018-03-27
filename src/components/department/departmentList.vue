@@ -35,7 +35,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button @click="delRow" class="erp_bt bt_del">
+                    <button @click="delMore(2)" class="erp_bt bt_del">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -92,7 +92,7 @@
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="goModify(scope.row.id)" >查看</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="confirmDel(scope.row)" >删除</el-button>
+                                    <el-button type="text" size="small"  @click="delRow(scope.$index,scope.row,1)" >删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -109,12 +109,31 @@
 
             </el-col>
         </el-row>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -126,10 +145,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -141,7 +159,7 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
         </el-dialog>
-        <!-- dialog -->
+        <!-- dialog --> 
     </div>
 </template>
 
@@ -192,8 +210,11 @@
                 tittle:'',//模态框tittle
                 showParent:true,//上级组织单元是否可选
 
-                // 错误信息提示开始
-                 option: {
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //-------------------- 
+                //---错误提示框----------------
+                option: {
                     vRail: {
                         width: '5px',
                         pos: 'right',
@@ -208,9 +229,17 @@
                         height: '0',
                     },
                 },
-                detail_message_ifShow:false,
                 errorMessage:false,
-                // 错误信息提示结束
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
 
                 selfAr:[],//根据id获得树形节点本身
 
@@ -403,6 +432,83 @@
             },
             //----------------------------------------------------------------
 
+            //---确认删除------------------------------------------------------
+            sureDel:function(){
+                let self = this;
+                if(self.who == 1){
+                    if(self.whoId>0){
+                        self.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:self.whoId}).then(function(res){
+                            
+                            self.tableData.splice(self.whoIndex,1);
+                            self.dialogDelConfirm = false;
+                            self.open('删除成功','el-icon-circle-check','successERP');
+                            // self.loadTableData();
+                        },function(res){
+                            self.open('删除失败','el-icon-error','faildERP');
+                            self.dialogDelConfirm = false;
+                            self.errorMessage=true;
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        })
+                    }else{
+                        self.dialogDelConfirm = false;
+                        self.tableData.splice(self.whoIndex,1);
+                        // self.addList.splice(self.whoIndex,1);
+                        self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    }
+                };
+
+                if(self.who == 2){
+                    self.$axios.posts('/api/services/app/DeptManagement/BatchDelete',self.idArray).then(function(res){
+                        self.loadTableData();
+                        self.dialogDelConfirm = false;
+                        self.open('删除成功','el-icon-circle-check','successERP');    
+                    },function(res){
+                        self.open('删除失败','el-icon-error','faildERP');
+                        self.dialogDelConfirm = false;
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })
+                }
+            },
+            //----------------------------------------------------------------
+
+            //---行内删除-----------------------------------------------------
+            delRow:function(index,row,who){
+                let self = this;
+                self.who = who;
+                self.whoIndex = index;
+                self.whoId = row.id;
+                self.dialogDelConfirm = true;
+            },
+            //---------------------------------------------------------------
+
+            //---多项删除----------------------------------------------------
+            delMore:function(num){
+                let self = this;
+                self.idArray.ids = [];
+                for(let i in self.multipleSelection){
+                    self.idArray.ids.push(self.multipleSelection[i].id)
+                }
+
+                if(self.idArray.ids.length>0){
+                    // if(self.idArray.ids.indexOf(undefined)!=-1){
+                    //     self.$message({
+                    //         type: 'warning',
+                    //         message: '新增数据请在行内删除'
+                    //     });
+                    //     return;
+                    // }
+                    self.dialogDelConfirm = true;   
+                    self.who = num;
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
+                    });
+                }
+            },
+            //--------------------------------------------------------------
+
             //---控制编辑------分页--------------------------------------------
             handleCurrentChange(val) {//页码改变
                  let self=this;
@@ -411,75 +517,11 @@
                      self.loadTableData();
                  }
             },
+            
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
             },
-            confirmDel(row) {
-                let self = this;
-                this.$confirm('确定删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-                }).then(() => {
-                    self.delThis(row);
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
-            },
-            delThis(row){//删除行
-                let self=this;
-                self.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:row.id})
-                .then(function(res){
-                    self.open('删除成功','el-icon-circle-check','successERP');
-                    self.loadTableData();
-                },function(res){
-                    self.errorMessage=true;
-                })
-            },
-            delRow(){
-                let self=this;
-                
-                for(let i in self.multipleSelection){
-                    self.idArray.ids.push(self.multipleSelection[i].id)
-                }
-                if(self.idArray.ids.length>0){
-                    self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.$axios.posts('/api/services/app/DeptManagement/BatchDelete',self.idArray).then(function(res){
-                                self.loadTableData();
-                                self.open('删除成功','el-icon-circle-check','successERP');  
-                                self.idArray = {
-                                    ids:[],
-                                };  
-                            },function(res){
-                                self.errorMessage=true;
-                            })
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
-                }else{
-                    self.$message({
-                        type: 'info',
-                        message: '请勾选需要删除的数据！'
-                    });
-                }
-
-            },
+            
             //---------------------------------------------------------------
             // SimpleSearch(){//简单搜索
             //      let self=this;
@@ -493,6 +535,8 @@
             //         self.tableLoading=false;
             //     })
             // },
+            
+            //---树形操作-----------------------------------------------
             nodeClick:function(data){
                 let self = this;
 
@@ -518,8 +562,7 @@
                 }
                 
             },
-            //---树形操作-----------------------------------------------
-            
+
             filterNode(value, data) {
                 if (!value) return true;
                  return data.deptName.indexOf(value) !== -1;

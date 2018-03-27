@@ -1,28 +1,49 @@
 <template>
   <div class="res-modify">
         <el-row class="bg-white pt10 pb10 bb1 fixed">
-            <button class="erp_bt bt_back" @click="back">
+            <button class="erp_bt bt_back" @click="isBack">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_back.png">
                 </div>
                 <span class="btDetail">返回</span>
             </button>
 
-            <button @click="Update()" class="erp_bt bt_modify">
+            <!-- <button @click="Update()" class="erp_bt bt_modify">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_modify.png">
                 </div>
                 <span class="btDetail">修改</span>
-            </button> 
-                                            <!-- 保存修改 -->
-            <button class="erp_bt bt_save" @click="saveModify" v-show='!isEdit'>
+            </button>  -->
+
+            <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_add.png">
+                </div>
+                <span class="btDetail">新增</span>
+            </button>
+
+            <button class="erp_bt bt_del" @click="delModify" v-show='!ifModify'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+
+            <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify'>
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_save.png">
                 </div>
                 <span class="btDetail">保存</span>
             </button>
 
-            <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
+            <button class="erp_bt bt_saveAdd" v-show='ifModify'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_saveAdd.png">
+                </div>
+                <span class="btDetail">保存并新增</span>
+            </button>
+
+            <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
@@ -115,7 +136,6 @@
                             <label><small>*</small>所属组织</label>
                             <el-select v-model="repositoryData.ouId"
                                        :class="{redBorder : validation.hasError('repositoryData.ouId')}"
-                                       :disabled="isEdit"
                                        class="ouId"
                                        @focus="showErrprTipsSelect"
                                        @change='Modify()'
@@ -145,7 +165,6 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockCode" 
                                       @change="Modify()"
-                                      :disabled="isEdit"
                                       @focus="showErrprTips"
                                       class="stockCode"
                                       :class="{redBorder : validation.hasError('repositoryData.stockCode')}"></el-input>
@@ -155,7 +174,6 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockName" 
                                       @change="Modify()"
-                                      :disabled="isEdit"
                                       @focus="showErrprTips"
                                       class="stockName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockName')}"></el-input>
@@ -166,7 +184,6 @@
                                       v-model="repositoryData.stockFullName" 
                                       @change="Modify()"
                                       @focus="showErrprTips"
-                                      :disabled="isEdit"
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockFullName')}"></el-input>
                         </div>
@@ -176,7 +193,6 @@
                                       v-model="repositoryData.mnemonic" 
                                       @change="Modify()"
                                       @focus="showErrprTips"
-                                      :disabled="isEdit"
                                       class="mnemonic"
                                       :class="{redBorder : validation.hasError('repositoryData.mnemonic')}"></el-input>
                         </div>
@@ -187,7 +203,6 @@
                                        placeholder=""
                                        @change="Modify()"
                                        @focus="showErrprTipsSelect"
-                                       :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.stockTypeId')}"
                                        class="stockTypeId">
                                 <el-option v-for="item in stockType"
@@ -204,7 +219,6 @@
                                        placeholder=""
                                        @change="Modify()"
                                        @focus="showErrprTipsSelect"
-                                       :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.opAreaId')}"
                                        class="opAreaId">
                                 <el-input placeholder="搜索..."
@@ -234,7 +248,6 @@
                                        placeholder=""
                                        @change="Modify()"
                                        @focus="showErrprTipsSelect"
-                                       :disabled="isEdit"
                                        :class="{redBorder : validation.hasError('repositoryData.adAreaId')}"
                                        class="adAreaId">
                                 <el-input placeholder=""
@@ -263,7 +276,6 @@
                                       v-model="repositoryData.manager"
                                       @change="Modify()"
                                       @focus="showErrprTips"
-                                      :disabled="isEdit"
                                       class="manager"
                                       :class="{redBorder : validation.hasError('repositoryData.manager')}"></el-input>
                         </div>
@@ -274,7 +286,6 @@
                                       v-model="repositoryData.phone"
                                       @change="Modify()"
                                       @focus="showErrprTips"
-                                      :disabled="isEdit"
                                       class="phone"
                                       :class="{redBorder : validation.hasError('repositoryData.phone')}"></el-input>
                         </div>
@@ -285,7 +296,6 @@
                                       v-model="repositoryData.email"
                                       @change="Modify()"
                                       @focus="showErrprTips"
-                                      :disabled="isEdit"
                                       class="email"
                                       :class="{redBorder : validation.hasError('repositoryData.email')}"></el-input>
                         </div>
@@ -294,7 +304,6 @@
                             <label>传真</label>
                             <el-input v-model="repositoryData.fax"
                                       @change="Modify()"
-                                      :disabled="isEdit"
                                       @focus="showErrprTips"
                                       placeholder="" 
                                       class="fax"
@@ -306,7 +315,6 @@
                             <el-input v-model="repositoryData.stockAddress"
                                       @change="Modify()"
                                       @focus="showErrprTips"
-                                      :disabled="isEdit"
                                       placeholder="" 
                                       class="stockAddress"
                                       :class="{redBorder : validation.hasError('repositoryData.stockAddress')}"></el-input>
@@ -316,7 +324,6 @@
                             <label>备注</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.remark"
-                                      :disabled="isEdit"
                                       @focus="showErrprTips"
                                       @change="Modify()"
                                       class="remark"
@@ -327,7 +334,6 @@
                             <label><small>*</small>状态</label>
                             <el-select v-model="repositoryData.status" 
                                        placeholder=""
-                                       :disabled="isEdit"
                                        @change='Modify()'
                                        @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('repositoryData.status')}"
@@ -343,20 +349,20 @@
             </div>
         </el-collapse-transition>
 
-      <el-row class="ft12 pr10 pt10 br3 bg-white">
-          <el-col :span='24' class="pl10 mb10 bb1">
-              <span class="header-title">送货信息</span>
-          </el-col>
+        <el-row class="ft12 pr10 pt10 br3 bg-white">
+            <el-col :span='24' class="pl10 mb10 bb1">
+                <span class="header-title">送货信息</span>
+            </el-col>
 
-          <el-col :span="24" class="bg-white pl10">
-                <button class="erp_bt bt_add" @click='addCol' v-show='!isEdit'>
+            <el-col :span="24" class="bg-white pl10">
+                <button class="erp_bt bt_add" @click='addCol'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">增行</span>
                 </button>
                 
-                <button class="erp_bt bt_del" @click='delRow' v-show='!isEdit'>
+                <button class="erp_bt bt_del" @click='delRow'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
@@ -387,7 +393,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson"
-                                    :disabled='isEdit'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -398,7 +403,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.moblie"
-                                    :disabled='isEdit'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -409,7 +413,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.phone"
-                                    :disabled='isEdit'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -420,7 +423,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.completeAddress"
-                                    :disabled='isEdit'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text" />
                         </template>
@@ -428,7 +430,7 @@
 
                     <el-table-column prop="transportMethodId" label="运输方式">
                         <template slot-scope="scope">
-                            <el-select  v-model="scope.row.transportMethodId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
+                            <el-select  v-model="scope.row.transportMethodId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
                                 <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
                             </el-select>
@@ -437,7 +439,7 @@
 
                     <el-table-column prop="transportMethodId" label="物流公司">
                         <template slot-scope="scope">
-                            <el-select  v-model="scope.row.logisticsCompanyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
+                            <el-select  v-model="scope.row.logisticsCompanyId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
                                 <el-option  v-for="item in logiAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
                             </el-select>
@@ -446,12 +448,10 @@
 
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
-                            <!-- <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault" :disabled='isEdit'></el-checkbox> -->
                             <el-radio  :label="true" 
                                                 v-model="scope.row.isDefault" 
                                                 @change.native="getCurrentRow(scope.$index,scope.row)" 
-                                                @change="handleChange(scope.$index,scope.row)"
-                                                :disabled="isEdit"></el-radio>
+                                                @change="handleChange(scope.$index,scope.row)"></el-radio>
                         </template>
                     </el-table-column>
 
@@ -459,8 +459,7 @@
                         <template slot-scope="scope">
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.remark" 
-                                    :disabled='isEdit'
+                                    v-model="scope.row.remark"
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -468,12 +467,12 @@
 
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row)" type="text" size="small" :disabled='isEdit'>删除</el-button>
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
-              </el-table> 
-          </el-col>
-      </el-row>
+                </el-table> 
+            </el-col>
+        </el-row>
 
       <el-row class="ft12 pr10 pt10 br3">
           <el-col :span='24' class="bg-white pl10 pt10 pb10">
@@ -505,6 +504,76 @@
           </el-col>
       </el-row>
 
+        <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            <!--  -->
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->  
 
   </div>
 </template>
@@ -628,8 +697,7 @@
                         }
                     })
             },
-            //------------------------------------------------------------
-            //---下拉的数据------------------------------------------------------
+                         //---下拉的数据-
             loadSelect:function(){
                 let self = this;
                 //所属组织
@@ -734,18 +802,13 @@
             },
             //------------------------------------------------------------
 
-            //---控制是否可编辑---------------------------------------
-            Update(){//修改
-                if(this.isEdit==true){
-                    this.isEdit=!this.isEdit;
-                }
-            },        
+            //---控制是否可编辑---------------------------------------        
             Cancel(){
                 let self = this;
-                if(self.isEdit==false){
-                    self.isEdit=!self.isEdit;
-                    self.loadData();
-                }
+                self.loadData();
+                self.ifModify = false;
+                $('.tipsWrapper').css({display:'none'})
+                // }
             },
             //-------------------------------------------------------
 
@@ -874,7 +937,46 @@
                 let self = this;
                 self.ifModify = true;
             },
-            //------------------------------------------------------------
+            //------------------------------------------------------
+
+            //---确认删除--------------------------------------------
+            sureDel:function(){
+                let self = this;
+                self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.$route.params.id}).then(function(res){
+                    self.open('删除仓库成功','el-icon-circle-check','successERP');
+                    self.back();
+                    self.dialogDelConfirm = false;
+                },function(res){
+                    self.open('删除仓库失败','el-icon-error','faildERP');
+                    self.dialogDelConfirm = false;
+                    self.errorMessage = true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                }) 
+            },
+            //------------------------------------------------------
+
+            //---顶部删除按钮-----------------------------------------
+            delModify:function(){
+                let self = this;
+                self.dialogDelConfirm = true; 
+            },
+            //-------------------------------------------------------
+
+            //---修改返回提示-----------------------------------------
+            isBack(){
+                let self=this;
+                if(self.ifModify){
+                    self.dialogUserConfirm=true;
+                    // self.choseDoing='back'
+                }else{
+                    self.back()
+                }
+            },
+            sureDoing:function(){
+                let self = this;
+                self.back();
+            },
+            //-------------------------------------------------------
 
             //---open-------数据清除--------路由跳转-----------------------
             open(tittle,iconClass,className) {
@@ -904,6 +1006,10 @@
             // },
             back(){
                 this.$store.state.url='/repository/repositoryList/default'
+                this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            goDetail(){//点击新增跳转
+                this.$store.state.url='/repository/repositoryData/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             //------------------------------------------------------------
@@ -1000,6 +1106,21 @@
                     }
                     })
             },
+            getErrorMessage(message,details,validationErrors){
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
+            },
             //-------------------------------------------------------------
             test:function(){
                 let self = this;
@@ -1035,7 +1156,6 @@
                 }, 
                 ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
-                isEdit:true,//判断是否要修改
                 ou: [{//所属组织
                     value:0,
                     label: '恒康'
@@ -1123,6 +1243,38 @@
                     ids:[]
                 },//需要删除的数组id
                 checkedAr:[],//加载时从表默认选择的数组
+
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //--------------------  
+
+                //---信息修改提示框------------
+                dialogUserConfirm:false,//信息更改提示控制
+                //----------------------------
+                //---错误提示框----------------
+                option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                errorMessage:false,
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
             }
         },
     }

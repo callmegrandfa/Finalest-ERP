@@ -628,7 +628,7 @@
                 });
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    // console.log(res);
+                    console.log(res);
                     self.statusAr = res.result;
                 },function(res){
                     console.log('err'+res)
@@ -665,24 +665,6 @@
                             console.log(res);
                             self.open('创建仓库成功','el-icon-circle-check','successERP');
                         })
-                        self.createRepositoryParams = {
-                            "ouId": '1',
-                            "stockCode": "",
-                            "stockName": "",
-                            "stockFullName": "",
-                            "opAreaId": '',
-                            "adAreaId": '',
-                            "stockTypeId": '',
-                            "invTypeId": 1,
-                            "fax": "",
-                            "email":  '',
-                            "status": '',
-                            "manager": "",
-                            "mnemonic": "",
-                            "stockAddress": "",
-                            "phone": "",
-                            "remark": ""
-                        } 
                         self.addList = [];
                         self.rows = [];
                     }
@@ -703,6 +685,8 @@
                             self.open('创建仓库成功','el-icon-circle-check','successERP');
                             self.createReAddress(res.result);
                             self.goModify(res.result)
+                        },function(res){
+                            self.open('创建失败','el-icon-error','faildERP');
                         })
                     }
                 })
@@ -1050,10 +1034,10 @@
                     "stockFullName": "",
                     "opAreaId": '',
                     "adAreaId": '1',
-                    "stockTypeId": '',
+                    "stockTypeId": 0,
                     "fax": "",
                     "email":  '',
-                    "status": '',
+                    "status": 0,
                     "mnemonic": "",
                     "stockAddress": "",
                     "manager": "",

@@ -1369,7 +1369,7 @@ export default({
             // console.log(self.customerData)
             self.$validate().then(function(success){
                 if(success){
-                    console.log(99999999)
+                    // console.log(99999999)
                     $('.tipsWrapper').css({display:'none'});
                     // this.$axios.puts('/api/services/app/ContactManagement/Update',self.customerData).then(function(res){
                     //     self.open('修改客户信息成功','el-icon-circle-check','successERP');
