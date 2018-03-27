@@ -1,6 +1,6 @@
 <template>
-    <div class="admstr-wrapper">
-        <!-- 按钮组 -->
+    <div class="supClasDetail-wrapper">
+         <!-- 按钮组 -->
         <el-row>
             <el-col :span="24">
                 <button @click="goback" class="erp_bt bt_back">
@@ -40,56 +40,36 @@
         </el-row>
         <!-- 表单 -->
         <el-row>
-            <div class="admstr-form-wrapper pt15">
+            <div class="supClasDetail-form-wrapper pt15">
                 <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
-                            <label><small>*</small>所属公司</label>
-                            <el-input class="areaCode" v-model="addData.areaCode"></el-input>
+                            <label><small>*</small>上级供应商分类</label>
+                            <el-input class="classParentName" v-model="addData.classParentName"></el-input>
                         </div>
                     </div>
                 </el-col>
                 <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>上级地区</label>
+                        <label><small>*</small>供应商分类编码</label>
                             <el-input 
-                            class="areaCode" 
-                            v-model="addData.areaCode"></el-input>
+                            class="classCode" 
+                            v-model="addData.classCode"></el-input>
                         </div>
                     </div>
                 </el-col>                 
                 <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>地区编码</label>
+                        <label><small>*</small>供应商分类名称</label>
                             <el-input 
-                            class="areaCode" 
-                            v-model="addData.areaCode"></el-input>
+                            class="className" 
+                            v-model="addData.className"></el-input>
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="24">
-                    <div class="bgMarginAuto">
-                        <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>地区名称</label>
-                            <el-input 
-                            class="areaCode" 
-                            v-model="addData.areaCode"></el-input>
-                        </div>
-                    </div>
-                </el-col>
-                <el-col :span="24">
-                    <div class="bgMarginAuto">
-                        <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>负责人</label>
-                            <el-input 
-                            class="areaCode" 
-                            v-model="addData.areaCode"></el-input>
-                        </div>
-                    </div>
-                </el-col>
-                <el-col :span="24">
+                 <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                         <label>备注</label>
@@ -103,7 +83,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="24">
+                 <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                             <label><small>*</small>状态</label>
@@ -111,8 +91,8 @@
                             class="status" 
                             placeholder=""
                             v-model="addData.status">
-                                <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
-                                </el-option>
+                                <!-- <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                                </el-option> -->
                             </el-select>
                         </div>
                     </div>
@@ -147,41 +127,73 @@
 </template>
 
 <script>
-export default {
-  name: "adminstrAreaDetail",
-  data() {
-    return {
-        addData:{},
-        selectData:{}
-    };
-  },
-  created() {},
-  methods: {
-    // 返回
-    goback() {
-        this.$store.state.url = "/adminstrArea/adminstrAreaList/default";
-        this.$router.push({ path: this.$store.state.url });
-    },
-    // 保存
-    save() {},
-    // 保存并新增
-    saveAdd() {}
-  }
-};
+    export default {
+        name: "supplierClassifyDetail",
+        data(){
+             return{
+                 addData:{
+                     classParentName:[] ,
+                     classCode :'',
+                     className :'',
+                     remark :'',
+                     status :[],
+                     createdBy :'',
+                     createdTime  :'',
+
+                 },
+
+             }
+         },
+         created(){
+
+         },
+         methods:{
+             // 返回列表页
+            goback() {
+                this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
+                this.$router.push({ path: this.$store.state.url });
+            },
+            // 保存
+            save(){},
+             // 保存并新增
+            saveAdd(){},
+            // 
+
+         },
+    }
 </script>
 
  <style scoped>
+    .supClasDetail-wrapper{
+        background-color: #fff;
+    }
     .pt15{
         padding-top: 15px;
     }
-    .admstr-wrapper{
+    .supClasDetail-wrapper{
         background-color: #fff;
     }
-    .admstr-wrapper .el-row:first-child{
-    padding: 7px 0;
-    border-bottom: 1px solid #e4e4e4;
+    .supClasDetail-wrapper .el-row:first-child{
+        padding: 7px 0;
+        border-bottom: 1px solid #e4e4e4;
     }
-    .admstr-wrapper .el-row:last-child{
+    .supClasDetail-wrapper .el-row:last-child{
         padding-bottom: 15px;
     }
+    
+</style>
+
+<style>
+/* 重新设置表单宽度 */
+.supClasDetail-wrapper .bgcolor.bgLongWidth label{
+        width: 100px;
+}
+.supClasDetail-wrapper .bgcolor.bgLongWidth .el-input,
+.supClasDetail-wrapper .bgcolor.bgLongWidth .rangeDate, 
+.bgcolor.bgLongWidth .el-textarea,
+.supClasDetail-wrapper .bgcolor.bgLongWidth .el-select{
+       width: calc(100% - 110px);
+    }
+
+
 </style>
