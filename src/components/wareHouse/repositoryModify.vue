@@ -439,7 +439,7 @@
 
                     <el-table-column prop="transportMethodId" label="物流公司">
                         <template slot-scope="scope">
-                            <el-select  v-model="scope.row.logisticsCompanyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
+                            <el-select  v-model="scope.row.logisticsCompanyId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
                                 <el-option  v-for="item in logiAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
                             </el-select>
@@ -448,7 +448,6 @@
 
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
-                            <!-- <el-checkbox v-model="repositoryAddressData[scope.$index].isDefault" :disabled='isEdit'></el-checkbox> -->
                             <el-radio  :label="true" 
                                                 v-model="scope.row.isDefault" 
                                                 @change.native="getCurrentRow(scope.$index,scope.row)" 
@@ -803,16 +802,9 @@
             },
             //------------------------------------------------------------
 
-            //---控制是否可编辑---------------------------------------
-            // Update(){//修改
-            //     if(this.isEdit==true){
-            //         this.isEdit=!this.isEdit;
-            //     }
-            // },        
+            //---控制是否可编辑---------------------------------------        
             Cancel(){
                 let self = this;
-                // if(self.isEdit==false){
-                    // self.isEdit=!self.isEdit;
                 self.loadData();
                 self.ifModify = false;
                 $('.tipsWrapper').css({display:'none'})
@@ -1164,7 +1156,6 @@
                 }, 
                 ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
-                // isEdit:true,//判断是否要修改
                 ou: [{//所属组织
                     value:0,
                     label: '恒康'
