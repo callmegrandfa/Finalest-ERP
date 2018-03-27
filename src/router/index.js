@@ -183,6 +183,8 @@ const commodityClassHeading = () =>
     import ('../components/commodityManagement/commodityClassHeading')
 const commodityProperty = () =>//商品属性
     import ('../components/commodityManagement/commodityProperty')
+const specificationOfGoods= ()=>//商品规格
+    import ('../components/commodityManagement/specificationOfGoods') 
 // const commodityPropertyList = () =>//商品属性列表
 //     import ('../components/commodityManagement/commodityPropertyList')
 const commodityPropertyDetails = () =>//商品属性详情
@@ -462,6 +464,7 @@ const routes = [
             // { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
             // { path: '/userList/:id', component: userList,name:'userList' },
             // { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
+            { path: '/specificationOfGoods/:id', component: specificationOfGoods, name: 'specificationOfGoods' },
 
             { path: '/tenant', component: tenant,name:'tenant',redirect: function(){//租户管理
               let name='tenant';
