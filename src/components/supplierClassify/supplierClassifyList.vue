@@ -1,5 +1,5 @@
 <template>
-    <div class="adstrArea-wrapper">
+    <div class="supplierClassifyList-wrapper">
         <el-row class="bg-white">
             <!-- 左侧输入框与树形控件 -->
             <el-col :span="5">
@@ -14,20 +14,9 @@
                         </el-autocomplete>
                     </el-col>
                     <el-col :span='24' class="tree-container" >
-                        <!-- <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                        v-loading="treeLoading" 
-                        :highlight-current="true"
-                        :data="componyTree"
-                        :props="defaultProps"
-                        node-key="id"
-                        default-expand-all
-                        ref="tree"
-                        :expand-on-click-node="false"
-                        :filter-node-method="filterNode"
-                        @node-click="nodeClick"
-                        >
-                        </el-tree> -->
+                        <!-- 树形控件 -->
+                        <el-tree>
+                        </el-tree>
                     </el-col>   
             </el-col>
             <!-- 右边数据列表 -->
@@ -72,56 +61,25 @@
                         </div>
                     </div>
                 </el-row>
-                <!-- dialog自定义弹窗 -->
-                <!-- <el-dialog :visible.sync="dialogUserDefined" class="dialogUserDefined">
-                    <template slot="title">
-                        <span>自定义<small>(设置显示字段)</small></span>
-                    </template>
-                     <el-table
-                        :data="tableData" 
-                        border 
-                        style="width: 100%" 
-                        stripe 
-                        ref="multipleTable">
-                            <el-table-column label="序号" fixed="left">
-                                 <template slot-scope="scope">
-                                    {{scope.$index + 1}}
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="field" label="字段" fixed="left"></el-table-column>
-                            <el-table-column prop="field" label="操作" fixed="left">
-                                <template slot-scope="scope">
-                                    <el-switch
-                                        v-model="tableData[scope.$index].value"
-                                        active-color="#13ce66">
-                                    </el-switch>
-                                </template>
-                            </el-table-column>
-                        </el-table>   
-                        <span slot="footer" class="dialog-footer">
-                            <el-button type="primary">确 定</el-button>
-                            <el-button>取 消</el-button>
-                        </span>
-                </el-dialog> -->
-                <!-- dialog -->
                 <!-- 数据列表 -->
                 <el-row>
                     <el-col :span='24'>
-                        <el-table  :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
+                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="areaCode" label="行政地区编码">
+                            <el-table-column prop="areaCode" label="供应商分类编码">
                                 <template slot-scope="scope">
                                     <el-button type="text" @click="modify(scope.row)">{{tableData[scope.$index].areaCode}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="areaName" label="行政地区名称">
+                            <el-table-column prop="areaName" label="供应商分类名称">
                                 <template slot-scope="scope">
                                     <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].areaName}}</el-button>
                                 </template>
                             </el-table-column>
-                            <!-- <el-table-column prop="manager" label="负责人"></el-table-column> -->
-                            <el-table-column prop="areaParentId_AreaName" label="上级行政地区"></el-table-column>
-                            <el-table-column prop="remark" label="备注"></el-table-column>
+                            <el-table-column prop="manager" label="上级供应商分类">
+                            </el-table-column>
+                            <el-table-column prop="remark" label="备注">
+                            </el-table-column>
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
@@ -155,89 +113,35 @@
                         background layout="total,prev, pager, next,jumper" 
                         @current-change="handleCurrentChange"
                         :current-page="pageIndex"
-                        :page-size="pageSize"
-                        :total="totalCount">
+                        :page-size="oneItem"
+                        :total="totalItem">
                         </el-pagination>   
                     </el-col>
                 </el-row>
             </el-col>
         </el-row>
-
     </div>
 </template>
 
 <script>
     export default {
-        name:'adminstrAreaList',
-        data(){
-            return{
-                searchKey:'',
-                SkipCount:0,
-                MaxResultCount:10,                
-                pageSize:10,
-                totalCount:0,
-                pageIndex:0,
-                searchLeft:'',
-                tableData:[],
-                // tableData:{
-                //     areaCode:'',
-                //     areaName :'',
-                //     areaName :'',//负责人
-                //     remark:'',
-                //     createdBy:'',
-                //     createdTime:'',
-                //     status :0,
-                // },//所有数据
-            }
-            
-        },
-        created(){
-             this.getDataList();
-        },
-        methods:{
-            // 获取所有列表数据
-            getDataList(){
-                let _this=this;
-                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{SearckKey:_this.searchKey,SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount,}).then(
-                    rsp=>{
-                        console.log(rsp.result);
-                        _this.tableData=rsp.result;
-                        
-                    }
-                )
-                
-            },
-            // ----------树形控件的处理函数开始----------
-            handleSelectionChange(){},
-            nodeClick(){},
-            filterNode(){},
-            // ----------树形控件的处理函数结束----------
-            // ----------分页器的处理函数结束----------
-            handleCurrentChange(){},
-            // ----------分页器的处理函数结束----------
-           
-            // 左边搜索框
-            leftSearch(){},
-            // 按钮增加----去新增详情页(detail)
+         name: "supplierClassifyList",
+         data(){
+             return{
+
+             }
+         },
+         created(){
+
+         },
+         methods:{
+           // 按钮增加----去新增详情页(detail)
             goAdd(){
                 //点击切换路由去添加
-                this.$store.state.url = "/adminstrArea/adminstrAreaDetail/default";
+                this.$store.state.url = "/supplierClassify/supplierClassifyDetail/default";
                 this.$router.push({ path: this.$store.state.url });
             },
-            // 按钮删除---删除选择项
-            delSelected(){},
-            // 行内删除
-            delRow(){},
-            //右边搜索框
-            rightSearch(){},
-            
-            tableLoading(){},
-
-            querySearchAsync(){},
-
-
-        },
-
+         },
     }
 </script>
 
@@ -310,5 +214,3 @@
         min-height: 380px;
     }
 </style>
-
-

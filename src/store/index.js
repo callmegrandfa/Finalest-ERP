@@ -4,6 +4,21 @@ Vue.use(vuex);
 
 export default new vuex.Store({
     state: {
+        option: {//滚动条样式
+            vRail: {
+                width: '5px',
+                pos: 'right',
+                background: "#9093994d",
+            },
+            vBar: {
+                width: '5px',
+                pos: 'right',
+                background: '#9093994d',
+            },
+            hRail: {
+                height: '0',
+            },
+        },
         slidbarHeight: 0,
         closeItem: [], //存储关闭页签
         Alive: true, //页面是否缓存

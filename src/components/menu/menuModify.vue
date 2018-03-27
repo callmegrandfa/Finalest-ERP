@@ -254,7 +254,7 @@
                 <el-collapse-transition>
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
+                            <vue-scroll :ops="$store.state.option">
                                 <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
                                 <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
@@ -278,21 +278,6 @@
     data(){
         return{
             // 错误信息提示开始
-            option: {
-                vRail: {
-                    width: '5px',
-                    pos: 'right',
-                    background: "#9093994d",
-                },
-                vBar: {
-                    width: '5px',
-                    pos: 'right',
-                    background: '#9093994d',
-                },
-                hRail: {
-                    height: '0',
-                },
-            },
             detail_message_ifShow:false,
             errorMessage:false,
             // 错误信息提示结束

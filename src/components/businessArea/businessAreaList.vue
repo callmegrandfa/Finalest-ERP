@@ -3,12 +3,7 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
-                    <!-- <el-input
-                        placeholder="搜索..."
-                        v-model="searchLeft" class="search_input">
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input> -->
-                     <el-autocomplete
+                    <el-autocomplete
                     v-model="searchLeft"
                     :fetch-suggestions="querySearchAsync"
                     class="search_input"
@@ -17,7 +12,7 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-autocomplete>
                 </el-col>
-                <el-col :span='24' class="tree-container" >
+                <el-col :span='24' class="tree-container" id="areaTree">
                     <el-tree
                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                     v-loading="treeLoading" 
@@ -34,7 +29,7 @@
                     </el-tree>
                 </el-col>   
             </el-col>
-            <el-col :span='19' class="border-left">
+            <el-col :span='19' class="border-left" id="areaTable">
                 <el-row class="h48 pt5">
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -186,7 +181,7 @@
                 <el-collapse-transition>
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
+                            <vue-scroll :ops="$store.state.option">
                                 <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
                                 <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
@@ -212,21 +207,6 @@
             return {
                 AreaNameOrAreaCode:'',//查询条件：地区名称/地区编码模糊查询关键字
                 // 错误信息提示开始
-                 option: {
-                    vRail: {
-                        width: '5px',
-                        pos: 'right',
-                        background: "#9093994d",
-                    },
-                    vBar: {
-                        width: '5px',
-                        pos: 'right',
-                        background: '#9093994d',
-                    },
-                    hRail: {
-                        height: '0',
-                    },
-                },
                 detail_message_ifShow:false,
                 errorMessage:false,
                 // 错误信息提示结束
@@ -264,7 +244,7 @@
                     // {areaName:'根目录',id:'0',items:[]},
                 ],
                 defaultProps: {
-                    children: 'items',
+                    children: 'childItems',
                     label: 'areaName',
                     id:'id'
                 },
@@ -359,7 +339,7 @@
             loadTableData(){//表格
                  let _this=this;
                  _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting,ParentId:0,AreaType:1}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.restaurants=[],
                     _this.tableData=res.result;
                     _this.totalItem=res.result.totalCount;
@@ -368,18 +348,24 @@
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     $.each(res.result,function(index,value){
                         let item={'value':value.areaName,'id':value.id};
                         _this.restaurants.push(item)
                     })
                     },function(res){
+                        _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     _this.tableLoading=false;
                 })
             },
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+                _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
@@ -419,6 +405,14 @@
                 },function(res){
                     _this.errorMessage=true;
                     _this.tableLoading=false;
+                })
+            },
+            getHeight(){
+                $("#area").css({
+                    minHeight:$('.bAreaListForm .bg-white').css('height')
+                })
+                $("#areaTable").css({
+                    minHeight:$('.bAreaListForm .bg-white').css('height')
                 })
             },
             goDetail(){
@@ -517,14 +511,18 @@
             nodeClick(data){
                  let _this=this;
                  _this.tableLoading=true;
-                 _this.detailParentId=data.id;
-                 _this.detailParentName=data.areaName;
-                 _this.ouId=data.ouId;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{ParentId:data.id,OuId:data.ouId,AreaType:1})
+                //  _this.detailParentId=data.id;
+                //  _this.detailParentName=data.areaName;
+                //  _this.ouId=data.ouId;
+                _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',{ParentId:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                 .then(function(res){
                     _this.tableData=res.result;
-                    // _this.tableData.unshift(data);
-                    _this.totalItem=res.result.length;
+                    _this.totalItem=res.result.totalCount;
+                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    _this.tableLoading=false;
+                    if(_this.tableData==[]){
+                        _this.pageIndex=0
+                    }
                     _this.tableLoading=false;
                     },function(res){
                     _this.errorMessage=true;
@@ -689,7 +687,6 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 380px;
 }
 </style>
 

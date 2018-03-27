@@ -280,62 +280,96 @@
             </el-dialog> -->
         </el-col>
         <!-- 关联角色 -->
-        <el-dialog :visible.sync="dialogTableVisible" title="关联角色">
+        <el-dialog :visible.sync="dialogTableVisible" title="关联角色" class="transfer_dialog">
             <el-col :span="24">
-                <el-col :span="11">
-                        <el-col :span="24">已选</el-col>    
-                        <el-col :span="24">
+                <el-col :span="11" class="transfer_warapper">
+                        <el-col :span="24" class="transfer_header">
+                            <span>已选</span>
+                            <div class="transfer_search">
+                               <el-autocomplete
+                                class="search_input"
+                                placeholder="搜索..."
+                                >
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-autocomplete>
+                            </div>    
+                        </el-col>    
+                        <el-col :span="24" class="transfer_table">
                             <el-table 
                             :data="showChecked" 
                             border 
                             style="width: 100%" 
                             stripe 
-                            max-height="350"
+                            :filter-change="roleLeft_search"
                             @selection-change="checkedSelect" 
-                            ref="multipleTable">
+                            ref="roleTableLeft">
                                 <el-table-column type="selection" fixed="left"></el-table-column>
                                 <el-table-column prop="roleCode" label="角色编码"></el-table-column>
                                 <el-table-column prop="displayName" label="角色名称"></el-table-column>
                                 <el-table-column prop="ouName" label="所属组织"></el-table-column>
                             </el-table>   
-                            <span>总共有条数据</span>
-                            <el-button :disabled="leftDownBtn" @click="pageDownLeft">&lt;</el-button>
-                            <el-button :disabled="leftAddBtn" @click="pageAddLeft">&gt;</el-button>
+                        </el-col>
+                        <el-col :span="24" class="transfer_footer">
+                            <el-col :span="18">
+                                <span>总共有{{totalItemLeft}}条数据</span>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-button class="el_transfer" :disabled="leftDownBtn" @click="pageDownLeft" type="primary" icon="el-icon-arrow-left" round></el-button>
+                                <el-button class="el_transfer" :disabled="leftAddBtn" @click="pageAddLeft" type="primary" icon="el-icon-arrow-right" round></el-button>
+                            </el-col>
                         </el-col>
                 </el-col>
-                <el-col :span="2">
-                    <el-button class="el_transfer" :disabled="is_nocheked" @click="noCheck_push_check" type="primary" icon="el-icon-arrow-left" round></el-button>
-                    <el-button class="el_transfer" :disabled="is_cheked" @click="check_push_noCheck" type="primary" icon="el-icon-arrow-right" round></el-button>
-               
+                <el-col :span="2" class="transfer_btns">
+                    <el-col :span="24" class="transfer_btn_wrapper">
+                        <el-button class="el_transfer" :disabled="is_nocheked" @click="noCheck_push_check" type="primary" icon="el-icon-arrow-left" round></el-button>
+                        <el-button class="el_transfer" :disabled="is_cheked" @click="check_push_noCheck" type="primary" icon="el-icon-arrow-right" round></el-button>
+                    </el-col>
                 </el-col>
-                <el-col :span="11">
-                    <el-col :span="24">可选</el-col>    
-                    <el-col :span="24">
+                <el-col :span="11" class="transfer_warapper">
+                    <el-col :span="24" class="transfer_header">
+                        <span>可选</span>
+                        <div class="transfer_search">
+                            <el-autocomplete
+                            class="search_input"
+                            placeholder="搜索..."
+                            >
+                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-autocomplete>
+                        </div>
+                    </el-col>    
+                    <el-col :span="24" class="transfer_table">
                         <el-table 
                         :data="showNoChecked" 
                         border 
                         style="width: 100%" 
                         stripe 
-                        max-height="350"
+                        :filter-change="roleRight_search"
                         @selection-change="nocheckedSelect" 
-                        ref="multipleTable">
+                        ref="roleTabRight">
                             <el-table-column type="selection" fixed="left"></el-table-column>
                             <el-table-column prop="roleCode" label="角色编码"></el-table-column>
                             <el-table-column prop="displayName" label="角色名称"></el-table-column>
                             <el-table-column prop="ouName" label="所属组织"></el-table-column>
                         </el-table>  
-                        <span>总共有条数据</span>
-                        <el-button :disabled="rightDownBtn" @click="pageDownRight">&lt;</el-button>
-                        <el-button :disabled="rightAddBtn" @click="pageAddRight">&gt;</el-button>
+                        
+                    </el-col>
+                    <el-col :span="24" class="transfer_footer">
+                        <el-col :span="18">
+                            <span>总共有{{totalItemRight}}条数据</span>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button class="el_transfer" :disabled="rightDownBtn" @click="pageDownRight" type="primary" icon="el-icon-arrow-left" round></el-button>
+                            <el-button class="el_transfer" :disabled="rightAddBtn" @click="pageAddRight" type="primary" icon="el-icon-arrow-right" round></el-button>
+                        </el-col>
                     </el-col>
                 </el-col>
-            <el-col :span="24">
-                <el-button @click="dialogTableVisible = false">确认</el-button>
-                <el-button @click="cancelPush">取消</el-button>
-            </el-col>
         </el-col>
+        <span slot="footer">
+            <button class="transfer_footer_btn transfer_confirm" @click="dialogTableVisible = false">确 认</button>
+            <button class="transfer_footer_btn" @click="cancelPush">取 消</button>
+        </span>
     </el-dialog>
-    
+    <!--dialog结束  -->
     <el-col :span="24">
             <div class="bgMarginAuto">
                 <div class="bgcolor bgLongWidth" style="overflow: visible;">
@@ -381,7 +415,7 @@
                 <el-collapse-transition>
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
+                            <vue-scroll :ops="$store.state.option">
                                 <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
                                 <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
@@ -405,21 +439,6 @@
     data(){
       return{
     // 错误信息提示开始
-        option: {
-            vRail: {
-                width: '5px',
-                pos: 'right',
-                background: "#9093994d",
-            },
-            vBar: {
-                width: '5px',
-                pos: 'right',
-                background: '#9093994d',
-            },
-            hRail: {
-                height: '0',
-            },
-        },
         detail_message_ifShow:false,
         errorMessage:false,
         // 错误信息提示结束
@@ -437,9 +456,6 @@
             label: 'ouFullname',
             id:'id'
         },
-
-
-        dialogTableVisible:false,//控制对话框
         menuCheck:true,//未选功能，已选功能
          check:false,//是否授权
          isLoadMore:false,
@@ -469,23 +485,7 @@
           "roleCodes": [],
         },
         dateRange:[],//有效时间
-        tableLoading:false,
-        tableData:[],
-        pageIndex:1,//分页的当前页码
-        totalPage:0,//当前分页总数
-        oneItem:10,//每页有多少条信息
-        multipleSelection: [],//复选框选中数据
-        page:1,//当前页
-        totalItem:0,//总共有多少条消息
-        checked:[],//已关联角色
-        nochecked:[],//未关联角色
-        allNode:[],//所有角色
-        checkedRoleCode:[],
-         update_click:false,   
-        rolePageIndex:1,//分页的当前页码
-        rolePage:0,//当前页
-        roleOneItem:10,//每页有多少条信息
-        roleTotalItem:0,//总共有多少条消息
+        update_click:false,   
         selectData:{//select数据
             OUType:[],//所属组织
             Status001:[],//启用状态
@@ -495,18 +495,17 @@
         },
         update:false,
         isEdit:true,//是否可编辑
-
+        update_click:false,   
 // ------------关联角色dialog-------------
-        checkedTable:[],//可选所有数据
+        dialogTableVisible:false,//控制对话框
+        checkedTable:[],//已选所有数据
         showChecked:[],//右侧表格展示的数据
         // roleCodesCancel:[],//表格数据，用于取消操作
-        nocheckedTable:[],//已选所有数据
+        nocheckedTable:[],//可选所有数据
         showNoChecked:[],//左侧表格展示的数据
         allRoles:[],//所有数据
         selection_checked: [],//复选框选中数据
         selection_nochecked: [],//复选框选中数据
-        checked:[],//展示所有权限
-        nochecked:[],//
         is_nocheked:true,//可选
         is_cheked:true,//已选
 //---------left表格-------------
@@ -516,7 +515,7 @@
         pageLeft:1,//当前页 
         totalItemLeft:0,//总共有多少条消息  
         leftDownBtn:true,//分页按钮是否显示
-        leftAddBtn:false,//分页按钮是否显示
+        leftAddBtn:true,//分页按钮是否显示
  //---------right表格-------------         
         totalItemRight:0,//总共有多少条消息 
         pageIndexRight:1,//分页的当前页码
@@ -524,8 +523,11 @@
         oneItemRight:10,//每页有多少条信息
         pageRight:1,//当前页 
         rightDownBtn:true,//分页按钮是否显示
-        rightAddBtn:false,//分页按钮是否显示
-
+        rightAddBtn:true,//分页按钮是否显示
+//---------搜索框----------------
+        timeout:null,
+        roleLeft_search:'',
+        roleRight_search:'',
         response:{
             details:'',
             message:'',
@@ -569,11 +571,11 @@
       }
     },
     created:function(){       
-      let _this=this;
-      _this.loadTree();
-    _this.getSelectData();
-    _this.GetRoles();
-    _this.getData();
+        let _this=this;
+        _this.loadTree();
+        _this.getSelectData();
+        _this.GetRoles();
+        _this.getData();
     },
     watch: {
       search(val) {
@@ -720,23 +722,6 @@
             customClass:className
             });
         },
-        uniqueArray(array1, array2){//求差集
-            var result = [];
-            for(var i = 0; i < array1.length; i++){
-                var item = array1[i];
-                var repeat = false;
-                for (var j = 0; j < array2.length; j++) {
-                    if (array1[i].id == array2[j].id) {//唯一key
-                        repeat = true;
-                        break;
-                    }
-                }
-                if (!repeat) {
-                    result.push(item);
-                }
-            }
-            return result;
-        },
         isBack(){
             let _this=this;
             if(_this.update){
@@ -832,6 +817,23 @@
             }else{
                 _this.open('没有需要保存的项目','el-icon-warning','noticERP');
             }    
+        },
+         uniqueArray(array1, array2){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i].id == array2[j].id) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
+                }
+            }
+            return result;
         },
         editDialog(){
             let _this=this;
@@ -932,6 +934,7 @@
             _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:1})//获取所有角色
             .then(function(re){ 
                 let totalAll=re.result.totalCount;//获取总共当前关联角色条数
+                if(totalAll>0){
                 _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:totalAll})//获取所有角色
                 .then(function(res){ 
                     _this.nocheckedTable=[]
@@ -949,6 +952,7 @@
                             
                         }
                     })
+                }
             })        
         },
         GetRoles(){//获取左侧表格数据
@@ -956,11 +960,15 @@
             _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
            .then(function(response){//获取已选角色
                 let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
-                _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
-                .then(function(resp){//获取已选角色
-                    _this.checkedTable=resp.result.items
+                if(totalCheckedAll>0){
+                    _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
+                    .then(function(resp){//获取已选角色
+                        _this.checkedTable=resp.result.items
+                        _this.getAllRoleData()//获取所有角色数据
+                    })
+                }else{
                     _this.getAllRoleData()//获取所有角色数据
-                })
+                }
                 
            })
         },
@@ -1042,6 +1050,32 @@
                 _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
             }
         },
+        // queryLeft(queryString, cb) {
+        //     var restaurants=[]
+        //     $.each(this.showChecked,function(index,value){
+        //         let item={'value':value.displayName,'id':value.id};
+        //         restaurants.push(item)
+        //     })
+        //     var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+        //     clearTimeout(this.timeout);
+        //     this.timeout = setTimeout(() => {
+        //     cb(results);
+        //     }, 100 * Math.random());
+        // },
+        // queryRight(queryString, cb) {
+        //     var restaurants=[]
+        //     $.each(this.showNoChecked,function(index,value){
+        //         let item={'value':value.displayName,'id':value.id};
+        //         restaurants.push(item)
+        //     })
+        //     var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+        //     clearTimeout(this.timeout);
+        //     this.timeout = setTimeout(() => {
+        //     cb(results);
+        //     }, 100 * Math.random());
+        // },
     }
 
 })

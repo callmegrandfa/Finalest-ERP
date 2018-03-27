@@ -20,10 +20,18 @@
                                 <el-form-item label="职员名称">
                                     <el-input v-model="formList.EmployeeName"></el-input>
                                 </el-form-item>
-                                <el-form-item label="业务组织">
+                                <el-form-item label="所属组织">
                                     <el-select v-model="formList.OuId">
-                                    <el-option label="恒康" value="0"></el-option>
-                                    <el-option label="总部" value="1"></el-option>
+                                    <!-- <el-option label="恒康" value="0"></el-option>
+                                    <el-option label="总部" value="1"></el-option> -->
+                                    <el-input placeholder="搜索..." class="selectSearch" v-model="search_ou">
+                                    </el-input>
+                                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_ou" :props="selectProps_ou"
+                                    node-key="id" default-expand-all ref="tree" :filter-node-method="filterNode_ou"
+                                    :expand-on-click-node="false" @node-click="nodeClick_ou">
+                                    </el-tree>
+                                    <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                                    </el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="部门">
@@ -123,17 +131,17 @@
                                 </el-row>
                     </el-col>
                 </el-row> 
-                 <el-row class="pb10">
+                 <el-row class="pb10 tableWrapper">
                         <div id="bg-white" style="background-color: rgba(251, 252, 253, 1);">
                             <el-table  :data="allList" border style="width: 100%"  @selection-change="handleSelectionChange"  stripe>
                                 <el-table-column type="selection" width="50">
                                 </el-table-column>
-                                <el-table-column prop="employeeCode" label="职员编码"  >
+                                <el-table-column prop="employeeCode" label="职员编码" fixed >
                                     <template slot-scope="scope">
                                         <el-button type="text" size="small" @click="checkDetail(scope.row)">{{allList[scope.$index].employeeCode}}</el-button>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="employeeName" label="职员名称"   > 
+                                <el-table-column prop="employeeName" label="职员名称"  fixed > 
                                     <template slot-scope="scope">
                                         <el-button type="text" size="small" @click="checkDetail(scope.row)">{{allList[scope.$index].employeeName}}</el-button>
                                     </template>
@@ -148,15 +156,24 @@
                                             <el-table-column prop="sexTValue" label="性别"
                                             >
                                 </el-table-column>
-                                <el-table-column prop="birthday" label="生日"
-                                            >
+                                <el-table-column label="生日">
+                                            <template slot-scope="scope">
+                                                <el-date-picker 
+                                                format="yyyy-MM-dd"
+                                                value-format="yyyy-MM-dd" 
+                                                v-model="allList[scope.$index].birthday" 
+                                                type="datetime" 
+                                                readonly
+                                                align="center"
+                                                placeholder=""></el-date-picker>
+                                            </template>
                                 </el-table-column>
                                 <el-table-column prop="employeeTypes[0].employeeTypeidTValue" label="职员类型" >
                                 </el-table-column>
                                 <el-table-column prop="shopName" label="所属店铺"
                                             >
                                 </el-table-column>
-                                <el-table-column label="操作" width="120">
+                                <el-table-column label="操作"  fixed="right">
                                 <template slot-scope="scope">
                                     <el-button @click="checkDetail(scope.row)" type="text" size="small">查看</el-button>
                                     <el-button type="text" size="small" @click="confirmDelThis(scope.row)">删除</el-button>
@@ -263,11 +280,30 @@
         ifWidth: true, //控制左侧搜索展开
         pageIndex: 1, //分页的当前页码
         totalPage: 0, //当前分页总数
-        page_size: 10 //每页有多少条信息
+        page_size: 10, //每页有多少条信息
+         //   所属组织下拉框数据
+        search_ou:'',
+        selectTree_ou:[],
+        selectProps_ou: {
+            children: 'children',
+            label: 'ouFullname',
+            id:'id'
+        },
+        selectData:{//select数据
+            area:[],//上级业务地区
+            ou:[],//组织
+            },
         };
     },
     created: function() {
         this.getAllList();
+
+         // 所属组织下拉选项框
+        this.getSelectData();
+        // 树形控件
+        this.loadTree();
+         // 文件夹图标
+        this.loadIcon()
     },
     methods: {
         // 获取所有数据，默认渲染所有数据
@@ -286,6 +322,53 @@
                 // console.log(rsp.result.items);
                 });
         },
+
+         //业务组织下拉选项框
+            getSelectData(){
+                    let _this=this;
+                    _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+                        // 所属组织
+                    _this.selectData.ou=res.result;
+                    })
+                
+            },
+                // 加载树形控件
+            loadTree(){
+                let _this=this;
+                    //组织
+                    _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                    .then(function(res){
+                        _this.selectTree_ou=res.result;
+                        _this.loadIcon();
+                    },function(res){
+                    })
+            },
+            loadIcon(){
+                    let _this=this;
+                    _this.$nextTick(function () {
+                        $('.preNode').remove();   
+                        $('.el-tree-node__label').each(function(){
+                            if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                                $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                            }else{
+                                $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                            }
+                        })
+                    })
+            },
+
+            filterNode_ou(value, data) {
+                if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
+            },
+            nodeClick_ou(data,node,self){
+                let _this=this;
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
+            },
 
         // 左侧搜索展开--------------------------------
         closeLeft: function() {
@@ -393,8 +476,8 @@
         // （行内按钮查看）查看详情
         checkDetail: function(row) {
             // console.log(row.id)
-            this.$store.state.url = "/staff/staffModify/" + row.id;
-            this.$router.push({ path: this.$store.state.url });
+            this.$store.state.url = "/staff/staffModify/" + row.id
+            this.$router.push({ path: this.$store.state.url })
         },
         // 确认是否删除本条数据
         confirmDelThis: function(row) {
@@ -565,6 +648,10 @@
 .staffList-wrapper  .el-table th>.cell{
     color: #000;
     font-size: 12px;
+}
+.staffList-wrapper .tableWrapper .el-input--prefix .el-input__inner{
+    border: none !important;
+    padding: 0px;
 }
 </style>
 

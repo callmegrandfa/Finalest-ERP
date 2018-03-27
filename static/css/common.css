@@ -1310,12 +1310,112 @@ color:#f66;
   margin-left: 10px;
 }
 /* 自定义穿梭框 */
-.el_transfer.el-button.is-round{
-  padding: 10px;
+.transfer_btns .el_transfer.el-button.is-round{
+  /* padding: 10px; */
   margin: auto;
   display: block;
 }
-.el_transfer.el-button.is-round:first-child{
-  margin-top: 60px;
+.el_transfer.el-button.is-round{
+  padding: 10px;
+}
+ .transfer_btns .el_transfer.el-button.is-round:first-child{
+  margin-bottom: 10px;
+}
+
+
+.transfer_dialog .transfer_warapper:first-child{
+  border-right: none;
+}
+.transfer_warapper{
+  border: 1px solid #ebeef5;
+}
+.transfer_fixed{
+  height: 445px;
+}
+.transfer_header{
+  height: 45px;
+  line-height: 45px;
+  padding: 0 10px;
+}
+.transfer_table,.transfer_btns{
+  height: 400px;
+  position: relative;
+}
+.transfer_btns .transfer_btn_wrapper {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -38px;
+}
+.transfer_table .el-table--border{
+  border: none;
+}
+.transfer_search{
+  float: right; 
+}
+.transfer_search .el-input__icon{
+  line-height: 25px;
+}
+.transfer_footer{
+    height: 45px;
+    line-height: 45px;
+    padding-left: 10px;
+}
+.transfer_dialog .el-dialog__footer{
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  padding: 0 20px;
+}
+.transfer_dialog .el-dialog__body{
+  padding-bottom: 0;
+}
+.transfer_footer_btn{
+  width: 93px;
+  height: 30px;
+  background: #f2f5f8;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 3px;
+  color: #8291a8;
+}
+.transfer_footer_btn:focus{
+  border: none;
+}
+.transfer_confirm{
+  background: #82aafc;
+  color: #fff;
+  margin-right: 20px;
+}
+.isConfirm_wrapper{
+  text-align: right;
+}
+.transfer_newAdd{
+  background-color: #4BCF83;
+  color:#fff;
+}
+.checkTips{
+  font-size: 12px;
+}
+.checkTypeSelect .el-input__inner{
+  width: 151px;
+  height: 30px;
+}
+.checkType_wrapper{
+  text-align: left;
+}
+
+.header_displayName{
+  text-align: left;
+}
+.header_ops{
+  text-align: right;
+}
+.checkbox_group{
+  background-color: #f2f2f2;
+  padding:10px 10px 0 10px;
+}
+.checkbox_group .el-checkbox{
   margin-bottom: 10px;
 }
