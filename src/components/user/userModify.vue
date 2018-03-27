@@ -220,7 +220,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor">
                         <label></label>
-                        <el-checkbox :disabled="isEdit" @change="isUpdate" v-model="addData.isReg"></el-checkbox>
+                        <el-checkbox disabled v-model="addData.isReg"></el-checkbox>
                         <span class="isGive">是否注册用户</span>
                     </div>
                 </div>
@@ -480,7 +480,7 @@
           "status": "",
           "userType": "",
           "languageId": "",
-          "isReg": false,
+          "isReg": true,
           "remark": "",
           "roleCodes": [],
         },
@@ -620,7 +620,7 @@
                     "userType": res.result.userType,
                     "languageId": res.result.languageId,
                     "userGroupId": res.result.userGroupId,
-                    "isReg": res.result.isReg,
+                    "isReg": true,
                     "remark": res.result.remark,
                     "roleCodes": res.result.roleCodes,
                     "email":res.result.email,

@@ -1079,11 +1079,15 @@ end-placeholder="结束日期">
   font-weight: bold;
   margin-bottom: 10px;
 }
+.bgcolor.bgLongWidth .rolesZoo{
+  width: calc(100% - 90px);
+  display: inline-block;
+}
  .bgcolor.bgLongWidth .addRole{
 text-align: center;
 line-height: 35px;
 display: inline-block;
-width: 66px;
+padding: 0 10px;
 height: 35px;
 background-color: #fff;
 border: 1px solid #c9d1d1;
@@ -1323,7 +1327,7 @@ color:#f66;
 }
 
 
-.transfer_dialog .transfer_warapper:first-child{
+.transfer_dialog+.transfer_warapper:first-child{
   border-right: none;
 }
 .transfer_warapper{

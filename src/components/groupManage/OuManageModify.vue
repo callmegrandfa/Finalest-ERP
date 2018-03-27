@@ -406,7 +406,7 @@
                     <label><small>*</small>会计方案</label>
                     <el-select filterable  class="accCchemeId"
                     :disabled="isEdit" 
-                    @change="isUpdate"
+                    @change="getStartMonth"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.accCchemeId')}"
                     placeholder=""
@@ -524,20 +524,22 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor longWidth">
-                    <label>备注</label>
-                    <el-input
-                    :disabled="isEdit" 
-                    @change="isUpdate"
-                    @focus="showErrprTipsTextArea"
-                    :class="{redBorder : validation.hasError('addData.remark')}"
-                    class="remark1" 
-                    v-model="addData.remark"
-                    type="textarea"
-                    :autosize="{ minRows: 4, maxRows: 10}"
-                    >
-                    </el-input>
-                </div>
+                <el-col :span="24">
+                    <div class="bgcolor longWidth">
+                        <label>备注</label>
+                        <el-input
+                        :disabled="isEdit" 
+                        @change="isUpdate"
+                        @focus="showErrprTipsTextArea"
+                        :class="{redBorder : validation.hasError('addData.remark')}"
+                        class="remark1" 
+                        v-model="addData.remark"
+                        type="textarea"
+                        :autosize="{ minRows: 4, maxRows: 10}"
+                        >
+                        </el-input>
+                    </div>
+                </el-col>
             </el-col> 
         </el-row>
      </div>    
@@ -850,21 +852,23 @@
                                 v-model="basCompany.webUrl"
                                 ></el-input>
                             </div>
-                            <div class="bgcolor longWidth">
-                                <label>备注</label>
-                                <el-input
-                                :disabled="isEdit" 
-                                @change="isUpdate"
-                                
-                                @focus="showErrprTipsTextArea"
-                                :class="{redBorder : validation.hasError('basCompany.remark')}"
-                                class="remark2" 
-                                v-model="basCompany.remark"
-                                type="textarea"
-                                :autosize="{ minRows: 4, maxRows: 10}"
-                                placeholder="">
-                                </el-input>
-                            </div>
+                            <el-col :span="24">
+                                <div class="bgcolor longWidth">
+                                    <label>备注</label>
+                                    <el-input
+                                    :disabled="isEdit" 
+                                    @change="isUpdate"
+                                    
+                                    @focus="showErrprTipsTextArea"
+                                    :class="{redBorder : validation.hasError('basCompany.remark')}"
+                                    class="remark2" 
+                                    v-model="basCompany.remark"
+                                    type="textarea"
+                                    :autosize="{ minRows: 4, maxRows: 10}"
+                                    placeholder="">
+                                    </el-input>
+                                </div>
+                            </el-col>
                         </div>                                  
                     </el-col>
                     </div>
@@ -1790,6 +1794,10 @@ export default({
                 companyStatus:'' ,//公司启用状态
                 regtime:''//公司成立时间
             };
+        },
+        getStartMonth(){
+            let _this=this;
+             _this.update=true;
         }
     }
 

@@ -618,6 +618,7 @@ export default({
       _this.loadOuTable();
       _this.loadFnTable();
       _this.fnLoadTree();
+      _this.getDefaulet();
     },
     watch: {
       search_ou(val) {
@@ -625,6 +626,13 @@ export default({
       }
     },
     methods:{
+        getDefaulet(){
+        let _this=this;
+        _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+        // 默认用户业务组织
+        _this.addData.ouId=res.result.id;
+        })
+    },
 // --------------------关联用户----------------------
         getUserAllData(){//获取关联用户数据
             let _this=this;
