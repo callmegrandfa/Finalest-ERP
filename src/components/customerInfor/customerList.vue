@@ -424,7 +424,7 @@
         //---获取数据-------------------------------------------------------
             loadAllList:function(){//获取所有列表数据
                 let self = this;
-                this.$axios.gets('/api/services/app/ContactManagement/QueryByCondition',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
+                this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.result;
                     self.total = res.result.length;
@@ -507,7 +507,7 @@
         //---左侧查询-------------------------------------------------------
         doSearch:function(){
             let self = this;
-            this.$axios.gets('/api/services/app/ContactManagement/QueryByCondition',{ContactClassId:self.queryClass,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
+            this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{ContactClassId:self.queryClass,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
                 console.log(res);
                 if(res.length>0){
                     self.allList = res.result;
