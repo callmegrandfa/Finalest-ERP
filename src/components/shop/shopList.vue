@@ -244,7 +244,7 @@
                                                background 
                                                layout="total, prev, pager, next"  
                                                :page-count="totalPage" 
-                                               :page-size="oneItem"
+                                               :page-size="eachPage"
                                                @current-change="handleCurrentChange"></el-pagination>
                             </el-col>
                         </el-row>
