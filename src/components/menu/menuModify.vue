@@ -680,7 +680,7 @@
                     .then(function(res){
                         _this.open('修改成功','el-icon-circle-check','successERP');
                     },function(res){
-                        _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
                         _this.open('修改失败','el-icon-error','faildERP');
                     })
