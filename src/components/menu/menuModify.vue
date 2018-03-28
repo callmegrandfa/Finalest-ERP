@@ -409,10 +409,6 @@
                 value: 'id',
                 label:'moduleName'
             },
-            checked:[],//展示所有权限
-            nochecked:[],//
-            nodeName:'',
-            allNode:[],
             selectData:{//select数据
                 Status001:[],//启用状态
                 menu:[],//菜单
@@ -423,6 +419,9 @@
                 validationErrors:[],
             },
 //--------------dialog----------------
+            checked:[],//展示所有权限
+            nochecked:[],//
+            allNode:[],
             storeNodeClickData:[],//储存点击节点的所有数据{all:[],check:[],nochecked:[]}
             nowClickNode:'',//记录点击的树节点
             checkTable:[],//页面渲染的数据
@@ -751,18 +750,6 @@
             };
             _this.validation.reset();
         },
-        // showNodeadd(){
-        //     let _this=this;
-        //     _this.menuCheck=!_this.menuCheck
-        //     $('.menu_item_add').css('display','block')
-        //     $('.menu_item_del').css('display','none')
-        // },
-        // showNodedel(){
-        //     let _this=this;
-        //     _this.menuCheck=!_this.menuCheck
-        //     $('.menu_item_add').css('display','none')
-        //     $('.menu_item_del').css('display','block')
-        // },
         showDialog(){
             let _this=this;
             _this.dialogTableVisible = true;
@@ -816,9 +803,6 @@
                     _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].check
                     _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].nochecked
                 }
-                
-                
-                
                 _this.checked=_this.uniqueArray(_this.checked,json);
             }else{
                 return false
@@ -852,112 +836,7 @@
 
             _this.checkTable=_this.storeNodeClickData[data.displayName].check;
             _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
-
-            // _this.nodeName=data.displayName;
-            //  $('.menu_box').each(function(x){
-            //     if($(this).attr('moduleName')==_this.nodeName){
-            //         $(this).css('display','block')
-            //     }else{
-            //         $(this).css('display','none')
-            //     }
-            // })
-
-
-            //  $('.menu_item_add .menu_item').each(function(){
-            //      let permissionName=$(this).attr('permissionName');
-            //      for(let i=0;i<_this.checked.length;i++){
-            //          if(permissionName==_this.checked[i].permissionName){
-            //              $(this).css('display','block')
-            //          }
-            //      }
-            // })
-            // $('.menu_item_del .menu_item').each(function(){
-            //      let permissionName=$(this).attr('permissionName');
-            //      for(let i=0;i<_this.checked.length;i++){
-            //          if(permissionName==_this.checked[i].permissionName){
-            //            $(this).css('display','none')
-            //          }
-            //      }
-            // })
-            
         },
-        // addPermission(x){
-        //     let _this=this;
-        //     $('.menu_item_add .menu_item').each(function(){
-        //         if($(this).attr('permissionName')==x.permissionName){
-        //             $(this).css('display','none')
-        //         }
-        //     })
-        //     $('.menu_item_del .menu_item').each(function(){
-        //         if($(this).attr('permissionName')==x.permissionName){
-        //             $(this).css('display','block')
-        //         }
-        //     })
-        //     let flag=false;
-        //     if(_this.nochecked.length<=0){
-        //         flag=true;
-        //     }else{
-        //         flag=false;
-        //         $.each(_this.nochecked,function(index,value){
-        //             if(x.permissionName==value.permissionName){
-        //                 flag=false;
-        //             }else{
-        //                 flag=true;
-        //             }
-        //         })
-        //     }
-        //     if(_this.checked.length>0){
-        //         for(let i=0;i<_this.checked.length;i++){
-        //             if(_this.checked[i].permissionName==x.permissionName){
-        //                 _this.checked.splice(i,1)
-        //                 break;
-        //             }
-        //         }
-        //     }
-           
-        //     if(flag){
-        //         _this.nochecked.push(x);
-        //     }
-        // },
-        // delPermission(x){
-        //     let _this=this;
-        //     $('.menu_item_del .menu_item').each(function(){
-        //         if($(this).attr('permissionName')==x.permissionName){
-        //             $(this).css('display','none')
-        //         }
-        //     })
-        //     $('.menu_item_add .menu_item').each(function(){
-        //         if($(this).attr('permissionName')==x.permissionName){
-        //             $(this).css('display','block')
-        //         }
-        //     })
-        //     let flag=false;
-        //     if(_this.checked.length<=0){
-        //         flag=true;
-        //     }else{
-        //         flag=false;
-        //         $.each(_this.checked,function(index,value){
-        //             if(x.permissionName==value.permissionName){
-        //                 flag=false;
-        //             }else{
-        //                 flag=true;
-        //             }
-        //         })
-        //     }
-        //     if(_this.nochecked.length>0){
-        //         for(let i=0;i<_this.nochecked.length;i++){
-        //             if(_this.nochecked[i].permissionName==x.permissionName){
-        //                 _this.nochecked.splice(i,1)
-        //                 break;
-        //             }
-        //         }
-        //     }
-            
-        //     if(flag){
-        //         _this.checked.push(x);
-        //     }
-        // }
-    
     }
 
   })

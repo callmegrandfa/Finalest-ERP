@@ -5,12 +5,10 @@
          <el-col :span="24">
             <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>      
             <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button class="erp_bt bt_saveAdd" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-            <button class="erp_bt bt_auxiliary bt_width">
-                <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                <span class="btDetail">辅助功能</span>
-                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-            </button>  
+            <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+            <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+            <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
      </el-row>
@@ -1005,7 +1003,25 @@
             </div>
         </div>                                  
     </el-col>
-</el-row>          
+</el-row>       
+<!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->   
 <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -1134,6 +1150,11 @@ export default({
                 message:'',
                 validationErrors:[],
             },
+//----------按钮操作--------------
+        choseDoing:'',//存储点击按钮判断信息
+        dialogUserConfirm:false,//信息更改提示控制
+        update:false,
+      
         }
     },
     validators: {
@@ -1568,30 +1589,93 @@ export default({
                 }
             });    
         },
-        saveAdd(){
-            //  let _this=this;
-            // _this.$validate()
-            // .then(function (success) {
-            //     if (success) {
-            //         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
-            //             _this.clearData();
-            //             _this.open('保存新增成功','el-icon-circle-check','successERP');
-            //         },function(res){
-            //             _this.open('保存新增失败','el-icon-error','faildERP');
-            //         })
-            //     }
-            // });     
+        //-------------按钮操作-----------
+        isBack(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='back'
+            }else{
+                _this.back()
+            }
         },
-        newAdd(){
-            // this.clearData();
-            // this.open('新增成功','el-icon-circle-check','successERP');
+        isUpdate(){//判断是否修改过信息
+            this.update=true;
+        },
+        isCancel(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='Cancel'
+            }else{
+                _this.Cancel()
+            }
+        },
+        sureDoing(){
+            let _this=this;
+            if(_this.choseDoing=='back'){
+                _this.back()
+                _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='Cancel'){
+                _this.Cancel();
+                _this.dialogUserConfirm=false;
+            }
+        },
+        Cancel(){
+            let _this=this;
+            _this.clearData();
         },
         clearData(){
-            
-        },
-        getStartMonth(){
             let _this=this;
-        }
+             _this.addData={
+                "ouCode": "",
+                "ouName": "",
+                "ouFullname": "",
+                "ouParentid": "",//整数
+                "accCchemeId": "",//整数
+                "accStartMonth": "",
+                "baseCurrencyId": "",//整数
+                "companyOuId": "",//整数
+                "contactPerson": "",
+                "phone": "",
+                "address": "",
+                "status": 1,//整数
+                "remark": "",
+                "ouTypes":[1,3],//组织职能
+            };
+            _this.basCompany={//其他信息
+                "ouParentid": "",//整数
+                "legalPerson": "",
+                "status": 1,//整数
+                "isGroupCompany": false,
+                "regCapital": "",//整数
+                "vatRegno": "",
+                "regtime": "",
+                "legalPersonIdnr": "",
+                "mgtDeptCode": "",
+                "mgtDeptName": "",
+                "businessStart": "",
+                "businessEnd": "",
+                "legalPersonType": "",
+                "introduction": "",
+                "contact": "",
+                "businessAddress": "",
+                "contactAddress": "",
+                "zipCode": "",
+                "phone": "",
+                "fax": "",
+                "email": "",
+                "webUrl": "",
+                "remark": ""
+            };
+            _this.Company=true;//公司 
+            _this.Business=false;//业务   
+            _this.Finance=true;//财务
+            _this.dateRange=[]
+            _this.getDefaulet()
+            _this.validation.reset();
+        },
+        saveAdd(){},
     }
 
 })        
@@ -1626,7 +1710,7 @@ export default({
       border-bottom:none;
   }
 .OuDetailForm>.el-row:first-child{
-      padding:5px 0;
+      padding:7px 0;
   }
  .OuDetailForm .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 10px;

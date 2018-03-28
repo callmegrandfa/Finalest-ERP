@@ -245,7 +245,7 @@
                 ],
                 defaultProps: {
                     children: 'childItems',
-                    label: 'areaName',
+                    label: 'name',
                     id:'id'
                 },
                 TreeContextMenu:[//点击鼠标右键生成菜单
@@ -348,17 +348,11 @@
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
                     $.each(res.result,function(index,value){
                         let item={'value':value.areaName,'id':value.id};
                         _this.restaurants.push(item)
                     })
                     },function(res){
-                        _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
                     _this.tableLoading=false;
                 })
             },
@@ -370,8 +364,14 @@
                     _this.componyTree=res.result
                     _this.treeLoading=false;
                     _this.loadIcon();
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                },function(res){
                    _this.treeLoading=false;
+                   _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                })
             },
             loadIcon(){
@@ -418,12 +418,9 @@
             goDetail(){
                 let _this=this;
                 if(typeof(_this.detailParentId)=='number'){
-                    if(_this.detailParentId == 0){
-                        alert(_this.detailParentName+"  是所在集团公司名称，并不是业务地区，请重新选择")
-                    }else{
-                        _this.$store.state.url='/businessArea/businessAreaDetail/'+[_this.detailParentId,_this.ouId];
+                        _this.$store.state.url='/businessArea/businessAreaDetail/'+[_this.detailParentId,_this.ouId,_this.detailParentName];
                         _this.$router.push({path:this.$store.state.url})//点击切换路由
-                    }
+                    
                 }else{
                     _this.$store.state.url='/businessArea/businessAreaDetail/default'
                     _this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -511,9 +508,9 @@
             nodeClick(data){
                  let _this=this;
                  _this.tableLoading=true;
-                //  _this.detailParentId=data.id;
-                //  _this.detailParentName=data.areaName;
-                //  _this.ouId=data.ouId;
+                 _this.detailParentId=data.id;
+                 _this.detailParentName=data.areaName;
+                 _this.ouId=data.ouId;
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',{ParentId:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                 .then(function(res){
                     _this.tableData=res.result;
