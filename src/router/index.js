@@ -187,7 +187,8 @@ const commodityProperty = () =>//商品属性
 //     import ('../components/commodityManagement/commodityPropertyList')
 const commodityPropertyDetails = () =>//商品属性详情
     import ('../components/commodityManagement/commodityPropertyDetails') 
-const staff = () =>
+    // 职员资料
+    const staff = () =>
     import ('../components/staffInfo/staff')
 const staffList = () =>
     import ('../components/staffInfo/staffList')
@@ -203,6 +204,11 @@ const adminstrArea = () => import('../components/administrativeArea/adminstrArea
 const adminstrAreaList = () => import('../components/administrativeArea/adminstrAreaList')
 const adminstrAreaDetail = () => import('../components/administrativeArea/adminstrAreaDetail')
 const adminstrAreaModify = () => import('../components/administrativeArea/adminstrAreaModify')
+// 供应商分类
+const supplierClassify = () => import('../components/supplierClassify/supplierClassify')
+const supplierClassifyList = () => import('../components/supplierClassify/supplierClassifyList')
+const supplierClassifyDetail = () => import('../components/supplierClassify/supplierClassifyDetail')
+const supplierClassifyModify = () => import('../components/supplierClassify/supplierClassifyModify')
     
 
 let redirectRouter = function(routerName) { //重定向
@@ -599,6 +605,20 @@ const routes = [
                     { path: '/adminstrArea/adminstrAreaList/:id', component: adminstrAreaList, name:'adminstrAreaList'},
                     { path: '/adminstrArea/adminstrAreaDetail/:id', component: adminstrAreaDetail, name:'adminstrAreaDetail'},
                     { path: '/adminstrArea/adminstrAreaModify/:id', component: adminstrAreaModify, name:'adminstrAreaModify'},
+                ],
+
+            },
+            {
+                path: '/supplierClassify',
+                component: supplierClassify,
+                name: 'supplierClassify',
+                redirect: function () { //供应商分类
+                    return redirectRouter('supplierClassify')
+                },
+                children: [
+                    { path: '/supplierClassify/supplierClassifyList/:id', component: supplierClassifyList, name: 'supplierClassifyList' },
+                    { path: '/supplierClassify/supplierClassifyDetail/:id', component: supplierClassifyDetail, name: 'supplierClassifyDetail' },
+                    { path: '/supplierClassify/supplierClassifyModify/:id', component: supplierClassifyModify, name: 'supplierClassifyModify' },
                 ],
 
             },
