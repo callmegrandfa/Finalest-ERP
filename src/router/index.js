@@ -183,6 +183,10 @@ const commodityClassHeading = () =>
     import ('../components/commodityManagement/commodityClassHeading')
 const commodityProperty = () =>//商品属性
     import ('../components/commodityManagement/commodityProperty')
+const commodityPropertyList = () =>//商品属性列表
+    import ('../components/commodityManagement/commodityPropertyList')
+const commodityPropertyDetails = () =>//商品属性详情
+    import ('../components/commodityManagement/commodityPropertyDetails') 
 const specificationOfGoods= ()=>//商品规格
     import ('../components/commodityManagement/specificationOfGoods') 
 // const commodityPropertyList = () =>//商品属性列表
@@ -516,19 +520,19 @@ const routes = [
                     { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
                 ]
             },
-            // {
-            //     path: '/commodityProperty',
-            //     component: commodityProperty,
-            //     name: 'commodityProperty',
-            //     redirect: function() { //商品属性
-            //         return redirectRouter('commodityProperty')
-            //     },
-            //     children: [
-            //         { path: '/commodityProperty/commodityPropertyList/:id', component: commodityPropertyList, name: 'commodityPropertyList' }, //商品类目
-            //         // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
-            //         { path: '/commodityProperty/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
-            //     ]
-            // },
+            {
+                path: '/commodityProperty',
+                component: commodityProperty,
+                name: 'commodityProperty',
+                redirect: function() { //商品属性
+                    return redirectRouter('commodityProperty')
+                },
+                children: [
+                    { path: '/commodityProperty/commodityPropertyList/:id', component: commodityPropertyList, name: 'commodityPropertyList' }, //商品属性
+                    // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/commodityProperty/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
+                ]
+            },
             {
                 path: '/dictionary',
                 component: dictionary,
