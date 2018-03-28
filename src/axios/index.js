@@ -12,7 +12,7 @@ axios.defaults.baseURL = 'http://192.168.100.107:8082';
 //POST传参序列化
 axios.interceptors.request.use((config) => {
     if(store.state.accessToken!=''){
-      config.headers.Authorization=store.state.accessToken;
+      config.headers.Authorization= store.state.accessToken;
     }else{
       router.push({path:'/login'});
     }

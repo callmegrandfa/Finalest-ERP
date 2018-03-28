@@ -90,7 +90,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
@@ -161,44 +161,43 @@
                             <span class="btDetail">选取</span>
                         </button>
                        
-    <!-- 关联角色 -->
+    <!-- 关联用户 -->
 <el-dialog :visible.sync="dialogUser" title="关联用户" class="transfer_dialog">
     <el-col :span="24">
         <el-col :span="11" class="transfer_warapper">
-                <el-col :span="24" class="transfer_header">
-                    <span>已选</span>
-                    <div class="transfer_search">
-                        <el-autocomplete
-                        class="search_input"
-                        placeholder="搜索..."
-                        >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-autocomplete>
-                    </div>    
-                </el-col>    
-                <el-col :span="24" class="transfer_table">
-                    <el-table 
-                    :data="showCheckedUser" 
-                    border 
-                    style="width: 100%" 
-                    stripe 
-                    @selection-change="checkedSelect" 
-                    ref="roleTableLeft">
-                        <el-table-column type="selection" fixed="left"></el-table-column>
-                        <el-table-column prop="userCode" label="用户编码"></el-table-column>
-                        <el-table-column prop="displayName" label="用户名称"></el-table-column>
-                        <el-table-column prop="ouId" label="所属组织"></el-table-column>
-                    </el-table>   
+            <el-col :span="24" class="transfer_header">
+                <span>已选</span>
+                <div class="transfer_search">
+                    <el-autocomplete
+                    class="search_input"
+                    placeholder="搜索..."
+                    >
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-autocomplete>
+                </div>    
+            </el-col>    
+            <el-col :span="24" class="transfer_table">
+                <el-table 
+                :data="showCheckedUser" 
+                border 
+                style="width: 100%" 
+                stripe 
+                @selection-change="checkedSelect" 
+                ref="roleTableLeft">
+                    <el-table-column prop="userCode" label="用户编码" fixed="left"></el-table-column>
+                    <el-table-column prop="displayName" label="用户名称" fixed="left"></el-table-column>
+                    <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                </el-table>   
+            </el-col>
+            <el-col :span="24" class="transfer_footer">
+                <el-col :span="18">
+                    <span>总共有{{totalItemLeftUser}}条数据</span>
                 </el-col>
-                <el-col :span="24" class="transfer_footer">
-                    <el-col :span="18">
-                        <span>总共有{{totalItemLeftUser}}条数据</span>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
-                        <el-button class="el_transfer" :disabled="leftAddBtnUser" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right" round></el-button>
-                    </el-col>
+                <el-col :span="6">
+                    <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
+                    <el-button class="el_transfer" :disabled="leftAddBtnUser" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right" round></el-button>
                 </el-col>
+            </el-col>
         </el-col>
         <el-col :span="2" class="transfer_btns">
             <el-col :span="24" class="transfer_btn_wrapper">
@@ -226,9 +225,8 @@
                 stripe 
                 @selection-change="nocheckedSelect" 
                 ref="roleTabRight">
-                    <el-table-column type="selection" fixed="left"></el-table-column>
-                    <el-table-column prop="userCode" label="用户编码"></el-table-column>
-                    <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                    <el-table-column prop="userCode" label="用户编码" fixed="left"></el-table-column>
+                    <el-table-column prop="displayName" label="用户名称" fixed="left"></el-table-column>
                     <el-table-column prop="ouId" label="所属组织"></el-table-column>
                 </el-table>  
                 
@@ -257,9 +255,9 @@
                         style="width: 100%" 
                         stripe>
 
-                            <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                            <el-table-column prop="userCode" label="用户编码" fixed="left"></el-table-column>
 
-                            <el-table-column prop="displayName" label="用户名称"></el-table-column>
+                            <el-table-column prop="displayName" label="用户名称" fixed="left"></el-table-column>
 
                             <el-table-column prop="ouId" label="所属组织"></el-table-column>
 
@@ -287,8 +285,8 @@
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
-                           <!-- 关联角色 -->
-<el-dialog :visible.sync="dialogOu" title="关联用户" class="transfer_dialog">
+                           <!-- 分配组织 -->
+<el-dialog :visible.sync="dialogOu" title="分配组织" class="transfer_dialog">
     <el-col :span="24">
         <el-col :span="11" class="transfer_warapper">
                 <el-col :span="24" class="transfer_header">
@@ -347,7 +345,7 @@
             <el-col :span="24" class="transfer_table">
                 <vue-scroll :ops="$store.state.option">
                 <el-tree
-                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                
                 :data="ouTreeDataRight"
                 :props="ouDefaultProps"
                 node-key="id"
@@ -399,9 +397,9 @@
                         style="width: 100%" 
                         stripe>
 
-                            <el-table-column prop="ouCode" label="组织编码"></el-table-column>
+                            <el-table-column prop="ouCode" label="组织编码" fixed="left"></el-table-column>
 
-                            <el-table-column prop="basOuTypes" label="组织类型">
+                            <el-table-column prop="basOuTypes" label="组织类型" fixed="left">
                                 <template slot-scope="scope">
                                     <span v-for="(x,index) in scope.row.basOuTypes" :key="index">{{x.ouTypeTValue}}</span>
                                 </template>
@@ -453,17 +451,14 @@
                                     <el-col :span="24" class="transfer_fixed">
                                         <vue-scroll :ops="$store.state.option">  
                                             <el-tree
-                                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                                            :data="ouTreeDataRight"
-                                            :props="ouDefaultProps"
-                                            node-key="id"
-                                            default-expand-all
-                                            show-checkbox
-                                            @check-change="ouCheckChangeRight"
-                                            ref="ouTreeRight"
-                                            :expand-on-click-node="false"
-                                            @node-click="ouNodeClickRight">
-                                            </el-tree>  
+                                                v-loading="fnTreeLoading" 
+                                                :data="fnTreeData"
+                                                :props="defaultProps"
+                                                node-key="id"
+                                                default-expand-all
+                                                @node-click="fnNodeClick"
+                                                :expand-on-click-node="false">
+                                            </el-tree>
                                         </vue-scroll>
                                     </el-col>
                                 </el-col>
@@ -479,8 +474,37 @@
                                             </el-col>
                                         </el-col>  
                                         <el-col :span="24" class="checkbox_group">
-                                                <el-checkbox v-for="item in moduleList" :label="item" :key="item">{{item}}</el-checkbox>
+                                            <el-checkbox v-for="item in moduleList" :label="item" :key="item">{{item}}</el-checkbox>
                                         </el-col>    
+                                        <el-table 
+                                        v-loading="fnTableLoading"
+                                        :data="fnTableData" 
+                                        border 
+                                        style="width: 100%" 
+                                        stripe>
+                                            <el-table-column prop="moduleName" label="名称" fixed="left"></el-table-column>
+
+                                            <el-table-column prop="permissionDtos" label="功能名称">
+
+                                                <!-- <el-table-column v-for="i in moduleList" :label="i">
+                                                    <template slot-scope="scope">
+                                                        <el-checkbox v-if="x.displayName == i" v-for="x in fnTableData[scope.$index].permissionDtos" checked disabled></el-checkbox>
+                                                        
+                                                    </template>
+                                                </el-table-column> -->
+                                                <template slot-scope="scope">
+                                                    <a class="addRole" v-for="i in fnTableData[scope.$index].permissionDtos">{{i.displayName}}</a>
+                                                </template>
+                                            </el-table-column>
+
+                                            <el-table-column label="操作">
+                                                <template slot-scope="scope">
+                                                    <el-button type="text"   @click="delThisFn(scope.row)">删除</el-button>
+                                                    <!-- <el-button type="text"   @click="seeThisRole(scope.row)" >查看</el-button> -->
+                                                    <!-- <el-button type="text"   @click="see(scope.row)" >查看</el-button> -->
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
                                     </el-col>
                                 </el-col>
                             </el-col>
@@ -494,15 +518,13 @@
                         <!-- tree -->
                         <el-col :span="5">
                             <el-tree
-                                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
                                 v-loading="fnTreeLoading" 
                                 :data="fnTreeData"
                                 :props="defaultProps"
                                 node-key="id"
                                 default-expand-all
-                                ref="tree"
-                                :expand-on-click-node="false"
-                                @node-click="fnNodeClick">
+                                @node-click="fnNodeClick"
+                                :expand-on-click-node="false">
                             </el-tree>
                         </el-col>
                         <!-- tree -->
@@ -514,11 +536,7 @@
                             border 
                             style="width: 100%" 
                             stripe>
-
-                                <el-table-column type="selection"></el-table-column>
-
-                                <el-table-column prop="moduleName" label="模块名称"></el-table-column>
-
+                                <el-table-column prop="moduleName" label="模块名称" fixed="left"></el-table-column>
                                 <el-table-column prop="permissionDtos" label="功能名称">
 
                                     <!-- <el-table-column v-for="i in moduleList" :label="i">
@@ -654,7 +672,6 @@ export default({
             ouTableLoading:false,
             dialogOu:false,
 // -------------分配功能-------------------
-            fnTableData:[],//分配功能数据
             fnTableData:[],//分配组织数据
             fnPageIndex:1,//分页的当前页码
             fnTotalPage:0,//当前分页总数
@@ -673,9 +690,9 @@ export default({
             fnTreeLoading:false,
             fnTreeData:[],
             defaultProps: {
-                children: 'childNodes',
-                label: 'moduleName',
-                id:'id',
+                children: 'children',
+                label: 'displayName',
+                value:'permissionName'
             },
 // ------------关联用户dialog-------------
         dialogUser:false,//控制对话框
@@ -837,9 +854,9 @@ export default({
         fnLoadTree(){
             let _this=this;
             _this.fnTreeLoading=true;
-            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
+            _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
             .then(function(res){
-                _this.fnTreeData=res
+                _this.fnTreeData=res.items;
                 _this.fnTreeLoading=false;
                 _this.loadIcon()
             },function(res){
@@ -1107,6 +1124,7 @@ export default({
             let _this=this;
             _this.userTableLoading=true;
             _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
+            
            .then(function(response){//获取已选角色
                 let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
                 _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})

@@ -170,71 +170,90 @@
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
                 </div>    
             </el-col>
-            <el-dialog :visible.sync="dialogTableVisible" title="添加功能">
-                <el-col :span="6" class="dialog_ dialog_l">
-                    <el-col :span="24">
-                        <el-input placeholder="" class="menu_search">
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-input>
-                    </el-col>
-                    <el-col :span="24" class="mt_20">
-                        <el-tree
-                        :data="componyTree"
-                        :props="defaultProps"
-                        node-key="id"
-                        default-expand-all
-                        :highlight-current="true"
-                        @node-click="nodeClick"
-                        :expand-on-click-node="false">
-                        </el-tree>
-                    </el-col>
-                </el-col>
-                <el-col :span="18" class="dialog_ dialog_r">
-                    <div class="menu_box" :key="i.displayName" v-for="i in componyTree" :moduleName="i.displayName">
-                        <el-col>{{i.displayName}}</el-col>
-                        <el-col :span="11">
-                                <el-col :span="24">已选</el-col>    
-                                <el-col :span="24">
-                                    <el-table 
-                                    :data="checkedTable" 
-                                    border 
-                                    style="width: 100%" 
-                                    stripe 
-                                    @selection-change="checkedSelect" 
-                                    ref="multipleTable">
-                                        <el-table-column type="selection" fixed="left"></el-table-column>
-                                        <el-table-column prop="displayName" label="功能"></el-table-column>
-                                    </el-table>    
-                                </el-col>
+            <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
+                <el-col :span="24">
+                    <el-col :span="6">
+                        <el-col :span="24" class="transfer_fixed">
+                            <vue-scroll :ops="$store.state.option">  
+                                <el-tree
+                                    :data="componyTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    default-expand-all
+                                    @node-click="nodeClick"
+                                    :expand-on-click-node="false">
+                                </el-tree>
+                            </vue-scroll>
                         </el-col>
-                        <el-col :span="2">
-                            <div class="el-transfer__buttons">
-                                <el-button :disabled="is_nocheked" @click="noCheck_push_check" type="primary" icon="el-icon-arrow-left"></el-button>
-                                <el-button :disabled="is_cheked" @click="check_push_noCheck" type="primary" icon="el-icon-arrow-right"></el-button>
-                            </div>
-                        </el-col>
-                        <el-col :span="11">
-                            <el-col :span="24">可选</el-col>    
-                            <el-col :span="24">
+                    </el-col>
+                    <el-col :span="18">
+                        <el-col :span="11" class="transfer_warapper">
+                            <el-col :span="24" class="transfer_header">
+                                <span>已选</span>
+                                <div class="transfer_search">
+                                    <el-autocomplete
+                                    class="search_input"
+                                    placeholder="搜索..."
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-autocomplete>
+                                </div>    
+                            </el-col>    
+                            <el-col :span="24" class="transfer_table">
                                 <el-table 
-                                :data="nocheckedTable" 
                                 border 
                                 style="width: 100%" 
                                 stripe 
-                                @selection-change="nocheckedSelect" 
-                                ref="multipleTable">
-                                    <el-table-column type="selection" fixed="left"></el-table-column>
+                                max-height="450"
+                                    @selection-change="leftFn_change"
+                                :data="checkTable"
+                                ref="roleTableLeft">
+                                    <el-table-column type="selection"></el-table-column>
                                     <el-table-column prop="displayName" label="功能"></el-table-column>
-                                </el-table>    
+                                </el-table>   
                             </el-col>
                         </el-col>
-                    </div>    
-                    <el-col :span="24">
-                        <el-button>确认</el-button>
-                        <el-button>取消</el-button>
+                        <el-col :span="2" class="transfer_btns">
+                            <el-col :span="24" class="transfer_btn_wrapper">
+                                <el-button class="el_transfer" :disabled="is_Fn_nocheked" @click="noCheck_push_check_Fn" type="primary" icon="el-icon-arrow-left" round></el-button>
+                                <el-button class="el_transfer" :disabled="is_Fn_cheked" @click="check_push_noCheck_Fn" type="primary" icon="el-icon-arrow-right" round></el-button>
+                            </el-col>
+                        </el-col>
+                        <el-col :span="11" class="transfer_warapper">
+                            <el-col :span="24" class="transfer_header">
+                                <span>可选</span>
+                                <div class="transfer_search">
+                                    <el-autocomplete
+                                    class="search_input"
+                                    placeholder="搜索..."
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-autocomplete>
+                                </div>
+                            </el-col>    
+                            <el-col :span="24" class="transfer_table">
+                                <el-table 
+                                border 
+                                max-height="450"
+                                :data="nocheckTable"
+                                style="width: 100%" 
+                                stripe 
+                                @selection-change="rightFn_change"
+                                ref="roleTabRight">
+                                    <el-table-column type="selection"></el-table-column>
+                                    <el-table-column prop="displayName" label="功能"></el-table-column>
+                                </el-table>  
+                                
+                            </el-col>
+                        </el-col>
                     </el-col>
                 </el-col>
+                <span slot="footer">
+                    <button class="transfer_footer_btn transfer_confirm">确 认</button>
+                    <button class="transfer_footer_btn">取 消</button>
+                </span>
             </el-dialog>
+            <!--dialog结束  -->
                 <!-- <el-dialog :visible.sync="dialogTableVisible">
                     <template slot="title">
                         <span style="float:left;">添加功能</span>
@@ -281,10 +300,10 @@
                 </el-dialog> -->
              <el-col :span="24">
                  <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
+                    <div class="bgcolor bgLongWidth" style="overflow:visible;">
                         <label class="h_35"></label>
-                        <div>
-                            <a class="addRole"  v-for="x in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="addPermission(x)" class="el-icon-error"></i></a>
+                        <div class="rolesZoo">
+                            <a class="addRole" :key="index" v-for="(x,index) in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
                         </div>
                     </div>
                  </div>
@@ -401,6 +420,17 @@
                 message:'',
                 validationErrors:[],
             },
+//--------------dialog----------------
+            storeNodeClickData:[],//储存点击节点的所有数据{all:[],check:[],nochecked:[]}
+            nowClickNode:'',//记录点击的树节点
+            checkTable:[],//页面渲染的数据
+            nocheckTable:[],//页面渲染的数据
+
+            is_Fn_nocheked:true,//穿梭框按钮显示隐藏
+            is_Fn_cheked:true,
+
+            left_selectFn:[],//checkbox选中数据
+            right_selectFn:[],
         }
     },
      validators: {
@@ -617,128 +647,194 @@
         clearData(){
            this.validation.reset();
         },
-        showNodeadd(){
-            let _this=this;
-            _this.menuCheck=!_this.menuCheck
-            $('.menu_item_add').css('display','block')
-            $('.menu_item_del').css('display','none')
-        },
-        showNodedel(){
-            let _this=this;
-            _this.menuCheck=!_this.menuCheck
-            $('.menu_item_add').css('display','none')
-            $('.menu_item_del').css('display','block')
-        },
+        // showNodeadd(){
+        //     let _this=this;
+        //     _this.menuCheck=!_this.menuCheck
+        //     $('.menu_item_add').css('display','block')
+        //     $('.menu_item_del').css('display','none')
+        // },
+        // showNodedel(){
+        //     let _this=this;
+        //     _this.menuCheck=!_this.menuCheck
+        //     $('.menu_item_add').css('display','none')
+        //     $('.menu_item_del').css('display','block')
+        // },
         showDialog(){
             let _this=this;
             _this.dialogTableVisible = true;
             _this.loadIcon()
         },
+        uniqueArray(array1, array2){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i].permissionName == array2[j].permissionName) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
+                }
+            }
+            return result;
+        },
         nodeClick(data,event){
-            let _this=this;
-            _this.nodeName=data.displayName;
-            //  $('.menu_box').each(function(x){
-            //     if($(this).attr('moduleName')==_this.nodeName){
-            //         $(this).css('display','block')
-            //     }else{
-            //         $(this).css('display','none')
-            //     }
-            // })
+           let _this=this;
+            let all=data.children;
+            let checkClick=[];
+            let nocheckedClick=[];
+            _this.nowClickNode=data.displayName;
+            if(!_this.storeNodeClickData[data.displayName]){
+                if(_this.checked.length>0){
+                    for(let i=0;_this.checked.length>i;i++){
+                        for(let x=0;all.length>x;x++){
+                            if(_this.checked[i].permissionName==all[x].permissionName){
+                                checkClick.push(all[x])
+                            }
+                        }
+                    }
+                    nocheckedClick=_this.uniqueArray(all,checkClick)
+                }else{
+                    nocheckedClick=all
+                }
+
+                _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
+            }
+            
+    
+            
+
+            _this.checkTable=_this.storeNodeClickData[data.displayName].check;
+            _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
         },
-        addPermission(x){
-            let _this=this;
-            $('.menu_item_add .menu_item').each(function(){
+        // addPermission(x){
+        //     let _this=this;
+        //     $('.menu_item_add .menu_item').each(function(){
                 
-                if($(this).attr('permissionName')==x.permissionName){
-                    $(this).css('display','none')
-                }
-            })
-            $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('permissionName')==x.permissionName){
-                    $(this).css('display','block')
-                }
-            })
-            let flag=false;
-            if(_this.nochecked.length<=0){
-                flag=true;
-            }else{
-                flag=false;
-                $.each(_this.nochecked,function(index,value){
-                    if(x==value){
-                        flag=false;
-                    }else{
-                        flag=true;
-                    }
-                })
-            }
-            $.each(_this.checked,function(index,value){
-                if(x==value){
-                    _this.checked.splice(index,1)
-                }
-            })
-            if(flag){
-                _this.nochecked.push(x);
-            }
-        },
-        delPermission(x){
+        //         if($(this).attr('permissionName')==x.permissionName){
+        //             $(this).css('display','none')
+        //         }
+        //     })
+        //     $('.menu_item_del .menu_item').each(function(){
+        //         if($(this).attr('permissionName')==x.permissionName){
+        //             $(this).css('display','block')
+        //         }
+        //     })
+        //     let flag=false;
+        //     if(_this.nochecked.length<=0){
+        //         flag=true;
+        //     }else{
+        //         flag=false;
+        //         $.each(_this.nochecked,function(index,value){
+        //             if(x==value){
+        //                 flag=false;
+        //             }else{
+        //                 flag=true;
+        //             }
+        //         })
+        //     }
+        //     $.each(_this.checked,function(index,value){
+        //         if(x==value){
+        //             _this.checked.splice(index,1)
+        //         }
+        //     })
+        //     if(flag){
+        //         _this.nochecked.push(x);
+        //     }
+        // },
+        // delPermission(x){
+        //     let _this=this;
+        //     $('.menu_item_del .menu_item').each(function(){
+        //         if($(this).attr('permissionName')==x.permissionName){
+        //             $(this).css('display','none')
+        //         }
+        //     })
+        //     $('.menu_item_add .menu_item').each(function(){
+        //         if($(this).attr('permissionName')==x.permissionName){
+        //             $(this).css('display','block')
+        //         }
+        //     })
+        //     let flag=false;
+        //     if(_this.checked.length<=0){
+        //         flag=true;
+        //     }else{
+        //         flag=false;
+        //         $.each(_this.checked,function(index,value){
+        //             if(x==value){
+        //                 flag=false;
+        //             }else{
+        //                 flag=true;
+        //             }
+        //         })
+        //     }
+        //     $.each(_this.nochecked,function(index,value){
+        //         if(x==value){
+        //             _this.nochecked.splice(index,1)
+        //         }
+        //     })
+        //     if(flag){
+        //         _this.checked.push(x);
+        //     }
+        // },
+        rightFn_change(val){
             let _this=this;
-            $('.menu_item_del .menu_item').each(function(){
-                if($(this).attr('permissionName')==x.permissionName){
-                    $(this).css('display','none')
-                }
-            })
-            $('.menu_item_add .menu_item').each(function(){
-                if($(this).attr('permissionName')==x.permissionName){
-                    $(this).css('display','block')
-                }
-            })
-            let flag=false;
-            if(_this.checked.length<=0){
-                flag=true;
-            }else{
-                flag=false;
-                $.each(_this.checked,function(index,value){
-                    if(x==value){
-                        flag=false;
-                    }else{
-                        flag=true;
-                    }
-                })
-            }
-            $.each(_this.nochecked,function(index,value){
-                if(x==value){
-                    _this.nochecked.splice(index,1)
-                }
-            })
-            if(flag){
-                _this.checked.push(x);
-            }
-        },
-        checkedSelect(val) {//dialogRole已选
-            let _this=this;
-            _this.selection_checked = val;
+            _this.right_selectFn=val;
             if(val.length==0){
-                _this.is_cheked=true
+                _this.is_Fn_nocheked=true
+                
             }else{
-                _this.is_cheked=false
+                _this.is_Fn_nocheked=false
             }
         },
-        nocheckedSelect(val) {//dialogRole可选
+        leftFn_change(val){
             let _this=this;
-            _this.selection_nochecked = val;
+            _this.left_selectFn=val;
             if(val.length==0){
-                _this.is_nocheked=true
+                _this.is_Fn_cheked=true
             }else{
-                _this.is_nocheked=false
+                _this.is_Fn_cheked=false
             }
         },
-        noCheck_push_check(){
-
+        noCheck_push_check_Fn(){//从右往左添加数据
+            let _this=this;
+            _this.storeNodeClickData[_this.nowClickNode].check=_this.right_selectFn.concat(_this.storeNodeClickData[_this.nowClickNode].check)
+            _this.storeNodeClickData[_this.nowClickNode].nochecked=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].nochecked,_this.right_selectFn);
+            _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].check
+            _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].nochecked
+            _this.checked=_this.right_selectFn.concat(_this.checked);
         },
-        check_push_noCheck(){
-
+        check_push_noCheck_Fn(){//从左往右添加数据
+            let _this=this;
+           _this.storeNodeClickData[_this.nowClickNode].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,_this.left_selectFn);
+            _this.storeNodeClickData[_this.nowClickNode].nochecked=_this.left_selectFn.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
+            
+            _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].check
+            _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].nochecked
+            _this.checked=_this.uniqueArray(_this.checked,_this.left_selectFn);
         },
+        check_push_noCheck_FnThis(val){//删除一个关联角色
+            let _this=this;
+            if(!_this.isEdit){
+                let json=[val]
+                _this.update=true;
+                if(_this.storeNodeClickData[_this.nowClickNode]){
+                    _this.storeNodeClickData[_this.nowClickNode].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
+                    _this.storeNodeClickData[_this.nowClickNode].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
 
+                    _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].check
+                    _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].nochecked
+                }
+                
+                
+                
+                _this.checked=_this.uniqueArray(_this.checked,json);
+            }else{
+                return false
+            }
+        },
     }
 
   })

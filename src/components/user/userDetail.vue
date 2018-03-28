@@ -254,7 +254,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor">
                         <label></label>
-                        <el-checkbox v-model="addData.isReg"></el-checkbox>
+                        <el-checkbox v-model="addData.isReg" disabled></el-checkbox>
                         <span class="isGive">是否注册用户</span>
                     </div>
                 </div>
@@ -631,6 +631,7 @@
       _this.loadTree();
       _this.getSelectData();
       _this.getAllRoleData();
+      _this.getDefaulet();
     },
     watch: {
       search(val) {
@@ -638,6 +639,13 @@
       }
     },
     methods: {
+        getDefaulet(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+            // 默认用户业务组织
+            _this.addData.ouId=res.result.id;
+            })
+        },
         getSelectData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 

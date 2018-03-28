@@ -414,6 +414,7 @@
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.accCchemeId')}"
                     placeholder=""
+                    :change="getStartMonth"
                     v-model="addData.accCchemeId">
                         <el-option 
                         v-for="item in selectData.accCchemeId" 
@@ -528,21 +529,22 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor longWidth">
-                    <label>备注</label>
-                    <el-input
-                    
-                    
-                    @focus="showErrprTipsTextArea"
-                    :class="{redBorder : validation.hasError('addData.remark')}"
-                    class="remark1" 
-                    v-model="addData.remark"
-                    type="textarea"
-                    :autosize="{ minRows: 4, maxRows: 10}"
-                    >
-                    </el-input>
-                </div>
-               
+                <el-col :span="24">
+                    <div class="bgcolor longWidth">
+                        <label>备注</label>
+                        <el-input
+                        
+                        
+                        @focus="showErrprTipsTextArea"
+                        :class="{redBorder : validation.hasError('addData.remark')}"
+                        class="remark1" 
+                        v-model="addData.remark"
+                        type="textarea"
+                        :autosize="{ minRows: 4, maxRows: 10}"
+                        >
+                        </el-input>
+                    </div>
+                </el-col>
             </el-col> 
         </el-row>
      </div>    
@@ -836,20 +838,22 @@
                                     v-model="basCompany.webUrl"
                                     ></el-input>
                                 </div>
-                                <div class="bgcolor longWidth">
-                                    <label>备注</label>
-                                    <el-input
-                                    
-                                    
-                                    @focus="showErrprTipsTextArea"
-                                    :class="{redBorder : validation.hasError('basCompany.remark')}"
-                                    class="remark2" 
-                                    v-model="basCompany.remark"
-                                    type="textarea"
-                                    :autosize="{ minRows: 4, maxRows: 10}"
-                                    placeholder="">
-                                    </el-input>
-                                </div>
+                                <el-col :span="24">
+                                    <div class="bgcolor longWidth">
+                                        <label>备注</label>
+                                        <el-input
+                                        
+                                        
+                                        @focus="showErrprTipsTextArea"
+                                        :class="{redBorder : validation.hasError('basCompany.remark')}"
+                                        class="remark2" 
+                                        v-model="basCompany.remark"
+                                        type="textarea"
+                                        :autosize="{ minRows: 4, maxRows: 10}"
+                                        placeholder="">
+                                        </el-input>
+                                    </div>
+                                </el-col>
                             </div>                                  
                         </el-col>
                         </div>
@@ -1041,6 +1045,7 @@
 export default({
     data() {
         return{
+            groupId:1,
             // 错误信息提示开始
             detail_message_ifShow:false,
             errorMessage:false,
@@ -1330,6 +1335,7 @@ export default({
         let _this=this;
          _this.loadTree();
          _this.getSelectData();
+         _this.getDefault();
     },  
      watch: {
       search(val) {
@@ -1337,6 +1343,15 @@ export default({
       }
     },
     methods:{
+        getDefault(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
+            // 会计期间方案值,启用月份
+                _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案
+                _this.addData.accStartMonth=res.result.accStartMonth;//启用月份
+                _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
+            })
+        },
         getSelectData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
@@ -1573,6 +1588,9 @@ export default({
         },
         clearData(){
             
+        },
+        getStartMonth(){
+            let _this=this;
         }
     }
 
