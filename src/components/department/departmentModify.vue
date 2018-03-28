@@ -2,35 +2,49 @@
     <div class="departmentModify">
         <el-row class="fixed">
             <el-col :span="24">
-                <button @click="back" class="erp_bt bt_back">
+                <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button @click="Update()" class="erp_bt bt_modify">
+                <!-- <button @click="Update()" class="erp_bt bt_modify">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_modify.png">
                     </div>
                     <span class="btDetail">修改</span>
-                </button> 
+                </button>  -->
+
+                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+
+                <button class="erp_bt bt_del" @click="delModify" v-show='!ifModify'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
                 
-                <button @click="save" class="erp_bt bt_save" v-show='!isEdit'>
+                <button @click="save" class="erp_bt bt_save" v-show='ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button @click='saveAdd' class="erp_bt bt_saveAdd" v-show='!isEdit'>
+                <button @click='saveAdd' class="erp_bt bt_saveAdd" v-show='ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
 
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!isEdit'>
+                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -54,7 +68,6 @@
                         <el-select class="ouId" 
                                    :class="{redBorder : validation.hasError('departmentData.ouId')}" 
                                    placeholder=""
-                                   :disabled="isEdit"
                                    @change='Modify()'
                                    v-model="departmentData.ouId">
                             <el-input placeholder="搜索..."
@@ -89,7 +102,6 @@
                         <el-select class="deptParentid" 
                                    :class="{redBorder : validation.hasError('departmentData.deptParentid')}" 
                                    placeholder=""
-                                   :disabled="isEdit"
                                    @change='Modify()'
                                    v-model="departmentData.deptParentid">
                             <el-input placeholder="搜索..."
@@ -122,7 +134,6 @@
                         <label><small>*</small>部门编码</label>
                         <el-input class="deptCode" 
                                   placeholder=""
-                                  :disabled="isEdit"
                                   @change='Modify()'
                                   :class="{redBorder : validation.hasError('departmentData.deptCode')}" 
                                   v-model="departmentData.deptCode"></el-input>
@@ -136,7 +147,6 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>部门名称</label>
                         <el-input  class="deptName"
-                                   :disabled="isEdit" 
                                    :class="{redBorder : validation.hasError('departmentData.deptName')}" 
                                    v-model="departmentData.deptName"
                                    placeholder=""
@@ -151,7 +161,6 @@
                     <div class="bgcolor longWidth">
                         <label>负责人</label>
                         <el-input class="manager" 
-                                  :disabled="isEdit"
                                   :class="{redBorder : validation.hasError('departmentData.manager')}" 
                                   v-model="departmentData.manager"
                                   @change='Modify()'
@@ -166,7 +175,6 @@
                     <div class="bgcolor longWidth">
                         <label>备注</label>
                         <el-input class="remark"
-                                  :disabled="isEdit" 
                                   :class="{redBorder : validation.hasError('departmentData.remark')}" 
                                   v-model="departmentData.remark"
                                   type="textarea"
@@ -182,7 +190,6 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
                         <el-select  class="status"
-                                    :disabled="isEdit" 
                                     :class="{redBorder : validation.hasError('departmentData.status')}" 
                                     placeholder=""
                                     v-model="departmentData.status">
@@ -195,7 +202,78 @@
                     <div class="error_tips">{{ validation.firstError('departmentData.status') }}</div>
                 </div>    
             </el-col>
-      </el-row>
+        </el-row>
+
+        <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            <!--  -->
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->  
   </div>
 </template>
 
@@ -219,7 +297,7 @@
         data(){
             return{
                 ifModify:false,//判断是否修改过
-                isEdit:true,//判断是否要修改
+                // isEdit:true,//判断是否要修改
                 
                 //---组织单元树--------
                 ouTree:[],
@@ -259,6 +337,39 @@
                     "remark": "",
                     "status": ''
                 },
+
+                
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //--------------------  
+
+                //---信息修改提示框------------
+                dialogUserConfirm:false,//信息更改提示控制
+                //----------------------------
+                //---错误提示框----------------
+                option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                errorMessage:false,
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
             }
         },
      validators: {
@@ -381,16 +492,18 @@
         },
         save(){//保存修改
             let self=this;
-            if(self.ifModify == true){
+            if(self.ifModify = true){
                 self.departmentData.id = self.$route.params.id;
                     self.$validate().then(function (success) {
                         if (success) {
                             self.$axios.puts('/api/services/app/DeptManagement/Update',self.departmentData).then(function(res){
-                                console.log(res)
-                                self.ifModify == false;
+                                // console.log(res)
+                                self.ifModify = false;
                                 self.open('修改成功','el-icon-circle-check','successERP');
                             },function(res){    
                                 self.open('修改失败','el-icon-error','faildERP');
+                                self.errorMessage=true;
+                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             })
                         }
                     });
@@ -403,12 +516,14 @@
                     self.$validate().then(function (success) {
                         if (success) {
                             self.$axios.puts('/api/services/app/DeptManagement/Update',self.departmentData).then(function(res){
-                                console.log(res)
+                                // console.log(res)
                                 self.ifModify = false;
                                 self.goDetail();
                                 self.open('修改成功','el-icon-circle-check','successERP');
                             },function(res){    
                                 self.open('修改失败','el-icon-error','faildERP');
+                                self.errorMessage=true;
+                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             })
                         }
                     });
@@ -416,18 +531,59 @@
         },
         //-------------------------------------------------------
 
-        //---控制是否可编辑---------------------------------------
-        Update(){//修改
-            if(this.isEdit==true){
-                this.isEdit=!this.isEdit;
+        //---确认删除--------------------------------------------
+        sureDel:function(){
+            let self = this;
+            self.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:self.$route.params.id}).then(function(res){
+                self.open('删除部门成功','el-icon-circle-check','successERP');
+                self.back();
+                self.dialogDelConfirm = false;
+            },function(res){
+                self.open('删除部门失败','el-icon-error','faildERP');
+                self.dialogDelConfirm = false;
+                self.errorMessage = true;
+                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+            }) 
+        },
+        //------------------------------------------------------
+
+        //---顶部删除按钮-----------------------------------------
+        delModify:function(){
+            let self = this;
+            self.dialogDelConfirm = true; 
+        },
+        //-------------------------------------------------------
+
+        //---修改返回提示-----------------------------------------
+        isBack(){
+            let self=this;
+            if(self.ifModify){
+                self.dialogUserConfirm=true;
+                // self.choseDoing='back'
+            }else{
+                self.back()
             }
-        },        
+        },
+        sureDoing:function(){
+            let self = this;
+            self.back();
+        },
+        //-------------------------------------------------------
+
+        //---控制是否可编辑---------------------------------------
+        // Update(){//修改
+        //     if(this.isEdit==true){
+        //         this.isEdit=!this.isEdit;
+        //     }
+        // },        
         Cancel(){
             let self = this;
-            if(self.isEdit==false){
-                self.isEdit=!self.isEdit;
+            // if(self.isEdit==false){
+                // self.isEdit=!self.isEdit;
                 self.loadData();
-            }
+                self.ifModify = false;
+                $('.tipsWrapper').css({display:'none'})
+            // }
         },
         //-------------------------------------------------------
 
@@ -484,6 +640,21 @@
                     $(this).removeClass('display_block')
                 }
             })
+        },
+        getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
         },
         //------------------------------------------------------
     }

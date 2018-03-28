@@ -2,39 +2,12 @@
  <div class="roleDetail">
      <el-row class="fixed">
          <el-col :span="24">
-            <button class="erp_bt bt_back" @click="back">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_back.png">
-                </div>
-                <span class="btDetail">返回</span>
-            </button>
-
-            <button class="erp_bt bt_save" @click="save">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_save.png">
-                </div>
-                <span class="btDetail">保存</span>
-            </button>
-
-            <button class="erp_bt bt_saveAdd">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_saveAdd.png">
-                </div>
-                <span class="btDetail">保存并新增</span>
-            </button>
-
-            <button class="erp_bt bt_add">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_add.png">
-                </div>
-                <span class="btDetail">复制</span>
-            </button>   
-
-            <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-            <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-            <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>
-            <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
-            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
+                <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> 
+                <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>  
+                <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+                <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+                <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
     </el-row>
@@ -477,7 +450,25 @@
             <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
         </div>                                  
     </el-col>
-</el-row>                                                                       
+</el-row>        
+<!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->                                                               
 </div>
 </template>
 
@@ -588,6 +579,11 @@ export default({
                 label: 'moduleName',
                 id:'id',
             },
+//----------按钮操作--------------
+        choseDoing:'',//存储点击按钮判断信息
+        dialogUserConfirm:false,//信息更改提示控制
+        update:false,
+      
 
         }
     },
@@ -618,6 +614,7 @@ export default({
       _this.loadOuTable();
       _this.loadFnTable();
       _this.fnLoadTree();
+      _this.getDefaulet();
     },
     watch: {
       search_ou(val) {
@@ -625,6 +622,13 @@ export default({
       }
     },
     methods:{
+        getDefaulet(){
+        let _this=this;
+        _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+        // 默认用户业务组织
+        _this.addData.ouId=res.result.id;
+        })
+    },
 // --------------------关联用户----------------------
         getUserAllData(){//获取关联用户数据
             let _this=this;
@@ -926,6 +930,51 @@ export default({
              this.$store.state.url='/role/roleList/default'
              this.$router.push({path:this.$store.state.url})
         },
+        //-------------按钮操作-----------
+        isBack(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='back'
+            }else{
+                _this.back()
+            }
+        },
+        isUpdate(){//判断是否修改过信息
+            this.update=true;
+        },
+        isCancel(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='Cancel'
+            }else{
+                _this.Cancel()
+            }
+        },
+        sureDoing(){
+            let _this=this;
+            if(_this.choseDoing=='back'){
+                _this.back()
+                _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='Cancel'){
+                _this.Cancel();
+                _this.dialogUserConfirm=false;
+            }
+        },
+        Cancel(){
+            let _this=this;
+            _this.clearData();
+        },
+        clearData(){
+            let _this=this;
+            _this.addData={
+                
+            }
+            _this.getDefaulet()
+            _this.validation.reset();
+        },
+        saveAdd(){},
         
         
     }
@@ -966,7 +1015,7 @@ export default({
     margin-bottom: 10px;
 }  
 .roleDetail .el-row:first-child{
-      padding:5px 0;
+      padding:7px 0;
 }
   .roleDetail .el-row{
      padding:15px 0;

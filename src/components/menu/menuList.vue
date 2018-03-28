@@ -192,7 +192,7 @@
                 <el-collapse-transition>
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
+                            <vue-scroll :ops="$store.state.option">
                                 <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
                                 <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
@@ -217,21 +217,6 @@
         data(){
             return {
             // 错误信息提示开始
-            option: {
-                vRail: {
-                    width: '5px',
-                    pos: 'right',
-                    background: "#9093994d",
-                },
-                vBar: {
-                    width: '5px',
-                    pos: 'right',
-                    background: '#9093994d',
-                },
-                hRail: {
-                    height: '0',
-                },
-            },
             detail_message_ifShow:false,
             errorMessage:false,
             // 错误信息提示结束
@@ -332,8 +317,14 @@
                     _this.componyTree=res
                     _this.treeLoading=false;
                     _this.loadIcon()
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                },function(res){
                     _this.treeLoading=false;
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                })
             },
             loadIcon(){
@@ -347,6 +338,14 @@
                             $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                         }
                     })
+                })
+            },
+             getHeight(){
+                $(".tree-container").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+                $(".border-left").css({
+                    minHeight:$('.bg-white').css('height')
                 })
             },
             handleCurrentChange(val) {//页码改变

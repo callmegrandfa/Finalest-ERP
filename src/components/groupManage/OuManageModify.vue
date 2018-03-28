@@ -406,7 +406,7 @@
                     <label><small>*</small>会计方案</label>
                     <el-select filterable  class="accCchemeId"
                     :disabled="isEdit" 
-                    @change="isUpdate"
+                    @change="getStartMonth"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.accCchemeId')}"
                     placeholder=""
@@ -524,20 +524,22 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor longWidth">
-                    <label>备注</label>
-                    <el-input
-                    :disabled="isEdit" 
-                    @change="isUpdate"
-                    @focus="showErrprTipsTextArea"
-                    :class="{redBorder : validation.hasError('addData.remark')}"
-                    class="remark1" 
-                    v-model="addData.remark"
-                    type="textarea"
-                    :autosize="{ minRows: 4, maxRows: 10}"
-                    >
-                    </el-input>
-                </div>
+                <el-col :span="24">
+                    <div class="bgcolor longWidth">
+                        <label>备注</label>
+                        <el-input
+                        :disabled="isEdit" 
+                        @change="isUpdate"
+                        @focus="showErrprTipsTextArea"
+                        :class="{redBorder : validation.hasError('addData.remark')}"
+                        class="remark1" 
+                        v-model="addData.remark"
+                        type="textarea"
+                        :autosize="{ minRows: 4, maxRows: 10}"
+                        >
+                        </el-input>
+                    </div>
+                </el-col>
             </el-col> 
         </el-row>
      </div>    
@@ -850,21 +852,23 @@
                                 v-model="basCompany.webUrl"
                                 ></el-input>
                             </div>
-                            <div class="bgcolor longWidth">
-                                <label>备注</label>
-                                <el-input
-                                :disabled="isEdit" 
-                                @change="isUpdate"
-                                
-                                @focus="showErrprTipsTextArea"
-                                :class="{redBorder : validation.hasError('basCompany.remark')}"
-                                class="remark2" 
-                                v-model="basCompany.remark"
-                                type="textarea"
-                                :autosize="{ minRows: 4, maxRows: 10}"
-                                placeholder="">
-                                </el-input>
-                            </div>
+                            <el-col :span="24">
+                                <div class="bgcolor longWidth">
+                                    <label>备注</label>
+                                    <el-input
+                                    :disabled="isEdit" 
+                                    @change="isUpdate"
+                                    
+                                    @focus="showErrprTipsTextArea"
+                                    :class="{redBorder : validation.hasError('basCompany.remark')}"
+                                    class="remark2" 
+                                    v-model="basCompany.remark"
+                                    type="textarea"
+                                    :autosize="{ minRows: 4, maxRows: 10}"
+                                    placeholder="">
+                                    </el-input>
+                                </div>
+                            </el-col>
                         </div>                                  
                     </el-col>
                     </div>
@@ -1074,7 +1078,7 @@
                 <el-collapse-transition>
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
+                            <vue-scroll :ops="$store.state.option">
                                 <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
                                 <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
@@ -1098,21 +1102,6 @@ export default({
     data() {
         return{
             // 错误信息提示开始
-            option: {
-                vRail: {
-                    width: '5px',
-                    pos: 'right',
-                    background: "#9093994d",
-                },
-                vBar: {
-                    width: '5px',
-                    pos: 'right',
-                    background: '#9093994d',
-                },
-                hRail: {
-                    height: '0',
-                },
-            },
             detail_message_ifShow:false,
             errorMessage:false,
             // 错误信息提示结束
@@ -1805,6 +1794,10 @@ export default({
                 companyStatus:'' ,//公司启用状态
                 regtime:''//公司成立时间
             };
+        },
+        getStartMonth(){
+            let _this=this;
+             _this.update=true;
         }
     }
 
@@ -1840,7 +1833,7 @@ export default({
       border-bottom:none;
   }
 .OuModifyForm>.el-row:first-child{
-      padding:5px 0;
+      padding:7px 0;
   }
  .OuModifyForm .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 10px;

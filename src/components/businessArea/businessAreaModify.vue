@@ -6,7 +6,7 @@
               <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
               <button @click="save" v-show="update_click" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
               <button @click="isCancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-              <button class="erp_bt bt_saveAdd" v-show="update_click"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+              <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
               <button class="erp_bt bt_auxiliary bt_width">
                 <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
                 <span class="btDetail">辅助功能</span>
@@ -21,7 +21,7 @@
                         <label><small>*</small>所属组织</label>
                         <el-select  
                         :disabled="isEdit" 
-                        @change="isUpdate"
+                        @change="changeOuId"
                         class="ouId" 
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
                         v-model="addData.ouId"
@@ -82,10 +82,10 @@
                             @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
-                            </el-option> -->
-                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
                             </el-option>
+                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option> -->
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -238,7 +238,7 @@
                 <el-collapse-transition>
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
+                            <vue-scroll :ops="$store.state.option">
                                 <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
                                 <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
@@ -262,21 +262,6 @@
     data(){
       return{
     // 错误信息提示开始
-        option: {
-            vRail: {
-                width: '5px',
-                pos: 'right',
-                background: "#9093994d",
-            },
-            vBar: {
-                width: '5px',
-                pos: 'right',
-                background: '#9093994d',
-            },
-            hRail: {
-                height: '0',
-            },
-        },
         detail_message_ifShow:false,
         errorMessage:false,
         // 错误信息提示结束
@@ -303,8 +288,8 @@
         selectTree_area:[
         ],
         selectProps_area: {
-            children: 'items',
-            label: 'areaName',
+            children: 'childItems',
+            label: 'name',
             id:'id'
         },
 
@@ -331,7 +316,7 @@
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
             languageId:[],//语种
-            area:[],//上级业务地区
+            // area:[],//上级业务地区
             ou:[],//组织
         },
         update:false,
@@ -405,10 +390,10 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
-            // 业务地区
-            _this.selectData.area=res.result.items;
-            })
+            // _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
+            // // 业务地区
+            // _this.selectData.area=res.result.items;
+            // })
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 所属组织
             _this.selectData.ou=res.result;
@@ -424,9 +409,23 @@
             //     _this.selectData.languageId=res.result.items;
             // })
         },
+        changeOuId(){
+            let _this=this;
+            _this.isUpdate();
+            _this.getAreaTree(_this.addData.ouId)
+        },
+        getAreaTree(OuId){
+            let _this=this;
+             _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:OuId})
+                .then(function(res){
+                    _this.selectTree_area=res.result;
+                    _this.loadIcon();
+                },function(res){
+                })
+        },
         getData(){
             let _this=this;
-             _this.$axios.gets('/api/services/app/AreaManagement/Get',{id:_this.$route.params.id})
+             _this.$axios.gets('/api/services/app/OpAreaManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
                 _this.addData={
                     "id": res.result.id,
@@ -447,10 +446,11 @@
                     createdTime:res.result.createdTime,
                     createdBy:res.result.createdBy,
                 }    
-                _this.item_ou.id=res.result.ouId;
+                 _this.item_ou.id=res.result.ouId;
                  _this.item_ou.ouFullname=res.result.ouFullname;
                 _this.item_area.id=res.result.areaParentId;
                 _this.item_area.areaName=res.result.areaParentId_AreaName;
+                _this.getAreaTree(res.result.ouId)
             },function(res){    
 
             })  
@@ -591,12 +591,12 @@
         loadTree(){
            let _this=this;
             //地区
-            _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
-            .then(function(res){
-                _this.selectTree_area=res.result;
-                _this.loadIcon();
-            },function(res){
-            })
+            // _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:_this.addData.OuId})
+            // .then(function(res){
+            //     _this.selectTree_area=res.result;
+            //     _this.loadIcon();
+            // },function(res){
+            // })
             //组织
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
@@ -635,14 +635,14 @@
             let _this=this;
             _this.item_area.id=data.id;
             _this.item_area.areaName=data.areaName;
-            // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
+            _this.$nextTick(function(){
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             })
+            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            //     if($(this).attr('date')==data.id){
+            //         $(this).click()
+            //     }
+            // })
         },
     }
 

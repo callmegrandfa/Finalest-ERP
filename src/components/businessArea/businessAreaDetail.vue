@@ -3,15 +3,12 @@
         <el-row  class="fixed">
             <el-col :span="24">
               <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
-              <!-- <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>     -->
               <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+              <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
               <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-              <button class="erp_bt bt_auxiliary bt_width">
-                <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                <span class="btDetail">辅助功能</span>
-                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-              </button>
+              <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
+              
             </el-col>
         </el-row>
         <el-row>
@@ -23,6 +20,7 @@
                         <el-select filterable  
                         placeholder=""
                         class="ouId" 
+                        @change="changeOuId"
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
                         v-model="addData.ouId"
                         >
@@ -79,10 +77,10 @@
                             @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
-                            </el-option> -->
-                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
                             </el-option>
+                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option> -->
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -189,6 +187,24 @@
                 </div>    
             </el-col>
       </el-row>
+      <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
       <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -205,7 +221,7 @@
                 <el-collapse-transition>
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
+                            <vue-scroll :ops="$store.state.option">
                                 <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
                                 <span class="dialog_font">{{response.details}}</span>
@@ -230,21 +246,6 @@
     data(){
       return{
          // 错误信息提示开始
-        option: {
-            vRail: {
-                width: '5px',
-                pos: 'right',
-                background: "#9093994d",
-            },
-            vBar: {
-                width: '5px',
-                pos: 'right',
-                background: '#9093994d',
-            },
-            hRail: {
-                height: '0',
-            },
-        },
         detail_message_ifShow:false,
         errorMessage:false,
         // 错误信息提示结束
@@ -270,8 +271,8 @@
         selectTree_area:[
         ],
         selectProps_area: {
-            children: 'items',
-            label: 'areaName',
+            children: 'childItems',
+            label: 'name',
             id:'id'
         },
 
@@ -296,13 +297,17 @@
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
             languageId:[],//语种
-            area:[],//上级业务地区
+            // area:[],//上级业务地区
             ou:[],//组织
         },
         response:{
             details:'',
             message:'',
         },
+//----------按钮操作--------------
+        choseDoing:'',//存储点击按钮判断信息
+        dialogUserConfirm:false,//信息更改提示控制
+        update:false,
       }
     },
      validators: {
@@ -362,6 +367,13 @@
             if (!value) return true;
             return data.areaName.indexOf(value) !== -1;
         },
+        getDefaulet(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+             // 默认用户业务组织
+            _this.addData.ouId=res.result.id;
+            })
+        },
         getSelectData(){
             let _this=this;
             // _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
@@ -372,18 +384,22 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
-            // 业务地区
-                _this.selectData.area=res.result.items;
-                if(_this.$route.params.id!="default"){
-                    _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
-                }
-            })
+            // _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
+            // // 业务地区
+            //     _this.selectData.area=res.result.items;
+            //     if(_this.$route.params.id!="default"){
+            //         _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
+            //     }
+            // })
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 所属组织
                 _this.selectData.ou=res.result;
                 if(_this.$route.params.id!="default"){
+                    _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
                     _this.addData.ouId=parseInt(_this.$route.params.id.split(',')[1]);
+                    _this.item_area.id=parseInt(_this.$route.params.id.split(',')[0]);
+                    _this.item_area.areaName=_this.$route.params.id.split(',')[2]
+                    _this.getAreaTree(_this.addData.ouId)
                 }
             })
             // _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
@@ -424,25 +440,40 @@
                 }
             })
         },
-      open(tittle,iconClass,className) {
-          this.$notify({
-          position: 'bottom-right',
-          iconClass:iconClass,
-          title: tittle,
-          showClose: false,
-          duration: 3000,
-          customClass:className
-          });
-      },
+        open(tittle,iconClass,className) {
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
+        changeOuId(){
+            let _this=this;
+            _this.isUpdate();
+            _this.getAreaTree(_this.addData.ouId)
+        },
+        getAreaTree(OuId){
+            let _this=this;
+                _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:OuId})
+                .then(function(res){
+                    _this.selectTree_area=res.result;
+                    console.log(res)
+                    _this.loadIcon();
+                },function(res){
+                })
+        },
       loadTree(){
             let _this=this;
             //地区
-            _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
-            .then(function(res){
-                _this.selectTree_area=res.result;
-                _this.loadIcon();
-            },function(res){
-            })
+            // _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
+            // .then(function(res){
+            //     _this.selectTree_area=res.result;
+            //     _this.loadIcon();
+            // },function(res){
+            // })
             //组织
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
@@ -510,15 +541,71 @@
         let _this=this;
         _this.item_area.id=data.id;
         _this.item_area.areaName=data.areaName;
-        // _this.$nextTick(function(){
-        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-        // })
-         $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-            if($(this).attr('date')==data.id){
-                $(this).click()
-            }
+        _this.$nextTick(function(){
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
         })
+        //  $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+        //     if($(this).attr('date')==data.id){
+        //         $(this).click()
+        //     }
+        // })
     },
+    //-------------按钮操作-----------
+        isBack(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='back'
+            }else{
+                _this.back()
+            }
+        },
+        isUpdate(){//判断是否修改过信息
+            this.update=true;
+        },
+        isCancel(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='Cancel'
+            }else{
+                _this.Cancel()
+            }
+        },
+        sureDoing(){
+            let _this=this;
+            if(_this.choseDoing=='back'){
+                _this.back()
+                _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='Cancel'){
+                _this.Cancel();
+                _this.dialogUserConfirm=false;
+            }
+        },
+        Cancel(){
+            let _this=this;
+            _this.clearData();
+        },
+        clearData(){
+            let _this=this;
+            _this.addData={
+                "groupId": 1,
+                "areaType": 1,
+                'ouId':'',
+                "areaParentId": '',
+                "areaCode": "",
+                "areaName": "",
+                "areaFullName": "string",
+                "areaFullPathId": "string",
+                "areaFullPathName": "string",
+                "manager": "",
+                "status":1,
+                "remark": ""
+                },
+            _this.getDefaulet()
+            _this.validation.reset();
+        },
+        saveAdd(){},
 }
 
 })

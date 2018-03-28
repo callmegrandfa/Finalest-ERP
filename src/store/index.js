@@ -4,6 +4,21 @@ Vue.use(vuex);
 
 export default new vuex.Store({
     state: {
+        option: {//滚动条样式
+            vRail: {
+                width: '5px',
+                pos: 'right',
+                background: "#9093994d",
+            },
+            vBar: {
+                width: '5px',
+                pos: 'right',
+                background: '#9093994d',
+            },
+            hRail: {
+                height: '0',
+            },
+        },
         slidbarHeight: 0,
         closeItem: [], //存储关闭页签
         Alive: true, //页面是否缓存
@@ -54,9 +69,9 @@ export default new vuex.Store({
             { name: 'menuList', url: '/menu/menuList/:id', parent: 'menu' } ,
             { name: 'menuModify', url: '/menu/menuModify/:id', parent: 'menu' } ,
 
-            // { name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: '', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
-            // { name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
-            // { name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
+            { name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: '', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
+            { name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
+            { name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
 
             { name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: '', default: '/commercial/commercialSpecification/:id' } , //商品规格
             { name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' } ,
@@ -94,6 +109,9 @@ export default new vuex.Store({
             { name: 'department', url: '/department/departmentList/:id', parent: '', default: '/department/departmentList/:id' } , //部门资料
             { name: 'departmentList', url: '/department/departmentList/:id', parent: 'department' } ,
 
+            { name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //部门资料
+            { name: 'shopList', url: '/shop/shopList/:id', parent: 'shop' } ,
+
             { name: 'dictionary', url: '/dictionary/dictionaryList/:id', parent: '', default: '/dictionary/dictionaryList/:id' } , //系统字典
             { name: 'dictionaryList', url: '/dictionary/dictionaryList/:id', parent: 'dictionary' } ,
 
@@ -111,16 +129,20 @@ export default new vuex.Store({
             { name: 'roleList', url: '/role/roleList/:id', parent: 'role' } ,
             { name: 'roleDetail', url: '/role/roleDetail/:id', parent: 'role' } ,
             { name: 'roleModify', url: '/role/roleModify/:id', parent: 'role' } ,
-
-            { name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' } , //职员资料
+            //职员资料
+            { name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' } , 
             { name: 'staffList', url: '/staff/staffList/:id', parent: 'staff' } ,
             { name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' } ,
-            
-            { name: 'count', url: '/count/countList/:id', parent: '' , default: '/count/countList/:id' }, //计量单位
-
-            { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaList/:id', parent: '', default: '/adminstrArea/adminstrAreaList/:id' }, //行政地区
+            //计量单位
+            { name: 'count', url: '/count/countList/:id', parent: '' , default: '/count/countList/:id' }, 
+            //行政地区
+            { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaList/:id', parent: '', default: '/adminstrArea/adminstrAreaList/:id' }, 
             { name: 'adminstrAreaDetail', url: '/adminstrArea/adminstrAreaDetail/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaList/:id' }, 
             { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaModify/:id', parent: '', default: '/adminstrArea/adminstrAreaModify/:id' },
+            //供应商分类
+            { name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: '', default: '/supplierClassify/supplierClassifyList/:id' },
+            { name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
+            { name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
         ],
         icon:[
             {code:'fa fa-address-book',label:"",},

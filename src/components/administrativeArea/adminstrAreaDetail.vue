@@ -9,6 +9,12 @@
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
+                <button  class="erp_bt bt_add">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
                 <button @click="save" class="erp_bt bt_save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
@@ -32,42 +38,338 @@
                 </button>
             </el-col>
         </el-row>
+
+        <!-- 表单验证的错误提示信息 -->
+	        <el-row>
+                <el-col>
+                    <div class="errTipsWrapper" name="areaParentId">
+                        <div class="errorTips" :class="{block : !validation.hasError('addData.areaParentId')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaParentId') }}</p>
+                        </div>
+                    </div>
+                    <div class="errTipsWrapper" name="areaCode">
+                        <div class="errorTips" :class="{block : !validation.hasError('addData.areaCode')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaCode') }}</p>
+                        </div>
+                    </div>
+                    <div class="errTipsWrapper" name="areaName">
+                        <div class="errorTips" :class="{block : !validation.hasError('addData.areaName')}">
+                            <p class="msgDetail">错误提示：{{ validation.firstError('addData.areaName') }}</p>
+                        </div>
+                    </div>
+                    <div class="errTipsWrapper" name="status">
+                      <div class="errorTips" :class="{block : !validation.hasError('addData.status')}">
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addData.status') }}</p>
+                      </div>
+                    </div>
+                </el-col>
+            </el-row>
+
+
         <!-- 表单 -->
         <el-row>
-            <el-col :span="24">
-                
-            </el-col>
+            <div class="admstr-form-wrapper pt15">
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>上级地区</label>
+                            <el-select filterable  
+                            :class="{redBorder : validation.hasError('addData.areaParentId')}"
+                            class="areaParentId" 
+                            placeholder=""
+                            v-model="addData.areaParentId">
+                                <!-- <el-input
+                                    placeholder="搜索..."
+                                    class="selectSearch"
+                                    v-model="search_area">
+                                </el-input> -->
+                                <el-tree
+                                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                    :highlight-current="true"
+                                    :data="adminAreaTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    default-expand-all
+                                    ref="tree"
+                                    :expand-on-click-node="false"
+                                    @node-click="nodeClick"
+                                    >
+                                </el-tree>
+                                <el-option v-show="false" v-for="item in adminAreaTree" :key="item.id" :label="item.areaName" :value="item.id" >
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </el-col>                 
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>地区编码</label>
+                            <el-input 
+                            class="areaCode" 
+                            :class="{redBorder : validation.hasError('addData.areaCode')}"
+                            v-model="addData.areaCode"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>地区名称</label>
+                            <el-input 
+                            class="areaName" 
+                            :class="{redBorder : validation.hasError('addData.areaName')}"
+                            v-model="addData.areaName"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                <!-- <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                        <label><small>*</small>负责人</label>
+                            <el-input 
+                            class="areaCode" 
+                            v-model="addData.areaCode"></el-input>
+                        </div>
+                    </div>
+                </el-col> -->
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                        <label>备注</label>
+                            <el-input
+                            class="remark" 
+                            v-model="addData.remark"
+                            type="textarea"
+                            :autosize="{ minRows: 4, maxRows: 4}"
+                            >
+                            </el-input>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small>*</small>状态</label>
+                            <el-select filterable  
+                            class="status" 
+                            placeholder=""
+                            :class="{redBorder : validation.hasError('addData.status')}"
+                            v-model="addData.status">
+                                <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label>创建人</label>
+                            <el-input 
+                            disabled
+                            ></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label>创建时间</label>
+                            <el-date-picker
+                            type="date"
+                            disabled
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                </el-col>
+               
+            </div>
         </el-row>
-        
     </div>
 </template>
 
 <script>
     export default {
-        name:'adminstrAreaDetail',
-        data(){
-            return {
-                
-
-
-
-            }
+    name: "adminstrAreaDetail",
+    data() {
+        return {
+            addData:{// 新增数据列表
+                "groupId": 0,
+                "levelNo": 0,
+                "areaParentId": '',
+                "areaCode": "",
+                "areaName": "",
+                "areaFullName": "string",
+                "areaFullPathId": "string",
+                "areaFullPathName": "string",
+                "isSystem": true,
+                "status": '',
+                "remark": "",
+            },
+            selectData:{
+                Status001:[],//启用状态
+            },
+            adminAreaTree:[],
+            defaultProps: {
+                        children: 'childItems',
+                        label: 'areaName',
+                        id:'id'
+                    },
+        };
+    },
+    created() {
+        this.getSelectData();
+        this.loadTree();
+        //   this.reset();
+    },
+    validators: {
+                        'addData.areaParentId': function (value) {//上级地区
+                            return this.Validator.value(value).required().maxLength(50)
+                        },
+                        'addData.areaCode': function (value) {//地区编码
+                            return this.Validator.value(value).required().maxLength(50)
+                        },
+                        'addData.areaName': function (value) {//地区名称
+                            return this.Validator.value(value).required().maxLength(50)
+                        },
+                        'addData.status': function (value) {//状态
+                            return this.Validator.value(value).required().integer();
+                        },
+                    },
+    methods: {
+        // 返回
+        goback() {
+            this.$store.state.url = "/adminstrArea/adminstrAreaList/default";
+            this.$router.push({ path: this.$store.state.url });
         },
-        created(){
+        // 成功的提示框
+                open(tittle,iconClass,className) {//提示框
+                    this.$notify({
+                    position: 'bottom-right',
+                    iconClass:iconClass,
+                    title: tittle,
+                    showClose: false,
+                    duration: 3000,
+                    customClass:className
+                    });
+                },
+        // 保存
+        save() {
+            let _this=this;
+            _this.$validate().then(
+                function (success) { 
+                    if (success){
+                        _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData)
+                            .then(
+                                rsp=>{
+                                            _this.open('保存成功','el-icon-circle-check','successERP');
+                                        },
+                                rsp=>{   
+                                            _this.open('保存失败','el-icon-error','faildERP');
+                                    }
+                            )
 
+                    }
+                }
+            )
+        
         },
-        methods:{
-            // 返回
-            goback(){},
-            // 保存
-            save(){},
-            // 保存并新增
-            saveAdd(){},
-
+        // 保存并新增
+        saveAdd() {
+            let _this=this;
+                    _this.$validate().then(
+                        function (success) {
+                            if (success) {
+                                _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData).then(
+                                                rsp=>{
+                                                    // console.log(rsp);
+                                                    _this.reset();
+                                                    _this.open('保存成功','el-icon-circle-check','successERP');
+                                                },
+                                                rsp=>{
+                                                    _this.open('保存失败','el-icon-error','faildERP');
+                                                }
+                                )
+                            }
+                        }
+                    );
         },
-    }
+        // 获取树形节点
+        loadTree(){
+            let _this=this;
+            // _this.treeLoading=true;
+            _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
+                .then(function(res){
+            // console.log(res.result);
+                    _this.adminAreaTree=res.result;
+                    _this.loadIcon();
+                    //  _this.treeLoading=false;
+                        },function(res){
+                            // _this.treeLoading=false;
+                        })
+                    }, 
+            // 文件夹图标加载
+                        loadIcon(){
+                            let _this=this;
+                            _this.$nextTick(function () {
+                                $('.preNode').remove();   
+                                $('.el-tree-node__label').each(function(){
+                                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                                    }else{
+                                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                                    }
+                                })
+                            })
+                        },
+            // 节点被点击时的回调
+                nodeClick(data,node,self){
+                    let _this=this;
+                    _this.addData.areaParentId=data.id;
+                    _this.addData.areaParentId_AreaName=data.areaName;
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                        if($(this).attr('date')==data.id){
+                            $(this).click()
+                        }
+                    })
+                },
+            // 获取下拉框数据
+            getSelectData(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+                // 启用状态
+                _this.selectData.Status001=res.result;
+                })
+            },
+        },
+        // 重新验证并设置值
+        reset(){
+            console.log("123zt");
+            this.addData.areaParentId='';
+            this.addData.areaCode='';
+            this.addData.areaName='';
+            this.addData.status='';
+            this.addData.remark=''; 
+            this.validation.reset();               
+        },
+    };
 </script>
 
-<style scoped>
-
+ <style scoped>
+    .pt15{
+        padding-top: 15px;
+    }
+    .admstr-wrapper{
+        background-color: #fff;
+    }
+    .admstr-wrapper .el-row:first-child{
+    padding: 7px 0;
+    border-bottom: 1px solid #e4e4e4;
+    }
+    .admstr-wrapper .el-row:last-child{
+        padding-bottom: 15px;
+    }
 </style>

@@ -183,11 +183,17 @@ const commodityClassHeading = () =>
     import ('../components/commodityManagement/commodityClassHeading')
 const commodityProperty = () =>//商品属性
     import ('../components/commodityManagement/commodityProperty')
-// const commodityPropertyList = () =>//商品属性列表
-//     import ('../components/commodityManagement/commodityPropertyList')
+const commodityPropertyList = () =>//商品属性列表
+    import ('../components/commodityManagement/commodityPropertyList')
 const commodityPropertyDetails = () =>//商品属性详情
     import ('../components/commodityManagement/commodityPropertyDetails') 
-const staff = () =>
+
+   
+
+const specificationOfGoods= ()=>//商品规格
+    import ('../components/commodityManagement/specificationOfGoods')  
+ // 职员资料
+    const staff = () =>
     import ('../components/staffInfo/staff')
 const staffList = () =>
     import ('../components/staffInfo/staffList')
@@ -203,6 +209,11 @@ const adminstrArea = () => import('../components/administrativeArea/adminstrArea
 const adminstrAreaList = () => import('../components/administrativeArea/adminstrAreaList')
 const adminstrAreaDetail = () => import('../components/administrativeArea/adminstrAreaDetail')
 const adminstrAreaModify = () => import('../components/administrativeArea/adminstrAreaModify')
+// 供应商分类
+const supplierClassify = () => import('../components/supplierClassify/supplierClassify')
+const supplierClassifyList = () => import('../components/supplierClassify/supplierClassifyList')
+const supplierClassifyDetail = () => import('../components/supplierClassify/supplierClassifyDetail')
+const supplierClassifyModify = () => import('../components/supplierClassify/supplierClassifyModify')
     
 
 let redirectRouter = function(routerName) { //重定向
@@ -462,6 +473,7 @@ const routes = [
             // { path: '/userInfoDetail/:id', component: userInfoDetail,name:'userInfoDetail' },
             // { path: '/userList/:id', component: userList,name:'userList' },
             // { path: '/userDataList/:id', component: userDataList,name:'userDataList' },
+            { path: '/specificationOfGoods/:id', component: specificationOfGoods, name: 'specificationOfGoods' },
 
             { path: '/tenant', component: tenant,name:'tenant',redirect: function(){//租户管理
               let name='tenant';
@@ -513,19 +525,19 @@ const routes = [
                     { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
                 ]
             },
-            // {
-            //     path: '/commodityProperty',
-            //     component: commodityProperty,
-            //     name: 'commodityProperty',
-            //     redirect: function() { //商品属性
-            //         return redirectRouter('commodityProperty')
-            //     },
-            //     children: [
-            //         { path: '/commodityProperty/commodityPropertyList/:id', component: commodityPropertyList, name: 'commodityPropertyList' }, //商品类目
-            //         // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
-            //         { path: '/commodityProperty/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
-            //     ]
-            // },
+            {
+                path: '/commodityProperty',
+                component: commodityProperty,
+                name: 'commodityProperty',
+                redirect: function() { //商品属性
+                    return redirectRouter('commodityProperty')
+                },
+                children: [
+                    { path: '/commodityProperty/commodityPropertyList/:id', component: commodityPropertyList, name: 'commodityPropertyList' }, //商品属性
+                    // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/commodityProperty/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
+                ]
+            },
             {
                 path: '/dictionary',
                 component: dictionary,
@@ -599,6 +611,20 @@ const routes = [
                     { path: '/adminstrArea/adminstrAreaList/:id', component: adminstrAreaList, name:'adminstrAreaList'},
                     { path: '/adminstrArea/adminstrAreaDetail/:id', component: adminstrAreaDetail, name:'adminstrAreaDetail'},
                     { path: '/adminstrArea/adminstrAreaModify/:id', component: adminstrAreaModify, name:'adminstrAreaModify'},
+                ],
+
+            },
+            {
+                path: '/supplierClassify',
+                component: supplierClassify,
+                name: 'supplierClassify',
+                redirect: function () { //供应商分类
+                    return redirectRouter('supplierClassify')
+                },
+                children: [
+                    { path: '/supplierClassify/supplierClassifyList/:id', component: supplierClassifyList, name: 'supplierClassifyList' },
+                    { path: '/supplierClassify/supplierClassifyDetail/:id', component: supplierClassifyDetail, name: 'supplierClassifyDetail' },
+                    { path: '/supplierClassify/supplierClassifyModify/:id', component: supplierClassifyModify, name: 'supplierClassifyModify' },
                 ],
 
             },

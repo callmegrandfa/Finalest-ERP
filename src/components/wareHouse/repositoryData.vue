@@ -1,7 +1,7 @@
 <template>
   <div class="res-detail">
         <el-row class="pt5 pb5 bb1 fixed bg-white">
-            <button class="erp_bt bt_back" @click="back">
+            <button class="erp_bt bt_back" @click="isBack">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_back.png">
                 </div>
@@ -174,6 +174,7 @@
                                        :class="{redBorder : validation.hasError('createRepositoryParams.ouId')}"
                                        class="ouId"
                                        @focus="showErrprTipsSelect"
+                                       @change='Modify'
                                        placeholder="">
                                 <el-input placeholder="搜索..."
                                           class="selectSearch"
@@ -200,6 +201,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockCode"
                                       class="stockCode"
+                                      @change='Modify'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockCode')}"></el-input>
                         </div>
@@ -209,6 +211,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockName"
                                       class="stockName"
+                                      @change='Modify'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockName')}"></el-input>
                         </div>
@@ -218,6 +221,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockFullName"
                                       class="stockFullName"
+                                      @change='Modify'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockFullName')}"></el-input>
                         </div>
@@ -227,6 +231,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.mnemonic"
                                       class="mnemonic"
+                                      @change='Modify'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.mnemonic')}"></el-input>
                         </div>
@@ -235,6 +240,7 @@
                             <label><small>*</small>仓库类型</label>
                             <el-select v-model="createRepositoryParams.stockTypeId" 
                                        placeholder=""
+                                       @change='Modify'
                                        @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.stockTypeId')}"
                                        class="stockTypeId">
@@ -250,6 +256,7 @@
                             <label>业务地区</label>
                             <el-select v-model="createRepositoryParams.opAreaId" 
                                        placeholder=""
+                                       @change='Modify'
                                        @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.opAreaId')}"
                                        class="opAreaId">
@@ -277,6 +284,7 @@
                             <label>行政地区</label>
                             <el-select v-model="createRepositoryParams.adAreaId" 
                                        placeholder=""
+                                       @change='Modify'
                                        @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.adAreaId')}"
                                        class="adAreaId">
@@ -305,6 +313,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.manager"
                                       class="manager"
+                                      @change='Modify'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.manager')}"></el-input>
                         </div>
@@ -314,6 +323,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.phone"
                                       class="phone"
+                                      @change='Modify'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.phone')}"></el-input>
                         </div>
@@ -323,6 +333,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.email"
                                       class="email"
+                                      @change='Modify'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.email')}"></el-input>
                         </div>
@@ -331,6 +342,7 @@
                             <label>传真</label>
                             <el-input v-model="createRepositoryParams.fax"
                                       placeholder="" 
+                                      @change='Modify'
                                       class="fax"
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.fax')}"></el-input>
@@ -340,6 +352,7 @@
                             <label>地址</label>
                             <el-input v-model="createRepositoryParams.stockAddress"
                                       placeholder="" 
+                                      @change='Modify'
                                       class="stockAddress"
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockAddress')}"></el-input>
@@ -350,6 +363,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.remark"
                                       class="remark"
+                                      @change='Modify'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.remark')}"></el-input>
                         </div>
@@ -358,6 +372,7 @@
                             <label><small>*</small>状态</label>
                             <el-select v-model="createRepositoryParams.status" 
                                        placeholder=""
+                                       @change='Modify'
                                        @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('createRepositoryParams.status')}"
                                        class="status">
@@ -513,7 +528,76 @@
         </el-col>
     </el-row>  
 
+    <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            <!--  -->
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
 
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
   </div>
 </template>
 
@@ -628,7 +712,7 @@
                 });
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    // console.log(res);
+                    console.log(res);
                     self.statusAr = res.result;
                 },function(res){
                     console.log('err'+res)
@@ -665,24 +749,6 @@
                             console.log(res);
                             self.open('创建仓库成功','el-icon-circle-check','successERP');
                         })
-                        self.createRepositoryParams = {
-                            "ouId": '1',
-                            "stockCode": "",
-                            "stockName": "",
-                            "stockFullName": "",
-                            "opAreaId": '',
-                            "adAreaId": '',
-                            "stockTypeId": '',
-                            "invTypeId": 1,
-                            "fax": "",
-                            "email":  '',
-                            "status": '',
-                            "manager": "",
-                            "mnemonic": "",
-                            "stockAddress": "",
-                            "phone": "",
-                            "remark": ""
-                        } 
                         self.addList = [];
                         self.rows = [];
                     }
@@ -703,6 +769,10 @@
                             self.open('创建仓库成功','el-icon-circle-check','successERP');
                             self.createReAddress(res.result);
                             self.goModify(res.result)
+                        },function(res){
+                            self.open('创建失败','el-icon-error','faildERP');
+                            self.errorMessage=true;
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         })
                     }
                 })
@@ -714,21 +784,17 @@
                     for(let i in self.addList){
                         self.addList[i].stockId = id;
                     }
-                    // for(let i in self.addList){
-                    //     self.addList[i].stockId = id;
-                    //     console.log(self.addList)
-                    //     this.$axios.posts('api/services/app/StockAddressManagement/Create',self.addList[i]).then(function(res){
-                    //         // console.log(res);
-                    //         self.open('创建仓库地址成功','el-icon-circle-check','successERP');
-                    //     })
-                    // }
-
+                    
                     this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
                         console.log(res);
                         self.open('创建仓库地址成功','el-icon-circle-check','successERP');
                         self.addList = [];
                         // self.loadData();
                         // self.clearData();
+                    },function(res){
+                        self.open('创建失败','el-icon-error','faildERP');
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }
                 
@@ -833,6 +899,35 @@
                     });
                 }
             },
+            //----------------------------------------------------
+
+            //---确认删除--------------------------------------------
+            sureDel:function(){
+                let self = this;
+                console.log(666)
+            },
+            //-------------------------------------------------------
+
+            //---修改返回提示-----------------------------------------
+            isBack(){
+                let self=this;
+                if(self.ifModify){
+                    self.dialogUserConfirm=true;
+                    // self.choseDoing='back'
+                }else{
+                    self.back()
+                }
+            },
+            sureDoing:function(){
+                let self = this;
+                self.back();
+            },
+            Modify:function(){//判断是否修改过
+                let self = this;
+                self.ifModify = true;
+            },
+            //-------------------------------------------------------
+
             //---open---back----清除--------------------------------------
             open(tittle,iconClass,className) {
                 this.$notify({
@@ -961,6 +1056,21 @@
                 // }
                 // })
             },
+            getErrorMessage(message,details,validationErrors){
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
+            },
             //-------------------------------------------------------------
             
 
@@ -981,6 +1091,7 @@
                 },
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制启用状态
+                ifModify:false,
                 // ifSave:-1,//保存按钮（是否可见）
                 queryOuId:{//ouManagement的搜索Id
                     id:'2'
@@ -1048,12 +1159,12 @@
                     "stockCode": "",
                     "stockName": "",
                     "stockFullName": "",
-                    "opAreaId": '',
-                    "adAreaId": '1',
-                    "stockTypeId": '',
+                    "opAreaId": 1,
+                    "adAreaId": 1,
+                    "stockTypeId": 0,
                     "fax": "",
                     "email":  '',
-                    "status": '',
+                    "status": 0,
                     "mnemonic": "",
                     "stockAddress": "",
                     "manager": "",
@@ -1075,6 +1186,41 @@
                 rows:[],//增行的数组
                 addList:[],//新增上传的数组
                 multipleSelection:[],//多选的数组
+
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //--------------------  
+
+                //---信息修改提示框------------
+                dialogUserConfirm:false,//信息更改提示控制
+                //----------------------------
+                //---错误提示框----------------
+                option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                errorMessage:false,
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
             }
         },
     }
