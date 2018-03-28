@@ -169,9 +169,10 @@ export default {
                     {name:'商品档案',address:'Record'},
                 ]
             },{
-                name:'职员资料',
+                name:'基础资料',
                 thirdInfo:[
-                    {name:'职员资料',address:'staff'}
+                    {name:'职员资料',address:'staff'},
+                    {name:'供应商分类',address:'supplierClassify'}
                 ]
             },{
                 name:'商品管理',

@@ -14,11 +14,10 @@
                         </el-autocomplete>
                     </el-col>
                     <el-col :span='24' class="tree-container" >
-                        <!-- <el-tree
+                        <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                        v-loading="treeLoading" 
                         :highlight-current="true"
-                        :data="componyTree"
+                        :data="adminAreaTree"
                         :props="defaultProps"
                         node-key="id"
                         default-expand-all
@@ -27,7 +26,7 @@
                         :filter-node-method="filterNode"
                         @node-click="nodeClick"
                         >
-                        </el-tree> -->
+                        </el-tree>
                     </el-col>   
             </el-col>
             <!-- 右边数据列表 -->
@@ -40,7 +39,7 @@
                         </div>
                         <span class="btDetail">新增</span>
                     </button>
-                    <button @click="delSelected" class="erp_bt bt_del">
+                    <button @click="confirmDelSelected" class="erp_bt bt_del" :disabled="isTrue">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div><span class="btDetail">删除</span>
@@ -171,14 +170,26 @@
         name:'adminstrAreaList',
         data(){
             return{
+                treeLoading:false,// 树形控件的动态加载效果
+                tableLoading:false,// 表格的动态加载效果
                 searchKey:'',
                 SkipCount:0,
                 MaxResultCount:10,                
-                pageSize:10,
-                totalCount:0,
-                pageIndex:0,
+                pageSize:10, //每页有多少条数据
+                totalCount:0,//总共有多少条数据
+                totalPage:0,//总页数
+                pageIndex:1,//分页的当前页码
                 searchLeft:'',
                 tableData:[],
+                adminAreaTree:[],
+                defaultProps: {
+                    children: 'childItems',
+                    label: 'areaName',
+                    id:'id'
+                },
+                selectedIds: {}, //复选框选中数据
+                restaurants:[],
+                isTrue:true,//批量删除键能否点击
                 // tableData:{
                 //     areaCode:'',
                 //     areaName :'',
@@ -191,26 +202,113 @@
             }
             
         },
+        watch: {
+            searchLeft(val) {
+                this.$refs.tree.filter(val);
+            }
+        },
         created(){
              this.getDataList();
+             this.loadTree();
         },
         methods:{
+                // 提示信息
+                open(tittle, iconClass, className) {
+                    this.$notify({
+                        position: "bottom-right",
+                        iconClass: iconClass,
+                        title: tittle,
+                        showClose: false,
+                        duration: 3000,
+                        customClass: className
+                    });
+                },
             // 获取所有列表数据
             getDataList(){
                 let _this=this;
-                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{SearckKey:_this.searchKey,SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount,}).then(
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{nodeId:0,SearckKey:_this.searchKey,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize}).then(
                     rsp=>{
-                        console.log(rsp.result);
+                        // console.log(rsp.result);
                         _this.tableData=rsp.result;
-                        
+                        _this.totalCount=rsp.result.totalCount;
+                        _this.totalPage=Math.ceil(rsp.result.totalCount/_this.oneItem);
                     }
                 )
                 
             },
             // ----------树形控件的处理函数开始----------
-            handleSelectionChange(){},
-            nodeClick(){},
-            filterNode(){},
+                // 获取树形节点
+                loadTree(){
+                    let _this=this;
+                    _this.treeLoading=true;
+                    _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
+                    .then(function(res){
+                            // console.log(res.result);
+                            _this.adminAreaTree=res.result;
+                            _this.loadIcon();
+                            _this.treeLoading=false;
+                    },function(res){
+                        _this.treeLoading=false;
+                    })
+                },
+                // 复选框中选中的数据(用于做批量删除)
+                handleSelectionChange: function(arr1) {
+                    let _this = this;
+                    _this.selectedIds.ids = [];
+                    for (let val of arr1) {
+                        _this.selectedIds.ids.push(val.id);
+                    }
+                    _this.isTrue=false;
+                    // console.log(_this.selectedIds);
+                },
+                // 节点被点击时的回调
+                nodeClick(data){
+                    // console.log(data);
+                    let _this=this;
+                    _this.tableLoading=true;
+                    _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{nodeId:data.id,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize})
+                    .then(function(res){
+                        _this.tableData=res.result;
+                        _this.totalCount=res.result.totalCount;
+                        _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                        _this.tableLoading=false;
+                        },function(res){
+                        _this.tableLoading=false;
+                    })
+                },
+                // 在搜索框输入关键字过滤节点
+                filterNode(value, data) {
+                if (!value) return true;
+                 return data.areaName.indexOf(value) !== -1;
+                },
+                // 文件夹图标加载
+                loadIcon(){
+                    let _this=this;
+                    _this.$nextTick(function () {
+                        $('.preNode').remove();   
+                        $('.el-tree-node__label').each(function(){
+                            if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                                $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                            }else{
+                                $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                            }
+                        })
+                    })
+                },
+                querySearchAsync(queryString, cb) {
+                var restaurants = this.restaurants;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                cb(results);
+                }, 100 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (state) => {
+                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
             // ----------树形控件的处理函数结束----------
             // ----------分页器的处理函数结束----------
             handleCurrentChange(){},
@@ -224,14 +322,82 @@
                 this.$store.state.url = "/adminstrArea/adminstrAreaDetail/default";
                 this.$router.push({ path: this.$store.state.url });
             },
-            // 按钮删除---删除选择项
-            delSelected(){},
+            // 按钮删除---删除选择项(批量删除)
+            delSelected: function() {
+                    let _this = this;
+                    this.$axios
+                        .posts(
+                        "/api/services/app/AdAreaManagement/BatchDelete",
+                        _this.selectedIds
+                        )
+                        .then(res => {
+                        if (!res.success) {
+                            _this.open("删除失败", "el-icon-error", "faildERP");
+                        }
+                        _this.open("删除成功", "el-icon-circle-check", "successERP");
+                        _this.getDataList();
+                        });
+                },
+            // 确认是否按钮删除(删除选中的----批量删除)
+            confirmDelSelected: function() {
+                let _this = this;
+                _this
+                    .$confirm("确定删除?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning",
+                    center: true
+                    })
+                    .then(() => {
+                    //确认
+                    _this.delSelected();
+                    })
+                    .catch(() => {
+                    //取消
+                    });
+            },
             // 行内删除
-            delRow(){},
+            delRow(row){
+                this.$axios
+                .deletes("/api/services/app/AdAreaManagement/Delete", { id: row.id })
+                .then(rsp => {
+               this.getDataList();
+                this.open("删除成功", "el-icon-circle-check", "successERP");
+                });
+            },
+            // 确认是否删除本条数据
+            confirmDelThis: function(row) {
+                let _this = this;
+                _this
+                    .$confirm("确定删除?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning",
+                    center: true
+                    })
+                    .then(() => {
+                    //确认
+                    _this.delRow(row);
+                    })
+                    .catch(() => {
+                    //取消
+                    _this.$message({
+                        type: "info",
+                        message: "已取消删除"
+                    });
+                    });
+            },
+            // （行内按钮查看）查看详情
+            modify: function(row) {
+                // console.log(row.id)
+                this.$store.state.url = "/adminstrArea/adminstrAreaModify/" + row.id
+                this.$router.push({ path: this.$store.state.url })
+            },
+            
             //右边搜索框
             rightSearch(){},
-            
-            tableLoading(){},
+           
+
 
             querySearchAsync(){},
 
