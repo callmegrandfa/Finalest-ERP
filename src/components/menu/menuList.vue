@@ -317,8 +317,14 @@
                     _this.componyTree=res
                     _this.treeLoading=false;
                     _this.loadIcon()
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                },function(res){
                     _this.treeLoading=false;
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                })
             },
             loadIcon(){
@@ -332,6 +338,14 @@
                             $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                         }
                     })
+                })
+            },
+             getHeight(){
+                $(".tree-container").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+                $(".border-left").css({
+                    minHeight:$('.bg-white').css('height')
                 })
             },
             handleCurrentChange(val) {//页码改变

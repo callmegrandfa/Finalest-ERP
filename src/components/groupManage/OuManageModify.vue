@@ -1833,7 +1833,7 @@ export default({
       border-bottom:none;
   }
 .OuModifyForm>.el-row:first-child{
-      padding:5px 0;
+      padding:7px 0;
   }
  .OuModifyForm .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 10px;

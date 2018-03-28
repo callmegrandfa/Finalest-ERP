@@ -2,10 +2,12 @@
     <div class="userDetail">
         <el-row  class="fixed">
             <el-col :span="24">
-              <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->   
-              <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+                <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> 
+                <button plain @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>  
+                <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+                <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+                <!-- <button @click="isNewAdd" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                <button @click="isDelete" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
             </el-col>
         </el-row>
         <el-row>
@@ -70,6 +72,7 @@
                         <small>*</small>用户编码</label>
                         <el-input 
                         class="userCode" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.userCode')}" 
                         v-model="addData.userCode" 
                         placeholder=""></el-input>
@@ -83,6 +86,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>用户名称</label>
                     <el-input 
+                    @change="isUpdate"
                     class="displayName" 
                     :class="{redBorder : validation.hasError('addData.displayName')}" 
                     v-model="addData.displayName"  
@@ -97,6 +101,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>手机号码</label>
                     <el-input 
+                    @change="isUpdate"
                     class="phoneNumber" 
                     :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
                     v-model="addData.phoneNumber"  
@@ -111,6 +116,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label>邮箱</label>
                     <el-input 
+                    @change="isUpdate"
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
                     v-model="addData.email"  
@@ -127,6 +133,7 @@
                     <el-select filterable  
                     class="userGroupId" 
                     placeholder=""
+                    @change="isUpdate"
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
                     v-model="addData.userGroupId">
                         <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
@@ -144,6 +151,7 @@
                     <el-select 
                     class="ouId" 
                     placeholder=""
+                    @change="isUpdate"
                     :class="{redBorder : validation.hasError('addData.ouId')}"
                     v-model="addData.ouId">
                         <!-- <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
@@ -182,6 +190,7 @@
                     <el-select filterable  
                     class="userType" 
                     placeholder=""
+                    @change="isUpdate"
                     :class="{redBorder : validation.hasError('addData.userType')}"
                     v-model="addData.userType">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
@@ -198,6 +207,7 @@
                     <label><small>*</small>语种</label>
                     <el-select filterable  
                     class="languageId" 
+                    @change="isUpdate"
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
                     v-model="addData.languageId">
@@ -215,6 +225,7 @@
                         <label><small>*</small>有效时间</label>
                         <div class="rangeDate">
                             <el-date-picker
+                            @change="isUpdate"
                             v-model="dateRange"
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
@@ -239,6 +250,7 @@
                         <label>状态</label>
                         <el-select filterable  
                         class="status" 
+                        @change="isUpdate"
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"
                         v-model="addData.status">
@@ -266,6 +278,7 @@
                         <label>备注</label>
                         <el-input
                         class="remark" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.remark')}"
                         v-model="addData.remark"
                         type="textarea"
@@ -458,6 +471,24 @@
             <button class="transfer_footer_btn" @click="cancelPush">取 消</button>
         </span>
     </el-dialog>
+     <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
       <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -495,7 +526,7 @@
   export default({
     data(){
       return{
-          timeout:null,
+        timeout:null,
          // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -588,6 +619,11 @@
             message:'',
             validationErrors:[],
         },
+
+//----------按钮操作--------------
+        choseDoing:'',//存储点击按钮判断信息
+        dialogUserConfirm:false,//信息更改提示控制
+        update:false,
       }
     },
      validators: {
@@ -787,8 +823,6 @@
                     _this.addData.roleCodes=roles;
                     _this.addData.effectiveStart=_this.dateRange[0];
                     _this.addData.effectiveEnd=_this.dateRange[1];
-                    // _this.addData.userType=parseInt(_this.addData.userType);
-                    // _this.addData.status=parseInt(_this.addData.status);
                     _this.$axios.posts('/api/services/app/User/Create',_this.addData)
                     .then(function(res){
                         _this.addData.id=res.result.id;
@@ -1045,6 +1079,90 @@
         //     cb(results);
         //     }, 100 * Math.random());
         // },
+//-------------按钮操作-----------
+        isBack(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='back'
+            }else{
+                _this.back()
+            }
+        },
+        isUpdate(){//判断是否修改过信息
+            this.update=true;
+        },
+        isCancel(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='Cancel'
+            }else{
+                _this.Cancel()
+            }
+        },
+        sureDoing(){
+            let _this=this;
+            if(_this.choseDoing=='back'){
+                _this.back()
+                _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='Cancel'){
+                _this.Cancel();
+                _this.dialogUserConfirm=false;
+            }
+        },
+        Cancel(){
+            let _this=this;
+            _this.clearData();
+        },
+        clearData(){
+            let _this=this;
+            _this.addData={
+                "userCode": "",
+                "displayName": "",
+                "phoneNumber": "",
+                "email": "",
+                "userGroupId": "",
+                "ouId": "",
+                "status": 1,
+                "userType": "",
+                "languageId": "",
+                "isReg": false,
+                "remark": "",
+                "roleCodes": []
+            }
+            _this.addData.effectiveStart='';
+            _this.addData.effectiveEnd='';
+            _this.dateRange=[];
+            _this.getDefaulet()
+            _this.validation.reset();
+        },
+        saveAdd(){
+            let _this=this;
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    let roles=[];
+                    $.each(_this.checkedTable,function(index,value){
+                        roles.push(value.roleCode)
+                    })
+                    _this.addData.roleCodes=roles;
+                    _this.addData.effectiveStart=_this.dateRange[0];
+                    _this.addData.effectiveEnd=_this.dateRange[1];
+                    _this.$axios.posts('/api/services/app/User/Create',_this.addData)
+                    .then(function(res){
+                        _this.addData.id=res.result.id;
+                        _this.$store.state.url='/user/userDetail/default'
+                        _this.$router.push({path:_this.$store.state.url})
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        _this.errorMessage=true;
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });
+        },
     }
 
 })
