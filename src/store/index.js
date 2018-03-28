@@ -108,6 +108,9 @@ export default new vuex.Store({
             { name: 'department', url: '/department/departmentList/:id', parent: '', default: '/department/departmentList/:id' } , //部门资料
             { name: 'departmentList', url: '/department/departmentList/:id', parent: 'department' } ,
 
+            { name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //部门资料
+            { name: 'shopList', url: '/shop/shopList/:id', parent: 'shop' } ,
+
             { name: 'dictionary', url: '/dictionary/dictionaryList/:id', parent: '', default: '/dictionary/dictionaryList/:id' } , //系统字典
             { name: 'dictionaryList', url: '/dictionary/dictionaryList/:id', parent: 'dictionary' } ,
 
