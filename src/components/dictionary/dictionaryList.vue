@@ -290,11 +290,13 @@
                 pageIndex:0,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
+                page:1,//当前页
+                
                 multipleSelection: [],//复选框选中数据
                 idArray:{
                     ids:[]
                 },//复选框选中数据id
-                page:1,//当前页
+                
                 treeCheck:[],
                 totalItem:0,//总共有多少条消息
                 tableLoading:true,
@@ -375,7 +377,7 @@
                 let self=this;
                 self.tableLoading=true;
                 self.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:(self.page-1)*self.oneItem,MaxResultCount:self.oneItem}).then(function(res){ 
-                    // console.log(res)
+                    console.log(res)
                     self.tableData = res.result.items;
                     // console.log(self.tableData)
                      $.each( self.tableData,function(index,value){//处理时间格式

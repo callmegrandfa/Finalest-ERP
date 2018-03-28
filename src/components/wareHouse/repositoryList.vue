@@ -92,7 +92,7 @@
                             <span class="btDetail">新增</span>
                         </button>
 
-                        <button @click="delRow" class="erp_bt bt_del">
+                        <button @click="delMore(2)" class="erp_bt bt_del">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -123,12 +123,12 @@
                             <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
                             <el-table-column prop="stockCode" label="仓库编码" fixed>
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].stockCode}}</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{scope.row.stockCode}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="stockName" label="仓库名称">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].stockName}}</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{scope.row.stockName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="stockFullName" label="仓库全称"></el-table-column>
@@ -155,7 +155,7 @@
                                     <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
                                     <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button v-on:click="confirmDel(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="delRow(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table> 
@@ -186,13 +186,33 @@
                     </el-col>
                 </el-row>
             </el-col>   
-      </el-row>
-      <!-- dialog错误信息提示 -->
-        <!-- <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+        </el-row>
+      
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -204,10 +224,9 @@
                     
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
                             <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
                             </vue-scroll> 
                         </el-col>
                       
@@ -218,7 +237,7 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
-        </el-dialog> -->
+        </el-dialog>
         <!-- dialog -->
   </div>
 </template>
@@ -255,8 +274,7 @@
                     console.log(res)
                 })
             },
-            //---------------------------------------------------------
-            //---获取下拉数据-------------------------------------------
+            
             loadSelect:function(){
                 let self = this;
                 //业务地区
@@ -268,7 +286,9 @@
                     console.log('err'+res)
                 })
             },
-            //---------------------------------------------------------
+            //----------------------------------------------------
+
+            //---条件查找------------------------------------------
             searchList:function(){//根据条件查找仓库信息
                 let self = this;
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
@@ -283,10 +303,12 @@
 
                 })
             },
+            //----------------------------------------------------
 
+            //---表格编辑------------------------------------------
             handleEdit:function(index){//表格内编辑操作
-			this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
-            console.log(index)
+                this.isEdit=index;//当选中行的索引值与列表中索引值相同，则编辑！
+                console.log(index)
             },
 
             handleSelectionChange(val) {//点击复选框选中的数据
@@ -299,68 +321,81 @@
                 this.page = val;
                 this.getAllList();
             },     
-            confirmDel(index,row) {
+            //---------------------------------------------------
+
+            //---确认删除----------------------------------------
+            sureDel:function(){
                 let self = this;
-                this.$confirm('确定删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-                }).then(() => {
-                    self.handleDelete(index,row);
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                if(self.who == 1){
+                    self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.whoId}).then(function(res){
+                        
+                        self.allList.splice(self.whoIndex,1);
+                        self.dialogDelConfirm = false;
+                        self.open('删除成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        self.open('删除失败','el-icon-error','faildERP');
+                        self.dialogDelConfirm = false;
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })
+                };
+
+                if(self.who == 2){
+                    // console.log(self.idArray)
+                    self.$axios.posts('/api/services/app/StockManagement/BatchDelete',self.idArray).then(function(res){
+                        self.getAllList();
+                        self.dialogDelConfirm = false;
+                        self.open('删除成功','el-icon-circle-check','successERP');    
+                    },function(res){
+                        self.open('删除失败','el-icon-error','faildERP');
+                        self.dialogDelConfirm = false;
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })
+                }
             },
-            handleDelete:function(index,id){//表格内删除操作
+            //--------------------------------------------------
+
+            //---行内删除---------------------------------------
+            delRow:function(index,row,who){
                 let self = this;
-                console.log(id)
-                this.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:id}).then(function(res){
-                    console.log(res);
-                    this.allList.splice(index,1);
-                    self.open('删除仓库成功','el-icon-circle-check','successERP')
-                },function(){
-                    // self.errorMessage=true;
-                    self.open('删除失败','el-icon-error','faildERP');
-                })
+                // console.log(row)
+                self.who = who;
+                self.whoIndex = index;
+                self.whoId = row.id;
+                self.dialogDelConfirm = true;
             },
-            delRow(){
-                let self=this;
+            //-------------------------------------------------
+
+            //---批量删除--------------------------------------
+            delMore:function(num){
+                let self = this;
+                self.idArray.ids = [];
                 for(let i in self.multipleSelection){
                     self.idArray.ids.push(self.multipleSelection[i].id)
                 }
 
                 if(self.idArray.ids.length>0){
-                    this.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        console.log('666')
-                        self.$axios.posts('/api/services/app/StockManagement/BatchDelete',self.idArray).then(function(res){
-                            self.getAllList();
-                            self.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            // self.errorMessage=true;
-                            self.open('删除失败','el-icon-error','faildERP');
-                        })
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
+                    if(self.idArray.ids.indexOf(undefined)!=-1){
+                        self.$message({
+                            type: 'warning',
+                            message: '新增数据请在行内删除'
                         });
+                        return;
+                    }
+                    self.dialogDelConfirm = true;   
+                    self.who = num;
+                }else{
+                    self.$message({
+                        type: 'info',
+                        message: '请勾选需要删除的数据！'
                     });
                 }
             },
-
+            //-------------------------------------------------
+            
+            
+            //---跳转----------------------------------------------
             goDetail(){
                 this.$store.state.url='/repository/repositoryData/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -371,7 +406,7 @@
                 // this.$store.state.url='/repository/default/repositoryModify/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
-
+            //-------------------------------------------------------
             open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -382,16 +417,16 @@
                 customClass:className
                 });
             },
-           closeLeft:function(){
-               let self = this;
-               self.ifWidth = false;
-           },
-           openLeft:function(){
-               let self = this;
-               self.ifWidth = true;
-           },
-           //---树------------------------------------------
-           loadIcon(){
+            closeLeft:function(){
+                let self = this;
+                self.ifWidth = false;
+            },
+            openLeft:function(){
+                let self = this;
+                self.ifWidth = true;
+            },
+            //---树------------------------------------------
+            loadIcon(){
                 let _this=this;
                 _this.$nextTick(function () {
                     $('.preNode').remove();   
@@ -419,8 +454,9 @@
                     $('#op_confirmSelect').click()
                 })
             },
-           //-----------------------------------------------
+            //-----------------------------------------------
         },
+        
         data(){
             return{ 
                 allList:[],//获取所有的列表数据
@@ -467,26 +503,6 @@
                 opAr:[],//业务地区下拉框
                 //-----------------------
 
-                // 错误信息提示开始
-                //  option: {
-                //     vRail: {
-                //         width: '5px',
-                //         pos: 'right',
-                //         background: "#9093994d",
-                //     },
-                //     vBar: {
-                //         width: '5px',
-                //         pos: 'right',
-                //         background: '#9093994d',
-                //     },
-                //     hRail: {
-                //         height: '0',
-                //     },
-                // },
-                // detail_message_ifShow:false,
-                // errorMessage:false,
-                // 错误信息提示结束
-
                 status: [{
                     value:"",
                     label: '全部'
@@ -497,13 +513,45 @@
                     value: 1,
                     label: '启用'
                  }],
-                 stockType:[{
+                stockType:[{
                     value:0,
                     label: '仓库'
                     }, {
                     value:1,
                     label: '店铺'
-                    }],
+                }],
+
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //--------------------  
+
+                //---错误提示框----------------
+                option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                errorMessage:false,
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
             }
         },
     }
