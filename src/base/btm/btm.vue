@@ -1,7 +1,7 @@
 
 <template>
     <el-row class="h48 pt5">
-    		<div class="ml5" style="float:left" v-for="item in date.botton">
+    		<div class="ml5" style="float:left" v-for="item in date.botton" :key="item.class">
     			<button v-show="item.show" :class="item.class" @click="selectItem(item)" ><div class="btImg"><img  :src="item.imgsrc"></div><span :class="String(item.imgsrc)" class="btDetail">{{item.text}}</span></button>
     		</div>                   
     </el-row>

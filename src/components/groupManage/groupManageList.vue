@@ -24,15 +24,15 @@
                     <label>行政地区</label>
                     <div class="areaBox">
                         <el-select v-model="entryItem.areaId" class="areaDrop" placeholder="选择省"  :disabled="isEdit">
-                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
                         <el-select v-model="entryItem.areaId" class="areaDrop" placeholder="选择市"   :disabled="isEdit">
-                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                             </el-option>
                         </el-select>
                         <el-select v-model="entryItem.areaId" class="areaDrop" placeholder="选择区"  :disabled="isEdit">
-                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                             </el-option>
                         </el-select>
                         <el-input class="areaEntry" placeholder="街道办地址" :disabled="isEdit"></el-input>
@@ -172,6 +172,9 @@
                     children: 'children',
                     label: 'label'
                 },
+                areaProArray:[],//行政地区(省)
+                areaCityArray:[],//行政地区(市)
+                areaDisArray:[],//行政地区(区)
                 pageIndex:-1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
@@ -198,6 +201,7 @@
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
+                _this.loadArea();
                 //_this.loadTree();
              },
         methods:{
@@ -215,6 +219,7 @@
                  let _this=this;
                 _this.$axios.gets('/api/services/app/GroupManagement/Get',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     //_this.tableData=res.result;
+                    console.log(res.result);
                     _this.entryItem.groupCode=res.result.groupCode;
                     _this.entryItem.groupName=res.result.groupName;
                     _this.entryItem.groupFullname=res.result.groupFullname;
@@ -230,6 +235,13 @@
                     _this.entryItem.status=res.result.status;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){
+                })
+            },
+            loadArea(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){ 
+                    _this.areaProArray=res.result;
+                  },function(res){
                 })
             },
             Update(){//修改

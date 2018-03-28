@@ -106,9 +106,9 @@ const tenantManagementAdd = () =>
     import ('../components/tenantManagement/tenantManagementAdd')
     //集团管理
 const groupManage = () =>
-    import ( /* webpackChunkName: "group-group" */ '../components/groupManage/groupManage')
+    import ('../components/groupManage/groupManage')
 const groupManageList = () =>
-    import ( /* webpackChunkName: "group-group" */ '../components/groupManage/groupManageList')
+    import ('../components/groupManage/groupManageList')
     //组织管理
 const OuManage = () =>
     import ( /* webpackChunkName: "group-manage" */ '../components/groupManage/OuManage')
