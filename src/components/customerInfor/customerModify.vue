@@ -1120,7 +1120,7 @@ export default({
                 this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
                     
                     self.customerData = res.result;
-                    // console.log(self.customerData);
+                    console.log(self.customerData);
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
@@ -1130,7 +1130,7 @@ export default({
                     self.ouItem.id =  self.customerData.ouId;
 
                     self.cuItem.id = self.customerData.contactClassId;
-                    self.cuItem.id = self.customerData.contactClassId_ClassName;
+                    self.cuItem.cuFullname = self.customerData.contactClassId_ClassName;
 
                     self.adItem.areaName = self.customerData.adAreaId_AreaName;
                     self.adItem.id = self.customerData.adAreaId;
