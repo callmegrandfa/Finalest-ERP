@@ -2,14 +2,12 @@
     <div class="userGroupDetail">
         <el-row  class="fixed">
             <el-col :span="24">
-              <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-              <button class="erp_bt bt_auxiliary bt_width">
-                <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                <span class="btDetail">辅助功能</span>
-                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-              </button>
+                <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> 
+                <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>  
+                <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+                <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+                <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
             </el-col>
         </el-row>
         <el-row>  
@@ -18,6 +16,7 @@
                    <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>用户组编码</label>
                         <el-input 
+                        @change="isUpdate"
                         class="userGroupCode" 
                         :class="{redBorder : validation.hasError('addData.userGroupCode')}" 
                         v-model="addData.userGroupCode"></el-input>
@@ -30,6 +29,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>用户组名称</label>
                         <el-input 
+                        @change="isUpdate"
                         class="userGroupName" 
                         :class="{redBorder : validation.hasError('addData.userGroupName')}" 
                         v-model="addData.userGroupName"></el-input>
@@ -45,6 +45,7 @@
                         <el-select filterable  
                         placeholder=""
                         class="ouId" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
                         v-model="addData.ouId"
                         >
@@ -81,6 +82,7 @@
                         <label><small>*</small>状态</label>
                         <el-select filterable  
                         class="status" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
                         v-model="addData.status">
@@ -97,6 +99,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
+                        @change="isUpdate"
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
                         v-model="addData.remark"
@@ -120,6 +123,24 @@
                 </div>                                  
             </el-col>
         </el-row>     
+        <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
       <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -196,6 +217,11 @@
             details:'',
             message:'',
         },
+//----------按钮操作--------------
+        choseDoing:'',//存储点击按钮判断信息
+        dialogUserConfirm:false,//信息更改提示控制
+        update:false,
+      
       }
     },
      validators: {
@@ -218,7 +244,7 @@
     created () {
         let _this=this;
         _this.getSelectData();
-        _this.getDefaulet();
+        _this.getDefault();
         _this.loadTree();  
     },
      watch: {
@@ -234,7 +260,7 @@
             if (!value) return true;
             return data.ouFullName.indexOf(value) !== -1;
         },
-        getDefaulet(){
+        getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
             // 默认用户业务组织
@@ -313,6 +339,21 @@
           this.$store.state.url='/userGroup/userGroupList/default'
           this.$router.push({path:this.$store.state.url})//点击切换路由
       },
+       getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
+        },
       save(){
         let _this=this;
         _this.$validate()
@@ -351,6 +392,74 @@
             }
         })
     },
+    //-------------按钮操作-----------
+        isBack(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='back'
+            }else{
+                _this.back()
+            }
+        },
+        isUpdate(){//判断是否修改过信息
+            this.update=true;
+        },
+        isCancel(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='Cancel'
+            }else{
+                _this.Cancel()
+            }
+        },
+        sureDoing(){
+            let _this=this;
+            if(_this.choseDoing=='back'){
+                _this.back()
+                _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='Cancel'){
+                _this.Cancel();
+                _this.dialogUserConfirm=false;
+            }
+        },
+        Cancel(){
+            let _this=this;
+            _this.clearData();
+            _this.update=false;
+        },
+        clearData(){
+            let _this=this;
+            _this.addData={
+                "groupId": 1,
+                "ouId": "",
+                "userGroupCode": "",
+                "userGroupName": "",
+                "remark": "",
+                "status": 1
+            }
+            _this.getDefault()
+            _this.validation.reset();
+        },
+        saveAdd(){
+            let _this=this;
+        _this.$validate()
+        .then(function (success) {
+            if (success) {
+                 _this.$axios.posts('/api/services/app/UserGroup/Create',_this.addData)
+                .then(function(res){
+                    _this.open('保存成功','el-icon-circle-check','successERP');
+                    _this.$store.state.url='/userGroup/userGroupDetail/default'
+                    _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                },function(res){   
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                    _this.errorMessage=true; 
+                    _this.open('保存失败','el-icon-error','faildERP');
+                })
+            }
+        });
+        },
 }
 
 })

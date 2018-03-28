@@ -317,8 +317,14 @@
                     _this.componyTree=res
                     _this.treeLoading=false;
                     _this.loadIcon()
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                },function(res){
                     _this.treeLoading=false;
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                })
             },
             loadIcon(){
@@ -332,6 +338,14 @@
                             $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                         }
                     })
+                })
+            },
+             getHeight(){
+                $(".tree-container").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+                $(".border-left").css({
+                    minHeight:$('.bg-white').css('height')
                 })
             },
             handleCurrentChange(val) {//页码改变
@@ -417,7 +431,7 @@
                     _this.loadTableData();
                     _this.loadTree();
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -437,7 +451,7 @@
                         _this.loadTree();
                         _this.dialogUserConfirm=false;
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.errorMessage=true;
                     _this.dialogUserConfirm=false;
                     _this.open('删除失败','el-icon-error','faildERP');

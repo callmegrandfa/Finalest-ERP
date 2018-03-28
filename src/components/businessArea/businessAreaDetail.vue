@@ -2,16 +2,13 @@
     <div class="businessAreaDetail">
         <el-row  class="fixed">
             <el-col :span="24">
-              <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button> -->
-              <!-- <button @click="delRow" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>     -->
+              <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
               <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-              <button class="erp_bt bt_auxiliary bt_width">
-                <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                <span class="btDetail">辅助功能</span>
-                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-              </button>
+              <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+              <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
+              
             </el-col>
         </el-row>
         <el-row>
@@ -23,6 +20,7 @@
                         <el-select filterable  
                         placeholder=""
                         class="ouId" 
+                        @change="changeOuId"
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
                         v-model="addData.ouId"
                         >
@@ -59,6 +57,7 @@
                         <label><small>*</small>上级业务地区</label>
                         <el-select filterable  
                         class="areaParentId" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
                         v-model="addData.areaParentId">
@@ -79,10 +78,10 @@
                             @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
-                            </el-option> -->
-                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
                             </el-option>
+                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option> -->
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
@@ -94,6 +93,7 @@
                    <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>业务地区编码</label>
                         <el-input 
+                        @change="isUpdate"
                         class="areaCode" 
                         :class="{redBorder : validation.hasError('addData.areaCode')}" 
                         v-model="addData.areaCode"></el-input>
@@ -108,6 +108,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>业务地区名称</label>
                         <el-input 
+                        @change="isUpdate"
                         class="areaName" 
                         :class="{redBorder : validation.hasError('addData.areaName')}" 
                         v-model="addData.areaName"></el-input>
@@ -121,6 +122,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>负责人</label>
                         <el-input 
+                        @change="isUpdate"
                         class="manager" 
                         :class="{redBorder : validation.hasError('addData.manager')}" 
                         v-model="addData.manager"  
@@ -135,6 +137,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
+                        @change="isUpdate"
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
                         v-model="addData.remark"
@@ -151,7 +154,8 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable  
+                        <el-select filterable 
+                        @change="isUpdate" 
                         class="status" 
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
@@ -189,6 +193,24 @@
                 </div>    
             </el-col>
       </el-row>
+      <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
       <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -255,8 +277,8 @@
         selectTree_area:[
         ],
         selectProps_area: {
-            children: 'items',
-            label: 'areaName',
+            children: 'childItems',
+            label: 'name',
             id:'id'
         },
 
@@ -281,13 +303,17 @@
             UserType:[],//身份类型
             userGroupId:[],//所属用户组
             languageId:[],//语种
-            area:[],//上级业务地区
+            // area:[],//上级业务地区
             ou:[],//组织
         },
         response:{
             details:'',
             message:'',
         },
+//----------按钮操作--------------
+        choseDoing:'',//存储点击按钮判断信息
+        dialogUserConfirm:false,//信息更改提示控制
+        update:false,
       }
     },
      validators: {
@@ -329,6 +355,7 @@
         let _this=this;
         _this.getSelectData();
         _this.loadTree();  
+        _this.getDefault();
     },
      watch: {
       search_area(val) {
@@ -347,6 +374,13 @@
             if (!value) return true;
             return data.areaName.indexOf(value) !== -1;
         },
+        getDefault(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+             // 默认用户业务组织
+            _this.addData.ouId=res.result.id;
+            })
+        },
         getSelectData(){
             let _this=this;
             // _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
@@ -357,18 +391,22 @@
             // 启用状态
             _this.selectData.Status001=res.result;
             })
-            _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
-            // 业务地区
-                _this.selectData.area=res.result.items;
-                if(_this.$route.params.id!="default"){
-                    _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
-                }
-            })
+            // _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
+            // // 业务地区
+            //     _this.selectData.area=res.result.items;
+            //     if(_this.$route.params.id!="default"){
+            //         _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
+            //     }
+            // })
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 所属组织
                 _this.selectData.ou=res.result;
                 if(_this.$route.params.id!="default"){
+                    _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
                     _this.addData.ouId=parseInt(_this.$route.params.id.split(',')[1]);
+                    _this.item_area.id=parseInt(_this.$route.params.id.split(',')[0]);
+                    _this.item_area.areaName=_this.$route.params.id.split(',')[2]
+                    _this.getAreaTree(_this.addData.ouId)
                 }
             })
             // _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
@@ -409,25 +447,39 @@
                 }
             })
         },
-      open(tittle,iconClass,className) {
-          this.$notify({
-          position: 'bottom-right',
-          iconClass:iconClass,
-          title: tittle,
-          showClose: false,
-          duration: 3000,
-          customClass:className
-          });
-      },
+        open(tittle,iconClass,className) {
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
+        changeOuId(){
+            let _this=this;
+            _this.isUpdate();
+            _this.getAreaTree(_this.addData.ouId)
+        },
+        getAreaTree(OuId){
+            let _this=this;
+                _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:OuId})
+                .then(function(res){
+                    _this.selectTree_area=res.result;
+                    _this.loadIcon();
+                },function(res){
+                })
+        },
       loadTree(){
             let _this=this;
             //地区
-            _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
-            .then(function(res){
-                _this.selectTree_area=res.result;
-                _this.loadIcon();
-            },function(res){
-            })
+            // _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
+            // .then(function(res){
+            //     _this.selectTree_area=res.result;
+            //     _this.loadIcon();
+            // },function(res){
+            // })
             //组织
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
@@ -463,15 +515,18 @@
                     _this.open('保存成功','el-icon-circle-check','successERP');
                     _this.$store.state.url='/businessArea/businessAreaModify/'+res.result.id
                     _this.$router.push({path:_this.$store.state.url})//点击切换路由
-                },function(res){   
-                    _this.response.message='';
-                    _this.response.details='';
-                    if(res.error.details!=null && res.error.details){
-                        _this.response.details=res.error.details;
+                },function(res){
+                    if(res && res!=''){
+                        _this.response.message='';
+                        _this.response.details='';
+                        if(res.error.details!=null && res.error.details){
+                            _this.response.details=res.error.details;
+                        }
+                        if(res.error.message!=null && res.error.message){
+                            _this.response.message=res.error.message;
+                        }
                     }
-                    if(res.error.message!=null && res.error.message){
-                        _this.response.message=res.error.message;
-                    }
+                    
                     _this.errorMessage=true; 
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
@@ -495,15 +550,98 @@
         let _this=this;
         _this.item_area.id=data.id;
         _this.item_area.areaName=data.areaName;
-        // _this.$nextTick(function(){
-        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-        // })
-         $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-            if($(this).attr('date')==data.id){
-                $(this).click()
-            }
+        _this.$nextTick(function(){
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
         })
+        //  $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+        //     if($(this).attr('date')==data.id){
+        //         $(this).click()
+        //     }
+        // })
     },
+    //-------------按钮操作-----------
+        isBack(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='back'
+            }else{
+                _this.back()
+            }
+        },
+        isUpdate(){//判断是否修改过信息
+            this.update=true;
+        },
+        isCancel(){
+            let _this=this;
+            if(_this.update){
+                _this.dialogUserConfirm=true;
+                _this.choseDoing='Cancel'
+            }else{
+                _this.Cancel()
+            }
+        },
+        sureDoing(){
+            let _this=this;
+            if(_this.choseDoing=='back'){
+                _this.back()
+                _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='Cancel'){
+                _this.Cancel();
+                _this.dialogUserConfirm=false;
+            }
+        },
+        Cancel(){
+            let _this=this;
+            _this.clearData();
+            _this.update=false;
+        },
+        clearData(){
+            let _this=this;
+            _this.addData={
+                "groupId": 1,
+                "areaType": 1,
+                'ouId':'',
+                "areaParentId": '',
+                "areaCode": "",
+                "areaName": "",
+                "areaFullName": "string",
+                "areaFullPathId": "string",
+                "areaFullPathName": "string",
+                "manager": "",
+                "status":1,
+                "remark": ""
+                },
+            _this.getDefault()
+            _this.validation.reset();
+        },
+        saveAdd(){
+            let _this=this;
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.addData)
+                    .then(function(res){
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.$store.state.url='/businessArea/businessAreaDetail/default'
+                        _this.$router.push({path:_this.$store.state.url})
+                    },function(res){   
+                        if(res && res!=''){
+                            _this.response.message='';
+                            _this.response.details='';
+                            if(res.error.details!=null && res.error.details){
+                                _this.response.details=res.error.details;
+                            }
+                            if(res.error.message!=null && res.error.message){
+                                _this.response.message=res.error.message;
+                            }
+                        }
+                        _this.errorMessage=true; 
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });
+        },
 }
 
 })

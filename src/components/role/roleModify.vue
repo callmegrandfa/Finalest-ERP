@@ -184,8 +184,9 @@
                 stripe 
                 @selection-change="checkedSelect" 
                 ref="roleTableLeft">
-                    <el-table-column prop="userCode" label="用户编码" fixed="left"></el-table-column>
-                    <el-table-column prop="displayName" label="用户名称" fixed="left"></el-table-column>
+                     <el-table-column type="selection"></el-table-column>
+                    <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                    <el-table-column prop="displayName" label="用户名称"></el-table-column>
                     <el-table-column prop="ouId" label="所属组织"></el-table-column>
                 </el-table>   
             </el-col>
@@ -225,8 +226,9 @@
                 stripe 
                 @selection-change="nocheckedSelect" 
                 ref="roleTabRight">
-                    <el-table-column prop="userCode" label="用户编码" fixed="left"></el-table-column>
-                    <el-table-column prop="displayName" label="用户名称" fixed="left"></el-table-column>
+                    <el-table-column type="selection"></el-table-column>
+                    <el-table-column prop="userCode" label="用户编码"></el-table-column>
+                    <el-table-column prop="displayName" label="用户名称"></el-table-column>
                     <el-table-column prop="ouId" label="所属组织"></el-table-column>
                 </el-table>  
                 
@@ -254,10 +256,9 @@
                         border 
                         style="width: 100%" 
                         stripe>
+                            <el-table-column prop="userCode" label="用户编码"></el-table-column>
 
-                            <el-table-column prop="userCode" label="用户编码" fixed="left"></el-table-column>
-
-                            <el-table-column prop="displayName" label="用户名称" fixed="left"></el-table-column>
+                            <el-table-column prop="displayName" label="用户名称"></el-table-column>
 
                             <el-table-column prop="ouId" label="所属组织"></el-table-column>
 
@@ -308,7 +309,7 @@
                     stripe 
                     @selection-change="checkedSelect" 
                     ref="roleTableLeft">
-                        <el-table-column type="selection" fixed="left"></el-table-column>
+                        <el-table-column type="selection"></el-table-column>
                         <el-table-column prop="userCode" label="用户编码"></el-table-column>
                         <el-table-column prop="displayName" label="用户名称"></el-table-column>
                         <el-table-column prop="ouId" label="所属组织"></el-table-column>
@@ -397,9 +398,9 @@
                         style="width: 100%" 
                         stripe>
 
-                            <el-table-column prop="ouCode" label="组织编码" fixed="left"></el-table-column>
+                            <el-table-column prop="ouCode" label="组织编码"></el-table-column>
 
-                            <el-table-column prop="basOuTypes" label="组织类型" fixed="left">
+                            <el-table-column prop="basOuTypes" label="组织类型">
                                 <template slot-scope="scope">
                                     <span v-for="(x,index) in scope.row.basOuTypes" :key="index">{{x.ouTypeTValue}}</span>
                                 </template>
@@ -482,7 +483,7 @@
                                         border 
                                         style="width: 100%" 
                                         stripe>
-                                            <el-table-column prop="moduleName" label="名称" fixed="left"></el-table-column>
+                                            <el-table-column prop="moduleName" label="名称"></el-table-column>
 
                                             <el-table-column prop="permissionDtos" label="功能名称">
 
@@ -493,7 +494,7 @@
                                                     </template>
                                                 </el-table-column> -->
                                                 <template slot-scope="scope">
-                                                    <a class="addRole" v-for="i in fnTableData[scope.$index].permissionDtos">{{i.displayName}}</a>
+                                                    <a class="addRole" v-for="(i,index) in fnTableData[scope.$index].permissionDtos"  :key="index">{{i.displayName}}</a>
                                                 </template>
                                             </el-table-column>
 
@@ -536,18 +537,17 @@
                             border 
                             style="width: 100%" 
                             stripe>
-                                <el-table-column prop="moduleName" label="模块名称" fixed="left"></el-table-column>
+                                <el-table-column prop="moduleName" label="模块名称"></el-table-column>
                                 <el-table-column prop="permissionDtos" label="功能名称">
 
-                                    <!-- <el-table-column v-for="i in moduleList" :label="i">
+                                    <el-table-column v-for="(i,index) in moduleList" :key="index" :label="i">
                                         <template slot-scope="scope">
-                                            <el-checkbox v-if="x.displayName == i" v-for="x in fnTableData[scope.$index].permissionDtos" checked disabled></el-checkbox>
-                                            
+                                            <el-checkbox v-if="x.displayName == i" :key="inde" v-for="(x,inde) in fnTableData[scope.$index].permissionDtos" checked ></el-checkbox>    
                                         </template>
-                                    </el-table-column> -->
-                                    <template slot-scope="scope">
-                                        <a class="addRole" v-for="i in fnTableData[scope.$index].permissionDtos">{{i.displayName}}</a>
-                                    </template>
+                                    </el-table-column>
+                                    <!-- <template slot-scope="scope">
+                                        <a class="addRole" v-for="(i,index) in fnTableData[scope.$index].permissionDtos" :key="index">{{i.displayName}}</a>
+                                    </template> -->
                                 </el-table-column>
 
                                 <el-table-column label="操作">
@@ -1277,7 +1277,7 @@ export default({
     margin-bottom: 10px;
 }  
 .roleModify .el-row:first-child{
-      padding:5px 0;
+      padding:7px 0;
 }
   .roleModify .el-row{
      padding:15px 0;

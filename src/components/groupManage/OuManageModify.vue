@@ -1724,7 +1724,7 @@ export default({
                             _this.update_click=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
-                            _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                             _this.errorMessage=true;
                             _this.open('保存失败','el-icon-error','faildERP');
                         })
@@ -1833,7 +1833,7 @@ export default({
       border-bottom:none;
   }
 .OuModifyForm>.el-row:first-child{
-      padding:5px 0;
+      padding:7px 0;
   }
  .OuModifyForm .getPadding,.tabZoo .el-tabs__nav-scroll{
      padding: 0 10px;
