@@ -203,19 +203,19 @@
                     
                 </el-row>
 
-                <el-row class="pl10 pt10 pr10 pb10">
+                <el-row class="pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column type="selection" fixed></el-table-column>
                             <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
                             <el-table-column prop="contactCode" label="客户编码" fixed>
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].contactCode}}</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{scope.row.contactCode}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="contactName" label="客户名称">
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{allList[scope.$index].contactName}}</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{scope.row.contactName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="contactFullName" label="客户全称"></el-table-column>
@@ -754,19 +754,6 @@
 }
 .fs12{
     font-size: 12px;
-}
-.w0{
-    width: 0px;
-}
-
-.w20{
-    width: 20%;
-}
-.w80{
-    width: 80%;
-}
-w100{
-    width: 100%;
 }
 .border1{
     border: 1px solid #cccccc;

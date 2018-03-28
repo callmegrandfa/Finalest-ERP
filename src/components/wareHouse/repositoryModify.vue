@@ -764,6 +764,10 @@
                         console.log(res);
                         self.open('修改地址信息成功','el-icon-circle-check','successERP');
                         self.updateList = [];
+                    },function(res){
+                        self.open('修改失败','el-icon-error','faildERP');
+                        self.errorMessage = true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                     
                 }
@@ -777,6 +781,10 @@
                                 console.log(res);
                                 self.open('修改仓库信息成功','el-icon-circle-check','successERP');
                                 self.ifModify = false;
+                            },function(res){
+                                self.open('修改失败','el-icon-error','faildERP');
+                                self.errorMessage = true;
+                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             })
                         }
                     })

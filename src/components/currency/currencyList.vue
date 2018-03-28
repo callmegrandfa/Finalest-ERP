@@ -40,7 +40,7 @@
 
                 </el-row>
 
-                <el-row class="pl10 pt10 pr10 pb10">
+                <el-row class="pb10">
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column type="selection" fixed></el-table-column>
