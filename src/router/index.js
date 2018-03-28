@@ -188,11 +188,7 @@ const commodityPropertyList = () =>//商品属性列表
 const commodityPropertyDetails = () =>//商品属性详情
     import ('../components/commodityManagement/commodityPropertyDetails') 
 const specificationOfGoods= ()=>//商品规格
-    import ('../components/commodityManagement/specificationOfGoods') 
-// const commodityPropertyList = () =>//商品属性列表
-//     import ('../components/commodityManagement/commodityPropertyList')
-const commodityPropertyDetails = () =>//商品属性详情
-    import ('../components/commodityManagement/commodityPropertyDetails') 
+    import ('../components/commodityManagement/specificationOfGoods')  
 const staff = () =>
     import ('../components/staffInfo/staff')
 const staffList = () =>
