@@ -1185,10 +1185,6 @@ export default({
   .roleDetail .el-tab-pane .bt_add{
       margin-bottom:15px;
   }
-  .roleDetail .el-dialog__headerbtn{
-    top:3px;
-    font-size:50px;
-}
 .roleDetail .el-dialog__body{
   overflow: hidden;
 }

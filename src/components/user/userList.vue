@@ -190,7 +190,6 @@
                             <el-table-column prop="ouFullname" label="所属组织"></el-table-column>
                             <el-table-column prop="userTypeTValue" label="身份类型"></el-table-column>
                             <el-table-column prop="languageDisplayName" label="语种"></el-table-column>
-                            <el-table-column prop="authTypeTValue" label="认证类型"></el-table-column>
                             <el-table-column prop="statusTValue" label="状态">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
