@@ -763,10 +763,14 @@ export default({
             _this.dialogOu=true;
             _this.loadIcon();
         },
+        getCheckedNodes_right() {//获取右侧选择的数据
+            let _this=this;
+            return _this.$refs.ouTreeRight.getCheckedNodes();
+        },
         ouCheckChangeRight(data, checked, indeterminate){
             let _this=this;
-         
-            if(data){
+            let checkData=_this.getCheckedNodes_right();
+            if(checkData.length>0){
                 _this.fromOuRight=false;
             }else{
                 _this.fromOuRight=true;
@@ -775,9 +779,14 @@ export default({
         ouNodeClickRight(){//右侧树形节点点击
 
         },
+        getCheckedNodes_left() {//获取左侧选择的数据
+            let _this=this;
+            return _this.$refs.ouTreeLeft.getCheckedNodes();
+        },
         ouCheckChangeLeft(data, checked, indeterminate){
             let _this=this;
-            if(data){
+            let checkData=_this.getCheckedNodes_left();
+            if(checkData.length>0){
                 _this.fromOuLeft=false;
             }else{
                 _this.fromOuLeft=true;
@@ -789,9 +798,12 @@ export default({
         },
         fromRightOu(){
             let _this=this;
+            let rightSelect=_this.getCheckedNodes_right();
+            
         },
         fromLeftOu(){
             let _this=this;
+            let leftSelect=_this.getCheckedNodes_left();
         },
         loadOuTable(){//获取分配组织数据
             let _this=this;
