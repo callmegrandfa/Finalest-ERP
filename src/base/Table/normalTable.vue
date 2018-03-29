@@ -1,12 +1,12 @@
 <template>
     <div>
-        <el-table v-loading="tableLoading" :data="tabledata" @selection-change="handleSelectionChange" border style="width: 100%">
+        <el-table :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
             <el-table-column type="selection" label="" width="50">
             </el-table-column>
             <el-table-column v-for="item in cols" :key="item.prop" :label="item.label" :prop="item.prop" >
                 <template slot-scope="scope" >
                     <el-checkbox v-if="item.control=='checkbox'" disabled v-model='scope.row[item.prop]'></el-checkbox>
-                    <el-input class="noEdit" readonly v-if="item.control!='checkbox'" v-model="scope.row[item.prop]"></el-input>
+                    <el-input class="noEdit" :disabled="isDisable" v-if="item.control!='checkbox'" v-model="scope.row[item.prop]"></el-input>
                 </template>
             </el-table-column>
             <el-table-column prop="address12" label="操作" width="">
@@ -21,7 +21,7 @@
 </template>
 <script type="text/javascript">
 	export	default{
-		props:['methodsUrl','cols'],
+		props:['methodsUrl','cols','isDisable','tableName'],
 		data(){
 			return{
                 currentPage:1,//当前页码
@@ -30,26 +30,17 @@
                 tableLoading:true,//加载动画
 			}
         },
-        vuex:{
-            getters:{
-                tabledata:state=>state.tableData
+        created:function(){
+            this.$store.commit('setTableName',this.tableName)
+            this.$store.commit('setHttpApi', this.methodsUrl.creat)
+            this.$store.dispatch('getTable');//初始化表格数据
+        },
+        computed:{
+            tableData(){
+                return this.$store.state[this.tableName];
             }
         },
-        mounted:function(){       
-           this.loadTableData();
-        },
         methods:{
-            loadTableData(){//初始化加载数据(creat)
-                let _this=this;
-                _this.tableLoading=true;
-                _this.$axios.gets(_this.methodsUrl.creat,{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
-                    _this.tabledata=res.result.items;
-                    let countPage=res.result.totalCount;
-                    _this.tableLoading=false;
-                    _this.totalPage = Math.ceil(countPage/_this.eachPage);
-                  
-                })
-            },
             modify(row){//查看编辑
                 this.$store.state.url=this.methodsUrl.view+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
@@ -63,7 +54,7 @@
                     center: true
                     }).then(() => {
                         _this.$axios.deletes(_this.methodsUrl.del,{Id:row.id}).then(function(res){
-                            _this.loadTableData();
+                            this.$store.dispatch('getTable');//初始化表格数据
                             _this.open('删除成功','el-icon-circle-check','successERP');    
                         }).catch(function(err){
                             _this.$message({
@@ -83,7 +74,7 @@
             },
             handleCurrentChange:function(val){//获取当前页码,分页
                 this.currentPage=val;
-                console.log(this.currentPage);
+                this.loadTableData();
                 
             },
         }
@@ -94,5 +85,9 @@
         border: none;
         height: 28px;
         text-align: center;
+    }
+    .noEdit.is-disabled .el-input__inner{
+        color: #606266;
+        background: #fff;
     }
 </style>
