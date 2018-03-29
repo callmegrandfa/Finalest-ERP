@@ -1187,10 +1187,7 @@
 </style>
 
 <style>
-.userModify .el-dialog__headerbtn{
-    top:3px;
-    font-size:50px;
-}
+
 .userModify .el-dialog__body{
   overflow: hidden;
 }

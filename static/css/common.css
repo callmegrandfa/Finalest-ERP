@@ -1203,15 +1203,18 @@ color:#f66;
   display:none;
 }
 /* dialog */
-.dialog_confirm_message .el-dialog__headerbtn{
+/* .dialog_confirm_message .el-dialog__headerbtn{
   font-size: 50px;
   right:0;
   top:0;
-}
+} */
 .el-dialog{
   border-radius: 10px;
 }
-
+.el-dialog__headerbtn{
+  top: 13px;     
+  font-size:23px;
+}
 .el-dialog__header{
   border-bottom: 1px solid #e4e4e4;
 }
