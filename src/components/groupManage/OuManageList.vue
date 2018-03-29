@@ -55,9 +55,9 @@
                             @node-click="nodeClick_area"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id"></el-option> -->
-                            <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
-                            </el-option>
+                            <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id"></el-option>
+                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            </el-option> -->
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
@@ -311,8 +311,8 @@
                     areaName:"",
                 },
                 selectProps_area: {
-                    children: 'items',
-                    label: 'areaName',
+                    children: 'childItems',
+                    label: 'name',
                     id:'id'
                 },
                 AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
@@ -331,7 +331,7 @@
                     OUType:[],//组织类型
                     Status001:[],//启用状态
                     companys:[],//所属公司
-                    area:[],//业务地区
+                    // area:[],//业务地区
                 },
                 searchDataClick:{},
                 tableSearchData:{},
@@ -393,10 +393,10 @@
                 // 公司
                     _this.selectData.companys=res.result;
                 })    
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
-                // 业务地区
-                _this.selectData.area=res.result.items;
-                })
+                // _this.$axios.gets('/api/services/app/AreaManagement/GetAll').then(function(res){ 
+                // // 业务地区
+                // _this.selectData.area=res.result.items;
+                // })
             },
             filterNode_area(value, data) {
                 if (!value) return true;
@@ -447,10 +447,11 @@
                },function(res){
                    _this.treeLoading=false;
                })
-                // 地区
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:_this.AreaType})
+               //地区
+                _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
                 .then(function(res){
                     _this.selectTree_area=res.result;
+                    console.log(res)
                     _this.loadIcon();
                 },function(res){
                 })
@@ -568,7 +569,7 @@
                     _this.loadTree();
                     _this.dialogUserConfirm=false;
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -592,7 +593,7 @@
                     _this.loadTree()
                         _this.dialogUserConfirm=false;
                 },function(res){
-                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.errorMessage=true;
                     _this.dialogUserConfirm=false;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -626,16 +627,16 @@
             nodeClick_area(data,node,self){
                 let _this=this;
                 _this.item.id=data.id;
-                _this.item.areaName=data.areaName;
-                // _this.$nextTick(function(){
-                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-                // })
-                
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
+                _this.item.areaName=data.name;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 })
+                
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // })
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id

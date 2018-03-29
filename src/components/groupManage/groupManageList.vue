@@ -23,19 +23,19 @@
                 <div class="bgcolor area">
                     <label>行政地区</label>
                     <div class="areaBox">
-                        <el-select v-model="entryItem.areaId" class="areaDrop" placeholder="选择省"  :disabled="isEdit">
+                        <el-select v-model="entryItem.areaProId" class="areaDrop" placeholder="选择省"  :disabled="isEdit" @change="ChoosePro()">
                             <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
-                        <el-select v-model="entryItem.areaId" class="areaDrop" placeholder="选择市"   :disabled="isEdit">
-                            <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-select v-show="areaCity" v-model="entryItem.areaCityId" class="areaDrop" placeholder="选择市"  @change="ChooseCity()"  :disabled="isEdit">
+                            <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
-                        <el-select v-model="entryItem.areaId" class="areaDrop" placeholder="选择区"  :disabled="isEdit">
-                            <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-select v-show="areaDis" v-model="entryItem.areaDicId" class="areaDrop" placeholder="选择区"  @change="ChooseDis()" :disabled="isEdit">
+                            <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
-                        <el-input class="areaEntry" placeholder="街道办地址" :disabled="isEdit"></el-input>
+                        <el-input v-show="areaStr" class="areaEntry" placeholder="街道办地址" :disabled="isEdit"></el-input>
                     </div>
                 </div>
                 <div class="bgcolor reset">
@@ -111,7 +111,9 @@
                     groupFullname:'',//集团全称
                     localCurrencyId:'',//本位币种
                     accStartMonth:'',//启用月份
-                    areaId:'',//行政地区
+                    areaProId:'',//行政地区(省)
+                    areaCityId:'',//行政地区(市)
+                    areaDisId:'',//行政地区(区)
                     industry:'',//所属行业
                     address:'',//地址
                     phone:'',//电话
@@ -172,6 +174,9 @@
                     children: 'children',
                     label: 'label'
                 },
+                areaCity:true,
+                areaDis:true,
+                areaStr:true,
                 areaProArray:[],//行政地区(省)
                 areaCityArray:[],//行政地区(市)
                 areaDisArray:[],//行政地区(区)
@@ -226,7 +231,7 @@
                     _this.entryItem.localCurrencyId=res.result.localCurrencyId;
                     _this.entryItem.accSchemeId=res.result.accSchemeId;
                     _this.entryItem.accStartMonth=res.result.accStartMonth;
-                    _this.entryItem.areaId=res.result.areaId;
+                    _this.entryItem.areaProId=res.result.areaId;
                     _this.entryItem.industry=res.result.industry;
                     _this.entryItem.address=res.result.address;
                     _this.entryItem.phone=res.result.phone;
@@ -251,6 +256,28 @@
             isUpdate(){//判断是否修改过信息
                 this.update=true;
             },
+            ChoosePro(){//选择省份
+                let _this=this;
+                this.areaDis=false;
+                this.areaStr=false;
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:_this.entryItem.areaProId}).then(function(res){ 
+                    _this.areaCityArray=res.result;
+                    console.log(res.result);
+                  },function(res){
+                })
+            },
+            ChooseCity(){//选择市
+                let _this=this;
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:_this.entryItem.areaCityId}).then(function(res){ 
+                    _this.areaDisArray=res.result;
+                    _this.areaDis=true;
+                    console.log(res.result);
+                  },function(res){
+                })
+            },
+            ChooseDis(){//选择区
+                this.areaStr=true;
+            },
             Save(){
                 let _this=this;
                 if(_this.update){
@@ -269,6 +296,7 @@
                 if(this.isEdit==false){
                     this.isEdit=!this.isEdit;
                     this.isCancel=!this.isCancel;
+                    this.loadTableData();
                     
                 }
                 
@@ -295,8 +323,8 @@
                })
             },
             handleCurrentChange(val) {//页码改变
-                 let _this=this;
-                 _this.page=val;
+                let _this=this;
+                _this.page=val;
                 _this.loadTableData();
             },
             SimpleSearch(){//简单搜索
@@ -336,32 +364,7 @@
                         })
                     }
                 };
-
-                // if(_this.treeCheck.length>0){//tree
-                //     for(let i=0;i<_this.treeCheck.length;i++){
-                //         _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
-                //         .then(function(res){    
-                //           _this.loadTree();
-                //         },function(res){
-                //             console.log('err:'+res)
-                //         })
-                //     }
-                // }
-
             },
-            // checkChange(data,check){
-            //     let _this=this;
-            //     let add=false;
-            //     if(check){
-            //         _this.treeCheck.push(data.treeId);
-            //     }else{
-            //         for(let i=0;i<_this.treeCheck.length;i++){
-            //             if(_this.treeCheck[i]==data.treeId){
-            //                 _this.treeCheck.splice(i,1);
-            //             }
-            //         }
-            //     }
-            // },
             nodeClick(data){
                  let _this=this;
                  let flag=false;
@@ -592,6 +595,7 @@
 }
 .areaBox {
     height: 32px;
+    width:calc(100% - 96px);
     float: left;
     border: 1px solid #e4e7ed;
 }

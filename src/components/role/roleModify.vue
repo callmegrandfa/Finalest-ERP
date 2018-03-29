@@ -540,10 +540,9 @@
                                 <el-table-column prop="moduleName" label="模块名称"></el-table-column>
                                 <el-table-column prop="permissionDtos" label="功能名称">
 
-                                    <el-table-column v-for="i in moduleList" :label="i">
+                                    <el-table-column v-for="(i,index) in moduleList" :key="index" :label="i">
                                         <template slot-scope="scope">
-                                            <el-checkbox v-if="x.displayName == i" v-for="x in fnTableData[scope.$index].permissionDtos" checked ></el-checkbox>
-                                            
+                                            <el-checkbox v-if="x.displayName == i" :key="inde" v-for="(x,inde) in fnTableData[scope.$index].permissionDtos" checked ></el-checkbox>    
                                         </template>
                                     </el-table-column>
                                     <!-- <template slot-scope="scope">

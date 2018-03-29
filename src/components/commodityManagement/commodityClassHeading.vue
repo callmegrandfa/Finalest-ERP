@@ -92,8 +92,8 @@
                             </el-tree>
                         </el-col>
                         <el-col :span="19" class="pb10" style="background:#fff">
-                            <!-- <normalTable  :methodsUrl="httpUrl" :cols="column"></normalTable> -->
-                            <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
+                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel"></normalTable>
+                            <!-- <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
                                 <el-table-column type="selection" label="" width="50">
                                 </el-table-column>
                                 <el-table-column prop="categoryParentName" label="上级类目">
@@ -121,7 +121,7 @@
                                 </el-table-column>
                             </el-table>
                             <el-pagination style="margin-top:20px;"  class="text-right" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, prev, pager, next"  :page-count="totalPage" >
-                            </el-pagination>   
+                            </el-pagination>    -->
                     </el-col>
                 </el-row>
                 </el-col>
@@ -186,7 +186,7 @@ import normalTable from '../../base/Table/normalTable'
                     show:true
                 }]},
                 httpUrl:{
-                   creat:'/api/services/app/CategoryManagement/GetAll',//数据初始化
+                   creat:'http://192.168.100.107:8082/api/services/app/CategoryManagement/GetAll',//数据初始化
                    view:'/commodityleimu/CommodityCategoriesDetails/',//查看详情
                    del:'/api/services/app/CategoryManagement/Delete'//单条删除
                 },
@@ -215,15 +215,17 @@ import normalTable from '../../base/Table/normalTable'
                     label: '服务类',
                     control:'checkbox'
                 }],
+                enableEdit:true,
+                tableModel:'commodityClassTable',
                 SystemOptions: [{
                     value: null,
                     label: '全部'
                     }, {
                     value: false,
-                    label: '是'
+                    label: '否'
                     }, {
                     value: true,
-                    label: '否'
+                    label: '是'
                     }],
                 StatusOptions:[{
                     value: 1,
@@ -252,11 +254,10 @@ import normalTable from '../../base/Table/normalTable'
             let content1=document.getElementById('bg-white');//设置高度为全屏
             let height1=window.innerHeight-123;
             content1.style.minHeight=height1+'px';
-           setTimeout(() => {console.log(this.$store.state.tableData)}, 1000)
         },
         created:function(){       
            this.loadTree();
-           this.loadTableData();
+           //this.loadTableData();
         },
         methods:{
         	closeLeft:function(){
@@ -322,9 +323,8 @@ import normalTable from '../../base/Table/normalTable'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){       
-                        console.log(res.result);                
-                        _this.tableData = res.result;
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){                      
+                        _this.$store.state[_this.tableModel] = res.result;
                         _this.totalCount=res.result.length
                         _this.tableLoading=false;
                         
@@ -347,7 +347,7 @@ import normalTable from '../../base/Table/normalTable'
                 let _this=this;
                 _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
                     console.log(res.result);
-                    _this.tableData=res.result;                   
+                    _this.$store.state[_this.tableModel]=res.result;                   
                 })
             },
             modify(id){//查看编辑

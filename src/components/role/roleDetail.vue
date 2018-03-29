@@ -614,7 +614,7 @@ export default({
       _this.loadOuTable();
       _this.loadFnTable();
       _this.fnLoadTree();
-      _this.getDefaulet();
+      _this.getDefault();
     },
     watch: {
       search_ou(val) {
@@ -622,7 +622,7 @@ export default({
       }
     },
     methods:{
-        getDefaulet(){
+        getDefault(){
         let _this=this;
         _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
         // 默认用户业务组织
@@ -965,13 +965,14 @@ export default({
         Cancel(){
             let _this=this;
             _this.clearData();
+            _this.update=false;
         },
         clearData(){
             let _this=this;
             _this.addData={
                 
             }
-            _this.getDefaulet()
+            _this.getDefault()
             _this.validation.reset();
         },
         saveAdd(){},
@@ -1167,30 +1168,6 @@ export default({
 .menu_add:hover{
     opacity: 0.9;
 }
-.addRole{
-    text-align: center;
-    line-height: 35px;
-    display: inline-block;
-    width: 66px;
-    height: 35px;
-    background-color: #f2f2f2;
-    border: none;
-    border-radius: 3px;
-    font-size: 12px;
-    margin-right: 10px;
-    cursor: pointer;
-    position: relative;
-}
-.addRole i{
-  position: absolute;
-  right: -4px;
-  top: -4px;
-  color: #cccccc;
-}
-.addRole:hover i{
-  color:#f66;
-}
-
 .dialog_{
     min-height: 540px;
     padding: 15px 20px;

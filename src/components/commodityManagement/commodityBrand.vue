@@ -100,6 +100,7 @@
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
+                            <!-- <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel"></normalTable> -->
                              <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
                                 <el-table-column
                                     type="selection"
@@ -181,6 +182,7 @@
 </template>
 
 <script>
+import normalTable from '../../base/Table/normalTable'
 import Query from '../../base/query/query'
 import Btm from '../../base/btm/btm'
     export default{
@@ -257,18 +259,51 @@ import Btm from '../../base/btm/btm'
                 isSave:false,
                 turnPage:-1,//是否允许翻页
                 pageFlag:true,
-
+                httpUrl:{
+                    creat:'/api/services/app/BrandManagement/GetAll',//数据初始化
+                },
+                column: [{
+                    prop: 'brandCode',
+                    label: '品牌编码',
+                    control:'normal'
+                    },{
+                    prop: 'brandName',
+                    label: '品牌名称',
+                    control:'normal'
+                    },{
+                    prop: 'brandEname',
+                    label: '英文名称',
+                    control:'normal'
+                    },{
+                    prop: 'remark',
+                    label: '备注',
+                    control:'normal'
+                    },{
+                    prop: 'status',
+                    label: '状态',
+                    control:'normal'
+                    },{
+                    prop: 'createdBy',
+                    label: '创建人',
+                    control:'normal'
+                    },{
+                    prop: 'createdTime',
+                    label: '创建时间',
+                    control:'normal'
+                    }],
+                enableEdit:false,
+                tableModel:'commdityBrandTable',
             }
         },
         created:function(){
             //this.datashop();
             this.loadTableData();
-            // $(document).on("click",".pageActive .el-pager>li",function(){
-            //     if(_this.turnPage==false){
-            //        //$(this).html("12");
-            //        $(this).css("background","#f4f4f5")
-            //     }  
-            // })
+            $(document).on("click",".pageActive .el-pager>li",function(){
+                if(_this.turnPage==false){
+                   //$(this).html("12");
+                   $(this).css("background","#f4f4f5")
+                }  
+            })
         },
         mounted:function(){   
             let content1=document.getElementById('bg-white');//设置高度为全屏
@@ -623,6 +658,9 @@ import Btm from '../../base/btm/btm'
                 oleftBox.style.display="block";
                 Re.style.display="none";
             },
+        },
+        components:{
+            normalTable
         }
     }
 </script>
