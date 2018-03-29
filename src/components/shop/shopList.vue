@@ -12,7 +12,35 @@
                     </el-col>
                 </el-row>
 
-                <el-row class="mt10">
+                <el-row class="fs12 mt10">
+                   <div class="bgcolor smallBgcolor">
+                        <label>所属组织</label>
+                        <el-select class="queryOu"
+                                   placeholder=""
+                                   v-model="queryOu">
+                            <el-input placeholder="搜索..."
+                                      class="selectSearch"
+                                      v-model="ouSearch"></el-input>
+
+                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                     :data="ouAr"
+                                     :props="selectOuProps"
+                                     node-key="id"
+                                     default-expand-all
+                                     ref="tree"
+                                     :filter-node-method="filterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="ouNodeClick"></el-tree>
+                            <el-option v-show="false"
+                                       :key="countOu.id" 
+                                       :label="countOu.ouFullname" 
+                                       :value="countOu.id"
+                                       id="ou_confirmSelect"></el-option>
+                        </el-select>
+                    </div> 
+                </el-row>
+
+                <!-- <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
                         <label>客户分类</label>
                         <el-select class="queryCu"
@@ -40,35 +68,7 @@
                             
                         </el-select>
                     </div>
-                </el-row>
-
-                <el-row class="fs12">
-                   <div class="bgcolor smallBgcolor">
-                        <label>所属组织</label>
-                        <el-select class="queryOu"
-                                   placeholder=""
-                                   v-model="queryOu">
-                            <el-input placeholder="搜索..."
-                                      class="selectSearch"
-                                      v-model="ouSearch"></el-input>
-
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="ouAr"
-                                     :props="selectOuProps"
-                                     node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="ouNodeClick"></el-tree>
-                            <el-option v-show="false"
-                                       :key="countOu.id" 
-                                       :label="countOu.ouFullname" 
-                                       :value="countOu.id"
-                                       id="ou_confirmSelect"></el-option>
-                        </el-select>
-                    </div> 
-                </el-row>
+                </el-row> -->
 
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
@@ -142,7 +142,7 @@
 
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
-                        <label>客户性质</label>
+                        <label>店铺性质</label>
                         <el-select v-model="queryProperty" placeholder="">
                             <el-option v-for="item in propertyAr"
                                         :key="item.itemValue"
@@ -244,7 +244,7 @@
                                                background 
                                                layout="total, prev, pager, next"  
                                                :page-count="totalPage" 
-                                               :page-size="oneItem"
+                                               :page-size="eachPage"
                                                @current-change="handleCurrentChange"></el-pagination>
                             </el-col>
                         </el-row>
