@@ -190,7 +190,6 @@
                             <el-table-column prop="ouFullname" label="所属组织"></el-table-column>
                             <el-table-column prop="userTypeTValue" label="身份类型"></el-table-column>
                             <el-table-column prop="languageDisplayName" label="语种"></el-table-column>
-                            <el-table-column prop="authTypeTValue" label="认证类型"></el-table-column>
                             <el-table-column prop="statusTValue" label="状态">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
@@ -539,7 +538,7 @@
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -562,7 +561,7 @@
                     _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');

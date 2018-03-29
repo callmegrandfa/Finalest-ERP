@@ -431,7 +431,7 @@
                     _this.loadTableData();
                     _this.loadTree();
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -451,7 +451,7 @@
                         _this.loadTree();
                         _this.dialogUserConfirm=false;
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.errorMessage=true;
                     _this.dialogUserConfirm=false;
                     _this.open('删除失败','el-icon-error','faildERP');

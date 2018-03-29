@@ -3,60 +3,60 @@
         <el-row class="h48 pt5 bg-white">
             <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <button v-on:click="Update()" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
-            <button v-on:click="Save()" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button v-on:click="Cancel()" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button v-on:click="Save()"  class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <button v-on:click="Cancel()" v-show="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
         </el-row>
         <el-row class="bg-white pt20">
                 <div class="bgcolor reset">
-                    <label>集团编码</label><el-input v-model="tableData[0].groupCode"  :disabled="isEdit" @change="isUpdate()" ></el-input>
+                    <label>集团编码</label><el-input v-model="entryItem.groupCode" :disabled="isEdit" ></el-input>
                 </div>
                 <div class="bgcolor reset">
-                    <label>集团名称</label><el-input :disabled="isEdit" v-model="tableData[0].groupName" @change="isUpdate()"></el-input>
+                    <label>集团名称</label><el-input v-model="entryItem.groupName" :disabled="isEdit"></el-input>
                     </div>
                 <div class="bgcolor reset">
-                    <label>集团全称</label><el-input :disabled="isEdit" v-model="tableData[0].groupFullname" @change="isUpdate()"></el-input>
+                    <label>集团全称</label><el-input v-model="entryItem.groupFullname" :disabled="isEdit"></el-input>
                 </div>
                 <div class="bgcolor reset">
-                    <label>会计方案</label><el-input :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  @change="isUpdate()"></el-input>
+                    <label>会计方案</label><el-input v-model="entryItem.accSchemeId" :disabled="isEdit"></el-input>
                 </div>
                 <div class="bgcolor area">
                     <label>行政地区</label>
                     <div class="areaBox">
-                        <el-select class="areaDrop" placeholder="选择省" v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
-                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-select v-model="entryItem.areaProId" class="areaDrop" placeholder="选择省"  :disabled="isEdit" @change="ChoosePro()">
+                            <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
-                        <el-select class="areaDrop" placeholder="选择市" v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
-                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-select v-show="areaCity" v-model="entryItem.areaCityId" class="areaDrop" placeholder="选择市"  @change="ChooseCity()"  :disabled="isEdit">
+                            <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
-                        <el-select class="areaDrop" placeholder="选择区" v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
-                            <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                        <el-select v-show="areaDis" v-model="entryItem.areaDicId" class="areaDrop" placeholder="选择区"  @change="ChooseDis()" :disabled="isEdit">
+                            <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
-                        <el-input class="areaEntry" placeholder="街道办地址" :disabled="isEdit" v-model="tableData[0].basAccperiodSchemeId_Name"  @change="isUpdate()"></el-input>
+                        <el-input v-show="areaStr" class="areaEntry" placeholder="街道办地址" :disabled="isEdit"></el-input>
                     </div>
                 </div>
                 <div class="bgcolor reset">
                     <label>启用会计月份</label>
-                    <el-select v-model="tableData[0].openAccperiodMonth"  :disabled="isEdit" @change="isUpdate()">
+                    <el-select  :disabled="isEdit" v-model="entryItem.accStartMonth">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor reset">
                     <label>本位币种</label>
-                    <el-select v-model="tableData[0].currencyID"  :disabled="isEdit" @change="isUpdate()">
+                    <el-select  v-model="entryItem.localCurrencyId " :disabled="isEdit" >
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="bgcolor reset"><label>所属行业</label><el-input :disabled="isEdit" v-model="tableData[0].industry" @change="isUpdate()" ></el-input></div>
-                <div class="bgcolor reset"><label>电话</label><el-input :disabled="isEdit" v-model="tableData[0].phone" @change="isUpdate()"></el-input></div>
-                <div class="bgcolor reset"><label>传真</label><el-input :disabled="isEdit" v-model="tableData[0].fax" @change="isUpdate()"></el-input></div>
-                <div class="bgcolor reset"><label>总部地址</label><el-input :disabled="isEdit" v-model="tableData[0].address" @change="isUpdate()"></el-input></div>
-                <div class="bgcolor reset"><label>备注</label><el-input :disabled="isEdit" v-model="tableData[0].remark" @change="isUpdate()"></el-input></div>
+                <div class="bgcolor reset"><label>所属行业</label><el-input v-model="entryItem.industry" :disabled="isEdit"></el-input></div>
+                <div class="bgcolor reset"><label>电话</label><el-input v-model="entryItem.phone" :disabled="isEdit"></el-input></div>
+                <div class="bgcolor reset"><label>传真</label><el-input v-model="entryItem.fax" :disabled="isEdit"></el-input></div>
+                <div class="bgcolor reset"><label>总部地址</label><el-input v-model="entryItem.address" :disabled="isEdit"></el-input></div>
+                <div class="bgcolor reset"><label>备注</label><el-input v-model="entryItem.remark" :disabled="isEdit"></el-input></div>
         </el-row>
         <!-- <el-row class="bg-white">
             <el-col :span="6">
@@ -105,23 +105,23 @@
             return {
                 ifHeaderShow:false,//是否显示表头
                 isEdit:true,//是否可编辑
-                tableData5: [{
-                    id: '12987122',
-                    name: '好滋好味鸡蛋仔',
-                    category: '江浙小吃、小吃零食',
-                    desc: '荷兰优质淡奶，奶香浓而不腻',
-                    address: '上海市普陀区真北路',
-                    shop: '王小虎夫妻店',
-                    shopId: '10333'
-                    }, {
-                    id: '12987123',
-                    name: '好滋好味鸡蛋仔',
-                    category: '江浙小吃、小吃零食',
-                    desc: '荷兰优质淡奶，奶香浓而不腻',
-                    address: '上海市普陀区真北路',
-                    shop: '王小虎夫妻店',
-                    shopId: '10333'
-                    }],
+                entryItem:{
+                    groupCode:'',//集团编码
+                    groupName:'',//集团名称,
+                    groupFullname:'',//集团全称
+                    localCurrencyId:'',//本位币种
+                    accStartMonth:'',//启用月份
+                    areaProId:'',//行政地区(省)
+                    areaCityId:'',//行政地区(市)
+                    areaDisId:'',//行政地区(区)
+                    industry:'',//所属行业
+                    address:'',//地址
+                    phone:'',//电话
+                    fax:'',//传真
+                    remark:'',//备注
+                    status:'',//启用状态
+                    id:'',//id
+                },
                 options: [{
                     basOuTypes: '1',
                     label: '1'
@@ -174,6 +174,12 @@
                     children: 'children',
                     label: 'label'
                 },
+                areaCity:true,
+                areaDis:true,
+                areaStr:true,
+                areaProArray:[],//行政地区(省)
+                areaCityArray:[],//行政地区(市)
+                areaDisArray:[],//行政地区(区)
                 pageIndex:-1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
@@ -182,14 +188,25 @@
                 treeCheck:[],
                 isClick:[],
                 update:false,
+                isCancel:false,//是否显示取消按钮
             }
         },
         watch:{
-
+            // entryItem:{
+            //     handler(val, oldVal){
+            //         if(oldVal.groupCode!=""){
+            //             this.isCancel=true;
+            //         }else{
+            //             this.isCancel=false;
+            //         }
+            //     },
+            //     deep:true
+            // }
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
+                _this.loadArea();
                 //_this.loadTree();
              },
         methods:{
@@ -205,26 +222,61 @@
             },
             loadTableData(){//表格
                  let _this=this;
-                _this.$axios.gets('/api/services/app/GroupManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
-                    _this.tableData=res.result.items;
-                     $.each(_this.tableData,function(index,value){
-                        let effectiveStart = value.effectiveStart.slice(0,value.effectiveStart.indexOf('.')).replace('T',' ');
-                        _this.tableData[index].effectiveStart = effectiveStart;
-                        let effectiveEnd = value.effectiveEnd.slice(0,value.effectiveEnd.indexOf('.')).replace('T',' ');
-                        _this.tableData[index].effectiveEnd = effectiveEnd;
-                    })
-                    console.log(_this.tableData);
+                _this.$axios.gets('/api/services/app/GroupManagement/Get',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                    //_this.tableData=res.result;
+                    console.log(res.result);
+                    _this.entryItem.groupCode=res.result.groupCode;
+                    _this.entryItem.groupName=res.result.groupName;
+                    _this.entryItem.groupFullname=res.result.groupFullname;
+                    _this.entryItem.localCurrencyId=res.result.localCurrencyId;
+                    _this.entryItem.accSchemeId=res.result.accSchemeId;
+                    _this.entryItem.accStartMonth=res.result.accStartMonth;
+                    _this.entryItem.areaProId=res.result.areaId;
+                    _this.entryItem.industry=res.result.industry;
+                    _this.entryItem.address=res.result.address;
+                    _this.entryItem.phone=res.result.phone;
+                    _this.entryItem.fax=res.result.fax;
+                    _this.entryItem.remark=res.result.remark;
+                    _this.entryItem.status=res.result.status;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     },function(res){
                 })
             },
+            loadArea(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){ 
+                    _this.areaProArray=res.result;
+                  },function(res){
+                })
+            },
             Update(){//修改
-                if(this.isEdit==true){
-                    this.isEdit=!this.isEdit;
-                } 
+                this.isEdit=false;
+                this.isCancel=true;
             },
             isUpdate(){//判断是否修改过信息
                 this.update=true;
+            },
+            ChoosePro(){//选择省份
+                let _this=this;
+                this.areaDis=false;
+                this.areaStr=false;
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:_this.entryItem.areaProId}).then(function(res){ 
+                    _this.areaCityArray=res.result;
+                    console.log(res.result);
+                  },function(res){
+                })
+            },
+            ChooseCity(){//选择市
+                let _this=this;
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:_this.entryItem.areaCityId}).then(function(res){ 
+                    _this.areaDisArray=res.result;
+                    _this.areaDis=true;
+                    console.log(res.result);
+                  },function(res){
+                })
+            },
+            ChooseDis(){//选择区
+                this.areaStr=true;
             },
             Save(){
                 let _this=this;
@@ -243,6 +295,8 @@
             Cancel(){
                 if(this.isEdit==false){
                     this.isEdit=!this.isEdit;
+                    this.isCancel=!this.isCancel;
+                    this.loadTableData();
                     
                 }
                 
@@ -269,8 +323,8 @@
                })
             },
             handleCurrentChange(val) {//页码改变
-                 let _this=this;
-                 _this.page=val;
+                let _this=this;
+                _this.page=val;
                 _this.loadTableData();
             },
             SimpleSearch(){//简单搜索
@@ -310,32 +364,7 @@
                         })
                     }
                 };
-
-                // if(_this.treeCheck.length>0){//tree
-                //     for(let i=0;i<_this.treeCheck.length;i++){
-                //         _this.$axios.deletes('/api/services/app/DeptManagement/Delete',{id:_this.treeCheck[i]})
-                //         .then(function(res){    
-                //           _this.loadTree();
-                //         },function(res){
-                //             console.log('err:'+res)
-                //         })
-                //     }
-                // }
-
             },
-            // checkChange(data,check){
-            //     let _this=this;
-            //     let add=false;
-            //     if(check){
-            //         _this.treeCheck.push(data.treeId);
-            //     }else{
-            //         for(let i=0;i<_this.treeCheck.length;i++){
-            //             if(_this.treeCheck[i]==data.treeId){
-            //                 _this.treeCheck.splice(i,1);
-            //             }
-            //         }
-            //     }
-            // },
             nodeClick(data){
                  let _this=this;
                  let flag=false;
@@ -566,6 +595,7 @@
 }
 .areaBox {
     height: 32px;
+    width:calc(100% - 96px);
     float: left;
     border: 1px solid #e4e7ed;
 }

@@ -808,7 +808,7 @@
                             _this.update_click=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
-                            _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                             _this.errorMessage=true;
                             _this.open('保存失败','el-icon-error','faildERP');
                         })
@@ -1187,10 +1187,7 @@
 </style>
 
 <style>
-.userModify .el-dialog__headerbtn{
-    top:3px;
-    font-size:50px;
-}
+
 .userModify .el-dialog__body{
   overflow: hidden;
 }

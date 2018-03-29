@@ -484,7 +484,8 @@
                         _this.loadTableData();
                         _this.loadTree();
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                    
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
@@ -499,18 +500,18 @@
                     _this.loadTableData();
                     _this.loadTree();
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             nodeClick(data){
-                 let _this=this;
-                 _this.tableLoading=true;
-                 _this.detailParentId=data.id;
-                 _this.detailParentName=data.areaName;
-                 _this.ouId=data.ouId;
+                let _this=this;
+                _this.tableLoading=true;
+                _this.detailParentId=data.id;
+                _this.detailParentName=data.name;
+                _this.ouId=data.ouId;
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',{ParentId:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                 .then(function(res){
                     _this.tableData=res.result;
@@ -530,34 +531,6 @@
                 this.$store.state.url='/businessArea/businessAreaModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
-            whichButton(event,node, data){
-                let e = event || window.event;
-                let btnNum = e.button;
-                if(e.target.className!='TreeMenuBtn'){
-                    $('.TreeMenu').css({
-                        display:'none'
-                    })
-                }else{
-                    return false;
-                }
-                if (btnNum==2){
-                e.target.id= data.id
-                let clickDom=$('#'+e.target.id);
-                let x = e.clientX
-                let y = e.clientY
-                let left=clickDom.offset().left;
-                clickDom.children('.TreeMenu').css({
-                    display:'block',
-                    left:x-left+'px',
-                    top:'0px'
-                })
-                $('.el-tree-node>.el-tree-node__children').css({
-                    overflow:'visible'
-                })
-                }
-            },
-            
-            
             filterNode(value, data) {
                 if (!value) return true;
                  return data.areaName.indexOf(value) !== -1;

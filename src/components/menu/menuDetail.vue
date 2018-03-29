@@ -2,10 +2,10 @@
     <div class="menuDetail">
         <el-row  class="fixed">
             <el-col :span="24">
-                <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> 
+                <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> 
                 <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>  
-                <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-                <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+                <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+                <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
                 <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                 <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
             </el-col>
@@ -16,6 +16,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>菜单编码</label>
                         <el-input 
+                        @change="isUpdate"
                         class="moduleCode" 
                         :class="{redBorder : validation.hasError('addData.moduleCode')}" 
                         v-model="addData.moduleCode"  
@@ -30,6 +31,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>菜单名称</label>
                         <el-input 
+                        @change="isUpdate"
                         class="moduleName" 
                         :class="{redBorder : validation.hasError('addData.moduleName')}" 
                         v-model="addData.moduleName"  
@@ -45,6 +47,7 @@
                         <label><small>*</small>子系统</label>
                         <el-select filterable  
                         class="systemId" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.systemId')}" 
                         placeholder=""
                         v-model="addData.systemId">
@@ -63,6 +66,7 @@
                     <el-select
                         class="moduleParentId" 
                         placeholder=""
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                         v-model="addData.moduleParentId"  >
                         <el-input
@@ -98,6 +102,7 @@
                         <label><small>*</small>状态</label>
                         <el-select filterable  
                         class="status" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         v-model="addData.status"
                         placeholder="">
@@ -120,6 +125,7 @@
                         placeholder=""></el-input> -->
                         <i :class="addData.ico" aria-hidden="true" style="position: absolute;right: 35px;z-index: 10;top: 6px;font-size: 25px;"></i>
                         <el-select filterable  
+                        @change="isUpdate"
                         class="ico" 
                         :class="{redBorder : validation.hasError('addData.ico')}" 
                         placeholder=""
@@ -139,6 +145,7 @@
                         <label>web地址</label>
                         <el-input 
                         class="url" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.url')}" 
                         v-model="addData.url"  
                         placeholder=""></el-input>
@@ -152,6 +159,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
+                            @change="isUpdate"
                             type="textarea"
                             v-model="addData.remark"  
                             :class="{redBorder : validation.hasError('addData.remark')}" 
@@ -184,7 +192,7 @@
                     </div>
                  </div>
             </el-col>
-            <el-col :span="24">
+            <!-- <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label class="h_35"></label>
@@ -194,7 +202,7 @@
                         </div>
                     </div>
                 </div>
-            </el-col>
+            </el-col> -->
         </el-row>
         <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
                 <el-col :span="24">
@@ -438,6 +446,7 @@
         _this.getSelectData();
         _this.loadTree();
         _this.loadPermission();
+        _this.getDefault();
     },
      watch: {
       search(val) {
@@ -454,53 +463,57 @@
            _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
             // 菜单
             _this.selectData.menu=res.result.items;
+           
+            })
+        },
+        getDefault(){
+            let _this=this;
             if(_this.$route.params.id!="default"){
                 _this.addData.moduleParentId=parseInt(_this.$route.params.id);
                 _this.item.moduleName=_this.$route.params.name;
                 _this.item.id=_this.$route.params.id;
             }
-            })
         },
         filterNode(value, data) {
             if (!value) return true;
             return data.moduleName.indexOf(value) !== -1;
         },
-        showErrprTips(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsSelect(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-        showErrprTipsRangedate(e){
-            $('.tipsWrapper').each(function(){
-                if($(e.$el).hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-            })
-        },
-      showErrprTipsTextArea(e){
-            $('.tipsWrapper').each(function(){
-              if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-                  $(this).addClass('display_block')
-              }else{
-                  $(this).removeClass('display_block')
-              }
-            })
-      },
+    //     showErrprTips(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //     showErrprTipsSelect(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //     showErrprTipsRangedate(e){
+    //         $('.tipsWrapper').each(function(){
+    //             if($(e.$el).hasClass($(this).attr('name'))){
+    //                 $(this).addClass('display_block')
+    //             }else{
+    //                 $(this).removeClass('display_block')
+    //             }
+    //         })
+    //     },
+    //   showErrprTipsTextArea(e){
+    //         $('.tipsWrapper').each(function(){
+    //           if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+    //               $(this).addClass('display_block')
+    //           }else{
+    //               $(this).removeClass('display_block')
+    //           }
+    //         })
+    //   },
       loadTree(){
             let _this=this;
             _this.treeLoading=true;
@@ -596,7 +609,7 @@
                         _this.$router.push({path:_this.$store.state.url})
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
-                        _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
                         _this.open('保存失败','el-icon-error','faildERP');
                     })
@@ -604,19 +617,6 @@
             });
         
             
-        },
-        saveAdd(){
-            // let _this=this;
-            // _this.$validate()
-            // .then(function (success) {
-            //     if (success) {
-            //         _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-            //             _this.open('保存并新增成功','el-icon-circle-check','successERP');
-            //         },function(res){
-            //             _this.open('保存并新增失败','el-icon-error','faildERP');
-            //         })
-            //     }
-            // });
         },
         clearData(){
            this.validation.reset();
@@ -755,6 +755,7 @@
         Cancel(){
             let _this=this;
             _this.clearData();
+            _this.update=false;
         },
         clearData(){
             let _this=this;
@@ -771,10 +772,45 @@
                 status:1,
                 permissions:[]
             },
-            _this.getDefaulet()
+            _this.checked=[];//展示所有权限
+            _this.nochecked=[];//
+            _this.storeNodeClickData=[];//储存点击节点的所有数据{all:[],check:[],nochecked:[]}
+            _this.nowClickNode='';//记录点击的树节点
+            _this.checkTable=[];//页面渲染的数据
+            _this.nocheckTable=[];//页面渲染的数据
+
+            _this.is_Fn_nocheked=true;//穿梭框按钮显示隐藏
+            _this.is_Fn_cheked=true;
+
+            _this.left_selectFn=[];//checkbox选中数据
+            _this.right_selectFn=[];
+            _this.getDefault()
             _this.validation.reset();
         },
-        saveAdd(){},
+        saveAdd(){
+             let _this=this;
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    let permissions=[];
+                    $.each(_this.checked,function(index,value){
+                        permissions.push(value.permissionName)
+                    })
+                    _this.addData.permissions=permissions;
+                    // _this.addData.permissionDtos=_this.checked;//权限
+                    _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
+                        _this.addData.id=res.result.id;
+                        _this.$store.state.url='/menu/menuDetail/default'
+                        _this.$router.push({path:_this.$store.state.url})
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                        _this.errorMessage=true;
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });
+        },
     }
 
   })
@@ -964,8 +1000,5 @@
 .menuDetail .el-tree-node__content{
     background-color:#F9F9F9;
 }
-.menuDetail .el-dialog__headerbtn{
-    top:3px;
-    font-size:50px;
-}
+
 </style>

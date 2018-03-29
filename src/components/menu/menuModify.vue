@@ -680,7 +680,7 @@
                     .then(function(res){
                         _this.open('修改成功','el-icon-circle-check','successERP');
                     },function(res){
-                        _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
                         _this.open('修改失败','el-icon-error','faildERP');
                     })
@@ -1019,8 +1019,5 @@
 .menuModify .el-tree-node__content{
     background-color:#F9F9F9;
 }
-.menuModify .el-dialog__headerbtn{
-    top:3px;
-    font-size:50px;
-}
+
 </style>

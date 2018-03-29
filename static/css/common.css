@@ -1152,6 +1152,18 @@ color:#f66;
   top:-1px;
 }
 /*  商品搜索框公共样式  */
+
+/* 行政地区下拉框公共样式 */
+.area{
+  width: 500px;
+  margin-right: 10px;
+}
+.areaBox {
+  height: 32px;
+  float: left;
+  border: 1px solid #e4e7ed;
+  border-radius: 3px;
+}
 /*  列表页   */
 .commodity{
   float:left;background:#fff;width:100%;
@@ -1203,15 +1215,18 @@ color:#f66;
   display:none;
 }
 /* dialog */
-.dialog_confirm_message .el-dialog__headerbtn{
+/* .dialog_confirm_message .el-dialog__headerbtn{
   font-size: 50px;
   right:0;
   top:0;
-}
+} */
 .el-dialog{
   border-radius: 10px;
 }
-
+.el-dialog__headerbtn{
+  top: 13px;     
+  font-size:23px;
+}
 .el-dialog__header{
   border-bottom: 1px solid #e4e4e4;
 }

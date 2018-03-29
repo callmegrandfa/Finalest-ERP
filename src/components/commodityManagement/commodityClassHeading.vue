@@ -92,7 +92,8 @@
                             </el-tree>
                         </el-col>
                         <el-col :span="19" class="pb10" style="background:#fff">
-                            <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
+                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel"></normalTable>
+                            <!-- <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
                                 <el-table-column type="selection" label="" width="50">
                                 </el-table-column>
                                 <el-table-column prop="categoryParentName" label="上级类目">
@@ -120,7 +121,7 @@
                                 </el-table-column>
                             </el-table>
                             <el-pagination style="margin-top:20px;"  class="text-right" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, prev, pager, next"  :page-count="totalPage" >
-                            </el-pagination>   
+                            </el-pagination>    -->
                     </el-col>
                 </el-row>
                 </el-col>
@@ -132,6 +133,7 @@
 <script>
 import Btm from '../../base/btm/btm'
 import Tree from '../../base/tree/tree'
+import normalTable from '../../base/Table/normalTable'
     export default{
         name:'customerInfor',
         data(){
@@ -183,15 +185,47 @@ import Tree from '../../base/tree/tree'
                     text: '导出',
                     show:true
                 }]},
+                httpUrl:{
+                   creat:'http://192.168.100.107:8082/api/services/app/CategoryManagement/GetAll',//数据初始化
+                   view:'/commodityleimu/CommodityCategoriesDetails/',//查看详情
+                   del:'/api/services/app/CategoryManagement/Delete'//单条删除
+                },
+                column: [{
+                    prop: 'categoryParentName',
+                    label: '上级类目',
+                    control:'normal'
+                    }, {
+                    prop: 'categoryCode',
+                    label: '类目编码',
+                    control:'normal'
+                    }, {
+                    prop: 'categoryName',
+                    label: '类目名称',
+                    control:'normal'
+                    }, {
+                    prop: 'status',
+                    label: '状态',
+                    control:'normal'
+                    }, {
+                    prop: 'mnemonic',
+                    label: '助记码',
+                    control:'normal'
+                    }, {
+                    prop: 'isService',
+                    label: '服务类',
+                    control:'checkbox'
+                }],
+                enableEdit:true,
+                tableModel:'commodityClassTable',
                 SystemOptions: [{
                     value: null,
                     label: '全部'
                     }, {
                     value: false,
-                    label: '是'
+                    label: '否'
                     }, {
                     value: true,
-                    label: '否'
+                    label: '是'
                     }],
                 StatusOptions:[{
                     value: 1,
@@ -223,7 +257,7 @@ import Tree from '../../base/tree/tree'
         },
         created:function(){       
            this.loadTree();
-           this.loadTableData();
+           //this.loadTableData();
         },
         methods:{
         	closeLeft:function(){
@@ -276,7 +310,7 @@ import Tree from '../../base/tree/tree'
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryTree')
+                    _this.$axios.gets('/api/services/app/CategoryManagement/GetCategoryTree')
                     .then(function(res){
                         _this.classTree=res
                         console.log(_this.classTree)
@@ -289,9 +323,8 @@ import Tree from '../../base/tree/tree'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){       
-                        console.log(res.result);                
-                        _this.tableData = res.result;
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){                      
+                        _this.$store.state[_this.tableModel] = res.result;
                         _this.totalCount=res.result.length
                         _this.tableLoading=false;
                         
@@ -314,11 +347,11 @@ import Tree from '../../base/tree/tree'
                 let _this=this;
                 _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
                     console.log(res.result);
-                    _this.tableData=res.result;                   
+                    _this.$store.state[_this.tableModel]=res.result;                   
                 })
             },
-            modify(row){//查看编辑
-                this.$store.state.url='/commodityleimu/CommodityCategoriesDetails/'+row.id
+            modify(id){//查看编辑
+                this.$store.state.url='/commodityleimu/CommodityCategoriesDetails/'+id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
             handleCurrentChange:function(val){//获取当前页码,分页
@@ -340,7 +373,6 @@ import Tree from '../../base/tree/tree'
                 });
             },
             del(data){//单条删除
-                let id=data.id;
                 let _this=this;
                 _this.$confirm('确定删除?', '提示', {
                     confirmButtonText: '确定',
@@ -348,7 +380,7 @@ import Tree from '../../base/tree/tree'
                     type: 'warning',
                     center: true
                     }).then(() => {
-                        _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:id}).then(function(res){
+                        _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:data}).then(function(res){
                             _this.loadTableData();
                             _this.open('删除成功','el-icon-circle-check','successERP');    
                         }).catch(function(err){
@@ -408,7 +440,8 @@ import Tree from '../../base/tree/tree'
         },
         components:{
             Btm,
-            Tree
+            Tree,
+            normalTable
         }
     }
 </script>

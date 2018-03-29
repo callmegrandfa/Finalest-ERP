@@ -2,10 +2,10 @@
     <div class="businessAreaDetail">
         <el-row  class="fixed">
             <el-col :span="24">
-              <button @click="back" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+              <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
               <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-              <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+              <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
               <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
               <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
               
@@ -57,6 +57,7 @@
                         <label><small>*</small>上级业务地区</label>
                         <el-select filterable  
                         class="areaParentId" 
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
                         v-model="addData.areaParentId">
@@ -92,6 +93,7 @@
                    <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>业务地区编码</label>
                         <el-input 
+                        @change="isUpdate"
                         class="areaCode" 
                         :class="{redBorder : validation.hasError('addData.areaCode')}" 
                         v-model="addData.areaCode"></el-input>
@@ -106,6 +108,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>业务地区名称</label>
                         <el-input 
+                        @change="isUpdate"
                         class="areaName" 
                         :class="{redBorder : validation.hasError('addData.areaName')}" 
                         v-model="addData.areaName"></el-input>
@@ -119,6 +122,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>负责人</label>
                         <el-input 
+                        @change="isUpdate"
                         class="manager" 
                         :class="{redBorder : validation.hasError('addData.manager')}" 
                         v-model="addData.manager"  
@@ -133,6 +137,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
+                        @change="isUpdate"
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
                         v-model="addData.remark"
@@ -149,7 +154,8 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable  
+                        <el-select filterable 
+                        @change="isUpdate" 
                         class="status" 
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
@@ -349,6 +355,7 @@
         let _this=this;
         _this.getSelectData();
         _this.loadTree();  
+        _this.getDefault();
     },
      watch: {
       search_area(val) {
@@ -367,7 +374,7 @@
             if (!value) return true;
             return data.areaName.indexOf(value) !== -1;
         },
-        getDefaulet(){
+        getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
              // 默认用户业务组织
@@ -460,7 +467,6 @@
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:OuId})
                 .then(function(res){
                     _this.selectTree_area=res.result;
-                    console.log(res)
                     _this.loadIcon();
                 },function(res){
                 })
@@ -509,15 +515,18 @@
                     _this.open('保存成功','el-icon-circle-check','successERP');
                     _this.$store.state.url='/businessArea/businessAreaModify/'+res.result.id
                     _this.$router.push({path:_this.$store.state.url})//点击切换路由
-                },function(res){   
-                    _this.response.message='';
-                    _this.response.details='';
-                    if(res.error.details!=null && res.error.details){
-                        _this.response.details=res.error.details;
+                },function(res){
+                    if(res && res!=''){
+                        _this.response.message='';
+                        _this.response.details='';
+                        if(res.error.details!=null && res.error.details){
+                            _this.response.details=res.error.details;
+                        }
+                        if(res.error.message!=null && res.error.message){
+                            _this.response.message=res.error.message;
+                        }
                     }
-                    if(res.error.message!=null && res.error.message){
-                        _this.response.message=res.error.message;
-                    }
+                    
                     _this.errorMessage=true; 
                     _this.open('保存失败','el-icon-error','faildERP');
                 })
@@ -585,6 +594,7 @@
         Cancel(){
             let _this=this;
             _this.clearData();
+            _this.update=false;
         },
         clearData(){
             let _this=this;
@@ -602,10 +612,36 @@
                 "status":1,
                 "remark": ""
                 },
-            _this.getDefaulet()
+            _this.getDefault()
             _this.validation.reset();
         },
-        saveAdd(){},
+        saveAdd(){
+            let _this=this;
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.addData)
+                    .then(function(res){
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.$store.state.url='/businessArea/businessAreaDetail/default'
+                        _this.$router.push({path:_this.$store.state.url})
+                    },function(res){   
+                        if(res && res!=''){
+                            _this.response.message='';
+                            _this.response.details='';
+                            if(res.error.details!=null && res.error.details){
+                                _this.response.details=res.error.details;
+                            }
+                            if(res.error.message!=null && res.error.message){
+                                _this.response.message=res.error.message;
+                            }
+                        }
+                        _this.errorMessage=true; 
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });
+        },
 }
 
 })

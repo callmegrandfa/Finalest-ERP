@@ -667,7 +667,7 @@
       _this.loadTree();
       _this.getSelectData();
       _this.getAllRoleData();
-      _this.getDefaulet();
+      _this.getDefault();
     },
     watch: {
       search(val) {
@@ -675,7 +675,7 @@
       }
     },
     methods: {
-        getDefaulet(){
+        getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
             // 默认用户业务组织
@@ -830,7 +830,7 @@
                         _this.$router.push({path:_this.$store.state.url})
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
-                        _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
                         _this.open('保存失败','el-icon-error','faildERP');
                     })
@@ -1114,6 +1114,7 @@
         Cancel(){
             let _this=this;
             _this.clearData();
+            _this.update=false;
         },
         clearData(){
             let _this=this;
@@ -1134,7 +1135,7 @@
             _this.addData.effectiveStart='';
             _this.addData.effectiveEnd='';
             _this.dateRange=[];
-            _this.getDefaulet()
+            _this.getDefault()
             _this.validation.reset();
         },
         saveAdd(){
@@ -1156,7 +1157,7 @@
                         _this.$router.push({path:_this.$store.state.url})
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
-                        _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
                         _this.open('保存失败','el-icon-error','faildERP');
                     })
@@ -1277,10 +1278,7 @@
 </style>
 
 <style>
-.userDetail .el-dialog__headerbtn{
-    top:3px;
-    font-size:50px;
-}
+
 .userDetail .el-dialog__body{
   overflow: hidden;
 }
