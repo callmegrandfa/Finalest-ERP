@@ -488,12 +488,6 @@
                                                 <el-checkbox v-model="clickFnTreeData[scope.$index][i.permissionName]" @change="selectChangeFn(scope.row[i.permissionName],i.permissionName)"></el-checkbox>
                                             </template>
                                         </el-table-column>
-                                            <!-- <el-table-column prop="displayName" label="名称"></el-table-column>
-                                            <el-table-column v-for="(i,index) in moduleList" :key="index" :label="i.displayName">
-                                                <template slot-scope="scope">
-                                                    <el-checkbox class="checkBox_table" :key="inde" v-for="(x,inde) in clickFnTreeData[scope.$index].children" v-if="x.permissionName == i.permissionName" :data-permissionName="x.permissionName" :checked="x.isCheck" @change="selectChangeFn(x,index)"></el-checkbox>    
-                                                </template>
-                                            </el-table-column> -->
                                         </el-table>
                                     </el-col>
                                 </el-col>
@@ -550,9 +544,6 @@
             <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" disabled="disabled"></el-date-picker></div>
             <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" disabled="disabled"></el-input></div>
             <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" disabled="disabled"></el-date-picker></div>
-            <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-            <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-            <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
         </div>                                  
     </el-col>
 </el-row>                                                                       
