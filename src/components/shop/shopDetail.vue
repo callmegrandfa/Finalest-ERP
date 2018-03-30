@@ -400,7 +400,7 @@
                             <span class="btDetail">Excel</span>
                         </button>
 
-                        <button class="erp_bt bt_del" @click='delMoreBank(4)'>
+                        <button class="erp_bt bt_del" @click='delMore(2)'>
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -836,7 +836,7 @@ export default({
             let self = this;
             //所属组织
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.ouAr = res.result;
                 self.loadIcon();
             },function(res){
@@ -844,7 +844,7 @@ export default({
             });
             //获取当前默认ouid
             self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.defaultOuId = res.result.id;
                 self.createShopParams.ouId = self.defaultOuId;
                 //加载完成拿回下拉的默认值
@@ -853,7 +853,7 @@ export default({
 
                 //业务地区
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.opAr = res.result;
                     self.loadIcon();
                 },function(res){
@@ -885,14 +885,14 @@ export default({
             });
             //店铺等级
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'ShopGrade'}).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.gradeAr = res.result;
             },function(res){
                 console.log('err'+res)
             });
             //行政地区*2
             self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.adAr = res.result;
                 self.loadIcon();
             },function(res){
@@ -939,7 +939,7 @@ export default({
                     if(self.addList.length>0){
                         self.createShopParams.shopContacts = self.addList;
                         self.$axios.posts('/api/services/app/ShopManagement/Create',self.createShopParams).then(function(res){
-                        console.log(res);
+                        // console.log(res);
                         self.open('创建店铺资料成功','el-icon-circle-check','successERP');
                         self.backId = res.result.id;
                         
@@ -1020,6 +1020,24 @@ export default({
                 self.open('删除成功','el-icon-circle-check','successERP');
             };
 
+            if(self.who == 2){//批量删除
+                let x=[];
+                $.each(self.addList,function(index,value){
+                    let flag = false;
+                    $.each(self.multipleSelection,function(i,val){
+                        if(value==val){
+                            flag = true;
+                        }
+                    })
+                    if(!flag){
+                        x.push(value)
+                    }
+                })
+                self.addList = x;
+                // console.log(self.addList)
+                self.dialogDelConfirm = false;
+            }
+
         },
         //-----------------------------------------------------
         
@@ -1033,27 +1051,36 @@ export default({
         //-------------------------------------------------------
 
         //---从表多项删除-----------------------------------------
-        delMoreBank:function(num){
+        delMore:function(num){
             let self = this;
-            for(let i in self.multipleSelection){
-                self.contactIndex.push(self.multipleSelection[i].index)
-            }
-            if(self.contactIndex.length>0){
-                self.dialogDelConfirm = true; 
-                self.who = num;
-                console.log(self.contactIndex)
-            }else{
+            // for(let i in self.multipleSelection){
+            //     self.contactIndex.push(self.multipleSelection[i].index)
+            // }
+            if(self.multipleSelection.length<=0){
                 self.$message({
                     type: 'info',
                     message: '请勾选需要删除的数据！'
                 });
+            }else{
+                self.who = num;
+                self.dialogDelConfirm = true; 
             }
+            // if(self.contactIndex.length>0){
+            //     self.dialogDelConfirm = true; 
+            //     self.who = num;
+            //     console.log(self.contactIndex)
+            // }else{
+            //     self.$message({
+            //         type: 'info',
+            //         message: '请勾选需要删除的数据！'
+            //     });
+            // }
         },
         //------------------------------------------------------
 
-        //----------------------------------------------------------
+        //---默认-------------------------------------------------------
         
-        getCurrentRow:function(index,row){//银行默认单选框
+        getCurrentRow:function(index,row){//默认单选框
             let self = this;
             for(let i in self.contactData){
                 self.contactData[i].isDefault = false;
@@ -1070,9 +1097,16 @@ export default({
         //---从表复选框---------------------------------------
         handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
+                // console.log(this.multipleSelection)
         },
         //---------------------------------------------------
+
+        //---从表修改----------------------------------------
+        handleChange:function(index,row){
+            let self = this;
+            self.ifModify = true;
+        },
+        //--------------------------------------------------
 
         //---判断是否有修改过的内容---------------------------
         Modify:function(){//判断主表是否修改过
@@ -1104,7 +1138,7 @@ export default({
         },
         sureDoing:function(){
             let self = this;
-            console.log(self.backCancle)
+            // console.log(self.backCancle)
             if(self.backCancle === 1){//为1是取消
                 self.backId = '';
                 self.dialogUserConfirm=false;
@@ -1143,8 +1177,10 @@ export default({
                     ],
                     id: 0
                 }
+                self.addList = [];
                 self.backCancle = '';
                 self.ifModify = false;
+                $('.tipsWrapper').css({display:'none'})
             }
             if(self.backCancle === 2){//为2是返回
                 self.back();
@@ -1184,7 +1220,7 @@ export default({
             })
         },
         filterNode(value, data) {
-            console.log(data)
+            // console.log(data)
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
@@ -1209,7 +1245,7 @@ export default({
             })
             //点击所属组织，业务地区跟着变动
             self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.opAr = res.result;
                 if(res.result.length==0){
                     self.opItem.areaName = '暂无业务地区';
@@ -1239,7 +1275,7 @@ export default({
         },
         opNodeClick:function(data){
             let self = this;
-            console.log(data)
+            // console.log(data)
             self.opItem.id = data.id;
             self.opItem.areaName = data.areaName;
             self.$nextTick(function(){

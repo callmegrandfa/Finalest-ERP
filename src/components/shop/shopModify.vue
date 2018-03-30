@@ -37,7 +37,7 @@
                     <span class="btDetail">保存并新增</span>
                 </button>
 
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
+                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify||ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -1163,7 +1163,7 @@ export default({
                 })
            
                 self.shopData.shopContacts = x;
-                console.log(self.shopData.shopContacts)
+                // console.log(self.shopData.shopContacts)
 
                 self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
                     self.open('删除联系人成功','el-icon-circle-check','successERP');
