@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import store from './store'
-import vuexStore from './vuex/store'
 import router from './router'//路由
 import ElementUI from 'element-ui'//UI组件http://element-cn.eleme.io
 import 'element-ui/lib/theme-chalk/index.css'
@@ -45,7 +44,6 @@ SimpleVueValidation.extendTemplates({//表单验证全局配置
 new Vue({
   el: '#app',
   store,
-  vuexStore,
   router,
   axios,
   render: h => h(App),

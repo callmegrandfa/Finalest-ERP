@@ -276,20 +276,20 @@
             //判断是否修改过信息
             this.update = true;
             this.isDisable=false;
-            console.log(this.isDisable);
+            // console.log(this.isDisable);
             
         },
         // 成功的提示框
-                open(tittle,iconClass,className) {//提示框
-                    this.$notify({
-                    position: 'bottom-right',
-                    iconClass:iconClass,
-                    title: tittle,
-                    showClose: false,
-                    duration: 3000,
-                    customClass:className
-                    });
-                },
+        open(tittle,iconClass,className) {//提示框
+         this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
         // 保存
         save() {
             let _this=this;
