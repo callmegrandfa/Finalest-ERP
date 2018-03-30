@@ -52,86 +52,116 @@
         
         <el-collapse-transition>
             <div v-show="ifShow">   
-                <el-row>
+                <el-row class="bg-white ft12 pr10 pt10">
                     <el-col :span="24" class="getPadding"> 
-                        <div class="tipsWrapper">
-                            <div class="errorTips">
-                                <p class="msgDetail">错误提示：
-                                    <span :class="{block : !validation.hasError('shopData.ouId')}">
-                                        所属组织{{ validation.firstError('shopData.ouId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopCode')}">
-                                        编码{{ validation.firstError('shopData.shopCode') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopName')}">
-                                        名称{{ validation.firstError('shopData.shopName') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopFullname')}">
-                                        全称{{ validation.firstError('shopData.shopFullname') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopWorkPropertyid')}">
-                                        店铺性质{{ validation.firstError('shopData.shopWorkPropertyid') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.stockId')}">
-                                        对应仓库{{ validation.firstError('shopData.stockId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopGradeId')}">
-                                        店铺等级{{ validation.firstError('shopData.shopGradeId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.openingDate')}">
-                                        开店日期{{ validation.firstError('shopData.openingDate') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.opAreaId')}">
-                                        业务地区{{ validation.firstError('shopData.opAreaId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.adAreaId')}">
-                                        行政地区{{ validation.firstError('shopData.adAreaId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.manager')}">
-                                        负责人{{ validation.firstError('shopData.manager') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.phone')}">
-                                        电话{{ validation.firstError('shopData.phone') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.tradingAreaid')}">
-                                        商圈{{ validation.firstError('shopData.tradingAreaid') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.status')}">
-                                        状态{{ validation.firstError('shopData.status') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopAddress')}">
-                                        店铺地址{{ validation.firstError('shopData.shopAddress') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.longitude')}">
-                                        经度{{ validation.firstError('shopData.longitude') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.latitude')}">
-                                        纬度{{ validation.firstError('shopData.latitude') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.remark')}">
-                                        备注{{ validation.firstError('shopData.remark') }},
-                                    </span>
-                                </p>
+                        <div class="tipsWrapper" name="ouId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.ouId')}">
+                                <p class="msgDetail">错误提示：所属组织{{ validation.firstError('shopData.ouId') }}</p>
                             </div>
                         </div>
-                        
+
+                        <div class="tipsWrapper" name="shopCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopCode')}">
+                                <p class="msgDetail">编码{{ validation.firstError('shopData.shopCode') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopName">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopName')}">
+                                <p class="msgDetail">名称{{ validation.firstError('shopData.shopName') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopFullname">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopFullname')}">
+                                <p class="msgDetail">全称{{ validation.firstError('shopData.shopFullname') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopWorkPropertyid">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopWorkPropertyid')}">
+                                <p class="msgDetail">店铺性质{{ validation.firstError('shopData.shopWorkPropertyid') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="stockId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.stockId')}">
+                                <p class="msgDetail">对应仓库{{ validation.firstError('shopData.stockId') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopGradeId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopGradeId')}">
+                                <p class="msgDetail">店铺等级{{ validation.firstError('shopData.shopGradeId') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="openingDate">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.openingDate')}">
+                                <p class="msgDetail">开店日期{{ validation.firstError('shopData.openingDate') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="opAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.opAreaId')}">
+                                <p class="msgDetail">业务地区{{ validation.firstError('shopData.opAreaId') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="adAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.adAreaId')}">
+                                <p class="msgDetail">行政地区{{ validation.firstError('shopData.adAreaId') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="manager">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.manager')}">
+                                <p class="msgDetail">负责人{{ validation.firstError('shopData.manager') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="phone">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.phone')}">
+                                <p class="msgDetail">电话{{ validation.firstError('shopData.phone') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="tradingAreaid">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.tradingAreaid')}">
+                                <p class="msgDetail">商圈{{ validation.firstError('shopData.tradingAreaid') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="status">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.status')}">
+                                <p class="msgDetail">状态{{ validation.firstError('shopData.status') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopAddress">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopAddress')}">
+                                <p class="msgDetail">店铺地址{{ validation.firstError('shopData.shopAddress') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="longitude">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.longitude')}">
+                                <p class="msgDetail">经度{{ validation.firstError('shopData.longitude') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="latitude">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.latitude')}">
+                                <p class="msgDetail">纬度{{ validation.firstError('shopData.latitude') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="remark">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.remark')}">
+                                <p class="msgDetail">备注{{ validation.firstError('shopData.remark') }}</p>
+                            </div>
+                        </div>
+                                
 
                         <div class="bgcolor">
                             <label><small>*</small>所属组织</label>
@@ -215,11 +245,11 @@
                         <div class="bgcolor">
                             <label>对应仓库</label>
                             <el-select v-model="shopData.stockId"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    class="stockId"
-                                    :class="{redBorder : validation.hasError('shopData.stockId')}">
+                                        placeholder=""
+                                        @change='Modify()'
+                                        @focus="showErrprTipsSelect"
+                                        class="stockId"
+                                        :class="{redBorder : validation.hasError('shopData.stockId')}">
                                 <el-option v-for="item in stockAr" 
                                         :key="item.id" 
                                         :label="item.stockName" 
@@ -256,11 +286,11 @@
                         <div class="bgcolor">
                             <label>业务地区</label>
                             <el-select v-model="shopData.opAreaId"
-                                    class="opAreaId"
-                                    @focus="showErrprTipsSelect"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    :class="{redBorder : validation.hasError('shopData.opAreaId')}">
+                                        class="opAreaId"
+                                        @focus="showErrprTipsSelect"
+                                        placeholder=""
+                                        @change='Modify()'
+                                        :class="{redBorder : validation.hasError('shopData.opAreaId')}">
                                 <el-input placeholder="搜索..."
                                         class="selectSearch"
                                         v-model="opSearch"></el-input>
@@ -300,49 +330,34 @@
                             </div>
                         </div>
 
-                        <!-- <div class="bgcolor">
-                            <label>主营品牌</label>
-                            <el-select v-model="shopData.mainBrand"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    class="shopTypeId"
-                                    :class="{redBorder : validation.hasError('shopData.shopTypeId')}">
-                                <el-option v-for="item in typeAr" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue"></el-option>
-                            </el-select>
-                        </div>    -->
-
                         <div class="bgcolor">
                             <label>负责人</label>
                             <el-input v-model="shopData.manager" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="manager"
-                                    :class="{redBorder : validation.hasError('shopData.manager')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="manager"
+                                        :class="{redBorder : validation.hasError('shopData.manager')}"
+                                        @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>电话</label>
                             <el-input v-model="shopData.phone" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="phone"
-                                    :class="{redBorder : validation.hasError('shopData.phone')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="phone"
+                                        :class="{redBorder : validation.hasError('shopData.phone')}"
+                                        @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>商圈</label>
                             <el-select v-model="shopData.tradingAreaid"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    class="tradingAreaid"
-                                    :class="{redBorder : validation.hasError('shopData.tradingAreaid')}">
+                                        placeholder=""
+                                        @change='Modify()'
+                                        @focus="showErrprTipsSelect"
+                                        class="tradingAreaid"
+                                        :class="{redBorder : validation.hasError('shopData.tradingAreaid')}">
                                 <el-option v-for="item in busAr" 
                                         :key="item.itemValue" 
                                         :label="item.itemName" 
@@ -353,11 +368,11 @@
                         <div class="bgcolor">
                             <label>状态</label>
                             <el-select v-model="shopData.status"
-                                    class="status"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('shopData.status')}">
+                                        class="status"
+                                        placeholder=""
+                                        @change='Modify()'
+                                        @focus="showErrprTipsSelect"
+                                        :class="{redBorder : validation.hasError('shopData.status')}">
                                 <el-option v-for="item in statusAr"  
                                         :key="item.itemValue" 
                                         :label="item.itemName" 
@@ -368,48 +383,48 @@
                         <div class="bgcolor">
                             <label>店铺地址</label>
                             <el-input v-model="shopData.shopAddress" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="shopAddress"
-                                    :class="{redBorder : validation.hasError('shopData.shopAddress')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="shopAddress"
+                                        :class="{redBorder : validation.hasError('shopData.shopAddress')}"
+                                        @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>经度</label>
                             <el-input v-model="shopData.longitude" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="longitude"
-                                    :class="{redBorder : validation.hasError('shopData.longitude')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="longitude"
+                                        :class="{redBorder : validation.hasError('shopData.longitude')}"
+                                        @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>纬度</label>
                             <el-input v-model="shopData.latitude" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="latitude"
-                                    :class="{redBorder : validation.hasError('shopData.latitude')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="latitude"
+                                        :class="{redBorder : validation.hasError('shopData.latitude')}"
+                                        @change='Modify()'></el-input>
                         </div>
                         
                         <div class="bgcolor">
                             <label>备注</label>
                             <el-input v-model="shopData.remark" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="remark"
-                                    :class="{redBorder : validation.hasError('shopData.remark')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="remark"
+                                        :class="{redBorder : validation.hasError('shopData.remark')}"
+                                        @change='Modify()'></el-input>
                         </div>
                     </el-col>
                 </el-row>
             </div>
         </el-collapse-transition>     
 
-        <!-- 公司业务财务bootTab标签页 -->
+        <!-- bootTab标签页 -->
         <el-row class="nopadding"> 
             <div class="tabZoo">
                 <el-col :span="24">
@@ -450,7 +465,7 @@
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="accountName" label="性别" width="180">
+                                <el-table-column prop="sex" label="性别" width="180">
                                     <template slot-scope="scope">
                                         <el-select  v-model="scope.row.sex" :class="[scope.$index%2==0?'bgw':'bgp']">
                                             <el-option  v-for="item in sexAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
@@ -627,6 +642,7 @@ export default({
             radio:'',
             ifModify:false,//判断主表是否修改过
             ifDoModify:false,//判断从表是否修改过
+            ifUp:false,//判断从表是否为修改
             //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -695,16 +711,6 @@ export default({
                 ids:[]
             },
 
-            createContactParams:{//创建银行的参数
-                contactPerson: "",
-                mobile: "",
-                phone: "",
-                isDefault: false,
-                remark: "",
-                position: "",
-                sex: '',
-                id: 0
-            },
             checkedAr:[],//进来时数据选中的默认框
             //---确认删除-----------------               
             dialogDelConfirm:false,//用户删除保存提示信息
@@ -783,10 +789,10 @@ export default({
             return this.Validator.value(value).maxLength(50);
         },
         'shopData.status': function (value) {//状态
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'shopData.shopAddress': function (value) {//店铺地址
-            return this.Validator.value(value)
+            return this.Validator.value(value).maxLength(50);
         },
         'shopData.longitude': function (value) {//经度
             return this.Validator.value(value).maxLength(50);
@@ -828,7 +834,6 @@ export default({
                     //对应仓库
                     self.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.getOuId,Start:0,Length:100}).then(function(res){
                         // console.log(res);
-                        
                         self.stockAr = res.data;
                     },function(res){
                         console.log('err'+res)
@@ -949,11 +954,29 @@ export default({
         },
         ouNodeClick:function(data){
             let self = this;
+            self.shopData.stockId = '';
+            self.shopData.opAreaId = '';
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
+            //点击所属组织，业务地区跟着变动
+            self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
+                console.log(res);
+                self.opAr = res.result;
+                self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+
+            //点击所属组织，对应仓库跟着变动
+            self.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,Start:0,Length:100}).then(function(res){
+                // console.log(res);
+                self.stockAr = res.data;
+            },function(res){
+                console.log('err'+res)
+            });
         },
         adNodeClick:function(data){
             let self = this;
@@ -993,7 +1016,7 @@ export default({
                 });
             }
 
-            if(self.ifDoModify){
+            if(self.ifUp){
                 self.saveContactModify();
             }
             
@@ -1006,6 +1029,7 @@ export default({
                 console.log(res);
                 self.open('修改联系人成功','el-icon-circle-check','successERP');
                 self.ifDoModify = false;
+                self.ifUp = false;
             },function(res){
                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                 self.errorMessage=true;
@@ -1053,6 +1077,10 @@ export default({
         handleChange:function(index,row){//判断联系人是否修改
             let self = this;
             self.ifDoModify = true;
+            if(row.id>0){
+                self.ifUp = true;
+            }
+            
         },
         //---------------------------------------------------
         //---从表增行--------------------------------------------
@@ -1239,7 +1267,7 @@ export default({
         //---修改返回提示-----------------------------------------
         isBack(){
             let self=this;
-            if(self.ifModify){
+            if(self.ifModify||self.ifDoModify){
                 self.dialogUserConfirm=true;
                 // self.choseDoing='back'
             }else{
@@ -1253,16 +1281,31 @@ export default({
         //-------------------------------------------------------
         //---提示错误----------------------------------------------
         showErrprTips(e){
-            $('.tipsWrapper').css({display:'none'})
-            
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
         },
         showErrprTipsSelect(e){
-            $('.tipsWrapper').css({display:'none'})
-            
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
         },
         showErrprTipsRangedate(e){
-            $('.tipsWrapper').css({display:'none'})
-            
+            $('.tipsWrapper').each(function(){
+            if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                $(this).addClass('display_block')
+            }else{
+                $(this).removeClass('display_block')
+            }
+            })
         },
         showErrprTipsTextArea(e){
             $('.tipsWrapper').css({display:'none'})
