@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import vuex from 'vuex'
+import axios from 'axios'
 Vue.use(vuex);
-
 export default new vuex.Store({
     state: {
         option: {//滚动条样式
@@ -597,6 +597,15 @@ export default new vuex.Store({
             {code:'fa fa-window-restore',label:"",},
             {code:'fa fa-wrench',label:"",},
         ],
+        tableName:'commodityClassTable',//表格名称
+        commodityClassTable:[],//商品类目表格数据
+        commdityBrandTable:[],//品牌表格数据
+        queryparams:{},
+        tableLoading:true,
+        currentPage:1,//当前页码
+        totalPage:10,//总页数
+        eachPage:10,//每页显示条数
+        httpApi:'',
     } ,
     mutations: {
         go(state) { //控制slidebar显示隐藏
@@ -618,5 +627,37 @@ export default new vuex.Store({
         go2(state) {
             state.fixed = false;
         } ,
+        InitTable(state,data){
+            state[state.tableName]=data;
+        },
+        setHttpApi(state,api){//api地址
+            state.httpApi=api;
+        },
+        setTableName(state,name){//对应表格名称
+            state.tableName=name
+        },
+        filterTable(){
+
+        }
+    },
+    actions:{
+        getTable(context){
+            axios.get(context.state.httpApi,{
+                params:{
+                    SkipCount:(context.state.currentPage-1)*context.state.eachPage,
+                    MaxResultCount:context.state.eachPage
+                }
+            }).then(function(res){
+                context.commit('InitTable',res.data.result.items);
+                },function(res){
+            })
+        },
+        queryTable(context){
+            // axios.get(context.state.httpApi,{context.state.queryparams
+            // }).then(function(res){
+            //     context.commit('InitTable',res.data.result.items);
+            //     },function(res){
+            // })
+        }
     }
 })

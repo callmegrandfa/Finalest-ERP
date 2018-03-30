@@ -521,8 +521,10 @@
                             border 
                             style="width: 100%" 
                             stripe>
+
+
                                 <el-table-column prop="moduleName" label="名称"></el-table-column>
-                                 
+                          
                                 <el-table-column :prop="i.permissionName" v-for="(i,index) in moduleList" :key="index" :label="i.displayName">
                                     <template slot-scope="scope">
                                         <el-checkbox v-model="clickFnTreeData[scope.$index][i.permissionName]" @change="selectChangeFn(scope.row[i.permissionName],i.permissionName)"></el-checkbox>

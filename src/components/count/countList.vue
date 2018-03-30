@@ -1,7 +1,8 @@
 <template>
     <div class="count-wrapper" style="float:left;background:#fff;width:100%;">
         <!-- 左边搜索栏 -->
-        <el-col :span="ifWidth?6:0" v-show="ifWidth" class="bgWhite" id="bg-white">
+        <el-col :span="ifWidth?5:0" v-show="ifWidth" class="bgWhite" id="bg-white">
+            <!-- 头部查询 -->
             <el-row class="h48 topSearch" id="left-box">
                     <el-col :span="18" class="pl10">
                         <img src="../../../static/image/common/search_btn.png">
@@ -11,61 +12,56 @@
                         <div class="circle" @click="closeLeft"><span class="circleContent">-</span></div>
                     </el-col>
             </el-row>
+            <!-- 查询 -->
             <el-row style="margin-top:20px">
-                <el-form ref="dataList" :model="dataList" label-width="80px"  class="formWidth">
+                <el-form ref="searchList" :model="searchList" label-width="80px"  class="formWidth">
                     <el-form-item label="单位编码">
-                        <el-input v-model="dataList.unitCode"></el-input>
+                        <el-input v-model="searchList.unitCode" ></el-input>
                     </el-form-item>
-                    <el-form-item label="单位名称">
-                        <el-input v-model="dataList.unitName"></el-input>
+                    <el-form-item label="单位名称" >
+                        <el-input v-model="searchList.unitName"></el-input>
                     </el-form-item>
                     <el-form-item label="基本单位">
-                        <el-select v-model="dataList.region" placeholder="">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                        <el-select v-model="searchList.IsBase" placeholder="">
+                            <el-option label="否" value="0"></el-option>
+                            <el-option label="是" value="1"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="状态">
-                        <el-select v-model="dataList.region" placeholder="">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                        <el-select v-model="searchList.Status" placeholder="">
+                            <el-option label="未启用" value="0"></el-option>
+                            <el-option label="启用" value="1"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-button>查询</el-button>
+                        <el-button @click="searchLeft">查询</el-button>
                     </el-form-item>
                 </el-form>
 
             </el-row>
         </el-col>
         <!-- 右边部分 -->
-        <el-col :span="ifWidth?18:24">
-            <div>
+        <el-col :span="ifWidth?19:24">
+            <div class="leftBox">
                 <el-row class="h48">
                      <el-col :span='2' class="search-block"  v-show="!ifWidth">
-                        <div style="display:inline-block" @click="openLeft">
+                         <div @click="openLeft">
                             <img src="../../../static/image/common/search_btn.png">
-                        </div>
-                        <div style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
                             <span>查询</span>
-                        </div>
-                        <div class="out-img" @click="openLeft">
-                            <span>+</span>
+                             <span @click="openLeft">+</span>
                         </div>
                     </el-col>
                     <!-- 按钮 -->
                     <el-col :span="22" class="h48">
                         <el-row class="h48">
                                 <el-col :span="18" class="pt5">
-                                            <button class="erp_bt bt_add" >
+                                        <button @click="add" class="erp_bt bt_add" >
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/bt_add.png">
                                             </div>
                                             <span class="btDetail">新增</span>
                                         </button>
-
-
-                                        <button class="erp_bt bt_cancel" >
+                                        <button @click="cancel" class="erp_bt bt_cancel" v-show="isEdit">
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/bt_cancel.png">
                                             </div>
@@ -73,7 +69,7 @@
                                         </button>
 
 
-                                        <button class="erp_bt bt_save" >
+                                        <button @click="save" class="erp_bt bt_save" >
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/bt_save.png">
                                             </div>
@@ -81,7 +77,7 @@
                                         </button>
 
 
-                                        <button class="erp_bt bt_del" >
+                                        <button class="erp_bt bt_del" @click="delNode" :disabled="nodeId==-1">
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/bt_del.png">
                                             </div>
@@ -115,79 +111,90 @@
                 <el-row class="bgColor">
                     <!-- 树形控件 -->
                     <el-col :span="6">
-                        <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                             :data="countTree"
+                             :props="defaultProps"
+                             node-key="id"
+                             default-expand-all
+                             ref="tree"
+                             :expand-on-click-node="false"
+                             :filter-node-method="filterNode"
+                             @node-click="nodeClick">
+                        </el-tree>
                     </el-col>
                     <el-col :span="18">
-                        <!-- 输入框 -->
+                        <!--右边表单 -->
                         <div class="bgcForm">
-                            <el-form ref="form" :model="formData" label-width="80px" class="rightForm">
+                            <el-form  ref="formData" :model="formData" label-width="80px" class="rightForm">
                                 <el-form-item label="单位编码">
-                                    <el-input></el-input>
+                                    <el-input v-model="formData.unitCode" @change="edit"></el-input>
                                 </el-form-item>
                                 <el-form-item label="单位名称">
-                                    <el-input></el-input>
+                                    <el-input @change="edit" v-model="formData.unitName"></el-input>
                                 </el-form-item>
                                 <el-form-item label="状态">
-                                    <el-input></el-input>
+                                    <el-select @change="edit" v-model="formData.status" placeholder="">
+                                        <el-option label="未启用" :value="0"></el-option>
+                                        <el-option label="启用" :value="1"></el-option>
+                                    </el-select>
                                 </el-form-item>
                                 <el-form-item>
-                                    <el-radio-group v-model="formData.radio">
-                                    <el-radio label="1">基本单位</el-radio>
-                                    </el-radio-group>
+                                    <el-checkbox @change="edit" v-model="formData.isBase">基本单位</el-checkbox>
                                 </el-form-item>
                             </el-form>
                         </div>
                         
-                        <div>
-                            <!-- tab栏 -->
-
-                            <div class="borderBtm">
-                                <el-col :span="22">
-                                    <!-- <el-tabs v-model="tabName" @tab-click="handleClick">
-                                        <el-tab-pane label="多单位" name="1"></el-tab-pane>
-                                    </el-tabs> -->
-                                    <button class="btnBorder">多单位</button>
-
-                                </el-col>
-                                <el-col :span="2">
-                                    <div class="pickUp">
-                                        <span>收起<i class="el-icon-arrow-down"></i></span>
-                                    </div>
-                                </el-col>
-                            </div>
-                            <!-- 按钮 -->
-                            <el-row class="btnHeight">
-                                <button class="erp_bt bt_save" >
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/increment.png">
-                                    </div>
-                                    <span class="btDetail">增行</span>
-                                </button>
-                                <button class="erp_bt bt_cancel" >
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/eraseline.png">
-                                    </div>
-                                    <span class="btDetail">删行</span>
-                                </button>
-                            </el-row>
-                            <!-- 表格 -->
-                            <el-row class="tableSize">
-                                <el-table :data="tableList" border style="width: 100%">
-                                    <el-table-column prop="" label="序号" width="50">
-                                    </el-table-column>
-                                    <el-table-column prop="" label="" width="180">
-                                    </el-table-column>
-                                    <el-table-column prop="" label="多单位">
-                                    </el-table-column>
-                                    <el-table-column prop="" label="系数" width="180">
-                                    </el-table-column>
-                                    <el-table-column prop="" label="备注" width="180">
-                                    </el-table-column>
-                                    <el-table-column prop="" label="操作">
-                                    </el-table-column>
-                                </el-table>
-                            </el-row>
-                            
+                        <div class="collapseBgc">
+                            <!-- 折叠面板 -->
+                            <el-collapse v-model="activeNames">
+                                <el-collapse-item  name="1" class="bgColor">
+                                     <template slot="title">
+                                        <button class="btnBorder">多单位</button>
+                                    </template>
+                                    <!-- 按钮 -->
+                                    <el-row class="btnHeight bgColor">
+                                        <button class="erp_bt bt_save" @click="addRow">
+                                            <div class="btImg">
+                                                <img src="../../../static/image/common/increment.png">
+                                            </div>
+                                            <span class="btDetail">增行</span>
+                                        </button>
+                                        <button class="erp_bt bt_cancel" >
+                                            <div class="btImg">
+                                                <img src="../../../static/image/common/eraseline.png">
+                                            </div>
+                                            <span class="btDetail">删行</span>
+                                        </button>
+                                    </el-row>
+                                    <!-- 表格 -->
+                                    <el-row class="tableSize">
+                                        <el-table stripe class="bgColor" :data="tableList" border style="width: 100%">
+                                            <el-table-column type="selection"></el-table-column>
+                                            <el-table-column prop="destUnitId" label="多单位">
+                                                <template slot-scope="scope">
+                                                    <el-input v-model="addRowList.destUnitId "></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column prop="factor" label="系数" width="180">
+                                               <template slot-scope="scope">
+                                                    <el-input v-model="addRowList.factor"></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column prop="remark" label="备注" width="180">
+                                                <template slot-scope="scope">
+                                                    <el-input v-model="addRowList.remark"></el-input>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column  label="操作">
+                                                <template slot-scope="scope">
+                                                    <el-button type="text"  @click="confirmDelThis(scope.row)" >删除</el-button>
+                                                    <el-button type="text"  @click="saveRow(scope.row)" >保存</el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-row>
+                                </el-collapse-item>                               
+                            </el-collapse>
                         </div>
                     </el-col>
                 </el-row>
@@ -201,66 +208,250 @@
         data(){
             return {
                 ifWidth:true,
-                dataList:{ 
+                nodeId:-1,
+                isAdd:false,//是否新增
+                isEdit:false,//是否编辑
+                activeNames:['1'],//折叠面板的默认激活状态
+                // --------------左侧搜索框数据
+                searchList:{ 
                     unitCode:'',
                     unitName:'',
-                    },
-                treeData: [
-                    { label: '计量单位',children: [
-                        {label: '个'},
-                        {label: '箱'}]
-                    },
-                ],
+                    IsBase:'',
+                    Status:'',
+                },
+                // -------树形控件数据
+                countTree: [
+                    // { label: '计量单位',children: [
+                    //     {label: '个'},
+                    //     {label: '箱'}]
+                    // },
+                    ],
                 defaultProps: {
-                children: 'children',
-                label: 'label'
+                    children: 'children',
+                    label: 'unitName',
+                    id: 'id',
                 },
+                //---------------- 按钮组参数
+                addList:{//增加所需参数
+                    groupId: 0,
+                    unitCode: "",
+                    unitName: "",
+                    isBase: true,
+                    status: 1,
+                },
+                editList:{//修改所需参数
+                    "id": 0,
+                    "groupId": 0,
+                    "unitCode": "",
+                    "unitName": "",
+                    "isBase": true,
+                    "status": 0
+                    },
+                 //---------------- 表单数据
                 formData:{
-                     radio:'1',
+                    unitCode: "",
+                    unitName: "",
+                    isBase: true,
+                    status: 1,
                 },
-                tabName:'1',
+                // --------------列表数据
                 tableList:[],
+                addRowList:{//新增行数据
+                    "groupId": 0,
+                    "unitId": 0,
+                    "destUnitId": '',
+                    "factor": "",
+                    "remark": ""
+                    },
+                tabName:'1',
+                
                 
 
             }
         },
         created:function () {  
-            this.loadAll();
+            // this.getAllList();
+            this.loadTree();
         },
         methods:{
-            // 左侧搜索栏的收起与展开
+            // ----------左侧搜索栏的收起与展开
             closeLeft: function() {
-            let self = this;
-            self.ifWidth = false;
+                let _this = this;
+                _this.ifWidth = false;
             },
             openLeft: function() {
-                let self = this;
-                self.ifWidth = true;
+                let _this = this;
+                _this.ifWidth = true;
             },
-            // 获取所有数据
-            loadAll(){
+            // 默认获取列表数据
+                // getAllList(){
+                //     let _this=this;
+                //     _this.$axios.gets('/api/services/app/UnitManagement/GetAll',{
+                //         MaxResultCount:10,SkipCount:0,
+                //     }).then(
+                //         rsp=>{
+                //             // console.log(rsp.success);
+                //             // console.log(rsp.result);
+                //             _this.tableList=rsp.result.items;
+                //         }
+                //     )
+                // },
+            // --------------------树形控件相关
+            loadIcon(){//添加文件夹图标
                 let _this=this;
-                _this.$axios.gets('/api/services/app/UnitManagement/GetAll',{
-                    MaxResultCount:10,SkipCount:0,
-                }).then(
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            loadTree(){//获取树形控件数据
+                let _this=this;
+                _this.$axios.gets('/api/services/app/UnitManagement/GetUnitTree').then(
+                    rsp=>{
+                    // console.log(rsp.result)
+                     _this.countTree=rsp.result
+                    _this.loadIcon();
+               })
+            },
+            nodeClick(data) {//树形控件节点被点击时的回调
+                // console.log(data);
+                let _this=this;
+                 _this.nodeId=data.id;
+                //  console.log(data.id);
+                _this.getNodeMsg();
+                _this.getNodeDetail();
+            },
+            getNodeMsg(){//获取树形节点详细信息
+                let _this=this;
+                _this.$axios.gets('/api/services/app/UnitManagement/Get',{Id:_this.nodeId}).then(
+                    rsp=>{
+                    // console.log(rsp.result);
+                     _this.formData=rsp.result;
+               });
+
+            },
+            getNodeDetail(){//获取树形节点子信息
+                let _this=this;
+                _this.$axios.gets('/api/services/app/UnitConvertManagement/GetDetail',{UnitId:_this.nodeId}).then(
+                    rsp=>{
+                    // console.log(rsp.result)
+                     _this.tableList=rsp.result;
+                       });
+
+            },
+            // -------------------按钮组功能
+            add(){//新增
+                let _this=this;
+               _this.isAdd=true;
+               _this.formData.unitCode='';
+               _this.formData.unitName='';
+
+            },
+            save(){//按钮保存
+                let _this=this;
+                if (_this.isAdd) {//新增后保存
+                    _this.addList.unitCode=_this.formData.unitCode;
+                    _this.addList.unitName=_this.formData.unitName;
+                    _this.addList.isBase=_this.formData.isBase;
+                    _this.addList.status=_this.formData.status;
+                    // console.log(_this.addList);
+                    _this.$axios.posts('/api/services/app/UnitManagement/Create',_this.addList)
+                    .then(
+                        rsp=>{
+                            _this.isAdd=false;
+                            _this.loadTree();
+                        }
+                    )
+                }
+                if (_this.isEdit) {//修改后保存
+                    _this.editList.id=_this.nodeId;
+                    _this.editList.unitCode=_this.formData.unitCode;
+                    _this.editList.unitName=_this.formData.unitName;
+                    _this.editList.isBase=_this.formData.isBase;
+                    _this.editList.status=_this.formData.status;
+                    // console.log(_this.editList);
+                    _this.$axios.puts('/api/services/app/UnitManagement/Update',_this.editList)
+                    .then(
+                        rsp=>{
+                            _this.isEdit=false;
+                            _this.loadTree();
+                        }
+                    )
+                }               
+            },
+            delNode(){//删除
+                let _this=this;
+                // console.log("删除节点");
+                _this.$axios.deletes('/api/services/app/UnitManagement/Delete',{Id:_this.nodeId})
+                .then(
                     rsp=>{
                         console.log(rsp.success);
-                        console.log(rsp.result);
-                        
+                        _this.loadTree();
+                    }
+                )
+                
+            },
+            edit(){//确认是否编辑
+                let _this=this;
+                _this.isEdit=true;
+                // console.log("值更改了");
+            },
+            cancel(){
+                let _this=this;
+                _this.getNodeMsg();
+            },
+
+            // -------------------左侧搜索功能
+            searchLeft(){//搜索
+                let _this=this;
+                _this.$axios.gets('/api/services/app/UnitManagement/GetData',{UnitCode:_this.searchList.unitCode,UnitName:_this.searchList.unitName,IsBase:_this.searchList.isBase,Status:_this.searchList.isBase})
+                .then(
+                    rsp=>{
+                        // console.log(rsp.result);
+                        _this.formData=rsp.result[0];
                     }
                 )
             },
-            // 树形控件
-             handleNodeClick(data) {
-                console.log(data);
+            // ----------------------表格功能
+            addRow(){//增加一行
+                let _this=this;
+                _this.tableList.push({"groupId": 0, "unitId": _this.nodeId,"destUnitId": '',"factor": "","remark": ""
+                });
+                // console.log(_this.tableList);            
+            },
+            saveRow(val){//保存所在行
+                // console.log("新增行数据");
+                // console.log(val);
+                 let _this=this;
+                 _this.addRowList.unitId=val.unitId;
+                //  console.log( _this.addRowList);
+                 
+                _this.$axios.posts('/api/services/app/UnitConvertManagement/Create',_this.addRowList)
+                .then(
+                    rsp=>{
+                        // console.log(rsp.success);
+                        console.log(rsp.result);
+                        _this.getNodeDetail();
+                    }
+                )
+
+            },
+            confirmDelThis(){//操作下面的删除
             },
             // tab栏事件
             handleClick(tab, event){},
+            filterNode(tab, event){},
         },
         mounted: function() {
-            let content1 = document.getElementById("bg-white"); //设置高度为全屏
-            let height1 = window.innerHeight - 123;
-            content1.style.minHeight = height1 + "px";
+            // let content1 = document.getElementById("bg-white"); //设置高度为全屏
+            // let height1 = window.innerHeight - 123;
+            // content1.style.minHeight = height1 + "px";
         },
     }
 </script>
@@ -272,7 +463,7 @@
 .bgWhite{
     background-color: #fff;
     height: 100%;
-    border-right: 1px solid #ccc
+    
 }
 .formWidth{
     width: 80%;
@@ -355,7 +546,7 @@
     border: none;
     background-color: #fbfcfd;
     border-bottom: 3px solid #33cccc;
-    height: 42px;
+    height: 48px;
     cursor: pointer;
 }
 .borderBtm .pickUp{
@@ -371,6 +562,13 @@
 .count-wrapper .tableSize .el-table th>.cell{
     color: #000;
     font-size: 12px;
+}
+.leftBox{
+    border-left: 1px solid #ccc;
+}
+.count-wrapper .el-collapse-item.is-active .el-collapse-item__header {
+    border-bottom-color: #ccc;
+    background-color: rgb(251, 252, 253);
 }
 </style>
 
@@ -392,6 +590,12 @@
     color: #fff;
     font-size: 12px;
     padding: 10px 30px;
+}
+.count-wrapper .bgcForm .el-select{
+    display: block !important;
+}
+.count-wrapper .tableSize .bgColor .el-input__inner {
+    border:none !important;
 }
 </style>
 

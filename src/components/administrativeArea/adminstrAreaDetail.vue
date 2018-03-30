@@ -167,7 +167,8 @@
                         <div class="bgcolor bgLongWidth">
                             <label>创建人</label>
                             <el-input 
-                            disabled
+                            :disabled="isDisabled"
+                             v-model="addData.createdBy"
                             ></el-input>
                         </div>
                     </div>
@@ -178,7 +179,8 @@
                             <label>创建时间</label>
                             <el-date-picker
                             type="date"
-                            disabled
+                            :disabled="isDisabled"
+                            v-model="addData.createdTime"
                             format="yyyy-MM-dd"
                             value-format="yyyy-MM-dd">
                             </el-date-picker>
@@ -196,6 +198,7 @@
     name: "adminstrAreaDetail",
     data() {
         return {
+            isDisabled:true,
             addData:{// 新增数据列表
                 "groupId": 0,
                 "levelNo": 0,
@@ -206,7 +209,7 @@
                 "areaFullPathId": "string",
                 "areaFullPathName": "string",
                 "isSystem": true,
-                "status": '',
+                "status": 1,
                 "remark": "",
             },
             selectData:{
@@ -265,13 +268,22 @@
                         _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData)
                             .then(
                                 rsp=>{
-                                            _this.open('保存成功','el-icon-circle-check','successERP');
+                                            _this.open('保存成功','el-icon-circle-check','successERP'); 
+                                             _this.$axios.gets("/api/services/app/AdAreaManagement/Get", {
+                                                id: rsp.result.id
+                                            }).then(
+                                                rsp=>{
+                                                    // console.log(rsp.result);
+                                                    _this.addData=rsp.result;
+                                                    _this.isDisabled=false;
+                                                }
+                                            )  
+
                                         },
                                 rsp=>{   
                                             _this.open('保存失败','el-icon-error','faildERP');
                                     }
                             )
-
                     }
                 }
             )
@@ -285,7 +297,6 @@
                             if (success) {
                                 _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData).then(
                                                 rsp=>{
-                                                    // console.log(rsp);
                                                     _this.reset();
                                                     _this.open('保存成功','el-icon-circle-check','successERP');
                                                 },
@@ -344,17 +355,17 @@
                 _this.selectData.Status001=res.result;
                 })
             },
+            // 重新验证并设置值
+            reset(){
+                this.addData.areaParentId='';
+                this.addData.areaCode='';
+                this.addData.areaName='';
+                this.addData.status='';
+                this.addData.remark=''; 
+                this.validation.reset();               
+            },
         },
-        // 重新验证并设置值
-        reset(){
-            console.log("123zt");
-            this.addData.areaParentId='';
-            this.addData.areaCode='';
-            this.addData.areaName='';
-            this.addData.status='';
-            this.addData.remark=''; 
-            this.validation.reset();               
-        },
+        
     };
 </script>
 
