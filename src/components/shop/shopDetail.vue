@@ -693,18 +693,6 @@ export default({
                 id: 0
             },
 
-            createBankParams:{//创建银行的参数
-                groupId: 1,
-                contactId:'',
-                settlementCurrencyId: '',
-                accountNo: "",
-                accountName: "",
-                openingBank: '',
-                contactPerson: '',
-                phone: '111111111111',
-                isDefault: true
-            },    
-
             contactData:[],//银行数据列表，开始为空
             addList:[],//需要添加的联系人信息
 
@@ -718,8 +706,6 @@ export default({
             backId:'',
             //---确认删除-----------------               
             dialogDelConfirm:false,//用户删除保存提示信息
-            // row:{},//存储用户点击删除条目数据
-            // choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
             //--------------------  
 
             //---信息修改提示框------------
@@ -942,8 +928,6 @@ export default({
                         // console.log(res);
                         self.open('创建店铺资料成功','el-icon-circle-check','successERP');
                         self.backId = res.result.id;
-                        
-                        
 
                         self.goModify(self.backId);
                     },function(res){
@@ -1053,28 +1037,15 @@ export default({
         //---从表多项删除-----------------------------------------
         delMore:function(num){
             let self = this;
-            // for(let i in self.multipleSelection){
-            //     self.contactIndex.push(self.multipleSelection[i].index)
-            // }
-            if(self.multipleSelection.length<=0){
+            if(self.multipleSelection.length>0){
+                self.who = num;
+                self.dialogDelConfirm = true; 
+            }else{
                 self.$message({
                     type: 'info',
                     message: '请勾选需要删除的数据！'
                 });
-            }else{
-                self.who = num;
-                self.dialogDelConfirm = true; 
             }
-            // if(self.contactIndex.length>0){
-            //     self.dialogDelConfirm = true; 
-            //     self.who = num;
-            //     console.log(self.contactIndex)
-            // }else{
-            //     self.$message({
-            //         type: 'info',
-            //         message: '请勾选需要删除的数据！'
-            //     });
-            // }
         },
         //------------------------------------------------------
 
@@ -1097,7 +1068,6 @@ export default({
         //---从表复选框---------------------------------------
         handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
-                // console.log(this.multipleSelection)
         },
         //---------------------------------------------------
 
@@ -1120,7 +1090,7 @@ export default({
                 self.dialogUserConfirm = true;
                 self.backCancle = 1;//为1是取消
             }
-            console.log(self.backCancle)
+            // console.log(self.backCancle)
         },
         
         //--------------------------------------------------
@@ -1138,7 +1108,6 @@ export default({
         },
         sureDoing:function(){
             let self = this;
-            // console.log(self.backCancle)
             if(self.backCancle === 1){//为1是取消
                 self.backId = '';
                 self.dialogUserConfirm=false;
@@ -1178,6 +1147,7 @@ export default({
                     id: 0
                 }
                 self.addList = [];
+                self.xrows = [];
                 self.backCancle = '';
                 self.ifModify = false;
                 $('.tipsWrapper').css({display:'none'})
