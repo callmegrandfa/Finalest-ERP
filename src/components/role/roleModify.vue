@@ -728,7 +728,7 @@ export default({
         _this.getSelectData();//下拉列表
 
         _this.loadOuTable();//分配组织表格
-        _this.loadOuTreeRight();//关联组织树形所有数据
+        // _this.loadOuTreeAll();//关联组织树形所有数据
         _this.loadOuTreeLeft();////关联组织树形左侧已选数据
         _this.getCheckFn();//获取已关联权限
         _this.getAllFn();//获取所有权限
@@ -769,8 +769,8 @@ export default({
                 _this.fromOuRight=true;
             };
         },
-        ouNodeClickRight(){//右侧树形节点点击
-
+        ouNodeClickRight(data){//右侧树形节点点击
+            console.log(data.id)
         },
         getCheckedNodes_left() {//获取左侧选择的数据
             let _this=this;
@@ -807,27 +807,99 @@ export default({
                 _this.ouTotalItem=res.result.totalCount
                 _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
                 _this.ouTableLoading=false;
+                _this.loadOuTreeAll();
                 },function(res){
                 _this.ouTableLoading=false;
             })
         },
-        loadOuTreeRight(){
+        loadOuTreeAll(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
-                _this.ouTreeDataRight=res.result;
-                // _this.treeLoading=false;
-                _this.loadIcon()
+                // _this.ouTreeDataRight=res.result;
+                _this.ouTreeDataRight=_this.parseJson(_this.ouTableData,res.result,'ouId','id','children');
+                // _this.parseJson(_this.ouTableData,res.result,'ouId','id','children')
+                // console.log(_this.parseJson(_this.ouTableData,_this.ouTreeDataRight,'ouId','id','children'))
+                // _this.loadIcon()
             },function(res){
-            //    _this.treeLoading=false;
             })
+        },
+        parseJson(list,jsonObj,keyList,key,children){
+            let _this=this;
+            var goon=true;
+            if(list.length>0 && list){
+                //遍历第一层数据
+                let result=[]
+                let result1=[]
+                for (var topKey=0;topKey<jsonObj.length;topKey++) {
+                    //遍历第一层数据
+                    if(jsonObj[topKey][children]!=null && typeof(jsonObj[topKey][children])=="object" && jsonObj[topKey][children].length > 0){
+                        //如果对象第一层的children存在并且有长度，递归继续解析
+                        var item=jsonObj[topKey];
+                        
+                        var repeat=false;
+                        for(var x=0;x<list.length;x++){
+                            if(list[x][keyList]==jsonObj[topKey][key]){
+                                 console.log(list[x][keyList]+"=="+jsonObj[topKey][key],2)
+                               repeat = true;
+                               goon=false
+                               break;   
+                           
+                                // jsonObj.splice(topKey,1)
+                            }
+                            
+                        };
+                        if (!repeat) {
+                            result.push(item);
+                        }
+                        console.log(goon)
+                        if(goon){
+                           return _this.parseJson(list,jsonObj[topKey][children],keyList,key,children);
+                        }
+                        // jsonObj[topKey][children]=_this.uniqueArrayFn(jsonObj[topKey][children],list,keyList,key)
+                        // return jsonObj
+                        // console.log(jsonObj[topKey][key])
+                        //   _this.parseJson(list,jsonObj[topKey][children],keyList,key,children);
+                    }else{////如果对象的children不存在，获取key
+                        if(typeof(jsonObj[topKey][key])!="undefined"){//获取key值
+                            // console.log(jsonObj[topKey][key])
+                            var item=jsonObj[topKey];
+                            var repeat=false;   
+                            for(var x=0;x<list.length;x++){
+                                if(list[x][keyList]==jsonObj[topKey][key]){
+                                //    console.log(list[x][keyList]+"=="+jsonObj[topKey][key],2)
+                                //    jsonObj.splice(topKey,1)
+                                 
+                                //    repeat = true;
+                                //    goon=false;
+                                //    break; 
+                                }
+                            }
+                            // if (!repeat) {
+                            //     result1.push(item);
+                            // }
+                            
+                        }
+                    }
+                }
+                // console.log(result)
+                if(!goon){
+                    
+                    return result
+                    return _this.parseJson(list,result,keyList,key,children);     
+                }
+            }else{
+                
+                return jsonObj
+            }
         },
         loadOuTreeLeft(){
             let _this=this;
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{id:_this.$route.params.id})
             .then(function(res){
                 _this.ouTreeDataLeft=res.result;
-                // _this.treeLoading=false;
+                // console.log(res.result)
+                //  _this.treeLoading=false;
                 _this.loadIcon()
             },function(res){
             //    _this.treeLoading=false;
@@ -890,13 +962,13 @@ export default({
                 })
             })
         },
-        uniqueArrayFn(array1, array2){//求差集
+        uniqueArrayFn(array1, array2,array1Key,array2Key){//求差集
             var result = [];
             for(var i = 0; i < array1.length; i++){
                 var item = array1[i];
                 var repeat = false;
                 for (var j = 0; j < array2.length; j++) {
-                    if (array1[i].permissionName == array2[j].permissionName) {//唯一key
+                    if (array1[i][array1Key] == array2[j][array2Key]) {//唯一key
                         repeat = true;
                         break;
                     }
