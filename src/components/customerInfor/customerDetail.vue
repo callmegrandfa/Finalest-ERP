@@ -1385,7 +1385,7 @@ export default({
                         for(let i in self.addAddressList){
                             self.addAddressList[i].contactId = res.result.id;
                         }
-                        self.createBank();
+                        self.createAddress();
 
                         for(let i in self.addOuList){
                             self.addOuList[i].contactId = res.result.id;
