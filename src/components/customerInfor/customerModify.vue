@@ -766,26 +766,24 @@
                 <div>
                     <div class="bgcolor">
                         <label>创建人</label>
-                        <el-input v-model="customerData.createName" placeholder="" disabled="disabled"></el-input>
+                        <el-input v-model="customerData.createdBy" placeholder="" disabled="disabled"></el-input>
                     </div>
 
                     <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-date-picker v-model="customerData.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-date-picker v-model="customerData.createdTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
                     </div>
 
                     <div class="bgcolor">
                         <label>修改人</label>
-                        <el-input v-model="customerData.modifyBy" placeholder="" disabled="disabled"></el-input>
+                        <el-input v-model="customerData.modifiedBy" placeholder="" disabled="disabled"></el-input>
                     </div>
 
                     <div class="bgcolor">
                         <label>修改时间</label>
-                        <el-date-picker v-model="customerData.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-date-picker v-model="customerData.modifiedTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
                     </div>
-                    <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-                    <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-                    <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+                    
                 </div>                                  
             </el-col>
         </el-row>

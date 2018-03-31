@@ -323,11 +323,18 @@
           </el-col>
 
           <el-col :span="24" class="bg-white pt10">
-                <button class="erp_bt bt_print" @click='addCol'>
+                <button class="erp_bt bt_add" @click="addCol">
                     <div class="btImg">
-                        <img src="../../../static/image/common/bt_print.png">
-                     </div>
-                    <span class="btDetail">增行</span>
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+
+                <button class="erp_bt bt_del" @click='delMore(2)'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
                 </button>
 
                 <button class="erp_bt bt_excel">
@@ -342,18 +349,12 @@
                     <span class="btDetail">辅助功能</span>
                     <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                 </button>
-                <!-- <button class="erp_bt bt_del" @click='delRow'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_del.png">
-                    </div>
-                    <span class="btDetail">删除</span>
-                </button> -->
           </el-col>
 
           
 
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10">
-              <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
+              <el-table :data="addList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
                     <el-table-column prop="contactPerson" label="联系人" >
@@ -361,7 +362,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -371,7 +371,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.moblie" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -382,7 +381,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.phone" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -391,7 +389,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.completeAddress" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -416,8 +413,7 @@
                         <template slot-scope="scope">
                             <el-radio  :label="true" 
                                         v-model="scope.row.isDefault" 
-                                        @change.native="getCurrentRow(scope.$index,scope.row)"
-                                        :disabled="isEdit"></el-radio>
+                                        @change.native="getCurrentRow(scope.$index,scope.row)"></el-radio>
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" label="备注">
@@ -425,17 +421,12 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.remark" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <!-- <span>{{scope.row}}</span> -->
-                            <!-- <el-button v-on:click='a(scope.row)'>123</el-button> -->
-                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
-                            <!-- <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button>  -->
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
               </el-table> 
@@ -449,10 +440,7 @@
                 <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="" disabled="disabled"></el-input></div>
                 <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker></div>
                 <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="" disabled="disabled"></el-input></div>
-                <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker></el-input></div>
-                <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-                <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-                <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+                <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker></div>
             </div>                                  
         </el-col>
     </el-row>  
@@ -619,9 +607,14 @@
 
                     //业务地区
                     self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
-                        // console.log(res);
-                        self.opAr = res.result;
-                        self.loadIcon();
+                        console.log(res);
+                        if(res.result.length>0){
+                            self.opAr = res.result;
+                            self.loadIcon();
+                        }else{
+                            self.opItem.areaName = '暂无业务地区';
+                        }
+                        
                     },function(res){
                         console.log('err'+res)
                     });
@@ -639,18 +632,6 @@
                 },function(res){
                     console.log('err'+res)
                 });
-                //业务地区*1
-                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
-                //     // console.log(res);
-                //     console.log(res)
-                //     self.opAr = res.result;
-                //     // self.opAr=[{
-                //     //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
-                //     // }]
-                //     self.loadIcon();
-                // },function(res){
-                //     console.log('err'+res)
-                // });
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
                     console.log(res);
@@ -695,7 +676,7 @@
                             self.errorMessage=true;
                             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         })
-                        self.Cancle();
+                        self.Cancel();
                     }
                 })
                 
@@ -762,15 +743,12 @@
                     isDefault:false,//是否默认
                     remark:'',//备注
                 };
-                self.allList.unshift(self.rows.newCol);
+                // self.allList.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
                 // console.log(self.rows)
             },
 
-            handleEdit:function(index){//表格内编辑操作
-
-            },
-
+            //---默认-------------------------------------
             getCurrentRow:function(index,row){//默认单选框
                 let self = this;
                 for(let i in self.addList){
@@ -779,63 +757,30 @@
                 self.addList[index].isDefault = true;
                 // self.updateList.push(self.checkedAr)
             },
+            //-------------------------------------------
 
-            handleSelectionChange:function(val){//点击复选框选中的数据
+            //---点击复选框选中的数据------------------------------
+            handleSelectionChange:function(val){
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
             },
-
-            handleDelete:function(index,id){//表格内删除操作
+            //---------------------------------------------------
+            //---从表表格内删除------------------------------------
+            handleDelete:function(index,row,who){//表格内删除操作
                 let self = this; 
-                self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.open('删除成功','el-icon-circle-check','successERP');    
-                            self.allList.splice(index,1);
-                            self.addList.splice(index,1);
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
+                self.who = who;
+                self.whoIndex = index;
+                self.dialogDelConfirm = true;
                 
             },
+            //---------------------------------------------------
 
-            delRow:function(){//删除选中的项
+            //---批量删除----------------------------------------
+
+            delMore:function(num){//删除选中的项
                 let self=this;
-                for(let i in self.multipleSelection){
-                    self.idArray.ids.push(self.multipleSelection[i].id)
-                }
-                if(self.idArray.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
-                }
-                
-                if(self.idArray.ids.length>0){
-                    console.log(self.idArray.ids)
-                    self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
-                                self.loadAddData();
-                                self.open('删除成功','el-icon-circle-check','successERP');    
-                            })
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
+                if(self.multipleSelection.length>0){
+                    self.who = num;
+                    self.dialogDelConfirm = true; 
                 }else{
                     self.$message({
                         type: 'info',
@@ -848,54 +793,95 @@
             //---确认删除--------------------------------------------
             sureDel:function(){
                 let self = this;
-                console.log(666)
+                if(self.who == 1){
+                    self.addList.splice(self.whoIndex,1)
+                    self.dialogDelConfirm = false;
+                    self.open('删除成功','el-icon-circle-check','successERP');
+                }
+
+                if(self.who == 2){
+                    let x = [];
+                    $.each(self.addList,function(index,value){
+                        let flag = false;
+                        $.each(self.multipleSelection,function(i,val){
+                            if(value==val){
+                                flag = true;
+                            }
+                        })
+                        if(!flag){
+                            x.push(value)
+                        }
+                    })
+                    self.addList = x;
+                    // console.log(self.addList)
+                    self.dialogDelConfirm = false;
+                }
             },
             //-------------------------------------------------------
 
-            //---cancle-------------------------------------------
-            Cancle:function(){
+            //---取消按钮-------------------------------------------
+            Cancel:function(){
                 let self = this;
-                self.createRepositoryParams = {
-                    ouId: '',
-                    stockCode: "",
-                    stockName: "",
-                    stockFullName: "",
-                    opAreaId: 1,
-                    adAreaId: 10,
-                    stockTypeId: 0,
-                    fax: "",
-                    email:  '',
-                    status: 0,
-                    mnemonic: "",
-                    stockAddress: "",
-                    manager: "",
-                    phone: "",
-                    remark: ""
+                if(self.Modify){
+                    self.dialogUserConfirm = true;
+                    self.backCancel = 1;//为1是取消
                 }
-                self.addList = [];
-                self.rows = [];
+                
             },
             //----------------------------------------------------
 
-            //---修改返回提示-----------------------------------------
+            //---弹出提示-----------------------------------------
             isBack(){
                 let self=this;
                 if(self.ifModify){
+                    self.backCancel = 2;
                     self.dialogUserConfirm=true;
                     // self.choseDoing='back'
                 }else{
                     self.back()
                 }
             },
-            sureDoing:function(){
-                let self = this;
-                self.back();
-            },
+            
             Modify:function(){//判断是否修改过
                 let self = this;
                 self.ifModify = true;
             },
             //-------------------------------------------------------
+
+            //---确认提示------------------------------------------
+            sureDoing:function(){
+                let self = this;
+                if(self.backCancel === 1){//为1是取消
+                    self.dialogUserConfirm=false;
+                    self.createRepositoryParams = {
+                        ouId: self.defaultOuId,
+                        stockCode: "",
+                        stockName: "",
+                        stockFullName: "",
+                        opAreaId: '',
+                        adAreaId: 10,
+                        stockTypeId: 0,
+                        fax: "",
+                        email:  '',
+                        status: 0,
+                        mnemonic: "",
+                        stockAddress: "",
+                        manager: "",
+                        phone: "",
+                        remark: ""
+                    }
+                    self.addList = [];
+                    self.rows = [];
+                    self.backCancel = '';
+                    self.ifModify = false;
+                    $('.tipsWrapper').css({display:'none'})
+                }
+                if(self.backCancel === 2){//为2是返回
+                    self.back();
+                }
+                
+            },
+            //----------------------------------------------------
 
             //---open---back----清除--------------------------------------
             open(tittle,iconClass,className) {
@@ -947,6 +933,8 @@
                 // console.log(data)
                 let self = this;
                 self.createRepositoryParams.opAreaId = '';
+                self.opItem.areaName = '';
+
                 self.ouItem.id = data.id;
                 self.ouItem.ouFullname = data.ouFullname;
                 self.$nextTick(function(){
@@ -954,13 +942,14 @@
                 })
                 //点击所属组织，业务地区跟着变动
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
-                    // console.log(res);
-                    self.opAr = res.result;
-                    if(res.result.length==0){
+                    console.log(res);
+                    if(res.result.length>0){
+                        self.opAr = res.result;
+                        self.loadIcon();
+                    }else{
                         self.opItem.areaName = '暂无业务地区';
                         self.opItem.id = '';
                     }
-                    self.loadIcon();
                 },function(res){
                     console.log('err'+res)
                 });
@@ -1050,6 +1039,7 @@
         data(){
             return {
                 defaultOuId:'',//默认的ouid
+                backCancel:'',//判断是返回还是取消
                 allList:[],
                 auditInformation:{//审计信息
                     createName:"",
@@ -1132,7 +1122,7 @@
                     "stockCode": "",
                     "stockName": "",
                     "stockFullName": "",
-                    "opAreaId": 1,
+                    "opAreaId": '',
                     "adAreaId": 10,
                     "stockTypeId": 0,
                     "fax": "",
