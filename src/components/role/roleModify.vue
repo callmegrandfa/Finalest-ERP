@@ -15,26 +15,16 @@
                 </div>
                 <span class="btDetail">保存</span>
             </button>
-
+            <button class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button class="erp_bt bt_saveAdd">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
                 </div>
                 <span class="btDetail">保存并新增</span>
             </button>
-
-            <button class="erp_bt bt_add">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_add.png">
-                </div>
-                <span class="btDetail">复制</span>
-            </button>   
-
+            
+            <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
             <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-            <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-            <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>
-            <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
-            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
     </el-row>
@@ -645,6 +635,7 @@ export default({
 // -------------tree-------------------
             fnTreeLoading:false,
             fnTreeData:[],
+            result:[],
             defaultProps: {
                 children: 'children',
                 label: 'displayName',
@@ -700,6 +691,7 @@ export default({
                 {moduleName:'',head:[{displayName:'',permissionName:''}]}
             ],//当前点击节点数据
             clickCheckBox:'',
+            pageTable:[],//用于分页展示所有权限
 
         }
     },
@@ -728,7 +720,7 @@ export default({
         _this.getSelectData();//下拉列表
 
         _this.loadOuTable();//分配组织表格
-        _this.loadOuTreeRight();//关联组织树形所有数据
+        // _this.loadOuTreeAll();//关联组织树形所有数据
         _this.loadOuTreeLeft();////关联组织树形左侧已选数据
         _this.getCheckFn();//获取已关联权限
         _this.getAllFn();//获取所有权限
@@ -769,8 +761,8 @@ export default({
                 _this.fromOuRight=true;
             };
         },
-        ouNodeClickRight(){//右侧树形节点点击
-
+        ouNodeClickRight(data){//右侧树形节点点击
+            console.log(data.id)
         },
         getCheckedNodes_left() {//获取左侧选择的数据
             let _this=this;
@@ -807,27 +799,103 @@ export default({
                 _this.ouTotalItem=res.result.totalCount
                 _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
                 _this.ouTableLoading=false;
+                _this.loadOuTreeAll();
                 },function(res){
                 _this.ouTableLoading=false;
             })
         },
-        loadOuTreeRight(){
+        loadOuTreeAll(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
-                _this.ouTreeDataRight=res.result;
-                // _this.treeLoading=false;
-                _this.loadIcon()
+                // _this.ouTreeDataRight=res.result;
+                _this.ouTreeDataRight=_this.parseJson(_this.ouTableData,res.result,'ouId','id','children');
+                // _this.parseJson(_this.ouTableData,res.result,'ouId','id','children')
+                // console.log(_this.parseJson(_this.ouTableData,_this.ouTreeDataRight,'ouId','id','children'))
+                // _this.loadIcon()
             },function(res){
-            //    _this.treeLoading=false;
             })
+        },
+        parseJson(list,jsonObj,keyList,key,children){
+            let _this=this;
+            let n=0;
+            let m=0;
+            let goOn=true;
+            if(list.length>0 && list!=null && typeof(list)!='undefined'){
+                //遍历第一层数据
+                for(let topKey in jsonObj) {
+                //for (var topKey=0;topKey<jsonObj.length;topKey++) {
+                    //遍历第一层数据
+                    var item = jsonObj[topKey];
+                    var repeat = false;
+                    
+                        if(jsonObj[topKey][children]!=null && typeof(jsonObj[topKey][children])=="object" && jsonObj[topKey][children].length > 0){
+                            //如果对象第一层的children存在并且有长度，递归继续解析
+                            for(let x in list){
+                            //for(var x=0;x<list.length;x++){
+                                if(list[x][keyList]==jsonObj[topKey][key]){
+                                console.log(list[x][keyList]+"=="+jsonObj[topKey][key],1)
+                                    repeat = true;
+                                    goOn=false
+                                    break; 
+                                }
+                            }
+                            if(!repeat){
+                                // console.log(repeat)
+                                  _this.parseJson(list,jsonObj[topKey][children],keyList,key,children); 
+                            }
+                            
+                        }else{
+                            for(let x in list){
+                            //for(var x=0;x<list.length;x++){
+                                if(list[x][keyList]==jsonObj[topKey][key]){
+                                    console.log(list[x][keyList]+"=="+jsonObj[topKey][key],2)
+                                    goOn=false
+                                    repeat = true;
+                                    break; 
+                                }
+                            }
+                            // let leftArray=[1,2.3];
+                            // let rightArray=[];
+                            // rightArray.find((i)=>{
+                            //     for(i in leftArray){
+                            //        rightArray.remove(i=rightArray.id) 
+                                    
+                            //     }
+                            // })
+                            //list.find(i=>i.id)
+                        }
+                    
+                    if (!repeat) {
+                        _this.result.push(item);
+
+                    }
+                    // if(repeat){
+                    //     _this.parseJson(list,result,keyList,key,children); 
+                    // }
+                }
+
+                console.log(_this.result);
+                return _this.result
+               
+                // if(!goOn){.
+
+                //     _this.parseJson(list,result,keyList,key,children); 
+                // }
+            //    return result
+            }else{
+                
+                return jsonObj
+            }
+            console.log(jsonObj);
         },
         loadOuTreeLeft(){
             let _this=this;
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{id:_this.$route.params.id})
             .then(function(res){
                 _this.ouTreeDataLeft=res.result;
-                // _this.treeLoading=false;
+                // console.log(res.result)
+                //  _this.treeLoading=false;
                 _this.loadIcon()
             },function(res){
             //    _this.treeLoading=false;
@@ -840,6 +908,7 @@ export default({
             _this.$axios.gets('/api/services/app/Role/GetPermissions',{Id:_this.$route.params.id})
             .then(function(res){
                 _this.checked=res.result.items;
+                _this.pageTable=res.result.items;
                 },function(res){
             })
         },
@@ -873,6 +942,29 @@ export default({
                 _this.fnTreeData=res.items;
                 _this.fnTreeLoading=false;
                 _this.loadIcon()
+                // _this.$axios.gets('/api/services/app/Role/GetPermissions',{Id:_this.$route.params.id})
+                // .then(function(resp){
+                //     _this.pageTable=resp.result.items;
+                //     if(res.items.length>0 && res.items!=null && typeof(res.items)!='undefined'){
+                //         for(let x=0;x<res.items.length;x++){
+                //             if(res.items[x].children.length>0 && res.items[x].children!=null && typeof(res.items[x].children)!='undefined'){
+                //                 for(let y=0;x<res.items[x].children.length;y++){
+                //                     if(resp.result.items.length>0 && resp.result.items!=null && typeof(resp.result.items)!='undefined'){
+                //                         for(let z=0;z<resp.result.items.length;z++){
+                //                             if(res.items[x].children[y].permissionName==resp.result.items[z].displayName){
+                //                                 let item={moduleName:data.displayName}
+                //                             }
+                //                         } 
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                    
+
+                //     },function(res){
+                // })
+
             },function(res){
                 _this.fnTreeLoading=false;
             })
@@ -890,13 +982,13 @@ export default({
                 })
             })
         },
-        uniqueArrayFn(array1, array2){//求差集
+        uniqueArrayFn(array1, array2,array1Key,array2Key){//求差集
             var result = [];
             for(var i = 0; i < array1.length; i++){
                 var item = array1[i];
                 var repeat = false;
                 for (var j = 0; j < array2.length; j++) {
-                    if (array1[i].permissionName == array2[j].permissionName) {//唯一key
+                    if (array1[i][array1Key] == array2[j][array2Key]) {//唯一key
                         repeat = true;
                         break;
                     }
@@ -927,11 +1019,6 @@ export default({
         },
         fnNodeClick(data){
             let _this=this;
-            // _this.checked=[
-            //     {description:null,displayName:"HKERP.Users.UserAppService.GetAll",id:0,name:"HKERP.Users.UserAppService.GetAll"},
-            //     {description:null,displayName:"HKERP.Users.UserAppService.GetRoles",id:0,name:"HKERP.Users.UserAppService.GetRoles"}
-            // ]
-            
             let item={moduleName:data.displayName}
             let head=[];
             $.each(data.children,function(index,value){
@@ -946,48 +1033,6 @@ export default({
             item.head=head
             _this.moduleList=head
             _this.clickFnTreeData=[item]
-            // console.log(item)
-            // _this.moduleList=[]
-            // $.each(data.children,function(index,value){
-            //     let item={displayName:value.displayName,permissionName:value.permissionName}
-            //     _this.moduleList.push(item)
-            // })
-            // let all=data.children;
-            // let checkClick=[];
-            // let nocheckedClick=[];
-            // _this.nowClickNode=data.displayName;
-            // if(!_this.storeNodeClickData[data.displayName]){
-            //     if(_this.checked.length>0){
-            //         for(let i=0;_this.checked.length>i;i++){
-            //             for(let x=0;all.length>x;x++){
-            //                 if(_this.checked[i].displayName==all[x].permissionName){
-            //                     all[x].isCheck=true
-
-            //                     // _this.checked[i].isCheck=true
-            //                     // checkClick.push(_this.checked[i])
-
-            //                     checkClick.push(all[x])
-            //                     break
-            //                 }
-            //             }
-            //         }
-            //         nocheckedClick=_this.uniqueArrayFn(all,checkClick)
-            //     }else{
-            //         for(let x=0;all.length>x;x++){
-            //             all[x].isCheck=false
-            //         }
-            //         nocheckedClick=all;
-            //     }
-
-            //     _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
-            // }
-            // _this.checkTable=_this.storeNodeClickData[data.displayName].check;
-            // _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
-            // _this.allTable=_this.storeNodeClickData[data.displayName].all;
-            // let clickItem=data
-            // clickItem.children=_this.storeNodeClickData[data.displayName].all;
-            // _this.clickFnTreeData=[clickItem]
-            
         },
         filterNode_ou(value, data) {
             if (!value) return true;
@@ -1037,11 +1082,8 @@ export default({
 // ----------关联用户--------------
         editDialog(){
             let _this=this;
-            if(!_this.isEdit){
                 _this.dialogUser=true;
-            }else{
-                return false;
-            }
+            
         },
         LeftbtnIsShow(){
             let _this=this;
@@ -1158,11 +1200,16 @@ export default({
             
            .then(function(response){//获取已选角色
                 let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
-                _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
-                .then(function(resp){//获取已选角色
-                    _this.checkedUserTable=resp.result.items
+                if(totalCheckedAll>0){
+                    _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
+                    .then(function(resp){//获取已选角色
+                        _this.checkedUserTable=resp.result.items
+                        _this.getAllUserData()//获取所有角色数据
+                    })
+                }else{
+                    _this.checkedUserTable=[]
                     _this.getAllUserData()//获取所有角色数据
-                })
+                }
                 
            })
         },
@@ -1222,16 +1269,11 @@ export default({
            
         },
         check_push_noCheck_userThis(val){//删除一个关联角色
-            let _this=this;
-            if(!_this.isEdit){
                 let json=[val]
                 _this.update=true;
                 _this.checkedUserTable=_this.uniqueArray(_this.checkedUserTable,json);
                 _this.showNoCheckedUser=_this.pagination(json,[],_this.oneItemRightUser,_this.pageRightUser,'right')
                 _this.showCheckedUser=_this.pagination([],json,_this.oneItemLeftUser,_this.pageLeftUser,'left')
-            }else{
-                return false
-            }
         },
         cancelPushUser(){//取消
             let _this=this;
