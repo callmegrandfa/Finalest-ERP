@@ -3,10 +3,11 @@
         <el-row  class="fixed">
             <el-col :span="24">
               <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>  
-              <button @click="save" v-show="update_click" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button @click="isCancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-              <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+              <button @click="save" class="erp_bt bt_save" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+              <button @click="isCancel" class="erp_bt bt_cancel" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button plain @click="saveAdd" class="erp_bt bt_saveAdd" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+              <button @click="add" class="erp_bt bt_add" v-show="!update"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <button @click="isDeleteThis" class="erp_bt bt_del" v-show="!update"><div class="btImg" ><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
             </el-col>
         </el-row>
         <el-row>
@@ -15,7 +16,7 @@
                     <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>用户编码</label>
                         <el-input 
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         class="userCode" 
                         :class="{redBorder : validation.hasError('addData.userCode')}" 
@@ -31,7 +32,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>用户名称</label>
                     <el-input 
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     class="displayName" 
                     :class="{redBorder : validation.hasError('addData.displayName')}" 
@@ -47,7 +48,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>手机号码</label>
                     <el-input 
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     class="phoneNumber" 
                     :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
@@ -63,7 +64,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label>邮箱</label>
                     <el-input 
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
@@ -79,7 +80,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属用户组</label>
                     <el-select filterable  
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     class="userGroupId" 
                     placeholder=""
@@ -98,7 +99,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属组织</label>
                     <el-select 
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     class="ouId" 
                     placeholder=""
@@ -138,7 +139,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>身份类型</label>
                     <el-select filterable  
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     class="userType" 
                     placeholder=""
@@ -157,7 +158,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>语种</label>
                     <el-select filterable  
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     class="languageId" 
                     placeholder=""
@@ -177,7 +178,7 @@
                         <label><small>*</small>有效时间</label>
                         <div class="rangeDate">
                             <el-date-picker
-                            :disabled="isEdit" 
+                             
                             @change="isUpdate"
                             v-model="dateRange"
                             class="dateRange"
@@ -202,7 +203,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>状态</label>
                         <el-select filterable  
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         class="status" 
                         placeholder=""
@@ -231,7 +232,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
-                        :disabled="isEdit" 
+                         
                          @change="isUpdate"
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}"
@@ -485,7 +486,6 @@
           "roleCodes": [],
         },
         dateRange:[],//有效时间
-        update_click:false,   
         selectData:{//select数据
             OUType:[],//所属组织
             Status001:[],//启用状态
@@ -493,9 +493,7 @@
             userGroupId:[],//所属用户组
             languageId:[],//语种
         },
-        update:false,
-        isEdit:true,//是否可编辑
-        update_click:false,   
+        update:false, 
 // ------------关联角色dialog-------------
         dialogTableVisible:false,//控制对话框
         checkedTable:[],//已选所有数据
@@ -740,6 +738,12 @@
                 _this.Cancel()
             }
         },
+        isDeleteThis(){
+            let _this=this;
+            _this.dialogUserConfirm=true;
+            _this.choseDoing='deleteThis'
+
+        },
         sureDoing(){
             let _this=this;
             if(_this.choseDoing=='back'){
@@ -748,30 +752,23 @@
             }else if(_this.choseDoing=='Cancel'){
                 _this.Cancel();
                 _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='deleteThis'){
+                _this.deleteThis();
+                _this.dialogUserConfirm=false;
             }
         },
         back(row){
             this.$store.state.url='/user/userList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
         },
-        Update(){//修改
-            this.update_click=true;
-            if(this.isEdit==true){
-                this.isEdit=!this.isEdit;
-            } 
-        },
         isUpdate(){//判断是否修改过信息
             this.update=true;
         },
         Cancel(){
-            if(this.isEdit==false){
-                this.isEdit=!this.isEdit;
                 this.validation.reset();
                 this.getData();
                 this.GetRoles()
                 this.update=false;
-                this.update_click=false;
-            }
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -790,33 +787,71 @@
         },
         save(){
             let _this=this;
-            if(_this.update){
-                _this.$validate()
-                .then(function (success) {
-                    if (success) {
-                        let roles=[];
-                        $.each(_this.checkedTable,function(index,value){
-                            roles.push(value.roleCode)
-                        })
-                        _this.addData.roleCodes=roles;
-                        _this.addData.effectiveStart=_this.dateRange[0];
-                        _this.addData.effectiveEnd=_this.dateRange[1];
-                        _this.$axios.puts('/api/services/app/User/Update',_this.addData)
-                        .then(function(res){
-                            _this.update=false;
-                            _this.isEdit=true;
-                            _this.update_click=false;
-                            _this.open('保存成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                            _this.errorMessage=true;
-                            _this.open('保存失败','el-icon-error','faildERP');
-                        })
-                    }
-                });
-            }else{
-                _this.open('没有需要保存的项目','el-icon-warning','noticERP');
-            }    
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    let roles=[];
+                    $.each(_this.checkedTable,function(index,value){
+                        roles.push(value.roleCode)
+                    })
+                    _this.addData.roleCodes=roles;
+                    _this.addData.effectiveStart=_this.dateRange[0];
+                    _this.addData.effectiveEnd=_this.dateRange[1];
+                    _this.$axios.puts('/api/services/app/User/Update',_this.addData)
+                    .then(function(res){
+                        _this.update=false;
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                        _this.errorMessage=true;
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });   
+        },
+        saveAdd(){
+            let _this=this;
+           _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    let roles=[];
+                    $.each(_this.checkedTable,function(index,value){
+                        roles.push(value.roleCode)
+                    })
+                    _this.addData.roleCodes=roles;
+                    _this.addData.effectiveStart=_this.dateRange[0];
+                    _this.addData.effectiveEnd=_this.dateRange[1];
+                    _this.$axios.puts('/api/services/app/User/Update',_this.addData)
+                    .then(function(res){
+                        _this.update=false;
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.add()
+                    },function(res){
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                        _this.errorMessage=true;
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });   
+        },
+        add(){
+            let _this=this;
+            _this.$store.state.url='/user/userDetail/default'
+            _this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
+        },
+        deleteThis(){
+             let _this=this;
+            _this.$axios.deletes('/api/services/app/User/Delete',{id:_this.$route.params.id})
+            .then(function(res){
+                _this.dialogUserConfirm=false;
+                _this.open('删除成功','el-icon-circle-check','successERP');
+                _this.add();
+            },function(res){
+                if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                _this.dialogUserConfirm=false;
+                _this.errorMessage=true;
+                _this.open('删除失败','el-icon-error','faildERP');
+            })
         },
          uniqueArray(array1, array2){//求差集
             var result = [];
@@ -837,11 +872,7 @@
         },
         editDialog(){
             let _this=this;
-            if(!_this.isEdit){
                 _this.dialogTableVisible=true;
-            }else{
-                return false;
-            }
         },
         LeftbtnIsShow(){
             let _this=this;
@@ -967,6 +998,7 @@
                         _this.getAllRoleData()//获取所有角色数据
                     })
                 }else{
+                    _this.checkedTable=[]
                     _this.getAllRoleData()//获取所有角色数据
                 }
                 
@@ -1006,15 +1038,11 @@
         },
         check_push_noCheckThis(val){//删除一个关联角色
             let _this=this;
-            if(!_this.isEdit){
                 let json=[val]
                 _this.update=true;
                 _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
                 _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
                 _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
-            }else{
-                return false
-            }
         },
         cancelPush(){//取消
             let _this=this;

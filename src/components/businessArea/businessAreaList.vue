@@ -129,7 +129,6 @@
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
                                     <el-button type="text"  @click="modify(scope.row)" >修改</el-button>
-                                    <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text"  @click="confirmDelThis(scope.row)" >删除</el-button>
                                 </template>
                             </el-table-column>
@@ -219,19 +218,6 @@
                 searchLeft:'',
                 timeout:null,
                 restaurants:[],
-                dialogData:{
-                    groupId: '1' ,
-                    areaType: '1' ,
-                    areaParentId:'' ,
-                    areaCode:'',
-                    areaName: '' ,
-                    areaFullName: 'string' ,
-                    areaFullPathId: 'string' ,
-                    areaFullPathName: 'string' ,
-                    manager: '' ,
-                    status: '' ,
-                    remark: ''
-                },
                  areaTypes: [{//业务地区分类
                     value:'1',
                     label: '业务地区'
@@ -279,38 +265,6 @@
                 
             }
         },
-        validators: {
-            //    'dialogData.areaType': function (value) {//地区分类
-            //      return this.Validator.value(value).required().integer()
-            //   },
-            'dialogData.areaCode': function (value) {//地区代码
-                return this.Validator.value(value).required().maxLength(50)
-            },
-            'dialogData.areaName': function (value) {//地区名称
-                return this.Validator.value(value).required().maxLength(50);
-            },
-            //   'dialogData.areaFullName': function (value) {//地区全称
-            //      return this.Validator.value(value).required().maxLength(200);
-            //   },
-            //   'dialogData.areaFullPathId': function (value) {//全路径ID
-            //      return this.Validator.value(value).required().maxLength(1000);
-            //   },
-            //   'dialogData.areaFullPathName': function (value) {//全路径名称
-            //      return this.Validator.value(value).required().maxLength(1000);
-            //   },
-            'dialogData.manager': function (value) {//负责人
-                return this.Validator.value(value).required().maxLength(20);
-            },
-            'dialogData.areaParentId': function (value) {//上级业务地区
-                return this.Validator.value(value).required().integer();
-            },
-            'dialogData.status': function (value) {//启用状态
-                return this.Validator.value(value).required().integer();
-            },
-            'dialogData.remark': function (value) {//备注
-                return this.Validator.value(value).required().maxLength(200);
-            },
-        },
         created:function(){       
             let _this=this;
             _this.loadTableData();
@@ -341,16 +295,27 @@
                  _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
                     _this.restaurants=[],
-                    _this.tableData=res.result;
+                    _this.tableData=[]
+                    // _this.tableData=res.result.items;
+                    $.each(res.result.items,function(index,val){
+                        if(val!=null){
+                            _this.tableData.push(val)
+                        }
+                    })
                     _this.totalItem=res.result.totalCount;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
-                    $.each(res.result,function(index,value){
-                        let item={'value':value.areaName,'id':value.id};
-                        _this.restaurants.push(item)
+                    $.each(res.result.items,function(index,value){
+                        if(value!=null){
+                            let item={'value':value.areaName,'id':value.id};
+                            _this.restaurants.push(item)
+                        }
+                        
+                        
+                        
                     })
                     },function(res){
                     _this.tableLoading=false;
@@ -477,7 +442,7 @@
                     "updateList": [],
                     "deleteList": _this.multipleSelection
                 }
-                _this.$axios.posts('/api/services/app/AreaManagement/CUDAggregate',data)
+                _this.$axios.posts('/api/services/app/OpAreaManagement/CUDAggregate',data)
                 .then(function(res){
                      _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
@@ -493,7 +458,7 @@
             },
             delThis(){//单项删除
                 let _this=this;
-                _this.$axios.deletes('/api/services/app/AreaManagement/Delete',{id:_this.row.id})
+                _this.$axios.deletes('/api/services/app/OpAreaManagement/Delete',{id:_this.row.id})
                 .then(function(res){
                     _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
@@ -508,13 +473,15 @@
             },
             nodeClick(data){
                 let _this=this;
+                console.log(data)
                 _this.tableLoading=true;
                 _this.detailParentId=data.id;
                 _this.detailParentName=data.name;
                 _this.ouId=data.ouId;
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',{ParentId:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                 .then(function(res){
-                    _this.tableData=res.result;
+                    _this.tableData=res.result.items;
+                    console.log(res)
                     _this.totalItem=res.result.totalCount;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
@@ -536,31 +503,6 @@
                  return data.areaName.indexOf(value) !== -1;
             },
             
-            clearTreeData(){
-                let _this=this;
-                _this.dialogData={
-                     groupId: 1 ,
-                    areaType: 1 ,
-                    areaParentId:'' ,
-                    areaCode:'',
-                    areaName: '' ,
-                    areaFullName: 'string' ,
-                    areaFullPathId: 'string' ,
-                    areaFullPathName: 'string' ,
-                    manager: '' ,
-                    status: '' ,
-                    remark: ''
-                }
-                _this.validation.reset();
-            },
-            newadds(){
-                let _this=this;
-                _this.clearTreeData();
-                _this.tittle='新增';
-                _this.isAdd=true;
-                _this.showParent=true;
-                _this.dialogFormVisible=true;
-            },
             querySearchAsync(queryString, cb) {
                 var restaurants = this.restaurants;
                 var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
