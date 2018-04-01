@@ -216,7 +216,7 @@
                 //--------------确认删除开始-----------------               
                 dialogUserConfirm:false,//用户删除保存提示信息
                 row:{},//存储用户点击删除条目数据
-                choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
+                choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
                 multipleSelection: {},//复选框选中数据
                 //--------------确认删除开始-----------------  
                 // selectedIds: {}, //复选框选中数据
@@ -235,8 +235,8 @@
              this.loadTree();
         },
         methods:{
-                // 提示信息
-                open(tittle, iconClass, className) {
+            // 提示信息
+            open(tittle, iconClass, className) {
                     this.$notify({
                         position: "bottom-right",
                         iconClass: iconClass,
@@ -245,7 +245,7 @@
                         duration: 3000,
                         customClass: className
                     });
-                },
+            },
             // 获取所有列表数据
             getDataList(){
                 let _this=this;
@@ -382,7 +382,7 @@
                 this.getDataList();
             },
             // 
-           confirm(){//多项删除
+            confirm(){//多项删除
                 let _this=this;
                 _this.choseAjax='rows'
                 if(_this.multipleSelection.ids.length>0){
