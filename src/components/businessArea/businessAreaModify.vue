@@ -3,15 +3,11 @@
         <el-row  class="fixed">
             <el-col :span="24">
               <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
-              <button @click="save" v-show="update_click" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button @click="isCancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-              <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-              <button class="erp_bt bt_auxiliary bt_width">
-                <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                <span class="btDetail">辅助功能</span>
-                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-              </button>
+              <button @click="save" class="erp_bt bt_save" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+              <button @click="isCancel" class="erp_bt bt_cancel" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button plain @click="saveAdd" class="erp_bt bt_saveAdd" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+              <button @click="add" class="erp_bt bt_add" v-show="!update"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <button @click="isDeleteThis" class="erp_bt bt_del" v-show="!update"><div class="btImg" ><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
             </el-col>
         </el-row>
         <el-row>
@@ -20,7 +16,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
                         <el-select  
-                        :disabled="isEdit" 
+                         
                         @change="changeOuId"
                         class="ouId" 
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
@@ -59,7 +55,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>上级业务地区</label>
                         <el-select  
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         class="areaParentId" 
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
@@ -97,7 +93,7 @@
                    <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>业务地区编码</label>
                         <el-input 
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         class="areaCode" 
                         :class="{redBorder : validation.hasError('addData.areaCode')}" 
@@ -113,7 +109,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>业务地区名称</label>
                         <el-input 
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         class="areaName" 
                         :class="{redBorder : validation.hasError('addData.areaName')}" 
@@ -128,7 +124,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>负责人</label>
                         <el-input 
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         class="manager" 
                         :class="{redBorder : validation.hasError('addData.manager')}" 
@@ -144,7 +140,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
@@ -163,7 +159,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
                         <el-select filterable  
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         class="status" 
                         :class="{redBorder : validation.hasError('addData.status')}" 
@@ -320,10 +316,8 @@
             ou:[],//组织
         },
         update:false,
-        isEdit:true,//是否可编辑 
         dialogUserConfirm:false,//信息更改提示控制
         choseDoing:'',//存储点击按钮判断信息
-        update_click:false,   
         response:{
             details:'',
             message:'',
@@ -518,6 +512,12 @@
                 _this.Cancel()
             }
         },
+        isDeleteThis(){
+            let _this=this;
+            _this.dialogUserConfirm=true;
+            _this.choseDoing='deleteThis'
+
+        },
         sureDoing(){
             let _this=this;
             if(_this.choseDoing=='back'){
@@ -526,6 +526,9 @@
             }else if(_this.choseDoing=='Cancel'){
                 _this.Cancel();
                 _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='deleteThis'){
+                _this.deleteThis();
+                _this.dialogUserConfirm=false;
             }
         },
         back(row){
@@ -533,19 +536,9 @@
             this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
         },
         Cancel(){
-            if(this.isEdit==false){
-                this.isEdit=!this.isEdit;
                 this.validation.reset();
                 this.getData();
                 this.update=false;
-                this.update_click=false;
-            }
-        },
-        Update(){//修改
-        this.update_click=true;
-        if(this.isEdit==true){
-            this.isEdit=!this.isEdit;
-        } 
         },
         isUpdate(){//判断是否修改过信息
             this.update=true;
@@ -566,16 +559,14 @@
             }
         },
         save(){
-        let _this=this;
-        if(_this.update){
+            let _this=this;
+            
             _this.$validate()
             .then(function (success) {
                 if (success) {
-                    _this.$axios.puts('/api/services/app/AreaManagement/Update',_this.addData)
+                    _this.$axios.puts('/api/services/app/OpAreaManagement/Update',_this.addData)
                     .then(function(res){
                         _this.update=false;
-                        _this.isEdit=true;
-                        _this.update_click=false;
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -584,9 +575,45 @@
                     })
                 }
             });
-        }else{
-            _this.open('没有需要保存的项目','el-icon-warning','noticERP');
-        }
+        
+        },
+        add(){
+            let _this=this;
+            _this.$store.state.url='/businessArea/businessAreaDetail/default';
+            _this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
+        },
+        deleteThis(){
+             let _this=this;
+            _this.$axios.deletes('/api/services/app/OpAreaManagement/Delete',{id:_this.$route.params.id})
+            .then(function(res){
+                _this.dialogUserConfirm=false;
+                _this.open('删除成功','el-icon-circle-check','successERP');
+                _this.add();
+            },function(res){
+                if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                _this.dialogUserConfirm=false;
+                _this.errorMessage=true;
+                _this.open('删除失败','el-icon-error','faildERP');
+            })
+        },
+        saveAdd(){
+            let _this=this;
+            
+            _this.$validate()
+            .then(function (success) {
+                if (success) {
+                    _this.$axios.puts('/api/services/app/OpAreaManagement/Update',_this.addData)
+                    .then(function(res){
+                        _this.update=false;
+                        _this.add()
+                        _this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
+                    },function(res){
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                        _this.errorMessage=true;
+                        _this.open('保存失败','el-icon-error','faildERP');
+                    })
+                }
+            });
         },
         loadTree(){
            let _this=this;

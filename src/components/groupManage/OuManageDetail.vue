@@ -174,12 +174,11 @@
                     v-model="addData.ouCode">
                     </el-input>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor" @keyup="updateOuName">
                     <label><small>*</small>名称</label>
                     <el-input class="ouName"
-                    
                     @change="isUpdate"
-                    @focus="showErrprTips"
+                    @focus="isUpdateOuName"
                     :class="{redBorder : validation.hasError('addData.ouName')}"
                      v-model="addData.ouName" >
                      </el-input>
@@ -995,7 +994,8 @@ export default({
         choseDoing:'',//存储点击按钮判断信息
         dialogUserConfirm:false,//信息更改提示控制
         update:false,
-      
+//----------名称全称联动----------
+        isUpdateFlag:false,     
         }
     },
     validators: {
@@ -1446,6 +1446,21 @@ export default({
         },
         isUpdate(){//判断是否修改过信息
             this.update=true;
+        },
+        isUpdateOuName(){
+            let _this=this
+            _this.showErrprTips();
+            if(_this.addData.ouName==_this.addData.ouFullname){
+                _this.isUpdateFlag=true;
+            }else{
+                _this.isUpdateFlag=false;
+            }
+        },
+        updateOuName(){
+            let _this=this;
+            if(_this.isUpdateFlag){
+                _this.addData.ouFullname=_this.addData.ouName
+            }
         },
         isCancel(){
             let _this=this;

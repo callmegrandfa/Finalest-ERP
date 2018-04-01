@@ -40,35 +40,7 @@
                     </div> 
                 </el-row>
 
-                <!-- <el-row class="fs12">
-                    <div class="bgcolor smallBgcolor">
-                        <label>客户分类</label>
-                        <el-select class="queryCu"
-                                   placeholder=""
-                                   v-model="queryCu">
-                            <el-input placeholder="搜索..."
-                                      class="selectSearch"
-                                      v-model="cuSearch"></el-input>
-
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="cuAr"
-                                     :props="selectCuProps"
-                                     node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="cuNodeClick"></el-tree>
-
-                            <el-option v-show="false"
-                                       :key="countCu.id" 
-                                       :label="countCu.cuFullname" 
-                                       :value="countCu.id"
-                                       id="cu_confirmSelect"></el-option>
-                            
-                        </el-select>
-                    </div>
-                </el-row> -->
+                
 
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
@@ -297,26 +269,14 @@
             return {
                 allList:[],//所有数据列表
 
-                queryCu:'',//客户分类搜索
+                
                 queryOu:'',//所属组织搜索
                 queryAd:'',//行政地区搜索
                 queryOp:'',//业务地区搜索
                 queryCode:'',//编码搜索
                 queryName:'',//名称搜索
-                queryProperty:'',//客户性质搜索
-                //---客户分类树形下拉-----
-                cuSearch:'',
-                selectCuProps:{
-                    children: 'childNodes',
-                    label: 'classFullname',
-                    id:'id'
-                },
-                cuItem:{
-                    id:'',
-                    cuFullname:'',
-                },
-                cuAr:[],//客户分类下拉框
-                //-----------------------
+                queryProperty:'',//性质搜索
+                
                 //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -346,8 +306,8 @@
                 //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
-                    children: 'items',
-                    label: 'areaName',
+                    children: 'childItems',
+                    label: 'name',
                     id:'id'
                 },
                 opItem:{
@@ -399,13 +359,10 @@
         },
         created:function(){
             this.loadAllList();
-            // this.loadSelect();
+            this.loadSelect();
             
         },
         computed:{
-            countCu () {
-                return this.cuItem;
-            },
             countOu () {
                 return this.ouItem;
             },
@@ -442,15 +399,15 @@
                 },function(res){
                     console.log('err'+res)
                 })
-                //组织单元
-                self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
+                //所属组织
+                self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                     console.log(res);
                     self.ouAr = res.result;
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
-                })
-                //行政地区*2
+                });
+                //行政地区
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
                     // console.log(res);
                     self.opAr = res.result;
@@ -458,21 +415,21 @@
                 },function(res){
                     console.log('err'+res)
                 })
-                //业务地区*1
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
-                    // console.log(res);
+                //业务地区
+                self.$axios.gets('/api/services/app/OpAreaManagement/GetTree').then(function(res){
+                    console.log(res);
                     self.opAr = res.result;
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
                 })
-                //客户性质
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerWorkProperty'}).then(function(res){
+                //店铺性质
+                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'ShopWorkProperty'}).then(function(res){
                     // console.log(res);
                     self.propertyAr = res.result;
                 },function(res){
                     console.log('err'+res)
-                })
+                });
             },
         //------------------------------------------------------------------
 
@@ -503,11 +460,12 @@
         //---左侧查询-------------------------------------------------------
         doSearch:function(){
             let self = this;
-            this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{ContactClassId:self.queryClass,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
+            self.$axios.gets('/api/services/app/ShopManagement/GetAll',{OuId:self.queryOu,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ShopCode:self.queryCode,ShopName:self.queryName,ShopWorkPropertyid:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
                 console.log(res);
-                if(res.length>0){
-                    self.allList = res.result;
-                    self.total = res.result.length;
+                if(res.result.totalCount>0){
+                    self.allList = res.result.items;
+                    console.log(self.allList)
+                    self.total = res.result.totalCount;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
                 }else{
                     self.loadAllList();
@@ -658,7 +616,8 @@
         opNodeClick:function(data){
             let self = this;
             self.opItem.id = data.id;
-            self.opItem.areaName = data.areaName;
+            self.opItem.areaName = data.name;
+            self.queryOp = data.id;
             self.$nextTick(function(){
                 $('#op_confirmSelect').click()
             })

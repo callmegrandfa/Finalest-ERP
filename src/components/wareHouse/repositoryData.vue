@@ -21,6 +21,13 @@
                 </div>
                 <span class="btDetail">保存并新增</span>
             </button>
+
+            <button class="erp_bt bt_cancel" @click='Cancel()'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_cancel.png">
+                </div>
+                <span class="btDetail">取消</span>
+            </button>
             
             <div class="toggle-btn">
                 <span @click='ifShow = !ifShow'>收起</span>
@@ -98,76 +105,7 @@
                                 </p>
                             </div>
                         </div>
-                        <!-- <div class="tipsWrapper" name="ouId">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.ouId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.ouId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="stockCode">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockCode')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockCode') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="stockName">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockName')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockName') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="stockFullName">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockFullName')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockFullName') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="mnemonic">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.mnemonic')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.mnemonic') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="stockTypeId">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.stockTypeId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.stockTypeId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="opAreaId">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.opAreaId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.opAreaId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="adAreaId">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.adAreaId')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.adAreaId') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="manager">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.manager')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.manager') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="phone">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.phone')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.phone') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="email">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.email')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.email') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="fax">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.fax')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.fax') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="remark">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.remark')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.remark') }}</p>
-                            </div>
-                        </div>
-                        <div class="tipsWrapper" name="status">
-                            <div class="errorTips" :class="{block : !validation.hasError('createRepositoryParams.status')}">
-                                <p class="msgDetail">错误提示：{{ validation.firstError('createRepositoryParams.status') }}</p>
-                            </div>
-                        </div> -->
+                        
                         <div class="bgcolor">
                             <label><small>*</small>所属组织</label>
                             <el-select v-model="createRepositoryParams.ouId"
@@ -280,32 +218,23 @@
                             </el-select>
                         </div>
 
-                        <div class="bgcolor">
+                        <div class="bgcolor area">
                             <label>行政地区</label>
-                            <el-select v-model="createRepositoryParams.adAreaId" 
-                                       placeholder=""
-                                       @change='Modify'
-                                       @focus="showErrprTipsSelect"
-                                       :class="{redBorder : validation.hasError('createRepositoryParams.adAreaId')}"
-                                       class="adAreaId">
-                                <el-input placeholder=""
-                                        class="selectSearch"
-                                        v-model="adSearch"></el-input>
-                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                        :data="adAr"
-                                        :props="selectAdProps"
-                                        node-key="id"
-                                        default-expand-all
-                                        ref="tree"
-                                        :filter-node-method="filterNode"
-                                        :expand-on-click-node="false"
-                                        @node-click="adNodeClick"></el-tree>
-                                <el-option v-show="false"
-                                           :key="countAd.id" 
-                                           :label="countAd.areaName" 
-                                           :value="countAd.id"
-                                           id="ad_confirmSelect"></el-option>
-                            </el-select>
+                            <div class="areaBox">
+                                <el-select v-model="createRepositoryParams.adAreaId" class="areaDrop" placeholder="选择省">
+                                    <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    </el-option>
+                                </el-select>
+                                <el-select v-model="createRepositoryParams.adAreaId" class="areaDrop" placeholder="选择市">
+                                    <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                    </el-option>
+                                </el-select>
+                                <el-select v-model="createRepositoryParams.adAreaId" class="areaDrop" placeholder="选择区">
+                                    <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                    </el-option>
+                                </el-select>
+                                <el-input class="areaEntry" placeholder="街道办地址"></el-input>
+                            </div>
                         </div>
 
                         <div class="bgcolor">
@@ -394,11 +323,18 @@
           </el-col>
 
           <el-col :span="24" class="bg-white pt10">
-                <button class="erp_bt bt_print" @click='addCol'>
+                <button class="erp_bt bt_add" @click="addCol">
                     <div class="btImg">
-                        <img src="../../../static/image/common/bt_print.png">
-                     </div>
-                    <span class="btDetail">增行</span>
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+
+                <button class="erp_bt bt_del" @click='delMore(2)'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
                 </button>
 
                 <button class="erp_bt bt_excel">
@@ -413,18 +349,12 @@
                     <span class="btDetail">辅助功能</span>
                     <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                 </button>
-                <!-- <button class="erp_bt bt_del" @click='delRow'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_del.png">
-                    </div>
-                    <span class="btDetail">删除</span>
-                </button> -->
           </el-col>
 
           
 
           <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10">
-              <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
+              <el-table :data="addList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
                     <el-table-column prop="contactPerson" label="联系人" >
@@ -432,7 +362,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -442,7 +371,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.moblie" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -453,7 +381,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.phone" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -462,7 +389,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.completeAddress" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
@@ -477,7 +403,7 @@
                     </el-table-column>
                     <el-table-column prop="transportMethodId" label="物流公司">
                         <template slot-scope="scope">
-                            <el-select  v-model="scope.row.logisticsCompanyId" :disabled="isEdit" :class="[scope.$index%2==0?'bgw':'bgp']">
+                            <el-select  v-model="scope.row.logisticsCompanyId" :class="[scope.$index%2==0?'bgw':'bgp']">
                                 <el-option  v-for="item in logiAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
                             </el-select>
@@ -487,8 +413,7 @@
                         <template slot-scope="scope">
                             <el-radio  :label="true" 
                                         v-model="scope.row.isDefault" 
-                                        @change.native="getCurrentRow(scope.$index,scope.row)"
-                                        :disabled="isEdit"></el-radio>
+                                        @change.native="getCurrentRow(scope.$index,scope.row)"></el-radio>
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" label="备注">
@@ -496,17 +421,12 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.remark" 
-                                    v-on:click='handleEdit(scope.$index)'
                                     type="text"/>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <!-- <span>{{scope.row}}</span> -->
-                            <!-- <el-button v-on:click='a(scope.row)'>123</el-button> -->
-                            <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
-                            <!-- <el-button v-on:click="handleSave(scope.$index,scope.row)" type="text" size="small">保存</el-button>  -->
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row.id)" type="text" size="small">删除</el-button>
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
               </el-table> 
@@ -520,10 +440,7 @@
                 <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" placeholder="" disabled="disabled"></el-input></div>
                 <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker></div>
                 <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" placeholder="" disabled="disabled"></el-input></div>
-                <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker></el-input></div>
-                <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-                <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-                <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+                <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker></div>
             </div>                                  
         </el-col>
     </el-row>  
@@ -667,25 +584,42 @@
             },
         },
         methods:{
-            //---加载数据----------------------------------------------
-            loadStatus:function(){
-                let self = this;
-                this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    self.status = res.result;
-                    console.log(self.status);
-                },function(res){
-                    console.log('err'+res)
-                })
-            },
-            //--------------------------------------------------------
             //---下拉的数据------------------------------------------------------
             loadSelect:function(){
                 let self = this;
                 //所属组织
-                self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
+                self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                     // console.log(res);
                     self.ouAr = res.result;
                     self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+
+                //获取当前默认ouid
+                self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
+                    // console.log(res);
+                    self.defaultOuId = res.result.id;
+                    self.createRepositoryParams.ouId = self.defaultOuId;
+                    //加载完成拿回下拉的默认值
+                    self.ouItem.ouFullname = res.result.ouFullname;
+                    self.ouItem.id =  res.result.id;
+
+                    //业务地区
+                    self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
+                        console.log(res);
+                        if(res.result.length>0){
+                            self.opAr = res.result;
+                            self.loadIcon();
+                        }else{
+                            self.opItem.areaName = '暂无业务地区';
+                        }
+                        
+                    },function(res){
+                        console.log('err'+res)
+                    });
+
+
                 },function(res){
                     console.log('err'+res)
                 });
@@ -694,18 +628,6 @@
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
                     // console.log(res);
                     self.adAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
-                //业务地区*1
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
-                    // console.log(res);
-                    console.log(res)
-                    self.opAr = res.result;
-                    // self.opAr=[{
-                    //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
-                    // }]
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
@@ -748,9 +670,13 @@
                         self.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
                             console.log(res);
                             self.open('创建仓库成功','el-icon-circle-check','successERP');
+                            self.createReAddress(res.result);
+                        },function(){
+                            self.open('创建失败','el-icon-error','faildERP');
+                            self.errorMessage=true;
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         })
-                        self.addList = [];
-                        self.rows = [];
+                        self.Cancel();
                     }
                 })
                 
@@ -790,7 +716,6 @@
                         self.open('创建仓库地址成功','el-icon-circle-check','successERP');
                         self.addList = [];
                         // self.loadData();
-                        // self.clearData();
                     },function(res){
                         self.open('创建失败','el-icon-error','faildERP');
                         self.errorMessage=true;
@@ -818,15 +743,12 @@
                     isDefault:false,//是否默认
                     remark:'',//备注
                 };
-                self.allList.unshift(self.rows.newCol);
+                // self.allList.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
                 // console.log(self.rows)
             },
 
-            handleEdit:function(index){//表格内编辑操作
-
-            },
-
+            //---默认-------------------------------------
             getCurrentRow:function(index,row){//默认单选框
                 let self = this;
                 for(let i in self.addList){
@@ -835,63 +757,30 @@
                 self.addList[index].isDefault = true;
                 // self.updateList.push(self.checkedAr)
             },
+            //-------------------------------------------
 
-            handleSelectionChange:function(val){//点击复选框选中的数据
+            //---点击复选框选中的数据------------------------------
+            handleSelectionChange:function(val){
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
             },
-
-            handleDelete:function(index,id){//表格内删除操作
+            //---------------------------------------------------
+            //---从表表格内删除------------------------------------
+            handleDelete:function(index,row,who){//表格内删除操作
                 let self = this; 
-                self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.open('删除成功','el-icon-circle-check','successERP');    
-                            self.allList.splice(index,1);
-                            self.addList.splice(index,1);
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
+                self.who = who;
+                self.whoIndex = index;
+                self.dialogDelConfirm = true;
                 
             },
+            //---------------------------------------------------
 
-            delRow:function(){//删除选中的项
+            //---批量删除----------------------------------------
+
+            delMore:function(num){//删除选中的项
                 let self=this;
-                for(let i in self.multipleSelection){
-                    self.idArray.ids.push(self.multipleSelection[i].id)
-                }
-                if(self.idArray.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
-                }
-                
-                if(self.idArray.ids.length>0){
-                    console.log(self.idArray.ids)
-                    self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
-                                self.loadAddData();
-                                self.open('删除成功','el-icon-circle-check','successERP');    
-                            })
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
+                if(self.multipleSelection.length>0){
+                    self.who = num;
+                    self.dialogDelConfirm = true; 
                 }else{
                     self.$message({
                         type: 'info',
@@ -904,29 +793,95 @@
             //---确认删除--------------------------------------------
             sureDel:function(){
                 let self = this;
-                console.log(666)
+                if(self.who == 1){
+                    self.addList.splice(self.whoIndex,1)
+                    self.dialogDelConfirm = false;
+                    self.open('删除成功','el-icon-circle-check','successERP');
+                }
+
+                if(self.who == 2){
+                    let x = [];
+                    $.each(self.addList,function(index,value){
+                        let flag = false;
+                        $.each(self.multipleSelection,function(i,val){
+                            if(value==val){
+                                flag = true;
+                            }
+                        })
+                        if(!flag){
+                            x.push(value)
+                        }
+                    })
+                    self.addList = x;
+                    // console.log(self.addList)
+                    self.dialogDelConfirm = false;
+                }
             },
             //-------------------------------------------------------
 
-            //---修改返回提示-----------------------------------------
+            //---取消按钮-------------------------------------------
+            Cancel:function(){
+                let self = this;
+                if(self.Modify){
+                    self.dialogUserConfirm = true;
+                    self.backCancel = 1;//为1是取消
+                }
+                
+            },
+            //----------------------------------------------------
+
+            //---弹出提示-----------------------------------------
             isBack(){
                 let self=this;
                 if(self.ifModify){
+                    self.backCancel = 2;
                     self.dialogUserConfirm=true;
                     // self.choseDoing='back'
                 }else{
                     self.back()
                 }
             },
-            sureDoing:function(){
-                let self = this;
-                self.back();
-            },
+            
             Modify:function(){//判断是否修改过
                 let self = this;
                 self.ifModify = true;
             },
             //-------------------------------------------------------
+
+            //---确认提示------------------------------------------
+            sureDoing:function(){
+                let self = this;
+                if(self.backCancel === 1){//为1是取消
+                    self.dialogUserConfirm=false;
+                    self.createRepositoryParams = {
+                        ouId: self.defaultOuId,
+                        stockCode: "",
+                        stockName: "",
+                        stockFullName: "",
+                        opAreaId: '',
+                        adAreaId: 10,
+                        stockTypeId: 0,
+                        fax: "",
+                        email:  '',
+                        status: 0,
+                        mnemonic: "",
+                        stockAddress: "",
+                        manager: "",
+                        phone: "",
+                        remark: ""
+                    }
+                    self.addList = [];
+                    self.rows = [];
+                    self.backCancel = '';
+                    self.ifModify = false;
+                    $('.tipsWrapper').css({display:'none'})
+                }
+                if(self.backCancel === 2){//为2是返回
+                    self.back();
+                }
+                
+            },
+            //----------------------------------------------------
 
             //---open---back----清除--------------------------------------
             open(tittle,iconClass,className) {
@@ -948,20 +903,6 @@
             back(){
                 this.$store.state.url='/repository/repositoryList/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-            clearData:function(){//清除创建的参数
-                let self = this;
-                self.createParams={
-                    groupId:'1',//集团ID
-                    stockId:'16',//仓库ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    phone:'',//联系电话
-                    logisticsCompanyId:'',//物流公司
-                    isDefault:false,//是否默认
-                    remark:'',//备注
-                };
             },
             //-------------------------------------------------------
             //---树-------------------------------------------------------------
@@ -989,13 +930,29 @@
                     return data.areaName.indexOf(value) !== -1;
             },
             ouNodeClick:function(data){
-                console.log(data)
+                // console.log(data)
                 let self = this;
+                self.createRepositoryParams.opAreaId = '';
+                self.opItem.areaName = '';
+
                 self.ouItem.id = data.id;
                 self.ouItem.ouFullname = data.ouFullname;
                 self.$nextTick(function(){
                     $('#ou_confirmSelect').click()
                 })
+                //点击所属组织，业务地区跟着变动
+                self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
+                    console.log(res);
+                    if(res.result.length>0){
+                        self.opAr = res.result;
+                        self.loadIcon();
+                    }else{
+                        self.opItem.areaName = '暂无业务地区';
+                        self.opItem.id = '';
+                    }
+                },function(res){
+                    console.log('err'+res)
+                });
             },
             
             adNodeClick:function(data){
@@ -1015,6 +972,8 @@
                 })
             },
             //-----------------------------------------------------
+
+            
             //---提示错误----------------------------------------------
             showErrprTips(e){
                 $('.tipsWrapper').css({display:'none'})
@@ -1079,6 +1038,8 @@
 
         data(){
             return {
+                defaultOuId:'',//默认的ouid
+                backCancel:'',//判断是返回还是取消
                 allList:[],
                 auditInformation:{//审计信息
                     createName:"",
@@ -1096,7 +1057,6 @@
                 queryOuId:{//ouManagement的搜索Id
                     id:'2'
                 },
-                ouGet:'',
                 //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -1111,6 +1071,9 @@
                 ouAr:[],//所属组织下拉框
                 //-----------------------
                 //---行政地区树形下拉-----
+                areaProArray:[],//行政地区(省)
+                areaCityArray:[],//行政地区(市)
+                areaDisArray:[],//行政地区(区)
                 adSearch:'',//树形搜索框的
                 selectAdProps:{
                     children: 'items',
@@ -1126,7 +1089,7 @@
                 //---业务地区树形下拉-----
                     opSearch:'',//树形搜索框的
                     selectOpProps:{
-                        children: 'items',
+                        children: 'childItems',
                         label: 'areaName',
                         id:'id'
                     },
@@ -1159,8 +1122,8 @@
                     "stockCode": "",
                     "stockName": "",
                     "stockFullName": "",
-                    "opAreaId": 1,
-                    "adAreaId": 1,
+                    "opAreaId": '',
+                    "adAreaId": 10,
                     "stockTypeId": 0,
                     "fax": "",
                     "email":  '',
@@ -1358,6 +1321,15 @@ input::-webkit-input-placeholder{
     text-align:center;
     border:none;
     background-color:#FAFAFA;
+}
+.el-select.areaDrop,.el-input.areaEntry{
+    width: 100px;
+}
+.areaDrop input,.areaEntry input{
+    border: none!important;
+}
+.areaDrop .el-input__inner,.areaEntry .el-input__inner{
+    height: 32px!important;
 }
 </style>
 

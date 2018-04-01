@@ -510,7 +510,7 @@
         _this.$validate()
         .then(function (success) {
             if (success) {
-                 _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.addData)
+                 _this.$axios.posts('/api/services/app/OpAreaManagement/Create',_this.addData)
                 .then(function(res){
                     _this.open('保存成功','el-icon-circle-check','successERP');
                     _this.$store.state.url='/businessArea/businessAreaModify/'+res.result.id
@@ -620,7 +620,7 @@
             _this.$validate()
             .then(function (success) {
                 if (success) {
-                    _this.$axios.posts('/api/services/app/AreaManagement/Create',_this.addData)
+                    _this.$axios.posts('/api/services/app/OpAreaManagement/Create',_this.addData)
                     .then(function(res){
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.$store.state.url='/businessArea/businessAreaDetail/default'

@@ -59,87 +59,119 @@
         
         <el-collapse-transition>
             <div v-show="ifShow">   
-                <el-row>
+                <el-row class="bg-white ft12 pr10 pt10">
                     <el-col :span="24" class="getPadding"> 
-                        <div class="tipsWrapper">
-                            <div class="errorTips">
-                                <p class="msgDetail">错误提示：
-                                    <span :class="{block : !validation.hasError('customerData.ouId')}">
-                                        所属组织{{ validation.firstError('customerData.ouId') }},
-                                    </span>
+                        <div class="tipsWrapper" name="ouId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.ouId')}">
+                                <p class="msgDetail">错误提示：所属组织{{ validation.firstError('customerData.ouId') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.contactCode')}">
-                                        编码{{ validation.firstError('customerData.contactCode') }},
-                                    </span>
+                        <div class="tipsWrapper" name="contactCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactCode')}">
+                                <p class="msgDetail">编码{{ validation.firstError('customerData.contactCode') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.contactName')}">
-                                        名称{{ validation.firstError('customerData.contactName') }},
-                                    </span>
+                        <div class="tipsWrapper" name="contactName">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactName')}">
+                                <p class="msgDetail">名称{{ validation.firstError('customerData.contactName') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.contactFullName')}">
-                                        全称{{ validation.firstError('customerData.contactFullName') }},
-                                    </span>
+                        <div class="tipsWrapper" name="contactFullName">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactFullName')}">
+                                <p class="msgDetail">全称{{ validation.firstError('customerData.contactFullName') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.mnemonic')}">
-                                        助记码{{ validation.firstError('customerData.mnemonic') }},
-                                    </span>
+                        <div class="tipsWrapper" name="mnemonic">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.mnemonic')}">
+                                <p class="msgDetail">助记码{{ validation.firstError('customerData.mnemonic') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.contactClassId')}">
-                                        客户分类{{ validation.firstError('customerData.contactClassId') }},
-                                    </span>
+                        <div class="tipsWrapper" name="contactClassId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactClassId')}">
+                                <p class="msgDetail">客户分类{{ validation.firstError('customerData.contactClassId') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.contactWorkPropertyId')}">
-                                        客户性质{{ validation.firstError('customerData.contactWorkPropertyId') }},
-                                    </span>
+                        <div class="tipsWrapper" name="contactWorkPropertyId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactWorkPropertyId')}">
+                                <p class="msgDetail">客户性质{{ validation.firstError('customerData.contactWorkPropertyId') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.contactGradeId')}">
-                                        客户等级{{ validation.firstError('customerData.contactGradeId') }},
-                                    </span>
+                        <div class="tipsWrapper" name="contactGradeId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactGradeId')}">
+                                <p class="msgDetail">客户等级{{ validation.firstError('customerData.contactGradeId') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.contactTypeId')}">
-                                        客户类型{{ validation.firstError('customerData.contactTypeId') }},
-                                    </span>
+                        <div class="tipsWrapper" name="contactTypeId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.contactTypeId')}">
+                                <p class="msgDetail">客户类型{{ validation.firstError('customerData.contactTypeId') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.ficaOuId')}">
-                                        对应财务组织{{ validation.firstError('customerData.ficaOuId') }},
-                                    </span>
+                        <div class="tipsWrapper" name="ficaOuId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.ficaOuId')}">
+                                <p class="msgDetail">对应财务组织{{ validation.firstError('customerData.ficaOuId') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.taxCode')}">
-                                        纳税登记号{{ validation.firstError('customerData.taxCode') }},
-                                    </span>
+                        <div class="tipsWrapper" name="taxCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.taxCode')}">
+                                <p class="msgDetail">纳税登记号{{ validation.firstError('customerData.taxCode') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.opAreaId')}">
-                                        业务地区{{ validation.firstError('customerData.opAreaId') }},
-                                    </span>
+                        <div class="tipsWrapper" name="opAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.opAreaId')}">
+                                <p class="msgDetail">业务地区{{ validation.firstError('customerData.opAreaId') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.adAreaId')}">
-                                        行政地区{{ validation.firstError('customerData.adAreaId') }},
-                                    </span>
+                        <div class="tipsWrapper" name="adAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.adAreaId')}">
+                                <p class="msgDetail">行政地区{{ validation.firstError('customerData.adAreaId') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.legalPerson')}">
-                                        法人代表{{ validation.firstError('customerData.legalPerson') }},
-                                    </span>
+                        <div class="tipsWrapper" name="legalPerson">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.legalPerson')}">
+                                <p class="msgDetail">法人代表{{ validation.firstError('customerData.legalPerson') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.regAddress')}">
-                                        注册地址{{ validation.firstError('customerData.regAddress') }},
-                                    </span>
+                        <div class="tipsWrapper" name="regAddress">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.regAddress')}">
+                                <p class="msgDetail">注册地址{{ validation.firstError('customerData.regAddress') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.manager')}">
-                                        负责人{{ validation.firstError('customerData.manager') }},
-                                    </span>
+                        <div class="tipsWrapper" name="manager">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.manager')}">
+                                <p class="msgDetail">负责人{{ validation.firstError('customerData.manager') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.phone')}">
-                                        电话{{ validation.firstError('customerData.phone') }},
-                                    </span>
+                        <div class="tipsWrapper" name="phone">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.phone')}">
+                                <p class="msgDetail">电话{{ validation.firstError('customerData.phone') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.remark')}">
-                                        备注{{ validation.firstError('customerData.remark') }},
-                                    </span>
+                        <div class="tipsWrapper" name="remark">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.remark')}">
+                                <p class="msgDetail">备注{{ validation.firstError('customerData.remark') }}</p>
+                            </div>
+                        </div>
 
-                                    <span :class="{block : !validation.hasError('customerData.status')}">
-                                        状态{{ validation.firstError('customerData.status') }},
-                                    </span>
-                                </p>
+                        <div class="tipsWrapper" name="status">
+                            <div class="errorTips" :class="{block : !validation.hasError('customerData.status')}">
+                                <p class="msgDetail">状态{{ validation.firstError('customerData.status') }}</p>
                             </div>
                         </div>
                         
@@ -734,26 +766,24 @@
                 <div>
                     <div class="bgcolor">
                         <label>创建人</label>
-                        <el-input v-model="customerData.createName" placeholder="" disabled="disabled"></el-input>
+                        <el-input v-model="customerData.createdBy" placeholder="" disabled="disabled"></el-input>
                     </div>
 
                     <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-date-picker v-model="customerData.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-date-picker v-model="customerData.createdTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
                     </div>
 
                     <div class="bgcolor">
                         <label>修改人</label>
-                        <el-input v-model="customerData.modifyBy" placeholder="" disabled="disabled"></el-input>
+                        <el-input v-model="customerData.modifiedBy" placeholder="" disabled="disabled"></el-input>
                     </div>
 
                     <div class="bgcolor">
                         <label>修改时间</label>
-                        <el-date-picker v-model="customerData.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-date-picker v-model="customerData.modifiedTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
                     </div>
-                    <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
-                    <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
-                    <div class="bgcolor"><label>封存人</label><el-input v-model="auditInformation.finishName" placeholder="请录入封存人"></el-input></div>     -->
+                    
                 </div>                                  
             </el-col>
         </el-row>
@@ -1899,44 +1929,44 @@ export default({
         //-------------------------------------------------------
         //---提示错误----------------------------------------------
         showErrprTips(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
+            // $('.tipsWrapper').css({display:'none'})
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
         },
         showErrprTipsSelect(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
+            // $('.tipsWrapper').css({display:'none'})
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
         },
         showErrprTipsRangedate(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.$el).hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
+            // $('.tipsWrapper').css({display:'none'})
+            $('.tipsWrapper').each(function(){
+                if($(e.$el).hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
         },
         showErrprTipsTextArea(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            // if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-            //     $(this).addClass('display_block')
-            // }else{
-            //     $(this).removeClass('display_block')
-            // }
-            // })
+            // $('.tipsWrapper').css({display:'none'})
+            $('.tipsWrapper').each(function(){
+            if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                $(this).addClass('display_block')
+            }else{
+                $(this).removeClass('display_block')
+            }
+            })
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;

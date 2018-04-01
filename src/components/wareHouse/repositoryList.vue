@@ -278,7 +278,7 @@
             loadSelect:function(){
                 let self = this;
                 //业务地区
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
+                self.$axios.gets('/api/services/app/OpAreaManagement/GetTree').then(function(res){
                     console.log(res);
                     self.opAr = res.result;
                     self.loadIcon();
@@ -446,10 +446,11 @@
                     return data.areaName.indexOf(value) !== -1;
             },
             opNodeClick:function(data){
-                // console.log(data)
+                console.log(data)
                 let self = this;
                 self.opItem.id = data.id;
-                self.opItem.areaName = data.areaName;
+                self.opItem.areaName = data.name;
+                self.searchArea = data.id;
                 self.$nextTick(function(){
                     $('#op_confirmSelect').click()
                 })
@@ -492,8 +493,8 @@
                 //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
-                    children: 'items',
-                    label: 'areaName',
+                    children: 'childItems',
+                    label: 'name',
                     id:'id'
                 },
                 opItem:{
