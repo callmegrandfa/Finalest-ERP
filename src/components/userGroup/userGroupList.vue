@@ -140,7 +140,7 @@
                                     <el-button type="text"  @click="see(scope.row)">{{scope.row.userGroupName}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                            <el-table-column prop="ouName" label="所属组织"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
                             <el-table-column prop="createdBy" label="创建人"></el-table-column>
                             
@@ -480,7 +480,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
              },
             delRow(){
@@ -503,7 +502,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             filterNode(value, data) {

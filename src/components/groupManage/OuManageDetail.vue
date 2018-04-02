@@ -1429,7 +1429,6 @@ export default({
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });    
@@ -1558,7 +1557,6 @@ export default({
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });    

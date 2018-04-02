@@ -571,7 +571,6 @@
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });
@@ -593,7 +592,6 @@
                 if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                 _this.dialogUserConfirm=false;
                 _this.errorMessage=true;
-                _this.open('删除失败','el-icon-error','faildERP');
             })
         },
         saveAdd(){
@@ -610,7 +608,6 @@
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });

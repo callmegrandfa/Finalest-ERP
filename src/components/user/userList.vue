@@ -541,7 +541,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
              },
             delRow(){
@@ -564,7 +563,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             filterNode(value, data) {

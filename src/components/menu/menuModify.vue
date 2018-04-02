@@ -181,55 +181,18 @@
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
                 </div>    
             </el-col>
-
-
-
-                <!-- <el-dialog :visible.sync="dialogTableVisible">
-                    <template slot="title">
-                        <span style="float:left;">添加功能</span>
-                        <div class="double_bt">
-                            <template v-if="menuCheck">
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="showNodeadd">已选功能</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}">未选功能</div>
-                            </template>
-                            <template v-else>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选功能</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选功能</div>
-                            </template>
+            <el-col :span="24">
+                 <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth" style="overflow: visible;">
+                        <label class="h_35"></label>
+                        <div class="rolesZoo">
+                            <a class="addRole"  v-for="(x,index) in checked" :key="index" :permissionName="x.permissionName">{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
                         </div>
-                    </template>
-                    <el-col :span="6" class="dialog_ dialog_l">
-                        <el-col :span="24">
-                            <el-input placeholder="" class="menu_search">
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-input>
-                        </el-col>
-                        <el-col :span="24" class="mt_20">
-                            <el-tree
-                            :data="componyTree"
-                            :props="defaultProps"
-                            node-key="id"
-                            default-expand-all
-                            @node-click="nodeClick"
-                            :expand-on-click-node="false">
-                            </el-tree>
-                        </el-col>
-                        
-                    </el-col>
-                    <el-col :span="18" class="dialog_ dialog_r">
-                        <div class="menu_box" v-for="(i,index) in componyTree"  :key="index" :moduleName="i.displayName">
-                            <p>{{i.displayName}}</p>
-                            <div class="menu_item_wapper menu_item_add">
-                                <span class="menu_item" v-for="(x,inde) in i.children" :key="inde" :permissionName="x.permissionName"><a class="menu_add" @click="addPermission(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
-                            </div>
-                            <div class="menu_item_wapper menu_item_del">
-                                <span class="menu_item" v-for="(x,inde) in i.children" :key="inde" :permissionName="x.permissionName"><a class="menu_add" @click="delPermission(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
-                            </div>
-                        </div>
-                    </el-col>
-                </el-dialog> -->
-
-            <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
+                    </div>
+                 </div>
+            </el-col>
+        </el-row>
+        <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
                 <el-col :span="24">
                     <el-col :span="6">
                         <el-col :span="24" class="transfer_fixed">
@@ -313,17 +276,6 @@
                 </span>
             </el-dialog>
             <!--dialog结束  -->
-             <el-col :span="24">
-                 <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth" style="overflow: visible;">
-                        <label class="h_35"></label>
-                        <div class="rolesZoo">
-                            <a class="addRole"  v-for="(x,index) in checked" :key="index" :permissionName="x.permissionName">{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
-                        </div>
-                    </div>
-                 </div>
-            </el-col>
-        </el-row>
         <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -490,7 +442,6 @@
             _this.loadParent()
             _this.getData()
            
-       
     },
      watch: {
       search(val) {
@@ -594,8 +545,8 @@
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
-                $('.el-tree-dialogTableVisible__label').each(function(){
-                    if($(this).parent('.el-tree-dialogTableVisible__content').next('.el-tree-dialogTableVisible__children').text()==''){
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
                         $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
@@ -867,7 +818,7 @@
         showDialog(){
             let _this=this;
             _this.dialogTableVisible = true;
-            _this.loadIcon()
+            _this.loadIcon();
         },
         rightFn_change(val){
             let _this=this;
