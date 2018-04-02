@@ -1278,10 +1278,7 @@
 </style>
 
 <style>
-.userDetail .el-dialog__headerbtn{
-    top:3px;
-    font-size:50px;
-}
+
 .userDetail .el-dialog__body{
   overflow: hidden;
 }

@@ -193,7 +193,7 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactName')}"
-                                    class="contact"
+                                    class="contactName"
                                     @change='Modify()'></el-input>
                         </div>
 
@@ -734,22 +734,22 @@
                 <div>
                     <div class="bgcolor">
                         <label>创建人</label>
-                        <el-input v-model="auditInformation.createName" placeholder="" disabled="disabled"></el-input>
+                        <el-input v-model="customerData.createName" placeholder="" disabled="disabled"></el-input>
                     </div>
 
                     <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-date-picker v-model="auditInformation.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-date-picker v-model="customerData.createTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
                     </div>
 
                     <div class="bgcolor">
                         <label>修改人</label>
-                        <el-input v-model="auditInformation.modifyName" placeholder="" disabled="disabled"></el-input>
+                        <el-input v-model="customerData.modifyBy" placeholder="" disabled="disabled"></el-input>
                     </div>
 
                     <div class="bgcolor">
                         <label>修改时间</label>
-                        <el-date-picker v-model="auditInformation.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-date-picker v-model="customerData.modifyTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
                     </div>
                     <!-- <div class="bgcolor"><label>启用日期</label><el-date-picker v-model="auditInformation.startTime" type="date" placeholder="选择启用日期"></el-date-picker></div>
                     <div class="bgcolor"><label>封存日期</label><el-date-picker v-model="auditInformation.finishTime" type="date" placeholder="选择封存日期"></el-date-picker></div>
@@ -844,17 +844,6 @@ export default({
             ifShow:true,
             radio:'',
             ifModify:false,//判断主表是否修改过
-            // isEdit:true,//判断是否要修改
-            ifBtn:true,//判断顶部按钮的显示与隐藏
-            auditInformation:{//审计信息
-                createName:"",
-                createTime:"",
-                modifyName:"",
-                modifyTime:"",
-                startTime:"",
-                finishTime:"",
-                finishName:"",
-            },
             //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -1120,7 +1109,7 @@ export default({
                 this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
                     
                     self.customerData = res.result;
-                    // console.log(self.customerData);
+                    console.log(self.customerData);
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
@@ -1130,7 +1119,7 @@ export default({
                     self.ouItem.id =  self.customerData.ouId;
 
                     self.cuItem.id = self.customerData.contactClassId;
-                    self.cuItem.id = self.customerData.contactClassId_ClassName;
+                    self.cuItem.cuFullname = self.customerData.contactClassId_ClassName;
 
                     self.adItem.areaName = self.customerData.adAreaId_AreaName;
                     self.adItem.id = self.customerData.adAreaId;

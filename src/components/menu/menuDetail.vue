@@ -1000,8 +1000,5 @@
 .menuDetail .el-tree-node__content{
     background-color:#F9F9F9;
 }
-.menuDetail .el-dialog__headerbtn{
-    top:3px;
-    font-size:50px;
-}
+
 </style>
