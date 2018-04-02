@@ -607,8 +607,8 @@
 
                     //业务地区
                     self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
-                        console.log(res);
-                        if(res.result.length>0){
+                        // console.log(res);
+                        if(res.result&&res.result.length>0){
                             self.opAr = res.result;
                             self.loadIcon();
                         }else{

@@ -124,11 +124,11 @@
                     <div class="bgcolor">
                         <label><small>*</small>所属组织</label>
                         <el-select v-model="createShopParams.ouId" 
-                                placeholder=""
-                                class="ouId"
-                                @focus="showErrprTipsSelect"
-                                @change='Modify()'
-                                :class="{redBorder : validation.hasError('createShopParams.ouId')}">
+                                    placeholder=""
+                                    class="ouId"
+                                    @focus="showErrprTipsSelect"
+                                    @change='Modify()'
+                                    :class="{redBorder : validation.hasError('createShopParams.ouId')}">
 
                             <el-input placeholder="搜索..."
                                     class="selectSearch"
@@ -663,7 +663,7 @@ export default({
                 shopName: "",
                 shopFullname: "",
                 shopWorkPropertyid: 0,
-                opAreaId: 1,
+                opAreaId: '',
                 stockId: '',
                 mnemonic: "",
                 shopGradeid: '',
@@ -839,9 +839,13 @@ export default({
 
                 //业务地区
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
-                    // console.log(res);
-                    self.opAr = res.result;
-                    self.loadIcon();
+                    console.log(res);
+                    if(res.result&&res.result.length>0){
+                        self.opAr = res.result;
+                        self.loadIcon();
+                    }else{
+                        self.opItem.areaName = '暂无业务地区'
+                    };
                 },function(res){
                     console.log('err'+res)
                 });
@@ -1207,6 +1211,7 @@ export default({
             let self = this;
             self.createShopParams.stockId = '';
             self.createShopParams.opAreaId = '';
+
             self.opItem.areaName = '';
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;
@@ -1215,13 +1220,13 @@ export default({
             })
             //点击所属组织，业务地区跟着变动
             self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
-                // console.log(res);
-                self.opAr = res.result;
-                if(res.result.length==0){
+                if(res.result.length>0){
+                    self.opAr = res.result;
+                    self.loadIcon();
+                }else{
                     self.opItem.areaName = '暂无业务地区';
                     self.opItem.id = '';
                 }
-                self.loadIcon();
             },function(res){
                 console.log('err'+res)
             });
