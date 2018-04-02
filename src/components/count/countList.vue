@@ -170,19 +170,32 @@
                                     <el-row class="tableSize">
                                         <el-table stripe class="bgColor" :data="tableList" border style="width: 100%">
                                             <el-table-column type="selection"></el-table-column>
-                                            <el-table-column prop="destUnitId" label="多单位">
+                                            <el-table-column prop="destUnitId_UnitName" label="多单位">
                                                 <template slot-scope="scope">
-                                                    <el-input v-model="addRowList.destUnitId "></el-input>
+                                                     <el-select  v-model="scope.row.destUnitId_UnitName ">
+                                                         <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                                                        :data="countTree"
+                                                        :props="defaultProps"
+                                                        node-key="id"
+                                                        default-expand-all
+                                                        ref="tree"
+                                                        :expand-on-click-node="false"
+                                                        :filter-node-method="filterNode"
+                                                        @node-click="TableClick">
+                                                        </el-tree>
+                                                        <el-option v-show="false" v-for="item in countTree" :key="item.id" :label="item.unitName" :value="item.id">
+                                                        </el-option>
+                                                    </el-select>
                                                 </template>
                                             </el-table-column>
                                             <el-table-column prop="factor" label="系数" width="180">
                                                <template slot-scope="scope">
-                                                    <el-input v-model="addRowList.factor"></el-input>
+                                                    <el-input v-model="scope.row.factor"></el-input>
                                                 </template>
                                             </el-table-column>
                                             <el-table-column prop="remark" label="备注" width="180">
                                                 <template slot-scope="scope">
-                                                    <el-input v-model="addRowList.remark"></el-input>
+                                                    <el-input v-model="scope.row.remark"></el-input>
                                                 </template>
                                             </el-table-column>
                                             <el-table-column  label="操作">
@@ -256,11 +269,12 @@
                 },
                 // --------------列表数据
                 tableList:[],
-                addRowList:{//新增行数据
+                addRowList:[],//增行的数组
+                addRowdata:{//新增行数据
                     "groupId": 0,
                     "unitId": 0,
-                    "destUnitId": '',
-                    "factor": "",
+                    "destUnitId_UnitName": "",
+                    "factor": 0,
                     "remark": ""
                     },
                 tabName:'1',
@@ -314,8 +328,10 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/UnitManagement/GetUnitTree').then(
                     rsp=>{
-                    // console.log(rsp.result)
+                    console.log(rsp.result);
                      _this.countTree=rsp.result
+                    console.log(_this.countTree)
+                     
                     _this.loadIcon();
                })
             },
@@ -340,7 +356,7 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/UnitConvertManagement/GetDetail',{UnitId:_this.nodeId}).then(
                     rsp=>{
-                    // console.log(rsp.result)
+                    console.log(rsp.result)
                      _this.tableList=rsp.result;
                        });
 
@@ -421,26 +437,36 @@
             // ----------------------表格功能
             addRow(){//增加一行
                 let _this=this;
-                _this.tableList.push({"groupId": 0, "unitId": _this.nodeId,"destUnitId": '',"factor": "","remark": ""
-                });
+                let newRow={
+                    "groupId": 0, 
+                    "unitId": _this.nodeId,
+                    "destUnitId_UnitName": _this.tableList[0].destUnitId_UnitName,
+                    "factor": "",
+                    "remark": "",
+                };
+                _this.tableList.unshift(newRow);
+                _this.addRowList.unshift(newRow);
                 // console.log(_this.tableList);            
             },
             saveRow(val){//保存所在行
                 // console.log("新增行数据");
                 // console.log(val);
                  let _this=this;
-                 _this.addRowList.unitId=val.unitId;
-                //  console.log( _this.addRowList);
+                 _this.addRowdata=val;
+                //  console.log( _this.addRowdata);
                  
-                _this.$axios.posts('/api/services/app/UnitConvertManagement/Create',_this.addRowList)
+                _this.$axios.posts('/api/services/app/UnitConvertManagement/Create',_this.addRowdata)
                 .then(
                     rsp=>{
-                        // console.log(rsp.success);
-                        console.log(rsp.result);
+                        console.log(rsp.success);
+                        // console.log(rsp.result);
                         _this.getNodeDetail();
                     }
                 )
 
+            },
+            TableClick(data){//表格中树形控件节点被点击时的回调
+                    console.log(data);
             },
             confirmDelThis(){//操作下面的删除
             },
