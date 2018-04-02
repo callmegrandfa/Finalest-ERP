@@ -266,7 +266,7 @@
                     _this.addData=rsp.result;
                     
                 });
-            },
+        },
         // 返回
         goback() {
             this.$store.state.url = "/adminstrArea/adminstrAreaList/default";
@@ -276,20 +276,20 @@
             //判断是否修改过信息
             this.update = true;
             this.isDisable=false;
-            console.log(this.isDisable);
+            // console.log(this.isDisable);
             
         },
         // 成功的提示框
-                open(tittle,iconClass,className) {//提示框
-                    this.$notify({
-                    position: 'bottom-right',
-                    iconClass:iconClass,
-                    title: tittle,
-                    showClose: false,
-                    duration: 3000,
-                    customClass:className
-                    });
-                },
+        open(tittle,iconClass,className) {//提示框
+         this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
         // 保存
         save() {
             let _this=this;
@@ -424,7 +424,7 @@
         },
          // 确认是否删除本条数据
             confirmDelThis() {
-                console.log("123");
+                // console.log("123");
                 
                 let _this = this;
                 _this
@@ -447,15 +447,15 @@
                     });
             },
         // 重新验证并设置值
-        // reset(){
-        //     console.log("123zt");
-        //     this.addData.areaParentId='';
-        //     this.addData.areaCode='';
-        //     this.addData.areaName='';
-        //     this.addData.status='';
-        //     this.addData.remark=''; 
-        //     this.validation.reset();               
-        // },
+        reset(){
+            // console.log("123zt");
+            this.addData.areaParentId='';
+            this.addData.areaCode='';
+            this.addData.areaName='';
+            this.addData.status='';
+            this.addData.remark=''; 
+            this.validation.reset();               
+        },
 
         },
        

@@ -145,7 +145,7 @@
                                     <el-button type="text"  @click="see(scope.row)">{{scope.row.displayName}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="ouId" label="所属组织"></el-table-column>
+                            <el-table-column prop="ouName" label="所属组织"></el-table-column>
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
@@ -153,7 +153,7 @@
                                     <span v-else>{{scope.row.statusTValue}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="创建时间(无字段)" width="160">
+                            <el-table-column label="创建时间" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker
                                     format="yyyy.MM.dd"
@@ -332,7 +332,6 @@
                 let _this=this;
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
-                    console.log(res)
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);

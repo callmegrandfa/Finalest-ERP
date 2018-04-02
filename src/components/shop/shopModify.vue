@@ -9,35 +9,35 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
+                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify&&!ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">新增</span>
                 </button>
 
-                <button class="erp_bt bt_del" @click="delCustomer(7)" v-show='!ifModify'>
+                <button class="erp_bt bt_del" @click="delShop(3)" v-show='!ifModify&&!ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
                     <span class="btDetail">删除</span>
                 </button>
 
-                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify'>
+                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify||ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button class="erp_bt bt_saveAdd" v-show='ifModify'>
+                <button class="erp_bt bt_saveAdd" v-show='ifModify||ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
 
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
+                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify||ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -52,86 +52,116 @@
         
         <el-collapse-transition>
             <div v-show="ifShow">   
-                <el-row>
+                <el-row class="bg-white ft12 pr10 pt10">
                     <el-col :span="24" class="getPadding"> 
-                        <div class="tipsWrapper">
-                            <div class="errorTips">
-                                <p class="msgDetail">错误提示：
-                                    <span :class="{block : !validation.hasError('shopData.ouId')}">
-                                        所属组织{{ validation.firstError('shopData.ouId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopCode')}">
-                                        编码{{ validation.firstError('shopData.shopCode') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopName')}">
-                                        名称{{ validation.firstError('shopData.shopName') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopFullName')}">
-                                        全称{{ validation.firstError('shopData.shopFullName') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopWorkPropertyid')}">
-                                        店铺性质{{ validation.firstError('shopData.shopWorkPropertyid') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.stockId')}">
-                                        对应仓库{{ validation.firstError('shopData.stockId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopGradeId')}">
-                                        店铺等级{{ validation.firstError('shopData.shopGradeId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.openingDate')}">
-                                        开店日期{{ validation.firstError('shopData.openingDate') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.opAreaId')}">
-                                        业务地区{{ validation.firstError('shopData.opAreaId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.adAreaId')}">
-                                        行政地区{{ validation.firstError('shopData.adAreaId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.manager')}">
-                                        负责人{{ validation.firstError('shopData.manager') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.phone')}">
-                                        电话{{ validation.firstError('shopData.phone') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.tradingAreaid')}">
-                                        商圈{{ validation.firstError('shopData.tradingAreaid') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.status')}">
-                                        状态{{ validation.firstError('shopData.status') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.shopAddress')}">
-                                        店铺地址{{ validation.firstError('shopData.shopAddress') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.longitude')}">
-                                        经度{{ validation.firstError('shopData.longitude') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.latitude')}">
-                                        纬度{{ validation.firstError('shopData.latitude') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('shopData.remark')}">
-                                        备注{{ validation.firstError('shopData.remark') }},
-                                    </span>
-                                </p>
+                        <div class="tipsWrapper" name="ouId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.ouId')}">
+                                <p class="msgDetail">错误提示：所属组织{{ validation.firstError('shopData.ouId') }}</p>
                             </div>
                         </div>
-                        
+
+                        <div class="tipsWrapper" name="shopCode">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopCode')}">
+                                <p class="msgDetail">编码{{ validation.firstError('shopData.shopCode') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopName">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopName')}">
+                                <p class="msgDetail">名称{{ validation.firstError('shopData.shopName') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopFullname">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopFullname')}">
+                                <p class="msgDetail">全称{{ validation.firstError('shopData.shopFullname') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopWorkPropertyid">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopWorkPropertyid')}">
+                                <p class="msgDetail">店铺性质{{ validation.firstError('shopData.shopWorkPropertyid') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="stockId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.stockId')}">
+                                <p class="msgDetail">对应仓库{{ validation.firstError('shopData.stockId') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopGradeId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopGradeId')}">
+                                <p class="msgDetail">店铺等级{{ validation.firstError('shopData.shopGradeId') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="openingDate">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.openingDate')}">
+                                <p class="msgDetail">开店日期{{ validation.firstError('shopData.openingDate') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="opAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.opAreaId')}">
+                                <p class="msgDetail">业务地区{{ validation.firstError('shopData.opAreaId') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="adAreaId">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.adAreaId')}">
+                                <p class="msgDetail">行政地区{{ validation.firstError('shopData.adAreaId') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="manager">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.manager')}">
+                                <p class="msgDetail">负责人{{ validation.firstError('shopData.manager') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="phone">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.phone')}">
+                                <p class="msgDetail">电话{{ validation.firstError('shopData.phone') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="tradingAreaid">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.tradingAreaid')}">
+                                <p class="msgDetail">商圈{{ validation.firstError('shopData.tradingAreaid') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="status">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.status')}">
+                                <p class="msgDetail">状态{{ validation.firstError('shopData.status') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="shopAddress">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.shopAddress')}">
+                                <p class="msgDetail">店铺地址{{ validation.firstError('shopData.shopAddress') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="longitude">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.longitude')}">
+                                <p class="msgDetail">经度{{ validation.firstError('shopData.longitude') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="latitude">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.latitude')}">
+                                <p class="msgDetail">纬度{{ validation.firstError('shopData.latitude') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="tipsWrapper" name="remark">
+                            <div class="errorTips" :class="{block : !validation.hasError('shopData.remark')}">
+                                <p class="msgDetail">备注{{ validation.firstError('shopData.remark') }}</p>
+                            </div>
+                        </div>
+                                
 
                         <div class="bgcolor">
                             <label><small>*</small>所属组织</label>
@@ -198,7 +228,7 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>店铺性质</label>
+                            <label><small>*</small>店铺性质</label>
                             <el-select v-model="shopData.shopWorkPropertyid"
                                     placeholder=""
                                     @change='Modify()'
@@ -215,11 +245,11 @@
                         <div class="bgcolor">
                             <label>对应仓库</label>
                             <el-select v-model="shopData.stockId"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    class="stockId"
-                                    :class="{redBorder : validation.hasError('shopData.stockId')}">
+                                        placeholder=""
+                                        @change='Modify()'
+                                        @focus="showErrprTipsSelect"
+                                        class="stockId"
+                                        :class="{redBorder : validation.hasError('shopData.stockId')}">
                                 <el-option v-for="item in stockAr" 
                                         :key="item.id" 
                                         :label="item.stockName" 
@@ -244,22 +274,23 @@
                         
                         <div class="bgcolor">
                             <label>开店日期</label>
-                            <el-input v-model="shopData.openingDate" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    :class="{redBorder : validation.hasError('shopData.openingDate')}"
-                                    class="openingDate"
-                                    @change='Modify()'></el-input>
+                            <el-date-picker v-model="shopData.openingDate" 
+                                            type="date" 
+                                            @focus="showErrprTips"
+                                            class="openingDate"
+                                            @change='Modify()'
+                                            :class="{redBorder : validation.hasError('shopData.openingDate')}"
+                                            placeholder=""></el-date-picker>
                         </div>
 
                         <div class="bgcolor">
                             <label>业务地区</label>
                             <el-select v-model="shopData.opAreaId"
-                                    class="opAreaId"
-                                    @focus="showErrprTipsSelect"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    :class="{redBorder : validation.hasError('shopData.opAreaId')}">
+                                        class="opAreaId"
+                                        @focus="showErrprTipsSelect"
+                                        placeholder=""
+                                        @change='Modify()'
+                                        :class="{redBorder : validation.hasError('shopData.opAreaId')}">
                                 <el-input placeholder="搜索..."
                                         class="selectSearch"
                                         v-model="opSearch"></el-input>
@@ -299,49 +330,34 @@
                             </div>
                         </div>
 
-                        <!-- <div class="bgcolor">
-                            <label>主营品牌</label>
-                            <el-select v-model="shopData.mainBrand"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    class="shopTypeId"
-                                    :class="{redBorder : validation.hasError('shopData.shopTypeId')}">
-                                <el-option v-for="item in typeAr" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue"></el-option>
-                            </el-select>
-                        </div>    -->
-
                         <div class="bgcolor">
                             <label>负责人</label>
                             <el-input v-model="shopData.manager" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="manager"
-                                    :class="{redBorder : validation.hasError('shopData.manager')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="manager"
+                                        :class="{redBorder : validation.hasError('shopData.manager')}"
+                                        @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>电话</label>
                             <el-input v-model="shopData.phone" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="phone"
-                                    :class="{redBorder : validation.hasError('shopData.phone')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="phone"
+                                        :class="{redBorder : validation.hasError('shopData.phone')}"
+                                        @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>商圈</label>
                             <el-select v-model="shopData.tradingAreaid"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    class="tradingAreaid"
-                                    :class="{redBorder : validation.hasError('shopData.tradingAreaid')}">
+                                        placeholder=""
+                                        @change='Modify()'
+                                        @focus="showErrprTipsSelect"
+                                        class="tradingAreaid"
+                                        :class="{redBorder : validation.hasError('shopData.tradingAreaid')}">
                                 <el-option v-for="item in busAr" 
                                         :key="item.itemValue" 
                                         :label="item.itemName" 
@@ -350,13 +366,13 @@
                         </div>  
 
                         <div class="bgcolor">
-                            <label><small>*</small>状态</label>
+                            <label>状态</label>
                             <el-select v-model="shopData.status"
-                                    class="status"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    :class="{redBorder : validation.hasError('shopData.status')}">
+                                        class="status"
+                                        placeholder=""
+                                        @change='Modify()'
+                                        @focus="showErrprTipsSelect"
+                                        :class="{redBorder : validation.hasError('shopData.status')}">
                                 <el-option v-for="item in statusAr"  
                                         :key="item.itemValue" 
                                         :label="item.itemName" 
@@ -367,61 +383,61 @@
                         <div class="bgcolor">
                             <label>店铺地址</label>
                             <el-input v-model="shopData.shopAddress" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="shopAddress"
-                                    :class="{redBorder : validation.hasError('shopData.shopAddress')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="shopAddress"
+                                        :class="{redBorder : validation.hasError('shopData.shopAddress')}"
+                                        @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>经度</label>
                             <el-input v-model="shopData.longitude" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="longitude"
-                                    :class="{redBorder : validation.hasError('shopData.longitude')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="longitude"
+                                        :class="{redBorder : validation.hasError('shopData.longitude')}"
+                                        @change='Modify()'></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>纬度</label>
                             <el-input v-model="shopData.latitude" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="latitude"
-                                    :class="{redBorder : validation.hasError('shopData.latitude')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="latitude"
+                                        :class="{redBorder : validation.hasError('shopData.latitude')}"
+                                        @change='Modify()'></el-input>
                         </div>
                         
                         <div class="bgcolor">
                             <label>备注</label>
                             <el-input v-model="shopData.remark" 
-                                    placeholder=""
-                                    @focus="showErrprTips"
-                                    class="remark"
-                                    :class="{redBorder : validation.hasError('shopData.remark')}"
-                                    @change='Modify()'></el-input>
+                                        placeholder=""
+                                        @focus="showErrprTips"
+                                        class="remark"
+                                        :class="{redBorder : validation.hasError('shopData.remark')}"
+                                        @change='Modify()'></el-input>
                         </div>
                     </el-col>
                 </el-row>
             </div>
         </el-collapse-transition>     
 
-        <!-- 公司业务财务bootTab标签页 -->
+        <!-- bootTab标签页 -->
         <el-row class="nopadding"> 
             <div class="tabZoo">
                 <el-col :span="24">
                 <el-tabs v-model="activeName">
-                        <el-tab-pane label="联系人" name="bank" class="getPadding" style="z-index:-10">
-                            <button class="erp_bt bt_add" @click="addColbank">
+                        <el-tab-pane label="联系人" name="contact" class="getPadding" style="z-index:-10">
+                            <button class="erp_bt bt_add" @click="addCol">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">增行</span>
                             </button>
                             
-                            <button class="erp_bt bt_del" @click="delMoreBank(4)">
+                            <button class="erp_bt bt_del" @click="delMore(2)">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_del.png">
                                 </div>
@@ -436,65 +452,65 @@
                             </button>
                             
                     
-                            <el-table :data="bankData" stripe border style="width: 100%" @selection-change="handleSelectionChange" class="all-table">
+                            <el-table :data="shopData.shopContacts" stripe border style="width: 100%" @selection-change="handleSelectionChange" class="all-table">
                                 <el-table-column type="selection"></el-table-column>
 
-                                <el-table-column prop="accountNo" label="银行账号" width="180">
+                                <el-table-column prop="contactPerson" label="联系人" width="180">
                                     <template slot-scope="scope">
                                         <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.accountNo" 
+                                            v-model="scope.row.contactPerson" 
                                             type="text"
-                                            @change="handleBankChange(scope.$index,scope.row)"/> 
+                                            @change="handleChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="accountName" label="银行账户" width="180">
+                                <el-table-column prop="sex" label="性别" width="180">
+                                    <template slot-scope="scope">
+                                        <el-select  v-model="scope.row.sex" :class="[scope.$index%2==0?'bgw':'bgp']">
+                                            <el-option  v-for="item in sexAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                            </el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="position" label="职位" width="180">
                                     <template slot-scope="scope">
                                         <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.accountName" 
+                                            v-model="scope.row.position" 
                                             type="text"    
-                                            @change="handleBankChange(scope.$index,scope.row)"/> 
+                                            @change="handleChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="openingBank" label="开户银行" width="180">
+                                <el-table-column prop="mobile" label="手机" width="180">
                                     <template slot-scope="scope">
                                         <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.openingBank" 
+                                            v-model="scope.row.mobile" 
                                             type="text"    
-                                            @change="handleBankChange(scope.$index,scope.row)"/> 
+                                            @change="handleChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="shopPerson" label="联系人" width="180">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.shopPerson" 
-                                            type="text"   
-                                            @change="handleBankChange(scope.$index,scope.row)"/> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="phone" label="联系电话" width="180">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.phone" 
-                                            type="text"    
-                                            @change="handleBankChange(scope.$index,scope.row)"/> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="isDefault" label="默认">
+                                
+                                <el-table-column prop="isDefault" label="默认" >
                                     <template slot-scope="scope">
                                         <el-radio  :label="true" 
                                                     v-model="scope.row.isDefault" 
                                                     @change.native="getCurrentRow(scope.$index,scope.row)" 
-                                                    @change="handleBankChange(scope.$index,scope.row)"></el-radio>
+                                                    @change="handleChange(scope.$index,scope.row)"></el-radio>
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="remark" label="备注" width="180">
+                                    <template slot-scope="scope">
+                                        <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.remark" 
+                                            type="text"   
+                                            @change="handleChange(scope.$index,scope.row)"/> 
                                     </template>
                                 </el-table-column>
 
@@ -506,158 +522,6 @@
                             </el-table>
                         </el-tab-pane>
 
-                        <!-- <el-tab-pane label="送货地址" name="address" class="getPadding" style="z-index:-1000">
-                            <button class="erp_bt bt_add" @click="addColAddress">
-                                <div class="btImg">
-                                    <img src="../../../static/image/common/bt_add.png">
-                                </div>
-                                <span class="btDetail">增行</span>
-                            </button>
-
-                            <button class="erp_bt bt_del" @click="delMoreAdd(5)">
-                                <div class="btImg">
-                                    <img src="../../../static/image/common/bt_del.png">
-                                </div>
-                                <span class="btDetail">删除</span>
-                            </button>
-
-                            <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
-                                <div class="btImg">
-                                    <img src="../../../static/image/common/bt_auxiliary.png">
-                                </div>
-                                <span class="btDetail">辅助功能</span>
-                            </button>
-                            
-                    
-                            <el-table :data="addressData" stripe border style="width: 100%;" election-change="handleSelectionChange2" class="all-table">
-
-                                <el-table-column prop="completeAddress" label="供货地址" width="180">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.completeAddress" 
-                                            type="text"    
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="completeAddress" label="省" width="180">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.completeAddress" 
-                                            type="text"    
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="id" label="市" width="180">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.id" 
-                                            type="text"    
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="phone" label="区" width="180">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.phone" 
-                                            type="text"   
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="shopPerson" label="联系人" width="180">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.shopPerson" 
-                                            type="text"    
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="shopPerson" label="联系电话" width="180">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.phone" 
-                                            type="text"    
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="isDefault" label="默认">
-                                    <template slot-scope="scope">
-                                        <el-checkbox v-model="addressData[scope.$index].isDefault"></el-checkbox>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label='操作'>
-                                    <template slot-scope="scope" >
-                                        <el-button v-on:click="handleDelete(scope.$index,scope.row,2)" type="text" size="small">删除</el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-tab-pane> -->
-
-                        <!-- <el-tab-pane label="使用组织" name="organization" class="getPadding" style="z-index:-1000">
-                            <button class="erp_bt bt_add" @click="addColOu">
-                                <div class="btImg">
-                                    <img src="../../../static/image/common/bt_add.png">
-                                </div>
-                                <span class="btDetail">增行</span>
-                            </button>
-
-                            <button class="erp_bt bt_del" @click="delMoreAdd(6)">
-                                <div class="btImg">
-                                    <img src="../../../static/image/common/bt_del.png">
-                                </div>
-                                <span class="btDetail">删除</span>
-                            </button>
-
-                            <button class="erp_bt bt_auxiliary" style="margin-bottom:10px;">
-                                <div class="btImg">
-                                    <img src="../../../static/image/common/bt_auxiliary.png">
-                                </div>
-                                <span class="btDetail">辅助功能</span>
-                            </button>
-                            
-                    
-                            <el-table :data="ouData" stripe border style="width: 100%" election-change="handleSelectionChange3" class="all-table">
-                                <el-table-column type="selection"></el-table-column>
-
-                                <el-table-column prop="ouId" label="业务组织" width="540">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.ouId" 
-                                            type="text"    
-                                            @change="handleOuChange(scope.$index,scope.row)" /> 
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column prop="transport_method_id" label="运输方式" width="540">
-                                    <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.transport_method_id" 
-                                                    @change="handleOuChange(scope.$index,scope.row)"
-                                                    :class="[scope.$index%2==0?'bgw':'bgp']">
-                                            <el-option  v-for="item in tranAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
-                                            </el-option>
-                                        </el-select>
-                                    </template>
-                                </el-table-column>
-
-                                <el-table-column label='操作'>
-                                    <template slot-scope="scope" >
-                                        <el-button v-on:click="handleDelete(scope.$index,scope.row,3)" type="text" size="small">删除</el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-tab-pane> -->
                     </el-tabs>
                 </el-col>
             </div>
@@ -777,7 +641,8 @@ export default({
             ifShow:true,
             radio:'',
             ifModify:false,//判断主表是否修改过
-            ifBtn:true,//判断顶部按钮的显示与隐藏
+            ifDoModify:false,//判断从表是否修改过
+            ifUp:false,//判断从表是否为修改
             //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -830,16 +695,11 @@ export default({
             busAr:[],//商圈下拉
             //-----------------------
   
-            activeName: 'bank',//tabs标签页默认激活name
+            activeName: 'contact',//tabs标签页默认激活name
 
             shopData:'',//根据id获得的店铺信息
-            bankData:[],//根据groupId获得银行信息
-            
-
-            updataBankList:[],//需要修改的银行信息
-            
-
-            addBankList:[],//需要添加的银行信息
+            contactData:[],//联系人数据
+            addList:[],//新增联系人
             
             x:0,
             xrows:[],
@@ -847,21 +707,10 @@ export default({
             multipleSelection:[],//需要删除的数组
             
 
-            idArrayBank:{//银行多项删除的id
+            idArray:{//银行多项删除的id
                 ids:[]
             },
 
-            createBankParams:{//创建银行的参数
-                "groupId": 1,
-                "shopId":'',
-                "settlementCurrencyId": '',
-                "accountNo": "",
-                "accountName": "",
-                "openingBank": '',
-                "shopPerson": '',
-                "phone": '',
-                "isDefault": true
-            },
             checkedAr:[],//进来时数据选中的默认框
             //---确认删除-----------------               
             dialogDelConfirm:false,//用户删除保存提示信息
@@ -909,7 +758,7 @@ export default({
         'shopData.shopName': function (value) {//名称
             return this.Validator.value(value).required().maxLength(50);
         },
-        'shopData.shopFullName': function (value) {//全称
+        'shopData.shopFullname': function (value) {//全称
             return this.Validator.value(value).required().maxLength(50);
         },
         'shopData.shopWorkPropertyid': function (value) {//店铺性质
@@ -922,7 +771,7 @@ export default({
             return this.Validator.value(value).integer();
         },
         'shopData.openingDate': function (value) {//开店日期
-            return this.Validator.value(value).integer();
+            return this.Validator.value(value).maxLength(50);
         },
         'shopData.opAreaId': function (value) {//业务地区
             return this.Validator.value(value).integer();
@@ -940,16 +789,16 @@ export default({
             return this.Validator.value(value).maxLength(50);
         },
         'shopData.status': function (value) {//状态
-            return this.Validator.value(value).required().integer();
-        },
-        'shopData.shopAddress': function (value) {//店铺地址
             return this.Validator.value(value).integer();
         },
+        'shopData.shopAddress': function (value) {//店铺地址
+            return this.Validator.value(value).maxLength(50);
+        },
         'shopData.longitude': function (value) {//经度
-            return this.Validator.value(value).number();
+            return this.Validator.value(value).maxLength(50);
         },
         'shopData.latitude': function (value) {//纬度
-            return this.Validator.value(value).number();
+            return this.Validator.value(value).maxLength(50);
         },
         'shopData.remark': function (value) {//备注
             return this.Validator.value(value).maxLength(200);
@@ -976,13 +825,15 @@ export default({
                 this.$axios.gets('/api/services/app/ShopManagement/Get',{id:self.$route.params.id}).then(function(res){
                     
                     self.shopData = res.result;
+                    self.contactData = self.shopData.shopContacts;
                     console.log(self.shopData);
+                    // console.log(self.contactData)
+                    
                     self.getOuId = self.shopData.ouId;//保存加载时获取的ouid
 
                     //对应仓库
                     self.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.getOuId,Start:0,Length:100}).then(function(res){
                         // console.log(res);
-                        
                         self.stockAr = res.data;
                     },function(res){
                         console.log('err'+res)
@@ -990,7 +841,7 @@ export default({
 
                     //业务地区
                     self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.getOuId}).then(function(res){
-                        console.log(res);
+                        // console.log(res);
                         self.opAr = res.result;
                         self.loadIcon();
                     },function(res){
@@ -998,42 +849,22 @@ export default({
                     });
 
 
-                    self.createBankParams.shopId = self.$route.params.id;
                     //加载完成拿回的下拉框的默认值
                     self.ouItem.ouFullname = self.shopData.ouFullname;
                     self.ouItem.id =  self.shopData.ouId;
 
-                    // self.cuItem.id = self.shopData.shopClassId;
-                    // self.cuItem.cuFullname = self.shopData.shopClassId_ClassName;
+                    
 
                     self.adItem.areaName = self.shopData.adAreaId_AreaName;
                     self.adItem.id = self.shopData.adAreaId;
 
                     self.opItem.areaName = self.shopData.opAreaFullName;
                     self.opItem.id = self.shopData.opAreaId;
-
-                    // self.fiItem.fiFullname = self.shopData.ficaOuId_OuName;
-                    // self.fiItem.id = self.shopData.ficaOuId;
                 })
                 
-                self.loadBankData();//加载银行数据
-                
-
             }
         },
-        loadBankData:function(){//银行数据
-            let self = this;
-            //获取所有的银行信息，也可以用groupid获取，
-            this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                console.log(res);
-                self.bankData = res.result.items;
-                for(let i in self.bankData){
-                    if(self.bankData[i].isDefault == true){
-                        self.checkedAr = self.bankData[i]
-                    }
-                }
-            })
-        },
+        
         //------------------------------------------------------
         //---下拉的数据------------------------------------------------------
         loadSelect:function(){
@@ -1057,7 +888,7 @@ export default({
             
             //店铺等级
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'ShopGrade'}).then(function(res){
-                // console.log(res);
+                console.log(res);
                 self.gradeAr = res.result;
             },function(res){
                 console.log('err'+res)
@@ -1100,8 +931,8 @@ export default({
 
         //---树-------------------------------------------------------------
         loadIcon(){
-            let _this=this;
-            _this.$nextTick(function () {
+            let self=this;
+            self.$nextTick(function () {
                 $('.preNode').remove();   
                 $('.el-tree-node__label').each(function(){
                     if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
@@ -1117,29 +948,36 @@ export default({
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
-        // cuNodeClick:function(data){
-        //     let self = this;
-        //     self.cuItem.id = data.id;
-        //     self.cuItem.cuFullname = data.classFullname;
-        //     self.$nextTick(function(){
-        //         $('#cu_confirmSelect').click()
-        //     })
-        // },
         ouNodeClick:function(data){
             let self = this;
+            self.shopData.stockId = '';
+            self.shopData.opAreaId = '';
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
-        },
-        fiNodeClick:function(data){
-            let self = this;
-            self.fiItem.id = data.id;
-            self.fiItem.fiFullname = data.ouFullname;
-            self.$nextTick(function(){
-                $('#fi_confirmSelect').click()
-            })
+            //点击所属组织，业务地区跟着变动
+            self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
+                console.log(res);
+                if(res.result.length>0){
+                    self.opAr = res.result;
+                    self.loadIcon();
+                }else{
+                    self.opItem.areaName = '暂无业务地区';
+                    self.opItem.id = '';
+                }
+            },function(res){
+                console.log('err'+res)
+            });
+
+            //点击所属组织，对应仓库跟着变动
+            self.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,Start:0,Length:100}).then(function(res){
+                // console.log(res);
+                self.stockAr = res.data;
+            },function(res){
+                console.log('err'+res)
+            });
         },
         adNodeClick:function(data){
             let self = this;
@@ -1157,83 +995,64 @@ export default({
                 $('#op_confirmSelect').click()
             })
         },
-        //-----------------------------------------------------
+        //----------------------------------------------------------------
 
         //---保存、修改数据---------------------------------------------
         saveModify:function(){
             let self = this;
             if(self.ifModify){
-                self.saveCustomerModify();
-            }else{
-                self.open('没有需要保存的项目','el-icon-warning','noticERP');
+                $('.tipsWrapper').css({display:'block'});
+                self.$validate().then(function(success){
+                    if(success){
+                        $('.tipsWrapper').css({display:'none'});
+                        self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
+                            self.open('修改店铺信息成功','el-icon-circle-check','successERP');
+                            self.ifModify = false;
+                        },function(res){
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            self.errorMessage=true;
+                            self.open('修改店铺信息失败','el-icon-error','faildERP');
+                        })
+                    }
+                });
             }
-            
-            self.saveBankModify();
-            self.saveAddressModify();
-            self.saveOuModify();
 
-            if(self.addBankList.length>0){
-                self.createBank();
-            };
-            if(self.addAddressList.length>0){
-                self.createAddress();
-            };
-            if(self.addOuList.length>0){
-                self.createOu();
+            if(self.ifUp){
+                self.saveContactModify();
             }
             
-        },
-        saveCustomerModify:function(){//修改客户信息
-            let self = this;
-            $('.tipsWrapper').css({display:'block'});
-            // console.log(self.shopData)
-            self.$validate().then(function(success){
-                if(success){
-                    // console.log(99999999)
-                    $('.tipsWrapper').css({display:'none'});
-                    // this.$axios.puts('/api/services/app/ContactManagement/Update',self.shopData).then(function(res){
-                    //     self.open('修改客户信息成功','el-icon-circle-check','successERP');
-                    //     self.ifModify = false;
-                    // },
-                    self.$axios.posts('/api/services/app/ContactManagement/CUDAggregate',{createList:[],updateList:self.shopData,deleteList:[]}).then(function(res){
-                        self.open('修改客户信息成功','el-icon-circle-check','successERP');
-                        self.ifModify = false;
-                    },function(res){
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                        self.open('修改失败','el-icon-error','faildERP');
-                    })
-                }
-            });
+            self.createContact();
             
         },
-        saveBankModify:function(){//修改银行资料
+        saveContactModify:function(){//修改联系人
             let self = this;
-            if(self.updataBankList.length>0){
-                self.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:[],updateList:self.updataBankList,deleteList:[]}).then(function(res){
-                        console.log(res);
-                        self.open('修改银行资料成功','el-icon-circle-check','successERP');
-                        self.updataBankList = [];
-                    },function(res){
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                        self.open('修改银行资料失败','el-icon-error','faildERP');
-                    })
-            }
+            self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
+                console.log(res);
+                self.open('修改联系人成功','el-icon-circle-check','successERP');
+                self.ifDoModify = false;
+                self.ifUp = false;
+            },function(res){
+                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                self.errorMessage=true;
+                self.open('修改联系人失败','el-icon-error','faildERP');
+            })
+            
         },
         
-        createBank:function(){//创建银行资料
+        createContact:function(){//创建联系人
             let self = this;
-
-            if(self.addBankList.length>0){
-                    self.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:self.addBankList,updateList:[],deleteList:[]}).then(function(res){         
-                        self.open('创建银行资料成功','el-icon-circle-check','successERP');
-                        self.addBankList = [];
-                    },function(res){
-                        self.open('创建银行资料失败','el-icon-error','faildERP');
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                    })
+            console.log(self.shopData.shopContacts)
+            if(self.addList.length>0){
+                
+                self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){         
+                    self.open('创建联系人成功','el-icon-circle-check','successERP');
+                    self.loadData();
+                    self.addList = [];
+                },function(res){
+                    self.open('创建联系人失败','el-icon-error','faildERP');
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    self.errorMessage=true;
+                })
             }
         },
         
@@ -1242,77 +1061,58 @@ export default({
         //---控制按钮显示及隐藏-----------------------------------     
         Cancel(){
             let self = this;
-            // if(self.isEdit==false){
-                // self.isEdit=!self.isEdit;
-                self.loadData();
-                self.ifModify = false;
-                $('.tipsWrapper').css({display:'none'})
-            // }
+            self.loadData();
+            self.ifModify = false;
+            self.ifDoModify = false;
+            $('.tipsWrapper').css({display:'none'})
         },
         //-------------------------------------------------------
 
-        // ---控制编辑----------------------------------------
+        // ---主表修改----------------------------------------
         Modify:function(){//判断主表是否修改过
             let self = this;
             self.ifModify = true;
         },
         //---------------------------------------------------
+        //---从表修改-----------------------------------------
+        handleChange:function(index,row){//判断联系人是否修改
+            let self = this;
+            self.ifDoModify = true;
+            if(row.id>0){
+                self.ifUp = true;
+            }
+            
+        },
+        //---------------------------------------------------
         //---从表增行--------------------------------------------
-        addColbank:function(){//银行增行
+        addCol:function(){//银行增行
             let self = this;
                 self.x++;
                 let newCol = 'newCol'+self.x;
                 self.xrows.newCol ={
-                    "groupId": 1,
-                    "shopId":self.createBankParams.shopId,
-                    "settlementCurrencyId": '',
-                    "accountNo": "",
-                    "accountName": "",
-                    "openingBank": '',
-                    "shopPerson": '',
-                    "phone": '',
-                    "isDefault": false
+                    contactPerson: "",
+                    mobile: "",
+                    phone: "",
+                    isDefault: false,
+                    remark: "",
+                    position: "",
+                    sex: '',
+                    id: 0
                 };
-                self.bankData.unshift(self.xrows.newCol);
-                self.addBankList.unshift(self.xrows.newCol)
+                self.shopData.shopContacts.unshift(self.xrows.newCol);
+                self.addList.unshift(self.xrows.newCol)
         },
         //---------------------------------------------------
 
-        //---从表修改-----------------------------------------
-        handleBankChange:function(index,row){//银行修改
-            // console.log(index)
-            let self = this;
-            let flag = false;
-            if(self.updataBankList.length==0&&row.id>0){
-                flag = true;
-            }else if(self.updataBankList.length>=1&&row.id>0){
-                for(let i in self.updataBankList){
-                    if(row.id != self.updataBankList[i].id){
-                        flag = true;
-                        // console.log(flag) 
-                    }else{
-                        flag= false;
-                        break;        
-                    }
-                }
-            };
-
-            if(flag){
-                self.updataBankList.push(row);
-                // console.log(self.updataBankList)
-            }
-        },
-        //---------------------------------------------------
+        
 
         //---从表默认单选框-----------------------------------
-        getCurrentRow:function(index,row){//银行默认单选框
+        getCurrentRow:function(index,row){//默认单选框
             let self = this;
-            for(let i in self.bankData){
-                self.bankData[i].isDefault = false;
+            for(let i in self.shopData.shopContacts){
+                self.shopData.shopContacts[i].isDefault = false;
             }
-            self.bankData[index].isDefault = true;
-            // self.updataBankList.push(row);
-            self.updataBankList.push(self.checkedAr)
+            self.shopData.shopContacts[index].isDefault = true;
             
         },
         //---------------------------------------------------
@@ -1320,124 +1120,71 @@ export default({
         //---从表复选框---------------------------------------
         handleSelectionChange:function(val){//点击复选框选中的数据
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
         },
         //---------------------------------------------------
 
-        //---从表单项删除-------------------------------------
-
-        handleDelete:function(index,row,who){//银行表格内删除操作
-            let self = this;
-            self.who = who;
-            self.whoIndex = index;
-            self.whoId = row.id;
-            self.dialogDelConfirm = true;
-        },
-        //---------------------------------------------------
+        
 
         //---确认删除-----------------------------------------
         sureDel:function(){
             let self = this;
             console.log(self.who)
-            if(self.who == 1){//银行单项删除
-                // console.log(self.whoId)
+            if(self.who == 1){//单项删除
                 if(self.whoId>0){
-                    // console.log(self.dialogDelConfirm)
-                    self.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:self.whoId}).then(function(res){
-                        self.open('删除银行资料成功','el-icon-circle-check','successERP');
-                        self.bankData.splice(self.whoIndex,1);
+                    self.shopData.shopContacts.splice(self.whoIndex,1);
+                    self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
+                        self.open('删除联系人成功','el-icon-circle-check','successERP');
                         self.dialogDelConfirm = false;
-                        console.log(self.dialogDelConfirm)
                     },function(res){
-                        self.open('删除银行资料失败','el-icon-error','faildERP');
+                        self.open('删除联系人失败','el-icon-error','faildERP');
                         self.dialogDelConfirm = false;
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }else{
-                    self.bankData.splice(self.whoIndex,1);
-                    self.addBankList.splice(self.whoIndex,1);
+                    self.shopData.shopContacts.splice(self.whoIndex,1);
+                    self.addList.splice(self.whoIndex,1);
                     self.dialogDelConfirm = false;
                     self.open('删除新增行成功','el-icon-circle-check','successERP');
                 }
             }
 
-            if(self.who == 2){//地址单项删除
-                if(self.whoId>0){
-                    self.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:self.whoId}).then(function(res){
-                        self.open('删除地址资料成功','el-icon-circle-check','successERP');
-                        self.addressData.splice(self.whoIndex,1);
-                        self.dialogDelConfirm = false;
-                    },function(res){
-                        self.open('删除地址资料失败','el-icon-error','faildERP');
-                        self.dialogDelConfirm = false;
-                        self.errorMessage=true;
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        
+            if(self.who == 2){//多项删除  
+                let x=[];
+                $.each(self.shopData.shopContacts,function(index,value){
+                    let flag=false;
+                    $.each(self.multipleSelection,function(i,val){
+                        if(value==val){
+                            flag=true
+                        }
                     })
-                }else{
-                    self.addressData.splice(self.whoIndex,1);
-                    self.addAddressList.splice(self.whoIndex,1);
-                    self.dialogDelConfirm = false;
-                    self.open('删除新增行成功','el-icon-circle-check','successERP');
-                }
-            }
+                    if(!flag){
+                        x.push(value)
+                    }
+                })
+           
+                self.shopData.shopContacts = x;
+                // console.log(self.shopData.shopContacts)
 
-            if(self.who == 3){//使用组织单项删除
-                if(self.whoId>0){
-                    self.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:self.whoId}).then(function(res){
-                        self.open('删除使用组织成功','el-icon-circle-check','successERP');
-                        self.ouData.splice(self.whoIndex,1);
-                        self.dialogDelConfirm = false;
-                    },function(res){
-                        self.open('删除使用组织失败','el-icon-error','faildERP');
-                        self.dialogDelConfirm = false;
-                        self.errorMessage=true;
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                    })
-                }else{
-                    self.ouData.splice(self.whoIndex,1);
-                    self.addOuList.splice(self.whoIndex,1);
-                    self.dialogDelConfirm = false;
-                    self.open('删除新增行成功','el-icon-circle-check','successERP');
-                }
-            }
-
-            if(self.who == 4){//银行多项删除  
-                self.$axios.posts('/api/services/app/ContactBankManagement/BatchDelete',self.idArrayBank).then(function(res){
-                    self.open('删除银行资料成功','el-icon-circle-check','successERP');
-                    self.loadBankData();
+                self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
+                    self.open('删除联系人成功','el-icon-circle-check','successERP');
+                    self.loadData();
                     self.dialogDelConfirm = false;
                 },function(res){
-                    self.open('删除银行资料失败','el-icon-error','faildERP');
+                    self.open('删除联系人失败','el-icon-error','faildERP');
                     self.dialogDelConfirm = false;
                     self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                 })    
             }
 
-            
-
-            if(self.who == 6){//使用组织多项删除  
-                self.$axios.posts('/api/services/app/ContactOuManagement/BatchDelete',self.idArrayOu).then(function(res){
-                    self.open('删除使用组织成功','el-icon-circle-check','successERP');
-                    self.loadOuData();
-                    self.dialogDelConfirm = false;
-                },function(res){
-                    self.open('删除使用组织失败','el-icon-error','faildERP');
-                    self.dialogDelConfirm = false;
-                    self.errorMessage = true;
-                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                })    
-            }
-
-            if(self.who == 7){//删除
-                self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:self.$route.params.id}).then(function(res){
-                    self.open('删除资料成功','el-icon-circle-check','successERP');
+            if(self.who == 3){//删除
+                self.$axios.deletes('/api/services/app/ShopManagement/Delete',{id:self.$route.params.id}).then(function(res){
+                    self.open('删除店铺成功','el-icon-circle-check','successERP');
                     self.back();
                     self.dialogDelConfirm = false;
                 },function(res){
-                    self.open('删除使用组织失败','el-icon-error','faildERP');
+                    self.open('删除店铺失败','el-icon-error','faildERP');
                     self.dialogDelConfirm = false;
                     self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1447,18 +1194,29 @@ export default({
 
         },
         //---------------------------------------------------
+
+        //---从表单项删除-------------------------------------
+
+        handleDelete:function(index,row,who){//表格内删除操作
+            let self = this;
+            console.log(row)
+            self.who = who;
+            self.whoIndex = index;
+            self.whoId = row.id;
+            self.dialogDelConfirm = true;
+        },
+        //---------------------------------------------------
         
         
         //---从表多项删除---------------------------------------------
-        delMoreBank:function(num){//银行多项删除
+        delMore:function(num){//多项删除
             let self = this;
-
+            
             for(let i in self.multipleSelection){
-                self.idArrayBank.ids.push(self.multipleSelection[i].id)
+                self.idArray.ids.push(self.multipleSelection[i].id)
             }
-
-            if(self.idArrayBank.ids.length>0){
-                if(self.idArrayBank.ids.indexOf(undefined)!=-1){
+            if(self.idArray.ids.length>0){
+                if(self.idArray.ids.indexOf(undefined)!=-1){
                     self.$message({
                         type: 'warning',
                         message: '新增数据请在行内删除'
@@ -1474,68 +1232,15 @@ export default({
                 });
             }
             
+            
         },
-
-        delMoreAdd:function(num){
-            let self = this;
-
-            for(let i in self.multipleSelectionAdd){
-                self.idArrayAdd.ids.push(self.multipleSelectionAdd[i].id)
-            }
-
-            if(self.idArrayAdd.ids.length>0){
-                if(self.idArrayAdd.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
-                }
-                self.dialogDelConfirm = true;   
-                self.who = num;
-            }else{
-                self.$message({
-                    type: 'info',
-                    message: '请勾选需要删除的数据！'
-                });
-            }
-        },
-
-        delMoreOu:function(num){
-            let self = this;
-
-            for(let i in self.multipleSelectionOu){
-                self.idArrayOu.ids.push(self.multipleSelectionOu[i].id)
-            }
-
-            if(self.idArrayOu.ids.length>0){
-                if(self.idArrayOu.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
-                }
-                self.dialogDelConfirm = true;   
-                self.who = num;
-            }else{
-                self.$message({
-                    type: 'info',
-                    message: '请勾选需要删除的数据！'
-                });
-            }
-        },
-
         
-        delCustomer:function(num){//删除此页客户资料
+        delShop:function(num){//删除此页店铺
             let self = this;
 
             self.who = num;
             self.dialogDelConfirm = true;  
         },
-        
-        
-          
         
         //-----------------------------------------------------------
 
@@ -1545,7 +1250,7 @@ export default({
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         goDetail(){//点击新增跳转
-            this.$store.state.url='/customer/customerDetail/default'
+            this.$store.state.url='/shop/shopDetail/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         open(tittle,iconClass,className) {
@@ -1563,7 +1268,7 @@ export default({
         //---修改返回提示-----------------------------------------
         isBack(){
             let self=this;
-            if(self.ifModify){
+            if(self.ifModify||self.ifDoModify){
                 self.dialogUserConfirm=true;
                 // self.choseDoing='back'
             }else{
@@ -1577,66 +1282,57 @@ export default({
         //-------------------------------------------------------
         //---提示错误----------------------------------------------
         showErrprTips(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
         },
         showErrprTipsSelect(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
+            $('.tipsWrapper').each(function(){
+                if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
+                    $(this).addClass('display_block')
+                }else{
+                    $(this).removeClass('display_block')
+                }
+            })
         },
         showErrprTipsRangedate(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.$el).hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
+            $('.tipsWrapper').each(function(){
+            if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
+                $(this).addClass('display_block')
+            }else{
+                $(this).removeClass('display_block')
+            }
+            })
         },
         showErrprTipsTextArea(e){
             $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            // if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-            //     $(this).addClass('display_block')
-            // }else{
-            //     $(this).removeClass('display_block')
-            // }
-            // })
+            
         },
         getErrorMessage(message,details,validationErrors){
-            let _this=this;
-            _this.response.message='';
-            _this.response.details='';
-            _this.response.validationErrors=[];
+            let self=this;
+            self.response.message='';
+            self.response.details='';
+            self.response.validationErrors=[];
             if(details!=null && details){
-                _this.response.details=details;
+                self.response.details=details;
             }
             if(message!=null && message){
-                _this.response.message=message;
+                self.response.message=message;
             }
             if(message!=null && message){
-                _this.response.validationErrors=validationErrors;
+                self.response.validationErrors=validationErrors;
             }
         },
         //-------------------------------------------------------------
         test:function(){
             let self = this;
-            console.log(self.checkedAr)
-            console.log(self.addBankList)
-            console.log(self.updataBankList)
+            // console.log(self.checkedAr)
+            console.log(self.contactData)
+            console.log(self.addList)
         },
     }
        
