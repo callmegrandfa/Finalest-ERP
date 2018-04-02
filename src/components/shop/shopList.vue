@@ -616,7 +616,8 @@
         opNodeClick:function(data){
             let self = this;
             self.opItem.id = data.id;
-            self.opItem.areaName = data.areaName;
+            self.opItem.areaName = data.name;
+            self.queryOp = data.id;
             self.$nextTick(function(){
                 $('#op_confirmSelect').click()
             })

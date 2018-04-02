@@ -229,19 +229,19 @@
         //   this.reset();
     },
     validators: {
-                        'addData.areaParentId': function (value) {//上级地区
-                            return this.Validator.value(value).required().maxLength(50)
-                        },
-                        'addData.areaCode': function (value) {//地区编码
-                            return this.Validator.value(value).required().maxLength(50)
-                        },
-                        'addData.areaName': function (value) {//地区名称
-                            return this.Validator.value(value).required().maxLength(50)
-                        },
-                        'addData.status': function (value) {//状态
-                            return this.Validator.value(value).required().integer();
-                        },
-                    },
+        'addData.areaParentId': function (value) {//上级地区
+            return this.Validator.value(value).required().maxLength(50)
+        },
+        'addData.areaCode': function (value) {//地区编码
+            return this.Validator.value(value).required().maxLength(50)
+        },
+        'addData.areaName': function (value) {//地区名称
+            return this.Validator.value(value).required().maxLength(50)
+        },
+        'addData.status': function (value) {//状态
+            return this.Validator.value(value).required().integer();
+        },
+    },
     methods: {
         // 返回
         goback() {
@@ -321,7 +321,7 @@
                         },function(res){
                             // _this.treeLoading=false;
                         })
-                    }, 
+        }, 
             // 文件夹图标加载
                         loadIcon(){
                             let _this=this;

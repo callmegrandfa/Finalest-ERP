@@ -46,8 +46,8 @@
                                       v-model="ouSearch"></el-input>
 
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="ouTree"
-                                     :props="ouProps"
+                                     :data="ouAr"
+                                     :props="selectOuProps"
                                      node-key="id"
                                      default-expand-all
                                      ref="tree"
@@ -57,7 +57,7 @@
 
                             <el-option v-show="false"
                                        :key="countOu.id" 
-                                       :label="countOu.ouName" 
+                                       :label="countOu.ouFullname" 
                                        :value="countOu.id"
                                        id="ou_confirmSelect"></el-option>
                         </el-select>
@@ -234,25 +234,26 @@
         data(){
             return{
                 ifModify:false,//判断是否修改过
+                defaultOuId:'',
                 //---组织单元树--------
-                ouTree:[],
                 ouSearch:'',
-                ouProps:{
+                selectOuProps:{
                     children: 'children',
                     label: 'ouFullname',
                     id:'id'
                 },
                 ouItem:{
                     id:'',
-                    ouName:'',
+                    ouFullname:'',
                 },
+                ouAr:[],//所属组织下拉框
                 //--------------------
                 //---上级部门树--------
                 selectParentTree:[],//选择上级部门
                 parentSearch:'',//搜索上级部门
                 selectParentProps:{
                     children: 'children',
-                    label: 'deptName',
+                    label: 'ouName',
                     id:'id'
                 },
                 parentItem:{
@@ -260,26 +261,6 @@
                     deptName:'',
                 },
                 //--------------------
-                ou:[{//所属组织
-                        value:'21',
-                        label: '恒康'
-                    }, {
-                        value:'35',
-                        label: '恒大'
-                    }, {
-                        value:'79',
-                        label: '361度'
-                }],
-                deptParent:[{//上级部门
-                        value:'1',
-                        label: '上级部门1'
-                    }, {
-                        value:'2',
-                        label: '上级部门2'
-                    }, {
-                        value:'3',
-                        label: '上级部门3'
-                }],
 
                 status: [],
                 addData:{
@@ -365,11 +346,25 @@
             self.treeLoading=true;
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 console.log(res)
-                self.ouTree=res.result;
+                self.ouAr=res.result;
                 self.loadIcon();
             },function(res){
                 self.treeLoading=false;
             })
+
+            //获取当前默认ouid
+            self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
+                // console.log(res);
+                self.defaultOuId = res.result.id;
+                self.addData.ouId = self.defaultOuId;
+                //加载完成拿回下拉的默认值
+                self.ouItem.ouFullname = res.result.ouFullname;
+                self.ouItem.id =  res.result.id;
+
+
+            },function(res){
+                console.log('err'+res)
+            });
         },
         loadParentTree(){
             let self=this;
@@ -500,15 +495,16 @@
         ouNodeClick:function(data){
             let self = this;
             self.ouItem.id = data.id;
-            self.ouItem.ouName = data.ouFullname;
+            self.ouItem.ouFullname = data.ouFullname;
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
         },
         nodeClick:function(data){
             let self = this;
+            console.log(data)
             self.parentItem.id = data.id;
-            self.parentItem.deptName = data.deptName;
+            self.parentItem.deptName = data.ouName;
             self.$nextTick(function(){
                 $('#businessDetail_confirmSelect').click()
             })

@@ -853,17 +853,13 @@ export default({
                     self.ouItem.ouFullname = self.shopData.ouFullname;
                     self.ouItem.id =  self.shopData.ouId;
 
-                    // self.cuItem.id = self.shopData.shopClassId;
-                    // self.cuItem.cuFullname = self.shopData.shopClassId_ClassName;
+                    
 
                     self.adItem.areaName = self.shopData.adAreaId_AreaName;
                     self.adItem.id = self.shopData.adAreaId;
 
                     self.opItem.areaName = self.shopData.opAreaFullName;
                     self.opItem.id = self.shopData.opAreaId;
-
-                    // self.fiItem.fiFullname = self.shopData.ficaOuId_OuName;
-                    // self.fiItem.id = self.shopData.ficaOuId;
                 })
                 
             }
@@ -964,8 +960,13 @@ export default({
             //点击所属组织，业务地区跟着变动
             self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
                 console.log(res);
-                self.opAr = res.result;
-                self.loadIcon();
+                if(res.result.length>0){
+                    self.opAr = res.result;
+                    self.loadIcon();
+                }else{
+                    self.opItem.areaName = '暂无业务地区';
+                    self.opItem.id = '';
+                }
             },function(res){
                 console.log('err'+res)
             });
