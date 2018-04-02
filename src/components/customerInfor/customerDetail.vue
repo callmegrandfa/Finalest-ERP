@@ -853,7 +853,7 @@ export default({
             defaultOuId:'',//默认ouid
             ifShow:true,
             ifModify:false,//判断信息是否修改过
-            showCompany:false,//初始默认公司计信息状态展开  
+            backCancle:'',//判断是返回还是取消
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -864,10 +864,10 @@ export default({
                 finishName:"",
             },
             search:'',
-            item:{
-                id:'',
-                areaName:'',
-            },
+            // item:{
+            //     id:'',
+            //     areaName:'',
+            // },
             defaultProps: {
                 children: 'items',
                 label: 'areaName',
@@ -934,7 +934,7 @@ export default({
             //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
-                    children: 'items',
+                    children: 'childItems',
                     label: 'areaName',
                     id:'id'
                 },

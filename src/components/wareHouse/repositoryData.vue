@@ -625,13 +625,13 @@
                 });
                 
                 //行政地区*2
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                    // console.log(res);
-                    self.adAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
+                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                //     // console.log(res);
+                //     self.adAr = res.result;
+                //     self.loadIcon();
+                // },function(res){
+                //     console.log('err'+res)
+                // });
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
                     console.log(res);
@@ -943,7 +943,7 @@
                 //点击所属组织，业务地区跟着变动
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
                     console.log(res);
-                    if(res.result.length>0){
+                    if(res.result&&res.result.length>0){
                         self.opAr = res.result;
                         self.loadIcon();
                     }else{
