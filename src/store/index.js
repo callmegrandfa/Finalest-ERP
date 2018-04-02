@@ -601,12 +601,24 @@ export default new vuex.Store({
             {code:'fa fa-window-restore',label:"",},
             {code:'fa fa-wrench',label:"",},
         ],
-        tableName:'commodityClassTable',//表格名称
-        commodityClassTable:[],//商品类目表格数据
-        commdityBrandTable:[],//品牌表格数据
+        tableName:'',//表格名称
+        commodityClassHeadingHttpApi:'',
+        commodityClassHeadingTable:[],//商品类目表格数据
+        commodityClassHeadingUpdateColArray:[],
+        commodityClassHeadingSelection:[],//选中数据集合
+        commodityClassHeadingCurrentPage:1,
+        commodityClassHeadingTotalPagination:10,//总页数
+        commodityBrandHttpApi:'',
+        commodityBrandTable:[],//品牌表格数据
+        commodityBrandNewCol:'',
+        commodityBrandNewColArray:[],//表格内新增数据集合
+        commodityBrandUpdateColArray:[],//表格内修改数据集合
+        commodityBrandSelection:[],//选中数据集合
+        commodityBrandUpdateRowId:'',//修改的表格行ID
+        commodityBrandCurrentPage:1,
+        commodityBrandTotalPagination:10,//总页数
         queryparams:{},
         tableLoading:true,
-        currentPage:1,//当前页码
         totalPage:10,//总页数
         eachPage:10,//每页显示条数
         httpApi:'',
@@ -631,37 +643,85 @@ export default new vuex.Store({
         go2(state) {
             state.fixed = false;
         } ,
-        InitTable(state,data){
-            state[state.tableName]=data;
+        Init_Table(state,data){//表格数据模型
+            state[state.tableName+'Table']=data;
+        },
+        Init_pagination(state,data){//页码总数
+            state[state.tableName+'TotalPagination']=data
         },
         setHttpApi(state,api){//api地址
-            state.httpApi=api;
+            state[state.tableName+'HttpApi']=api;
         },
         setTableName(state,name){//对应表格名称
-            state.tableName=name
+            state.tableName=name;
         },
-        filterTable(){
-
+        setCurrentPage(state,page){//当前页码
+           state[state.tableName+'CurrentPage']=page;
+        },
+        setAddColArray(state,array){//重置行内新增集合
+            state[state.tableName+'NewColArray']=array;
+        },
+        setUpdateColArray(state,array){//重置行内修改集合
+            state[state.tableName+'UpdateColArray']=array;
+        },
+        setTableSelection(state,array){
+            state[state.tableName+'Selection']=array;
+        },
+        add_col(state,data){//表格行内新增
+            state[state.tableName+'Table'].unshift(data);
+            state[state.tableName+'NewColArray'].unshift(data);
+        },
+        Add_UpdateArray(state,data){//行内修改集合
+            console.log(data)
+            state[state.tableName+'UpdateColArray'].push(data);
+        },
+        get_RowId(state,data){//行id
+            state[state.tableName+'UpdateRowId']=data;
         }
     },
     actions:{
-        getTable(context){
-            axios.get(context.state.httpApi,{
+        InitTable(context){//表格初始化
+            axios.get(context.state[context.state.tableName+'HttpApi'],{
                 params:{
-                    SkipCount:(context.state.currentPage-1)*context.state.eachPage,
+                    SkipCount:(context.state[context.state.tableName+'CurrentPage']-1)*context.state.eachPage,
                     MaxResultCount:context.state.eachPage
                 }
             }).then(function(res){
-                context.commit('InitTable',res.data.result.items);
+                context.commit('Init_Table',res.data.result.items);
+                let totalPage=Math.ceil(res.data.result.totalCount/context.state.eachPage);
+                context.commit('Init_pagination',totalPage);
                 },function(res){
             })
         },
+        addCol(context,item){//添加行
+            //通过参数传递
+            context.commit('add_col',item)
+            // if(context.state[context.state.tableName+'NewCol']==""){
+            //     return
+            // }else{
+            //     console.log(context.state.tableName+'NewCol');
+            //     context.commit('add_col',context.state[context.state.tableName+'NewCol'])
+            // }
+        },
+        AddUpdateArray(context){//更改行id
+            if(context.state[context.state.tableName+'UpdateColArray'].length==0){
+                if(context.state[context.state.tableName+'UpdateRowId']!=""&&typeof(context.state[context.state.tableName+'UpdateRowId'])!="undefined")
+                console.log(context.state[context.state.tableName+'UpdateRowId']);
+                context.commit('Add_UpdateArray',context.state[context.state.tableName+'UpdateRowId'])
+                //context.state.updateColArray.push( context.state.rowId);
+            }else{
+                if(context.state[context.state.tableName+'UpdateColArray'].indexOf(context.state[context.state.tableName+'UpdateRowId'])==-1&&context.state[context.state.tableName+'UpdateRowId']!=""&&typeof(context.state[context.state.tableName+'UpdateRowId'])!="undefined"){
+                    context.commit('Add_UpdateArray',context.state[context.state.tableName+'UpdateRowId'])
+                }else{
+                    return
+                }
+            }
+        },
+        getRowId(context,id){
+            context.commit('get_RowId',id);
+        },
         queryTable(context){
-            // axios.get(context.state.httpApi,{context.state.queryparams
-            // }).then(function(res){
-            //     context.commit('InitTable',res.data.result.items);
-            //     },function(res){
-            // })
+      
         }
     }
 })
