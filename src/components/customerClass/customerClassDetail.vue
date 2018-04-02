@@ -234,8 +234,8 @@
         loadParentTree(){
             let self=this;
             self.treeLoading=true;
-            self.$axios.gets('api/services/app/ContactClassManagement/GetTreeList').then(function(res){
-                console.log(res)
+            self.$axios.gets('api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
+                // console.log(res)
                 self.selectParentTree=res;
                 self.loadIcon();
             },function(res){
@@ -272,12 +272,17 @@
         save(){
             let self=this; 
             self.$validate().then(function (success) {
-                console.log(success);
                 if(success) {   
                    self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){  
                         // _this.addData.id=res.result.id;
+                        // console.log(res.result);
                         self.open('保存成功','el-icon-circle-check','successERP');
-                        self.goModify(res.result.id)
+                        self.$axios.gets("/api/services/app/ContactClassManagement/Get", {id: res.result.id}).then( res=>{
+                                            console.log(res.result);
+                                            self.addData=res.result;
+                                            // _this.isDisabled=false;
+                                            // self.isAdd=false;
+                                            })
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
                     })
@@ -289,7 +294,7 @@
             self.$validate().then(function (success) {
                 if (success) {
                     self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){
-                        console.log(res);
+                        // console.log(res);
                         self.open('保存成功','el-icon-circle-check','successERP');
                         self.goDetail();
                     },function(res){    
