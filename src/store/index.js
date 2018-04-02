@@ -52,7 +52,11 @@ export default new vuex.Store({
             { name: 'customerList', url: '/customer/customerList/:id', parent: 'customer' } ,
             { name: 'customerDetail', url: '/customer/customerDetail/:id', parent: 'customer' } ,
             { name: 'customerModify', url: '/customer/customerModify/:id', parent: 'customer' } ,
-
+            //客户分类
+            { name: 'customerClass', url: '/customerClass/customerClassList/:id', parent: '', default: '/customerClass/customerClassList/:id' } , //客户分类
+            { name: 'customerClassList', url: '/customerClass/customerClassList/:id', parent: 'customerClass' } ,
+            { name: 'customerClassDetail', url: '/customerClass/customerClassDetail/:id', parent: 'customerClass' } ,
+            { name: 'customerClassModify', url: '/customerClass/customerClassModify/:id', parent: 'customerClass' } ,
             { name: 'account', url: '/account/accountList/:id', parent: '', default: '/account/accountList/:id' } , //会计期间
             { name: 'accountList', url: '/account/accountList/:id', parent: 'account' } ,
             { name: 'accountDetail', url: '/account/accountDetail/:id', parent: 'account' } ,
