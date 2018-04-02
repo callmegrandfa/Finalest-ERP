@@ -3,16 +3,17 @@
  <div class="OuModifyForm">
      <el-row class="fixed">
          <el-col :span="24">
-            <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+            <!-- <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>           
             <button class="erp_bt bt_save" v-show="update_click" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button @click="isCancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-            <button class="erp_bt bt_saveAdd" v-show="update_click" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-            <button class="erp_bt bt_auxiliary bt_width">
-                <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                <span class="btDetail">辅助功能</span>
-                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-            </button>  
+            <button class="erp_bt bt_saveAdd" v-show="update_click" plain @click="saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button> -->
+            <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+              <button @click="save" class="erp_bt bt_save" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+              <button @click="isCancel" class="erp_bt bt_cancel" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button plain @click="saveAdd" class="erp_bt bt_saveAdd" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+              <button @click="add" class="erp_bt bt_add" v-show="!update"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <button @click="isDeleteThis" class="erp_bt bt_del" v-show="!update"><div class="btImg" ><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
      </el-row>
@@ -344,12 +345,11 @@
                     v-model="addData.ouCode">
                     </el-input>
                 </div>
-                <div class="bgcolor">
+                <div class="bgcolor" @keyup="updateOuName">
                     <label><small>*</small>名称</label>
                     <el-input class="ouName"
-                    :disabled="isEdit" 
                     @change="isUpdate"
-                    @focus="showErrprTips"
+                    @focus="isUpdateOuName"
                     :class="{redBorder : validation.hasError('addData.ouName')}"
                      v-model="addData.ouName" >
                      </el-input>
@@ -357,7 +357,7 @@
                 <div class="bgcolor">
                     <label><small>*</small>全称</label>
                     <el-input class="ouFullname"  
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.ouFullname')}"
@@ -367,7 +367,7 @@
                 <div class="bgcolor">
                     <label><small>*</small>上级业务单元</label>
                     <el-select class="ouParentid"
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -405,7 +405,7 @@
                 <div class="bgcolor">
                     <label><small>*</small>会计方案</label>
                     <el-select filterable  class="accCchemeId"
-                    :disabled="isEdit" 
+                     
                     @change="getStartMonth"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.accCchemeId')}"
@@ -422,7 +422,7 @@
                 <div class="bgcolor">
                     <label><small>*</small>启用月份</label>
                     <el-date-picker 
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
@@ -436,7 +436,7 @@
                 <div class="bgcolor">
                     <label><small>*</small>本位币种</label>
                     <el-select filterable  
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     placeholder=""
                     @focus="showErrprTipsSelect"
@@ -455,7 +455,7 @@
                 <div class="bgcolor">
                     <label>所属公司</label>
                     <el-select filterable  
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     placeholder=""
                     @focus="showErrprTipsSelect"
@@ -474,7 +474,7 @@
                 <div class="bgcolor">
                     <label>联系人</label>
                     <el-input 
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.contactPerson')}"
@@ -486,7 +486,7 @@
                 <div class="bgcolor">
                     <label>电话</label>
                     <el-input 
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.phone')}"
@@ -497,7 +497,7 @@
                 <div class="bgcolor">
                     <label>地址</label>
                     <el-input 
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.address')}"
@@ -508,7 +508,7 @@
                  <div class="bgcolor">
                     <label>启用状态</label>
                     <el-select filterable  
-                    :disabled="isEdit" 
+                     
                     @change="isUpdate"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.status')}"
@@ -528,7 +528,7 @@
                     <div class="bgcolor longWidth">
                         <label>备注</label>
                         <el-input
-                        :disabled="isEdit" 
+                         
                         @change="isUpdate"
                         @focus="showErrprTipsTextArea"
                         :class="{redBorder : validation.hasError('addData.remark')}"
@@ -550,7 +550,7 @@
     <el-col :span="24" class="getPadding"> 
         <el-col :span="6">  
             <el-checkbox-group 
-            :disabled="isEdit" 
+             
             @change="isUpdate"
             v-model="addData.ouTypes"
             :min="1">
@@ -569,14 +569,14 @@
                     <div class="companyInfo">
                     <el-col :span="24">
                         <el-col :span="5"  class="getPadding">
-                            <el-checkbox :disabled="isEdit" v-model="basCompany.isGroupCompany" @change="isGroupCompany">集团公司</el-checkbox>
+                            <el-checkbox  v-model="basCompany.isGroupCompany" @change="isGroupCompany">集团公司</el-checkbox>
                         </el-col> 
                     </el-col>
                     <el-col :span="24"  class="getPadding" style="border-bottom:1px solid #e4e4e4; ">
                         <div class="bgcolor">
                             <label>上级公司</label>
                             <el-select filterable  
-                            :disabled="isEdit" 
+                             
                             @change="isUpdate"
                             @focus="showErrprTipsSelect"
                             :class="{redBorder : validation.hasError('basCompany.ouParentid')}"
@@ -603,7 +603,7 @@
                         <div class="bgcolor">
                             <label>启用状态</label>
                             <el-select filterable  
-                            :disabled="isEdit" 
+                             
                             @change="isUpdate"
                             
                             @focus="showErrprTipsSelect"
@@ -627,7 +627,7 @@
                             <div class="bgcolor">
                                 <label>注册资本</label>
                                 <el-input 
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -639,7 +639,7 @@
                             <div class="bgcolor">
                                 <label>法人代表</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -651,7 +651,7 @@
                             <div class="bgcolor">
                                 <label>纳税人登记号</label>
                                 <el-input 
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -663,7 +663,7 @@
                             <div class="bgcolor">
                                 <label>成立日期</label>
                                 <el-date-picker 
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTipsRangedate"
@@ -678,7 +678,7 @@
                             <div class="bgcolor">
                                 <label>法人身份证号码</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -690,7 +690,7 @@
                             <div class="bgcolor">
                                 <label>主管部门代码</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -702,7 +702,7 @@
                             <div class="bgcolor">
                                 <label>主管部门名称</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -714,7 +714,7 @@
                             <div class="bgcolor">
                                 <label>纳税人类别</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -726,7 +726,7 @@
                             <div class="bgcolor">
                                 <label>营业地址</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -739,7 +739,7 @@
                                 <label>营业或有效期限</label>
                                 <div class="rangeDate">
                                     <el-date-picker
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     
                                     @focus="showErrprTipsRangedate"
@@ -759,7 +759,7 @@
                             <div class="bgcolor longWidth">
                                 <label>公司简介</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -771,7 +771,7 @@
                             <div class="bgcolor">
                                 <label>通讯地址</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -783,7 +783,7 @@
                             <div class="bgcolor">
                                 <label>邮政编码</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -795,7 +795,7 @@
                             <div class="bgcolor">
                                 <label>联系人</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -807,7 +807,7 @@
                             <div class="bgcolor">
                                 <label>传真</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -819,7 +819,7 @@
                             <div class="bgcolor">
                                 <label>电话</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -831,7 +831,7 @@
                             <div class="bgcolor">
                                 <label>email</label>
                                 <el-input
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 
                                 @focus="showErrprTips"
@@ -844,7 +844,7 @@
                                 <label>web网址</label>
                                 <el-input
                                 
-                                :disabled="isEdit" 
+                                 
                                 @change="isUpdate"
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.webUrl')}"
@@ -856,7 +856,7 @@
                                 <div class="bgcolor longWidth">
                                     <label>备注</label>
                                     <el-input
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     
                                     @focus="showErrprTipsTextArea"
@@ -881,7 +881,7 @@
                                 <div class="bgcolor">
                                     <label>国税登记号</label>
                                     <el-input 
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     class="legalPerson" 
                                     >
@@ -890,7 +890,7 @@
                                 <div class="bgcolor">
                                     <label>发税登记号</label>
                                     <el-input 
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     class="legalPerson" 
                                     >
@@ -899,7 +899,7 @@
                                 <div class="bgcolor">
                                     <label>纳税人识别号</label>
                                     <el-input 
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     class="legalPerson" 
                                     >
@@ -908,7 +908,7 @@
                                 <div class="bgcolor">
                                     <label>纳税人编码</label>
                                     <el-input 
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     class="legalPerson" 
                                     >
@@ -917,7 +917,7 @@
                                 <div class="bgcolor">
                                     <label>纳税税种</label>
                                     <el-input 
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     class="legalPerson" 
                                     >
@@ -926,7 +926,7 @@
                                 <div class="bgcolor">
                                     <label>委托税种</label>
                                     <el-input 
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     class="legalPerson" 
                                     >
@@ -935,13 +935,13 @@
                                 <div class="bgcolor">
                                     <label>纳税组织</label>
                                     <el-checkbox
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"></el-checkbox>
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
                                     <el-select filterable  
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     v-model="test"
                                     placeholder=""
@@ -966,7 +966,7 @@
                                 <div class="bgcolor">
                                     <label>上级业务组织</label>
                                     <el-select filterable 
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     v-model="test"
                                     placeholder=""
@@ -982,7 +982,7 @@
                                 <div class="bgcolor">
                                     <label>结算账务组织</label>
                                     <el-input 
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     class="legalPerson" 
                                     >
@@ -991,7 +991,7 @@
                                 <div class="bgcolor">
                                     <label>启用状态</label>
                                     <el-select filterable  
-                                    :disabled="isEdit" 
+                                     
                                     @change="isUpdate"
                                     v-model="test"
                                     placeholder=""
@@ -1190,13 +1190,13 @@ export default({
                 ou:[],
             },
             update:false,
-            isEdit:true,//是否可编辑
-            update_click:false,//修改按钮点击改变状态
             response:{
                 details:'',
                 message:'',
                 validationErrors:[],
             },
+//----------名称全称联动----------
+            isUpdateFlag:false,                 
         }
     },
     validators: {
@@ -1596,6 +1596,27 @@ export default({
                 _this.Cancel()
             }
         },
+        isUpdateOuName(){
+            let _this=this
+            _this.showErrprTips();
+            if(_this.addData.ouName==_this.addData.ouFullname){
+                _this.isUpdateFlag=true;
+            }else{
+                _this.isUpdateFlag=false;
+            }
+        },
+        updateOuName(){
+            let _this=this;
+            if(_this.isUpdateFlag){
+                _this.addData.ouFullname=_this.addData.ouName
+            }
+        },
+        isDeleteThis(){
+            let _this=this;
+            _this.dialogUserConfirm=true;
+            _this.choseDoing='deleteThis'
+
+        },
         sureDoing(){
             let _this=this;
             if(_this.choseDoing=='back'){
@@ -1603,6 +1624,9 @@ export default({
                 _this.dialogUserConfirm=false;
             }else if(_this.choseDoing=='Cancel'){
                 _this.Cancel();
+                _this.dialogUserConfirm=false;
+            }else if(_this.choseDoing=='deleteThis'){
+                _this.deleteThis();
                 _this.dialogUserConfirm=false;
             }
         },
@@ -1668,25 +1692,14 @@ export default({
             _this.update=true;
             _this.basCompany.ouParentid='';
         },
-        Update(){//修改
-            let _this=this;
-            _this.update_click=true;
-            if(_this.isEdit==true){
-                _this.isEdit=!_this.isEdit;
-            } 
-        },
         isUpdate(){//判断是否修改过信息
             this.update=true;
         },
         Cancel(){
             let _this=this;
-            if(_this.isEdit==false){
-                _this.isEdit=!_this.isEdit;
-                _this.validation.reset();
-                _this.getData();
-                _this.update=false;
-                _this.update_click=false;
-            }
+            _this.validation.reset();
+            _this.getData();
+            _this.update=false;
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -1706,7 +1719,6 @@ export default({
         save(){
             let _this=this;
             $('.tipsWrapper').css({display:'block'})
-            if(_this.update){
                 _this.$validate()
                 .then(function (success) {
                     if (success) {
@@ -1720,8 +1732,6 @@ export default({
                         }
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                             _this.update=false;
-                            _this.isEdit=true;
-                            _this.update_click=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
                             if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -1729,28 +1739,52 @@ export default({
                             _this.open('保存失败','el-icon-error','faildERP');
                         })
                     }
-                });     
-            }else{
-                _this.open('没有需要保存的项目','el-icon-warning','noticERP');
-            }
+                });
         },
         saveAdd(){
-            //  let _this=this;
-            // _this.$validate()
-            // .then(function (success) {
-            //     if (success) {
-            //         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
-            //             _this.clearData();
-            //             _this.open('保存新增成功','el-icon-circle-check','successERP');
-            //         },function(res){
-            //             _this.open('保存新增失败','el-icon-error','faildERP');
-            //         })
-            //     }
-            // });     
+            let _this=this;
+            $('.tipsWrapper').css({display:'block'})
+                _this.$validate()
+                .then(function (success) {
+                    if (success) {
+                        $('.tipsWrapper').css({display:'none'})
+                        if(_this.Company){
+                            _this.basCompany.businessStart=_this.dateRange[0];
+                            _this.basCompany.businessEnd=_this.dateRange[1];
+                            _this.addData.basCompany=_this.basCompany;
+                        }else{
+                            _this.basCompany={}
+                        }
+                             _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
+                            _this.update=false;
+                            _this.open('保存成功','el-icon-circle-check','successERP');
+                            _this.add()
+                        },function(res){
+                            if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                            _this.errorMessage=true;
+                            _this.open('保存失败','el-icon-error','faildERP');
+                        })
+                    }
+                });
         },
-        newAdd(){
-            this.clearData();
-            this.open('新增成功','el-icon-circle-check','successERP');
+        add(){
+            let _this=this;
+            _this.$store.state.url='/OuManage/OuManageDetail/default'
+            _this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        deleteThis(){
+             let _this=this;
+            _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.$route.params.id})
+            .then(function(res){
+                _this.dialogUserConfirm=false;
+                _this.open('删除成功','el-icon-circle-check','successERP');
+                _this.add();
+            },function(res){
+                if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                _this.dialogUserConfirm=false;
+                _this.errorMessage=true;
+                _this.open('删除失败','el-icon-error','faildERP');
+            })
         },
         clearData(){
             this.creatorUser=[];

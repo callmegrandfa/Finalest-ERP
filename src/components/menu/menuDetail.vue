@@ -283,8 +283,8 @@
                     </el-col>
                 </el-col>
                 <span slot="footer">
-                    <button class="transfer_footer_btn transfer_confirm">确 认</button>
-                    <button class="transfer_footer_btn">取 消</button>
+                    <button class="transfer_footer_btn transfer_confirm" @click="dialogTableVisible = false">确 认</button>
+                    <button class="transfer_footer_btn" @click="CancelTree">取 消</button>
                 </span>
             </el-dialog>
             <!--dialog结束  -->
@@ -756,6 +756,16 @@
             let _this=this;
             _this.clearData();
             _this.update=false;
+        },
+        CancelTree(){
+            let _this=this;
+            _this.dialogTableVisible=false;
+           
+            _this.checked=[];
+            
+            _this.checkTable=[];
+            _this.nocheckTable=[];
+            _this.storeNodeClickData=[]
         },
         clearData(){
             let _this=this;
