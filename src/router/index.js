@@ -332,7 +332,19 @@ const routes = [
                     { path: '/customer/customerModify/:id', component: customerModify, name: 'customerModify' },
                 ]
             },
-
+            {
+                path: '/customerClass',
+                component: customerClass,
+                name: 'customerClass',
+                redirect: function() { //客户分类
+                    return redirectRouter('customerClass')
+                },
+                children: [
+                    { path: '/customerClass/customerClassList/:id', component:  customerClassList, name: 'customerClassList' },
+                    { path: '/customerClass/customerClassDetail/:id', component: customerClassDetail, name: 'customerClassDetail' },
+                    { path: '/customerClass/customerClassModify/:id', component: customerClassModify, name: 'customerClassModify' },
+                ]
+            },
             {
                 path: '/account',
                 component: account,
