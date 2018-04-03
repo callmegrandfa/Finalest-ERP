@@ -949,6 +949,7 @@
         },
         getAllRoleData(){
             let _this=this;
+            _this.checkedTable=[]
             _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:1})//获取所有角色
             .then(function(re){ 
                 let totalAll=re.result.totalCount;//获取总共当前关联角色条数
@@ -1020,7 +1021,7 @@
         cancelPush(){//取消
             let _this=this;
             _this.dialogTableVisible=false;
-            _this.GetRoles()
+            _this.getAllRoleData();
         },
         pageDownLeft(){//左侧表格向左翻页
             let _this=this;
