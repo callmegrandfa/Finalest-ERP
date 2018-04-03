@@ -1,7 +1,7 @@
 <template>
   <div class="res-detail">
         <el-row class="pt5 pb5 bb1 fixed bg-white">
-            <button class="erp_bt bt_back" @click="isBack">
+            <button class="erp_bt bt_back" @click="isBack(1)">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_back.png">
                 </div>
@@ -15,6 +15,13 @@
                 <span class="btDetail">保存</span>
             </button>
 
+            <button class="erp_bt bt_cancel" @click='isBack(2)'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_cancel.png">
+                </div>
+                <span class="btDetail">取消</span>
+            </button>
+
             <button class="erp_bt bt_saveAdd" @click='saveAdd'>
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
@@ -22,12 +29,21 @@
                 <span class="btDetail">保存并新增</span>
             </button>
 
-            <button class="erp_bt bt_cancel" @click='Cancel()'>
+            <button class="erp_fb_bt bt_add" :disabled='true'>
                 <div class="btImg">
-                    <img src="../../../static/image/common/bt_cancel.png">
+                    <img src="../../../static/image/common/bt_add.png">
                 </div>
-                <span class="btDetail">取消</span>
+                <span class="btDetail">新增</span>
             </button>
+
+            <button class="erp_fb_bt bt_del" :disabled='true'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_del.png">
+                </div>
+                <span class="btDetail">删除</span>
+            </button>
+
+            
             
             <div class="toggle-btn">
                 <span @click='ifShow = !ifShow'>收起</span>
@@ -149,7 +165,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockName"
                                       class="stockName"
-                                      @change='Modify'
+                                      @change='editName'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockName')}"></el-input>
                         </div>
@@ -159,7 +175,7 @@
                             <el-input placeholder="" 
                                       v-model="createRepositoryParams.stockFullName"
                                       class="stockFullName"
-                                      @change='Modify'
+                                      @change='editFullName'
                                       @focus="showErrprTips"
                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockFullName')}"></el-input>
                         </div>
@@ -583,6 +599,14 @@
                 return this.opItem;
             },
         },
+        watch:{
+            createRepositoryParams:{
+                handler:function(){
+                    console.log(123)
+                },
+                deep: true
+            }
+        },
         methods:{
             //---下拉的数据------------------------------------------------------
             loadSelect:function(){
@@ -831,15 +855,16 @@
             //----------------------------------------------------
 
             //---弹出提示-----------------------------------------
-            isBack(){
+            isBack(num){
                 let self=this;
                 if(self.ifModify){
-                    self.backCancel = 2;
                     self.dialogUserConfirm=true;
-                    // self.choseDoing='back'
                 }else{
-                    self.back()
+                    if(num == 1){
+                        self.back()
+                    }
                 }
+                
             },
             
             Modify:function(){//判断是否修改过
@@ -851,35 +876,7 @@
             //---确认提示------------------------------------------
             sureDoing:function(){
                 let self = this;
-                if(self.backCancel === 1){//为1是取消
-                    self.dialogUserConfirm=false;
-                    self.createRepositoryParams = {
-                        ouId: self.defaultOuId,
-                        stockCode: "",
-                        stockName: "",
-                        stockFullName: "",
-                        opAreaId: '',
-                        adAreaId: 10,
-                        stockTypeId: 0,
-                        fax: "",
-                        email:  '',
-                        status: 0,
-                        mnemonic: "",
-                        stockAddress: "",
-                        manager: "",
-                        phone: "",
-                        remark: ""
-                    }
-                    self.addList = [];
-                    self.rows = [];
-                    self.backCancel = '';
-                    self.ifModify = false;
-                    $('.tipsWrapper').css({display:'none'})
-                }
-                if(self.backCancel === 2){//为2是返回
-                    self.back();
-                }
-                
+                self.back();
             },
             //----------------------------------------------------
 
@@ -1032,7 +1029,21 @@
             },
             //-------------------------------------------------------------
             
-
+            //---编辑名称，全称跟着改变-------------------------------------
+            editName:function(){
+                let self = this;
+                self.Modify();
+                console.log(self.createRepositoryParams.stockName)
+                if(!self.nameWithFull&&self.createRepositoryParams.stockFullName == ''){
+                    self.createRepositoryParams.stockFullName = self.createRepositoryParams.stockName;
+                }
+            },
+            editFullName:function(){
+                let self = this;
+                self.Modify();
+                self.nameWithFull = true;
+            },
+            //------------------------------------------------------------
 
         },
 
@@ -1184,6 +1195,8 @@
                 who:'',//删除的是谁以及是否是多项删除
                 whoId:'',//单项删除的id
                 whoIndex:'',//单项删除的index
+                //-----------------------------
+                nameWithFull:false,
             }
         },
     }

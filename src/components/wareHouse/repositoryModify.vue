@@ -8,40 +8,44 @@
                 <span class="btDetail">返回</span>
             </button>
 
-            <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify&&!ifDoModify'>
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_add.png">
-                </div>
-                <span class="btDetail">新增</span>
-            </button>
+            
 
-            <button class="erp_bt bt_del" @click="delModify" v-show='!ifModify&&!ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_del.png">
-                    </div>
-                    <span class="btDetail">删除</span>
-                </button>
-
-            <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify||ifDoModify'>
+            <button class="erp_bt bt_save" @click="saveModify" :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_save.png">
                 </div>
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_saveAdd" v-show='ifModify||ifDoModify' @click='saveAdd'>
+            <button class="erp_bt bt_cancel" @click="Cancel()" :class="{erp_fb_bt:!ifModify}">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_cancel.png">
+                </div>
+                <span class="btDetail">取消</span>
+            </button>
+
+            <button class="erp_bt bt_saveAdd" @click='saveAdd' :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
                 </div>
                 <span class="btDetail">保存并新增</span>
             </button>
 
-            <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
+            <button class="erp_bt bt_add" @click="goDetail" :class="{erp_fb_bt:ifModify}">
                 <div class="btImg">
-                    <img src="../../../static/image/common/bt_cancel.png">
+                    <img src="../../../static/image/common/bt_add.png">
                 </div>
-                <span class="btDetail">取消</span>
+                <span class="btDetail">新增</span>
             </button>
+
+            <button class="erp_bt bt_del" @click="delModify" :class="{erp_fb_bt:ifModify}">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_del.png">
+                </div>
+                <span class="btDetail">删除</span>
+            </button>
+
+            
 
             
 
@@ -130,8 +134,8 @@
                             <el-select v-model="repositoryData.ouId"
                                        :class="{redBorder : validation.hasError('repositoryData.ouId')}"
                                        class="ouId"
+                                       @change="Modify"
                                        @focus="showErrprTipsSelect"
-                                       @change='Modify()'
                                        placeholder="">
                                 <el-input placeholder="搜索..."
                                           class="selectSearch"
@@ -153,29 +157,29 @@
                                            id="ou_confirmSelect"></el-option>
                             </el-select>
                         </div>
+
                         <div class="bgcolor">
                             <label><small>*</small>编码</label>
                             <el-input placeholder="" 
-                                      v-model="repositoryData.stockCode" 
-                                      @change="Modify()"
+                                      v-model="repositoryData.stockCode"
                                       @focus="showErrprTips"
                                       class="stockCode"
                                       :class="{redBorder : validation.hasError('repositoryData.stockCode')}"></el-input>
                         </div>
+
                         <div class="bgcolor">
                             <label><small>*</small>名称</label>
                             <el-input placeholder="" 
-                                      v-model="repositoryData.stockName" 
-                                      @change="Modify()"
+                                      v-model="repositoryData.stockName"
                                       @focus="showErrprTips"
                                       class="stockName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockName')}"></el-input>
                         </div>
+
                         <div class="bgcolor">
                             <label><small>*</small>全称</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockFullName" 
-                                      @change="Modify()"
                                       @focus="showErrprTips"
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockFullName')}"></el-input>
@@ -566,9 +570,15 @@
     export default{
         name:'repositoryModify',
         created:function(){
+            // let self = this;
+            // self.loadData();
+            // self.loadSelect();
+        },
+        mounted:function(){
             let self = this;
             self.loadData();
             self.loadSelect();
+            
         },
         validators: {
             'repositoryData.ouId': function (value) {//所属组织
@@ -617,6 +627,142 @@
                 return this.Validator.value(value).required().integer();
             },
         },
+        data(){
+            return {
+                getOuId:'',//保存获取的ouid
+                repositoryData:'',//根据仓库id查出的仓库信息
+                repositoryAddressData:[],//根据仓库id查出的仓库地址信息
+                getRepositoryAddressParams:{
+                   id:'',
+                }, 
+                firstModify:false,
+                ifModify:false,//判断主表是否修改过
+                ifDoModify:false,//判断从表是否修改过
+                ifShow:true,//控制折叠页面
+                ou: [{//所属组织
+                    value:0,
+                    label: '恒康'
+                }, {
+                    value:1,
+                    label: '恒大'
+                }, {
+                    value:2,
+                    label: '361度'
+                }],
+                //---所属组织树形下拉-----
+                ouSearch:'',
+                selectOuProps:{
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+                ouItem:{
+                    id:'',
+                    ouFullname:'',
+                },
+                ouAr:[],//所属组织下拉框
+                //-----------------------
+                //---行政地区树形下拉-----
+                areaProArray:[],//行政地区(省)
+                areaCityArray:[],//行政地区(市)
+                areaDisArray:[],//行政地区(区)
+                adSearch:'',//树形搜索框的
+                selectAdProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                adItem:{
+                    id:'',
+                    areaName:'',
+                },
+                adAr:[],//行政地区下拉框
+                //-----------------------
+                //---业务地区树形下拉-----
+                    opSearch:'',//树形搜索框的
+                    selectOpProps:{
+                        children: 'childItems',
+                        label: 'areaName',
+                        id:'id'
+                    },
+                    opItem:{
+                        id:'',
+                        areaName:'',
+                    },
+                    opAr:[],//业务地区下拉框
+                //-----------------------
+
+                //---普通下拉框-----------
+                statusAr:[],//状态
+                transAr:[],//运输方式
+                logiAr:[],//物流公司
+                //-----------------------
+                stockType: [{//仓库类型
+                    value:0,
+                    label: '仓库'
+                }, {
+                    value:1,
+                    label: '店铺'
+                }],
+                
+                status: [],
+
+                value: '',
+                
+                createParams:{//创建新的仓库地址
+                    groupId:'1',//集团ID
+                    stockId:'',//仓库ID
+                    completeAddress:'',//详情地址
+                    transportMethodId:'',//运输方式
+                    contactPerson:'',//联系人
+                    phone:'',//联系电话
+                    logisticsCompanyId:'',//物流公司
+                    isDefault:false,//是否默认
+                    remark:'',//备注
+                },
+                x:0,//增行的下标
+                rows:[],//增行的数组
+                updateList:[],//更新上传的数组
+                addList:[],//新增上传的数组
+                multipleSelection:[],//需要删除的数组
+                idArray:{
+                    ids:[]
+                },//需要删除的数组id
+                checkedAr:[],//加载时从表默认选择的数组
+
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //--------------------  
+
+                //---信息修改提示框------------
+                dialogUserConfirm:false,//信息更改提示控制
+                //----------------------------
+                //---错误提示框----------------
+                option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                errorMessage:false,
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
+            }
+        },
         computed:{
             countOu () {
                 return this.ouItem;
@@ -628,24 +774,33 @@
                 return this.opItem;
             },
         },
-        watch: {
-            opSearch(val) {
-                this.$refs.opTree.filter(val);
-            },
-            ouSearch(val) {
-                this.$refs.ouTree.filter(val);
+
+        watch:{
+            repositoryData:{
+                handler: function (val, oldVal) {
+                    let self = this;
+                    if(!self.firstModify){
+                        self.firstModify = !self.firstModify;
+                    }else{
+                        self.ifModify = true;
+                    }
+                },
+                deep: true,
             }
         },
+        
         methods:{
             
             //---加载信息-----------------------------------------------
             loadData:function(){//根据id查找仓库信息和仓库地址信息
                 let self = this;
                 if(self.$route.params.id!='default'){
+                    self.firstModify = false;
                     //根据仓库id获取仓库信息
                     self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
-                        // console.log(res)               
+                        console.log(res)               
                         self.repositoryData = res.result;
+                        self.extraData = res.result;
                         self.getOuId = self.repositoryData.ouId;
 
                         //业务地区
@@ -676,7 +831,6 @@
                     }
                     // console.log(self.getRepositoryAddressParams)
                     self.loadAddData();
-                    
                 }
             },
             loadAddData:function(){
@@ -704,13 +858,13 @@
                 });
                 
                 //行政地区*2
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                    // console.log(res);
-                    self.adAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
+                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                //     // console.log(res);
+                //     self.adAr = res.result;
+                //     self.loadIcon();
+                // },function(res){
+                //     console.log('err'+res)
+                // });
                 
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
@@ -741,7 +895,6 @@
             saveModify:function(){//修改仓库信息保存
                 let self = this;
                 
-                
                 if(self.updateList.length>0){
                     self.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
                         console.log(res);
@@ -756,7 +909,7 @@
                 }
                 
                 // self.repositoryData.adAreaId == 1;
-                console.log(self.repositoryData)
+                // console.log(self.repositoryData)
                 if(self.ifModify){
                     self.$validate().then(function(success){
                         if(success){
@@ -867,10 +1020,6 @@
                 };
                 self.repositoryAddressData.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
-                // console.log(self.repositoryAddressData)
-                // console.log(self.x)
-                // console.log(self.rows)
-                // console.log(self.addList)
             },
             delRow:function(){//删除选中的项
                 let self=this;
@@ -972,6 +1121,7 @@
             },
             Modify:function(){
                 let self = this;
+                console.log(123)
                 self.ifModify = true;
             },
             //------------------------------------------------------
@@ -995,7 +1145,10 @@
             //---顶部删除按钮-----------------------------------------
             delModify:function(){
                 let self = this;
-                self.dialogDelConfirm = true; 
+                if(!self.ifModify){
+                    self.dialogDelConfirm = true;
+                }
+                 
             },
             //-------------------------------------------------------
 
@@ -1171,158 +1324,7 @@
             },
         },
 
-        data(){
-            return {
-                getOuId:'',//保存获取的ouid
-                repositoryData:{
-                    "ouId": '',
-                    "stockCode": "",
-                    "stockName": "",
-                    "stockFullName": "",
-                    'mnemonic':'',
-                    "opAreaId": '',
-                    "adAreaId": '',
-                    "stockTypeId": '',
-                    "invTypeId": '',
-                    "fax": "",
-                    'stockAddress':'',
-                    "email": "",
-                    "status": '',
-                    "manager": "",
-                    "phone": "",
-                    "remark": ""
-                },//根据仓库id查出的仓库信息
-                repositoryAddressData:[],//根据仓库id查出的仓库地址信息
-                getRepositoryAddressParams:{
-                   id:'',
-                }, 
-                ifModify:false,//判断主表是否修改过
-                ifDoModify:false,//判断从表是否修改过
-                ifShow:true,//控制折叠页面
-                ou: [{//所属组织
-                    value:0,
-                    label: '恒康'
-                }, {
-                    value:1,
-                    label: '恒大'
-                }, {
-                    value:2,
-                    label: '361度'
-                }],
-                //---所属组织树形下拉-----
-                ouSearch:'',
-                selectOuProps:{
-                    children: 'children',
-                    label: 'ouFullname',
-                    id:'id'
-                },
-                ouItem:{
-                    id:'',
-                    ouFullname:'',
-                },
-                ouAr:[],//所属组织下拉框
-                //-----------------------
-                //---行政地区树形下拉-----
-                areaProArray:[],//行政地区(省)
-                areaCityArray:[],//行政地区(市)
-                areaDisArray:[],//行政地区(区)
-                adSearch:'',//树形搜索框的
-                selectAdProps:{
-                    children: 'items',
-                    label: 'areaName',
-                    id:'id'
-                },
-                adItem:{
-                    id:'',
-                    areaName:'',
-                },
-                adAr:[],//行政地区下拉框
-                //-----------------------
-                //---业务地区树形下拉-----
-                    opSearch:'',//树形搜索框的
-                    selectOpProps:{
-                        children: 'childItems',
-                        label: 'areaName',
-                        id:'id'
-                    },
-                    opItem:{
-                        id:'',
-                        areaName:'',
-                    },
-                    opAr:[],//业务地区下拉框
-                //-----------------------
-
-                //---普通下拉框-----------
-                statusAr:[],//状态
-                transAr:[],//运输方式
-                logiAr:[],//物流公司
-                //-----------------------
-                stockType: [{//仓库类型
-                    value:0,
-                    label: '仓库'
-                }, {
-                    value:1,
-                    label: '店铺'
-                }],
-                
-                status: [],
-
-                value: '',
-                
-                createParams:{//创建新的仓库地址
-                    groupId:'1',//集团ID
-                    stockId:'',//仓库ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    phone:'',//联系电话
-                    logisticsCompanyId:'',//物流公司
-                    isDefault:false,//是否默认
-                    remark:'',//备注
-                },
-                x:0,//增行的下标
-                rows:[],//增行的数组
-                updateList:[],//更新上传的数组
-                addList:[],//新增上传的数组
-                multipleSelection:[],//需要删除的数组
-                idArray:{
-                    ids:[]
-                },//需要删除的数组id
-                checkedAr:[],//加载时从表默认选择的数组
-
-                //---确认删除-----------------               
-                dialogDelConfirm:false,//用户删除保存提示信息
-                //--------------------  
-
-                //---信息修改提示框------------
-                dialogUserConfirm:false,//信息更改提示控制
-                //----------------------------
-                //---错误提示框----------------
-                option: {
-                    vRail: {
-                        width: '5px',
-                        pos: 'right',
-                        background: "#9093994d",
-                    },
-                    vBar: {
-                        width: '5px',
-                        pos: 'right',
-                        background: '#9093994d',
-                    },
-                    hRail: {
-                        height: '0',
-                    },
-                },
-                errorMessage:false,
-                detail_message_ifShow:false,
-                response:{
-                    details:'',
-                    message:'',
-                    validationErrors:[],
-                },
-                //-----------------------------
-            }
-        },
+        
     }
 </script>
 
