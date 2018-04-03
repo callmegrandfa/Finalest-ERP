@@ -90,11 +90,8 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-input :class="{redBorder : validation.hasError('addItem.mnemonic')}" :disabled="isEdit" v-model="addItem.mnemonic" > </el-input>
+                                    <el-input :disabled="isEdit" v-model="addItem.mnemonic" > </el-input>
                                 </div>
-                            </el-col>
-                            <el-col :span="2">
-                                <div class="error_tips">{{ validation.firstError('addItem.mnemonic') }}</div>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -497,7 +494,7 @@ import Btm from '../../base/btm/btm'
                         return;   
                     }); 
                 }else{
-                    _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
+                    _this.$axios.posts('/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
                         _this.InitModify();
                         _this.InitData();
                         _this.validation.reset();
