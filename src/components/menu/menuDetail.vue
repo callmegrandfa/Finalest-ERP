@@ -353,6 +353,8 @@
                 moduleParentId:'',
                 url:'',
                 status:1,
+                moduleIsBottom: true,
+                remark:'',
             },
            contain: [{ 
                 value:'0',
@@ -411,24 +413,24 @@
       'addData.moduleName': function (value) {//菜单名称
          return this.Validator.value(value).required().maxLength(50);
       },
-    //   'addData.ico': function (value) {//图标
-    //      return this.Validator.value(value).maxLength(200);
-    //   },
+      'addData.ico': function (value) {//图标
+         return this.Validator.value(value).maxLength(200);
+      },
       'addData.systemId': function (value) {//子系统
          return this.Validator.value(value).required().integer();
       },
       'addData.moduleParentId': function (value) {//上级菜单
           return this.Validator.value(value).required().integer();
       },
-    //   'addData.url': function (value) {//web地址
-    //      return this.Validator.value(value).maxLength(1000);
-    //   },
+      'addData.url': function (value) {//web地址
+         return this.Validator.value(value).maxLength(1000);
+      },
       'addData.status': function (value) {//状态
          return this.Validator.value(value).required().integer();
       },
-    //   'addData.remark': function (value) {//
-    //      return this.Validator.value(value).maxLength(200);
-    //   }
+      'addData.remark': function (value) {//
+         return this.Validator.value(value).maxLength(200);
+      }
     },
     created:function(){
         let _this=this;

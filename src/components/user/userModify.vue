@@ -62,7 +62,7 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                    <label>邮箱</label>
+                    <label><small>*</small>邮箱</label>
                     <el-input 
                      
                     @change="isUpdate"
@@ -137,7 +137,7 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                    <label><small>*</small>身份类型</label>
+                    <label>身份类型</label>
                     <el-select filterable  
                      
                     @change="isUpdate"
@@ -156,7 +156,7 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                    <label><small>*</small>语种</label>
+                    <label>语种</label>
                     <el-select filterable  
                      
                     @change="isUpdate"
@@ -175,7 +175,7 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>有效时间</label>
+                        <label>有效时间</label>
                         <div class="rangeDate">
                             <el-date-picker
                              
@@ -544,7 +544,7 @@
          return this.Validator.value(value).required().maxLength(20);
       },
       'addData.email': function (value) {//邮箱
-         return this.Validator.value(value).maxLength(200);
+         return this.Validator.value(value).required().maxLength(200);
       },
       'addData.userGroupId': function (value) {//所属用户组
          return this.Validator.value(value).required().integer();
@@ -553,10 +553,10 @@
           return this.Validator.value(value).required().integer();
       },
       'addData.userType': function (value) {//身份类型
-         return this.Validator.value(value).required().integer();
+         return this.Validator.value(value).integer();
       },
       'addData.languageId': function (value) {//语种
-          return this.Validator.value(value).required().integer();
+          return this.Validator.value(value).integer();
       },
       'addData.status': function (value) {//状态
          return this.Validator.value(value).integer();
@@ -565,7 +565,7 @@
          return this.Validator.value(value).maxLength(200);
       },
       'dateRange':function(value){
-          return this.Validator.value(value).required();
+          return this.Validator.value(value);
       }
     },
     created:function(){       
