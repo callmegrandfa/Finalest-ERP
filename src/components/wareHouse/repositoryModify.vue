@@ -471,7 +471,7 @@
               <div>
                 <div class="bgcolor">
                     <label>创建人</label>
-                    <el-input placeholder="" disabled="disabled"></el-input>
+                    <el-input placeholder="" disabled="disabled" v-model="repositoryData.createdBy"></el-input>
                 </div>
 
                 <div class="bgcolor">
@@ -761,6 +761,10 @@
                     validationErrors:[],
                 },
                 //-----------------------------
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
             }
         },
         computed:{
@@ -1021,6 +1025,13 @@
                 self.repositoryAddressData.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
             },
+            handleDelete:function(index,row,who){//表格内删除操作
+                let self = this;
+                self.who = who;
+                self.whoIndex = index;
+                self.whoId = row.id;
+                self.dialogDelConfirm = true;
+        },
             delRow:function(){//删除选中的项
                 let self=this;
                 for(let i in self.multipleSelection){
