@@ -479,13 +479,13 @@
                  let _this=this;
                  _this.page=val;
                  if(_this.load=="loadTableData"){
-                     _this.loadTableData();
+                     _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"loadTableData")
                  }else if(_this.load=="SimpleSearch"){
                      _this.SimpleSearch();
                  }else if(_this.load=="submitSearch"){
-                     _this.submitSearch();
+                       _this.ajaxTable({Name:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
                  }else if(_this.load=="nodeClick"){
-                     _this.nodeClick();
+                     _this.ajaxTable({OuParentid:_this.detailParentId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                  }
             },
             SimpleSearchClick(){
@@ -610,7 +610,7 @@
                  _this.detailParentId=data.id;
                  _this.detailParentName=data.ouFullname;
                  _this.page=1
-                 _this.ajaxTable({OuParentid:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                 _this.ajaxTable({OuParentid:_this.detailParentId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                  
             },
             nodeClick_area(data,node,self){

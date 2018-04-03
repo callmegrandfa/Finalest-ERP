@@ -261,7 +261,7 @@
                     details:'',
                     message:'',
                 },
-                
+                nodeClickId:0,//点击节点纪录id
             }
         },
         created:function(){       
@@ -298,7 +298,7 @@
                 let _this=this;
                 _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',data).then(function(res){ 
-                    // _this.restaurants=[]
+                    _this.restaurants=[]
                     _this.load=event;
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount;
@@ -307,6 +307,10 @@
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
+                    $.each(res.result.items,function(index,value){
+                        let item={'value':value.areaName,'id':value.id};
+                        _this.restaurants.push(item)
+                    })
                     },function(res){
                     _this.tableLoading=false;
                 })
@@ -346,11 +350,11 @@
                  let _this=this;
                  _this.page=val;
                  if(_this.load=="loadTableData"){
-                     _this.loadTableData();
+                      _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},'loadTableData');
                  }else if(_this.load=="nodeClick"){
-                     _this.nodeClick();
+                     _this.ajaxTable({ParentId:_this.nodeClickId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"nodeClick");
                  }else if(_this.load=="submitSearch"){
-                     _this.submitSearch();
+                    _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
                  }
             },
             getHeight(){
@@ -452,13 +456,13 @@
             },
             nodeClick(data){
                 let _this=this;
-                let id="";
+                _this.page=1
                 if(data.areaName!=undefined){
-                    id=data.id;
+                    _this.nodeClickId=data.id;
                     _this.detailParentId=0;
                     _this.detailParentId=data.id;
                 }else{  
-                    id=data.ouId;
+                     _this.nodeClickId=data.ouId;
                     _this.detailParentId=0;
                     
                 }
@@ -466,7 +470,7 @@
                 // _this.detailParentId=data.id;
                 _this.detailParentName=data.name;
                 _this.ouId=data.ouId;
-                _this.ajaxTable({ParentId:id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"nodeClick");
+                _this.ajaxTable({ParentId:_this.nodeClickId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"nodeClick");
             },
             modify(row){
                 this.$store.state.url='/businessArea/businessAreaModify/'+row.id
@@ -474,7 +478,7 @@
             },
             filterNode(value, data) {
                 if (!value) return true;
-                 return data.areaName.indexOf(value) !== -1;
+                 return data.name.indexOf(value) !== -1;
             },
             
             querySearchAsync(queryString, cb) {
@@ -493,6 +497,7 @@
             },
             submitSearch(){
                 let _this=this;
+                _this.page=1
                  _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
             }
         },

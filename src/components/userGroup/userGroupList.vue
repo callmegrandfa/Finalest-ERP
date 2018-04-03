@@ -71,9 +71,10 @@
                         </button>
                         <button class="erp_bt bt_stop bt_width"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
                         <div class="search_input_group">
-                            <div class="search_input_wapper">
+                            <div class="search_input_wapper" @keyup.enter="submitSearch">
                                 <el-input
                                     placeholder="搜索..."
+                                    v-model="Name"
                                     class="search_input">
                                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                                 </el-input>
@@ -300,9 +301,8 @@
                 totalItem:0,//总共有多少条消息
                 treeCheck:[],
                 isClick:[],
-                load:true,
+                load:'loadTableData',
                
-                searchBtClick:false,
                 ifWidth:true,
                 dialogUserDefined:false,//dialog
 
@@ -311,6 +311,7 @@
                     message:'',
                     validationErrors:[],
                 },
+                Name:'',//右上角模糊查询
             }
         },
         created:function(){       
@@ -373,8 +374,13 @@
             },
             loadTableData(){//表格
                 let _this=this;
+                _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"loadTableData");
+            },
+            ajaxTable(data,event){
+                 let _this=this;
                 _this.tableLoading=true
-                _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/UserGroup/GetAll',data).then(function(res){ 
+                    _this.load=event;
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
@@ -386,41 +392,29 @@
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                  _this.page=val;
-                 if(_this.load){
-                     _this.loadTableData();
-                 }else{
+                 if(_this.load=="loadTableData"){
+                     _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"loadTableData")
+                 }else if(_this.load=="SimpleSearch"){
                      _this.SimpleSearch();
+                 }else if(_this.load=="submitSearch"){
+                       _this.ajaxTable({UserGroupName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
                  }
             },
             SimpleSearchClick(){
                 let _this=this;
-                 _this.load=false;
-                 _this.searchBtClick=true;
-                 _this.tableLoading=true;
                  _this.searchDataClick={
                     UserGroupCode:_this.searchData.UserGroupCode,//
                     UserGroupName: _this.searchData.UserGroupName,//
                     OuId: _this.searchData.OuId,//
                 }
+                _this.page=1
                 _this.SimpleSearch();
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
-                 _this.tableLoading=true;
                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
-                _this.$axios.gets('/api/services/app/UserGroup/GetAll',_this.searchDataClick)
-                .then(function(res){
-                    _this.totalItem=res.result.totalCount
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    _this.tableData=res.result.items;
-                    _this.tableLoading=false;
-                    _this.searchBtClick=false;
-                },function(res){
-                    _this.errorMessage=true;
-                     _this.tableLoading=false;
-                     _this.searchBtClick=false;
-                })
+                 _this.ajaxTable(_this.searchDataClick,"SimpleSearch")
             },
             goDetail(){
                 this.$store.state.url='/userGroup/userGroupDetail/default'
@@ -548,6 +542,11 @@
                 this.$store.state.url='/userGroup/userGroupModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
+            submitSearch(){
+                let _this=this;
+                _this.page=1
+                 _this.ajaxTable({UserGroupName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+            }
         },
     }
 </script>
