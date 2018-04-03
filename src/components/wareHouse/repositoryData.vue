@@ -1,7 +1,7 @@
 <template>
   <div class="res-detail">
         <el-row class="pt5 pb5 bb1 fixed bg-white">
-            <button class="erp_bt bt_back" @click="isBack(1)">
+            <button class="erp_bt bt_back" @click="isBack()">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_back.png">
                 </div>
@@ -15,7 +15,7 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_cancel" @click='isBack(2)'>
+            <button class="erp_bt bt_cancel" @click='isBack()'>
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
@@ -860,9 +860,7 @@
                 if(self.ifModify){
                     self.dialogUserConfirm=true;
                 }else{
-                    if(num == 1){
-                        self.back()
-                    }
+                    self.back()
                 }
                 
             },
@@ -1033,7 +1031,7 @@
             editName:function(){
                 let self = this;
                 self.Modify();
-                console.log(self.createRepositoryParams.stockName)
+                // console.log(self.createRepositoryParams.stockName)
                 if(!self.nameWithFull&&self.createRepositoryParams.stockFullName == ''){
                     self.createRepositoryParams.stockFullName = self.createRepositoryParams.stockName;
                 }

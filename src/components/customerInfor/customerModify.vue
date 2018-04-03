@@ -1340,6 +1340,7 @@ export default({
                 }else{
                     self.opItem.areaName = '暂无业务地区';
                     self.opItem.id = '';
+                    self.opAr = [];
                 }
                 
             },function(res){
