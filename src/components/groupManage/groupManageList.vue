@@ -31,11 +31,10 @@
                             <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
-                        <el-select v-show="areaDis" v-model="entryItem.areaDicId" class="areaDrop" placeholder="选择区"  @change="ChooseDis()" >
+                        <el-select v-show="areaDis" v-model="entryItem.areaDisId" class="areaDrop" placeholder="选择区"  @change="ChooseDis()" >
                             <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
                             </el-option>
                         </el-select>
-                        <el-input v-show="areaStr" class="areaEntry" placeholder="街道办地址" ></el-input>
                     </div>
                 </div>
                 <div class="bgcolor reset">
@@ -160,17 +159,18 @@
                 update:false,
                 isCancel:false,//是否显示取消按钮
                 entryItemBak:'',
-                areaFullPath:'',
+                areaFullPathName:'',
                 areaFullPathArray:[],
             }
         },
         watch:{
-            areaFullPath:function(val,oldVal){
+            areaFullPathName:function(val,oldVal){
                 if(val!=""){
-                    this.areaFullPathArray=val.split(",");
+                    this.areaFullPathArray=val.split(">");
                     this.entryItem.areaProId=this.areaFullPathArray[0];
                     this.entryItem.areaCityId=this.areaFullPathArray[1];
                     this.entryItem.areaDisId=this.areaFullPathArray[2];
+                    console.log(this.entryItem.areaProId,this.entryItem.areaCityId,this.entryItem.areaDisId);
                 }
             },
             entryItemBak:{
@@ -204,14 +204,15 @@
             loadTableData(){//表格
                  let _this=this;
                 _this.$axios.gets('/api/services/app/GroupManagement/Get',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
-                    _this.areaFullPath=res.result.areaFullPathId;
+                    console.log(res.result);
+                    _this.areaFullPathName=res.result.areaId_AreaFullPathName;
                     _this.entryItem.groupCode=res.result.groupCode;
                     _this.entryItem.groupName=res.result.groupName;
                     _this.entryItem.groupFullname=res.result.groupFullname;
                     _this.entryItem.localCurrencyId=res.result.localCurrencyId;
                     _this.entryItem.accSchemeId=res.result.accSchemeId;
                     _this.entryItem.accStartMonth=res.result.accStartMonth;
-                    _this.entryItem.areaProId=res.result.areaId;
+                    //_this.entryItem.areaProId=res.result.areaId;
                     _this.entryItem.industry=res.result.industry;
                     _this.entryItem.address=res.result.address;
                     _this.entryItem.phone=res.result.phone;
@@ -249,7 +250,8 @@
                 this.areaStr=false;
                 _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:_this.entryItem.areaProId}).then(function(res){ 
                     _this.areaCityArray=res.result;
-                    console.log(res.result);
+                    _this.entryItem.areaCityId="";
+                    _this.entryItem.areaDisId="";
                   },function(res){
                 })
             },
@@ -257,18 +259,39 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:_this.entryItem.areaCityId}).then(function(res){ 
                     _this.areaDisArray=res.result;
+                    _this.entryItem.areaDisId="";
                     _this.areaDis=true;
-                    console.log(res.result);
                   },function(res){
                 })
             },
             ChooseDis(){//选择区
-                this.areaStr=true;
+                
             },
             Save(){
                 let _this=this;
+
+                let updateItem={
+                    groupName: _this.entryItem.groupCode,
+                    groupFullname:_this.entryItem.groupFullname,
+                    localCurrencyId: _this.entryItem.localCurrencyId,
+                    accSchemeId:_this.entryItem.accSchemeId,
+                    accStartMonth: _this.entryItem.accStartMonth,
+                    areaId: 0,
+                    industry: _this.entryItem.industry,
+                    phone: _this.entryItem.phone,
+                    fax: _this.entryItem.fax,
+                    remark:_this.entryItem.remark,
+                    status: _this.entryItem.status
+                }
+                if(_this.entryItem.areaDisId!=""){
+                    updateItem.areaId=_this.entryItem.areaDisId
+                }else if(_this.entryItem.areaDisId==""&&_this.entryItem.areaCityId!=""){
+                    updateItem.areaId=_this.entryItem.areaCityId
+                }else if(_this.entryItem.areaProId!=""&&_this.entryItem.areaCityId==""){
+                    updateItem.areaId=_this.entryItem.areaProId
+                }
                 if(_this.update){
-                    _this.$axios.puts('/api/services/app/GroupManagement/Update',_this.entryItem).then(function(res){ 
+                    _this.$axios.puts('/api/services/app/GroupManagement/Update',updateItem).then(function(res){ 
                         _this.open('修改成功','el-icon-circle-check','successERP');
                         _this.isEdit=!_this.isEdit;
                         },function(res){
@@ -584,7 +607,7 @@
     border: 1px solid #e4e7ed;
 }
 .el-select.areaDrop,.el-input.areaEntry{
-    width: 100px;
+    width: 134px;
 }
 .areaDrop input,.areaEntry input{
     border: none!important;
