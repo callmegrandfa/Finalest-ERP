@@ -107,9 +107,10 @@
                             <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                         </button>
                         <div class="search_input_group">
-                            <div class="search_input_wapper">
+                            <div class="search_input_wapper" @keyup.enter="submitSearch">
                                 <el-input
                                     placeholder="搜索..."
+                                    v-model="Name"
                                     class="search_input">
                                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                                 </el-input>
@@ -200,17 +201,20 @@
                             </el-table-column>
                             <el-table-column label="公司">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==1" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-model="scope.row.cop" disabled></el-checkbox>
+                                    <!-- <el-checkbox v-if="i.ouType==1" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox> -->
                                 </template>
                             </el-table-column>
                             <el-table-column label="业务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==2" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-model="scope.row.business" disabled></el-checkbox>
+                                    <!-- <el-checkbox v-if="i.ouType==2" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox> -->
                                 </template>
                             </el-table-column>
                             <el-table-column label="财务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==3" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-model="scope.row.finace" disabled></el-checkbox>
+                                    <!-- <el-checkbox v-if="i.ouType==3" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox> -->
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
@@ -350,7 +354,7 @@
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
-                load:true,
+                load:"loadTableData",
                 totalItem:0,//总共有多少条消息
                 ifWidth:true,
                 dialogUserDefined:false,//dialog
@@ -362,6 +366,7 @@
                     details:'',
                     message:'',
                 },
+                Name:'',//右上角模糊查询
             }
         },
         created:function(){       
@@ -420,9 +425,34 @@
             },
             loadTableData(){//表格
                 let _this=this;
+                _this.page=1
+                _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"loadTableData")
+            },
+            ajaxTable(data,event){
+                 let _this=this;
                 _this.tableLoading=true
-                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/OuManagement/GetAll',data).then(function(res){ 
+                    _this.load=event;
                     _this.tableData=res.result.items;
+                    $.each(_this.tableData,function(index,val){
+                        let finace=false;
+                        let business=false;
+                        let cop=false;
+                        $.each(val.basOuTypes,function(x,value){
+                            if(value.ouType==3){
+                                finace=true;
+                            }
+                            if(value.ouType==2){
+                                business=true;
+                            }
+                            if(value.ouType==1){
+                                cop=true
+                            }
+                        })
+                        val.finace=finace;
+                        val.business=business;
+                        val.cop=cop;
+                    })
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
@@ -449,7 +479,6 @@
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
                 .then(function(res){
                     _this.selectTree_area=res.result;
-                    console.log(res)
                     _this.loadIcon();
                 },function(res){
                 })
@@ -470,15 +499,18 @@
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                  _this.page=val;
-                 if(_this.load){
-                     _this.loadTableData();
-                 }else{
+                 if(_this.load=="loadTableData"){
+                     _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"loadTableData")
+                 }else if(_this.load=="SimpleSearch"){
                      _this.SimpleSearch();
+                 }else if(_this.load=="submitSearch"){
+                       _this.ajaxTable({Name:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+                 }else if(_this.load=="nodeClick"){
+                     _this.ajaxTable({OuParentid:_this.detailParentId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                  }
             },
             SimpleSearchClick(){
                 let _this=this;
-                 _this.load=false;
                  _this.searchDataClick={
                     OuCode:_this.searchData.OuCode,//编码
                     Name: _this.searchData.Name,//名称
@@ -487,23 +519,14 @@
                     Status: _this.searchData.Status,//启用状态
                     OuType: _this.searchData.OuType,//组织类型
                 }
+                _this.page=1
                 _this.SimpleSearch();
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
-                 _this.tableLoading=true;
                  _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAll',_this.searchDataClick)
-                .then(function(res){      
-                    _this.totalItem=res.result.totalCount
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    _this.tableData=res.result.items;
-                    _this.tableLoading=false;
-                },function(res){
-                    _this.errorMessage=true;
-                     _this.tableLoading=false;
-                })
+                 _this.ajaxTable(_this.searchDataClick,"SimpleSearch")
             },
             goDetail(){
                 let _this=this;
@@ -570,7 +593,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             delRow(){
@@ -594,7 +616,6 @@
                      if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.errorMessage=true;
                     _this.dialogUserConfirm=false;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             getHeight(){
@@ -609,17 +630,8 @@
                  let _this=this;
                  _this.detailParentId=data.id;
                  _this.detailParentName=data.ouFullname;
-                _this.tableLoading=true
-                _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuParentid:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
-                .then(function(res){ 
-                    _this.tableData=res.result.items;
-                    _this.totalItem=res.result.totalCount
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    _this.tableLoading=false;
-                    },function(res){
-                    _this.errorMessage=true;
-                    _this.tableLoading=false;
-                })
+                 _this.page=1
+                 _this.ajaxTable({OuParentid:_this.detailParentId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                  
             },
             nodeClick_area(data,node,self){
@@ -640,6 +652,11 @@
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
+            submitSearch(){
+                let _this=this;
+                _this.page=1
+                 _this.ajaxTable({Name:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+            }
             
         },
     }

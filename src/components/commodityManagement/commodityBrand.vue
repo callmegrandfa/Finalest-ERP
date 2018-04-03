@@ -100,8 +100,8 @@
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
-                            <!-- <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel"></normalTable> -->
-                             <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
+                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel" :hasModify="hasModify"></normalTable>
+                             <!-- <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
                                 <el-table-column
                                     type="selection"
                                     width="55">
@@ -164,15 +164,15 @@
                                         <el-button v-on:click="handleDel(scope.row,scope.$index)" type="text" size="small">删除</el-button>
                                     </template>
                                 </el-table-column>
-                            </el-table>
-                        <el-pagination
+                            </el-table> -->
+                        <!-- <el-pagination
                          style="margin-top:20px;" 
                          class="text-right pageActive"
                          :current-page.sync="currentPage"
                          background layout="total, prev, pager, next" 
                          @current-change="handleCurrentChange"
                          :page-count="totalPage" >
-                         </el-pagination>   
+                         </el-pagination>    -->
                         </el-col> 
                     </el-row>
                 </el-col>
@@ -261,11 +261,13 @@ import Btm from '../../base/btm/btm'
                 pageFlag:true,
                 httpUrl:{
                     creat:'/api/services/app/BrandManagement/GetAll',//数据初始化
+                    del:'/api/services/app/BrandManagement/Delete',//行内删除
                 },
                 column: [{
                     prop: 'brandCode',
                     label: '品牌编码',
-                    control:'normal'
+                    control:'normal',
+                    flag:true,//更改标识
                     },{
                     prop: 'brandName',
                     label: '品牌名称',
@@ -281,7 +283,7 @@ import Btm from '../../base/btm/btm'
                     },{
                     prop: 'status',
                     label: '状态',
-                    control:'normal'
+                    control:'select'
                     },{
                     prop: 'createdBy',
                     label: '创建人',
@@ -289,15 +291,29 @@ import Btm from '../../base/btm/btm'
                     },{
                     prop: 'createdTime',
                     label: '创建时间',
-                    control:'normal'
+                    control:'datetime'
                     }],
                 enableEdit:false,
-                tableModel:'commdityBrandTable',
+                tableModel:'commodityBrand',
+                hasModify:false,//是否包含查看按钮
+                commodityBrandNewCol:{
+                    groupId:0,
+                    brandCode:"" ,
+                    brandName:"" ,
+                    brandEname:"",
+                    status:1 ,
+                    remark:" " ,
+                    remark2:" " ,
+                    statusTValue:1,
+                    createdBy:this.$store.state.name,
+                    createdTime:this.GetDateTime()
+                    //"seq":Math.max.apply(Math,this.tableData.map(function(o){return Number(o.seq);}))+1
+                }
             }
         },
         created:function(){
             //this.datashop();
-            this.loadTableData();
+           // this.loadTableData();
             $(document).on("click",".pageActive .el-pager>li",function(){
                 if(_this.turnPage==false){
                    //$(this).html("12");
@@ -310,12 +326,27 @@ import Btm from '../../base/btm/btm'
             let height1=window.innerHeight-123;
             content1.style.minHeight=height1+'px';
         },
+        computed:{
+            newColArray(){//新增数据集合
+                if(!this.enableEdit){
+                    return this.$store.state[this.tableModel+'NewColArray'];
+                }else{
+                    return [];
+                }
+                
+            },
+        },
         watch:{
             isUpdate:function(val,oldVal){
                 if(val==true){
                     this.isCancel=true;
                     this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
                 }
+            },
+            newColArray:{
+                handler: function (val, oldVal) {
+                },
+                deep:true
             },
             tableData:{
                 handler: function (val, oldVal) {
@@ -468,32 +499,11 @@ import Btm from '../../base/btm/btm'
                     "createdTime":this.GetDateTime()
                     //"seq":Math.max.apply(Math,this.tableData.map(function(o){return Number(o.seq);}))+1
                 };
-                this.isUpdate=true;
-                this.isAdd=true;
-                this.tableData.unshift(newcol);
-                this.addArray.unshift(newcol);
-                // if(this.addArray.length>0){
-                //     for(let i in this.addArray){
-                //         if(this.addArray[i].brandCode==""||this.addArray[i].brandName==""){
-                //             return
-                //         }else{
-                //             this.tableData.unshift(newcol);
-                //             this.addArray.push(newcol);
-                //         }
-                //         // if(this.addArray[i].brandCode==""||this.addArray[i].brandName==""){
-                //         //     this.$message({
-                //         //         message: '红色框内为必填项！',
-                //         //         type: 'error'
-                //         //     });
-                //         //     return
-                //         // }
-                //     }
-                // }else{
-                //     this.tableData.unshift(newcol);
-                //     this.addArray.push(newcol);
-                // }
-                
-                    
+                 this.$store.dispatch('addCol',newcol);//表格行内新增
+                // this.isUpdate=true;
+                // this.isAdd=true;
+                // this.tableData.unshift(newcol);
+                // this.addArray.unshift(newcol);                  
             },
             handleDel(row,index){//行内删除
                 console.log(index);
@@ -525,7 +535,8 @@ import Btm from '../../base/btm/btm'
             search(){//按条件查询
                 let _this=this;
                 _this.$axios.gets('/api/services/app/BrandManagement/GetData',_this.searchItem).then(function(res){
-                    _this.tableData=res.result;                   
+                    //_this.tableData=res.result;
+                    _this.$store.state[_this.tableModel+'Table']=res.result;                     
                 })
             },
             cancel(){//数据恢复到初始化状态 取消
@@ -537,16 +548,17 @@ import Btm from '../../base/btm/btm'
             },
             handleStatus(statu){//批量启用/禁用
                 let handleArray=[];
+                this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                let tableData=this.$store.state[this.tableModel+'Table'];
                 if(this.SelectionChange.length>0){
-                    this.isUpdate=true;
                     for(let o in this.SelectionChange){
-                        this.updateArray.push(this.SelectionChange[o].id)
+                        this.$store.commit('Add_UpdateArray',this.SelectionChange[o].id)
                         handleArray.push(this.SelectionChange[o].id)
                     }
                     for(let i in handleArray){
-                        for(let j in this.tableData){
-                            if (handleArray[i]==this.tableData[j].id){
-                                this.tableData[j].status=statu;
+                        for(let j in tableData){
+                            if (handleArray[i]==tableData[j].id){
+                               tableData[j].status=statu;
                             }
                         }
                     }
@@ -559,6 +571,7 @@ import Btm from '../../base/btm/btm'
                 
             },
             delBatch(){//批量删除
+                this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
                 for(var i in this.SelectionChange){
                     this.idArray.ids.push(this.SelectionChange[i].id)
                 }
@@ -578,7 +591,9 @@ import Btm from '../../base/btm/btm'
                         center: true
                         }).then(() => {
                             _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
-                                _this.loadTableData();
+                                _this.$store.dispatch('InitTable');
+                                _this.$store.commit('setTableSelection',[])
+                                _this.idArray.ids=[];
                                 _this.open('删除成功','el-icon-circle-check','successERP');    
                             })
                         }).catch(() => {
@@ -596,50 +611,95 @@ import Btm from '../../base/btm/btm'
                 }
             },
             save(){
-                this.isSave=true;
                 let _this=this;
-                if(_this.addArray.length>0){//新增保存
-                    for(let i in _this.addArray){
-                        if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""){
-                            this.$message({
-                                message: '红色框内为必填项！',
-                                type: 'error'
-                            });
-                        }
-                    }
-                    if(_this.addArray.length==1){//单条新增
-                        _this.$axios.posts('/api/services/app/BrandManagement/Create',_this.addArray[0]).then(function(res){
-                            _this.loadTableData();
-                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
-                            _this.isAdd=false
+                let newArray=_this.$store.state[_this.tableModel+'NewColArray'];
+                let newArrayLength=_this.$store.state[_this.tableModel+'NewColArray'].length;
+                let updateArray=_this.$store.state[_this.tableModel+'UpdateColArray'];
+                let updateArrayLength=_this.$store.state[_this.tableModel+'UpdateColArray'].length;
+                let tableData=_this.$store.state[_this.tableModel+'Table'];
+                // 新增保存
+                if(newArrayLength>0){
+                    if(newArrayLength==1){//单条新增
+                        _this.$axios.posts('/api/services/app/BrandManagement/Create',newArray[0]).then(function(res){
+                            _this.$store.dispatch('InitTable')
+                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
+                            _this.$store.commit('setAddColArray',[])//置空新增集合
                         }); 
                     }else{//批量新增                      
-                        _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',_this.addArray).then(function(res){
-                            _this.loadTableData();
-                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
-                            _this.isAdd=false
+                        _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',newArray).then(function(res){
+                            _this.$store.dispatch('InitTable')
+                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
+                            _this.$store.commit('setAddColArray',[])//置空新增集合
                         }); 
-                    }                    
-                }else if(_this.isUpdate){//修改保存
-                    if(_this.updateArray.length==1){//单条修改
+                    }    
+                }
+                if(updateArrayLength>0){
+                    if(updateArrayLength==1){//单条修改
                         let updataIndex=-1;
-                        for(let i in _this.tableData){
-                            if(_this.updateArray[0]==_this.tableData[i].id){
+                        for(let i in tableData){
+                            if(updateArray[0]==tableData[i].id){
                                 updataIndex=i;
                             }
                         }
-                        _this.$axios.puts('/api/services/app/BrandManagement/Update',_this.tableData[updataIndex]).then(function(res){
-                            _this.loadTableData();
+                        _this.$axios.puts('/api/services/app/BrandManagement/Update',tableData[updataIndex]).then(function(res){
+                            _this.$store.dispatch('InitTable');
+                             _this.$store.commit('setUpdateColArray',[])//置空新增集合
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         });
                     }else{//批量修改
-                        _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',_this.tableData).then(function(res){
-                            _this.loadTableData();
+                        _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',tableData).then(function(res){
+                            _this.$store.dispatch('InitTable');
+                             _this.$store.commit('setUpdateColArray',[])//置空新增集合
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
-                            _this.isAdd=false
                         }); 
                     }
-                }              
+                }
+                
+                //未封装组件前保存逻辑
+                // this.isSave=true;
+                // let _this=this;
+                // if(_this.addArray.length>0){//新增保存
+                //     for(let i in _this.addArray){
+                //         if(_this.addArray[i].brandCode==""||_this.addArray[i].brandName==""){
+                //             this.$message({
+                //                 message: '红色框内为必填项！',
+                //                 type: 'error'
+                //             });
+                //         }
+                //     }
+                //     if(_this.addArray.length==1){//单条新增
+                //         _this.$axios.posts('/api/services/app/BrandManagement/Create',_this.addArray[0]).then(function(res){
+                //             _this.loadTableData();
+                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
+                //             _this.isAdd=false
+                //         }); 
+                //     }else{//批量新增                      
+                //         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',_this.addArray).then(function(res){
+                //             _this.loadTableData();
+                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
+                //             _this.isAdd=false
+                //         }); 
+                //     }                    
+                // }else if(_this.isUpdate){//修改保存
+                //     if(_this.updateArray.length==1){//单条修改
+                //         let updataIndex=-1;
+                //         for(let i in _this.tableData){
+                //             if(_this.updateArray[0]==_this.tableData[i].id){
+                //                 updataIndex=i;
+                //             }
+                //         }
+                //         _this.$axios.puts('/api/services/app/BrandManagement/Update',_this.tableData[updataIndex]).then(function(res){
+                //             _this.loadTableData();
+                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
+                //         });
+                //     }else{//批量修改
+                //         _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',_this.tableData).then(function(res){
+                //             _this.loadTableData();
+                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
+                //             _this.isAdd=false
+                //         }); 
+                //     }
+                // }              
                   
             },                          
             packUp(){

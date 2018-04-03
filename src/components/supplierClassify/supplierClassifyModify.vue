@@ -3,7 +3,7 @@
          <!-- 按钮组 -->
         <el-row>
             <el-col :span="24">
-                <button @click="goback" class="erp_bt bt_back">
+                <button  @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
@@ -64,7 +64,24 @@
                     </div>
                 </el-col>
         </el-row>
-
+        <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            <!--  -->
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
         <!-- 表单 -->
         <el-row>
             <div class="supClasModify-form-wrapper pt15">
@@ -227,14 +244,16 @@
                     label: 'className',
                     id: 'id',
                 },
+                // ------------------提示框数据
+                dialogUserConfirm:false,//信息更改提示控制
 
              }
         },
-         created(){
+        created(){
             this.getSelectData();
             this.loadTree();
-             this.getDataList();
-         },
+            this.getDataList();
+        },
         validators: {
             'addData.classParentId': function (value) {//上级供应商分类
                 return this.Validator.value(value).required().maxLength(50)
@@ -265,14 +284,13 @@
                         // console.log(rsp.result);
                         // _this.treeNode.Id=rsp.result.classParentId;
                         _this.addData=rsp.result;
-                        _this.$axios
-                        .gets("/api/services/app/ContactClassManagement/Get", {
-                        id: rsp.result.classParentId
-                        }).then(
+                        _this.$axios.gets("/api/services/app/ContactClassManagement/Get",
+                        {id: rsp.result.classParentId})
+                        .then(
                             rsp=>{
-                                console.log(rsp.result);
-                                 _this.treeNode.Id=rsp.result.id;
-                                 _this.treeNode.className=rsp.result.className;
+                                // console.log(rsp.result);
+                                _this.treeNode.Id=rsp.result.id;
+                                _this.treeNode.className=rsp.result.className;
                             }
                         )
                     });
@@ -295,17 +313,31 @@
                     _this.selectData.Status001=res.result;
                 })
             },
-             //---------------按钮组功能 
+            //--------------------------------------按钮组功能 
+            //---------------返回 ------------
             goback() {//返回
                 this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
                 this.$router.push({ path: this.$store.state.url });
             },
+            isBack(){
+                let _this=this;
+                if(_this.update){
+                    _this.dialogUserConfirm=true;
+                    // _this.choseDoing='back'
+                }else{
+                    _this.goback()
+                }
+            },
+            sureDoing:function(){
+                let _this = this;
+                _this.goback();
+            },
+            // ---------------------------------------------------------
             add(){ //新增
                 this.$store.state.url = "/supplierClassify/supplierClassifyDetail/default";
                 this.$router.push({ path: this.$store.state.url });
             },
-            isUpdate() {
-                //判断是否修改过信息
+            isUpdate() {//判断是否修改过信息
                 this.update = true;
                 this.isTrue=false;
                 // console.log(this.isDisable);
@@ -315,7 +347,7 @@
                 _this.$validate().then(
                     function (success) { 
                         if (success){
-                            _this.$axios.posts('/api/services/app/ContactClassManagement/Update',_this.addData).then(
+                            _this.$axios.puts('/api/services/app/ContactClassManagement/Update',_this.addData).then(
                                 rsp=>{
                                     _this.open('保存成功','el-icon-circle-check','successERP'); 
                                     _this.isTrue=true;
@@ -348,7 +380,7 @@
                     );
             },
             // ----------树形控件相关----------
-             loadIcon(){//添加文件夹图标
+            loadIcon(){//添加文件夹图标
                 let _this=this;
                 _this.$nextTick(function () {
                     $('.preNode').remove();   
@@ -374,7 +406,7 @@
             },
             nodeClick(data) {//点击树形控件节点时的回调
                let _this=this;
-                 console.log(data);
+                //  console.log(data);
                 _this.treeNode.Id=data.id;
                 _this.treeNode.className=data.className;
                 _this.$nextTick(function(){
@@ -420,15 +452,16 @@
     .supClasModify-wrapper .bgcolor.bgLongWidth label{
             width: 100px;
     }
-    .supClasModify-wrapper .bgcolor.bgLongWidth .el-input,
-    .supClasModify-wrapper .bgcolor.bgLongWidth .rangeDate, 
+    .supClasModify-wrapper  .bgcolor.bgLongWidth .el-input,
+    .supClasModify-wrapper  .bgcolor.bgLongWidth .rangeDate, 
     .bgcolor.bgLongWidth .el-textarea,
-    .supClasModify-wrapper .bgcolor.bgLongWidth .el-select{
+    .supClasModify-wrapper  .bgcolor.bgLongWidth .el-select{
         width: calc(100% - 110px);
         }
-    /* .supClasModify-wrapper .bgcolor.bgLongWidth .el-select{
+    /* .supClasModify-wrapper  .bgcolor.bgLongWidth .el-select{
         width: 100%;
         } */
-
-
+.supClasModify-wrapper  .bgcolor.bgLongWidth .el-select .el-input{
+        width:100%;
+}
 </style>

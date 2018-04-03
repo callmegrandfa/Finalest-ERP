@@ -92,7 +92,7 @@
                             </el-tree>
                         </el-col>
                         <el-col :span="19" class="pb10" style="background:#fff">
-                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel"></normalTable>
+                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel" :hasModify="hasModify"></normalTable>
                             <!-- <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
                                 <el-table-column type="selection" label="" width="50">
                                 </el-table-column>
@@ -205,7 +205,7 @@ import normalTable from '../../base/Table/normalTable'
                     }, {
                     prop: 'status',
                     label: '状态',
-                    control:'normal'
+                    control:'select'
                     }, {
                     prop: 'mnemonic',
                     label: '助记码',
@@ -216,7 +216,8 @@ import normalTable from '../../base/Table/normalTable'
                     control:'checkbox'
                 }],
                 enableEdit:true,
-                tableModel:'commodityClassTable',
+                tableModel:'commodityClassHeading',
+                hasModify:true,
                 SystemOptions: [{
                     value: null,
                     label: '全部'
@@ -324,7 +325,7 @@ import normalTable from '../../base/Table/normalTable'
                 let _this=this;
                 _this.tableLoading=true;
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){                      
-                        _this.$store.state[_this.tableModel] = res.result;
+                        _this.$store.state[_this.tableModel+'Table'] = res.result;
                         _this.totalCount=res.result.length
                         _this.tableLoading=false;
                         
@@ -346,8 +347,7 @@ import normalTable from '../../base/Table/normalTable'
             query(){//条件查询
                 let _this=this;
                 _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
-                    console.log(res.result);
-                    _this.$store.state[_this.tableModel]=res.result;                   
+                    _this.$store.state[_this.tableModel+'Table']=res.result;                   
                 })
             },
             modify(id){//查看编辑
@@ -398,6 +398,7 @@ import normalTable from '../../base/Table/normalTable'
             },
             delData(){//选取(批量)删除
                 let _this=this;
+                _this.SelectionChange=this.$store.state[this.tableModel+'Selection'];
                 if(_this.SelectionChange.length==0){
                     _this.$message({
                         type: 'info',
@@ -418,13 +419,17 @@ import normalTable from '../../base/Table/normalTable'
                         }).then(() => {
                             if(delAarry.length==1){//单条删除
                                 _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
-                                    _this.loadTableData();
+                                    _this.$store.dispatch('InitTable');
+                                    _this.$store.commit('setTableSelection',[])
+                                    _this.delAarry.ids=[];
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
                             }else{//批量删除
                                 
                                  _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/BatchDelete',delAarry).then(function(res){
-                                    _this.loadTableData();
+                                    _this.$store.dispatch('InitTable');
+                                    _this.$store.commit('setTableSelection',[])
+                                    _this.delAarry.ids=[];
                                     _this.open('删除成功','el-icon-circle-check','successERP');    
                                 })
                             }  

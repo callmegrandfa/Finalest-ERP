@@ -203,9 +203,9 @@
                     "seq": 0,
                     "status": 1,
                     "remark": "",
-                    "createdBy" :'',
-                    "createdTime"  :'',
-                    },
+                    "createdBy" :this.$store.state.name,
+                    "createdTime"  : this.GetDateTime(),
+                },
                 //  下拉框的选项数据
                 selectData:{
                     Status001:[],//启用状态
@@ -225,10 +225,11 @@
 
              }
         },
-         created(){
+        created(){
             this.getSelectData();
             this.loadTree();
-         },
+            this.GetDateTime();
+        },
         validators: {
             'addData.classParentId': function (value) {//上级供应商分类
                 return this.Validator.value(value).required().maxLength(50)
@@ -248,7 +249,11 @@
                 return this.treeNode;
                 },
         },
-        methods:{           
+        methods:{
+            GetDateTime() {//获取当前时间
+                let date=new Date();
+                return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
+            },          
             // 成功的提示框
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -301,7 +306,7 @@
                                 }
                             )
                         }
-                    }
+                    }                    
                 )
             },
             saveAdd(){ // 保存并新增
@@ -403,6 +408,7 @@
     /* .supClasDetail-wrapper .bgcolor.bgLongWidth .el-select{
         width: 100%;
         } */
-
-
+.supClasDetail-wrapper .bgcolor.bgLongWidth .el-select .el-input{
+        width:100%;
+}
 </style>

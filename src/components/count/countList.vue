@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div class="count-wrapper" style="float:left;background:#fff;width:100%;">
         <!-- 左边搜索栏 -->
         <el-col :span="ifWidth?5:0" v-show="ifWidth" class="bgWhite" id="bg-white">
@@ -40,6 +40,23 @@
 
             </el-row>
         </el-col>
+         <!-- dialog是否删除提示(对话框控件) -->
+            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">确认删除？</p>
+                    </el-col>
+                </el-col>
+                
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
         <!-- 右边部分 -->
         <el-col :span="ifWidth?19:24">
             <div class="leftBox">
@@ -159,7 +176,7 @@
                                             </div>
                                             <span class="btDetail">增行</span>
                                         </button>
-                                        <button class="erp_bt bt_cancel" >
+                                        <button class="erp_bt bt_cancel" @click="delSelected">
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/eraseline.png">
                                             </div>
@@ -168,13 +185,13 @@
                                     </el-row>
                                     <!-- 表格 -->
                                     <el-row class="tableSize">
-                                        <el-table stripe class="bgColor" :data="tableList" border style="width: 100%">
+                                        <el-table stripe class="bgColor" :data="tableList" border @selection-change="handleSelectionChange" style="width: 100%">
                                             <el-table-column type="selection"></el-table-column>
-                                            <el-table-column prop="destUnitId_UnitName" label="多单位">
+                                            <el-table-column prop="destUnitId" label="多单位">
                                                 <template slot-scope="scope">
-                                                     <el-select  v-model="scope.row.destUnitId_UnitName ">
+                                                     <el-select  v-model="scope.row.destUnitId">
                                                          <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                                                        :data="countTree"
+                                                        :data="countTableTree"
                                                         :props="defaultProps"
                                                         node-key="id"
                                                         default-expand-all
@@ -183,7 +200,7 @@
                                                         :filter-node-method="filterNode"
                                                         @node-click="TableClick">
                                                         </el-tree>
-                                                        <el-option v-show="false" v-for="item in countTree" :key="item.id" :label="item.unitName" :value="item.id">
+                                                        <el-option v-show="false" :key="count.Id" :label="count.unitName" :value="count.Id"   id="countTbale_confirmSelect">
                                                         </el-option>
                                                     </el-select>
                                                 </template>
@@ -273,21 +290,46 @@
                 addRowdata:{//新增行数据
                     "groupId": 0,
                     "unitId": 0,
-                    "destUnitId_UnitName": "",
+                    "destUnitId": 0,
                     "factor": 0,
                     "remark": ""
                     },
                 tabName:'1',
+                multipleSelection: {},//复选框选中数据
+                dialogUserConfirm:false,//确认提示框是否显示
+                choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
+                // --------------树形控件与下拉框数据
+                 treeNode:{
+                    Id:'',
+                    unitName:'',
+                },
+                countTree:[],
                 
                 
 
             }
         },
-        created:function () {  
+        created() {  
             // this.getAllList();
             this.loadTree();
         },
+        computed:{
+            count () {
+                return this.treeNode;
+                },
+        },
         methods:{
+             // 提示信息
+            open(tittle, iconClass, className) {
+                this.$notify({
+                    position: "bottom-right",
+                    iconClass: iconClass,
+                    title: tittle,
+                    showClose: false,
+                    duration: 3000,
+                    customClass: className
+                });
+            },
             // ----------左侧搜索栏的收起与展开
             closeLeft: function() {
                 let _this = this;
@@ -297,19 +339,6 @@
                 let _this = this;
                 _this.ifWidth = true;
             },
-            // 默认获取列表数据
-                // getAllList(){
-                //     let _this=this;
-                //     _this.$axios.gets('/api/services/app/UnitManagement/GetAll',{
-                //         MaxResultCount:10,SkipCount:0,
-                //     }).then(
-                //         rsp=>{
-                //             // console.log(rsp.success);
-                //             // console.log(rsp.result);
-                //             _this.tableList=rsp.result.items;
-                //         }
-                //     )
-                // },
             // --------------------树形控件相关
             loadIcon(){//添加文件夹图标
                 let _this=this;
@@ -328,9 +357,9 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/UnitManagement/GetUnitTree').then(
                     rsp=>{
-                    console.log(rsp.result);
+                    // console.log(rsp.result);
                      _this.countTree=rsp.result
-                    console.log(_this.countTree)
+                    // console.log(_this.countTree)
                      
                     _this.loadIcon();
                })
@@ -342,8 +371,10 @@
                 //  console.log(data.id);
                 _this.getNodeMsg();
                 _this.getNodeDetail();
+                _this.loadTableTree();
+
             },
-            getNodeMsg(){//获取树形节点详细信息
+            getNodeMsg(){//获取树形节点信息
                 let _this=this;
                 _this.$axios.gets('/api/services/app/UnitManagement/Get',{Id:_this.nodeId}).then(
                     rsp=>{
@@ -352,12 +383,24 @@
                });
 
             },
-            getNodeDetail(){//获取树形节点子信息
+            getNodeDetail(){//获取树形节点详细信息
                 let _this=this;
                 _this.$axios.gets('/api/services/app/UnitConvertManagement/GetDetail',{UnitId:_this.nodeId}).then(
                     rsp=>{
-                    console.log(rsp.result)
-                     _this.tableList=rsp.result;
+                    // console.log(rsp.result);
+                    if (rsp.result.length>0) {
+                        for (let val of rsp.result){
+                            // console.log(val);
+                            _this.treeNode.Id=val.destUnitId;
+                            _this.treeNode.unitName=val.destUnitId_UnitName;
+                            // console.log(_this.treeNode.unitName);
+                        }
+                        _this.tableList=rsp.result;
+                    }else{
+                        _this.tableList=rsp.result;
+                        _this.treeNode.Id=rsp.result.id;
+                        _this.treeNode.unitName=rsp.result.unitName;
+                    }
                        });
 
             },
@@ -422,7 +465,6 @@
                 let _this=this;
                 _this.getNodeMsg();
             },
-
             // -------------------左侧搜索功能
             searchLeft(){//搜索
                 let _this=this;
@@ -434,13 +476,13 @@
                     }
                 )
             },
-            // ----------------------表格功能
+            // ---------------------------------------------表格功能
             addRow(){//增加一行
                 let _this=this;
                 let newRow={
                     "groupId": 0, 
                     "unitId": _this.nodeId,
-                    "destUnitId_UnitName": _this.tableList[0].destUnitId_UnitName,
+                    "destUnitId":"",
                     "factor": "",
                     "remark": "",
                 };
@@ -454,22 +496,101 @@
                  let _this=this;
                  _this.addRowdata=val;
                 //  console.log( _this.addRowdata);
-                 
                 _this.$axios.posts('/api/services/app/UnitConvertManagement/Create',_this.addRowdata)
                 .then(
                     rsp=>{
-                        console.log(rsp.success);
+                        // console.log(rsp.success);
+                        // console.log("表格行内保存成功");
                         // console.log(rsp.result);
                         _this.getNodeDetail();
                     }
                 )
 
             },
+            confirmDelThis(row){//确认单项删除
+                let _this=this;
+                // console.log("确认了吗");
+                _this.choseAjax='row'
+                _this.row=row;
+                _this.dialogUserConfirm=true;
+            },
+            delThis(row){//单项删除（操作下面的删除行）
+                let _this=this;
+                _this.$axios.deletes('/api/services/app/UnitConvertManagement/Delete',{id:_this.row.id})
+                .then(function(res){
+                    _this.dialogUserConfirm=false;
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                     _this.getNodeDetail();
+                },function(res){
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    _this.dialogUserConfirm=false;
+                    _this.errorMessage=true;
+                    _this.open('删除失败','el-icon-error','faildERP');
+                })
+            },
+            handleSelectionChange(arr1){//多项删除（表格上面的删行）
+                let _this = this;
+                _this.multipleSelection.ids = [];
+                for (let val of arr1) {
+                    _this.multipleSelection.ids.push(val.id);
+                }
+                // _this.isTrue=false;
+                // console.log(_this.multipleSelection);
+            },
+            delSelected(){//确认多项删除
+                let _this=this;
+                _this.choseAjax='rows';
+                if(_this.multipleSelection.ids.length>0){
+                _this.dialogUserConfirm=true;
+                }
+            },
+            delRow(){// 多项删除(批量删除)
+                let _this = this;
+                // console.log(_this.multipleSelection);
+                this.$axios
+                    .posts(
+                    "/api/services/app/UnitConvertManagement/BatchDelete",
+                    _this.multipleSelection
+                    )
+                    .then(res => {
+                    if (!res.success) {
+                         _this.open("删除失败", "el-icon-error", "faildERP");
+                    }
+                    _this.dialogUserConfirm=false;
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                    _this.getDataList();
+                    });
+            },
+            sureAjax(){
+                let _this=this;
+                if(_this.choseAjax=='row'){
+                    _this.delThis()
+                }else if(_this.choseAjax=='rows'){
+                    _this.delSelected()
+                }
+            },
+            // -------------------表格中的树形控件相关
+            loadTableTree(){//加载表格中树形控件
+                 let _this=this;
+                _this.$axios.gets('/api/services/app/UnitManagement/GetOtherUnit',{UnitId:_this.nodeId}).then(
+                    rsp=>{
+                    // console.log(rsp.result);
+                     _this.countTableTree=rsp.result
+                    // console.log(_this.countTableTree)
+                    _this.loadIcon();
+               })
+            },
             TableClick(data){//表格中树形控件节点被点击时的回调
-                    console.log(data);
+                let _this=this;
+                    //  console.log(data);
+                    _this.treeNode.Id=data.id;
+                    _this.treeNode.unitName=data.unitName;
+                    _this.$nextTick(function(){
+                        $('#countTbale_confirmSelect').click()
+                    })
             },
-            confirmDelThis(){//操作下面的删除
-            },
+           
+            
             // tab栏事件
             handleClick(tab, event){},
             filterNode(tab, event){},
@@ -599,30 +720,31 @@
 </style>
 
 
-<style>
-.count-wrapper .formWidth .el-input__inner{
-    height:30px !important;
+ <style>
+    .count-wrapper .formWidth .el-input__inner{
+        height:30px !important;
 
-}
-.count-wrapper .formWidth .el-form-item__label{
-    font-size:12px !important;
-    color: #000;
-}
-.count-wrapper .formWidth .el-form-item{
-    margin-bottom: 0px !important;
-}
-.count-wrapper .formWidth .el-button{
-    background: #4a6997;
-    color: #fff;
-    font-size: 12px;
-    padding: 10px 30px;
-}
-.count-wrapper .bgcForm .el-select{
-    display: block !important;
-}
-.count-wrapper .tableSize .bgColor .el-input__inner {
-    border:none !important;
-}
+    }
+    .count-wrapper .formWidth .el-form-item__label{
+        font-size:12px !important;
+        color: #000;
+    }
+    .count-wrapper .formWidth .el-form-item{
+        margin-bottom: 0px !important;
+    }
+    .count-wrapper .formWidth .el-button{
+        background: #4a6997;
+        color: #fff;
+        font-size: 12px;
+        padding: 10px 30px;
+    }
+    .count-wrapper .bgcForm .el-select{
+        display: block !important;
+    }
+    .count-wrapper .tableSize .bgColor .el-input__inner {
+        border:none !important;
+        text-align: center;
+    }
 </style>
 
 
