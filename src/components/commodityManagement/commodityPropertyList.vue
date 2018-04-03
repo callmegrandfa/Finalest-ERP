@@ -20,7 +20,7 @@
                     </el-col>
                     <el-col :span="12">
                         <div class="smallBgcolor" style="margin-top:20px">
-                        <el-input placeholder="请录入单号" v-model="search.PropertyCode"></el-input>
+                        <el-input  v-model="search.PropertyCode"></el-input>
                         </div>
                     </el-col>
                 </el-row>
@@ -32,7 +32,7 @@
                     </el-col>
                     <el-col :span="12">
                         <div class="smallBgcolor" >
-                        <el-input placeholder="请录入单号" v-model="search.PropertyName"></el-input>
+                        <el-input  v-model="search.PropertyName"></el-input>
                         </div>
                     </el-col>
                 </el-row>
@@ -130,7 +130,7 @@
                             </el-table-column>
                             <el-table-column fixed prop="propertyName" label="属性名称">
                                 <template slot-scope="scope">
-                                    <el-button type="text"    >{{tableData[scope.$index].propertyName}}</el-button>
+                                    <el-button type="text"   @click="modify(scope.row)" >{{tableData[scope.$index].propertyName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="status" label="状态" width="">
@@ -141,7 +141,7 @@
                             </el-table-column>
                             <el-table-column prop="required" label="必填" width="">
                                 <template slot-scope="scope">
-                                    <el-checkbox  v-model="tableData[scope.$index].required"></el-checkbox>
+                                    <el-checkbox  v-model="tableData[scope.$index].required" disabled></el-checkbox>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="address7" label="备注" width="">
@@ -163,7 +163,55 @@
 
             </el-col>
         </el-row>
-        </div>   
+        </div>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                <button class="dialog_footer_bt dialog_font no" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="$store.state.option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>   
     </div>
 </template>
 
@@ -226,10 +274,10 @@ import Tree from '../../base/tree/tree'
                     text: '停用'
                 }]},
                 RequiredOptions:[{
-                    value: 0,
+                    value: true,
                     label: '必填'
                     }, {
-                    value: 1,
+                    value: false,
                     label: '不必填'
                 }],
                 ControlTypeOptions:[{
@@ -276,6 +324,17 @@ import Tree from '../../base/tree/tree'
                 idArray:{
                     ids:[]
                 },
+                 // 错误信息提示开始
+                detail_message_ifShow:false,
+                errorMessage:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                // 错误信息提示结束
+                choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
+                dialogUserConfirm:false,//用户删除保存提示信息
                 tableData: [],
                 currentPage:1,//分页的当前页码
                 eachPage:10,//每页有多少条信息
@@ -284,6 +343,7 @@ import Tree from '../../base/tree/tree'
                 ifWidth:true,
                 tableLoading:true,
                 treeLoading:true,
+                rowid: '',
             }
         },
         created:function(){
@@ -313,49 +373,52 @@ import Tree from '../../base/tree/tree'
                 this.$store.state.url='/commodityProperty/commodityPropertyDetails/'+row.id;
                 this.$router.push({path:this.$store.state.url});
             },
-            btmlog:function(data){
-                if(data == '删除'){
-                    for(var i in this.SelectionChange){
-                        this.idArray.ids.push(this.SelectionChange[i].id)
-                    }
-                    let _this=this;
-                    if(_this.idArray.ids.length>0){
-                        _this.$confirm('确定删除?', '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning',
-                            center: true
-                            }).then(() => {
-                                _this.$axios.posts('http://192.168.100.107:8085/api/services/app/PropertyManagement/BatchDelete',_this.idArray).then(function(res){
-                                    _this.loadTableData();
-                                    _this.loadTree();
-                                    _this.open('删除成功','el-icon-circle-check','successERP');    
-                                })
-                            }).catch(() => {
-                                this.$message({
-                                    type: 'info',
-                                    message: '已取消删除'
-                                });
-                        });
-                       
-                    }else{
-                        this.$message({
-                            type: 'info',
-                            message: '请勾选需要删除的数据！'
-                        });
-                    }
+            sureAjax(){
+                let _this=this;
+                if(_this.choseAjax=='row'){
+                    _this.delThis()
+                }else if(_this.choseAjax=='rows'){
+                    _this.delRow()
                 }
             },
-            querylog:function(data){
+            delRow(){
+                for(var i in this.SelectionChange){
+                        this.idArray.ids.push(this.SelectionChange[i].id)
+                    }
                 let _this=this;
-                if(data){
-                    let ocate= document.getElementById('cp')
-                    ocate.style.width="100%";
-                    _this.bottonbox.botton.push({
-                        class: 'erp_bt bt_auxiliary',
-                        imgsrc: '../../../static/image/common/bt_stop.png',
-                        text: '查询'
-                    })
+                if(_this.idArray.ids.length>0){
+                    _this.$axios.posts('http://192.168.100.107:8085/api/services/app/PropertyManagement/BatchDelete',_this.idArray).then(function(res){
+                        _this.dialogUserConfirm=false;
+                        _this.loadTableData();
+                        _this.loadTree();
+                        _this.open('删除成功','el-icon-circle-check','successERP');    
+                    })         
+                }else{
+                    _this.dialogUserConfirm=false;
+                    _this.errorMessage=true;
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    _this.open('删除失败','el-icon-error','faildERP');
+                    // this.$message({
+                    //     type: 'info',
+                    //     message: '请勾选需要删除的数据！'
+                    // });
+
+                }
+            },
+            open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
+            btmlog:function(data){
+                if(data == '删除'){
+                    this.choseAjax = 'rows';
+                    this.dialogUserConfirm=true;
                 }
             },
             loadTableData(){
@@ -371,34 +434,27 @@ import Tree from '../../base/tree/tree'
                         }
                     }
                     _this.tableData.sort(compare('seq'));
-                    for(let i=0;i<_this.tableData.length;i++){
-                        if(_this.tableData[i].controlType == 0){
-                           _this.tableData[i].controlType='下拉' 
-                        }else if(_this.tableData[i].controlType == 1){
-                           _this.tableData[i].controlType='日期'  
-                        }else if(_this.tableData[i].controlType == 2){
-                           _this.tableData[i].controlType='手工录入'  
-                        }else{
-                           _this.tableData[i].controlType='关联档案'  
-                        }
-                        if(_this.tableData[i].status == 0){
-                           _this.tableData[i].status='已提交' 
-                        }else if(_this.tableData[i].status == 1){
-                           _this.tableData[i].status='不通过'  
-                        }else if(_this.tableData[i].status == 2){
-                           _this.tableData[i].status='已反审'  
-                        }else{
-                           _this.tableData[i].status='通过'  
-                        }
-
-                    }
-                    
+                    _this.modifyText();
                     console.log(_this.tableData)
                     let countPage=res.result.totalCount;
                     // _this.tableLoading=false;
                     _this.totalPage = Math.ceil(countPage/_this.eachPage);
 
                   
+                })
+            },
+            delThis(){
+                let _this=this;
+                this.$axios.deletes('http://192.168.100.107:8085/api/services/app/PropertyManagement/Delete',{Id:_this.rowid}).then(function(res){
+                    _this.dialogUserConfirm=false;
+                    _this.loadTableData();
+                    _this.loadTree();
+                    _this.open('删除成功','el-icon-circle-check','successERP');              
+                },function(res){
+                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    _this.dialogUserConfirm=false;
+                    _this.errorMessage=true;
+                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             loadTree(){//获取tree data
@@ -408,16 +464,9 @@ import Tree from '../../base/tree/tree'
                     .then(function(res){
                         _this.classTree=res;
                         _this.treeLoading=false;
-                        console.log(res)
-                        console.log(1)
-                        // _this.classTree=res
-                        // console.log(res)
                         _this.loadIcon();
-                        // _this.treeLoading=false;
-                        // _this.loadIcon();
                 },function(res){
                     _this.treeLoading=false;
-                    // _this.treeLoading=false;
                 })
             },
             TreeNodeClick(data){//树节点点击回调             
@@ -426,11 +475,27 @@ import Tree from '../../base/tree/tree'
                 console.log(data.id); 
                     _this.$axios.gets('http://192.168.100.107:8085/api/services/app/PropertyManagement/GetPropertyList',{inputId:data.id}).then(function(res){       
                         console.log(_this.tableData );                
-                        // _this.tableData = res.result;
-                        // _this.totalCount=res.result.length
+                        _this.tableData = res.result;
+                        _this.modifyText();
+                        _this.totalCount=res.result.length
                         _this.tableLoading=false;
                         
                     })
+            },
+            getErrorMessage(message,details,validationErrors){
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
             },
             loadIcon(){
                 let _this=this;
@@ -446,28 +511,13 @@ import Tree from '../../base/tree/tree'
                 })
             },
             handleDel(row,index){//行内删除
-                console.log(row.id);
-                this.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {     
-                            let _this=this;
-                            _this.$axios.deletes('http://192.168.100.107:8085/api/services/app/PropertyManagement/Delete',{Id:row.id}).then(function(res){
-                                _this.loadTableData();
-                                _this.open('删除成功','el-icon-circle-check','successERP');              
-                            })
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                });
+                let _this=this;
+                _this.choseAjax = 'row';
+                _this.dialogUserConfirm=true;
+                _this.rowid=row.id
             },
             handleCurrentChange:function(val){//获取当前页码,分页
                 this.currentPage=val;
-                console.log(this.currentPage);
                 this.loadTableData();
             },
             handleSelectionChange(val){//多选操作
@@ -479,11 +529,35 @@ import Tree from '../../base/tree/tree'
                 }
 
             },
+            modifyText(){
+                let _this=this;
+                for(let i=0;i<_this.tableData.length;i++){
+                    if(_this.tableData[i].controlType == 0){
+                       _this.tableData[i].controlType='下拉' 
+                    }else if(_this.tableData[i].controlType == 1){
+                       _this.tableData[i].controlType='日期'  
+                    }else if(_this.tableData[i].controlType == 2){
+                       _this.tableData[i].controlType='手工录入'  
+                    }else{
+                       _this.tableData[i].controlType='关联档案'  
+                    }
+                    if(_this.tableData[i].status == 0){
+                       _this.tableData[i].status='已提交' 
+                    }else if(_this.tableData[i].status == 1){
+                       _this.tableData[i].status='不通过'  
+                    }else if(_this.tableData[i].status == 2){
+                       _this.tableData[i].status='已反审'  
+                    }else{
+                       _this.tableData[i].status='通过'  
+                    }
+
+                }
+            },
             query(){//按条件查询
                 let _this=this;
                 _this.$axios.gets('http://192.168.100.107:8085/api/services/app/PropertyManagement/GetSearch',_this.search).then(function(res){
-                    console.log(res.result);
-                    _this.tableData=res.result;                   
+                    _this.tableData=res.result; 
+                    _this.modifyText();                  
                 })
             },
             
@@ -600,9 +674,13 @@ import Tree from '../../base/tree/tree'
         line-height: 48px;
         border-bottom: 1px solid #E4E4E4;
     }
+
 </style>
 
 <style>
+.no{
+        background-color: blue !important;
+    }
 .commodityProperty .bgcolor{
     width: 100%;
 }

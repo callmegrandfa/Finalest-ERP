@@ -45,7 +45,15 @@ const customerDetail = () =>
     import ('../components/customerInfor/customerDetail')
 const customerModify = () =>
     import ('../components/customerInfor/customerModify')
-
+//客户分类
+const customerClass = () =>
+    import (  '../components/customerClass/customerClass')
+const customerClassList = () =>
+    import (  '../components/customerClass/customerClassList')
+const customerClassDetail = () =>
+    import ('../components/customerClass/customerClassDetail')
+const customerClassModify = () =>
+    import ('../components/customerClass/customerClassModify')
 const account = () =>
     import ( /* webpackChunkName: "group-customer" */ '../components/account/account')
 const accountList = () =>
@@ -324,7 +332,19 @@ const routes = [
                     { path: '/customer/customerModify/:id', component: customerModify, name: 'customerModify' },
                 ]
             },
-
+            {
+                path: '/customerClass',
+                component: customerClass,
+                name: 'customerClass',
+                redirect: function() { //客户分类
+                    return redirectRouter('customerClass')
+                },
+                children: [
+                    { path: '/customerClass/customerClassList/:id', component:  customerClassList, name: 'customerClassList' },
+                    { path: '/customerClass/customerClassDetail/:id', component: customerClassDetail, name: 'customerClassDetail' },
+                    { path: '/customerClass/customerClassModify/:id', component: customerClassModify, name: 'customerClassModify' },
+                ]
+            },
             {
                 path: '/account',
                 component: account,

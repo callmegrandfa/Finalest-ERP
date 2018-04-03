@@ -644,7 +644,7 @@
                 if(self.$route.params.id!='default'){
                     //根据仓库id获取仓库信息
                     self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
-                        console.log(res)               
+                        // console.log(res)               
                         self.repositoryData = res.result;
                         self.getOuId = self.repositoryData.ouId;
 
@@ -1065,7 +1065,7 @@
                 //点击所属组织，业务地区跟着变动
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
                     console.log(res);
-                    if(res.result.length>0){
+                    if(res.result&&res.result.length>0){
                         self.opAr = res.result;
                         self.loadIcon();
                     }else{

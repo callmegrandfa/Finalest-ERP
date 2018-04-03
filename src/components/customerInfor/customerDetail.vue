@@ -118,107 +118,16 @@
                             </p>
                         </div>
                     </div>
-                    <!-- <div class="tipsWrapper" name="ouId">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.ouId')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.ouId') }}</p>
-                        </div>
-                    </div> -->
-                    <!-- <div class="tipsWrapper" name="contactCode">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactCode')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactCode') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="contactName">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactName')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactName') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="contactFullName">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactFullName')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactFullName') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="mnemonic">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.mnemonic')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.mnemonic') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="contactClassId">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactClassId')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactClassId') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="contactWorkPropertyId">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactWorkPropertyId')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactWorkPropertyId') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="contactGradeId">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.contactGradeId')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.contactGradeId') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="isCustomer">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.isCustomer')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.isCustomer') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="ficaOuId">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.ficaOuId')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.ficaOuId') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="taxCode">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.taxCode')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.taxCode') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="opAreaId">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.opAreaId')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.opAreaId') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="adAreaId">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.adAreaId')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.adAreaId') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="legalPerson">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.legalPerson')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.legalPerson') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="regAddress">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.regAddress')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.regAddress') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="manager">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.manager')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.manager') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="phone">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.phone')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.phone') }}</p>
-                        </div>
-                    </div>
-                    <div class="tipsWrapper" name="remark">
-                        <div class="errorTips" :class="{block : !validation.hasError('createContactParams.remark')}">
-                            <p class="msgDetail">错误提示：{{ validation.firstError('createContactParams.remark') }}</p>
-                        </div>
-                    </div> -->
-                    
+                                       
 
                     <div class="bgcolor">
                         <label><small>*</small>所属组织{{createContactParams.ouId}}</label>
                         <el-select v-model="createContactParams.ouId" 
-                                placeholder=""
-                                class="ouId"
-                                @focus="showErrprTipsSelect"
-                                @change='Modify()'
-                                :class="{redBorder : validation.hasError('createContactParams.ouId')}">
-                                <!--  -->
+                                    placeholder=""
+                                    class="ouId"
+                                    @focus="showErrprTipsSelect"
+                                    @change='Modify()'
+                                    :class="{redBorder : validation.hasError('createContactParams.ouId')}">
 
                             <el-input placeholder="搜索..."
                                     class="selectSearch"
@@ -420,33 +329,26 @@
                                        id="op_confirmSelect"></el-option>
                         </el-select>
                     </div>
-                    <div class="bgcolor">
+
+                    <div class="bgcolor area">
                         <label>行政地区</label>
-                        <el-select v-model="createContactParams.adAreaId" 
-                                   placeholder=""
-                                   @change='Modify()'
-                                   class="adAreaId"
-                                   @focus="showErrprTipsSelect"
-                                   :class="{redBorder : validation.hasError('createContactParams.adAreaId')}">
-                            <el-input placeholder=""
-                                      class="selectSearch"
-                                      v-model="adSearch"></el-input>
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                    :data="adAr"
-                                    :props="selectAdProps"
-                                    node-key="id"
-                                    default-expand-all
-                                    ref="tree"
-                                    :filter-node-method="filterNode"
-                                    :expand-on-click-node="false"
-                                    @node-click="adNodeClick"></el-tree>
-                            <el-option v-show="false"
-                                       :key="countAd.id" 
-                                       :label="countAd.areaName" 
-                                       :value="countAd.id"
-                                       id="ad_confirmSelect"></el-option>
-                        </el-select>
+                        <div class="areaBox">
+                            <el-select v-model="createContactParams.adAreaId" class="areaDrop" placeholder="选择省">
+                                <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="createContactParams.adAreaId" class="areaDrop" placeholder="选择市">
+                                <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="createContactParams.adAreaId" class="areaDrop" placeholder="选择区">
+                                <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                </el-option>
+                            </el-select>
+                            <el-input class="areaEntry" placeholder="街道办地址"></el-input>
+                        </div>
                     </div>
+
                     <div class="bgcolor">
                         <label>法人代表</label>
                         <el-input v-model="createContactParams.legalPerson" 
@@ -948,9 +850,10 @@
 export default({
     data() {
         return{
+            defaultOuId:'',//默认ouid
             ifShow:true,
             ifModify:false,//判断信息是否修改过
-            showCompany:false,//初始默认公司计信息状态展开  
+            backCancle:'',//判断是返回还是取消
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -961,10 +864,10 @@ export default({
                 finishName:"",
             },
             search:'',
-            item:{
-                id:'',
-                areaName:'',
-            },
+            // item:{
+            //     id:'',
+            //     areaName:'',
+            // },
             defaultProps: {
                 children: 'items',
                 label: 'areaName',
@@ -1013,6 +916,9 @@ export default({
             //-----------------------    
 
             //---行政地区树形下拉-----
+                areaProArray:[],//行政地区(省)
+                areaCityArray:[],//行政地区(市)
+                areaDisArray:[],//行政地区(区)
                 adSearch:'',//树形搜索框的
                 selectAdProps:{
                     children: 'items',
@@ -1028,7 +934,7 @@ export default({
             //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
-                    children: 'items',
+                    children: 'childItems',
                     label: 'areaName',
                     id:'id'
                 },
@@ -1053,7 +959,7 @@ export default({
 
             createContactParams:{//创建客户资料参数
                 'groupId':1,//集团Id
-                'ouId':1,//组织单元id
+                'ouId':'',//组织单元id
                 'contactCode':'',//客户编码
                 'contactName':'',//客户名称
                 'contactFullName':'',//客户全称
@@ -1259,6 +1165,41 @@ export default({
         //---下拉的数据------------------------------------------------------
         loadSelect:function(){
             let self = this;
+            //所属组织
+            self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
+                // console.log(res);
+                self.ouAr = res.result;
+                self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+            //获取当前默认ouid
+            self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
+                // console.log(res);
+                self.defaultOuId = res.result.id;
+                self.createContactParams.ouId = self.defaultOuId;
+                //加载完成拿回下拉的默认值
+                self.ouItem.ouFullname = res.result.ouFullname;
+                self.ouItem.id =  res.result.id;
+
+                //业务地区
+                self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
+                    console.log(res);
+                    if(res.result&&res.result.length>0){
+                        self.opAr = res.result;
+                        self.loadIcon();
+                    }else{
+                        self.opItem.areaName = '暂无业务地区'
+                    }
+                    
+                },function(res){
+                    console.log('err'+res)
+                });
+
+            },function(res){
+                console.log('err'+res)
+            });
+
             //客户分类
             self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
                 console.log(res);
@@ -1267,14 +1208,7 @@ export default({
             },function(res){
                 console.log('err'+res)
             });
-            //组织单元
-            self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
-                console.log(res);
-                self.ouAr = res.result;
-                self.loadIcon();
-            },function(res){
-                console.log('err'+res)
-            });
+            
             //对应财务组织
             self.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:3}).then(function(res){
                 console.log(res);
@@ -1305,22 +1239,14 @@ export default({
                 console.log('err'+res)
             });
             //行政地区*2
-            self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                console.log(res);
-                self.adAr = res.result;
-                self.loadIcon();
-            },function(res){
-                console.log('err'+res)
-            });
+            // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+            //     console.log(res);
+            //     self.adAr = res.result;
+            //     self.loadIcon();
+            // },function(res){
+            //     console.log('err'+res)
+            // });
             
-            //业务地区*1
-            self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
-                // console.log(res);
-                self.opAr = res.result;
-                self.loadIcon();
-            },function(res){
-                console.log('err'+res)
-            });
             //状态
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
                 // console.log(res);
@@ -1690,11 +1616,27 @@ export default({
         },
         ouNodeClick:function(data){
             let self = this;
+            self.createContactParams.opAreaId = '';
+            self.opItem.areaName = '';
+
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
+            //点击所属组织，业务地区跟着变动
+            self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
+                console.log(res);
+                if(res.result&&res.result.length>0){
+                    self.opAr = res.result;
+                    self.loadIcon();
+                }else{
+                    self.opItem.areaName = '暂无业务地区';
+                    self.opItem.id = '';
+                }
+            },function(res){
+                console.log('err'+res)
+            });
         },
         fiNodeClick:function(data){
             let self = this;
@@ -1882,23 +1824,7 @@ export default({
 .mb10{
     margin-bottom: 10px;
 }
-/* .input-need{
-    border:none;
-    outline: none;
-    width: 100%;
-    height: 23px;
-    line-height: 23px;
-    text-align: center
-} */
-/* .customerBasicForm .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-} */
+
 .customerBasicForm .el-input__inner{
     height:35px !important;
     border:1px solid white;
@@ -1919,6 +1845,15 @@ export default({
 }
 .customerBasicForm .el-select-dropdown__item{
     text-align: center;
+}
+.el-select.areaDrop,.el-input.areaEntry{
+    width: 100px;
+}
+.areaDrop input,.areaEntry input{
+    border: none!important;
+}
+.areaDrop .el-input__inner,.areaEntry .el-input__inner{
+    height: 32px!important;
 }
   </style>
   

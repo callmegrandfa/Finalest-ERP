@@ -80,7 +80,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-                             
+
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
@@ -726,7 +726,7 @@ export default({
         _this.getAllFn();//获取所有权限
         _this.fnLoadTree();//分配权限树形
 
-      
+        _this.getModifyData();//根据id获取数据
     },
     watch: {
       search_ou(val) {
@@ -740,6 +740,15 @@ export default({
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
             // 启用状态
             _this.selectData.Status001=res.result;
+            })
+        },
+        getModifyData(){
+            let _this=this;
+             _this.$axios.gets('/api/services/app/Role/Get',{Id:_this.$route.params.id})
+            .then(function(res){ 
+                _this.addData=res.result;
+                
+                },function(res){
             })
         },
 //-------------关联组织-----------
@@ -817,77 +826,60 @@ export default({
             })
         },
         parseJson(list,jsonObj,keyList,key,children){
+            //list:已选组织列表数据。jsonObj:所有组织树形数据。keyList,key分别为list和jsonObj的唯一id。children:jsonObj的子节点键值，jsonObj[index].children
             let _this=this;
-            let n=0;
-            let m=0;
-            let goOn=true;
-            if(list.length>0 && list!=null && typeof(list)!='undefined'){
+            let result=[];
+            let go=false
+            if(list.length>0 && list!=null && typeof(list)!='undefined'){//已选组织长度大于0，且存在
                 //遍历第一层数据
                 for(let topKey in jsonObj) {
-                //for (var topKey=0;topKey<jsonObj.length;topKey++) {
                     //遍历第一层数据
                     var item = jsonObj[topKey];
                     var repeat = false;
-                    
-                        if(jsonObj[topKey][children]!=null && typeof(jsonObj[topKey][children])=="object" && jsonObj[topKey][children].length > 0){
-                            //如果对象第一层的children存在并且有长度，递归继续解析
-                            for(let x in list){
-                            //for(var x=0;x<list.length;x++){
-                                if(list[x][keyList]==jsonObj[topKey][key]){
-                                console.log(list[x][keyList]+"=="+jsonObj[topKey][key],1)
-                                    repeat = true;
-                                    goOn=false
-                                    break; 
-                                }
-                            }
-                            if(!repeat){
-                                // console.log(repeat)
-                                  _this.parseJson(list,jsonObj[topKey][children],keyList,key,children); 
-                            }
-                            
-                        }else{
-                            for(let x in list){
-                            //for(var x=0;x<list.length;x++){
-                                if(list[x][keyList]==jsonObj[topKey][key]){
-                                    console.log(list[x][keyList]+"=="+jsonObj[topKey][key],2)
-                                    goOn=false
-                                    repeat = true;
-                                    break; 
-                                }
-                            }
-                            // let leftArray=[1,2.3];
-                            // let rightArray=[];
-                            // rightArray.find((i)=>{
-                            //     for(i in leftArray){
-                            //        rightArray.remove(i=rightArray.id) 
-                                    
-                            //     }
-                            // })
-                            //list.find(i=>i.id)
+                    for(let x in list){
+                        if(list[x][keyList]==jsonObj[topKey][key]){//list和tree有相同key时
+                            // console.log(list[x][keyList]+"=="+jsonObj[topKey][key],1)
+                            repeat = true;
+                            go=true
+                            break;
                         }
-                    
-                    if (!repeat) {
-                        _this.result.push(item);
-
                     }
-                    // if(repeat){
-                    //     _this.parseJson(list,result,keyList,key,children); 
-                    // }
+                    if (!repeat) {//去除相同项
+                        result.push(item);
+                    
+                        
+                        // if(jsonObj[topKey][children]!=null && typeof(jsonObj[topKey][children])=="object" && jsonObj[topKey][children].length > 0){
+                        //     _this.parseJson(list,jsonObj[topKey][children],keyList,key,children);
+
+                        // }else{//如果对象children不存在
+
+                        // }
+                        
+                    }
                 }
+                if(go){
+                    _this.parseJson(list,result,keyList,key,children);
+                }else{
+                    for(let topKey in jsonObj) {
+                    //遍历第一层数据
+                        if(jsonObj[topKey][children]!=null && typeof(jsonObj[topKey][children])=="object" && jsonObj[topKey][children].length > 0){
+                            
+                            _this.parseJson(list,jsonObj[topKey][children],keyList,key,children);
 
-                console.log(_this.result);
-                return _this.result
-               
-                // if(!goOn){.
-
-                //     _this.parseJson(list,result,keyList,key,children); 
-                // }
-            //    return result
+                        }else{//如果对象children不存在
+                            console.log(jsonObj[topKey][key])
+                        }
+                        
+                    }
+                
+                }
+                
+                 
             }else{
                 
-                return jsonObj
+                // return jsonObj
             }
-            console.log(jsonObj);
+            
         },
         loadOuTreeLeft(){
             let _this=this;
@@ -921,7 +913,6 @@ export default({
                 },function(res){
             })
         },
-        
         dialogFnIsShow(){
             let _this=this;
             _this.dialogFn=true;
@@ -933,7 +924,6 @@ export default({
             _this.ouPage=val;
             _this.loadOuTable();
         },
-
         fnLoadTree(){
             let _this=this;
             _this.fnTreeLoading=true;
@@ -1054,7 +1044,6 @@ export default({
             _this.$nextTick(function(){
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             })
-            
             // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
             //     if($(this).attr('date')==data.id){
             //         $(this).click()
@@ -1190,7 +1179,6 @@ export default({
             _this.totalPageRightUser=Math.ceil(_this.totalItemRightUser/_this.oneItemRightUser);//有多少页
             _this.RightbtnIsShow()
             return nowData
-            
         },
        
         GetUsers(){//获取左侧表格数据

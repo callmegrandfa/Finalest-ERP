@@ -16,28 +16,28 @@
                     <span class="btDetail">修改</span>
                 </button> -->
 
-                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
+                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify&&!ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">新增</span>
                 </button>
 
-                <button class="erp_bt bt_del" @click="delCustomer(7)" v-show='!ifModify'>
+                <button class="erp_bt bt_del" @click="delCustomer(7)" v-show='!ifModify&&!ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
                     <span class="btDetail">删除</span>
                 </button>
 
-                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify'>
+                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify||ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button class="erp_bt bt_saveAdd" v-show='ifModify'>
+                <button class="erp_bt bt_saveAdd" v-show='ifModify||ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
@@ -395,33 +395,23 @@
                             </el-select>
                         </div>
 
-                        <div class="bgcolor">
+                        <div class="bgcolor area">
                             <label>行政地区</label>
-                            <el-select v-model="customerData.adAreaId"
-                                    placeholder=""
-                                    @change='Modify()'
-                                    @focus="showErrprTipsSelect"
-                                    class="adAreaId"
-                                    :class="{redBorder : validation.hasError('customerData.adAreaId')}">
-                                <el-input placeholder=""
-                                            class="selectSearch"
-                                            v-model="adSearch"></el-input>
-                                
-                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                            :data="adAr"
-                                            :props="selectAdProps"
-                                            node-key="id"
-                                            default-expand-all
-                                            ref="tree"
-                                            :filter-node-method="filterNode"
-                                            :expand-on-click-node="false"
-                                            @node-click="adNodeClick"></el-tree>
-                                <el-option v-show="false"
-                                        :key="countAd.id" 
-                                        :label="countAd.areaName" 
-                                        :value="countAd.id"
-                                        id="ad_confirmSelect"></el-option>
-                            </el-select>
+                            <div class="areaBox">
+                                <el-select v-model="customerData.adAreaId" class="areaDrop" placeholder="选择省">
+                                    <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    </el-option>
+                                </el-select>
+                                <el-select v-model="customerData.adAreaId" class="areaDrop" placeholder="选择市">
+                                    <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                    </el-option>
+                                </el-select>
+                                <el-select v-model="customerData.adAreaId" class="areaDrop" placeholder="选择区">
+                                    <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                    </el-option>
+                                </el-select>
+                                <el-input class="areaEntry" placeholder="街道办地址"></el-input>
+                            </div>
                         </div>
 
                         <div class="bgcolor">
@@ -871,9 +861,11 @@ export default({
     },
     data() {
         return{
+            getOuId:'',//保存获取的ouid
             ifShow:true,
             radio:'',
             ifModify:false,//判断主表是否修改过
+            ifDoModify:false,//判断从表是否修改过
             //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -917,6 +909,9 @@ export default({
             //-----------------------
 
             //---行政地区树形下拉-----
+                areaProArray:[],//行政地区(省)
+                areaCityArray:[],//行政地区(市)
+                areaDisArray:[],//行政地区(区)
                 adSearch:'',//树形搜索框的
                 selectAdProps:{
                     children: 'items',
@@ -932,7 +927,7 @@ export default({
             //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
-                    children: 'items',
+                    children: 'childItems',
                     label: 'areaName',
                     id:'id'
                 },
@@ -1139,10 +1134,22 @@ export default({
                 this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
                     
                     self.customerData = res.result;
-                    console.log(self.customerData);
+                    console.log(self.customerData)
+                    self.getOuId = res.result.ouId;
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
+
+                    //业务地区
+                    self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.getOuId}).then(function(res){
+                        // console.log(res);
+                        self.opAr = res.result;
+                        self.loadIcon();
+                    },function(res){
+                        console.log('err'+res)
+                    });
+                     
+                    
 
                     //加载完成拿回的下拉框的默认值
                     self.ouItem.ouFullname = self.customerData.ouId_OuName;
@@ -1210,7 +1217,7 @@ export default({
                 console.log('err'+res)
             });
             //所属组织
-            self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
+            self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 // console.log(res);
                 self.ouAr = res.result;
                 self.loadIcon();
@@ -1247,24 +1254,14 @@ export default({
                 console.log('err'+res)
             });
             //行政地区*2
-            self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                // console.log(res);
-                self.adAr = res.result;
-                self.loadIcon();
-            },function(res){
-                console.log('err'+res)
-            });
-            //业务地区*1
-            self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
-                // console.log(res);
-                self.opAr = res.result;
-                // self.opAr=[{
-                //     areaCode:null,areaFullName:null,areaFullPathId:null,areaFullPathName:null,areaName:"X 公司",areaParentId:0,areaType:0,groupId:0,id:0,items:[],manager:null,ouId:38,remark:null,status:0
-                // }]
-                self.loadIcon();
-            },function(res){
-                console.log('err'+res)
-            });
+            // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+            //     // console.log(res);
+            //     self.adAr = res.result;
+            //     self.loadIcon();
+            // },function(res){
+            //     console.log('err'+res)
+            // });
+            
             //状态
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
                 // console.log(res);
@@ -1326,11 +1323,28 @@ export default({
         },
         ouNodeClick:function(data){
             let self = this;
+            self.customerData.opAreaId = '';
+            self.opItem.areaName = '';
+
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
+            //点击所属组织，业务地区跟着变动
+            self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
+                console.log(res);
+                if(res.result&&res.result.length>0){
+                    self.opAr = res.result;
+                    self.loadIcon();
+                }else{
+                    self.opItem.areaName = '暂无业务地区';
+                    self.opItem.id = '';
+                }
+                
+            },function(res){
+                console.log('err'+res)
+            });
         },
         fiNodeClick:function(data){
             let self = this;
@@ -1363,8 +1377,6 @@ export default({
             let self = this;
             if(self.ifModify){
                 self.saveCustomerModify();
-            }else{
-                self.open('没有需要保存的项目','el-icon-warning','noticERP');
             }
             
             self.saveBankModify();
@@ -1388,12 +1400,8 @@ export default({
             // console.log(self.customerData)
             self.$validate().then(function(success){
                 if(success){
-                    // console.log(99999999)
                     $('.tipsWrapper').css({display:'none'});
-                    // this.$axios.puts('/api/services/app/ContactManagement/Update',self.customerData).then(function(res){
-                    //     self.open('修改客户信息成功','el-icon-circle-check','successERP');
-                    //     self.ifModify = false;
-                    // },
+                    
                     self.$axios.posts('/api/services/app/ContactManagement/CUDAggregate',{createList:[],updateList:self.customerData,deleteList:[]}).then(function(res){
                         self.open('修改客户信息成功','el-icon-circle-check','successERP');
                         self.ifModify = false;
@@ -1574,6 +1582,7 @@ export default({
             // console.log(index)
             let self = this;
             let flag = false;
+            self.ifDoModify = true;
             if(self.updataBankList.length==0&&row.id>0){
                 flag = true;
             }else if(self.updataBankList.length>=1&&row.id>0){
@@ -1596,6 +1605,7 @@ export default({
         handleAddressChange:function(index,row){//地址修改
             let self = this;
             let flag = false;
+            self.ifDoModify = true;
             if(self.updataAddressList.length==0){
                 flag = true;
             }else if(self.updataAddressList.length>=1){
@@ -1618,6 +1628,7 @@ export default({
         handleOuChange:function(index,row){//使用组织修改
             let self = this;
             let flag = false;
+            self.ifDoModify = true;
             if(self.updataOuList.length==0){
                 flag = true;
             }else if(self.updataOuList.length>=1){
@@ -2106,6 +2117,15 @@ export default({
 }
 .customerBasicForm .el-select-dropdown__item{
     text-align: center;
+}
+.el-select.areaDrop,.el-input.areaEntry{
+    width: 100px;
+}
+.areaDrop input,.areaEntry input{
+    border: none!important;
+}
+.areaDrop .el-input__inner,.areaEntry .el-input__inner{
+    height: 32px!important;
 }
   </style>
   
