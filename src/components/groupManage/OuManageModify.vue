@@ -1731,6 +1731,12 @@ export default({
                             _this.basCompany={}
                         }
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
+                             _this.auditInfo={
+                                createdBy:res.result.createdBy,
+                                createdTime:res.result.createdTime,
+                                modifiedBy:res.result.modifiedBy,
+                                modifiedTime:res.result.modifiedTime,
+                            }
                             _this.update=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){

@@ -303,7 +303,6 @@
         getData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/UserGroup/Get',{id:_this.$route.params.id}).then(function(res){ 
-                console.log(res)
                 _this.addData= {
                     "groupId": 1,
                     "id":res.result.id,
@@ -410,8 +409,13 @@
                 if (success) {
                     _this.$axios.puts('/api/services/app/UserGroup/Update',_this.addData)
                     .then(function(res){
+                        _this.auditInformation={
+                            createdBy:res.result.createdBy,
+                            createdTime:res.result.createdTime,
+                            modifiedBy:res.result.modifiedBy,
+                            modifiedTime:res.result.modifiedTime,
+                        }
                         _this.open('保存成功','el-icon-circle-check','successERP');
-                        
                         _this.update=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -428,7 +432,6 @@
                     _this.$axios.puts('/api/services/app/UserGroup/Update',_this.addData)
                     .then(function(res){
                         _this.open('保存成功','el-icon-circle-check','successERP');
-
                         _this.update=false;
                         _this.add();
                     },function(res){   
