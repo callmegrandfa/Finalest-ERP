@@ -295,10 +295,11 @@ export default {
     },
     // ---------------------------------------获取所有列表数据
     getDataList() {
-      let _this = this;
-      _this.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {inputName: _this.inputName}).then(res => {
-           console.log(res);
-          _this.tableData = res.result.items;
+      let self = this;
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {inputName: self.inputName,ContactOwner:1,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting}).then(res => {
+          //  console.log(res);
+          self.tableData = res.result.items;
+          self.totalItem = res.result.totalCount;
          
         });
     },
@@ -309,7 +310,7 @@ export default {
       self.$axios.gets("api/services/app/ContactClassManagement/GetTreeList", {Ower:1}).then(
           function(res) {
             // console.log(1)
-            console.log(res);
+            // console.log(res);
             // self.customerClassTree[0].childrenNodes=res;
             // console.log(self.customerClassTree)
             // self.treeLoading = false;
@@ -559,24 +560,19 @@ export default {
         });
       }
     },
- nodeClick(data){//点击树形控件节点时的回调
-                let _this=this;
-                console.log(data);
-                _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
-                    rsp=>{
-                    // console.log(rsp);
-                     _this.tableData=rsp.result.items;
-               })
-            },
-            getSonNode(data) {//获取树形节点子节点
-                let _this=this;
-                // console.log(data);
-                _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
-                    rsp=>{
-                    // console.log(rsp);
-                     _this.tableData=rsp.result;
-               })
-            },
+            nodeClick(data){//点击树形控件节点时的回调
+                  let self=this;
+                  // console.log(data);
+                  self.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
+                      res=>{
+                       console.log(res);
+                        // self.totalCount=res.result.totalCount;
+                        self.totalItem = res.result.totalCount;
+                        self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
+                        self.tableData=res.result.items;
+                        
+                  })
+              },
             filterNode(value, data) {//过滤节点
                 // console.log(value);
                 // console.log(data);

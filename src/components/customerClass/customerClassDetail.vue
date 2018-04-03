@@ -174,7 +174,9 @@
                 
                 status: [],//状态
                 //------------------ 新增客户-------------
-                addData:{            
+                addData:{
+                    "groupId": 0,
+                    "contactOwner": 1,            
                     "classParentId": '',
                     "classCode": "",
                     "className": "",
@@ -185,7 +187,8 @@
                     "status": 0,
                     "remark": "",
                     "mnemonic": "1",
-                   
+                    "createdBy" :'',
+                    "createdTime"  :''
                     },
                     //  dateRange:[],//有效时间
                     // tableLoading:false,
@@ -280,8 +283,6 @@
                         self.$axios.gets("/api/services/app/ContactClassManagement/Get", {id: res.result.id}).then( res=>{
                                             console.log(res.result);
                                             self.addData=res.result;
-                                            // _this.isDisabled=false;
-                                            // self.isAdd=false;
                                             })
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
@@ -296,7 +297,6 @@
                     self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){
                         // console.log(res);
                         self.open('保存成功','el-icon-circle-check','successERP');
-                        self.goDetail();
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
                     })
