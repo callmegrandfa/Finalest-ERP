@@ -477,6 +477,8 @@ table .el-input__icon{
         position: absolute;
         left: 0;
       }
+
+      
       .bt_del .btImg{
       transform: rotate(45deg);
       -ms-transform: rotate(45deg);
@@ -565,6 +567,41 @@ table .el-input__icon{
     }
     .bt_print{
       background-color:#99f;
+    }
+
+    .erp_fb_bt{
+      height: 36px;
+      padding: 0 10px;
+      border: none;
+      position: relative;
+      cursor: no-drop;
+      float: left;
+      margin-right: 2px;
+      background-color: #cccccc;
+    }
+    .erp_fb_bt.bt_cancel .btImg img{
+      top: 5px;
+    }
+    .erp_fb_bt .btImg{
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      top:10px;
+    }
+    .erp_fb_bt .btImg img{
+      max-width: 100%;
+      max-height: 100%;
+      position: absolute;
+      left: 0;
+    }
+    .erp_fb_bt .btDetail{
+      font-size: 12px;
+      color: #fff;
+      display: block;
+      height: 100%;
+      width: 100;
+      line-height: 36px;
+      padding-left: 20px;
     }
 
 /* 小圆按钮 */

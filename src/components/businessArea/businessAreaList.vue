@@ -40,12 +40,11 @@
                     </button>
                     <!-- <input @keyup.enter="submitSearch" type="text"> -->
                     <div class="search_input_group">
-                        <div class="search_input_wapper">
+                        <div class="search_input_wapper" @keyup.enter="submitSearch">
                             <el-input
                                 placeholder="搜索..."
                                 class="search_input"
-                                v-model="AreaNameOrAreaCode"
-                                @keyup="submitSearch"
+                                v-model="SearchKey"
                                 >
                                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
                             </el-input>
@@ -204,7 +203,7 @@
         name:'customerInfor',
         data(){
             return {
-                AreaNameOrAreaCode:'',//查询条件：地区名称/地区编码模糊查询关键字
+                SearchKey:'',//查询条件：地区名称/地区编码模糊查询关键字
                 // 错误信息提示开始
                 detail_message_ifShow:false,
                 errorMessage:false,
@@ -243,7 +242,7 @@
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
-                load:true,
+                load:'loadTableData',
                 totalItem:0,//总共有多少条消息
                 tableLoading:true,
                 treeLoading:false,
@@ -262,7 +261,7 @@
                     details:'',
                     message:'',
                 },
-                
+                nodeClickId:0,//点击节点纪录id
             }
         },
         created:function(){       
@@ -292,16 +291,16 @@
             },
             loadTableData(){//表格
                  let _this=this;
-                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
-                    _this.restaurants=[],
-                    _this.tableData=[]
-                    // _this.tableData=res.result.items;
-                    $.each(res.result.items,function(index,val){
-                        if(val!=null){
-                            _this.tableData.push(val)
-                        }
-                    })
+                 _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},'loadTableData');
+              
+            },
+            ajaxTable(data,event){
+                let _this=this;
+                _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',data).then(function(res){ 
+                    _this.restaurants=[]
+                    _this.load=event;
+                    _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
@@ -309,13 +308,8 @@
                         _this.pageIndex=0
                     }
                     $.each(res.result.items,function(index,value){
-                        if(value!=null){
-                            let item={'value':value.areaName,'id':value.id};
-                            _this.restaurants.push(item)
-                        }
-                        
-                        
-                        
+                        let item={'value':value.areaName,'id':value.id};
+                        _this.restaurants.push(item)
                     })
                     },function(res){
                     _this.tableLoading=false;
@@ -355,22 +349,13 @@
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                  _this.page=val;
-                 if(_this.load){
-                     _this.loadTableData();
+                 if(_this.load=="loadTableData"){
+                      _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},'loadTableData');
+                 }else if(_this.load=="nodeClick"){
+                     _this.ajaxTable({ParentId:_this.nodeClickId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"nodeClick");
+                 }else if(_this.load=="submitSearch"){
+                    _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
                  }
-            },
-            SimpleSearch(){//简单搜索
-                 let _this=this;
-                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/OuManagement/SimpleSearch',_this.searchData)
-                .then(function(res){
-                    _this.load=false
-                    _this.tableData=res.result.basOus;
-                    _this.tableLoading=false;
-                },function(res){
-                    _this.errorMessage=true;
-                    _this.tableLoading=false;
-                })
             },
             getHeight(){
                 $("#area").css({
@@ -453,7 +438,6 @@
                     
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             delThis(){//单项删除
@@ -468,31 +452,25 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             nodeClick(data){
                 let _this=this;
-                console.log(data)
+                _this.page=1
+                if(data.areaName!=undefined){
+                    _this.nodeClickId=data.id;
+                    _this.detailParentId=0;
+                    _this.detailParentId=data.id;
+                }else{  
+                     _this.nodeClickId=data.ouId;
+                    _this.detailParentId=0;
+                    
+                }
                 _this.tableLoading=true;
-                _this.detailParentId=data.id;
+                // _this.detailParentId=data.id;
                 _this.detailParentName=data.name;
                 _this.ouId=data.ouId;
-                _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',{ParentId:data.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
-                .then(function(res){
-                    _this.tableData=res.result.items;
-                    console.log(res)
-                    _this.totalItem=res.result.totalCount;
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    _this.tableLoading=false;
-                    if(_this.tableData==[]){
-                        _this.pageIndex=0
-                    }
-                    _this.tableLoading=false;
-                    },function(res){
-                    _this.errorMessage=true;
-                    _this.tableLoading=false;
-                })
+                _this.ajaxTable({ParentId:_this.nodeClickId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"nodeClick");
             },
             modify(row){
                 this.$store.state.url='/businessArea/businessAreaModify/'+row.id
@@ -500,7 +478,7 @@
             },
             filterNode(value, data) {
                 if (!value) return true;
-                 return data.areaName.indexOf(value) !== -1;
+                 return data.name.indexOf(value) !== -1;
             },
             
             querySearchAsync(queryString, cb) {
@@ -519,15 +497,8 @@
             },
             submitSearch(){
                 let _this=this;
-                _this.$axios.gets('/api/services/app/AreaManagement/GetAreaChildData',{AreaType:1,AreaNameOrAreaCode:_this.AreaNameOrAreaCode})
-                .then(function(res){
-                    _this.tableData=res.result;
-                    _this.totalItem=res.result.length;
-                    _this.tableLoading=false;
-                    },function(res){
-                    _this.errorMessage=true;
-                    _this.tableLoading=false;
-                })
+                _this.page=1
+                 _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
             }
         },
     }

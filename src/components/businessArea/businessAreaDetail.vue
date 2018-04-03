@@ -516,19 +516,9 @@
                     _this.$store.state.url='/businessArea/businessAreaModify/'+res.result.id
                     _this.$router.push({path:_this.$store.state.url})//点击切换路由
                 },function(res){
-                    if(res && res!=''){
-                        _this.response.message='';
-                        _this.response.details='';
-                        if(res.error.details!=null && res.error.details){
-                            _this.response.details=res.error.details;
-                        }
-                        if(res.error.message!=null && res.error.message){
-                            _this.response.message=res.error.message;
-                        }
-                    }
+                   if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     
                     _this.errorMessage=true; 
-                    _this.open('保存失败','el-icon-error','faildERP');
                 })
             }
         });
@@ -626,18 +616,8 @@
                         _this.$store.state.url='/businessArea/businessAreaDetail/default'
                         _this.$router.push({path:_this.$store.state.url})
                     },function(res){   
-                        if(res && res!=''){
-                            _this.response.message='';
-                            _this.response.details='';
-                            if(res.error.details!=null && res.error.details){
-                                _this.response.details=res.error.details;
-                            }
-                            if(res.error.message!=null && res.error.message){
-                                _this.response.message=res.error.message;
-                            }
-                        }
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true; 
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });

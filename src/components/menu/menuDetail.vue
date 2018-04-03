@@ -192,17 +192,6 @@
                     </div>
                  </div>
             </el-col>
-            <!-- <el-col :span="24">
-                <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
-                        <label class="h_35"></label>
-                        <div>
-                            <button @click="save" class="add_m_bt">提交</button>
-                            <button @click="back" class="add_m_bt">返回</button>
-                        </div>
-                    </div>
-                </div>
-            </el-col> -->
         </el-row>
         <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
                 <el-col :span="24">
@@ -364,6 +353,8 @@
                 moduleParentId:'',
                 url:'',
                 status:1,
+                moduleIsBottom: true,
+                remark:'',
             },
            contain: [{ 
                 value:'0',

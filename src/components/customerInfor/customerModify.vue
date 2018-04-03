@@ -1178,7 +1178,7 @@ export default({
         loadBankData:function(){//银行数据
             let self = this;
             //获取所有的银行信息，也可以用groupid获取，
-            this.$axios.gets('/api/services/app/ContactBankManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+            this.$axios.gets('/api/services/app/ContactBankManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
                 console.log(res);
                 self.bankData = res.result.items;
                 for(let i in self.bankData){

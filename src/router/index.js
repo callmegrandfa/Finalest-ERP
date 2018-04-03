@@ -226,12 +226,13 @@ const supplierClassifyModify = () => import('../components/supplierClassify/supp
 
 let redirectRouter = function(routerName) { //重定向
     let activeRouter = store.state.activeRouter;
-    for (let i = 0; i < activeRouter.length; i++) {
-        if (activeRouter[i].name == routerName) {
-            return activeRouter[i].url;
-            break;
-        }
-    }
+    return store.state[routerName].url
+    // for (let i = 0; i < activeRouter.length; i++) {
+    //     if (activeRouter[i].name == routerName) {
+    //         return activeRouter[i].url;
+    //         break;
+    //     }
+    // }
     
 }
 Vue.use(Router)
@@ -664,34 +665,38 @@ router.beforeEach((to, from, next) => {
     } else {
         store.state.Alive = true;
     }
-    $('.one').each(function(index){//菜单高亮
-        if($(this).attr('data-url')!=undefined){
-            for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
-                if($(this).attr('data-url').split(',')[i]==to.path.split('/')[1]){
-                    $(this).addClass('menu_active')
-                    break
-                }
-            }
-        }
-    })
-    if (store.accessToken != '') {
+    // $('.one').each(function(index){//菜单高亮
+    //     if($(this).attr('data-url')!=undefined){
+    //         for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
+    //             if($(this).attr('data-url').split(',')[i]==to.path.split('/')[1]){
+    //                 $(this).addClass('menu_active')
+    //                 break
+    //             }
+    //         }
+    //     }
+    // })
+    console.log(store.accessToken)
+    if (store.accessToken != '' && typeof(store.accessToken)!='undefined') {
         document.title = to.name
         let activeRouter = store.state.activeRouter;
-        let parent = '';
-        let url = '';
-        for (let i = 0; i < activeRouter.length; i++) {
-            if (activeRouter[i].name == to.name) {
-                parent = activeRouter[i].parent;
-                url = activeRouter[i].url;
-                break
-            }
-        }
-        for (let i = 0; i < activeRouter.length; i++) {
-            if (activeRouter[i].name == parent) {
-                activeRouter[i].url = url
-                break
-            }
-        }
+        // console.log(to)
+        store.state[to.name].url=to.fullPath;
+        store.state[store.state[to.name].parent].url=to.fullPath
+        // let parent = '';
+        // let url = '';
+        // for (let i = 0; i < activeRouter.length; i++) {
+        //     if (activeRouter[i].name == to.name) {
+        //         parent = activeRouter[i].parent;
+        //         url = activeRouter[i].url;
+        //         break
+        //     }
+        // }
+        // for (let i = 0; i < activeRouter.length; i++) {
+        //     if (activeRouter[i].name == parent) {
+        //         activeRouter[i].url = url
+        //         break
+        //     }
+        // }
     }
     next()
 })

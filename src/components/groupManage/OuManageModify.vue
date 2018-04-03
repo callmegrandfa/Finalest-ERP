@@ -1731,12 +1731,17 @@ export default({
                             _this.basCompany={}
                         }
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
+                             _this.auditInfo={
+                                createdBy:res.result.createdBy,
+                                createdTime:res.result.createdTime,
+                                modifiedBy:res.result.modifiedBy,
+                                modifiedTime:res.result.modifiedTime,
+                            }
                             _this.update=false;
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         },function(res){
                             if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                             _this.errorMessage=true;
-                            _this.open('保存失败','el-icon-error','faildERP');
                         })
                     }
                 });
@@ -1762,7 +1767,6 @@ export default({
                         },function(res){
                             if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                             _this.errorMessage=true;
-                            _this.open('保存失败','el-icon-error','faildERP');
                         })
                     }
                 });
@@ -1783,7 +1787,6 @@ export default({
                 if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                 _this.dialogUserConfirm=false;
                 _this.errorMessage=true;
-                _this.open('删除失败','el-icon-error','faildERP');
             })
         },
         clearData(){
