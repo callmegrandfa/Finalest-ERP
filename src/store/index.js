@@ -33,6 +33,8 @@ export default new vuex.Store({
         temporary: [], //本地暂时存储页签
         slidbarData: [], //从localStorage读取页签
         tableData:[],//表格数据
+
+//------------------------------------------------------------------------路由数据----------------------------------------------------------------------
         order:{ name: 'order', url: '/order/orderList/:id', parent: '', default: '/order/orderList/:id' } , //采购管理
         orderDetails:{ name: 'orderDetails', url: '/order/orderDetails/:id', parent: 'order' } ,
         orderList:{ name: 'orderList', url: '/order/orderList/:id', parent: 'order' } ,
@@ -144,6 +146,8 @@ export default new vuex.Store({
         supplierClassify:{ name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: '', default: '/supplierClassify/supplierClassifyList/:id' },
         supplierClassifyDetail:{ name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
         supplierClassifyModify:{ name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
+//----------------------------------------------------------------------------路由数据-----------------------------------------------------------------------
+
         // activeRouter: [ //进入页面子路由，重定向路由。name,parent,defult不变,url将被重定向(name=parent)
         //     { name: 'order', url: '/order/orderList/:id', parent: '', default: '/order/orderList/:id' } , //采购管理
         //     { name: 'orderDetails', url: '/order/orderDetails/:id', parent: 'order' } ,
