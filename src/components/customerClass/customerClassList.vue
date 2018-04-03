@@ -58,7 +58,7 @@
                      <div class="search_input_group">
                             <div class="search_input_wapper">
                                 <el-input
-                                    v-model="inputName" 
+                                    v-model="InputName" 
                                     @change="searchRight"
                                     placeholder="搜索..."
                                     class="search_input">
@@ -200,7 +200,7 @@ export default {
       },
       // TreeContextMenu:[//点击鼠标右键生成菜单
       // ],
-      inputName: "",
+      InputName: "",
       pageIndex: 0, //分页的当前页码
       totalPage: 0, //当前分页总数
       oneItem: 10, //每页有多少条信息
@@ -296,8 +296,8 @@ export default {
     // ---------------------------------------获取所有列表数据
     getDataList() {
       let self = this;
-      self.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {inputName: self.inputName,ContactOwner:1,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting}).then(res => {
-          //  console.log(res);
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {ContactOwner:1,InputName: self.InputName,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
+           console.log(res);
           self.tableData = res.result.items;
           self.totalItem = res.result.totalCount;
          
@@ -563,7 +563,7 @@ export default {
             nodeClick(data){//点击树形控件节点时的回调
                   let self=this;
                   // console.log(data);
-                  self.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
+                  self.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{Id:data.id,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
                       res=>{
                        console.log(res);
                         // self.totalCount=res.result.totalCount;
