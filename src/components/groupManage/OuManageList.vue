@@ -201,17 +201,20 @@
                             </el-table-column>
                             <el-table-column label="公司">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==1" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-model="scope.row.cop" disabled></el-checkbox>
+                                    <!-- <el-checkbox v-if="i.ouType==1" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox> -->
                                 </template>
                             </el-table-column>
                             <el-table-column label="业务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==2" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-model="scope.row.business" disabled></el-checkbox>
+                                    <!-- <el-checkbox v-if="i.ouType==2" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox> -->
                                 </template>
                             </el-table-column>
                             <el-table-column label="财务">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-if="i.ouType==3" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox>
+                                    <el-checkbox v-model="scope.row.finace" disabled></el-checkbox>
+                                    <!-- <el-checkbox v-if="i.ouType==3" v-for="i in scope.row.basOuTypes" :key="i.ouType" checked disabled></el-checkbox> -->
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
@@ -431,6 +434,25 @@
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',data).then(function(res){ 
                     _this.load=event;
                     _this.tableData=res.result.items;
+                    $.each(_this.tableData,function(index,val){
+                        let finace=false;
+                        let business=false;
+                        let cop=false;
+                        $.each(val.basOuTypes,function(x,value){
+                            if(value.ouType==3){
+                                finace=true;
+                            }
+                            if(value.ouType==2){
+                                business=true;
+                            }
+                            if(value.ouType==1){
+                                cop=true
+                            }
+                        })
+                        val.finace=finace;
+                        val.business=business;
+                        val.cop=cop;
+                    })
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
@@ -457,7 +479,6 @@
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
                 .then(function(res){
                     _this.selectTree_area=res.result;
-                    console.log(res)
                     _this.loadIcon();
                 },function(res){
                 })
