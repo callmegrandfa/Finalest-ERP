@@ -4,15 +4,14 @@
             <!-- 左侧输入框与树形控件 -->
             <el-col :span="5">
                     <el-col class="h48 pl15 pr15" :span="24">
-                        <el-autocomplete
-                        v-model="searchLeft"
-                        :fetch-suggestions="querySearchAsync"
-                        class="search_input"
-                        placeholder="搜索..."
-                        >
+                         <el-input
+                        placeholder="输入关键字进行过滤"
+                        v-model="filterText" 
+                        class="search_input">
+                        </el-input>
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-autocomplete>
                     </el-col>
+                    <!-- 树形控件 -->
                     <el-col :span='24' class="tree-container" >
                         <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
@@ -21,10 +20,11 @@
                         :props="defaultProps"
                         node-key="id"
                         default-expand-all
-                        ref="tree"
+                        ref="tree2"
                         :expand-on-click-node="false"
                         :filter-node-method="filterNode"
                         @node-click="nodeClick"
+                        class="filter-tree"
                         >
                         </el-tree>
                     </el-col>   
@@ -200,14 +200,15 @@
                 totalCount:0,//总共有多少条数据
                 totalPage:0,//总页数
                 pageIndex:1,//分页的当前页码
-                searchLeft:'',
                 tableData:[],
+                // --------------------------树形控件数据
                 adminAreaTree:[],
                 defaultProps: {
                     children: 'childItems',
                     label: 'areaName',
                     id:'id'
                 },
+                filterText:'',
                 nodeId:0,
                 // 错误信息提示开始
                 detail_message_ifShow:false,
@@ -225,14 +226,14 @@
             }
             
         },
-        watch: {
-            searchLeft(val) {
-                this.$refs.tree.filter(val);
-            }
-        },
         created(){
              this.getDataList();
              this.loadTree();
+        },
+        watch: {
+            filterText(val) {
+                this.$refs.tree2.filter(val);
+            }
         },
         methods:{
             // 提示信息
@@ -252,8 +253,7 @@
                 _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{nodeId:_this.nodeId,SearckKey:_this.searchKey,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize}).then(
                     rsp=>{
                         _this.tableData=rsp.result.items;
-                        console.log(rsp.result);
-                        
+                        // console.log(rsp.result);
                         _this.totalCount=rsp.result.totalCount;
                         _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
                     }
@@ -276,7 +276,7 @@
                         _this.treeLoading=false;
                     })
                 },
-                // 复选框中选中的数据(用于做批量删除)
+                //复选框中选中的数据(用于做批量删除)
                 handleSelectionChange: function(arr1) {
                     let _this = this;
                     _this.multipleSelection.ids = [];
@@ -286,9 +286,8 @@
                     // _this.isTrue=false;
                     // console.log(_this.multipleSelection);
                 },
-                // 节点被点击时的回调
-                nodeClick(data){
-                    console.log(data);
+                nodeClick(data){// 节点被点击时的回调
+                    // console.log(data);
                     let _this=this;
                     _this.tableLoading=true;
                     _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{nodeId:data.id,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize})
@@ -296,19 +295,18 @@
                         // console.log(res.result);
                         _this.tableData=res.result.items;
                         _this.totalCount=res.result.totalCount;
-                        _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                        _this.totalPage=Math.ceil(res.result.totalCount/_this.pageSize);
                         _this.tableLoading=false;
                         },function(res){
                         _this.tableLoading=false;
                     })
                 },
                 // 在搜索框输入关键字过滤节点
-                filterNode(value, data) {
-                if (!value) return true;
-                 return data.areaName.indexOf(value) !== -1;
+                filterNode(value, data) {// 在搜索框输入关键字过滤节点
+                    if (!value) return true;
+                    return data.areaName.indexOf(value) !== -1;
                 },
-                // 文件夹图标加载
-                loadIcon(){
+                loadIcon(){// 文件夹图标加载
                     let _this=this;
                     _this.$nextTick(function () {
                         $('.preNode').remove();   
@@ -321,22 +319,14 @@
                         })
                     })
                 },
-                querySearchAsync(queryString, cb) {
-                    var restaurants = this.restaurants;
-                    var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-                    clearTimeout(this.timeout);
-                    this.timeout = setTimeout(() => {
-                    cb(results);
-                    }, 100 * Math.random());
-                },
             createStateFilter(queryString) {
                 return (state) => {
                 return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
                 };
             },
-            // ----------树形控件的处理函数结束----------
-            // ----------分页器的处理函数结束----------
+            leftSearch(){// 左边搜索框
+            },
+            // ----------分页器的处理函数结束----------------------------
             handleCurrentChange(val){
                 // console.log(val);
                 this.pageIndex=val;
@@ -344,8 +334,6 @@
             },
             // ----------分页器的处理函数结束----------
            
-            // 左边搜索框
-            leftSearch(){},
             // 按钮增加----去新增详情页(detail)
             goAdd(){
                 //点击切换路由去添加
@@ -403,7 +391,7 @@
                     _this.delRow()
                 }
             },
-             delThis(){//删除行
+            delThis(row){//删除行
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/AdAreaManagement/Delete',{id:_this.row.id})
                 .then(function(res){
@@ -411,14 +399,12 @@
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.getDataList();
                 },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    // _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
-             },
-            querySearchAsync(){},
-
+            },
 
         },
 
