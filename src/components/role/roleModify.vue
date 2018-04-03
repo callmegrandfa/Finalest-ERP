@@ -532,10 +532,10 @@
     <el-col :span="22" class="auditInformation getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createName" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createTime" type="date" disabled="disabled"></el-date-picker></div>
-            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifyName" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifyTime" type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
+            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createdTime" type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
+            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifiedTime" type="date" disabled="disabled"></el-date-picker></div>
         </div>                                  
     </el-col>
 </el-row>                                                                       
@@ -564,13 +564,10 @@ export default({
             },
             ifShow:true, 
             auditInformation:{//审计信息
-                createName:"",
-                createTime:"",
-                modifyName:"",
-                modifyTime:"",
-                startTime:"",
-                finishTime:"",
-                finishName:"",
+                createdBy:"",
+                createdTime:"",
+                modifiedBy:"",
+                modifiedTime:"",
             },
 
             customerNature:[{//客户性质
@@ -747,7 +744,12 @@ export default({
              _this.$axios.gets('/api/services/app/Role/Get',{Id:_this.$route.params.id})
             .then(function(res){ 
                 _this.addData=res.result;
-                
+                _this.auditInformation={//审计信息
+                    createdBy:res.result.createdBy,
+                    createdTime:res.result.createdTime,
+                    modifiedBy:res.result.modifiedBy,
+                    modifiedTime:res.result.modifiedTime,
+                }
                 },function(res){
             })
         },
@@ -867,7 +869,6 @@ export default({
                             _this.parseJson(list,jsonObj[topKey][children],keyList,key,children);
 
                         }else{//如果对象children不存在
-                            console.log(jsonObj[topKey][key])
                         }
                         
                     }
