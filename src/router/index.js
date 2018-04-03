@@ -675,7 +675,7 @@ router.beforeEach((to, from, next) => {
     //         }
     //     }
     // })
-    if (store.accessToken != '') {
+    if (store.accessToken != '' && typeof(store.accessToken)!='undefined') {
         document.title = to.name
         let activeRouter = store.state.activeRouter;
         // console.log(to)
