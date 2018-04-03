@@ -279,6 +279,7 @@ const routes = [
                             store.state.alerts = false;
                             store.state.name = x;
                             store.state.accessToken = token;
+                            
                             next();
                         } else {
                             store.state.alerts = true;
@@ -675,10 +676,9 @@ router.beforeEach((to, from, next) => {
     //         }
     //     }
     // })
-    if (store.accessToken != '' && typeof(store.accessToken)!='undefined') {
+    if (store.state.accessToken != '' && typeof(store.state.accessToken)!='undefined') {
         document.title = to.name
         let activeRouter = store.state.activeRouter;
-        // console.log(to)
         store.state[to.name].url=to.fullPath;
         store.state[store.state[to.name].parent].url=to.fullPath
         // let parent = '';

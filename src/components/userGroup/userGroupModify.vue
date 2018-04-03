@@ -253,23 +253,23 @@
         _this.getData();
     },
      watch: {
-      search_area(val) {
-        this.$refs.tree.filter(val);
-      },
-      search_ou(val) {
-        this.$refs.tree.filter(val);
-      },
-      addData:{
-          handler:function(val,oldVal){
-              let _this=this;
-              if(!_this.firstModify){
-                  _this.firstModify=!_this.firstModify;
-              }else{
-                  _this.ifModify=true
-              }
-          },
-          deep:true,
-      },
+        search_area(val) {
+            this.$refs.tree.filter(val);
+        },
+        search_ou(val) {
+            this.$refs.tree.filter(val);
+        },
+        addData:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.firstModify){
+                    _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
     },
     methods: {
         filterNode_ou(value, data) {
@@ -402,8 +402,8 @@
                 this.validation.reset();
                 this.getData();
                 this.update=false;
-                _this.firstModify=false;
-                _this.ifModify=false;
+                this.firstModify=false;
+                this.ifModify=false;
         },
         isUpdate(){//判断是否修改过信息
             this.update=true;
