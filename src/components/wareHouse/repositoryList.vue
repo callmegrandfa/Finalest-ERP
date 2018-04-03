@@ -247,8 +247,9 @@
         name:'repositoryList',
         
         created:function(){
+            this.getOuId();
             this.getAllList();
-            this.loadSelect();
+            // this.loadSelect();
             
         },
         computed:{
@@ -263,8 +264,23 @@
         },
         methods:{
             //---获取数据------------------------------------------
-            getAllList:function(){//获取所有仓库列表0
+            getOuId:function(){
                 let self = this;
+
+                //获取当前默认ouid
+                self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
+                    console.log(res);
+                    self.defaultOuId = res.result.id;
+
+                    self.loadSelect();
+                },function(res){
+                    console.log('err'+res)
+                });
+            },
+
+            getAllList:function(){//获取所有仓库列表
+                let self = this; 
+
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.data;
@@ -278,7 +294,7 @@
             loadSelect:function(){
                 let self = this;
                 //业务地区
-                self.$axios.gets('/api/services/app/OpAreaManagement/GetTree').then(function(res){
+                self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
                     console.log(res);
                     self.opAr = res.result;
                     self.loadIcon();
@@ -291,10 +307,9 @@
             //---条件查找------------------------------------------
             searchList:function(){//根据条件查找仓库信息
                 let self = this;
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
                     console.log(res);
                     if(res.total>0){
-                        self.queryList=res.data;
                         self.allList = res.data;
                         self.total = res.total;
                     }else{
@@ -333,7 +348,6 @@
                         self.dialogDelConfirm = false;
                         self.open('删除成功','el-icon-circle-check','successERP');
                     },function(res){
-                        self.open('删除失败','el-icon-error','faildERP');
                         self.dialogDelConfirm = false;
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -347,7 +361,6 @@
                         self.dialogDelConfirm = false;
                         self.open('删除成功','el-icon-circle-check','successERP');    
                     },function(res){
-                        self.open('删除失败','el-icon-error','faildERP');
                         self.dialogDelConfirm = false;
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -460,22 +473,13 @@
         
         data(){
             return{ 
+                defaultOuId:'',//默认ouid
                 allList:[],//获取所有的列表数据
                 total:'',//数据总条数
-                queryList:[],//将查询回来的数据保存为数组形式
                 multipleSelection: [],//复选框选中数据
-                listById:'',//根据id获取的list
-                xx:'156416',
                 idArray:{
                     ids:[]
                 },//复选框选中数据id
-                getAllParam:{
-                    OuId:'1',//组织单元ID()
-                    Draw:'1',
-                    Start:'0',//偏移量
-                    Length:'100',//长度
-                },
-                queryId:'',//需要查询的stockId
                     
                 pageIndex:0,//分页的当前页码
 			    totalPage:0,//当前分页总数
