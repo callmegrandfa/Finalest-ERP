@@ -111,9 +111,13 @@ export default new vuex.Store({
 
         department:{ name: 'department', url: '/department/departmentList/:id', parent: '', default: '/department/departmentList/:id' } , //部门资料
         departmentList:{ name: 'departmentList', url: '/department/departmentList/:id', parent: 'department' } ,
+        departmentDetail:{ name: 'departmentDetail', url: '/department/departmentDetail/:id', parent: 'department' } ,
+        departmentModify:{ name: 'departmentModify', url: '/department/departmentModify/:id', parent: 'department' } ,
 
-        shop:{ name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //部门资料
+        shop:{ name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //店铺资料
         shopList:{ name: 'shopList', url: '/shop/shopList/:id', parent: 'shop' } ,
+        shopDetail:{ name: 'shopDetail', url: '/shop/shopDetail/:id', parent: 'shop' } ,
+        shopModify:{ name: 'shopModify', url: '/shop/shopModify/:id', parent: 'shop' } ,
 
         dictionary:{ name: 'dictionary', url: '/dictionary/dictionaryList/:id', parent: '', default: '/dictionary/dictionaryList/:id' } , //系统字典
         dictionaryList:{ name: 'dictionaryList', url: '/dictionary/dictionaryList/:id', parent: 'dictionary' } ,
