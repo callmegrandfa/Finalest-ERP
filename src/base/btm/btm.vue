@@ -2,7 +2,7 @@
 <template>
     <el-row class="h48 pt5">
     		<div class="ml5" style="float:left" v-for="item in date.botton" :key="item.class">
-    			<button v-show="item.show" :class="item.class" @click="selectItem(item)" ><div class="btImg"><img  :src="item.imgsrc"></div><span :class="String(item.imgsrc)" class="btDetail">{{item.text}}</span></button>
+    			<button :disabled="item.disabled" :class="item.class" @click="selectItem(item)" ><div class="btImg"><img  :src="item.imgsrc"></div><span :class="String(item.imgsrc)" class="btDetail">{{item.text}}</span></button>
     		</div>                   
     </el-row>
 </template>
@@ -21,7 +21,7 @@
 	    methods:{
 	    	selectItem(item){
 	    		let _this=this;
-	    		if(item.class=='erp_bt bt_add'|| item.class=='erp_bt bt_back'){
+	    		if(item.class=='erp_bt bt_add'|| item.class=='erp_bt bt_back'|| item.class=="erp_bt bt_cancel"){
 	    			this.$store.state.url=`${this.date.url}/default`
            		    this.$router.push({path:this.$store.state.url})//点击切换路由
 	    		}else if(item.text == '保存' && item.class == 'erp_bt bt_save'){
@@ -71,4 +71,8 @@
 	.bt_eraseline{
 		background-color: rgb(255,102,0);
 	}
+	button.erp_bt[disabled] {
+    cursor: not-allowed;
+    background: #ccc;
+}
 </style>
