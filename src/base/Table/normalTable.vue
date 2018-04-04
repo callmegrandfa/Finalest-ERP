@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-table @row-click="rowClick" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
+        <el-table class="normalTable" @row-click="rowClick" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
             <el-table-column type="selection" label="" width="50">
             </el-table-column>
             <el-table-column v-for="(item) in cols" :key="item.prop" :label="item.label" :prop="item.prop" >
@@ -18,14 +18,16 @@
             <el-table-column prop="address12" label="操作" width="">
                 <template slot-scope="scope">
                     <el-button v-show="hasModify"  @click="modify(scope.row)" type="text" size="small"  >查看</el-button>
-                    <el-button @click="del(scope.row,scope.$index)" type="text" size="small"  >删除</el-button>
+                    <el-button @click="dialogOpen(scope.row,scope.$index)" type="text" size="small"  >删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination style="margin-top:20px;"  class="text-right" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, prev, pager, next"  :page-count="totalPagination" ></el-pagination>
+        <dialogBox :message="dialogMessage" :dialogVisible="dialogShow"  @confirm="delConfirm" @cancel="delCancel"></dialogBox>   
     </div>
 </template>
 <script type="text/javascript">
+    import dialogBox from '../dialog/dialog'
 	export	default{
 		props:['methodsUrl','cols','isDisable','tableName','hasModify'],
 		data(){
@@ -41,12 +43,19 @@
                     value: 1,
                     label: '启用'
                 }],
+                delIndex:'',
+                delRow:'',
+                dialogMessage:'',
+                dialogShow:false,
 			}
         },
         created:function(){
             this.$store.commit('setTableName',this.tableName)
             this.$store.commit('setHttpApi', this.methodsUrl.creat)
             this.$store.dispatch('InitTable');//初始化表格数据
+        },
+        components:{
+            dialogBox
         },
         computed:{
             tableData(){//表格数据
@@ -57,8 +66,7 @@
                     return this.$store.state[this.tableName+'NewColArray'];
                 }else{
                     return [];
-                }
-                
+                }  
             },
             updateColArray(){//修改row集合
                 if(!this.isDisable){
@@ -91,34 +99,34 @@
                 this.$store.state.url=this.methodsUrl.view+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
-            del(row,index){//单条删除
+            dialogOpen(row,index){//单条删除
                 let _this=this;
-                _this.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        if(_this.newColArray.length>0){
-                            _this.$store.state[this.tableName+'Table'].splice(index,1);
-                            _this.newColArray.splice(index,1);
-                        }else{
-                            _this.$axios.deletes(_this.methodsUrl.del,{Id:row.id}).then(function(res){
-                                _this.$store.dispatch('InitTable');//初始化表格数据
-                                _this.open('删除成功','el-icon-circle-check','successERP');    
-                            }).catch(function(err){
-                                _this.$message({
-                                    type: 'warning',
-                                    message: err.error.message
-                                });
-                            })  
-                        }       
-                    }).catch(() => {
+                _this.delIndex=index;
+                _this.delRow=row;
+                _this.dialogMessage="确定删除？";
+                _this.dialogShow=true;
+            },
+            delConfirm(){//确认删除
+                let _this=this;
+                if(_this.newColArray.length>0){
+                    _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
+                    _this.newColArray.splice(this.delIndex,1);
+                    _this.dialogShow=false;
+                }else{
+                    _this.$axios.deletes(_this.methodsUrl.del,{Id:this.delRow.id}).then(function(res){
+                        _this.$store.dispatch('InitTable');//初始化表格数据
+                        _this.open('删除成功','el-icon-circle-check','successERP');  
+                        _this.dialogShow=false;  
+                    }).catch(function(err){
                         _this.$message({
-                            type: 'info',
-                            message: '已取消删除'
+                            type: 'warning',
+                            message: err.error.message
                         });
-                });
+                    })  
+                }       
+            },
+            delCancel(){//取消删除
+                this.dialogShow=false;
             },
             rowClick(row){//获取行id
                 this.$store.dispatch('getRowId',row.id);//初始化表格数据
@@ -151,7 +159,7 @@
         left: -55px;
         top: 0px;
     }
-    .el-select input.el-input__inner[disabled] {
+   .normalTable .el-select input.el-input__inner[disabled] {
     background: #fff;
     height: 28px;
     border: 0;

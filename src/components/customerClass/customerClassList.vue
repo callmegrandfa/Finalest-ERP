@@ -58,7 +58,7 @@
                      <div class="search_input_group">
                             <div class="search_input_wapper">
                                 <el-input
-                                    v-model="inputName" 
+                                    v-model="InputName" 
                                     @change="searchRight"
                                     placeholder="搜索..."
                                     class="search_input">
@@ -176,6 +176,7 @@ export default {
   name: "customerClass",
   data() {
     return {
+      ContactOwner:1,//  客户分类参数(获取所有数据时)
       searchLeft: "",
       ifCan: true,
       classParentId: [
@@ -191,20 +192,15 @@ export default {
       ],
       statusC: [], //状态
       tableData: [],
-      customerClassTree: [
-        {
-          className: "客户分类",
-          children: []
-        }
-      ],
+      customerClassTree: [],
       defaultProps: {
-        children: "childrenNodes",
+        children: "childNodes",
         label: "className",
         id: "id"
       },
       // TreeContextMenu:[//点击鼠标右键生成菜单
       // ],
-      inputName: "",
+      InputName: "",
       pageIndex: 0, //分页的当前页码
       totalPage: 0, //当前分页总数
       oneItem: 10, //每页有多少条信息
@@ -220,7 +216,7 @@ export default {
       tableLoading: true,
       treeLoading: false,
       Sorting: "", //table搜索
-      Ower: "", //树形图的地区分类(1.客户分类.2供货商分类)
+      Ower: 1, //树形图的地区分类(1.客户分类.2供货商分类)
       isAdd: true, //判断是增加还是修改
       tittle: "", //模态框tittle
       showParent: true, //上级组织单元是否可选
@@ -284,19 +280,10 @@ export default {
       //表格
       let self = this;
       self.tableLoading = true;
-      self.$axios.gets("/api/services/app/ContactClassManagement/GetAll", {SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetAllList", {ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
             // console.log(res);
             self.tableData = res.result.items;
             // console.log(self.tableData)
-            // $.each(self.tableData, function(index, value) {
-            //   //处理时间格式
-            //   if (value.createdTime && value.createdTime != "") {
-            //     let createdTime = value.createdTime
-            //       .slice(0, value.createdTime.indexOf("."))
-            //       .replace("T", " ");
-            //     self.tableData[index].createdTime = createdTime;
-            //   }
-            // });
             self.totalItem = res.result.totalCount;
             self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
             self.tableLoading = false;
@@ -308,11 +295,11 @@ export default {
     },
     // ---------------------------------------获取所有列表数据
     getDataList() {
-      let _this = this;
-      _this.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {inputName: _this.inputName})
-        .then(rsp => {
-           console.log(rsp);
-          _this.tableData = rsp.result.items;
+      let self = this;
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {ContactOwner:1,InputName: self.InputName,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
+           console.log(res);
+          self.tableData = res.result.items;
+          self.totalItem = res.result.totalCount;
          
         });
     },
@@ -320,13 +307,17 @@ export default {
     loadTree() {
       let self = this;
       self.treeLoading = true;
-      self.$axios.gets("api/services/app/ContactClassManagement/GetTreeList", { Ower: 1}).then(
+      self.$axios.gets("api/services/app/ContactClassManagement/GetTreeList", {Ower:1}).then(
           function(res) {
             // console.log(1)
-            console.log(res);
-            // self.customerClassTree[0].children=res.result
+            // console.log(res);
+            // self.customerClassTree[0].childrenNodes=res;
             // console.log(self.customerClassTree)
+            // self.treeLoading = false;
+            // self.customerClassTree=res;
+            // self.loadIcon();
             self.treeLoading = false;
+            self.customerClassTree=res;
             self.loadIcon();
           },
           function(res) {
@@ -471,7 +462,7 @@ export default {
       // self.dialogData.phone = row.phone;
       self.dialogData.classParentId = row.classParentId;
       self.dialogData.status = row.status;
-      console.log(self.dialogData);
+      // console.log(self.dialogData);
     },
     //----------------------------------------------------------------
 
@@ -569,42 +560,26 @@ export default {
         });
       }
     },
-    nodeClick: function(data) {
-      let self = this;
-
-      if (data.id) {
-        // self.$axios.gets('/api/services/app/ContactClassManagement/Get',{id:data.id}).then(function(res){
-        //     // console.log(res)
-        //     self.selfAr = res.result
-        //     // console.log(self.selfAr)
-        // },function(res){
-
-        // })
-
-        self.$axios
-          .gets("/api/services/app/ContactClassManagement/GetDataList", {
-            classParentId: data.id,
-            SkipCount: 0,
-            MaxResultCount: 100
-          })
-          .then(
-            function(res) {
-              // console.log(res)
-              self.tableData = res.result.items;
-              self.tableData.unshift(self.selfAr);
-            },
-            function(res) {
-              self.treeLoading = false;
+            nodeClick(data){//点击树形控件节点时的回调
+                  let self=this;
+                  // console.log(data);
+                  self.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{Id:data.id,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
+                      res=>{
+                       console.log(res);
+                        // self.totalCount=res.result.totalCount;
+                        self.totalItem = res.result.totalCount;
+                        self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
+                        self.tableData=res.result.items;
+                        
+                  })
+              },
+            filterNode(value, data) {//过滤节点
+                // console.log(value);
+                // console.log(data);
+                if (!value) return true;
+                return data.className.indexOf(value) !== -1;
+                // this.nodeClick(data);
             }
-          );
-      } else {
-        self.loadTableData();
-      }
-    },
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.className.indexOf(value) !== -1;
-    }
   }
 };
 </script>

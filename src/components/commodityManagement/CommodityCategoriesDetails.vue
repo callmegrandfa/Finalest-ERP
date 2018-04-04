@@ -16,7 +16,6 @@
                                     <el-select 
                                     class="areaParentId" 
                                     :class="{redBorder : validation.hasError('addItem.categoryParentid')}" 
-                                    :disabled="isEdit"
                                     v-model="addItem.categoryParentid"
                                     placeholder="">
                                     <!-- <input type="text" class="selectTree"> -->
@@ -56,7 +55,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor" >
-                                    <el-input :class="{redBorder : validation.hasError('addItem.categoryCode')}" :disabled="isEdit" placeholder="" v-model="addItem.categoryCode"></el-input>
+                                    <el-input :class="{redBorder : validation.hasError('addItem.categoryCode')}"  placeholder="" v-model="addItem.categoryCode"></el-input>
                                 </div>
                             </el-col>
                             <el-col :span="2">
@@ -73,7 +72,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor" >
-                                <el-input placeholder="" :class="{redBorder : validation.hasError('addItem.categoryName')}" :disabled="isEdit" v-model="addItem.categoryName"></el-input>
+                                <el-input placeholder="" :class="{redBorder : validation.hasError('addItem.categoryName')}" v-model="addItem.categoryName"></el-input>
                                 </div>
                             </el-col>
                             <el-col :span="2">
@@ -90,7 +89,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-input :disabled="isEdit" v-model="addItem.mnemonic" > </el-input>
+                                    <el-input  v-model="addItem.mnemonic" > </el-input>
                                 </div>
                             </el-col>
                         </el-row>
@@ -106,7 +105,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor" >
-                                <el-select :class="{redBorder : validation.hasError('addItem.status')}"  :disabled="isEdit"  v-model="addItem.status" >
+                                <el-select :class="{redBorder : validation.hasError('addItem.status')}"   v-model="addItem.status" >
                                     <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                                 </div>
@@ -125,7 +124,7 @@
                             </el-col>
                             <el-col :span="3">
                                 <div class="bgcolor smallBgcolor" >
-                                <el-input  :disabled="isEdit" placeholder="" v-model="addItem.remark">
+                                <el-input placeholder="" v-model="addItem.remark">
                                 </el-input>
                                 </div>
                             </el-col>
@@ -138,7 +137,7 @@
                     </el-col>
                     <el-col :span="2" style="margin-left:0">
                         <div class="bgcolor smallBgcolor">
-                            <el-checkbox :disabled="isEdit" v-model="addItem.isService" >服务类（虚拟）</el-checkbox>
+                            <el-checkbox v-model="addItem.isService" >服务类（虚拟）</el-checkbox>
                         </div>
                     </el-col> 
                 </el-row>
@@ -247,32 +246,22 @@ import Btm from '../../base/btm/btm'
                     class: 'erp_bt bt_back',
                     imgsrc: '../../../static/image/common/bt_back.png',
                     text: '返回',
-                    show:true
+                    disabled:false
                 },{
                     class: 'erp_bt bt_save',
                     imgsrc: '../../../static/image/common/bt_save.png',
                     text: '保存',
-                    show:true
-                },{
-                    class: 'erp_bt bt_modify',
-                    imgsrc: '../../../static/image/common/bt_modify.png',
-                    text: '修改',
-                    show:false
+                    disabled:false
                 },{
                     class: 'erp_bt bt_cancel',
                     imgsrc: '../../../static/image/common/u470.png',
                     text: '取消',
-                    show:false
+                    disabled:true
                 },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
                     text: '删除',
-                    show:true
-                },{
-                    class: 'erp_bt bt_auxiliary',
-                    imgsrc: '../../../static/image/common/bt_audit.png',
-                    text: '审核',
-                    show:true
+                    disabled:false
                 }]},
                 addItem:{
                     categoryParentid:"",//上级商品类目
@@ -310,17 +299,15 @@ import Btm from '../../base/btm/btm'
                     label: '未启用'
                 }],
                 isUpdate:false,//是否修改
+                isAdd:false,
+                changeTimes:0,
             }
         },
         created(){
-            this.InitModify();
             this.loadTree();
-            if(this.$route.params.id=="default"){//判断是否新增进入
-                this.bottonbox.botton[2].show=false;
-                this.isEdit=false
-            }else{
-                this.bottonbox.botton[2].show=true;
-                this.isEdit=true;
+            this.InitModify();
+            if(this.$route.params.id=="default"){
+                this.isAdd=true;
             }
         },
         validators: {
@@ -347,13 +334,26 @@ import Btm from '../../base/btm/btm'
         },
         watch: {
             treeQuery(val) {
-                console.log(this.$refs.tree.filter(val));
                 this.$refs.tree.filter(val);
             },
             addItem:{
                 handler: function (val, oldVal) {
-                    if(val.categoryParentid!=null&&this.bottonbox.botton[3].show){
-                        this.isUpdate=true;
+                    // if(this.$route.params.id=="default"){
+                    //     this.changeTimes=1;
+                    // }
+                    this.changeTimes++
+                    if(this.changeTimes==2){
+                        this.bottonbox.botton[2].disabled=false;
+                    }
+                },
+                deep:true
+            },
+            classTree:{
+                 handler: function (val, oldVal) {
+                    if(val.length>0){
+                        this.treeNode.categoryParentid=val[0].categoryParentid;
+                        this.treeNode.categoryName=val[0].categoryName;
+                        this.addItem.categoryParentid=val[0].categoryParentid;
                     }
                 },
                 deep:true
@@ -382,16 +382,16 @@ import Btm from '../../base/btm/btm'
             //     this.$store.state.url='/commodityleimu/commodityClassHeading/default'
             //     this.$router.push({path:this.$store.state.url})//点击切换路由
             // },
-            btmlog:function(data){
-                if(data=="修改"&&this.isEdit==true){
-                    this.isEdit=false;
-                    this.bottonbox.botton[2].show=false
-                    this.bottonbox.botton[3].show=true
-                }else if(data=="取消"){
-                    this.isEdit=true;
-                    this.bottonbox.botton[2].show=true
-                    this.bottonbox.botton[3].show=false;
-                    this.InitModify();
+            btmlog:function(data){              
+                if(data=="取消"){
+                    if(this.$route.params.id=="default"){
+                        this.validation.reset();
+                        this.isAdd=true;
+                        this.InitData();
+                    }else{
+                        this.InitModify();
+                    }
+                    this.bottonbox.botton[2].disabled=true;
                 }else if(data=="新增保存"){
                     this.save();
                 }
@@ -402,6 +402,7 @@ import Btm from '../../base/btm/btm'
                     return;
                 }else{
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
+                        _this.changeTimes=0;
                         _this.updateId=res.result.id;
                         _this.treeNode.categoryParentid=res.result.categoryParentid;
                         _this.treeNode.categoryName=res.result.categoryName;
@@ -416,18 +417,22 @@ import Btm from '../../base/btm/btm'
                         _this.addItem.createdBy=res.result.createdBy;
                         _this.addItem.modifiedTime=res.result.modifiedTime;
                         _this.addItem.modifiedBy=res.result.modifiedBy;
-                        _this.isUpdate=false;
                         //_this.tableData=res.result;                   
                     })
                 }
                  
+            },
+            InitCategoryid(){//设置默认商品类目
+                this.treeNode.categoryParentid=this.classTree[0].categoryParentid;
+                this.treeNode.categoryName=this.classTree[0].categoryName;
+                this.addItem.categoryParentid=this.classTree[0].categoryParentid;
             },
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryTree')
                     .then(function(res){
-                        _this.classTree=res
+                        _this.classTree=res;
                         _this.loadIcon();
                         _this.treeLoading=false;
                 },function(res){
@@ -448,7 +453,6 @@ import Btm from '../../base/btm/btm'
                 })
             },
             filterNode(value, data) {
-                console.log(value)
                 if (!value) return true;
                 return data.categoryName.indexOf(value) !== -1;
             },
@@ -480,23 +484,24 @@ import Btm from '../../base/btm/btm'
             save(){//保存
                 let _this=this;
                 _this.$validate()
-                if(_this.isUpdate){
+                if(!_this.isAdd){
                     let updateData=_this.addItem;
-                    _this.$set(updateData, 'id', _this.updateId);
+                   // _this.$set(updateData, 'id', _this.updateId);
                     _this.$axios.puts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Update',updateData).then(function(res){
                         _this.InitModify();
                         _this.validation.reset();
                         _this.isEdit=true;
                         _this.bottonbox.botton[2].show=true;//修改按钮
                         _this.bottonbox.botton[3].show=false;//取消按钮
+                        _this.InitCategoryid();
                         _this.open('修改商品类目成功','el-icon-circle-check','successERP'); 
-
                         return;   
                     }); 
                 }else{
                     _this.$axios.posts('/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
                         _this.InitModify();
                         _this.InitData();
+                        _this.InitCategoryid();
                         _this.validation.reset();
                         _this.open('保存商品类目成功','el-icon-circle-check','successERP');    
                     }); 

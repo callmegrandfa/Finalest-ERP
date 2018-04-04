@@ -9,7 +9,7 @@
        <vue-scroll :ops="ops">
             <li class="one" @mouseenter="enter1">
                 <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
-                <a class="oneA" href="javascript:;">测试</a>
+                <a class="oneA" href="javascript:;">系统管理</a>
                 <ul class="slidUl slid1">
                     <vue-scroll :ops="ops">
                         <li class="two" v-for="i in secondLevel1" @mouseenter="enter2">
@@ -26,13 +26,6 @@
                     </vue-scroll> 
                 </ul>
             </li>
-
-
-
-
-
-
-
             <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1">
                 <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
                 <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
@@ -40,9 +33,9 @@
                     <vue-scroll :key="item.id" :ops="ops">
                         <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
                             <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
-                            <a href="javascript:;" :moduleParentId="i.moduleParentId" :menuname="i.moduleName" :menuUrl="i.url" @click="storageData">{{i.moduleName}}</a>
+                            <a href="javascript:;" @click="storageData" :moduleParentId="i.moduleParentId" :menuname="i.moduleName" :menuUrl="i.url">{{i.moduleName}}</a>
                             <diV class="triangle"></diV>
-                            <ul class="slidUl slid2" v-show="i.childNodes.length">
+                            <ul class="slidUl slid2" v-show="i.childNodes.length>0" >
                                 <vue-scroll :key="i.id" :ops="ops">
                                     <li class="three" v-for="it in i.childNodes">
                                         <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
@@ -200,8 +193,6 @@ export default {
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
             _this.childNodes=res;
-            // console.log(2)
-
             _this.$nextTick(function(){
                 let x={}
                 $('.one').each(function(index){

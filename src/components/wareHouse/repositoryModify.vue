@@ -38,7 +38,7 @@
                 <span class="btDetail">新增</span>
             </button>
 
-            <button class="erp_bt bt_del" @click="delModify" :class="{erp_fb_bt:ifModify}">
+            <button class="erp_bt bt_del" @click="delModify(3)" :class="{erp_fb_bt:ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_del.png">
                 </div>
@@ -254,7 +254,7 @@
                                     <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                                     </el-option>
                                 </el-select>
-                                <el-input class="areaEntry" placeholder="街道办地址"></el-input>
+                                <!-- <el-input class="areaEntry" placeholder="街道办地址"></el-input> -->
                             </div>
                         </div>
 
@@ -342,7 +342,7 @@
                 <span class="header-title">送货信息</span>
             </el-col>
 
-            <el-col :span="24" class="bg-white pl10">
+            <el-col :span="24" class="bg-white pl10 mb10">
                 <button class="erp_bt bt_add" @click='addCol'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
@@ -350,7 +350,7 @@
                     <span class="btDetail">增行</span>
                 </button>
                 
-                <button class="erp_bt bt_del" @click='delRow'>
+                <button class="erp_bt bt_del" @click='delMore(2)'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
@@ -372,7 +372,7 @@
                 </button>
           </el-col>
 
-          <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
+          <!-- <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">repositoryAddressData -->
               <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
@@ -455,7 +455,7 @@
 
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table> 
@@ -725,6 +725,10 @@
                 updateList:[],//更新上传的数组
                 addList:[],//新增上传的数组
                 multipleSelection:[],//需要删除的数组
+                // falsemultipleSelection:[],
+                allDelArray:{
+                    ids:[]
+                },
                 idArray:{
                     ids:[]
                 },//需要删除的数组id
@@ -1025,54 +1029,150 @@
                 self.repositoryAddressData.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
             },
+            //---从表单项删除-------------------------------------
             handleDelete:function(index,row,who){//表格内删除操作
                 let self = this;
                 self.who = who;
                 self.whoIndex = index;
                 self.whoId = row.id;
                 self.dialogDelConfirm = true;
-        },
-            delRow:function(){//删除选中的项
+            },
+            //---------------------------------------------------
+
+            //---批量删除----------------------------------------
+            delMore:function(num){
                 let self=this;
+                // self.who = 2;
                 for(let i in self.multipleSelection){
-                    self.idArray.ids.push(self.multipleSelection[i].id)
+                    self.allDelArray.ids.push(self.multipleSelection[i].id)
                 }
-                if(self.idArray.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
+                for(let i in self.multipleSelection){
+                    if(self.multipleSelection[i].id>0){
+                        self.idArray.ids.push(self.multipleSelection[i].id)
+                    }
                 }
-                
-                if(self.idArray.ids.length>0){
-                    console.log(self.idArray.ids)
-                    self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
-                                self.loadAddData();
-                                self.open('删除成功','el-icon-circle-check','successERP');    
-                            })
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
-                }else{
+
+                console.log(self.allDelArray)
+                console.log(self.idArray)
+
+                if(self.allDelArray.ids.length>0){
+                    // if(self.idArray.ids.indexOf(undefined)!=-1){
+                    //     self.$message({
+                    //         type: 'warning',
+                    //         message: '新增数据请在行内删除'
+                    //     });
+                    //     return;
+                    // }
+                    self.dialogDelConfirm = true;   
+                    self.who = num;
+                } else{
                     self.$message({
                         type: 'info',
                         message: '请勾选需要删除的数据！'
                     });
                 }
+
             },
+            //--------------------------------------------------
+
+            //---顶部删除按钮-----------------------------------------
+            delModify:function(num){
+                let self = this;
+                self.who = num
+                self.dialogDelConfirm = true;
+            },
+            //-------------------------------------------------------
+
+            //---确认删除--------------------------------------------
+            sureDel:function(){
+                let self = this;
+                if(self.who ==1){
+                    self.idArray.ids = [];
+                    if(self.whoId>0){
+                        self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:self.whoId}).then(function(res){
+                            self.open('删除地址成功','el-icon-circle-check','successERP');
+                            self.repositoryAddressData.splice(self.whoIndex,1)
+                            self.dialogDelConfirm = false;
+                        },function(res){
+                            self.dialogDelConfirm = false;
+                            self.errorMessage = true;
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        }) 
+                    }else{
+                        self.repositoryAddressData.splice(self.whoIndex,1);
+                        self.addList.splice(self.whoIndex,1);
+                        self.dialogDelConfirm = false;
+                        self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    }
+                    
+                }
+
+                if(self.who == 2){
+                    // if(self.allDelArray == self.idArray){
+                    
+                        // self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
+                        //     self.open('删除地址成功','el-icon-circle-check','successERP');
+                        //     self.loadAddData();
+                        //     self.dialogDelConfirm = false;
+                        // },function(res){
+                        //     self.dialogDelConfirm = false;
+                        //     self.errorMessage = true;
+                        //     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        // })
+                    // }else{
+                        // console.log(self.addList)/
+                        // console.log(self.multipleSelection)
+                        let x = []; 
+                        $.each(self.repositoryAddressData,function(index,value){
+                            let flag = false;
+                            $.each(self.multipleSelection,function(i,val){
+                                if(value==val){
+                                    flag = true;
+                                }
+                            })
+                            if(!flag){
+                                x.push(value)
+                            }
+                        })
+                        console.log(x)
+                        self.repositoryAddressData = x;
+                        self.addList = [];
+                        for(let i in x){
+                            if(x[i].id==''||x[i].id==undefined){
+                                // console.log(x[i])
+                                self.addList.push(x[i])
+                                console.log(self.addList)
+                            }
+                        }
+                        // console.log()
+                        console.log(self.addList)
+                        self.dialogDelConfirm = false;
+                    // }
+                    
+                }
+
+                if(self.who == 3){
+                    self.$axios.deletes('/api/services/app/StockManagement/Delete',{id:self.$route.params.id}).then(function(res){
+                        self.open('删除仓库成功','el-icon-circle-check','successERP');
+                        self.back();
+                        self.dialogDelConfirm = false;
+                    },function(res){
+                        self.dialogDelConfirm = false;
+                        self.errorMessage = true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }) 
+                }
+                
+            },
+            //------------------------------------------------------
+            
             handleSelectionChange:function(val){//点击复选框选中的数据
+                console.log(val)
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
+
+                // if(val.id&&val.id>0){
+                    // this.multipleSelection = val;
+                // }
             },
 
             handleChange:function(index,row){
@@ -1108,60 +1208,33 @@
                 self.repositoryAddressData[index].isDefault = true;
                 self.updateList.push(self.checkedAr)
             },
-            handleDelete:function(index,row){//表格内删除操作
-                let self = this;
+            // handleDelete:function(index,row){//表格内删除操作
+            //     let self = this;
                 
-                self.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
-                            self.repositoryAddressData.splice(index,1)
-                            self.loadAllList();
-                            self.open('删除成功','el-icon-circle-check','successERP');    
-                        })
-                    }).catch(() => {
-                        self.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
+            //     self.$confirm('确定删除?', '提示', {
+            //         confirmButtonText: '确定',
+            //         cancelButtonText: '取消',
+            //         type: 'warning',
+            //         center: true
+            //         }).then(() => {
+            //             self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
+            //                 self.repositoryAddressData.splice(index,1)
+            //                 self.loadAllList();
+            //                 self.open('删除成功','el-icon-circle-check','successERP');    
+            //             })
+            //         }).catch(() => {
+            //             self.$message({
+            //                 type: 'info',
+            //                 message: '已取消删除'
+            //             });
+            //         });
                 
-            },
+            // },
             Modify:function(){
                 let self = this;
-                console.log(123)
                 self.ifModify = true;
             },
             //------------------------------------------------------
-
-            //---确认删除--------------------------------------------
-            sureDel:function(){
-                let self = this;
-                self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.$route.params.id}).then(function(res){
-                    self.open('删除仓库成功','el-icon-circle-check','successERP');
-                    self.back();
-                    self.dialogDelConfirm = false;
-                },function(res){
-                    self.open('删除仓库失败','el-icon-error','faildERP');
-                    self.dialogDelConfirm = false;
-                    self.errorMessage = true;
-                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                }) 
-            },
-            //------------------------------------------------------
-
-            //---顶部删除按钮-----------------------------------------
-            delModify:function(){
-                let self = this;
-                if(!self.ifModify){
-                    self.dialogDelConfirm = true;
-                }
-                 
-            },
-            //-------------------------------------------------------
 
             //---修改返回提示-----------------------------------------
             isBack(){
