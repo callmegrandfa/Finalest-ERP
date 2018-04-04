@@ -8,7 +8,7 @@
         </el-row>
         <el-row class="bg-white pt20">
                 <div class="bgcolor reset">
-                    <label>集团编码</label><el-input v-model="entryItem.groupCode" ></el-input>
+                    <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
                 </div>
                 <div class="bgcolor reset">
                     <label>集团名称</label><el-input v-model="entryItem.groupName" ></el-input>
