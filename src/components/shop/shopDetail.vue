@@ -124,11 +124,11 @@
                     <div class="bgcolor">
                         <label><small>*</small>所属组织</label>
                         <el-select v-model="createShopParams.ouId" 
-                                placeholder=""
-                                class="ouId"
-                                @focus="showErrprTipsSelect"
-                                @change='Modify()'
-                                :class="{redBorder : validation.hasError('createShopParams.ouId')}">
+                                    placeholder=""
+                                    class="ouId"
+                                    @focus="showErrprTipsSelect"
+                                    @change='Modify()'
+                                    :class="{redBorder : validation.hasError('createShopParams.ouId')}">
 
                             <el-input placeholder="搜索..."
                                     class="selectSearch"
@@ -582,7 +582,6 @@ export default({
             defaultOuId:'',
             ifShow:true,
             ifModify:false,//判断信息是否修改过
-            showCompany:false,//初始默认公司计信息状态展开  
             backCancle:'',//判断是返回还是取消
             auditInformation:{//审计信息
                 createName:"",
@@ -594,10 +593,10 @@ export default({
                 finishName:"",
             },
             search:'',
-            item:{
-                id:'',
-                areaName:'',
-            },
+            // item:{
+            //     id:'',
+            //     areaName:'',
+            // },
             defaultProps: {
                 children: 'items',
                 label: 'areaName',
@@ -663,7 +662,7 @@ export default({
                 shopName: "",
                 shopFullname: "",
                 shopWorkPropertyid: 0,
-                opAreaId: 1,
+                opAreaId: '',
                 stockId: '',
                 mnemonic: "",
                 shopGradeid: '',
@@ -839,9 +838,13 @@ export default({
 
                 //业务地区
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
-                    // console.log(res);
-                    self.opAr = res.result;
-                    self.loadIcon();
+                    console.log(res);
+                    if(res.result&&res.result.length>0){
+                        self.opAr = res.result;
+                        self.loadIcon();
+                    }else{
+                        self.opItem.areaName = '暂无业务地区'
+                    };
                 },function(res){
                     console.log('err'+res)
                 });
@@ -877,13 +880,13 @@ export default({
                 console.log('err'+res)
             });
             //行政地区*2
-            self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                // console.log(res);
-                self.adAr = res.result;
-                self.loadIcon();
-            },function(res){
-                console.log('err'+res)
-            });
+            // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+            //     // console.log(res);
+            //     self.adAr = res.result;
+            //     self.loadIcon();
+            // },function(res){
+            //     console.log('err'+res)
+            // });
             //状态
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
                 // console.log(res);
@@ -918,15 +921,17 @@ export default({
         //---保存数据--------------------------------------------------       
         save:function(){//创建店铺
             let self = this;
+            
             $('.tipsWrapper').css({display:'block'})
             self.$validate().then(function(success){
                 if(success){
-                    $('.tipsWrapper').css({display:'none'})
-                    if(self.addList.length>0){
-                        self.createShopParams.shopContacts = self.addList;
-                        self.$axios.posts('/api/services/app/ShopManagement/Create',self.createShopParams).then(function(res){
+                    // console.log(2)
+                    $('.tipsWrapper').css({display:'none'}) 
+                    self.createShopParams.shopContacts = self.addList;
+                    console.log(self.addList)
+                    self.$axios.posts('/api/services/app/ShopManagement/Create',self.createShopParams).then(function(res){
                         // console.log(res);
-                        self.open('创建店铺资料成功','el-icon-circle-check','successERP');
+                        self.open('创建成功','el-icon-circle-check','successERP');
                         self.backId = res.result.id;
 
                         self.goModify(self.backId);
@@ -936,7 +941,7 @@ export default({
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         self.errorMessage=true;
                     });
-                    }
+                    
                     
                 }
             })
@@ -990,6 +995,7 @@ export default({
                     id: 0
                 };
                 self.addList.unshift(self.xrows.newCol)
+                console.log(self.addList)
         },
 
         //-----------------------------------------------------
@@ -1053,14 +1059,15 @@ export default({
         
         getCurrentRow:function(index,row){//默认单选框
             let self = this;
-            for(let i in self.contactData){
-                self.contactData[i].isDefault = false;
+            // for(let i in self.contactData){
+            //     self.contactData[i].isDefault = false;
+            // }
+            // self.contactData[index].isDefault = true;
+
+            for(let i in self.addList){
+                self.addList[i].isDefault = false;
             }
-            self.contactData[index].isDefault = true;
-            for(let i in addBankList){
-                self.addBankList[i].isDefault = false;
-            }
-            self.addBankList[index].isDefault = true;
+            self.addList[index].isDefault = true;
             
         },
         //----------------------------------------------------------
@@ -1117,7 +1124,7 @@ export default({
                     shopName: "",
                     shopFullname: "",
                     shopWorkPropertyid: 0,
-                    opAreaId: 1,
+                    opAreaId: '',
                     stockId: '',
                     mnemonic: "",
                     shopGradeid: '',
@@ -1207,6 +1214,7 @@ export default({
             let self = this;
             self.createShopParams.stockId = '';
             self.createShopParams.opAreaId = '';
+
             self.opItem.areaName = '';
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;
@@ -1215,13 +1223,13 @@ export default({
             })
             //点击所属组织，业务地区跟着变动
             self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
-                // console.log(res);
-                self.opAr = res.result;
-                if(res.result.length==0){
+                if(res.result&&res.result.length>0){
+                    self.opAr = res.result;
+                    self.loadIcon();
+                }else{
                     self.opItem.areaName = '暂无业务地区';
                     self.opItem.id = '';
                 }
-                self.loadIcon();
             },function(res){
                 console.log('err'+res)
             });

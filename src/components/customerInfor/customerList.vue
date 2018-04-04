@@ -455,13 +455,13 @@
                     console.log('err'+res)
                 })
                 //行政地区*2
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                    // console.log(res);
-                    self.opAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                })
+                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                //     // console.log(res);
+                //     self.opAr = res.result;
+                //     self.loadIcon();
+                // },function(res){
+                //     console.log('err'+res)
+                // })
                 //业务地区*1
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
                     // console.log(res);
@@ -507,19 +507,26 @@
         //---左侧查询-------------------------------------------------------
         doSearch:function(){
             let self = this;
-            this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{ContactClassId:self.queryClass,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
-                console.log(res);
-                if(res.length>0){
-                    self.allList = res.result;
-                    self.total = res.result.length;
-                    self.totalPage = Math.ceil(self.total/self.eachPage)
-                }else{
-                    self.loadAllList();
-                }
-                
-            },function(res){
-                console.log('err'+res)
-            })
+            if(self.queryClass == ''&&self.queryOu == ''&&self.queryAd==''&&self.queryOp==''&&self.queryCode==''&&self.queryName==''&&self.queryProperty==''){
+                self.loadAllList()
+            }else{
+                this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{ContactClassId:self.queryClass,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
+                    console.log(res);
+                    if(res.result&&res.result.length>0){
+                        self.allList = res.result;
+                        self.total = res.result.length;
+                        self.totalPage = Math.ceil(self.total/self.eachPage)
+                    }else{
+                        self.allList = res.result;
+                        self.total = 0;
+                        self.totalPage = 0;
+
+                    }
+                    
+                },function(res){
+                    console.log('err'+res)
+                })
+            }
         },
         //-------------------------------------------------------------------
 
@@ -650,6 +657,7 @@
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
+            self.queryOu = data.id
         },
         adNodeClick:function(data){
             let self = this;

@@ -89,9 +89,9 @@
                                 </template>
                             </el-table-column>
                             <!-- <el-table-column prop="manager" label="负责人"></el-table-column> -->
-                            <el-table-column prop="classParentName" label="上级客户分类">
+                            <el-table-column prop="classParentId_ClassName" label="上级客户分类">
                               <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].classParentName}}</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].classParentId_ClassName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
@@ -238,6 +238,7 @@ export default {
       },
       detail_message_ifShow: false,
       errorMessage: false,
+      dateabc:'',
       // 错误信息提示结束
 
       selfAr: [] //根据id获得树形节点本身
@@ -276,11 +277,11 @@ export default {
   },
   methods: {
     //---数据表格加载---------------------------------------------------
-    loadTableData() {
+    loadTableData(data) {
       //表格
       let self = this;
       self.tableLoading = true;
-      self.$axios.gets("/api/services/app/ContactClassManagement/GetAllList", {ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList",{Id:0,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
             console.log(res);
             self.tableData = res.result.items;
             // console.log(self.tableData)
@@ -470,7 +471,10 @@ export default {
       self.page = val;
       if(self.load){
         self.loadTableData();
-    }
+      }else{
+        self.nodeClick(self.dateabc);
+      }
+      
     },
     handleSelectionChange(val) {
       //点击复选框选中的数据
@@ -534,6 +538,7 @@ export default {
               .then(
                 function(res) {
                   self.loadTableData();
+                  // self.loadTree() ;//删除成功加载树形节点
                   self.open("删除成功", "el-icon-circle-check", "successERP");
                   self.idArray = {
                     ids: []
@@ -560,23 +565,27 @@ export default {
       nodeClick(data){//点击树形控件节点时的回调
             let self=this;
             // console.log(data);
-            self.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{Id:data.id,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
+            if(data.id){
+              self.dateabc=data.id;
+            }else{
+              self.dateabc=data;
+            }
+            // self.dateabc=data.id;
+            console.log(self.dateabc)
+            self.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:self.dateabc,ContactOwner:1,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
                 res=>{
                   console.log(res);
                   // self.totalCount=res.result.totalCount;
                   self.totalItem = res.result.totalCount;
                   self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
                   self.tableData=res.result.items;
-                  
+                  self.load=false;
                   
             })
         },
             filterNode(value, data) {//过滤节点
-                // console.log(value);
-                // console.log(data);
                 if (!value) return true;
                 return data.className.indexOf(value) !== -1;
-                // this.nodeClick(data);
             }
   }
 };

@@ -37,7 +37,7 @@
                         </el-tree>
                     </el-col>  
             </el-col>
-             <!-- dialog是否删除提示(对话框控件) -->
+            <!-- dialog是否删除提示(对话框控件) -->
             <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
                 <template slot="title">
                     <span class="dialog_font">提示</span>
@@ -195,7 +195,6 @@
          created(){
             this.loadTree();
             this.getDataList();
-
          },
         watch: {
             filterText(val) {
@@ -267,8 +266,10 @@
                 // console.log(data);
                 _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
                     rsp=>{
-                    // console.log(rsp);
-                     _this.tableData=rsp.result;
+                    //  console.log(rsp.result);
+                     _this.tableData=rsp.result.items;
+                     _this.totalCount=rsp.result.totalCount;
+                     _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
                })
             },
             getSonNode(data) {//获取树形节点子节点
@@ -276,8 +277,8 @@
                 // console.log(data);
                 _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
                     rsp=>{
-                    // console.log(rsp);
-                     _this.tableData=rsp.result;
+                    console.log(rsp);
+                    //  _this.tableData=rsp.result;
                })
             },
             filterNode(value, data) {//过滤节点
@@ -316,7 +317,7 @@
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
-            delSelected(){//多项删除
+            delSelected(){//确认多项删除
                 let _this=this;
                 _this.choseAjax='rows'
                 if(_this.multipleSelection.ids.length>0){
@@ -359,10 +360,10 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/ContactClassManagement/GetSearch',{inputName:_this.rightKeyword}).then(
                     rsp=>{
-                        _this.tableData=rsp.result
+                        _this.tableData=rsp.result.items;
                         // console.log(rsp.result);
-                        // _this.totalCount=rsp.result.totalCount;
-                        // _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
+                        _this.totalCount=rsp.result.totalCount;
+                        _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
                     }
                 )
 

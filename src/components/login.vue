@@ -81,13 +81,13 @@ export default {
       }
   },
   mounted:function(){//设置高度为全屏
-            let body=document.getElementsByTagName('body')[0];
-            let h=window.innerHeight;
-            body.style.height=h+'px';
-      window.onresize = function(){
-            let height=window.innerHeight;
-            body.style.height=height+'px';
-     }
+    let body=document.getElementsByTagName('body')[0];
+    let h=window.innerHeight;
+    body.style.height=h+'px';
+    window.onresize = function(){
+        let height=window.innerHeight;
+        body.style.height=height+'px';
+    }
   },
   methods:{
       switch(url){
@@ -120,6 +120,7 @@ export default {
                     let pushItem={'name':_this.login.userNameOrEmailAddress,'accessToken':'Bearer '+res.result.accessToken};
                     temporaryLogin.push(pushItem);
                 }
+                // _this.$store.state.accessToken='Bearer '+res.result.accessToken;
                 // console.log('Bearer '+res.result.accessToken)
                 window.sessionStorage.setItem('_ERP',JSON.stringify(temporaryLogin));
                 _this.$store.commit('username');

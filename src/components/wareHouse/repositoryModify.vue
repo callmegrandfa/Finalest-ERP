@@ -8,40 +8,44 @@
                 <span class="btDetail">返回</span>
             </button>
 
-            <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify&&!ifDoModify'>
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_add.png">
-                </div>
-                <span class="btDetail">新增</span>
-            </button>
+            
 
-            <button class="erp_bt bt_del" @click="delModify" v-show='!ifModify&&!ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_del.png">
-                    </div>
-                    <span class="btDetail">删除</span>
-                </button>
-
-            <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify||ifDoModify'>
+            <button class="erp_bt bt_save" @click="saveModify" :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_save.png">
                 </div>
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_saveAdd" v-show='ifModify||ifDoModify' @click='saveAdd'>
+            <button class="erp_bt bt_cancel" @click="Cancel()" :class="{erp_fb_bt:!ifModify}">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_cancel.png">
+                </div>
+                <span class="btDetail">取消</span>
+            </button>
+
+            <button class="erp_bt bt_saveAdd" @click='saveAdd' :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
                 </div>
                 <span class="btDetail">保存并新增</span>
             </button>
 
-            <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
+            <button class="erp_bt bt_add" @click="goDetail" :class="{erp_fb_bt:ifModify}">
                 <div class="btImg">
-                    <img src="../../../static/image/common/bt_cancel.png">
+                    <img src="../../../static/image/common/bt_add.png">
                 </div>
-                <span class="btDetail">取消</span>
+                <span class="btDetail">新增</span>
             </button>
+
+            <button class="erp_bt bt_del" @click="delModify(3)" :class="{erp_fb_bt:ifModify}">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_del.png">
+                </div>
+                <span class="btDetail">删除</span>
+            </button>
+
+            
 
             
 
@@ -130,8 +134,8 @@
                             <el-select v-model="repositoryData.ouId"
                                        :class="{redBorder : validation.hasError('repositoryData.ouId')}"
                                        class="ouId"
+                                       @change="Modify"
                                        @focus="showErrprTipsSelect"
-                                       @change='Modify()'
                                        placeholder="">
                                 <el-input placeholder="搜索..."
                                           class="selectSearch"
@@ -153,29 +157,29 @@
                                            id="ou_confirmSelect"></el-option>
                             </el-select>
                         </div>
+
                         <div class="bgcolor">
                             <label><small>*</small>编码</label>
                             <el-input placeholder="" 
-                                      v-model="repositoryData.stockCode" 
-                                      @change="Modify()"
+                                      v-model="repositoryData.stockCode"
                                       @focus="showErrprTips"
                                       class="stockCode"
                                       :class="{redBorder : validation.hasError('repositoryData.stockCode')}"></el-input>
                         </div>
+
                         <div class="bgcolor">
                             <label><small>*</small>名称</label>
                             <el-input placeholder="" 
-                                      v-model="repositoryData.stockName" 
-                                      @change="Modify()"
+                                      v-model="repositoryData.stockName"
                                       @focus="showErrprTips"
                                       class="stockName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockName')}"></el-input>
                         </div>
+
                         <div class="bgcolor">
                             <label><small>*</small>全称</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.stockFullName" 
-                                      @change="Modify()"
                                       @focus="showErrprTips"
                                       class="stockFullName"
                                       :class="{redBorder : validation.hasError('repositoryData.stockFullName')}"></el-input>
@@ -250,7 +254,7 @@
                                     <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                                     </el-option>
                                 </el-select>
-                                <el-input class="areaEntry" placeholder="街道办地址"></el-input>
+                                <!-- <el-input class="areaEntry" placeholder="街道办地址"></el-input> -->
                             </div>
                         </div>
 
@@ -338,7 +342,7 @@
                 <span class="header-title">送货信息</span>
             </el-col>
 
-            <el-col :span="24" class="bg-white pl10">
+            <el-col :span="24" class="bg-white pl10 mb10">
                 <button class="erp_bt bt_add" @click='addCol'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
@@ -346,7 +350,7 @@
                     <span class="btDetail">增行</span>
                 </button>
                 
-                <button class="erp_bt bt_del" @click='delRow'>
+                <button class="erp_bt bt_del" @click='delMore(2)'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
@@ -368,7 +372,7 @@
                 </button>
           </el-col>
 
-          <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
+          <!-- <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">repositoryAddressData -->
               <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
@@ -451,7 +455,7 @@
 
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table> 
@@ -467,7 +471,7 @@
               <div>
                 <div class="bgcolor">
                     <label>创建人</label>
-                    <el-input placeholder="" disabled="disabled"></el-input>
+                    <el-input placeholder="" disabled="disabled" v-model="repositoryData.createdBy"></el-input>
                 </div>
 
                 <div class="bgcolor">
@@ -566,9 +570,15 @@
     export default{
         name:'repositoryModify',
         created:function(){
+            // let self = this;
+            // self.loadData();
+            // self.loadSelect();
+        },
+        mounted:function(){
             let self = this;
             self.loadData();
             self.loadSelect();
+            
         },
         validators: {
             'repositoryData.ouId': function (value) {//所属组织
@@ -617,6 +627,150 @@
                 return this.Validator.value(value).required().integer();
             },
         },
+        data(){
+            return {
+                getOuId:'',//保存获取的ouid
+                repositoryData:'',//根据仓库id查出的仓库信息
+                repositoryAddressData:[],//根据仓库id查出的仓库地址信息
+                getRepositoryAddressParams:{
+                   id:'',
+                }, 
+                firstModify:false,
+                ifModify:false,//判断主表是否修改过
+                ifDoModify:false,//判断从表是否修改过
+                ifShow:true,//控制折叠页面
+                ou: [{//所属组织
+                    value:0,
+                    label: '恒康'
+                }, {
+                    value:1,
+                    label: '恒大'
+                }, {
+                    value:2,
+                    label: '361度'
+                }],
+                //---所属组织树形下拉-----
+                ouSearch:'',
+                selectOuProps:{
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                },
+                ouItem:{
+                    id:'',
+                    ouFullname:'',
+                },
+                ouAr:[],//所属组织下拉框
+                //-----------------------
+                //---行政地区树形下拉-----
+                areaProArray:[],//行政地区(省)
+                areaCityArray:[],//行政地区(市)
+                areaDisArray:[],//行政地区(区)
+                adSearch:'',//树形搜索框的
+                selectAdProps:{
+                    children: 'items',
+                    label: 'areaName',
+                    id:'id'
+                },
+                adItem:{
+                    id:'',
+                    areaName:'',
+                },
+                adAr:[],//行政地区下拉框
+                //-----------------------
+                //---业务地区树形下拉-----
+                    opSearch:'',//树形搜索框的
+                    selectOpProps:{
+                        children: 'childItems',
+                        label: 'areaName',
+                        id:'id'
+                    },
+                    opItem:{
+                        id:'',
+                        areaName:'',
+                    },
+                    opAr:[],//业务地区下拉框
+                //-----------------------
+
+                //---普通下拉框-----------
+                statusAr:[],//状态
+                transAr:[],//运输方式
+                logiAr:[],//物流公司
+                //-----------------------
+                stockType: [{//仓库类型
+                    value:0,
+                    label: '仓库'
+                }, {
+                    value:1,
+                    label: '店铺'
+                }],
+                
+                status: [],
+
+                value: '',
+                
+                createParams:{//创建新的仓库地址
+                    groupId:'1',//集团ID
+                    stockId:'',//仓库ID
+                    completeAddress:'',//详情地址
+                    transportMethodId:'',//运输方式
+                    contactPerson:'',//联系人
+                    phone:'',//联系电话
+                    logisticsCompanyId:'',//物流公司
+                    isDefault:false,//是否默认
+                    remark:'',//备注
+                },
+                x:0,//增行的下标
+                rows:[],//增行的数组
+                updateList:[],//更新上传的数组
+                addList:[],//新增上传的数组
+                multipleSelection:[],//需要删除的数组
+                // falsemultipleSelection:[],
+                allDelArray:{
+                    ids:[]
+                },
+                idArray:{
+                    ids:[]
+                },//需要删除的数组id
+                checkedAr:[],//加载时从表默认选择的数组
+
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //--------------------  
+
+                //---信息修改提示框------------
+                dialogUserConfirm:false,//信息更改提示控制
+                //----------------------------
+                //---错误提示框----------------
+                option: {
+                    vRail: {
+                        width: '5px',
+                        pos: 'right',
+                        background: "#9093994d",
+                    },
+                    vBar: {
+                        width: '5px',
+                        pos: 'right',
+                        background: '#9093994d',
+                    },
+                    hRail: {
+                        height: '0',
+                    },
+                },
+                errorMessage:false,
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                //-----------------------------
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
+            }
+        },
         computed:{
             countOu () {
                 return this.ouItem;
@@ -628,24 +782,33 @@
                 return this.opItem;
             },
         },
-        watch: {
-            opSearch(val) {
-                this.$refs.opTree.filter(val);
-            },
-            ouSearch(val) {
-                this.$refs.ouTree.filter(val);
+
+        watch:{
+            repositoryData:{
+                handler: function (val, oldVal) {
+                    let self = this;
+                    if(!self.firstModify){
+                        self.firstModify = !self.firstModify;
+                    }else{
+                        self.ifModify = true;
+                    }
+                },
+                deep: true,
             }
         },
+        
         methods:{
             
             //---加载信息-----------------------------------------------
             loadData:function(){//根据id查找仓库信息和仓库地址信息
                 let self = this;
                 if(self.$route.params.id!='default'){
+                    self.firstModify = false;
                     //根据仓库id获取仓库信息
                     self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
                         self.repositoryData = res.result;
+                        self.extraData = res.result;
                         self.getOuId = self.repositoryData.ouId;
 
                         //业务地区
@@ -676,7 +839,6 @@
                     }
                     // console.log(self.getRepositoryAddressParams)
                     self.loadAddData();
-                    
                 }
             },
             loadAddData:function(){
@@ -704,13 +866,13 @@
                 });
                 
                 //行政地区*2
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                    // console.log(res);
-                    self.adAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                });
+                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                //     // console.log(res);
+                //     self.adAr = res.result;
+                //     self.loadIcon();
+                // },function(res){
+                //     console.log('err'+res)
+                // });
                 
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
@@ -741,7 +903,6 @@
             saveModify:function(){//修改仓库信息保存
                 let self = this;
                 
-                
                 if(self.updateList.length>0){
                     self.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
                         console.log(res);
@@ -756,7 +917,7 @@
                 }
                 
                 // self.repositoryData.adAreaId == 1;
-                console.log(self.repositoryData)
+                // console.log(self.repositoryData)
                 if(self.ifModify){
                     self.$validate().then(function(success){
                         if(success){
@@ -867,52 +1028,151 @@
                 };
                 self.repositoryAddressData.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
-                // console.log(self.repositoryAddressData)
-                // console.log(self.x)
-                // console.log(self.rows)
-                // console.log(self.addList)
             },
-            delRow:function(){//删除选中的项
+            //---从表单项删除-------------------------------------
+            handleDelete:function(index,row,who){//表格内删除操作
+                let self = this;
+                self.who = who;
+                self.whoIndex = index;
+                self.whoId = row.id;
+                self.dialogDelConfirm = true;
+            },
+            //---------------------------------------------------
+
+            //---批量删除----------------------------------------
+            delMore:function(num){
                 let self=this;
+                // self.who = 2;
                 for(let i in self.multipleSelection){
-                    self.idArray.ids.push(self.multipleSelection[i].id)
+                    self.allDelArray.ids.push(self.multipleSelection[i].id)
                 }
-                if(self.idArray.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
+                for(let i in self.multipleSelection){
+                    if(self.multipleSelection[i].id>0){
+                        self.idArray.ids.push(self.multipleSelection[i].id)
+                    }
                 }
-                
-                if(self.idArray.ids.length>0){
-                    console.log(self.idArray.ids)
-                    self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
-                                self.loadAddData();
-                                self.open('删除成功','el-icon-circle-check','successERP');    
-                            })
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
-                }else{
+
+                console.log(self.allDelArray)
+                console.log(self.idArray)
+
+                if(self.allDelArray.ids.length>0){
+                    // if(self.idArray.ids.indexOf(undefined)!=-1){
+                    //     self.$message({
+                    //         type: 'warning',
+                    //         message: '新增数据请在行内删除'
+                    //     });
+                    //     return;
+                    // }
+                    self.dialogDelConfirm = true;   
+                    self.who = num;
+                } else{
                     self.$message({
                         type: 'info',
                         message: '请勾选需要删除的数据！'
                     });
                 }
+
             },
+            //--------------------------------------------------
+
+            //---顶部删除按钮-----------------------------------------
+            delModify:function(num){
+                let self = this;
+                self.who = num
+                self.dialogDelConfirm = true;
+            },
+            //-------------------------------------------------------
+
+            //---确认删除--------------------------------------------
+            sureDel:function(){
+                let self = this;
+                if(self.who ==1){
+                    self.idArray.ids = [];
+                    if(self.whoId>0){
+                        self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:self.whoId}).then(function(res){
+                            self.open('删除地址成功','el-icon-circle-check','successERP');
+                            self.repositoryAddressData.splice(self.whoIndex,1)
+                            self.dialogDelConfirm = false;
+                        },function(res){
+                            self.dialogDelConfirm = false;
+                            self.errorMessage = true;
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        }) 
+                    }else{
+                        self.repositoryAddressData.splice(self.whoIndex,1);
+                        self.addList.splice(self.whoIndex,1);
+                        self.dialogDelConfirm = false;
+                        self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    }
+                    
+                }
+
+                if(self.who == 2){
+                    // if(self.allDelArray == self.idArray){
+                    
+                        // self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
+                        //     self.open('删除地址成功','el-icon-circle-check','successERP');
+                        //     self.loadAddData();
+                        //     self.dialogDelConfirm = false;
+                        // },function(res){
+                        //     self.dialogDelConfirm = false;
+                        //     self.errorMessage = true;
+                        //     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        // })
+                    // }else{
+                        // console.log(self.addList)/
+                        // console.log(self.multipleSelection)
+                        let x = []; 
+                        $.each(self.repositoryAddressData,function(index,value){
+                            let flag = false;
+                            $.each(self.multipleSelection,function(i,val){
+                                if(value==val){
+                                    flag = true;
+                                }
+                            })
+                            if(!flag){
+                                x.push(value)
+                            }
+                        })
+                        console.log(x)
+                        self.repositoryAddressData = x;
+                        self.addList = [];
+                        for(let i in x){
+                            if(x[i].id==''||x[i].id==undefined){
+                                // console.log(x[i])
+                                self.addList.push(x[i])
+                                console.log(self.addList)
+                            }
+                        }
+                        // console.log()
+                        console.log(self.addList)
+                        self.dialogDelConfirm = false;
+                    // }
+                    
+                }
+
+                if(self.who == 3){
+                    self.$axios.deletes('/api/services/app/StockManagement/Delete',{id:self.$route.params.id}).then(function(res){
+                        self.open('删除仓库成功','el-icon-circle-check','successERP');
+                        self.back();
+                        self.dialogDelConfirm = false;
+                    },function(res){
+                        self.dialogDelConfirm = false;
+                        self.errorMessage = true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }) 
+                }
+                
+            },
+            //------------------------------------------------------
+            
             handleSelectionChange:function(val){//点击复选框选中的数据
+                console.log(val)
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
+
+                // if(val.id&&val.id>0){
+                    // this.multipleSelection = val;
+                // }
             },
 
             handleChange:function(index,row){
@@ -948,56 +1208,33 @@
                 self.repositoryAddressData[index].isDefault = true;
                 self.updateList.push(self.checkedAr)
             },
-            handleDelete:function(index,row){//表格内删除操作
-                let self = this;
+            // handleDelete:function(index,row){//表格内删除操作
+            //     let self = this;
                 
-                self.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
-                            self.repositoryAddressData.splice(index,1)
-                            self.loadAllList();
-                            self.open('删除成功','el-icon-circle-check','successERP');    
-                        })
-                    }).catch(() => {
-                        self.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
+            //     self.$confirm('确定删除?', '提示', {
+            //         confirmButtonText: '确定',
+            //         cancelButtonText: '取消',
+            //         type: 'warning',
+            //         center: true
+            //         }).then(() => {
+            //             self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
+            //                 self.repositoryAddressData.splice(index,1)
+            //                 self.loadAllList();
+            //                 self.open('删除成功','el-icon-circle-check','successERP');    
+            //             })
+            //         }).catch(() => {
+            //             self.$message({
+            //                 type: 'info',
+            //                 message: '已取消删除'
+            //             });
+            //         });
                 
-            },
+            // },
             Modify:function(){
                 let self = this;
                 self.ifModify = true;
             },
             //------------------------------------------------------
-
-            //---确认删除--------------------------------------------
-            sureDel:function(){
-                let self = this;
-                self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.$route.params.id}).then(function(res){
-                    self.open('删除仓库成功','el-icon-circle-check','successERP');
-                    self.back();
-                    self.dialogDelConfirm = false;
-                },function(res){
-                    self.open('删除仓库失败','el-icon-error','faildERP');
-                    self.dialogDelConfirm = false;
-                    self.errorMessage = true;
-                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                }) 
-            },
-            //------------------------------------------------------
-
-            //---顶部删除按钮-----------------------------------------
-            delModify:function(){
-                let self = this;
-                self.dialogDelConfirm = true; 
-            },
-            //-------------------------------------------------------
 
             //---修改返回提示-----------------------------------------
             isBack(){
@@ -1065,7 +1302,7 @@
                 //点击所属组织，业务地区跟着变动
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
                     console.log(res);
-                    if(res.result.length>0){
+                    if(res.result&&res.result.length>0){
                         self.opAr = res.result;
                         self.loadIcon();
                     }else{
@@ -1171,158 +1408,7 @@
             },
         },
 
-        data(){
-            return {
-                getOuId:'',//保存获取的ouid
-                repositoryData:{
-                    "ouId": '',
-                    "stockCode": "",
-                    "stockName": "",
-                    "stockFullName": "",
-                    'mnemonic':'',
-                    "opAreaId": '',
-                    "adAreaId": '',
-                    "stockTypeId": '',
-                    "invTypeId": '',
-                    "fax": "",
-                    'stockAddress':'',
-                    "email": "",
-                    "status": '',
-                    "manager": "",
-                    "phone": "",
-                    "remark": ""
-                },//根据仓库id查出的仓库信息
-                repositoryAddressData:[],//根据仓库id查出的仓库地址信息
-                getRepositoryAddressParams:{
-                   id:'',
-                }, 
-                ifModify:false,//判断主表是否修改过
-                ifDoModify:false,//判断从表是否修改过
-                ifShow:true,//控制折叠页面
-                ou: [{//所属组织
-                    value:0,
-                    label: '恒康'
-                }, {
-                    value:1,
-                    label: '恒大'
-                }, {
-                    value:2,
-                    label: '361度'
-                }],
-                //---所属组织树形下拉-----
-                ouSearch:'',
-                selectOuProps:{
-                    children: 'children',
-                    label: 'ouFullname',
-                    id:'id'
-                },
-                ouItem:{
-                    id:'',
-                    ouFullname:'',
-                },
-                ouAr:[],//所属组织下拉框
-                //-----------------------
-                //---行政地区树形下拉-----
-                areaProArray:[],//行政地区(省)
-                areaCityArray:[],//行政地区(市)
-                areaDisArray:[],//行政地区(区)
-                adSearch:'',//树形搜索框的
-                selectAdProps:{
-                    children: 'items',
-                    label: 'areaName',
-                    id:'id'
-                },
-                adItem:{
-                    id:'',
-                    areaName:'',
-                },
-                adAr:[],//行政地区下拉框
-                //-----------------------
-                //---业务地区树形下拉-----
-                    opSearch:'',//树形搜索框的
-                    selectOpProps:{
-                        children: 'childItems',
-                        label: 'areaName',
-                        id:'id'
-                    },
-                    opItem:{
-                        id:'',
-                        areaName:'',
-                    },
-                    opAr:[],//业务地区下拉框
-                //-----------------------
-
-                //---普通下拉框-----------
-                statusAr:[],//状态
-                transAr:[],//运输方式
-                logiAr:[],//物流公司
-                //-----------------------
-                stockType: [{//仓库类型
-                    value:0,
-                    label: '仓库'
-                }, {
-                    value:1,
-                    label: '店铺'
-                }],
-                
-                status: [],
-
-                value: '',
-                
-                createParams:{//创建新的仓库地址
-                    groupId:'1',//集团ID
-                    stockId:'',//仓库ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    phone:'',//联系电话
-                    logisticsCompanyId:'',//物流公司
-                    isDefault:false,//是否默认
-                    remark:'',//备注
-                },
-                x:0,//增行的下标
-                rows:[],//增行的数组
-                updateList:[],//更新上传的数组
-                addList:[],//新增上传的数组
-                multipleSelection:[],//需要删除的数组
-                idArray:{
-                    ids:[]
-                },//需要删除的数组id
-                checkedAr:[],//加载时从表默认选择的数组
-
-                //---确认删除-----------------               
-                dialogDelConfirm:false,//用户删除保存提示信息
-                //--------------------  
-
-                //---信息修改提示框------------
-                dialogUserConfirm:false,//信息更改提示控制
-                //----------------------------
-                //---错误提示框----------------
-                option: {
-                    vRail: {
-                        width: '5px',
-                        pos: 'right',
-                        background: "#9093994d",
-                    },
-                    vBar: {
-                        width: '5px',
-                        pos: 'right',
-                        background: '#9093994d',
-                    },
-                    hRail: {
-                        height: '0',
-                    },
-                },
-                errorMessage:false,
-                detail_message_ifShow:false,
-                response:{
-                    details:'',
-                    message:'',
-                    validationErrors:[],
-                },
-                //-----------------------------
-            }
-        },
+        
     }
 </script>
 

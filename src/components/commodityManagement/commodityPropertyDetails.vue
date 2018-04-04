@@ -7,7 +7,7 @@
                 <el-row class="pl10 pr10">
                     <el-col :span="24" style="margin-top:20px">
                         <el-row>
-                            <el-col :span="2">
+                            <el-col :span="9">
                                 <div class="bgcolor smallBgcolor">
                                         <label ><small>*</small>上级属性</label>
                                </div>
@@ -15,7 +15,8 @@
                             <el-col :span="5" >
                                 <div class="bgcolor smallBgcolor">
                                     <el-select 
-                                    class="propertyParentid" 
+                                    class="propertyParentid"
+                                    @change="isUpdate" 
                                     v-model="addData.propertyParentid"
                                     placeholder="" :class="{redBorder : validation.hasError('addData.propertyParentid')}">
                                     <el-input
@@ -45,14 +46,14 @@
                     </el-col>
                     <el-col :span="24">
                         <el-row>
-                            <el-col :span="2">
+                            <el-col :span="9">
                                 <div class="bgcolor smallBgcolor" >
                                         <label><small>*</small>属性编码</label>
                                </div>
                             </el-col>
                             <el-col :span="5" >
                                 <div class="smallBgcolor bgcolor" >
-                                <el-input placeholder="" :class="{redBorder : validation.hasError('addData.propertyCode')}" v-model="addData.propertyCode" id="coding" ></el-input>
+                                <el-input placeholder="" @change="isUpdate" :class="{redBorder : validation.hasError('addData.propertyCode')}" v-model="addData.propertyCode" id="coding" ></el-input>
                                 </div>
                             </el-col>
                             <el-col :span="3"><div class="error_tips_info">{{ validation.firstError('addData.propertyCode') }}</div></el-col>
@@ -60,14 +61,14 @@
                     </el-col>
                     <el-col :span="24">
                         <el-row>
-                            <el-col :span="2">
+                            <el-col :span="9">
                                 <div class="bgcolor smallBgcolor" >
                                        <label> <small>*</small>属性名称</label>
                                </div>
                             </el-col>
                             <el-col :span="5" id="name">
                                 <div class="smallBgcolor bgcolor" >
-                                <el-input placeholder="" :class="{redBorder : validation.hasError('addData.propertyName')}" v-model="addData.propertyName"></el-input>
+                                <el-input placeholder="" @change="isUpdate" :class="{redBorder : validation.hasError('addData.propertyName')}" v-model="addData.propertyName"></el-input>
                                 </div>
                             </el-col>
                             <el-col :span="3"><div class="error_tips_info">{{ validation.firstError('addData.propertyName') }}</div></el-col>
@@ -75,14 +76,14 @@
                     </el-col>
                     <el-col :span="24">
                         <el-row>
-                            <el-col :span="2">
+                            <el-col :span="9">
                                 <div class="bgcolor smallBgcolor" >
                                         <label><small>*</small>控件类型</label>
                                </div>
                             </el-col>
                             <el-col :span="5" id="type">
                                 <div class="bgcolor smallBgcolor" >
-                                    <el-select v-model="addData.controlType"  :class="{redBorder : validation.hasError('addData.controlType')}">
+                                    <el-select v-model="addData.controlType" @change="isUpdate" :class="{redBorder : validation.hasError('addData.controlType')}">
                                     <el-option  v-for="item in ControlTypeOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
 
@@ -96,14 +97,14 @@
                 <el-row class="pl10  pr10">
                     <el-col :span="24">
                         <el-row>
-                            <el-col :span="2">
+                            <el-col :span="9">
                                 <div class="bgcolor smallBgcolor" >
                                         <label><small>*</small>数据源</label>
                                </div>
                             </el-col>
                             <el-col :span="5">
                                 <div class="smallBgcolor bgcolor" >
-                                <el-input placeholder="" v-model="addData.dataSource" :class="{redBorder : validation.hasError('addData.dataSource')}"></el-input>
+                                <el-input placeholder="" v-model="addData.dataSource" @change="isUpdate" :class="{redBorder : validation.hasError('addData.dataSource')}"></el-input>
                                 </div>
                             </el-col>
                             <el-col :span="3"><div class="error_tips_info">{{ validation.firstError('addData.dataSource') }}</div></el-col>
@@ -111,41 +112,41 @@
                     </el-col>
                     <el-col :span="24">
                         <el-row>
-                            <el-col :span="2">
+                            <el-col :span="9">
                                 <div class="bgcolor smallBgcolor" >
                                         <label>显示顺序</label>
                                </div>
                             </el-col>
                             <el-col :span="5" id="order">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder="" v-model="addData.seq"></el-input>
+                                <el-input placeholder="" @change="isUpdate" v-model="addData.seq"></el-input>
                                 </div>
                             </el-col>
                         </el-row>
                     </el-col>
                     <el-col :span="24">
                         <el-row>
-                            <el-col :span="2">
+                            <el-col :span="9">
                                 <div class="bgcolor smallBgcolor" >
                                         <label>级联属性</label>
                                </div>
                             </el-col>
                             <el-col :span="5">
                                 <div class="smallBgcolor" >
-                                <el-input placeholder="" v-model="addData.levelNo"></el-input>
+                                <el-input placeholder="" @change="isUpdate" v-model="addData.levelNo"></el-input>
                                 </div>
                             </el-col>
                         </el-row>
                     </el-col>
                     <el-col :span="24">
-                        <el-col :span="2">
+                        <el-col :span="9">
                             <div class="bgcolor smallBgcolor" >
                                     <label>状态</label>
                            </div>
                         </el-col>
                         <el-col :span="5" id="state">
                             <div class="bgcolor smallBgcolor" >
-                                <el-select  v-model="addData.status">
+                                <el-select  v-model="addData.status" @change="isUpdate">
                                 <el-option  v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value">
                                 </el-option>
 
@@ -155,19 +156,14 @@
                     </el-col>
                 </el-row>
                 <el-row class="pl10 pr10">
-                    <el-col :span="2">
+                    <el-col :span="9">
                         <div class="height1"></div>
                     </el-col>
-
                     <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6" class="Systemcheckbox mt10">
-                        
-                            <el-checkbox  v-model="addData.isSystem" label="1">系统属性</el-checkbox>
-                        
+                        <el-checkbox  v-model="addData.isSystem" label="1">系统属性</el-checkbox>       
                     </el-col>
                     <el-col :xl="2" :lg="2" :md="4" :sm="5" :xs="6" class="mt10">
-                       
-                            <el-checkbox v-model="addData.required" label="2">必填</el-checkbox>
-                        
+                            <el-checkbox v-model="addData.required" label="2">必填</el-checkbox>  
                     </el-col>
                 </el-row>
                 <el-row class="pl10 pr10 pt10  " style="border-top:1px solid #e4e4e4;   ">
@@ -226,6 +222,56 @@
             </el-col>
         </el-row>
         
+        <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="$store.state.option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font yes" @click="sureAjax">确 认</button>
+                <button class="dialog_footer_bt dialog_font no" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog --> 
     </div>
 </template>
 
@@ -236,6 +282,12 @@ import Textbox from '../../base/textbox/textbox'
         name:'customerInfor',
         data(){
             return{
+
+                 // 错误信息提示开始
+                detail_message_ifShow:false,
+                errorMessage:false,
+                // 错误信息提示结束
+                dialogUserConfirm:false,//用户删除保存提示信息
                 classTree:[],
                 ifWidth:true,
                 treeNode:{
@@ -276,6 +328,7 @@ import Textbox from '../../base/textbox/textbox'
                    botton:[{
                     class: 'erp_bt bt_back',
                     imgsrc: '../../../static/image/common/bt_back.png',
+                    update:false,
                     text: '返回',
                     show:true,
                 },{
@@ -283,13 +336,16 @@ import Textbox from '../../base/textbox/textbox'
                     imgsrc: '../../../static/image/common/bt_save.png',
                     text: '保存',
                     show:true,
+                },{ class: 'erp_bt bt_auxiliary cancel',
+                    show:true, 
+                    imgsrc: '../../../static/image/common/u470.png',
+                    text: '取消'
                 },{
                     class: 'erp_bt bt_save_add',
                     imgsrc: '../../../static/image/common/bt_save.png',
                     text: '保存并新增',
                     show:true,
-                },{
-                    class: 'erp_bt bt_add',
+                },{  class: 'erp_bt bt_add after',
                     imgsrc: '../../../static/image/common/bt_add.png',
                     text: '新增',
                     show:true,
@@ -331,7 +387,19 @@ import Textbox from '../../base/textbox/textbox'
                     label: '通过'
                 }],
                 value: '',
-
+                ifsql:true,
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                increased:false,//新增按钮
+                dellet:false,//删除按钮
+                savefa:true,//新增保存按钮
+                savexiu:false,//修改保存按钮
+                abolish:true,//取消按钮
+                savefaadd:true,//保存并提交
+                aboxiu:false,//修改取消
             }
         },
         validators: {
@@ -355,7 +423,6 @@ import Textbox from '../../base/textbox/textbox'
             let _this=this;
             _this.InitModify();
             this.loadTree();
-            console.log(this.count.propertyName)
             if(this.$route.params.id !="default"){
                _this.showbutton() 
             }else{
@@ -369,9 +436,19 @@ import Textbox from '../../base/textbox/textbox'
         },
         watch: {
             treeQuery(val) {
-                console.log(this.$refs.tree.filter(val));
                 this.$refs.tree.filter(val);
             },
+            addData:{
+                handler:function(){
+                    this.ifsql = !this.ifsql
+                    if(this.$route.params.id != "default" && this.ifsql){
+                        if(this.bottonbox.botton[1].text != '保存'){
+                            this.bottonbox.botton.splice(1,2,{class: 'erp_bt bt_save amend_save',show:true, imgsrc: '../../../static/image/common/bt_save.png',text: '保存'},{class: 'erp_bt bt_auxiliary cancel',show:true, imgsrc: '../../../static/image/common/u470.png',text: '取消'},{class: 'erp_bt bt_save_add',show:true, imgsrc: '../../../static/image/common/bt_save.png',text: '保存并新增'})
+                        }    
+                    }
+                },
+                deep: true
+            }
         },
         methods:{
             InitModify(){
@@ -383,7 +460,6 @@ import Textbox from '../../base/textbox/textbox'
                         // _this.updateId=res.result.id;
                         _this.treeNode.propertyParentid=res.result.propertyParentid;
                         _this.treeNode.propertyName=res.result.propertyName;
-                        console.log(_this.treeNode.propertyName);
                           _this.addData.levelNo=res.result.levelNo,
                           _this.addData.propertyParentid=res.result.propertyParentid,
                           _this.addData.relPropertyId= res.result.relPropertyId,
@@ -413,7 +489,6 @@ import Textbox from '../../base/textbox/textbox'
                     _this.$axios.gets('http://192.168.100.107:8085/api/services/app/PropertyManagement/GetPropertyTree')
                     .then(function(res){
                         _this.classTree=res
-                        console.log(_this.classTree)
                         _this.loadIcon();
                         _this.treeLoading=false;
                 },function(res){
@@ -451,15 +526,30 @@ import Textbox from '../../base/textbox/textbox'
                 return currentdate;
             },
             filterNode(value, data) {
-                console.log(value)
                 if (!value) return true;
                 return data.categoryName.indexOf(value) !== -1;
+            },
+            isUpdate(){
+                //判断是否修改过信息
+                let _this=this;
+                if(this.$route.params.id !="default"){
+                   this.bottonbox.botton[0].update=true; 
+                    _this.savefa=false;//新增保存功能注释
+                    _this.savexiu=true;//修改保存功能注释
+                    _this.abolish=false;//注释取消按钮
+                    _this.aboxiu=true;//注释修改取消按钮
+                    _this.savefaadd=true;//注释保存并提交按钮
+                    _this.increased=false;//激活新增按钮
+                    _this.dellet=false;//激活删除按钮
+                    console.log(1)
+                }else{
+                   this.bottonbox.botton[0].update=false; 
+                } 
             },
             nodeClick(data){
                 let _this=this;
                 _this.treeNode.propertyParentid=data.propertyParentid;
                 _this.treeNode.propertyName=data.propertyName;
-                console.log(1)
                 _this.$nextTick(function(){
                     $('#businessDetail_confirmSelect').click()
                 })
@@ -477,42 +567,205 @@ import Textbox from '../../base/textbox/textbox'
                 this.addData.required="";//是否必填
             },
             btmlog:function(data){
-
                 let _this=this;
                 if(data == '新增保存'){
-                    _this.$validate();
-                    if(_this.addData.levelNo != '' && _this.addData.propertyParentid !='' ){
-                        _this.addData.levelNo=parseInt(_this.addData.levelNo);
+                    if(_this.savefa){//新增保存是否启用
+                        _this.$validate().then(function (success) {
+                            if(success){
+                                if(_this.addData.levelNo != '' && _this.addData.propertyParentid !='' ){
+                                    _this.addData.levelNo=parseInt(_this.addData.levelNo);
+                                    _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);    
+                                }
+                                if(_this.addData.seq != ''){
+                                    _this.addData.seq=parseInt(_this.addData.seq);
+                                }
+                                if(_this.addData.seq == ''){
+                                   _this.addData.seq = 0;
+                                }
+                                if(_this.addData.status == ''){
+                                    _this.addData.status = 0;
+                                }
+                                if(_this.addData.levelNo ==''){
+                                   _this.addData.levelNo = 0; 
+                                }
+                                _this.$axios.posts('http://192.168.100.107:8085/api/services/app/PropertyManagement/Create',_this.addData).then(function(res){
+                                    // _this.InitModify();
+                                    _this.validation.reset();
+                                    _this.open('创建商品属性成功','el-icon-circle-check','successERP'); 
+                                    _this.savefa=false;//新增保存功能注释
+                                    _this.savexiu=false;//修改保存功能注释
+                                    _this.abolish=false;//注释取消按钮
+                                    _this.savefaadd=false;//注释保存并提交按钮
+                                    _this.increased=true;//激活新增按钮
+                                    _this.dellet=true;//激活删除按钮
+                                    _this.aboxiu=false;//注释修改取消按钮
+                                    _this.$store.state.url='/commodityProperty/commodityPropertyDetails/'+res.result.id;
+                                    _this.$router.push({path:_this.$store.state.url});
+                                },function(res){
+                                    _this.open('创建失败','el-icon-error','faildERP');
+                                    // alert(res)
+                                    console.log(res)
+                                    // _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                                    _this.dialogUserConfirm=false;
+                                    _this.errorMessage=true;
+                                    
+                                });
+                            }
+                              
+                        });
+                    }
+                    if(_this.savexiu){
+                        // _this.$validate();
+                      _this.addData.modifiedBy='admin';
+                      _this.addData.createdBy='admin';
+                      _this.addData.levelNo=parseInt(_this.addData.levelNo);
                         _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);
-                        
-                    }
-                    if(_this.addData.seq != ''){
                         _this.addData.seq=parseInt(_this.addData.seq);
+                      _this.$axios.puts('http://192.168.100.107:8085/api/services/app/PropertyManagement/Update',_this.addData).then(function(res){
+                            // _this.$store.state.url='/tenant/tenantManagement/'+res.result.id;
+                            // _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                            _this.open('保存成功','el-icon-circle-check','successERP');
+                            _this.savefa=false;//新增保存功能注释
+                            _this.savexiu=false;//修改保存功能注释
+                            _this.abolish=false;//注释取消按钮
+                            _this.aboxiu=false;//注释修改取消按钮
+                            _this.savefaadd=false;//注释保存并提交按钮
+                            _this.increased=true;//激活新增按钮
+                            _this.dellet=true;//激活删除按钮
+                        },function(){
+                            _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            _this.dialogUserConfirm=false;
+                            _this.errorMessage=true;
+                            _this.open('保存失败','el-icon-error','faildERP');
+                        });
                     }
-                    
-
-                    _this.$axios.posts('http://192.168.100.107:8085/api/services/app/PropertyManagement/Create',_this.addData).then(function(res){
-                        // _this.InitModify();
-                        _this.InitData();
-                        // _this.validation.reset();
-                        _this.open('保存商品类目成功','el-icon-circle-check','successERP');    
-                    }); 
-                }else if(data == '修改保存'){
-                  // _this.$validate();
-                  _this.addData.modifiedBy='admin';
-                  _this.addData.createdBy='admin';
-                  _this.addData.levelNo=parseInt(_this.addData.levelNo);
-                    _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);
-                    _this.addData.seq=parseInt(_this.addData.seq);
-                    console.log(_this.addData)
-                  _this.$axios.puts('http://192.168.100.107:8085/api/services/app/PropertyManagement/Update',_this.addData).then(function(res){
-                        // _this.$store.state.url='/tenant/tenantManagement/'+res.result.id;
-                        // _this.$router.push({path:_this.$store.state.url})//点击切换路由
-                        _this.open('保存成功','el-icon-circle-check','successERP');
-                    },function(){
-                        _this.open('保存失败','el-icon-error','faildERP');
-                    });
-                } 
+                }else if(data == '新增'){
+                    if(_this.increased){
+                        this.$store.state.url=`/commodityProperty/commodityPropertyDetails/default`
+                        this.$router.push({path:this.$store.state.url});
+                        this.InitData();
+                        _this.InitModify();
+                        this.loadTree();
+                        _this.savefa=true;//新增保存功能注释
+                        _this.savexiu=false;//修改保存功能注释
+                        _this.abolish=true;//注释取消按钮
+                        _this.savefaadd=true;//注释保存并提交按钮
+                        _this.increased=false;//激活新增按钮
+                        _this.dellet=false;//激活删除按钮
+                        _this.aboxiu=false;//注释修改取消按钮
+                    }  
+                }else if(data == '取消'){
+                   if(_this.abolish){
+                        this.ifsql =false;
+                        _this.$store.state.url='/commodityProperty/commodityPropertyDetails/default';
+                         _this.$router.push({path:_this.$store.state.url});
+                   }
+                   if(_this.aboxiu){
+                        _this.InitModify();
+                        _this.savefa=false;//新增保存功能注释
+                        _this.savexiu=false;//修改保存功能注释
+                        _this.abolish=false;//注释取消按钮
+                        _this.savefaadd=false;//注释保存并提交按钮
+                        _this.increased=true;//激活新增按钮
+                        _this.dellet=true;//激活删除按钮
+                        _this.aboxiu=false;//注释修改取消按钮
+                   } 
+                }else if(data == '删除'){
+                    if(_this.dellet){
+                        this.dialogUserConfirm = true;
+                    }
+                }else if(data == '保存并新增'){
+                    if(_this.savefaadd){
+                        if(_this.savefa){//新增保存是否启用
+                            _this.$validate().then(function (success) {
+                                if(success){
+                                    if(_this.addData.levelNo != '' && _this.addData.propertyParentid !='' ){
+                                        _this.addData.levelNo=parseInt(_this.addData.levelNo);
+                                        _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);    
+                                    }
+                                    if(_this.addData.seq != ''){
+                                        _this.addData.seq=parseInt(_this.addData.seq);
+                                    }
+                                    if(_this.addData.seq == ''){
+                                       _this.addData.seq = 0;
+                                    }
+                                    if(_this.addData.status == ''){
+                                        _this.addData.status = 0;
+                                    }
+                                    if(_this.addData.levelNo ==''){
+                                       _this.addData.levelNo = 0; 
+                                    }
+                                    _this.$axios.posts('http://192.168.100.107:8085/api/services/app/PropertyManagement/Create',_this.addData).then(function(res){
+                                        // _this.InitModify();
+                                        _this.validation.reset();
+                                        _this.open('创建商品属性成功','el-icon-circle-check','successERP'); 
+                                        _this.savefa=true;//新增保存功能注释
+                                        _this.savexiu=false;//修改保存功能注释
+                                        _this.abolish=true;//注释取消按钮
+                                        _this.savefaadd=true;//注释保存并提交按钮
+                                        _this.increased=false;//激活新增按钮
+                                        _this.dellet=false;//激活删除按钮
+                                        _this.aboxiu=false;//注释修改取消按钮
+                                        _this.InitData();
+                                        
+                                    },function(res){
+                                        _this.open('创建失败','el-icon-error','faildERP');
+                                        // alert(res)
+                                        console.log(res)
+                                        // _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                                        _this.dialogUserConfirm=false;
+                                        _this.errorMessage=true;
+                                        
+                                    });
+                                }
+                                  
+                            });
+                        }
+                        if(_this.savexiu){
+                            // _this.$validate();
+                          _this.addData.modifiedBy='admin';
+                          _this.addData.createdBy='admin';
+                          _this.addData.levelNo=parseInt(_this.addData.levelNo);
+                            _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);
+                            _this.addData.seq=parseInt(_this.addData.seq);
+                          _this.$axios.puts('http://192.168.100.107:8085/api/services/app/PropertyManagement/Update',_this.addData).then(function(res){
+                                // _this.$store.state.url='/tenant/tenantManagement/'+res.result.id;
+                                // _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                                _this.open('保存成功','el-icon-circle-check','successERP');
+                                _this.savefa=true;//新增保存功能注释
+                                _this.savexiu=false;//修改保存功能注释
+                                _this.abolish=true;//注释取消按钮
+                                _this.savefaadd=true;//注释保存并提交按钮
+                                _this.increased=false;//激活新增按钮
+                                _this.dellet=false;//激活删除按钮
+                                _this.aboxiu=false;//注释修改取消按钮
+                                _this.InitData();
+                            },function(){
+                                _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                                _this.dialogUserConfirm=false;
+                                _this.errorMessage=true;
+                                _this.open('保存失败','el-icon-error','faildERP');
+                            });
+                        }
+                    }
+                }
+            },
+            sureAjax(){
+                let _this=this;
+                _this.$axios.deletes('http://192.168.100.107:8085/api/services/app/PropertyManagement/Delete',{Id:_this.$route.params.id}).then(function(res){
+                    // _this.loadTableData();
+                    _this.dialogUserConfirm=false;
+                    _this.InitData();
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                    _this.$store.state.url=`/commodityProperty/commodityPropertyDetails/default`
+                    _this.$router.push({path:_this.$store.state.url}); 
+                    _this.savefa=true;//新增保存功能注释
+                    _this.savexiu=false;//修改保存功能注释
+                    _this.abolish=true;//注释取消按钮
+                    _this.savefaadd=true;//注释保存并提交按钮
+                    _this.increased=false;//激活新增按钮
+                    _this.dellet=false;//激活删除按钮            
+                })
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -524,11 +777,21 @@ import Textbox from '../../base/textbox/textbox'
                 customClass:className
                 });
             },
-            showbutton(){
-                this.bottonbox.botton.splice(1,2,{class: 'erp_bt bt_save amend_save',show:true, imgsrc: '../../../static/image/common/bt_save.png',text: '保存'},{class: 'erp_bt bt_auxiliary cancel',show:true, imgsrc: '../../../static/image/common/u470.png',text: '取消'})
-               
-            }
-            
+            getErrorMessage(message,details,validationErrors){
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
+            },           
         },
         components:{
             Btm

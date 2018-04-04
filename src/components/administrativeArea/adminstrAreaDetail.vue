@@ -64,8 +64,6 @@
                     </div>
                 </el-col>
             </el-row>
-
-
         <!-- 表单 -->
         <el-row>
             <div class="admstr-form-wrapper pt15">
@@ -95,7 +93,9 @@
                                     @node-click="nodeClick"
                                     >
                                 </el-tree>
-                                <el-option v-show="false" v-for="item in adminAreaTree" :key="item.id" :label="item.areaName" :value="item.id" >
+                                <!-- <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id" >
+                                </el-option> -->
+                                 <el-option v-show="false" :key="count.Id" :label="count.areaName" :value="count.Id"   id="adminStrDetail_confirmSelect">
                                 </el-option>
                             </el-select>
                         </div>
@@ -167,8 +167,8 @@
                         <div class="bgcolor bgLongWidth">
                             <label>创建人</label>
                             <el-input 
-                            :disabled="isDisabled"
-                             v-model="addData.createdBy"
+                            disabled
+                            v-model="addData.createdBy"
                             ></el-input>
                         </div>
                     </div>
@@ -179,7 +179,7 @@
                             <label>创建时间</label>
                             <el-date-picker
                             type="date"
-                            :disabled="isDisabled"
+                            disabled
                             v-model="addData.createdTime"
                             format="yyyy-MM-dd"
                             value-format="yyyy-MM-dd">
@@ -198,7 +198,6 @@
     name: "adminstrAreaDetail",
     data() {
         return {
-            isDisabled:true,
             addData:{// 新增数据列表
                 "groupId": 0,
                 "levelNo": 0,
@@ -211,22 +210,29 @@
                 "isSystem": true,
                 "status": 1,
                 "remark": "",
+                "createdBy" :this.$store.state.name,
+                "createdTime"  : this.GetDateTime(),
             },
             selectData:{
                 Status001:[],//启用状态
             },
+            // -------------------------树形控件数据
             adminAreaTree:[],
             defaultProps: {
                         children: 'childItems',
                         label: 'areaName',
                         id:'id'
-                    },
+            },
+            treeNode:{
+                    Id:'',
+                    areaName:'',
+            },
         };
     },
     created() {
         this.getSelectData();
         this.loadTree();
-        //   this.reset();
+        this.GetDateTime();
     },
     validators: {
         'addData.areaParentId': function (value) {//上级地区
@@ -242,23 +248,32 @@
             return this.Validator.value(value).required().integer();
         },
     },
+    computed:{
+            count () {
+                return this.treeNode;
+                },
+        },
     methods: {
+        GetDateTime() {//获取当前时间
+            let date=new Date();
+            return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
+        }, 
         // 返回
         goback() {
             this.$store.state.url = "/adminstrArea/adminstrAreaList/default";
             this.$router.push({ path: this.$store.state.url });
         },
         // 成功的提示框
-                open(tittle,iconClass,className) {//提示框
-                    this.$notify({
-                    position: 'bottom-right',
-                    iconClass:iconClass,
-                    title: tittle,
-                    showClose: false,
-                    duration: 3000,
-                    customClass:className
-                    });
-                },
+        open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+        },
         // 保存
         save() {
             let _this=this;
@@ -268,6 +283,7 @@
                         _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData)
                             .then(
                                 rsp=>{
+                                    // console.log(rsp.result);
                                             _this.open('保存成功','el-icon-circle-check','successERP'); 
                                              _this.$axios.gets("/api/services/app/AdAreaManagement/Get", {
                                                 id: rsp.result.id
@@ -308,8 +324,8 @@
                         }
                     );
         },
-        // 获取树形节点
-        loadTree(){
+        // ----------树形控件相关----------
+        loadTree(){// 获取树形节点
             let _this=this;
             // _this.treeLoading=true;
             _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
@@ -322,31 +338,29 @@
                             // _this.treeLoading=false;
                         })
         }, 
-            // 文件夹图标加载
-                        loadIcon(){
-                            let _this=this;
-                            _this.$nextTick(function () {
-                                $('.preNode').remove();   
-                                $('.el-tree-node__label').each(function(){
-                                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                                    }else{
-                                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                                    }
-                                })
-                            })
-                        },
-            // 节点被点击时的回调
-                nodeClick(data,node,self){
-                    let _this=this;
-                    _this.addData.areaParentId=data.id;
-                    _this.addData.areaParentId_AreaName=data.areaName;
-                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                        if($(this).attr('date')==data.id){
-                            $(this).click()
+        loadIcon(){// 文件夹图标加载
+            let _this=this;
+             _this.$nextTick(function () {
+                $('.preNode').remove();   
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                         }
-                    })
-                },
+                })
+            })
+        },
+        nodeClick(data,node,self){// 节点被点击时的回调
+             let _this=this;
+                //  console.log(data);
+                _this.treeNode.Id=data.id;
+                _this.treeNode.areaName=data.areaName;
+                _this.$nextTick(function(){
+                    $('#adminStrDetail_confirmSelect').click()
+                })
+            
+         },
             // 获取下拉框数据
             getSelectData(){
                 let _this=this;

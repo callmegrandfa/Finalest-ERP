@@ -16,31 +16,31 @@
                     <span class="btDetail">修改</span>
                 </button>  -->
                 
-              <button @click="save" class="erp_fb_bt bt_save" v-show='!ifModify'>
+              <button @click="save" class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                     <div class="btImg">
                       <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                   </button>
-              <button class="erp_fb_bt bt_cancel">
+              <button class="erp_bt bt_cancel":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                   <div class="btImg"><img src="../../../static/image/common/bt_cancel.png">
                   </div>
                   <span class="btDetail">取消</span>
               </button>
-              <button class="erp_fb_bt bt_saveAdd">
+              <button @click="saveAdd"class="erp_bt bt_saveAdd":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
                 </div>
                 <span class="btDetail">保存并新增</span>
               </button>
-                  <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
+                  <button class="erp_bt bt_add" @click="goDetail" :disabled="ifModify" :class="{erp_fb_bt : ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">新增</span>
                 </button>
 
-                <button class="erp_bt bt_del" @click="delModify" v-show='!ifModify'>
+                <button class="erp_bt bt_del" @click="delModify" :disabled="ifModify" :class="{erp_fb_bt : ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
@@ -163,13 +163,23 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建时间</label>
-                        <el-input class="createdTime" 
+
+                        <!-- <el-input class="createdTime" 
                                   :class="{redBorder : validation.hasError('customerClassData.createdTime')}" 
                                    :disabled="isEdit" 
                                   v-model="customerClassData.createdTime"
                                   :autosize="{ minRows: 4, maxRows: 4}">
                                    @change='Modify()'></el-input>
-                        </el-input>
+                        </el-input> -->
+                        <el-date-picker
+                                  v-model="customerClassData.createdTime"
+                                  type="date"
+                                  format="yyyy-MM-dd"
+                                  value-format="yyyy-MM-dd" 
+                                  :disabled="isEdit" 
+                                   @change='Modify()'></el-input>
+                                  placeholder="">
+                         </el-date-picker>
                     </div>
                   
                 </div>    
@@ -381,17 +391,6 @@ export default {
           });
       }
     },
-    // loadOuTree:function(){
-    //     let self=this;
-    //     self.treeLoading=true;
-    //     self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
-    //         console.log(res)
-    //         self.ouTree=res.result;
-    //         self.loadIcon();
-    //     },function(res){
-    //         self.treeLoading=false;
-    //     })
-    // },
     loadParentTree() {
       let self = this;
       self.treeLoading = true;
@@ -538,7 +537,7 @@ export default {
               )
               .then(
                 function(res) {
-                  // console.log(res);
+                  console.log(res);
                   self.ifModify = false;
                   self.goDetail();
                   self.open("修改成功", "el-icon-circle-check", "successERP");

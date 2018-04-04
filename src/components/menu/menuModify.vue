@@ -2,12 +2,12 @@
     <div class="menuModify">
         <el-row  class="fixed">
             <el-col :span="24">
-               <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <button @click="save" class="erp_bt bt_save" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button @click="isCancel" class="erp_bt bt_cancel" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-              <button plain @click="saveAdd" class="erp_bt bt_saveAdd" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-              <button @click="add" class="erp_bt bt_add" v-show="!update"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-              <button @click="isDeleteThis" class="erp_bt bt_del" v-show="!update"><div class="btImg" ><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+              <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
+              <button @click="save" class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+              <button @click="isCancel" class="erp_bt bt_cancel" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button plain @click="saveAdd" class="erp_bt bt_saveAdd" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+              <button @click="add" class="erp_bt bt_add" :disabled="ifModify" :class="{erp_fb_bt : ifModify}"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <button @click="isDeleteThis" class="erp_bt bt_del" :disabled="ifModify" :class="{erp_fb_bt : ifModify}"><div class="btImg" ><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
             </el-col>
         </el-row>
         <el-row>
@@ -181,55 +181,18 @@
                     <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
                 </div>    
             </el-col>
-
-
-
-                <!-- <el-dialog :visible.sync="dialogTableVisible">
-                    <template slot="title">
-                        <span style="float:left;">添加功能</span>
-                        <div class="double_bt">
-                            <template v-if="menuCheck">
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}" @click="showNodeadd">已选功能</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}">未选功能</div>
-                            </template>
-                            <template v-else>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : !menuCheck}">已选功能</div>
-                                <div class="menu_btn_choose" :class="{menu_btn_active : menuCheck}" @click="showNodedel">未选功能</div>
-                            </template>
+            <el-col :span="24">
+                 <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth" style="overflow: visible;">
+                        <label class="h_35"></label>
+                        <div class="rolesZoo">
+                            <a class="addRole"  v-for="(x,index) in checked" :key="index" :permissionName="x.permissionName">{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
                         </div>
-                    </template>
-                    <el-col :span="6" class="dialog_ dialog_l">
-                        <el-col :span="24">
-                            <el-input placeholder="" class="menu_search">
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-input>
-                        </el-col>
-                        <el-col :span="24" class="mt_20">
-                            <el-tree
-                            :data="componyTree"
-                            :props="defaultProps"
-                            node-key="id"
-                            default-expand-all
-                            @node-click="nodeClick"
-                            :expand-on-click-node="false">
-                            </el-tree>
-                        </el-col>
-                        
-                    </el-col>
-                    <el-col :span="18" class="dialog_ dialog_r">
-                        <div class="menu_box" v-for="(i,index) in componyTree"  :key="index" :moduleName="i.displayName">
-                            <p>{{i.displayName}}</p>
-                            <div class="menu_item_wapper menu_item_add">
-                                <span class="menu_item" v-for="(x,inde) in i.children" :key="inde" :permissionName="x.permissionName"><a class="menu_add" @click="addPermission(x)"><i class="el-icon-minus"></i></a>{{x.displayName}}</span>
-                            </div>
-                            <div class="menu_item_wapper menu_item_del">
-                                <span class="menu_item" v-for="(x,inde) in i.children" :key="inde" :permissionName="x.permissionName"><a class="menu_add" @click="delPermission(x)"><i class="el-icon-plus"></i></a>{{x.displayName}}</span>
-                            </div>
-                        </div>
-                    </el-col>
-                </el-dialog> -->
-
-            <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
+                    </div>
+                 </div>
+            </el-col>
+        </el-row>
+        <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
                 <el-col :span="24">
                     <el-col :span="6">
                         <el-col :span="24" class="transfer_fixed">
@@ -313,17 +276,6 @@
                 </span>
             </el-dialog>
             <!--dialog结束  -->
-             <el-col :span="24">
-                 <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth" style="overflow: visible;">
-                        <label class="h_35"></label>
-                        <div class="rolesZoo">
-                            <a class="addRole"  v-for="(x,index) in checked" :key="index" :permissionName="x.permissionName">{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
-                        </div>
-                    </div>
-                 </div>
-            </el-col>
-        </el-row>
         <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -381,6 +333,8 @@
   export default({
     data(){
         return{
+            firstModify:false,
+            ifModify:false,
             update:false,
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
@@ -467,21 +421,21 @@
       'addData.status': function (value) {//
          return this.Validator.value(value).required().integer();
       },
-      'addData.ico': function (value) {//图标
-         return this.Validator.value(value).maxLength(200);
-      },
+    //   'addData.ico': function (value) {//图标
+    //      return this.Validator.value(value).maxLength(200);
+    //   },
       'addData.systemId': function (value) {//子系统
          return this.Validator.value(value).required().integer();
       },
       'addData.moduleParentId': function (value) {//上级菜单
           return this.Validator.value(value).required().integer();
       },
-      'addData.url': function (value) {//web地址
-         return this.Validator.value(value).maxLength(1000);
-      },
-      'addData.remark': function (value) {//
-         return this.Validator.value(value).maxLength(200);
-      }
+    //   'addData.url': function (value) {//web地址
+    //      return this.Validator.value(value).maxLength(1000);
+    //   },
+    //   'addData.remark': function (value) {//
+    //      return this.Validator.value(value).maxLength(200);
+    //   }
     },
     created:function(){
         let _this=this;
@@ -490,12 +444,22 @@
             _this.loadParent()
             _this.getData()
            
-       
     },
      watch: {
       search(val) {
         this.$refs.tree.filter(val);
-      }
+      },
+      addData:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.firstModify){
+                    _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
     },
     methods:{
         getData(){
@@ -594,8 +558,8 @@
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
-                $('.el-tree-dialogTableVisible__label').each(function(){
-                    if($(this).parent('.el-tree-dialogTableVisible__content').next('.el-tree-dialogTableVisible__children').text()==''){
+                $('.el-tree-node__label').each(function(){
+                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
                         $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
@@ -705,6 +669,8 @@
                 this.validation.reset();
                 this.getData();
                 this.update=false;
+                this.firstModify=false;
+                this.ifModify=false;
         },
         CancelTree(){
             let _this=this;
@@ -769,11 +735,14 @@
                     // _this.addData.permissionDtos=_this.checked;//权限
                     _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
                     .then(function(res){
-                        _this.open('修改成功','el-icon-circle-check','successERP');
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.firstModify=false;
+                        _this.ifModify=false;
+                        _this.update=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('修改失败','el-icon-error','faildERP');
+                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             })    
@@ -810,12 +779,12 @@
                     // _this.addData.permissionDtos=_this.checked;//权限
                     _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
                     .then(function(res){
-                        _this.open('修改成功','el-icon-circle-check','successERP');
+                        _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.add()
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('修改失败','el-icon-error','faildERP');
+                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             })    
@@ -867,7 +836,7 @@
         showDialog(){
             let _this=this;
             _this.dialogTableVisible = true;
-            _this.loadIcon()
+            _this.loadIcon();
         },
         rightFn_change(val){
             let _this=this;

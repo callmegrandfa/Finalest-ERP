@@ -3,7 +3,7 @@
        <!-- 按钮组 -->
         <el-row>
             <el-col :span="24">
-                <button @click="goback" class="erp_bt bt_back">
+                <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
@@ -38,7 +38,7 @@
                     <span class="btDetail">取消</span>
                 </button>
 
-                <button @click="confirmDelThis()" class="erp_bt bt_del" :disabled="!isDisable">
+                <button @click="confirmDelThis" class="erp_bt bt_del" :disabled="!isDisable">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                          </div>
@@ -49,7 +49,6 @@
 
             </el-col>
         </el-row>
-
         <!-- 表单验证的错误提示信息 -->
 	        <el-row>
                 <el-col>
@@ -75,8 +74,40 @@
                     </div>
                 </el-col>
             </el-row>
-
-
+        <!-- dialog数据变动提示(是否忽略更改) -->
+            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    </el-col>
+                </el-col>
+                <!--  -->
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
+        <!-- dialog是否删除提示(对话框控件) -->
+            <el-dialog :visible.sync="dialogDeleteConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">确认删除？</p>
+                    </el-col>
+                </el-col>
+                
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogDeleteConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
         <!-- 表单 -->
         <el-row>
             <div class="admstr-form-wrapper pt15">
@@ -106,7 +137,7 @@
                                     @node-click="nodeClick"
                                     >
                                 </el-tree>
-                                <el-option v-show="false" v-for="item in adminAreaTree" :key="item.id" :label="item.areaName" :value="item.id" >
+                                <el-option v-show="false" :key="count.Id" :label="count.areaName" :value="count.Id"   id="adminStrModify_confirmSelect">
                                 </el-option>
                             </el-select>
                         </div>
@@ -172,6 +203,7 @@
                             <label>创建人</label>
                             <el-input 
                             disabled
+                            v-model="addData.createdBy"
                             ></el-input>
                         </div>
                     </div>
@@ -183,13 +215,13 @@
                             <el-date-picker
                             type="date"
                             disabled
+                            v-model="addData.createdTime"
                             format="yyyy-MM-dd"
                             value-format="yyyy-MM-dd">
                             </el-date-picker>
                         </div>
                     </div>
                 </el-col>
-               
             </div>
         </el-row>
     </div>
@@ -198,270 +230,271 @@
 <script>
     export default {
         name:'adminstrAreaModify',
-         data() {
-        return {
-            isDisable:true,
-            update:false,
-            
-            addData:{// 修改数据列表
-                "groupId": 0,
-                "levelNo": 0,
-                "areaParentId": '',
-                "areaCode": "",
-                "areaName": "",
-                "areaFullName": "string",
-                "areaFullPathId": "string",
-                "areaFullPathName": "string",
-                "isSystem": true,
-                "status": '',
-                "remark": "",
-            },
-            selectData:{
-                Status001:[],//启用状态
-            },
-            adminAreaTree:[],
-            defaultProps: {
-                        children: 'childItems',
-                        label: 'areaName',
-                        id:'id'
-                    },
-        };
-    },
-    created() {
-        this.getSelectData();
-        this.getDataList();
-        this.loadTree();
-        //   this.reset();
-    },
-    validators: {
-                        'addData.areaParentId': function (value) {//上级地区
-                            return this.Validator.value(value).required().maxLength(50)
-                        },
-                        'addData.areaCode': function (value) {//地区编码
-                            return this.Validator.value(value).required().maxLength(50)
-                        },
-                        'addData.areaName': function (value) {//地区名称
-                            return this.Validator.value(value).required().maxLength(50)
-                        },
-                        'addData.status': function (value) {//状态
-                            return this.Validator.value(value).required().integer();
-                        },
-                    },
-    methods: {
-        // 去新增
-        goAdd(){
-            //点击切换路由去添加
-            this.$store.state.url = "/adminstrArea/adminstrAreaDetail/default";
-            this.$router.push({ path: this.$store.state.url });
-        },
-        // 获取数据渲染
-        getDataList() {
-            let _this = this;
-            _this.$axios
-                .gets("/api/services/app/AdAreaManagement/Get", {
-                id: this.$route.params.id
-                })
-                .then(rsp => {
-                    // console.log(rsp.result);
-                    _this.addData=rsp.result;
-                    
-                });
-        },
-        // 返回
-        goback() {
-            this.$store.state.url = "/adminstrArea/adminstrAreaList/default";
-            this.$router.push({ path: this.$store.state.url });
-        },
-        isUpdate() {
-            //判断是否修改过信息
-            this.update = true;
-            this.isDisable=false;
-            // console.log(this.isDisable);
-            
-        },
-        // 成功的提示框
-        open(tittle,iconClass,className) {//提示框
-         this.$notify({
-            position: 'bottom-right',
-            iconClass:iconClass,
-            title: tittle,
-            showClose: false,
-            duration: 3000,
-            customClass:className
-            });
-        },
-        // 保存
-        save() {
-            let _this=this;
-            _this.$validate().then(
-                function (success) { 
-                    if (success){
-                        if(_this.update){
-                             _this.$axios.puts('/api/services/app/AdAreaManagement/Update',_this.addData)
-                            .then(
-                                rsp=>{
-                                            _this.open('修改成功','el-icon-circle-check','successERP');
-                                             _this.update = false;
-                                        },
-                                rsp=>{   
-                                            _this.open('修改失败','el-icon-error','faildERP');
-                                    }
-                            )
-                        }
-                       
-
-                    }
-                }
-            )
-        
-        },
-        // 保存并新增
-        saveAdd() {
-            let _this=this;
-            // console.log('123');
-            
-            _this.$validate().then(
-                function (success) { 
-                    if (success){
-                        if(_this.update){
-                             _this.$axios.puts('/api/services/app/AdAreaManagement/Update',_this.addData)
-                            .then(
-                                rsp=>{
-                                            _this.open('修改成功','el-icon-circle-check','successERP');
-                                            _this.goAdd();
-                                        },
-                                rsp=>{   
-                                            _this.open('修改失败','el-icon-error','faildERP');
-                                    }
-                            )
-                        }
-                       
-
-                    }
-                }
-            )
-        },
-        // 获取树形节点
-        loadTree(){
-            let _this=this;
-            // _this.treeLoading=true;
-            _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
-                .then(function(res){
-            // console.log(res.result);
-                    _this.adminAreaTree=res.result;
-                    _this.loadIcon();
-                    //  _this.treeLoading=false;
-                        },function(res){
-                            // _this.treeLoading=false;
-                        })
-                    }, 
-            // 文件夹图标加载
-                        loadIcon(){
-                            let _this=this;
-                            _this.$nextTick(function () {
-                                $('.preNode').remove();   
-                                $('.el-tree-node__label').each(function(){
-                                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                                    }else{
-                                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                                    }
-                                })
-                            })
-                        },
-            // 节点被点击时的回调
-                nodeClick(data,node,self){
-                    let _this=this;
-                    _this.addData.areaParentId=data.id;
-                    _this.addData.areaParentId_AreaName=data.areaName;
-                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                        if($(this).attr('date')==data.id){
-                            $(this).click()
-                        }
-                    })
+        data() {
+            return {
+                isDisable:true,
+                update:false,
+                
+                addData:{// 修改数据列表
+                    "groupId": 0,
+                    "levelNo": 0,
+                    "areaParentId": '',
+                    "areaCode": "",
+                    "areaName": "",
+                    "areaFullName": "string",
+                    "areaFullPathId": "string",
+                    "areaFullPathName": "string",
+                    "isSystem": true,
+                    "status": '',
+                    "remark": "",
+                    "createdBy":"",
+                    "createdTime":"",
                 },
-            // 获取下拉框数据
-            getSelectData(){
-                let _this=this;
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
-                // 启用状态
-                _this.selectData.Status001=res.result;
-                })
-            },
-             // 取消
-        cancel(){
-            let _this=this;
-            if (_this.update) {
-                   _this .$confirm("确定撤销修改?", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning",
-                    center: true
-                    })
-                    .then(() => {
-                    //确认
-                    this.getDataList();
-                    })
-                    .catch(() => {
-                    //取消
-                    _this.$message({
-                        type: "info",
-                        message: "已保留更改"
-                    });
-                });
-            }
+                selectData:{
+                    Status001:[],//启用状态
+                },
+                // ------------------树形控件数据
+                adminAreaTree:[],
+                defaultProps: {
+                    children: 'childItems',
+                    label: 'areaName',
+                    id:'id'
+                },
+                treeNode:{
+                    Id:'',
+                    areaName:'',
+                },
+                // ------------------提示框数据
+                dialogUserConfirm:false,//信息更改提示控制
+                dialogDeleteConfirm:false,//删除信息提示控制
+                choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
+                btnValue:'',//存储点击单个删除还是多项删除按钮判断信息
+            };
         },
-        // 删除删除
-        delRow(){
+        created() {
+            this.getSelectData();
+            this.getDataList();
+            this.loadTree();
+        },
+        validators: {
+            'addData.areaParentId': function (value) {//上级地区
+                return this.Validator.value(value).required().maxLength(50)
+                            },
+            'addData.areaCode': function (value) {//地区编码
+                return this.Validator.value(value).required().maxLength(50)
+                            },
+            'addData.areaName': function (value) {//地区名称
+                return this.Validator.value(value).required().maxLength(50)
+                            },
+            'addData.status': function (value) {//状态
+                return this.Validator.value(value).required().integer();
+                            },
+        },
+        computed:{
+            count () {
+                return this.treeNode;
+                },
+        },
+        methods: {
+            // 获取数据渲染
+            getDataList(){
+                let _this = this;
+                _this.$axios
+                    .gets("/api/services/app/AdAreaManagement/Get", {id:this.$route.params.id})
+                    .then(rsp => {
+                        // console.log(rsp.result);
+                        _this.addData=rsp.result;
+                        _this.$axios.gets("/api/services/app/AdAreaManagement/Get",
+                        {id: rsp.result.areaParentId})
+                        .then(
+                            rsp=>{
+                                // console.log(rsp.result);
+                                _this.treeNode.Id=rsp.result.id;
+                                _this.treeNode.areaName=rsp.result.areaName;
+                            }
+                        )
+                    });
+            },
+            // 成功的提示框
+            open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                    position: 'bottom-right',
+                    iconClass:iconClass,
+                    title: tittle,
+                    showClose: false,
+                    duration: 3000,
+                    customClass:className
+                });
+            },
+            // ----------------------------按钮组功能
+            // ------------返回----------- 
+            goback() {// 返回
+                this.$store.state.url = "/adminstrArea/adminstrAreaList/default";
+                this.$router.push({ path: this.$store.state.url });
+            },
+            isBack(){
+                let _this=this;
+                _this.btnValue='toBack';
+                if(_this.update){
+                    _this.dialogUserConfirm=true;
+                }else{
+                    _this.goback()
+                }
+            },
+            sureDoing:function(){
+                let _this=this;
+                if (_this.btnValue=='toBack') {
+                    this.goback();
+                }else{
+                    _this.dialogUserConfirm=false;
+                    _this.btnValue=='';
+                }
+                
+            },
+            isUpdate() {//判断是否修改过信息
+                this.update = true;
+                this.isDisable=false;
+                // console.log(this.isDisable);
+            },
+            // --------------删除-----------
+            confirmDelThis(){//确认单项删除
+                let _this=this;
+                _this.choseAjax='row';
+                _this.dialogDeleteConfirm=true;
+            },
+            sureAjax(){
+                let _this=this;
+                if(_this.choseAjax=='row'){
+                    _this.delThis()
+                }else if(_this.choseAjax=='rows'){
+                    _this.delSelected()
+                }
+            },
+            delThis(){// 删除删除
                 let _this=this;
                 _this.$axios
                 .deletes("/api/services/app/AdAreaManagement/Delete",
                 { id:_this.$route.params.id })
                 .then(rsp => {
-                _this.open("删除成功", "el-icon-circle-check", "successERP");
-                _this.goback();
-                    });
-        },
-         // 确认是否删除本条数据
-            confirmDelThis() {
-                // console.log("123");
-                
-                let _this = this;
-                _this
-                    .$confirm("确定删除?", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning",
-                    center: true
-                    })
-                    .then(() => {
-                    //确认
-                    _this.delRow(row);
-                    })
-                    .catch(() => {
-                    //取消
-                    _this.$message({
-                        type: "info",
-                        message: "已取消删除"
-                    });
-                    });
+                    _this.dialogDeleteConfirm=false;
+                    _this.open("删除成功", "el-icon-circle-check", "successERP");
+                    _this.goback();
+                });
             },
-        // 重新验证并设置值
-        reset(){
-            // console.log("123zt");
-            this.addData.areaParentId='';
-            this.addData.areaCode='';
-            this.addData.areaName='';
-            this.addData.status='';
-            this.addData.remark=''; 
-            this.validation.reset();               
-        },
+            // --------------删除-----------
+            cancel(){// 取消
+                let _this=this;
+                _this.btnValue='isCancel';
+                if(_this.update){
+                    _this.dialogUserConfirm=true;
+                }
+            },
+            goAdd(){// 去新增
+                //点击切换路由去添加
+                this.$store.state.url = "/adminstrArea/adminstrAreaDetail/default";
+                this.$router.push({ path: this.$store.state.url });
+            },
+            save() {// 保存
+                let _this=this;
+                _this.$validate().then(
+                    function (success) { 
+                        if (success){
+                            if(_this.update){
+                                _this.$axios.puts('/api/services/app/AdAreaManagement/Update',_this.addData)
+                                .then(
+                                    rsp=>{
+                                                _this.open('修改成功','el-icon-circle-check','successERP');
+                                                _this.update = false;
+                                            },
+                                    rsp=>{   
+                                                _this.open('修改失败','el-icon-error','faildERP');
+                                        }
+                                )
+                            }
+                        
+
+                        }
+                    }
+                )
+            
+            },
+            saveAdd() {// 保存并新增
+                let _this=this;
+                // console.log('123');
+                _this.$validate().then(
+                    function (success) { 
+                        if (success){
+                            if(_this.update){
+                                _this.$axios.puts('/api/services/app/AdAreaManagement/Update',_this.addData)
+                                .then(
+                                    rsp=>{
+                                                _this.open('修改成功','el-icon-circle-check','successERP');
+                                                _this.goAdd();
+                                            },
+                                    rsp=>{   
+                                                _this.open('修改失败','el-icon-error','faildERP');
+                                        }
+                                )
+                            }
+                        
+
+                        }
+                    }
+                )
+            },
+            // ----------树形控件相关----------
+            loadTree(){// 获取树形节点
+                let _this=this;
+                // _this.treeLoading=true;
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
+                    .then(function(res){
+                // console.log(res.result);
+                        _this.adminAreaTree=res.result;
+                        _this.loadIcon();
+                        //  _this.treeLoading=false;
+                            },function(res){
+                                // _this.treeLoading=false;
+                    })
+            }, 
+            loadIcon(){// 文件夹图标加载
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                            }else{
+                                $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                                }
+                    })
+                })
+            },
+            nodeClick(data,node,self){// 节点被点击时的回调
+                let _this=this;
+                    //  console.log(data);
+                _this.treeNode.Id=data.id;
+                _this.treeNode.areaName=data.areaName;
+                _this.$nextTick(function(){
+                        $('#adminStrModify_confirmSelect').click()
+                })
+            },
+            getSelectData(){// 获取下拉框数据
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+                _this.selectData.Status001=res.result;// 启用状态
+                })
+            },
+            reset(){// 重新验证并设置值
+                // console.log("123zt");
+                this.addData.areaParentId='';
+                this.addData.areaCode='';
+                this.addData.areaName='';
+                this.addData.status='';
+                this.addData.remark=''; 
+                this.validation.reset();               
+            },
 
         },
-       
-       
-        
-        
     };
 </script>
 
