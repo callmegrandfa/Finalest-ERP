@@ -6,8 +6,8 @@
                 <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>  
                 <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
                 <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-                <!-- <button class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                <button class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
+                <button class="erp_fb_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <button class="erp_fb_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
             </el-col>
         </el-row>
         <el-row>
@@ -192,17 +192,6 @@
                     </div>
                  </div>
             </el-col>
-            <!-- <el-col :span="24">
-                <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
-                        <label class="h_35"></label>
-                        <div>
-                            <button @click="save" class="add_m_bt">提交</button>
-                            <button @click="back" class="add_m_bt">返回</button>
-                        </div>
-                    </div>
-                </div>
-            </el-col> -->
         </el-row>
         <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
                 <el-col :span="24">
@@ -364,6 +353,8 @@
                 moduleParentId:'',
                 url:'',
                 status:1,
+                moduleIsBottom: true,
+                remark:'',
             },
            contain: [{ 
                 value:'0',

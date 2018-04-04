@@ -88,6 +88,12 @@ export default {
                 ]
             },
             {
+                name:'客户分类',
+                thirdInfo:[
+                    {name:'客户分类',address:'customerClass'},
+                ]
+            },
+            {
                 name:'角色管理',
                 thirdInfo:[
                     {name:'角色资料',address:'role'},

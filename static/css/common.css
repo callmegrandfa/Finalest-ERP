@@ -29,6 +29,9 @@
   float: right;
   margin-right: 10px;
 }
+.search_input_group .el-input__icon{
+  line-height: 30px;
+}
 .search_input_wapper{
   width: calc(80% - 10px);
   float: left;
@@ -41,7 +44,6 @@
 }
 .userDefined{
     width: 100%;
-    position: absolute;
     height: 30px;
     border-radius: 30px;
     cursor: pointer;
@@ -341,6 +343,33 @@ table .el-input__icon{
         height: 24px;
         border-radius: 50%;
     }   
+    .el-tree .el-checkbox__inner{
+      width: 14px;
+      height: 14px;
+      border-radius: 0;
+    }
+    .el-tree .el-checkbox__inner::after {
+      -webkit-box-sizing: content-box;
+      box-sizing: content-box;
+      content: "";
+      border: 1px solid #fff;
+      border-left: 0;
+      border-top: 0;
+      height: 7px;
+      left: 4px;
+      position: absolute;
+      top: 1px;
+      -webkit-transform: rotate(45deg) scaleY(0);
+      transform: rotate(45deg) scaleY(0);
+      width: 3px;
+      -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      -webkit-transform-origin: center;
+      transform-origin: center;
+  }
     .el-checkbox__inner::after{
         -webkit-box-sizing: content-box;
         box-sizing: content-box;
@@ -477,6 +506,8 @@ table .el-input__icon{
         position: absolute;
         left: 0;
       }
+
+      
       .bt_del .btImg{
       transform: rotate(45deg);
       -ms-transform: rotate(45deg);
@@ -565,6 +596,41 @@ table .el-input__icon{
     }
     .bt_print{
       background-color:#99f;
+    }
+
+    .erp_fb_bt{
+      height: 36px;
+      padding: 0 10px;
+      border: none;
+      position: relative;
+      cursor: no-drop;
+      float: left;
+      margin-right: 2px;
+      background-color: #cccccc;
+    }
+    .erp_fb_bt.bt_cancel .btImg img{
+      top: 5px;
+    }
+    .erp_fb_bt .btImg{
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      top:10px;
+    }
+    .erp_fb_bt .btImg img{
+      max-width: 100%;
+      max-height: 100%;
+      position: absolute;
+      left: 0;
+    }
+    .erp_fb_bt .btDetail{
+      font-size: 12px;
+      color: #fff;
+      display: block;
+      height: 100%;
+      width: 100;
+      line-height: 36px;
+      padding-left: 20px;
     }
 
 /* 小圆按钮 */

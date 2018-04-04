@@ -109,7 +109,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="url" label="web地址"></el-table-column>
-                            <el-table-column prop="moduleParentId" label="上级菜单"></el-table-column>
+                            <el-table-column prop="moduleParentId_ModuleName" label="上级菜单"></el-table-column>
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>

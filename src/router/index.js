@@ -45,7 +45,15 @@ const customerDetail = () =>
     import ('../components/customerInfor/customerDetail')
 const customerModify = () =>
     import ('../components/customerInfor/customerModify')
-
+//客户分类
+const customerClass = () =>
+    import (  '../components/customerClass/customerClass')
+const customerClassList = () =>
+    import (  '../components/customerClass/customerClassList')
+const customerClassDetail = () =>
+    import ('../components/customerClass/customerClassDetail')
+const customerClassModify = () =>
+    import ('../components/customerClass/customerClassModify')
 const account = () =>
     import ( /* webpackChunkName: "group-customer" */ '../components/account/account')
 const accountList = () =>
@@ -217,13 +225,14 @@ const supplierClassifyModify = () => import('../components/supplierClassify/supp
     
 
 let redirectRouter = function(routerName) { //重定向
-    let activeRouter = store.state.activeRouter;
-    for (let i = 0; i < activeRouter.length; i++) {
-        if (activeRouter[i].name == routerName) {
-            return activeRouter[i].url;
-            break;
-        }
-    }
+    // let activeRouter = store.state.activeRouter;
+    return store.state[routerName].url
+    // for (let i = 0; i < activeRouter.length; i++) {
+    //     if (activeRouter[i].name == routerName) {
+    //         return activeRouter[i].url;
+    //         break;
+    //     }
+    // }
     
 }
 Vue.use(Router)
@@ -270,6 +279,7 @@ const routes = [
                             store.state.alerts = false;
                             store.state.name = x;
                             store.state.accessToken = token;
+                            
                             next();
                         } else {
                             store.state.alerts = true;
@@ -324,7 +334,19 @@ const routes = [
                     { path: '/customer/customerModify/:id', component: customerModify, name: 'customerModify' },
                 ]
             },
-
+            {
+                path: '/customerClass',
+                component: customerClass,
+                name: 'customerClass',
+                redirect: function() { //客户分类
+                    return redirectRouter('customerClass')
+                },
+                children: [
+                    { path: '/customerClass/customerClassList/:id', component:  customerClassList, name: 'customerClassList' },
+                    { path: '/customerClass/customerClassDetail/:id', component: customerClassDetail, name: 'customerClassDetail' },
+                    { path: '/customerClass/customerClassModify/:id', component: customerClassModify, name: 'customerClassModify' },
+                ]
+            },
             {
                 path: '/account',
                 component: account,
@@ -644,34 +666,36 @@ router.beforeEach((to, from, next) => {
     } else {
         store.state.Alive = true;
     }
-    $('.one').each(function(index){//菜单高亮
-        if($(this).attr('data-url')!=undefined){
-            for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
-                if($(this).attr('data-url').split(',')[i]==to.path.split('/')[1]){
-                    $(this).addClass('menu_active')
-                    break
-                }
-            }
-        }
-    })
-    if (store.accessToken != '') {
+    // $('.one').each(function(index){//菜单高亮
+    //     if($(this).attr('data-url')!=undefined){
+    //         for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
+    //             if($(this).attr('data-url').split(',')[i]==to.path.split('/')[1]){
+    //                 $(this).addClass('menu_active')
+    //                 break
+    //             }
+    //         }
+    //     }
+    // })
+    if (store.state.accessToken != '' && typeof(store.state.accessToken)!='undefined') {
         document.title = to.name
-        let activeRouter = store.state.activeRouter;
-        let parent = '';
-        let url = '';
-        for (let i = 0; i < activeRouter.length; i++) {
-            if (activeRouter[i].name == to.name) {
-                parent = activeRouter[i].parent;
-                url = activeRouter[i].url;
-                break
-            }
-        }
-        for (let i = 0; i < activeRouter.length; i++) {
-            if (activeRouter[i].name == parent) {
-                activeRouter[i].url = url
-                break
-            }
-        }
+        // let activeRouter = store.state.activeRouter;
+        store.state[to.name].url=to.fullPath;
+        store.state[store.state[to.name].parent].url=to.fullPath
+        // let parent = '';
+        // let url = '';
+        // for (let i = 0; i < activeRouter.length; i++) {
+        //     if (activeRouter[i].name == to.name) {
+        //         parent = activeRouter[i].parent;
+        //         url = activeRouter[i].url;
+        //         break
+        //     }
+        // }
+        // for (let i = 0; i < activeRouter.length; i++) {
+        //     if (activeRouter[i].name == parent) {
+        //         activeRouter[i].url = url
+        //         break
+        //     }
+        // }
     }
     next()
 })

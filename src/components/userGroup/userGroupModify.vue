@@ -2,17 +2,12 @@
     <div class="userGroupModify">
         <el-row  class="fixed">
             <el-col :span="24">
-              <!-- <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <button @click="Update" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>
-              <button @click="save" v-show="update_click" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button @click="isCancel" v-show="update_click" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-              <button class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button> -->
               <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
-              <button @click="save" class="erp_bt bt_save" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button @click="isCancel" class="erp_bt bt_cancel" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-              <button plain @click="saveAdd" class="erp_bt bt_saveAdd" v-show="update"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
-              <button @click="add" class="erp_bt bt_add" v-show="!update"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-              <button @click="isDeleteThis" class="erp_bt bt_del" v-show="!update"><div class="btImg" ><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+              <button @click="save" class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+              <button @click="isCancel" class="erp_bt bt_cancel" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button plain @click="saveAdd" class="erp_bt bt_saveAdd" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
+              <button @click="add" class="erp_bt bt_add" :disabled="ifModify" :class="{erp_fb_bt : ifModify}"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+              <button @click="isDeleteThis" class="erp_bt bt_del" :disabled="ifModify" :class="{erp_fb_bt : ifModify}"><div class="btImg" ><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
             </el-col>
         </el-row>
         <el-row>  
@@ -191,6 +186,8 @@
   export default({
     data(){
       return{
+        firstModify:false,
+        ifModify:false,
          // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -256,12 +253,23 @@
         _this.getData();
     },
      watch: {
-      search_area(val) {
-        this.$refs.tree.filter(val);
-      },
-      search_ou(val) {
-        this.$refs.tree.filter(val);
-      }
+        search_area(val) {
+            this.$refs.tree.filter(val);
+        },
+        search_ou(val) {
+            this.$refs.tree.filter(val);
+        },
+        addData:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.firstModify){
+                    _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
     },
     methods: {
         filterNode_ou(value, data) {
@@ -303,7 +311,6 @@
         getData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/UserGroup/Get',{id:_this.$route.params.id}).then(function(res){ 
-                console.log(res)
                 _this.addData= {
                     "groupId": 1,
                     "id":res.result.id,
@@ -395,6 +402,8 @@
                 this.validation.reset();
                 this.getData();
                 this.update=false;
+                this.firstModify=false;
+                this.ifModify=false;
         },
         isUpdate(){//判断是否修改过信息
             this.update=true;
@@ -410,20 +419,19 @@
                 if (success) {
                     _this.$axios.puts('/api/services/app/UserGroup/Update',_this.addData)
                     .then(function(res){
+                        _this.auditInformation={
+                            createdBy:res.result.createdBy,
+                            createdTime:res.result.createdTime,
+                            modifiedBy:res.result.modifiedBy,
+                            modifiedTime:res.result.modifiedTime,
+                        }
                         _this.open('保存成功','el-icon-circle-check','successERP');
-
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                         _this.update=false;
-                    },function(res){   
-                        _this.response.message='';
-                        _this.response.details='';
-                        if(res.error.details!=null && res.error.details){
-                            _this.response.details=res.error.details;
-                        }
-                        if(res.error.message!=null && res.error.message){
-                            _this.response.message=res.error.message;
-                        }
+                    },function(res){
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true; 
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });
@@ -436,20 +444,13 @@
                     _this.$axios.puts('/api/services/app/UserGroup/Update',_this.addData)
                     .then(function(res){
                         _this.open('保存成功','el-icon-circle-check','successERP');
-
                         _this.update=false;
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                         _this.add();
                     },function(res){   
-                        _this.response.message='';
-                        _this.response.details='';
-                        if(res.error.details!=null && res.error.details){
-                            _this.response.details=res.error.details;
-                        }
-                        if(res.error.message!=null && res.error.message){
-                            _this.response.message=res.error.message;
-                        }
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true; 
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });
@@ -470,7 +471,6 @@
                 if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                 _this.dialogUserConfirm=false;
                 _this.errorMessage=true;
-                _this.open('删除失败','el-icon-error','faildERP');
             })
         },
         nodeClick_ou(data,node,self){

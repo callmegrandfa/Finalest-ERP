@@ -2,7 +2,7 @@
  <div class="customerBasicForm">
      <el-row>
          <el-col :span="24"  class="fixed bg-white bb1 pb5 pt5">
-            <button class="erp_bt bt_back" @click="isBack">
+            <button class="erp_bt bt_back" @click="isBack()">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_back.png">
                 </div>
@@ -16,6 +16,13 @@
                 <span class="btDetail">保存</span>
             </button>
 
+            <button class="erp_bt bt_cancel" @click='isBack()'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_cancel.png">
+                </div>
+                <span class="btDetail">取消</span>
+            </button>
+
             <button class="erp_bt bt_saveAdd">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
@@ -23,12 +30,20 @@
                 <span class="btDetail">保存并新增</span>
             </button>
 
-            <button class="erp_bt bt_cancel" @click='Cancel()'>
+            <button class="erp_fb_bt bt_add" :disabled='true'>
                 <div class="btImg">
-                    <img src="../../../static/image/common/bt_cancel.png">
+                    <img src="../../../static/image/common/bt_add.png">
                 </div>
-                <span class="btDetail">取消</span>
+                <span class="btDetail">新增</span>
             </button>
+
+             <button class="erp_fb_bt bt_del" :disabled='true'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_del.png">
+                </div>
+                <span class="btDetail">删除</span>
+            </button>
+              
             
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
@@ -121,7 +136,7 @@
                                        
 
                     <div class="bgcolor">
-                        <label><small>*</small>所属组织{{createContactParams.ouId}}</label>
+                        <label><small>*</small>所属组织</label>
                         <el-select v-model="createContactParams.ouId" 
                                     placeholder=""
                                     class="ouId"
@@ -166,7 +181,7 @@
                         <el-input v-model="createContactParams.contactName" 
                                 placeholder=""
                                 @focus="showErrprTips" 
-                                @change='Modify()'
+                                @change='editName'
                                 :class="{redBorder : validation.hasError('createContactParams.contactName')}"
                                 class="contactName"></el-input>
                     </div>
@@ -177,7 +192,7 @@
                         <el-input v-model="createContactParams.contactFullName" 
                                 placeholder=""
                                 @focus="showErrprTips" 
-                                @change='Modify()'
+                                @change='editFullName'
                                 :class="{redBorder : validation.hasError('createContactParams.contactFullName')}"
                                 class="contactFullName"></el-input>
                     </div>
@@ -193,7 +208,7 @@
                     </div>
                         
                     <div class="bgcolor">
-                        <label>客户分类</label>
+                        <label><small>*</small>客户分类</label>
                         <el-select v-model="createContactParams.contactClassId" 
                                 placeholder=""
                                 class="contactClassId"
@@ -223,7 +238,7 @@
                     </div>
                                 
                     <div class="bgcolor">
-                        <label>客户性质</label>
+                        <label><small>*</small>客户性质</label>
                         <el-select v-model="createContactParams.contactWorkPropertyId" 
                                     placeholder=""
                                     @change='Modify()'
@@ -231,7 +246,7 @@
                                     @focus="showErrprTipsSelect"
                                     :class="{redBorder : validation.hasError('createContactParams.contactWorkPropertyId')}">
                                 <!--  -->
-                            <el-option v-for="item in propertyAr" 
+                            <el-option v-for="item in typeAr" 
                                         :key="item.itemValue" 
                                         :label="item.itemName" 
                                         :value="item.itemValue"></el-option>
@@ -253,21 +268,21 @@
                         </el-select>
                     </div>
                     <div class="bgcolor">
-                        <label>客户类型</label>
+                        <label><small>*</small>客户类型</label>
                         <el-select v-model='createContactParams.contactTypeId'
                                 placeholder=""
                                 @change='Modify()'
                                 class="contactTypeId"
                                 @focus="showErrprTipsSelect"
                                 :class="{redBorder : validation.hasError('createContactParams.contactTypeId')}">
-                            <el-option v-for="itemb in typeAr" 
+                            <el-option v-for="itemb in propertyAr" 
                                         :key="itemb.itemValue" 
                                         :label="itemb.itemName" 
                                         :value="itemb.itemValue"></el-option>
                         </el-select>
                     </div>   
                     <div class="bgcolor">
-                        <label>对应财务组织</label>
+                        <label><small>*</small>对应财务组织</label>
                         <el-select v-model="createContactParams.ficaOuId" 
                                 placeholder=""
                                 @change='Modify()'
@@ -853,7 +868,7 @@ export default({
             defaultOuId:'',//默认ouid
             ifShow:true,
             ifModify:false,//判断信息是否修改过
-            showCompany:false,//初始默认公司计信息状态展开  
+            backCancle:'',//判断是返回还是取消
             auditInformation:{//审计信息
                 createName:"",
                 createTime:"",
@@ -864,10 +879,10 @@ export default({
                 finishName:"",
             },
             search:'',
-            item:{
-                id:'',
-                areaName:'',
-            },
+            // item:{
+            //     id:'',
+            //     areaName:'',
+            // },
             defaultProps: {
                 children: 'items',
                 label: 'areaName',
@@ -934,7 +949,7 @@ export default({
             //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
-                    children: 'items',
+                    children: 'childItems',
                     label: 'areaName',
                     id:'id'
                 },
@@ -980,7 +995,7 @@ export default({
                 'phone':'',//电话
                 'remark':'',//备注
                 'creditMgt':true,//信用管理
-                'status':'未启用',//状态
+                'status':1,//状态
             },
 
             createBankParams:{//创建银行的参数
@@ -1074,6 +1089,8 @@ export default({
             who:'',//删除的是谁以及是否是多项删除
             // whoId:'',//单项删除的id
             whoIndex:'',//单项删除的index
+            //-----------------------------
+            nameWithFull:false,
         }
     },
     validators: {
@@ -1093,19 +1110,19 @@ export default({
             return this.Validator.value(value).maxLength(50);
         },
         'createContactParams.contactClassId': function (value) {//客户分类
-            return this.Validator.value(value).integer();
+            return this.Validator.value(value).required().integer();
         },
         'createContactParams.contactWorkPropertyId': function (value) {//客户性质
-            return this.Validator.value(value).integer();
+            return this.Validator.value(value).required().integer();
         },
         'createContactParams.contactGradeId': function (value) {//客户等级
             return this.Validator.value(value).integer();
         },
         'createContactParams.isCustomer': function (value) {//客户类型
-            return this.Validator.value(value).integer();
+            return this.Validator.value(value).required().integer();
         },
         'createContactParams.ficaOuId': function (value) {//对应财务组织
-            return this.Validator.value(value).integer();
+            return this.Validator.value(value).required().integer();
         },
         'createContactParams.taxCode': function (value) {//纳税登记号 
             return this.Validator.value(value).maxLength(50);
@@ -1131,7 +1148,7 @@ export default({
         'createContactParams.remark': function (value) {//备注
             return this.Validator.value(value).maxLength(200);
         },
-        'createContactParams.status': function (value) {//备注
+        'createContactParams.status': function (value) {//状态
             return this.Validator.value(value).required().integer();
         },
     },
@@ -1555,11 +1572,10 @@ export default({
         //--------------------------------------------------
 
         //---修改返回提示-----------------------------------------
-        isBack(){
+        isBack(num){
             let self=this;
             if(self.ifModify){
                 self.dialogUserConfirm=true;
-                // self.choseDoing='back'
             }else{
                 self.back()
             }
@@ -1721,6 +1737,21 @@ export default({
             }
         },
         //-------------------------------------------------------------
+
+        //---编辑名称，全称跟着改变-------------------------------------
+        editName:function(){
+            let self = this;
+            self.Modify();
+            if(!self.nameWithFull&&self.createContactParams.contactFullName == ''){
+                self.createContactParams.contactFullName = self.createContactParams.contactName;
+            }
+        },
+        editFullName:function(){
+            let self = this;
+            self.Modify();
+            self.nameWithFull = true;
+        },
+        //------------------------------------------------------------
     }
        
 

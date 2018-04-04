@@ -33,117 +33,236 @@ export default new vuex.Store({
         temporary: [], //本地暂时存储页签
         slidbarData: [], //从localStorage读取页签
         tableData:[],//表格数据
-        activeRouter: [ //进入页面子路由，重定向路由。name,parent,defult不变,url将被重定向(name=parent)
-            { name: 'order', url: '/order/orderList/:id', parent: '', default: '/order/orderList/:id' } , //采购管理
-            { name: 'orderDetails', url: '/order/orderDetails/:id', parent: 'order' } ,
-            { name: 'orderList', url: '/order/orderList/:id', parent: 'order' } ,
 
-            { name: 'OuManage', url: '/OuManage/OuManageList/:id', parent: '', default: '/OuManage/OuManageList/:id' } , //组织管理
-            { name: 'OuManageDetail', url: '/OuManage/OuManageDetail/:id', parent: 'OuManage' } ,
-            { name: 'OuManageModify', url: '/OuManage/OuManageModify/:id', parent: 'OuManage' } ,
-            { name: 'OuManageList', url: '/OuManage/OuManageList/:id', parent: 'OuManage' } ,
+//------------------------------------------------------------------------路由数据----------------------------------------------------------------------
+        order:{ name: 'order', url: '/order/orderList/:id', parent: '', default: '/order/orderList/:id' } , //采购管理
+        orderDetails:{ name: 'orderDetails', url: '/order/orderDetails/:id', parent: 'order' } ,
+        orderList:{ name: 'orderList', url: '/order/orderList/:id', parent: 'order' } ,
+        OuManage:{ name: 'OuManage', url: '/OuManage/OuManageList/:id', parent: '', default: '/OuManage/OuManageList/:id' } , //组织管理
+        OuManageDetail:{ name: 'OuManageDetail', url: '/OuManage/OuManageDetail/:id', parent: 'OuManage' } ,
+        OuManageModify:{ name: 'OuManageModify', url: '/OuManage/OuManageModify/:id', parent: 'OuManage' } ,
+        OuManageList:{ name: 'OuManageList', url: '/OuManage/OuManageList/:id', parent: 'OuManage' } ,
+        repository:{ name: 'repository', url: '/repository/repositoryList/:id', parent: '', default: '/repository/repositoryList/:id' } , //仓库管理
+        repositoryList:{ name: 'repositoryList', url: '/repository/repositoryList/:id', parent: 'repository' } ,
+        repositoryData:{ name: 'repositoryData', url: '/repository/repositoryData/:id', parent: 'repository' } ,
+        repositoryModify:{ name: 'repositoryModify', url: '/repository/repositoryModify/:id', parent: 'repository' } ,
 
-            { name: 'repository', url: '/repository/repositoryList/:id', parent: '', default: '/repository/repositoryList/:id' } , //仓库管理
-            { name: 'repositoryList', url: '/repository/repositoryList/:id', parent: 'repository' } ,
-            { name: 'repositoryData', url: '/repository/repositoryData/:id', parent: 'repository' } ,
-            { name: 'repositoryModify', url: '/repository/repositoryModify/:id', parent: 'repository' } ,
+        customer:{ name: 'customer', url: '/customer/customerList/:id', parent: '', default: '/customer/customerList/:id' } , //客户管理
+        customerList:{ name: 'customerList', url: '/customer/customerList/:id', parent: 'customer' } ,
+        customerDetail:{ name: 'customerDetail', url: '/customer/customerDetail/:id', parent: 'customer' } ,
+        customerModify:{ name: 'customerModify', url: '/customer/customerModify/:id', parent: 'customer' } ,
+        //客户分类
+        customerClass:{ name: 'customerClass', url: '/customerClass/customerClassList/:id', parent: '', default: '/customerClass/customerClassList/:id' } , //客户分类
+        customerClassList:{ name: 'customerClassList', url: '/customerClass/customerClassList/:id', parent: 'customerClass' } ,
+        customerClassDetail:{ name: 'customerClassDetail', url: '/customerClass/customerClassDetail/:id', parent: 'customerClass' } ,
+        customerClassModify:{ name: 'customerClassModify', url: '/customerClass/customerClassModify/:id', parent: 'customerClass' } ,
+        account:{ name: 'account', url: '/account/accountList/:id', parent: '', default: '/account/accountList/:id' } , //会计期间
+        accountList:{ name: 'accountList', url: '/account/accountList/:id', parent: 'account' } ,
+        accountDetail:{ name: 'accountDetail', url: '/account/accountDetail/:id', parent: 'account' } ,
 
-            { name: 'customer', url: '/customer/customerList/:id', parent: '', default: '/customer/customerList/:id' } , //客户管理
-            { name: 'customerList', url: '/customer/customerList/:id', parent: 'customer' } ,
-            { name: 'customerDetail', url: '/customer/customerDetail/:id', parent: 'customer' } ,
-            { name: 'customerModify', url: '/customer/customerModify/:id', parent: 'customer' } ,
+        currency:{ name: 'currency', url: '/currency/currencyList/:id', parent: '', default: '/customer/currencyList/:id' } , //币种管理
+        currencyList:{ name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
 
-            { name: 'account', url: '/account/accountList/:id', parent: '', default: '/account/accountList/:id' } , //会计期间
-            { name: 'accountList', url: '/account/accountList/:id', parent: 'account' } ,
-            { name: 'accountDetail', url: '/account/accountDetail/:id', parent: 'account' } ,
+        bill:{ name: 'bill', url: '/bill/billList/:id', parent: '', default: '/bill/billList/:id' } , //模板2.0
+        billDetails:{ name: 'billDetails', url: '/bill/billDetails/:id', parent: 'bill' } ,
+        billList:{ name: 'billList', url: '/bill/billList/:id', parent: 'bill' } ,
 
-            { name: 'currency', url: '/currency/currencyList/:id', parent: '', default: '/customer/currencyList/:id' } , //币种管理
-            { name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
+        menu:{ name: 'menu', url: '/menu/menuList/:id', parent: '', default: '/menu/menuList/:id' } , //菜单管理
+        menuDetail:{ name: 'menuDetail', url: '/menu/menuDetail/:id', parent: 'menu' } ,
+        menuList:{ name: 'menuList', url: '/menu/menuList/:id', parent: 'menu' } ,
+        menuModify:{ name: 'menuModify', url: '/menu/menuModify/:id', parent: 'menu' } ,
 
-            { name: 'bill', url: '/bill/billList/:id', parent: '', default: '/bill/billList/:id' } , //模板2.0
-            { name: 'billDetails', url: '/bill/billDetails/:id', parent: 'bill' } ,
-            { name: 'billList', url: '/bill/billList/:id', parent: 'bill' } ,
+        commodityProperty:{ name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: '', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
+        commodityPropertyDetails:{ name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
+        commodityPropertyList:{ name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
 
-            { name: 'menu', url: '/menu/menuList/:id', parent: '', default: '/menu/menuList/:id' } , //菜单管理
-            { name: 'menuDetail', url: '/menu/menuDetail/:id', parent: 'menu' } ,
-            { name: 'menuList', url: '/menu/menuList/:id', parent: 'menu' } ,
-            { name: 'menuModify', url: '/menu/menuModify/:id', parent: 'menu' } ,
+        commercial:{ name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: '', default: '/commercial/commercialSpecification/:id' } , //商品规格
+        commercialSpecification:{ name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' } ,
+        commercialSpecificationDetails:{ name: 'commercialSpecificationDetails', url: '/commercial/commercialSpecificationDetails/:id', parent: 'commercial' } ,
 
-            { name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: '', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
-            { name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
-            { name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
+        commodityleimu:{ name: 'commodityleimu', url: '/commodityleimu/commodityClassHeading/:id', parent: '', default: '/commodityleimu/commodityClassHeading/:id' } , //商品类目
+        // { name: 'CommodityCategories', url: '/commodityleimu/CommodityCategories/:id', parent: 'commodityleimu' } ,
+        CommodityCategoriesDetails:{ name: 'CommodityCategoriesDetails', url: '/commodityleimu/CommodityCategoriesDetails/:id', parent: 'commodityleimu' } ,
+        commodityClassHeading:{ name: 'commodityClassHeading', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu' } ,
 
-            { name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: '', default: '/commercial/commercialSpecification/:id' } , //商品规格
-            { name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' } ,
-            { name: 'commercialSpecificationDetails', url: '/commercial/commercialSpecificationDetails/:id', parent: 'commercial' } ,
+        Property:{ name: 'Property', url: '/Property/classProperty/:id', parent: '', default: '/Property/classProperty/:id' } , //类目属性规格
+        classProperty:{ name: 'classProperty', url: '/Property/classProperty/:id', parent: 'Property' } ,
+        classPropertyDetails:{ name: 'classPropertyDetails', url: '/Property/classPropertyDetails/:id', parent: 'Property' } ,
 
-            { name: 'commodityleimu', url: '/commodityleimu/commodityClassHeading/:id', parent: '', default: '/commodityleimu/commodityClassHeading/:id' } , //商品类目
-            // { name: 'CommodityCategories', url: '/commodityleimu/CommodityCategories/:id', parent: 'commodityleimu' } ,
-            { name: 'CommodityCategoriesDetails', url: '/commodityleimu/CommodityCategoriesDetails/:id', parent: 'commodityleimu' } ,
-            { name: 'commodityClassHeading', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu' } ,
+        specification:{ name: 'specification', url: '/specification/specificationOfGoodsList/:id', parent: '', default: '/specification/specificationOfGoodsList/:id' } , //商品规格组
+        specificationOfGoodsList:{ name: 'specificationOfGoodsList', url: '/specification/specificationOfGoodsList/:id', parent: 'specification' } ,
+        specificationOfGoodsDetails:{ name: 'specificationOfGoodsDetails', url: '/specification/specificationOfGoodsDetails/:id', parent: 'specification' } ,
 
-            { name: 'Property', url: '/Property/classProperty/:id', parent: '', default: '/Property/classProperty/:id' } , //类目属性规格
-            { name: 'classProperty', url: '/Property/classProperty/:id', parent: 'Property' } ,
-            { name: 'classPropertyDetails', url: '/Property/classPropertyDetails/:id', parent: 'Property' } ,
+        tenant:{ name: 'tenant', url: '/tenant/tenantManagement/:id', parent: '', default: '/tenant/tenantManagement/:id' } , //租户管理
+        tenantManagement:{ name: 'tenantManagement', url: '/tenant/tenantManagement/:id', parent: 'tenant' } ,
+        tenantManagementAdd:{ name: 'tenantManagementAdd', url: '/tenant/tenantManagementAdd/:id', parent: 'tenant' } ,
 
-            { name: 'specification', url: '/specification/specificationOfGoodsList/:id', parent: '', default: '/specification/specificationOfGoodsList/:id' } , //商品规格组
-            { name: 'specificationOfGoodsList', url: '/specification/specificationOfGoodsList/:id', parent: 'specification' } ,
-            { name: 'specificationOfGoodsDetails', url: '/specification/specificationOfGoodsDetails/:id', parent: 'specification' } ,
+        Record:{ name: 'Record', url: '/Record/commodityRecord/:id', parent: '', default: '/Record/commodityRecord/:id' } , //商品档案
+        commodityRecord:{ name: 'commodityRecord', url: '/Record/commodityRecord/:id', parent: 'Record' } ,
+        commodityRecordDetails:{ name: 'commodityRecordDetails', url: '/Record/commodityRecordDetails/:id', parent: 'Record' } ,
 
-            { name: 'tenant', url: '/tenant/tenantManagement/:id', parent: '', default: '/tenant/tenantManagement/:id' } , //租户管理
-            { name: 'tenantManagement', url: '/tenant/tenantManagement/:id', parent: 'tenant' } ,
-            { name: 'tenantManagementAdd', url: '/tenant/tenantManagementAdd/:id', parent: 'tenant' } ,
+        groupManage:{ name: 'groupManage', url: '/groupManage/groupManageList/:id', parent: '', default: '/groupManage/groupManageList/:id' } , //集团管理
+        groupManageList:{ name: 'groupManageList', url: '/groupManage/groupManageList/:id', parent: 'groupManage' } ,
 
-            { name: 'Record', url: '/Record/commodityRecord/:id', parent: '', default: '/Record/commodityRecord/:id' } , //商品档案
-            { name: 'commodityRecord', url: '/Record/commodityRecord/:id', parent: 'Record' } ,
-            { name: 'commodityRecordDetails', url: '/Record/commodityRecordDetails/:id', parent: 'Record' } ,
+        businessArea:{ name: 'businessArea', url: '/businessArea/businessAreaList/:id', parent: '', default: '/businessArea/businessAreaList/:id' } , //业务地区管理
+        businessAreaList:{ name: 'businessAreaList', url: '/businessArea/businessAreaList/:id', parent: 'businessArea' } ,
+        businessAreaDetail:{ name: 'businessAreaDetail', url: '/businessArea/businessAreaDetail/:id', parent: 'businessArea' } ,
+        businessAreaModify:{ name: 'businessAreaModify', url: '/businessArea/businessAreaModify/:id', parent: 'businessArea' } ,
 
-            { name: 'groupManage', url: '/groupManage/groupManageList/:id', parent: '', default: '/groupManage/groupManageList/:id' } , //集团管理
-            { name: 'groupManageList', url: '/groupManage/groupManageList/:id', parent: 'groupManage' } ,
+        department:{ name: 'department', url: '/department/departmentList/:id', parent: '', default: '/department/departmentList/:id' } , //部门资料
+        departmentList:{ name: 'departmentList', url: '/department/departmentList/:id', parent: 'department' } ,
 
-            { name: 'businessArea', url: '/businessArea/businessAreaList/:id', parent: '', default: '/businessArea/businessAreaList/:id' } , //业务地区管理
-            { name: 'businessAreaList', url: '/businessArea/businessAreaList/:id', parent: 'businessArea' } ,
-            { name: 'businessAreaDetail', url: '/businessArea/businessAreaDetail/:id', parent: 'businessArea' } ,
-            { name: 'businessAreaModify', url: '/businessArea/businessAreaModify/:id', parent: 'businessArea' } ,
+        shop:{ name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //部门资料
+        shopList:{ name: 'shopList', url: '/shop/shopList/:id', parent: 'shop' } ,
 
-            { name: 'department', url: '/department/departmentList/:id', parent: '', default: '/department/departmentList/:id' } , //部门资料
-            { name: 'departmentList', url: '/department/departmentList/:id', parent: 'department' } ,
+        dictionary:{ name: 'dictionary', url: '/dictionary/dictionaryList/:id', parent: '', default: '/dictionary/dictionaryList/:id' } , //系统字典
+        dictionaryList:{ name: 'dictionaryList', url: '/dictionary/dictionaryList/:id', parent: 'dictionary' } ,
 
-            { name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //部门资料
-            { name: 'shopList', url: '/shop/shopList/:id', parent: 'shop' } ,
+        user:{ name: 'user', url: '/user/userList/:id', parent: '', default: '/user/userList/:id' } , //用户资料
+        userList:{ name: 'userList', url: '/user/userList/:id', parent: 'user' } ,
+        userDetail:{ name: 'userDetail', url: '/user/userDetail/:id', parent: 'user' } ,
+        userModify:{ name: 'userModify', url: '/user/userModify/:id', parent: 'user' } ,
 
-            { name: 'dictionary', url: '/dictionary/dictionaryList/:id', parent: '', default: '/dictionary/dictionaryList/:id' } , //系统字典
-            { name: 'dictionaryList', url: '/dictionary/dictionaryList/:id', parent: 'dictionary' } ,
+        userGroup:{ name: 'userGroup', url: '/userGroup/userGroupList/:id', parent: '', default: '/userGroup/userGroupList/:id' } , //用户组
+        userGroupList:{ name: 'userGroupList', url: '/userGroup/userGroupList/:id', parent: 'userGroup' } ,
+        userGroupDetail:{ name: 'userGroupDetail', url: '/userGroup/userGroupDetail/:id', parent: 'userGroup' } ,
+        userGroupModify:{ name: 'userGroupModify', url: '/userGroup/userGroupModify/:id', parent: 'userGroup' } ,
 
-            { name: 'user', url: '/user/userList/:id', parent: '', default: '/user/userList/:id' } , //用户资料
-            { name: 'userList', url: '/user/userList/:id', parent: 'user' } ,
-            { name: 'userDetail', url: '/user/userDetail/:id', parent: 'user' } ,
-            { name: 'userModify', url: '/user/userModify/:id', parent: 'user' } ,
+        role:{ name: 'role', url: '/role/roleList/:id', parent: '', default: '/role/roleList/:id' } , //角色资料
+        roleList:{ name: 'roleList', url: '/role/roleList/:id', parent: 'role' } ,
+        roleDetail:{ name: 'roleDetail', url: '/role/roleDetail/:id', parent: 'role' } ,
+        roleModify:{ name: 'roleModify', url: '/role/roleModify/:id', parent: 'role' } ,
+        //职员资料
+        staff:{ name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' } , 
+        staffList:{ name: 'staffList', url: '/staff/staffList/:id', parent: 'staff' } ,
+        staffDetail:{ name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' } ,
+        //计量单位
+        count:{ name: 'count', url: '/count/countList/:id', parent: '' , default: '/count/countList/:id' }, 
+        //行政地区
+        adminstrArea:{ name: 'adminstrArea', url: '/adminstrArea/adminstrAreaList/:id', parent: '', default: '/adminstrArea/adminstrAreaList/:id' }, 
+        adminstrAreaDetail:{ name: 'adminstrAreaDetail', url: '/adminstrArea/adminstrAreaDetail/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaList/:id' }, 
+        adminstrArea:{ name: 'adminstrArea', url: '/adminstrArea/adminstrAreaModify/:id', parent: '', default: '/adminstrArea/adminstrAreaModify/:id' },
+        //供应商分类
+        supplierClassify:{ name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: '', default: '/supplierClassify/supplierClassifyList/:id' },
+        supplierClassifyDetail:{ name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
+        supplierClassifyModify:{ name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
+//----------------------------------------------------------------------------路由数据-----------------------------------------------------------------------
 
-            { name: 'userGroup', url: '/userGroup/userGroupList/:id', parent: '', default: '/userGroup/userGroupList/:id' } , //用户组
-            { name: 'userGroupList', url: '/userGroup/userGroupList/:id', parent: 'userGroup' } ,
-            { name: 'userGroupDetail', url: '/userGroup/userGroupDetail/:id', parent: 'userGroup' } ,
-            { name: 'userGroupModify', url: '/userGroup/userGroupModify/:id', parent: 'userGroup' } ,
+        // activeRouter: [ //进入页面子路由，重定向路由。name,parent,defult不变,url将被重定向(name=parent)
+        //     { name: 'order', url: '/order/orderList/:id', parent: '', default: '/order/orderList/:id' } , //采购管理
+        //     { name: 'orderDetails', url: '/order/orderDetails/:id', parent: 'order' } ,
+        //     { name: 'orderList', url: '/order/orderList/:id', parent: 'order' } ,
 
-            { name: 'role', url: '/role/roleList/:id', parent: '', default: '/role/roleList/:id' } , //角色资料
-            { name: 'roleList', url: '/role/roleList/:id', parent: 'role' } ,
-            { name: 'roleDetail', url: '/role/roleDetail/:id', parent: 'role' } ,
-            { name: 'roleModify', url: '/role/roleModify/:id', parent: 'role' } ,
-            //职员资料
-            { name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' } , 
-            { name: 'staffList', url: '/staff/staffList/:id', parent: 'staff' } ,
-            { name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' } ,
-            //计量单位
-            { name: 'count', url: '/count/countList/:id', parent: '' , default: '/count/countList/:id' }, 
-            //行政地区
-            { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaList/:id', parent: '', default: '/adminstrArea/adminstrAreaList/:id' }, 
-            { name: 'adminstrAreaDetail', url: '/adminstrArea/adminstrAreaDetail/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaList/:id' }, 
-            { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaModify/:id', parent: '', default: '/adminstrArea/adminstrAreaModify/:id' },
-            //供应商分类
-            { name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: '', default: '/supplierClassify/supplierClassifyList/:id' },
-            { name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
-            { name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
-        ],
+        //     { name: 'OuManage', url: '/OuManage/OuManageList/:id', parent: '', default: '/OuManage/OuManageList/:id' } , //组织管理
+        //     { name: 'OuManageDetail', url: '/OuManage/OuManageDetail/:id', parent: 'OuManage' } ,
+        //     { name: 'OuManageModify', url: '/OuManage/OuManageModify/:id', parent: 'OuManage' } ,
+        //     { name: 'OuManageList', url: '/OuManage/OuManageList/:id', parent: 'OuManage' } ,
+
+        //     { name: 'repository', url: '/repository/repositoryList/:id', parent: '', default: '/repository/repositoryList/:id' } , //仓库管理
+        //     { name: 'repositoryList', url: '/repository/repositoryList/:id', parent: 'repository' } ,
+        //     { name: 'repositoryData', url: '/repository/repositoryData/:id', parent: 'repository' } ,
+        //     { name: 'repositoryModify', url: '/repository/repositoryModify/:id', parent: 'repository' } ,
+
+        //     { name: 'customer', url: '/customer/customerList/:id', parent: '', default: '/customer/customerList/:id' } , //客户管理
+        //     { name: 'customerList', url: '/customer/customerList/:id', parent: 'customer' } ,
+        //     { name: 'customerDetail', url: '/customer/customerDetail/:id', parent: 'customer' } ,
+        //     { name: 'customerModify', url: '/customer/customerModify/:id', parent: 'customer' } ,
+        //     //客户分类
+        //     { name: 'customerClass', url: '/customerClass/customerClassList/:id', parent: '', default: '/customerClass/customerClassList/:id' } , //客户分类
+        //     { name: 'customerClassList', url: '/customerClass/customerClassList/:id', parent: 'customerClass' } ,
+        //     { name: 'customerClassDetail', url: '/customerClass/customerClassDetail/:id', parent: 'customerClass' } ,
+        //     { name: 'customerClassModify', url: '/customerClass/customerClassModify/:id', parent: 'customerClass' } ,
+        //     { name: 'account', url: '/account/accountList/:id', parent: '', default: '/account/accountList/:id' } , //会计期间
+        //     { name: 'accountList', url: '/account/accountList/:id', parent: 'account' } ,
+        //     { name: 'accountDetail', url: '/account/accountDetail/:id', parent: 'account' } ,
+
+        //     { name: 'currency', url: '/currency/currencyList/:id', parent: '', default: '/customer/currencyList/:id' } , //币种管理
+        //     { name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
+
+        //     { name: 'bill', url: '/bill/billList/:id', parent: '', default: '/bill/billList/:id' } , //模板2.0
+        //     { name: 'billDetails', url: '/bill/billDetails/:id', parent: 'bill' } ,
+        //     { name: 'billList', url: '/bill/billList/:id', parent: 'bill' } ,
+
+        //     { name: 'menu', url: '/menu/menuList/:id', parent: '', default: '/menu/menuList/:id' } , //菜单管理
+        //     { name: 'menuDetail', url: '/menu/menuDetail/:id', parent: 'menu' } ,
+        //     { name: 'menuList', url: '/menu/menuList/:id', parent: 'menu' } ,
+        //     { name: 'menuModify', url: '/menu/menuModify/:id', parent: 'menu' } ,
+
+        //     { name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: '', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
+        //     { name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
+        //     { name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
+
+        //     { name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: '', default: '/commercial/commercialSpecification/:id' } , //商品规格
+        //     { name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' } ,
+        //     { name: 'commercialSpecificationDetails', url: '/commercial/commercialSpecificationDetails/:id', parent: 'commercial' } ,
+
+        //     { name: 'commodityleimu', url: '/commodityleimu/commodityClassHeading/:id', parent: '', default: '/commodityleimu/commodityClassHeading/:id' } , //商品类目
+        //     // { name: 'CommodityCategories', url: '/commodityleimu/CommodityCategories/:id', parent: 'commodityleimu' } ,
+        //     { name: 'CommodityCategoriesDetails', url: '/commodityleimu/CommodityCategoriesDetails/:id', parent: 'commodityleimu' } ,
+        //     { name: 'commodityClassHeading', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu' } ,
+
+        //     { name: 'Property', url: '/Property/classProperty/:id', parent: '', default: '/Property/classProperty/:id' } , //类目属性规格
+        //     { name: 'classProperty', url: '/Property/classProperty/:id', parent: 'Property' } ,
+        //     { name: 'classPropertyDetails', url: '/Property/classPropertyDetails/:id', parent: 'Property' } ,
+
+        //     { name: 'specification', url: '/specification/specificationOfGoodsList/:id', parent: '', default: '/specification/specificationOfGoodsList/:id' } , //商品规格组
+        //     { name: 'specificationOfGoodsList', url: '/specification/specificationOfGoodsList/:id', parent: 'specification' } ,
+        //     { name: 'specificationOfGoodsDetails', url: '/specification/specificationOfGoodsDetails/:id', parent: 'specification' } ,
+
+        //     { name: 'tenant', url: '/tenant/tenantManagement/:id', parent: '', default: '/tenant/tenantManagement/:id' } , //租户管理
+        //     { name: 'tenantManagement', url: '/tenant/tenantManagement/:id', parent: 'tenant' } ,
+        //     { name: 'tenantManagementAdd', url: '/tenant/tenantManagementAdd/:id', parent: 'tenant' } ,
+
+        //     { name: 'Record', url: '/Record/commodityRecord/:id', parent: '', default: '/Record/commodityRecord/:id' } , //商品档案
+        //     { name: 'commodityRecord', url: '/Record/commodityRecord/:id', parent: 'Record' } ,
+        //     { name: 'commodityRecordDetails', url: '/Record/commodityRecordDetails/:id', parent: 'Record' } ,
+
+        //     { name: 'groupManage', url: '/groupManage/groupManageList/:id', parent: '', default: '/groupManage/groupManageList/:id' } , //集团管理
+        //     { name: 'groupManageList', url: '/groupManage/groupManageList/:id', parent: 'groupManage' } ,
+
+        //     { name: 'businessArea', url: '/businessArea/businessAreaList/:id', parent: '', default: '/businessArea/businessAreaList/:id' } , //业务地区管理
+        //     { name: 'businessAreaList', url: '/businessArea/businessAreaList/:id', parent: 'businessArea' } ,
+        //     { name: 'businessAreaDetail', url: '/businessArea/businessAreaDetail/:id', parent: 'businessArea' } ,
+        //     { name: 'businessAreaModify', url: '/businessArea/businessAreaModify/:id', parent: 'businessArea' } ,
+
+        //     { name: 'department', url: '/department/departmentList/:id', parent: '', default: '/department/departmentList/:id' } , //部门资料
+        //     { name: 'departmentList', url: '/department/departmentList/:id', parent: 'department' } ,
+
+        //     { name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //部门资料
+        //     { name: 'shopList', url: '/shop/shopList/:id', parent: 'shop' } ,
+
+        //     { name: 'dictionary', url: '/dictionary/dictionaryList/:id', parent: '', default: '/dictionary/dictionaryList/:id' } , //系统字典
+        //     { name: 'dictionaryList', url: '/dictionary/dictionaryList/:id', parent: 'dictionary' } ,
+
+        //     { name: 'user', url: '/user/userList/:id', parent: '', default: '/user/userList/:id' } , //用户资料
+        //     { name: 'userList', url: '/user/userList/:id', parent: 'user' } ,
+        //     { name: 'userDetail', url: '/user/userDetail/:id', parent: 'user' } ,
+        //     { name: 'userModify', url: '/user/userModify/:id', parent: 'user' } ,
+
+        //     { name: 'userGroup', url: '/userGroup/userGroupList/:id', parent: '', default: '/userGroup/userGroupList/:id' } , //用户组
+        //     { name: 'userGroupList', url: '/userGroup/userGroupList/:id', parent: 'userGroup' } ,
+        //     { name: 'userGroupDetail', url: '/userGroup/userGroupDetail/:id', parent: 'userGroup' } ,
+        //     { name: 'userGroupModify', url: '/userGroup/userGroupModify/:id', parent: 'userGroup' } ,
+
+        //     { name: 'role', url: '/role/roleList/:id', parent: '', default: '/role/roleList/:id' } , //角色资料
+        //     { name: 'roleList', url: '/role/roleList/:id', parent: 'role' } ,
+        //     { name: 'roleDetail', url: '/role/roleDetail/:id', parent: 'role' } ,
+        //     { name: 'roleModify', url: '/role/roleModify/:id', parent: 'role' } ,
+        //     //职员资料
+        //     { name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' } , 
+        //     { name: 'staffList', url: '/staff/staffList/:id', parent: 'staff' } ,
+        //     { name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' } ,
+        //     //计量单位
+        //     { name: 'count', url: '/count/countList/:id', parent: '' , default: '/count/countList/:id' }, 
+        //     //行政地区
+        //     { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaList/:id', parent: '', default: '/adminstrArea/adminstrAreaList/:id' }, 
+        //     { name: 'adminstrAreaDetail', url: '/adminstrArea/adminstrAreaDetail/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaList/:id' }, 
+        //     { name: 'adminstrArea', url: '/adminstrArea/adminstrAreaModify/:id', parent: '', default: '/adminstrArea/adminstrAreaModify/:id' },
+        //     //供应商分类
+        //     { name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: '', default: '/supplierClassify/supplierClassifyList/:id' },
+        //     { name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
+        //     { name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
+        // ],
         icon:[
             {code:'fa fa-address-book',label:"",},
             {code:'fa fa-address-book-o',label:"",},

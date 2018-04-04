@@ -123,7 +123,7 @@ axios.interceptors.request.use((config) => {
       return new Promise((resolve, reject) => {
         axios.put(url, params)
           .then(response => {
-            resolve(response.message);
+            resolve(response.data);
           }, err => {
             reject(err);
           })
