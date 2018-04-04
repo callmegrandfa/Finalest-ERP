@@ -281,18 +281,20 @@ export default {
       let self = this;
       self.tableLoading = true;
       self.$axios.gets("/api/services/app/ContactClassManagement/GetAllList", {ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
-            // console.log(res);
+            console.log(res);
             self.tableData = res.result.items;
             // console.log(self.tableData)
             self.totalItem = res.result.totalCount;
             self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
-            self.tableLoading = false;
-          },
-          function(res) {
-            self.tableLoading = false;
-          }
-        );
-    },
+              if(self.tableData==[]){
+                   self.pageIndex=0
+                    }
+                    self.tableLoading=false;
+                    },function(res){
+                    // self.errorMessage=true;
+                    self.tableLoading=false;
+                    })
+                },
     // ---------------------------------------获取所有列表数据
     getDataList() {
       let self = this;
@@ -311,11 +313,6 @@ export default {
           function(res) {
             // console.log(1)
             // console.log(res);
-            // self.customerClassTree[0].childrenNodes=res;
-            // console.log(self.customerClassTree)
-            // self.treeLoading = false;
-            // self.customerClassTree=res;
-            // self.loadIcon();
             self.treeLoading = false;
             self.customerClassTree=res;
             self.loadIcon();
@@ -471,9 +468,9 @@ export default {
       //页码改变
       let self = this;
       self.page = val;
-      if (self.load) {
+      if(self.load){
         self.loadTableData();
-      }
+    }
     },
     handleSelectionChange(val) {
       //点击复选框选中的数据
@@ -560,19 +557,20 @@ export default {
         });
       }
     },
-            nodeClick(data){//点击树形控件节点时的回调
-                  let self=this;
-                  // console.log(data);
-                  self.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{Id:data.id,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
-                      res=>{
-                       console.log(res);
-                        // self.totalCount=res.result.totalCount;
-                        self.totalItem = res.result.totalCount;
-                        self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
-                        self.tableData=res.result.items;
-                        
-                  })
-              },
+      nodeClick(data){//点击树形控件节点时的回调
+            let self=this;
+            // console.log(data);
+            self.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{Id:data.id,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
+                res=>{
+                  console.log(res);
+                  // self.totalCount=res.result.totalCount;
+                  self.totalItem = res.result.totalCount;
+                  self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
+                  self.tableData=res.result.items;
+                  
+                  
+            })
+        },
             filterNode(value, data) {//过滤节点
                 // console.log(value);
                 // console.log(data);

@@ -9,25 +9,37 @@
                     <span class="btDetail">返回</span>
                 </button>     
 
-                <button @click="save" class="erp_bt bt_save">
+                <button @click="save" class="erp_fb_bt bt_save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
-
-                <button @click='saveAdd' class="erp_bt bt_saveAdd">
+                <button class="erp_fb_bt bt_cancel">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
+                <button @click='saveAdd' class="erp_fb_bt bt_saveAdd">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
-                
-                <button class="erp_bt bt_auxiliary bt_width">
-                    <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                    <span class="btDetail">辅助功能</span>
-                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                </button>
+               <button class="erp_bt bt_add" >
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_add.png">
+                </div>
+                <span class="btDetail">新增</span>
+               </button>
+
+              <button class="erp_bt bt_del">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_del.png">
+                </div>
+                <span class="btDetail">删除</span>
+              </button>
             </el-col>
         </el-row>
 
@@ -184,7 +196,7 @@
                     "classFullPathId": "",
                     "classFullPathName": "",
                     "seq": 0,
-                    "status": 0,
+                    "status": 1,
                     "remark": "",
                     "mnemonic": "1",
                     "createdBy" :'',
@@ -330,9 +342,11 @@
     //       })
     //   },
         back(row){
+
             this.$store.state.url='/customerClass/customerClassList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
+        
         goModify:function(id){
             // console.log(id)
             this.$store.state.url='/customerClass/customerClassModify/'+id
@@ -400,6 +414,40 @@
 <style scoped>
 .pt15{
     padding-top: 15px;
+}
+/* .erp_fb_bt {
+    height: 36px;
+    padding: 0 10px;
+    border: none;
+    position: relative;
+    cursor: no-drop;
+    float: left;
+    margin-right: 2px;
+    background-color: #cccccc;
+} */
+/* .erp_fb_bt .btImg {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 10px;
+}
+.erp_fb_bt .btDetail {
+    font-size: 12px;
+    color: #fff;
+    display: block;
+    height: 100%;
+    width: 100;
+    line-height: 36px;
+    padding-left: 20px;
+}
+/* .erp_fb_bt .btImg img {
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+    left: 0;
+} */ 
+.erp_fb_bt{
+    background-color: 
 }
 .customerClassDetail  .errorTips{
     margin-bottom: 10px;
