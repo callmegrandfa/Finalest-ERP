@@ -382,7 +382,7 @@ export default {
             id: self.$route.params.id
           })
           .then(function(res) {
-            console.log(res);
+            // console.log(res);
             self.customerClassData = res.result;
             // self.ouItem.id = self.customerClassData.classParentId;
             // self.ouItem.ouName = self.customerClassData.ouFullname;
@@ -406,7 +406,7 @@ export default {
       let self = this;
       self.treeLoading = true;
       self.$axios
-        .gets("api/services/app/ContactClassManagement/GetTreeList")
+        .gets("api/services/app/ContactClassManagement/GetTreeList",{Ower:1})
         .then(
           function(res) {
             console.log(res);
@@ -522,7 +522,7 @@ export default {
               )
               .then(
                 function(res) {
-                  console.log(res);
+                  // console.log(res);
                   self.ifModify == false;
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                 },
@@ -548,7 +548,7 @@ export default {
               )
               .then(
                 function(res) {
-                  console.log(res);
+                  // console.log(res);
                   self.ifModify = false;
                   self.goDetail();
                   self.open("修改成功", "el-icon-circle-check", "successERP");

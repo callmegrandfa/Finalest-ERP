@@ -9,13 +9,6 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <!-- <button @click="Update()" class="erp_bt bt_modify">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_modify.png">
-                    </div>
-                    <span class="btDetail">修改</span>
-                </button> -->
-
                 <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify&&!ifDoModify'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
@@ -1743,7 +1736,6 @@ export default({
                         self.ouData.splice(self.whoIndex,1);
                         self.dialogDelConfirm = false;
                     },function(res){
-                        self.open('删除使用组织失败','el-icon-error','faildERP');
                         self.dialogDelConfirm = false;
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1762,7 +1754,6 @@ export default({
                     self.loadBankData();
                     self.dialogDelConfirm = false;
                 },function(res){
-                    self.open('删除银行资料失败','el-icon-error','faildERP');
                     self.dialogDelConfirm = false;
                     self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1775,7 +1766,6 @@ export default({
                     self.loadAddData();
                     self.dialogDelConfirm = false;
                 },function(res){
-                    self.open('删除地址失败','el-icon-error','faildERP');
                     self.dialogDelConfirm = false;
                     self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1788,7 +1778,6 @@ export default({
                     self.loadOuData();
                     self.dialogDelConfirm = false;
                 },function(res){
-                    self.open('删除使用组织失败','el-icon-error','faildERP');
                     self.dialogDelConfirm = false;
                     self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1801,7 +1790,6 @@ export default({
                     self.back();
                     self.dialogDelConfirm = false;
                 },function(res){
-                    self.open('删除使用组织失败','el-icon-error','faildERP');
                     self.dialogDelConfirm = false;
                     self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)

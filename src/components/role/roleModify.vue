@@ -142,6 +142,171 @@
         <div class="tabZoo">
             <el-col :span="24">
                <el-tabs v-model="activeName">
+                   <!-- - - - - - - - - - - - - - - - - - - - 分配组织- - - - - - - - - - - - - - - - - - - - -  -->
+                    <el-tab-pane label="管理组织" name="ou" class="getPadding" style="z-index:-1000">
+                        <button class="erp_bt bt_add" @click="dialogOuIsShow">
+                            <div class="btImg">
+                                <img src="../../../static/image/common/bt_add.png">
+                            </div>
+                            <span class="btDetail">选取</span>
+                        </button>
+                        <div class="search_input_group">
+                            <div class="search_input_wapper">
+                                <el-input
+                                    placeholder="搜索..."
+                                    class="search_input"
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
+                            <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                                <button class="userDefined">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                </button>
+                            </div>
+                        </div>
+                           <!-- 分配组织 -->
+<el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
+        <!-- <el-col :span="11" class="transfer_warapper">
+                <el-col :span="24" class="transfer_header">
+                    <span>已选</span>
+                    <div class="transfer_search">
+                        <el-autocomplete
+                        class="search_input"
+                        placeholder="搜索..."
+                        >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-autocomplete>
+                    </div>    
+                </el-col>    
+                <el-col :span="24" class="transfer_table">
+                   <vue-scroll :ops="$store.state.option">
+                    <el-tree
+                    :data="ouTreeDataLeft"
+                    :props="ouDefaultPropsLeft"
+                    node-key="id"
+                    default-expand-all
+                    show-checkbox
+                    @check-change="ouCheckChangeLeft"
+                    ref="ouTreeLeft"
+                    :expand-on-click-node="false"
+                    @node-click="ouNodeClickLeft">
+                    </el-tree>  
+                    </vue-scroll>
+                </el-col>
+               
+        </el-col> -->
+        <!-- <el-col :span="2" class="transfer_btns">
+            <el-col :span="24" class="transfer_btn_wrapper">
+                <el-button class="el_transfer" :disabled="fromOuRight" @click="fromRightOu" type="primary" icon="el-icon-arrow-left" round></el-button>
+                <el-button class="el_transfer" :disabled="fromOuLeft" @click="fromLeftOu" type="primary" icon="el-icon-arrow-right" round></el-button>
+            </el-col>
+        </el-col> -->
+        <span slot="title">
+            <span>分配组织</span>
+            <div class="search_input_group">
+                <div class="search_input_wapper">
+                    <el-input
+                        placeholder="搜索..."
+                        class="search_input"
+                        >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </div>
+            </div>
+        </span>
+        <el-col :span="24" class="transfer_warapper">
+            <el-col :span="24" class="transfer_table">
+                <vue-scroll :ops="$store.state.option">
+                    <el-tree
+                    :data="ouTreeDataRight"
+                    show-checkbox
+                    default-expand-all
+                    node-key="id"
+                    ref="tree"
+                    highlight-current
+                    @node-click="ouNodeClickRight"
+                    :props="ouDefaultPropsRight">
+                    </el-tree>
+                <!-- <el-tree
+                :data="ouTreeDataRight"
+                :props="ouDefaultPropsRight"
+                node-key="id"
+                default-expand-all
+                show-checkbox
+                highlight-current
+                @check-change="ouCheckChangeRight"
+                ref="tree"
+                :expand-on-click-node="false"
+                @node-click="ouNodeClickRight">
+                </el-tree>   -->
+                </vue-scroll>
+            </el-col>
+            <!-- <el-button @click="getCheckedNodes">通过 node 获取</el-button>
+            <el-button @click="getCheckedKeys">通过 key 获取</el-button>
+            <el-button @click="setCheckedNodes">通过 node 设置</el-button>
+            <el-button @click="setCheckedKey" class="setKey" :data-length="lenKey">通过 key 设置</el-button> -->
+        </el-col>
+    <span slot="footer">
+        <el-col :span="12" class="checkType_wrapper">
+            <span class="checkTips">节点选中方式</span>
+            <el-select filterable
+            class="checkTypeSelect"
+            placeholder=""
+            :class="{redBorder : validation.hasError('addData.status')}"
+            v-model="nodeCheckType">
+                <el-option v-for="item in nodeCheckTypes" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+            </el-select>
+            <button class="transfer_footer_btn transfer_newAdd">新增组织</button>
+        </el-col>
+        <el-col :span="12" class="isConfirm_wrapper">
+            <button class="transfer_footer_btn transfer_confirm" @click="ouDialogSure">确 认</button>
+            <button class="transfer_footer_btn" @click="dialogOu = false">取 消</button>
+        </el-col>
+        
+    </span>
+</el-dialog>
+<!--dialog结束  -->
+                        <el-table 
+                        v-loading="ouTableLoading"
+                        :data="ouTableData" 
+                        border 
+                        style="width: 100%" 
+                        stripe>
+
+                            <el-table-column prop="ouCode" label="组织编码"></el-table-column>
+
+                            <el-table-column prop="ouTypes" label="组织类型"></el-table-column>
+
+                            <el-table-column prop="assignPerson" label="授权人"></el-table-column>
+
+                            <el-table-column label="授权时间">
+                                <template slot-scope="scope">
+                                    <el-date-picker
+                                    v-model="ouTableData[scope.$index].assignTime"
+                                    format="yyyy.MM.dd"
+                                    type="datetime" 
+                                    readonly
+                                    align="center"></el-date-picker>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                 <template slot-scope="scope">
+                                     <el-button type="text">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total,prev, pager, next,jumper" 
+                        @current-change="ouHandleCurrentChange"
+                        :current-page="ouPageIndex"
+                        :page-size="ouOneItem"
+                        :total="ouTotalItem">
+                        </el-pagination>   
+                    </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - 关联用户- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="关联用户" name="role" class="getPadding" style="z-index:-10">
                         <button class="erp_bt bt_add"  @click="dialogUser = true">
@@ -150,6 +315,21 @@
                             </div>
                             <span class="btDetail">选取</span>
                         </button>
+                        <div class="search_input_group">
+                            <div class="search_input_wapper">
+                                <el-input
+                                    placeholder="搜索..."
+                                    class="search_input"
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
+                            <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                                <button class="userDefined">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                </button>
+                            </div>
+                        </div>
                        
     <!-- 关联用户 -->
 <el-dialog :visible.sync="dialogUser" title="关联用户" class="transfer_dialog">
@@ -268,150 +448,6 @@
                         :total="totalItemLeftUser">
                         </el-pagination>   
                     </el-tab-pane>
-<!-- - - - - - - - - - - - - - - - - - - - 分配组织- - - - - - - - - - - - - - - - - - - - -  -->
-                    <el-tab-pane label="分配组织" name="ou" class="getPadding" style="z-index:-1000">
-                        <button class="erp_bt bt_add" @click="dialogOuIsShow">
-                            <div class="btImg">
-                                <img src="../../../static/image/common/bt_add.png">
-                            </div>
-                            <span class="btDetail">选取</span>
-                        </button>
-                           <!-- 分配组织 -->
-<el-dialog :visible.sync="dialogOu" title="分配组织" class="transfer_dialog">
-    <el-col :span="24">
-        <el-col :span="11" class="transfer_warapper">
-                <el-col :span="24" class="transfer_header">
-                    <span>已选</span>
-                    <div class="transfer_search">
-                        <el-autocomplete
-                        class="search_input"
-                        placeholder="搜索..."
-                        >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-autocomplete>
-                    </div>    
-                </el-col>    
-                <el-col :span="24" class="transfer_table">
-                   <vue-scroll :ops="$store.state.option">
-                    <el-tree
-                    :data="ouTreeDataLeft"
-                    :props="ouDefaultPropsLeft"
-                    node-key="id"
-                    default-expand-all
-                    show-checkbox
-                    @check-change="ouCheckChangeLeft"
-                    ref="ouTreeLeft"
-                    :expand-on-click-node="false"
-                    @node-click="ouNodeClickLeft">
-                    </el-tree>  
-                    </vue-scroll>
-                </el-col>
-               
-        </el-col>
-        <el-col :span="2" class="transfer_btns">
-            <el-col :span="24" class="transfer_btn_wrapper">
-                <el-button class="el_transfer" :disabled="fromOuRight" @click="fromRightOu" type="primary" icon="el-icon-arrow-left" round></el-button>
-                <el-button class="el_transfer" :disabled="fromOuLeft" @click="fromLeftOu" type="primary" icon="el-icon-arrow-right" round></el-button>
-            </el-col>
-        </el-col>
-        <el-col :span="11" class="transfer_warapper">
-            <el-col :span="24" class="transfer_header">
-                <span>可选</span>
-                <div class="transfer_search">
-                    <el-autocomplete
-                    class="search_input"
-                    placeholder="搜索..."
-                    >
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-autocomplete>
-                </div>
-            </el-col>    
-            <el-col :span="24" class="transfer_table">
-                <vue-scroll :ops="$store.state.option">
-                <el-tree
-                :data="ouTreeDataRight"
-                :props="ouDefaultPropsRight"
-                node-key="id"
-                default-expand-all
-                show-checkbox
-                @check-change="ouCheckChangeRight"
-                ref="ouTreeRight"
-                :expand-on-click-node="false"
-                @node-click="ouNodeClickRight">
-                </el-tree>  
-                </vue-scroll>
-            </el-col>
-            <!-- <el-col :span="24" class="transfer_footer">
-                <el-col :span="18">
-                    <span>总共有{{totalItemRightUser}}条数据</span>
-                </el-col>
-                <el-col :span="6">
-                    <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button>
-                    <el-button class="el_transfer" :disabled="rightAddBtnUser" @click="pageAddRightUser" type="primary" icon="el-icon-arrow-right" round></el-button>
-                </el-col>
-            </el-col> -->
-        </el-col>
-    </el-col>
-    <span slot="footer">
-        <el-col :span="12" class="checkType_wrapper">
-            <span class="checkTips">节点选中方式</span>
-            <el-select filterable
-            class="checkTypeSelect"
-            placeholder=""
-            :class="{redBorder : validation.hasError('addData.status')}"
-            v-model="nodeCheckType">
-                <el-option v-for="item in nodeCheckTypes" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-            </el-select>
-            <button class="transfer_footer_btn transfer_newAdd">新增组织</button>
-        </el-col>
-        <el-col :span="12" class="isConfirm_wrapper">
-            <button class="transfer_footer_btn transfer_confirm">确 认</button>
-            <button class="transfer_footer_btn">取 消</button>
-        </el-col>
-        
-    </span>
-</el-dialog>
-<!--dialog结束  -->
-                        <el-table 
-                        v-loading="ouTableLoading"
-                        :data="ouTableData" 
-                        border 
-                        style="width: 100%" 
-                        stripe>
-
-                            <el-table-column prop="ouCode" label="组织编码"></el-table-column>
-
-                            <el-table-column prop="ouTypes" label="组织类型"></el-table-column>
-
-                            <el-table-column prop="assignPerson" label="授权人"></el-table-column>
-
-                            <el-table-column label="授权时间">
-                                <template slot-scope="scope">
-                                    <el-date-picker
-                                    v-model="ouTableData[scope.$index].assignTime"
-                                    format="yyyy.MM.dd"
-                                    type="datetime" 
-                                    readonly
-                                    align="center"></el-date-picker>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="操作">
-                                 <template slot-scope="scope">
-                                     <el-button type="text">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <el-pagination
-                        style="margin-top:20px;" 
-                        class="text-right" 
-                        background layout="total,prev, pager, next,jumper" 
-                        @current-change="ouHandleCurrentChange"
-                        :current-page="ouPageIndex"
-                        :page-size="ouOneItem"
-                        :total="ouTotalItem">
-                        </el-pagination>   
-                    </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - 分配功能- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="分配功能" name="fn" class="getPadding" style="z-index:-1000">
                         <el-col :span="24">
@@ -421,6 +457,21 @@
                                 </div>
                                 <span class="btDetail">选取</span>
                             </button>
+                            <div class="search_input_group">
+                                <div class="search_input_wapper">
+                                    <el-input
+                                        placeholder="搜索..."
+                                        class="search_input"
+                                        >
+                                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-input>
+                                </div>
+                                <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                                    <button class="userDefined">
+                                        <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                    </button>
+                                </div>
+                            </div>
                         </el-col>
 
 <!-- - - - - - - - - - - - - - - - - - - - 分配功能- - - - - - - - - - - - - - - - - - - - -  -->
@@ -506,21 +557,49 @@
                         <!-- tree -->
                         <el-col :span="19">
                             <!-- table -->
-                            <el-table 
-                            :data="clickFnTreeData" 
-                            border 
-                            style="width: 100%" 
-                            stripe>
-
-
-                                <el-table-column prop="moduleName" label="名称"></el-table-column>
-                          
-                                <el-table-column :prop="i.permissionName" v-for="(i,index) in moduleList" :key="index" :label="i.displayName">
-                                    <template slot-scope="scope">
-                                        <el-checkbox v-model="clickFnTreeData[scope.$index][i.permissionName]" @change="selectChangeFn(scope.row[i.permissionName],i.permissionName)"></el-checkbox>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
+                            <el-col :span="24" class="transfer_fixed">
+                                        <el-col :span="24" class="transfer_header">
+                                            <el-col :span="12" class="header_displayName">
+                                                <span>CRM</span>
+                                            </el-col>
+                                            <el-col :span="12" class="header_ops">
+                                            <el-checkbox></el-checkbox>
+                                            <span>全选</span>     
+                                            </el-col>
+                                        </el-col>  
+                                        <el-col :span="24" class="checkbox_group">
+                                            <span v-for="(x,index) in clickFnTreeData" :key="index">
+                                                <span v-for="(i,inde) in moduleList" :key="inde">
+                                                    <el-checkbox
+                                                    v-model="clickFnTreeData[index][i.permissionName]" 
+                                                    @change="selectChangeFn(clickFnTreeData[index][i.permissionName],i.permissionName)"
+                                                    >
+                                                    {{i.displayName}}
+                                                    </el-checkbox>
+                                                </span>
+                                            </span>
+                                            
+                                            
+                                        </el-col>    
+                                        <el-table 
+                                        :data="clickFnTreeData" 
+                                        border 
+                                        class="fnTable"
+                                        style="width: 100%" 
+                                        stripe>
+                                        <el-table-column prop="moduleName" label="名称" fixed="left" width="200"></el-table-column>
+                                        <el-table-column label="功能" max-height="2500">
+                                            <template slot-scope="scope">
+                                                <el-checkbox v-for="(item,index) in clickFnTreeData[scope.$index].children" :key="index" v-model="item.check" @change="selectChangeFn(scope.row[i.permissionName],i.permissionName)">{{item.displayName}}</el-checkbox>
+                                            </template>
+                                        </el-table-column>
+                                        <!-- <el-table-column :prop="i.permissionName" v-for="(i,index) in moduleList" :key="index" :label="i.displayName">
+                                            <template slot-scope="scope">
+                                                <el-checkbox v-model="clickFnTreeData[scope.$index][i.permissionName]" @change="selectChangeFn(scope.row[i.permissionName],i.permissionName)"></el-checkbox>
+                                            </template>
+                                        </el-table-column> -->
+                                        </el-table>
+                                    </el-col>
                             
                         </el-col>
                     </el-tab-pane>
@@ -546,6 +625,30 @@
 export default({
     data() {
         return{
+            option: {//滚动条样式
+                vRail: {
+                    width: 0,
+                    height:0,
+                    background: "#9093994d",
+                },
+                vBar:{
+                     width: 0,
+                     height:0,
+                    background: '#9093994d',
+                },
+                hRail: {
+                    width: 0,
+                    height:0,
+                    pos: 'bottom',
+                    background: "#9093994d",
+                },
+                hBar:{
+                     width:0,
+                     height:0,
+                    pos: 'bottom',
+                    background: '#9093994d',
+                }
+            },
             search_ou:'',
             selectTree_ou:[
             ],
@@ -581,7 +684,7 @@ export default({
                 label: '选项3'
             }],
 
-            activeName: 'role',//tabs标签页默认激活name
+            activeName: 'ou',//tabs标签页默认激活name
 
             addData:{
                 "ouId": "",
@@ -594,6 +697,7 @@ export default({
             },
 
 // -------------分配组织-------------------
+
             nodeCheckTypes:[{//客户性质
                 value:1,
                 label: '包含所有下级'
@@ -603,12 +707,12 @@ export default({
             }],
             nodeCheckType:1, 
             dialogOu:false,
+            storeCheckOu:[],
 //-------------tree right---------------
             ouTreeDataRight:[],//
             ouDefaultPropsRight:{
                 children: 'children',
                 label: 'ouFullname',
-                id:'id'
             },
 //-------------tree left---------------
             ouTreeDataLeft:[],//
@@ -685,7 +789,7 @@ export default({
             nocheckTable:[],//页面渲染的数据
             allTable:[],//页面渲染的数据
             clickFnTreeData:[
-                {moduleName:'',head:[{displayName:'',permissionName:''}]}
+                // {moduleName:'',head:[{displayName:'',permissionName:''}]}
             ],//当前点击节点数据
             clickCheckBox:'',
             pageTable:[],//用于分页展示所有权限
@@ -725,6 +829,7 @@ export default({
 
         _this.getModifyData();//根据id获取数据
     },
+    
     watch: {
       search_ou(val) {
         this.$refs.tree_ou.filter(val);
@@ -758,10 +863,13 @@ export default({
             let _this=this;
             _this.dialogOu=true;
             _this.loadIcon();
+            setTimeout(function(){
+                console.log(_this.storeCheckOu)
+               _this.$refs.tree.setCheckedKeys(_this.storeCheckOu);
+            },200)
         },
         getCheckedNodes_right() {//获取右侧选择的数据
             let _this=this;
-            return _this.$refs.ouTreeRight.getCheckedNodes();
         },
         ouCheckChangeRight(data, checked, indeterminate){
             let _this=this;
@@ -773,7 +881,7 @@ export default({
             };
         },
         ouNodeClickRight(data){//右侧树形节点点击
-            console.log(data.id)
+            console.log(data)
         },
         getCheckedNodes_left() {//获取左侧选择的数据
             let _this=this;
@@ -810,17 +918,22 @@ export default({
                 _this.ouTotalItem=res.result.totalCount
                 _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
                 _this.ouTableLoading=false;
+                _this.storeCheckOu=[];
+                $.each(res.result.items,function(index,val){
+                    _this.storeCheckOu.push(val.ouId)
+                })           
                 _this.loadOuTreeAll();
                 },function(res){
                 _this.ouTableLoading=false;
             })
         },
+        
         loadOuTreeAll(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
-                // _this.ouTreeDataRight=res.result;
-                _this.ouTreeDataRight=_this.parseJson(_this.ouTableData,res.result,'ouId','id','children');
+                _this.ouTreeDataRight=res.result;
+                // _this.ouTreeDataRight=_this.parseJson(_this.ouTableData,res.result,'ouId','id','children');
                 // _this.parseJson(_this.ouTableData,res.result,'ouId','id','children')
                 // console.log(_this.parseJson(_this.ouTableData,_this.ouTreeDataRight,'ouId','id','children'))
                 // _this.loadIcon()
@@ -846,39 +959,23 @@ export default({
                             break;
                         }
                     }
-                    if (!repeat) {//去除相同项
-                        result.push(item);
-                    
-                        
-                        // if(jsonObj[topKey][children]!=null && typeof(jsonObj[topKey][children])=="object" && jsonObj[topKey][children].length > 0){
-                        //     _this.parseJson(list,jsonObj[topKey][children],keyList,key,children);
-
-                        // }else{//如果对象children不存在
-
-                        // }
-                        
+                    if (repeat) {//去除相同项
+                        _this.ouTableData.push(item);
                     }
-                }
-                if(go){
-                    _this.parseJson(list,result,keyList,key,children);
-                }else{
-                    for(let topKey in jsonObj) {
-                    //遍历第一层数据
-                        if(jsonObj[topKey][children]!=null && typeof(jsonObj[topKey][children])=="object" && jsonObj[topKey][children].length > 0){
+                    if(jsonObj[topKey][children]!=null && typeof(jsonObj[topKey][children])=="object" && jsonObj[topKey][children].length > 0){
                             
                             _this.parseJson(list,jsonObj[topKey][children],keyList,key,children);
 
                         }else{//如果对象children不存在
+
                         }
-                        
-                    }
-                
                 }
+                
                 
                  
             }else{
                 
-                // return jsonObj
+
             }
             
         },
@@ -893,6 +990,12 @@ export default({
             },function(res){
             //    _this.treeLoading=false;
             })
+        },
+        ouDialogSure(){
+            let _this=this;
+            _this.dialogOu=false;
+            _this.ouTableData=_this.$refs.tree.getCheckedNodes();
+            console.log(_this.ouTableData)
         },
 //---------------分配权限--------------
         getCheckFn(){//获取关联权限
@@ -930,6 +1033,7 @@ export default({
             _this.fnTreeLoading=true;
             _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
             .then(function(res){
+                console.log(res)
                 _this.fnTreeData=res.items;
                 _this.fnTreeLoading=false;
                 _this.loadIcon()
@@ -1008,22 +1112,28 @@ export default({
                 }
             }
         },
-        fnNodeClick(data){
+        fnNodeClick(data){//获取点击所有权限
             let _this=this;
-            let item={moduleName:data.displayName}
+            // console.log(data)
+            let item={moduleName:data.displayName,children:[]}
             let head=[];
             $.each(data.children,function(index,value){
-                head.push({displayName:value.displayName,permissionName:value.permissionName})
-                item[value.permissionName]=false
+                // console.log(value)
+                // head.push({displayName:value.displayName,permissionName:value.permissionName})
+                let x={check:false,permissionName:value.permissionName}
+                
                 $.each(_this.checked,function(indexs,val){
                     if(value.permissionName==val.displayName){
-                        item[value.permissionName]=true
+                        x.check=true;
+                        x.displayName=value.displayName
                     }
                 })
+                item.children.push(x)
             })
             item.head=head
             _this.moduleList=head
             _this.clickFnTreeData=[item]
+            console.log(_this.clickFnTreeData)
         },
         filterNode_ou(value, data) {
             if (!value) return true;
@@ -1298,6 +1408,25 @@ export default({
                 _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')
             }
         },
+         getCheckedNodes() {
+             this.storeCheckOu=this.$refs.tree.getCheckedNodes()
+        console.log(this.$refs.tree.getCheckedNodes());
+      },
+      getCheckedKeys() {
+           this.storeCheckOu=this.$refs.tree.getCheckedKeys()
+        console.log(this.$refs.tree.getCheckedKeys());
+      },
+      setCheckedNodes() {
+        this.$refs.tree.setCheckedNodes(this.storeCheckOu);
+      },
+      setCheckedKey() {
+          let _this=this;
+          console.log(this.storeCheckOu)
+            _this.$refs.tree.setCheckedKeys(this.storeCheckOu);
+      },
+      resetChecked() {
+        this.$refs.tree.setCheckedKeys([]);
+      }
         
     }
        
@@ -1402,7 +1531,20 @@ export default({
 .roleModify .el-tree-node__content{
     background-color: #F9F9F9;
 }
-/* .roleModify thead tr:last-child{
-    display: none;
-} */
+.roleModify .search_input_group{
+    margin-top:6px;
+}
+.roleModify .dialogOu .search_input_group{
+    width:40%;
+    position: absolute;
+    top: 2px;
+    right: 6%;
+}
+.roleModify .dialogOu .search_input_group .search_input_wapper{
+    width:100%;
+}
+
+.roleModify .fnTable .el-table__row .el-table_1_column_11 .cell{
+    overflow-x: scroll;
+}
   </style>
