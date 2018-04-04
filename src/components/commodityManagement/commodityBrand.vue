@@ -497,7 +497,7 @@ import dialogBox from '../../base/dialog/dialog'
                     + seperator2 + date.getSeconds();
                 return currentdate;
             },
-            addCol(){//新增
+            addCol(){//新增              
                 let newcol={
                     "groupId":0,
                     "brandCode":"" ,
@@ -511,7 +511,15 @@ import dialogBox from '../../base/dialog/dialog'
                     "createdTime":this.GetDateTime()
                     //"seq":Math.max.apply(Math,this.tableData.map(function(o){return Number(o.seq);}))+1
                 };
-                 this.$store.dispatch('addCol',newcol);//表格行内新增
+                let newArrayLength=this.$store.state[this.tableModel+'NewColArray'].length;
+                if(newArrayLength>2){
+                    this.$message({
+                        type: 'info',
+                        message: '请先编辑保存新增项'
+                    });
+                }else{
+                    this.$store.dispatch('addCol',newcol);//表格行内新增
+                }              
                 // this.isUpdate=true;
                 // this.isAdd=true;
                 // this.tableData.unshift(newcol);
@@ -621,32 +629,6 @@ import dialogBox from '../../base/dialog/dialog'
                         _this.open('删除成功','el-icon-circle-check','successERP');    
                     })
                 }
-                // if(_this.idArray.ids.length>0){
-                //     _this.$confirm('确定删除?', '提示', {
-                //         confirmButtonText: '确定',
-                //         cancelButtonText: '取消',
-                //         type: 'warning',
-                //         center: true
-                //         }).then(() => {
-                //             _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
-                //                 _this.$store.dispatch('InitTable');
-                //                 _this.$store.commit('setTableSelection',[])
-                //                 _this.idArray.ids=[];
-                //                 _this.open('删除成功','el-icon-circle-check','successERP');    
-                //             })
-                //         }).catch(() => {
-                //             this.$message({
-                //                 type: 'info',
-                //                 message: '已取消删除'
-                //             });
-                //     });
-                   
-                // }else{
-                //     this.$message({
-                //         type: 'info',
-                //         message: '请勾选需要删除的数据！'
-                //     });
-                // }
             },
             delCancel(){
                 this.dialogShow=false;
