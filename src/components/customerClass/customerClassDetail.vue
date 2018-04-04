@@ -446,9 +446,9 @@
     position: absolute;
     left: 0;
 } */ 
-.erp_fb_bt{
+/* .erp_fb_bt{
     background-color: 
-}
+} */
 .customerClassDetail  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
