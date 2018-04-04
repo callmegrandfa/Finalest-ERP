@@ -7,7 +7,7 @@
                 <template slot-scope="scope" >
                     <img :id="scope.row.id" v-show='(scope.row.id==""||typeof(scope.row.id)=="undefined"||updateColArray.indexOf(scope.row.id)>=0)&&item.flag' class="update-icon" src="../../../static/image/content/redremind.png"/> 
                     <el-checkbox v-if="item.control=='checkbox'" disabled v-model='scope.row[item.prop]'></el-checkbox>
-                    <el-input class="noEdit" :disabled="isDisable" v-if="item.control=='normal'" v-model="scope.row[item.prop]"></el-input>
+                    <el-input :class="{errorclass:item.required&&scope.row[item.prop]==''&&ifSave==true}"  class="noEdit" :disabled="isDisable" v-if="item.control=='normal'" v-model="scope.row[item.prop]"></el-input>
                     <el-date-picker  v-if="item.control=='datetime'"  v-model="scope.row[item.prop]" readonly type="date"></el-date-picker>
                     <el-select :disabled="isDisable" v-if="item.control=='select'"  v-model="scope.row[item.prop]" >
                         <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
@@ -29,7 +29,7 @@
 <script type="text/javascript">
     import dialogBox from '../dialog/dialog'
 	export	default{
-		props:['methodsUrl','cols','isDisable','tableName','hasModify'],
+		props:['methodsUrl','cols','isDisable','tableName','hasModify',"ifSave"],
 		data(){
 			return{
                 currentPage:1,//当前页码
