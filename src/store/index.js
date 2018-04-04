@@ -63,6 +63,8 @@ export default new vuex.Store({
         currency:{ name: 'currency', url: '/currency/currencyList/:id', parent: '', default: '/customer/currencyList/:id' } , //币种管理
         currencyList:{ name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
 
+        commodityBrand:{name: 'commodityBrand', url: '/commodityBrand/:id', parent: 'commodityBrand', default: '/commodityBrand/:id' },//商品品牌
+
         bill:{ name: 'bill', url: '/bill/billList/:id', parent: '', default: '/bill/billList/:id' } , //模板2.0
         billDetails:{ name: 'billDetails', url: '/bill/billDetails/:id', parent: 'bill' } ,
         billList:{ name: 'billList', url: '/bill/billList/:id', parent: 'bill' } ,
@@ -111,9 +113,13 @@ export default new vuex.Store({
 
         department:{ name: 'department', url: '/department/departmentList/:id', parent: '', default: '/department/departmentList/:id' } , //部门资料
         departmentList:{ name: 'departmentList', url: '/department/departmentList/:id', parent: 'department' } ,
+        departmentDetail:{ name: 'departmentDetail', url: '/department/departmentDetail/:id', parent: 'department' } ,
+        departmentModify:{ name: 'departmentModify', url: '/department/departmentModify/:id', parent: 'department' } ,
 
-        shop:{ name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //部门资料
+        shop:{ name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //店铺资料
         shopList:{ name: 'shopList', url: '/shop/shopList/:id', parent: 'shop' } ,
+        shopDetail:{ name: 'shopDetail', url: '/shop/shopDetail/:id', parent: 'shop' } ,
+        shopModify:{ name: 'shopModify', url: '/shop/shopModify/:id', parent: 'shop' } ,
 
         dictionary:{ name: 'dictionary', url: '/dictionary/dictionaryList/:id', parent: '', default: '/dictionary/dictionaryList/:id' } , //系统字典
         dictionaryList:{ name: 'dictionaryList', url: '/dictionary/dictionaryList/:id', parent: 'dictionary' } ,

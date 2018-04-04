@@ -9,54 +9,58 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <!-- <button @click="Update()" class="erp_bt bt_modify">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_modify.png">
-                    </div>
-                    <span class="btDetail">修改</span>
-                </button>  -->
-
-                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
-
-                <button class="erp_bt bt_del" @click="delModify" v-show='!ifModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_del.png">
-                    </div>
-                    <span class="btDetail">删除</span>
-                </button>
-                
-                <button @click="save" class="erp_bt bt_save" v-show='ifModify'>
+                <button class="erp_bt bt_save" :class="{erp_fb_bt:!ifModify}"  @click="save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button @click='saveAdd' class="erp_bt bt_saveAdd" v-show='ifModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_saveAdd.png">
-                    </div>
-                    <span class="btDetail">保存并新增</span>
-                </button>
-
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
+                <button class="erp_bt bt_cancel" :disabled='!ifModify' :class="{erp_fb_bt:!ifModify}" @click="Cancel">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
                     <span class="btDetail">取消</span>
                 </button>
 
-
-                <button class="erp_bt bt_auxiliary bt_width">
-                    <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                    <span class="btDetail">辅助功能</span>
-                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                <button class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!ifModify}" @click='saveAdd'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_saveAdd.png">
+                    </div>
+                    <span class="btDetail">保存并新增</span>
                 </button>
+
+                <button class="erp_bt bt_add" @click="goDetail" v-show="!ifModify">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+
+                <button class="erp_bt bt_add" v-show="ifModify" :class="{erp_fb_bt:ifModify}" >
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+
+                <button class="erp_bt bt_del" @click="delModify" v-show="!ifModify">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+                
+                <button class="erp_bt bt_del" v-show="ifModify" :class="{erp_fb_bt:ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+
+                
+
+                
             </el-col>
         </el-row>
 
@@ -293,9 +297,30 @@
             count () {
                 return this.parentItem;
                 },
+        },
+        watch:{
+            departmentData:{
+                handler: function (val, oldVal) {
+                    let self = this;
+                    if(!self.firstModify){
+                        self.firstModify = !self.firstModify;
+                    }else{
+                        self.ifModify = true;
+                    }
+
+                    // self.changeTimes++
+                    // if(this.changeTimes==2){
+                    //     self.ifModify = true;
+                    // }else{
+                    //     self.ifModify=false;
+                    // }
+                },
+                deep: true,
+            }
         },  
         data(){
             return{
+                firstModify:false,
                 ifModify:false,//判断是否修改过
                 // isEdit:true,//判断是否要修改
                 
@@ -409,6 +434,9 @@
                     self.ouItem.ouName = self.departmentData.ouFullname;
                     self.parentItem.id = self.departmentData.deptParentid;
                     self.parentItem.deptName = self.departmentData.deptParentName;
+
+                    self.firstModify = false;
+                    
                 });
             }
 
@@ -492,7 +520,7 @@
         },
         save(){//保存修改
             let self=this;
-            if(self.ifModify = true){
+            if(self.ifModify){
                 self.departmentData.id = self.$route.params.id;
                     self.$validate().then(function (success) {
                         if (success) {
@@ -501,7 +529,6 @@
                                 self.ifModify = false;
                                 self.open('修改成功','el-icon-circle-check','successERP');
                             },function(res){    
-                                self.open('修改失败','el-icon-error','faildERP');
                                 self.errorMessage=true;
                                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             })
@@ -511,7 +538,7 @@
         },
         saveAdd:function(){//保存修改并新增
             let self=this;
-            if(self.ifModify = true){
+            if(self.ifModify){
                 self.departmentData.id = self.$route.params.id;
                     self.$validate().then(function (success) {
                         if (success) {
@@ -521,7 +548,6 @@
                                 self.goDetail();
                                 self.open('修改成功','el-icon-circle-check','successERP');
                             },function(res){    
-                                self.open('修改失败','el-icon-error','faildERP');
                                 self.errorMessage=true;
                                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             })
@@ -571,19 +597,19 @@
         //-------------------------------------------------------
 
         //---控制是否可编辑---------------------------------------
-        // Update(){//修改
-        //     if(this.isEdit==true){
-        //         this.isEdit=!this.isEdit;
-        //     }
-        // },        
+              
         Cancel(){
             let self = this;
-            // if(self.isEdit==false){
-                // self.isEdit=!self.isEdit;
-                self.loadData();
-                self.ifModify = false;
-                $('.tipsWrapper').css({display:'none'})
+            console.log(self.ifModify)
+            self.ifModify = false;
+            // if(self.ifModify == false){
+                // self.loadData();
             // }
+            // console.log(self.ifModify)
+            
+            console.log(self.ifModify)
+                
+            $('.tipsWrapper').css({display:'none'})
         },
         //-------------------------------------------------------
 

@@ -100,7 +100,7 @@
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
-                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel" :hasModify="hasModify"></normalTable>
+                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel" :hasModify="hasModify" :ifSave="isSave"></normalTable>
                              <!-- <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
                                 <el-table-column
                                     type="selection"
@@ -260,7 +260,6 @@ import dialogBox from '../../base/dialog/dialog'
                 updateId:'',
                 ifWidth:true,
                 cancelClick:false,//是否点击取消按钮
-                isSave:false,
                 turnPage:-1,//是否允许翻页
                 pageFlag:true,
                 httpUrl:{
@@ -271,15 +270,18 @@ import dialogBox from '../../base/dialog/dialog'
                     prop: 'brandCode',
                     label: '品牌编码',
                     control:'normal',
+                    required:true,
                     flag:true,//更改标识
                     },{
                     prop: 'brandName',
                     label: '品牌名称',
-                    control:'normal'
+                    control:'normal',
+                    required:true,
                     },{
                     prop: 'brandEname',
                     label: '英文名称',
-                    control:'normal'
+                    control:'normal',
+                    required:true,
                     },{
                     prop: 'remark',
                     label: '备注',
@@ -297,6 +299,7 @@ import dialogBox from '../../base/dialog/dialog'
                     label: '创建时间',
                     control:'datetime'
                     }],
+                isSave:false,
                 enableEdit:false,
                 tableModel:'commodityBrand',
                 hasModify:false,//是否包含查看按钮
@@ -551,6 +554,7 @@ import dialogBox from '../../base/dialog/dialog'
                 })
             },
             cancel(){//数据恢复到初始化状态 取消
+                this.isSave=false;
                 this.$store.dispatch('InitTable');
                 this.$store.commit('setUpdateRowId',"")//置空修改行id
                 this.$store.commit('setAddColArray',[])//置空新增集合
@@ -649,28 +653,43 @@ import dialogBox from '../../base/dialog/dialog'
             },
             save(){
                 let _this=this;
+                _this.isSave=true;
                 let newArray=_this.$store.state[_this.tableModel+'NewColArray'];
                 let newArrayLength=_this.$store.state[_this.tableModel+'NewColArray'].length;
                 let updateArray=_this.$store.state[_this.tableModel+'UpdateColArray'];
                 let updateArrayLength=_this.$store.state[_this.tableModel+'UpdateColArray'].length;
                 let tableData=_this.$store.state[_this.tableModel+'Table'];
                 // 新增保存
+                if(newArrayLength>0){//新增保存
+                    for(let i in newArray){
+                        if(newArray[i].brandCode==""||newArray[i].brandName==""||newArray[i].brandEname==""){
+                            this.$message({
+                                message: '红色框内为必填项！',
+                                type: 'error'
+                            });
+                            return;
+                        }
+                    }
+                }
                 if(newArrayLength>0){
                     if(newArrayLength==1){//单条新增
                         _this.$axios.posts('/api/services/app/BrandManagement/Create',newArray[0]).then(function(res){
                             _this.$store.commit('setAddColArray',[])//置空新增集合
-                            _this.$store.dispatch('InitTable')
+                            _this.$store.dispatch('InitTable');
+                            _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                         }).catch(function(err){
                             _this.$message({
                                 type: 'warning',
                                 message: err.error.message
                             });
+                            _this.isSave=false;
                         })   
                     }else{//批量新增                      
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',newArray).then(function(res){
                             _this.$store.commit('setAddColArray',[])//置空新增集合
-                            _this.$store.dispatch('InitTable')
+                            _this.$store.dispatch('InitTable');
+                            _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                         }); 
                     }    
@@ -687,6 +706,7 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.$store.commit('setUpdateRowId',"")//置空修改行id
                             _this.$store.commit('setUpdateColArray',[])//置空修改集合
                             _this.$store.dispatch('InitTable');
+                            _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         });
                     }else{//批量修改
@@ -694,7 +714,7 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.$store.commit('setUpdateRowId',"")//置空修改行id
                             _this.$store.commit('setUpdateColArray',[])//置空修改集合
                             _this.$store.dispatch('InitTable');
-                            console.log(_this.$store.state[_this.tableModel+'UpdateColArray']);
+                            _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         }); 
                     }

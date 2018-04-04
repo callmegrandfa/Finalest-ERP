@@ -117,6 +117,7 @@
                     remark:'',//备注
                     status:'',//启用状态
                     id:'',//id
+                    areaId:'',
                 },
                 currencyOptions: [],
                 tableData:[],
@@ -212,7 +213,7 @@
                     _this.entryItem.localCurrencyId=res.result.localCurrencyId;
                     _this.entryItem.accSchemeId=res.result.accSchemeId;
                     _this.entryItem.accStartMonth=res.result.accStartMonth;
-                    //_this.entryItem.areaProId=res.result.areaId;
+                    _this.entryItem.areaId=res.result.areaId;
                     _this.entryItem.industry=res.result.industry;
                     _this.entryItem.address=res.result.address;
                     _this.entryItem.phone=res.result.phone;
@@ -269,7 +270,6 @@
             },
             Save(){
                 let _this=this;
-
                 let updateItem={
                     groupName: _this.entryItem.groupCode,
                     groupFullname:_this.entryItem.groupFullname,
@@ -283,12 +283,14 @@
                     remark:_this.entryItem.remark,
                     status: _this.entryItem.status
                 }
-                if(_this.entryItem.areaDisId!=""){
+                if(_this.entryItem.areaDisId!=""&&typeof(_this.entryItem.areaDisId)!="string"){
                     updateItem.areaId=_this.entryItem.areaDisId
-                }else if(_this.entryItem.areaDisId==""&&_this.entryItem.areaCityId!=""){
+                }else if(_this.entryItem.areaDisId==""&&_this.entryItem.areaCityId!=""&&typeof(_this.entryItem.areaCityId)!="string"){
                     updateItem.areaId=_this.entryItem.areaCityId
-                }else if(_this.entryItem.areaProId!=""&&_this.entryItem.areaCityId==""){
+                }else if(_this.entryItem.areaProId!=""&&_this.entryItem.areaCityId==""&&typeof(_this.entryItem.areaProId)!="string"){
                     updateItem.areaId=_this.entryItem.areaProId
+                }else if(typeof(this.entryItem.areaDisId)=="string"&&typeof(_this.entryItem.areaCityId)=="string"&&typeof(_this.entryItem.areaProId)=="string"){
+                    updateItem.areaId=_this.entryItem.areaId
                 }
                 if(_this.update){
                     _this.$axios.puts('/api/services/app/GroupManagement/Update',updateItem).then(function(res){ 
@@ -298,6 +300,7 @@
                         _this.open('修改失败','el-icon-error','faildERP');
                     });
                     _this.update=false;
+                    _this.isCancel=false;
                 }else{
                     _this.open('没有需要保存的项目','el-icon-warning','noticERP');
                 }

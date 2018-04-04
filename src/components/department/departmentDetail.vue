@@ -2,7 +2,7 @@
     <div class="departmentDetail">
         <el-row>
             <el-col :span="24">
-                <button @click="isBack" class="erp_bt bt_back">
+                <button class="erp_bt bt_back" @click="isBack">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
@@ -16,17 +16,32 @@
                     <span class="btDetail">保存</span>
                 </button>
 
+                <button class="erp_bt bt_cancel" @click='isBack()'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
+
                 <button @click='saveAdd' class="erp_bt bt_saveAdd">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
+
+                <button class="erp_fb_bt bt_add" :disabled='true'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
                 
-                <button class="erp_bt bt_auxiliary bt_width">
-                    <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                    <span class="btDetail">辅助功能</span>
-                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                <button class="erp_fb_bt bt_del" :disabled='true'>
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
                 </button>
             </el-col>
         </el-row>
