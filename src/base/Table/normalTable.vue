@@ -106,16 +106,28 @@
                 _this.dialogMessage="确定删除？";
                 _this.dialogShow=true;
             },
+            open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
             delConfirm(){//确认删除
                 let _this=this;
                 if(_this.newColArray.length>0){
                     _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
                     _this.newColArray.splice(this.delIndex,1);
+                    _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                     _this.dialogShow=false;
                 }else{
                     _this.$axios.deletes(_this.methodsUrl.del,{Id:this.delRow.id}).then(function(res){
                         _this.$store.dispatch('InitTable');//初始化表格数据
-                        _this.open('删除成功','el-icon-circle-check','successERP');  
+                        _this.open('删除成功','el-icon-circle-check','successERP'); 
+                        _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                         _this.dialogShow=false;  
                     }).catch(function(err){
                         _this.$message({
