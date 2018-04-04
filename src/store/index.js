@@ -783,15 +783,17 @@ export default new vuex.Store({
         setUpdateColArray(state,array){//重置行内修改集合
             state[state.tableName+'UpdateColArray']=array;
         },
-        setTableSelection(state,array){
+        setTableSelection(state,array){//设置表格多选集合
             state[state.tableName+'Selection']=array;
+        },
+        setUpdateRowId(state,id){//重置修改行id
+            state[state.tableName+'UpdateRowId']=id;
         },
         add_col(state,data){//表格行内新增
             state[state.tableName+'Table'].unshift(data);
             state[state.tableName+'NewColArray'].unshift(data);
         },
         Add_UpdateArray(state,data){//行内修改集合
-            console.log(data)
             state[state.tableName+'UpdateColArray'].push(data);
         },
         get_RowId(state,data){//行id
@@ -815,19 +817,11 @@ export default new vuex.Store({
         addCol(context,item){//添加行
             //通过参数传递
             context.commit('add_col',item)
-            // if(context.state[context.state.tableName+'NewCol']==""){
-            //     return
-            // }else{
-            //     console.log(context.state.tableName+'NewCol');
-            //     context.commit('add_col',context.state[context.state.tableName+'NewCol'])
-            // }
         },
         AddUpdateArray(context){//更改行id
             if(context.state[context.state.tableName+'UpdateColArray'].length==0){
                 if(context.state[context.state.tableName+'UpdateRowId']!=""&&typeof(context.state[context.state.tableName+'UpdateRowId'])!="undefined")
-                console.log(context.state[context.state.tableName+'UpdateRowId']);
                 context.commit('Add_UpdateArray',context.state[context.state.tableName+'UpdateRowId'])
-                //context.state.updateColArray.push( context.state.rowId);
             }else{
                 if(context.state[context.state.tableName+'UpdateColArray'].indexOf(context.state[context.state.tableName+'UpdateRowId'])==-1&&context.state[context.state.tableName+'UpdateRowId']!=""&&typeof(context.state[context.state.tableName+'UpdateRowId'])!="undefined"){
                     context.commit('Add_UpdateArray',context.state[context.state.tableName+'UpdateRowId'])
