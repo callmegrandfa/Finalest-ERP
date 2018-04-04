@@ -40,9 +40,9 @@
                     <vue-scroll :key="item.id" :ops="ops">
                         <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
                             <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
-                            <a href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{i.moduleName}}</a>
+                            <a href="javascript:;" :moduleParentId="i.moduleParentId" :menuname="i.moduleName" :menuUrl="i.url" @click="storageData">{{i.moduleName}}</a>
                             <diV class="triangle"></diV>
-                            <ul class="slidUl slid2" >
+                            <ul class="slidUl slid2" v-show="i.childNodes.length">
                                 <vue-scroll :key="i.id" :ops="ops">
                                     <li class="three" v-for="it in i.childNodes">
                                         <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
@@ -200,9 +200,7 @@ export default {
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
             _this.childNodes=res;
-
             // console.log(2)
-
 
             _this.$nextTick(function(){
                 let x={}

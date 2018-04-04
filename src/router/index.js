@@ -225,7 +225,7 @@ const supplierClassifyModify = () => import('../components/supplierClassify/supp
     
 
 let redirectRouter = function(routerName) { //重定向
-    let activeRouter = store.state.activeRouter;
+    // let activeRouter = store.state.activeRouter;
     return store.state[routerName].url
     // for (let i = 0; i < activeRouter.length; i++) {
     //     if (activeRouter[i].name == routerName) {
@@ -279,6 +279,7 @@ const routes = [
                             store.state.alerts = false;
                             store.state.name = x;
                             store.state.accessToken = token;
+                            
                             next();
                         } else {
                             store.state.alerts = true;
@@ -675,11 +676,10 @@ router.beforeEach((to, from, next) => {
     //         }
     //     }
     // })
-    console.log(store.accessToken)
-    if (store.accessToken != '' && typeof(store.accessToken)!='undefined') {
+
+    if (store.state.accessToken != '' && typeof(store.state.accessToken)!='undefined') {
         document.title = to.name
-        let activeRouter = store.state.activeRouter;
-        // console.log(to)
+        // let activeRouter = store.state.activeRouter;
         store.state[to.name].url=to.fullPath;
         store.state[store.state[to.name].parent].url=to.fullPath
         // let parent = '';
