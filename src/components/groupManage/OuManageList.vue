@@ -13,7 +13,7 @@
                 </el-row>
 
                 <div class="mt20 bgcolor smallBgcolor">
-                    <label><small>*</small>组织类型</label>
+                    <label>组织类型</label>
                     <el-select filterable   v-model="searchData.OuType" placeholder="">
                         <el-option v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>

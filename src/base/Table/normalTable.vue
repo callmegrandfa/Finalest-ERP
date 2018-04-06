@@ -36,6 +36,10 @@
                 totalPage:10,//总页数
                 eachPage:10,//每页显示条数
                 tableLoading:true,//加载动画
+                updateId:'',//修改行id
+                rowIndex:'',//修改行index
+                updateRow:'',
+                clickRow:'',
                 options: [{
                     value: 0,
                     label: '禁用'
@@ -88,7 +92,17 @@
             tableData:{
                 handler: function (val, oldVal) {
                     if(oldVal.length>0&&!this.isDisable){
-                       this.$store.dispatch('AddUpdateArray');//当表格数据初次加载完毕且表格为可编辑状态，其数据发生改变时   
+                        for(let i in this.$store.state[this.tableName+'Table']){
+                            if(this.clickRow.id==this.$store.state[this.tableName+'Table'][i].id){
+                                this.rowIndex=i;
+                            }
+                        }
+                        if(!this.Compare(this.updateRow,this.$store.state[this.tableName+'Table'][this.rowIndex])){
+                            this.$store.dispatch('AddUpdateArray');//当表格数据初次加载完毕且表格为可编辑状态，其数据发生改变时   
+                        }else{
+                            console.log("xiangtong");
+                        }
+                        
                     }
                 },
                 deep: true
@@ -106,16 +120,30 @@
                 _this.dialogMessage="确定删除？";
                 _this.dialogShow=true;
             },
+            open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
             delConfirm(){//确认删除
                 let _this=this;
                 if(_this.newColArray.length>0){
                     _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
-                    _this.newColArray.splice(this.delIndex,1);
+                    _this.newColArray.splice(_this.delIndex,1);
+                    _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                    _this.$store.commit('setIfDel',true);//设置删除参数为真
                     _this.dialogShow=false;
                 }else{
-                    _this.$axios.deletes(_this.methodsUrl.del,{Id:this.delRow.id}).then(function(res){
+                    _this.$axios.deletes(_this.methodsUrl.del,{Id:_this.delRow.id}).then(function(res){
                         _this.$store.dispatch('InitTable');//初始化表格数据
-                        _this.open('删除成功','el-icon-circle-check','successERP');  
+                        _this.open('删除成功','el-icon-circle-check','successERP'); 
+                        _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                        _this.$store.commit('setIfDel',true);//设置删除参数为真
                         _this.dialogShow=false;  
                     }).catch(function(err){
                         _this.$message({
@@ -129,7 +157,10 @@
                 this.dialogShow=false;
             },
             rowClick(row){//获取行id
-                this.$store.dispatch('getRowId',row.id);//初始化表格数据
+                //this.updateId=row.id
+                this.clickRow=row;
+                this.InitUpdateRow(row.id);
+                this.$store.dispatch('getRowId',row.id);//传递获取的行id
             },
             handleSelectionChange(val){//多选操作
                 this.$store.commit('setTableSelection',val)
@@ -139,6 +170,49 @@
                 this.$store.dispatch('InitTable');//初始化表格数据   
                 
             },
+            InitUpdateRow(id){//根据id获取修改行数据
+                let _this=this;
+                _this.$axios.gets(_this.methodsUrl.getId,{Id:id}).then(function(res){
+                    _this.updateRow=res.result;
+                    })
+            },
+            // 对比json对象的方法块
+            isObj(object) {  
+                return object && typeof (object) == 'object' && Object.prototype.toString.call(object).toLowerCase() == "[object object]";  
+            },        
+            isArray(object) {  
+                return object && typeof (object) == 'object' && object.constructor == Array;  
+            }, 
+            getLength(object) {  
+                var count = 0;  
+                for (var i in object) count++;  
+                return count;  
+            },
+            Compare(objA, objB) {  
+                if (!this.isObj(objA) || !this.isObj(objB)) return false; //判断类型是否正确  
+                if (this.getLength(objA) != this.getLength(objB)) return false; //判断长度是否一致  
+                return this.CompareObj(objA, objB, true);//默认为true  
+            },  
+            CompareObj(objA, objB, flag) {  
+                for (var key in objA) {  
+                    if (!flag) //跳出整个循环  
+                        break;  
+                    if (!objB.hasOwnProperty(key)) { flag = false; break; }  
+                    if (!this.isArray(objA[key])) { //子级不是数组时,比较属性值  
+                        if (objB[key] != objA[key]) { flag = false; break; }  
+                    } else {  
+                        if (!this.isArray(objB[key])) { flag = false; break; }  
+                        var oA = objA[key], oB = objB[key];  
+                        if (oA.length != oB.length) { flag = false; break; }  
+                        for (var k in oA) {  
+                            if (!flag) //这里跳出循环是为了不让递归继续  
+                                break;  
+                            flag = this.CompareObj(oA[k], oB[k], flag);  
+                        }  
+                    }  
+                }  
+                return flag;  
+            }, 
         }
 	}
 </script>
