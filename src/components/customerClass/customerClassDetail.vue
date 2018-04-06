@@ -2,7 +2,7 @@
     <div class="customerClassDetail">
         <el-row>
             <el-col :span="24">
-                <button @click="back" class="erp_bt bt_back">
+                <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
@@ -15,19 +15,31 @@
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
-
+                <button @click="isCancel"class="erp_bt bt_cancel">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
                 <button @click='saveAdd' class="erp_bt bt_saveAdd">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
-                
-                <button class="erp_bt bt_auxiliary bt_width">
-                    <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                    <span class="btDetail">辅助功能</span>
-                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                </button>
+               <button class="erp_fb_bt bt_add" >
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_add.png">
+                </div>
+                <span class="btDetail">新增</span>
+               </button>
+
+              <button class="erp_fb_bt bt_del">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_del.png">
+                </div>
+                <span class="btDetail">删除</span>
+              </button>
             </el-col>
         </el-row>
 
@@ -70,6 +82,7 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>客户分类编码</label>
                         <el-input class="classCode" 
+                                  @change="isUpdate"
                                   :class="{redBorder : validation.hasError('addData.classCode')}" 
                                   v-model="addData.classCode">
                         </el-input>
@@ -83,6 +96,7 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>客户分类名称</label>
                         <el-input  class="className" 
+                                    @change="isUpdate"
                                    :class="{redBorder : validation.hasError('addData.className')}" 
                                    v-model="addData.className"></el-input>
                     </div>
@@ -96,6 +110,7 @@
                         <label>备注</label>
                         <el-input class="remark" 
                                   :class="{redBorder : validation.hasError('addData.remark')}" 
+                                   @change="isUpdate"
                                   v-model="addData.remark"
                                   type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 4}">
@@ -110,6 +125,7 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
                         <el-select  class="status" 
+                                     @change="isUpdate"
                                     :class="{redBorder : validation.hasError('addData.status')}" 
                                     placeholder=""
                                     v-model="addData.status">
@@ -126,11 +142,9 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
-                       <el-input class="createdTime" 
-                                  :class="{redBorder : validation.hasError('addData.createdTime')}" 
-                                  v-model="addData.createdTime"
-                                  disabled=""
-                                  :autosize="{ minRows: 4, maxRows: 4}"
+                       <el-input class="createdBy" 
+                                  v-model="addData.createdBy"
+                                  disabled="" 
                                   >
                         </el-input>
                     </div>
@@ -141,19 +155,39 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建时间</label>
-                        <el-input class="createdTime" 
-                                  :class="{redBorder : validation.hasError('addData.createdTime')}" 
-                                  disabled=""
-                                  v-model="addData.createdTime"
-                                  :autosize="{ minRows: 4, maxRows: 4}">
-                        </el-input>
+                         <el-date-picker
+                            v-model="addData.createdTime"
+                            type="date"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd" 
+                            disabled
+                            placeholder="">
+                        </el-date-picker>
                     </div>
                   
                 </div>    
             </el-col>
       </el-row>
+       <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
   </div>
-</template>
+  </template>
 
 <script>
     export default({
@@ -184,24 +218,15 @@
                     "classFullPathId": "",
                     "classFullPathName": "",
                     "seq": 0,
-                    "status": 0,
+                    "status": 1,
                     "remark": "",
                     "mnemonic": "1",
                     "createdBy" :'',
                     "createdTime"  :''
                     },
-                    //  dateRange:[],//有效时间
-                    // tableLoading:false,
-                    // tableData:[],
-                    // pageIndex:1,//分页的当前页码
-                    // totalPage:0,//当前分页总数
-                    // oneItem:10,//每页有多少条信息
-                    // multipleSelection: [],//复选框选中数据
-                    // page:1,//当前页
-                    // totalItem:0,//总共有多少条消息
-                    //  SkipCount:0,
-                    // MaxResultCount:100,
-                    // totalCount:0,
+                choseDoing:'',//存储点击按钮判断信息
+                dialogUserConfirm:false,//信息更改提示控制
+                update:false,
             }
         },
      validators: {
@@ -271,19 +296,21 @@
         },
         //-----------------------------------------------------
         
-        //---保存新增---------------------------------------------
-        save(){
+        //---保存---------------------------------------------
+           save(){
             let self=this; 
             self.$validate().then(function (success) {
                 if(success) {   
                    self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){  
+                        // console.log(res.result);
+                        self.addData.id=res.result.id;
+                        self.$store.state.url='/customerClass/customerClassModify/'+res.result.id
+                        self.$router.push({path:self.$store.state.url})
+                        self.open('保存成功','el-icon-circle-check','successERP');
+                        self.dialogUserConfirm=false;
                         // _this.addData.id=res.result.id;
                         // console.log(res.result);
                         self.open('保存成功','el-icon-circle-check','successERP');
-                        self.$axios.gets("/api/services/app/ContactClassManagement/Get", {id: res.result.id}).then( res=>{
-                                            console.log(res.result);
-                                            self.addData=res.result;
-                                            })
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
                     })
@@ -295,8 +322,14 @@
             self.$validate().then(function (success) {
                 if (success) {
                     self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){
-                        // console.log(res);
-                        self.open('保存成功','el-icon-circle-check','successERP');
+                        //  self.addData=res.result;
+                         self.addData.id=res.result.id;
+                         self.$store.state.url='/customerClass/customerClassDetail/default'
+                         self.$router.push({path:self.$store.state.url})
+                         self.open('保存成功','el-icon-circle-check','successERP');
+                          self.clearData();
+                          self.update=false;
+                         console.log(self.update)
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
                     })
@@ -315,23 +348,26 @@
             customClass:className
             });
         },
-        // ----------------------------加载表格------------------------
-    //     loadTableData(){//表格
-    //       let self=this;
-    //       self.tableLoading=true
-    //       self.$axios.gets('/api/services/app/ContactClassManagement/GetAllList',{ContactOwner:1,SkipCount:(self.page-1)*self.oneItem,MaxResultCount:self.oneItem,Sorting:self.Sorting}).then(function(res){
-    //         //   self.tableData=res.result.items;
-    //           self.totalItem=res.result.totalCount
-    //           self.totalPage=Math.ceil(res.result.totalCount/self.oneItem);
-    //           self.tableLoading=false;
-    //           self.nochecked=res.result.items;
-    //           },function(res){
-    //           self.tableLoading=false;
-    //       })
-    //   },
+        // ----------------------------按钮组------------------------
         back(row){
+
             this.$store.state.url='/customerClass/customerClassList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        sureDoing(){
+            let self=this;
+            if(self.choseDoing=='back'){
+                self.back()
+                self.dialogUserConfirm=false;
+            }else if(self.choseDoing=='Cancel'){
+                self.Cancel();
+                self.dialogUserConfirm=false;
+            }
+            },
+        Cancel(){
+            let self=this;
+            self.clearData();
+            self.update=false;
         },
         goModify:function(id){
             // console.log(id)
@@ -342,6 +378,28 @@
         goDetail(){//点击新增跳转
             this.$store.state.url='/customerClass/customerClassDetail/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
+        },
+        // 清除数据-------------------------
+         clearData(){
+          let self=this;
+            self.addData={
+                "groupId": 0,
+                "contactOwner": 1,            
+                "classParentId": '',
+                "classCode": "",
+                "className": "",
+                "classFullname": "1",
+                "classFullPathId": "",
+                "classFullPathName": "",
+                "seq": 0,
+                "status": 1,
+                "remark": "",
+                "mnemonic": "1",
+                "createdBy" :'',
+                "createdTime"  :''
+            },
+            // self.getDefault()
+            self.validation.reset();
         },
         //---------------------------------------------------------
         //---下拉树------------------------------------------------.
@@ -359,7 +417,28 @@
                 $('#customerClass_confirmSelect').click()
             })
         },
-        //---------------------------------------------------------
+        //-------------按钮操作-----------
+        isBack(){
+            let self=this;
+            if(self.update){
+                self.dialogUserConfirm=true;
+                self.choseDoing='back'
+            }else{
+                self.back()
+            }
+        },
+        isUpdate(){//判断是否修改过信息
+            this.update=true;
+        },
+        isCancel(){
+            let self=this;
+            if(self.update){
+                self.dialogUserConfirm=true;
+                self.choseDoing='Cancel'
+            }else{
+                self.Cancel()
+            }
+        },
 
         //---错误提示-------------------------------------------
         showErrprTips(e){
@@ -389,7 +468,8 @@
                 }
             })
         },
-        //------------------------------------------------------
+
+       //-------------按钮操作-----------
     }
 
 })

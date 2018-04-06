@@ -735,14 +735,14 @@
                     // _this.addData.permissionDtos=_this.checked;//权限
                     _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
                     .then(function(res){
-                        _this.open('修改成功','el-icon-circle-check','successERP');
+                        _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.firstModify=false;
                         _this.ifModify=false;
                         _this.update=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('修改失败','el-icon-error','faildERP');
+                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             })    
@@ -779,12 +779,12 @@
                     // _this.addData.permissionDtos=_this.checked;//权限
                     _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
                     .then(function(res){
-                        _this.open('修改成功','el-icon-circle-check','successERP');
+                        _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.add()
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('修改失败','el-icon-error','faildERP');
+                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             })    
