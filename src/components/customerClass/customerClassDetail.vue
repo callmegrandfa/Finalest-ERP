@@ -308,6 +308,7 @@
                         self.$store.state.url='/customerClass/customerClassModify/'+res.result.id
                         self.$router.push({path:self.$store.state.url})
                         self.open('保存成功','el-icon-circle-check','successERP');
+                        self.dialogUserConfirm=false;
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
                     })
@@ -324,7 +325,11 @@
                          self.$store.state.url='/customerClass/customerClassDetail/default'
                          self.$router.push({path:self.$store.state.url})
                          self.open('保存成功','el-icon-circle-check','successERP');
-                         self.clearData();
+                          self.clearData();
+                          self.update=false;
+                         console.log(self.update)
+                        
+                        
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
                     })

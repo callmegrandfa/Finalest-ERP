@@ -8,13 +8,6 @@
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
-
-                <!-- <button @click="Update()" class="erp_bt bt_modify">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_modify.png">
-                    </div>
-                    <span class="btDetail">修改</span>
-                </button>  -->
                 
               <button @click="save" class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                     <div class="btImg">
@@ -488,7 +481,7 @@ export default {
       let self = this;
       if (self.ifModify) {
         self.dialogUserConfirm = true;
-        // self.choseDoing='back'
+        self.choseDoing='back'
       } else {
         self.back();
       }
@@ -500,20 +493,18 @@ export default {
     save() {
       //保存修改
       let self = this;
-      if (self.ifModify == true) {
         self.customerClassData.id = self.$route.params.id;
         self.$validate().then(function(success) {
           if (success) {
             self.$axios
               .puts(
-                "/api/services/app/ContactClassManagement/Update",
-                self.customerClassData
-              )
-              .then(
+                "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
                   // console.log(res);
-                  self.ifModify == false;
                   self.open("修改成功", "el-icon-circle-check", "successERP");
+                    // 修改成功，点返回不弹出对话框
+                   self.ifModify = false;
+                  // console.log(self.ifModify);
                 },
                 function(res) {
                   self.open("修改失败", "el-icon-error", "faildERP");
@@ -521,7 +512,6 @@ export default {
               );
           }
         });
-      }
     },
     saveAdd: function() {
       //保存修改并新增

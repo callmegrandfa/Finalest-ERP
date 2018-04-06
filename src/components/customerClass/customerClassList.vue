@@ -296,7 +296,7 @@ export default {
                     self.tableLoading=false;
                     })
                 },
-    // ---------------------------------------获取所有列表数据
+    // ---------------------------------------获取所有列表数据-----------------
     getDataList() {
       let self = this;
       self.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {ContactOwner:1,InputName: self.InputName,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
@@ -306,7 +306,7 @@ export default {
          
         });
     },
-    //------------------------------------------------加载树形结构
+    //------------------------------------------------加载树形结构-------------------------
     loadTree() {
       let self = this;
       self.treeLoading = true;
