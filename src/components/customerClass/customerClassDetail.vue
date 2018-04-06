@@ -302,7 +302,6 @@
             self.$validate().then(function (success) {
                 if(success) {   
                    self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){  
-                        // self.addData.id=res.result.id;
                         // console.log(res.result);
                         self.addData.id=res.result.id;
                         self.$store.state.url='/customerClass/customerClassModify/'+res.result.id
