@@ -43,7 +43,7 @@
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.accStartMonth')}">
-                            启用月份{{ validation.firstError('addData.accStartMonth') }},
+                            启用年月{{ validation.firstError('addData.accStartMonth') }},
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.baseCurrencyId')}">
@@ -182,7 +182,7 @@
                 </div>
                 <div class="tipsWrapper" name="accStartMonth">
                     <div class="errorTips" :class="{block : !validation.hasError('addData.accStartMonth')}">
-                        <p class="msgDetail">错误提示：启用月份{{ validation.firstError('addData.accStartMonth') }}</p>
+                        <p class="msgDetail">错误提示：启用年月{{ validation.firstError('addData.accStartMonth') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="baseCurrencyId">
@@ -415,17 +415,17 @@
                     </el-select>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>启用月份</label>
+                    <label><small>*</small>启用年月</label>
                     <el-date-picker 
                      
                     @change="isUpdate"
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
                     class="accStartMonth datepicker" 
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd" 
+                    format="yyyy-MM"
+                    value-format="yyyy-MM" 
                     v-model="addData.accStartMonth" 
-                    type="date" 
+                    type="month" 
                     ></el-date-picker>
                 </div>
                 <div class="bgcolor">
@@ -1212,7 +1212,7 @@ export default({
       'addData.accCchemeId': function (value) {//会计方案
          return this.Validator.value(value).required().maxLength(50);
       },
-      'addData.accStartMonth': function (value) {//启用月份
+      'addData.accStartMonth': function (value) {//启用年月
          return this.Validator.value(value).required();
       },
       'addData.baseCurrencyId': function (value) {//本位币种id
