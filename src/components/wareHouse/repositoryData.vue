@@ -402,6 +402,7 @@
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
+                             <img class="abimg" src="../../../static/image/content/redremind.png"/>
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 

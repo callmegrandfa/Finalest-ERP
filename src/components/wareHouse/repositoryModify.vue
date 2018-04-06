@@ -378,12 +378,12 @@
                 </button>
           </el-col>
 
-          <!-- <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">repositoryAddressData -->
               <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
+                            <img v-show='redAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson"
@@ -646,7 +646,9 @@
                 getRepositoryAddressParams:{
                    id:'',
                 }, 
-                firstModify:false,
+                firstModify:false,//主表第一次修改
+                firstAddModify:false,//从表第一次修改
+
                 ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
                 
@@ -778,6 +780,9 @@
                 proId:'',
                 cityId:'',
                 disId:'',
+                //-----------------------------
+                redAr:[],//显示小红标的数组
+                InitAddData:[],//初始的从表数据
 
             }
         },
@@ -804,6 +809,60 @@
                     }
                 },
                 deep: true,
+            },
+
+            repositoryAddressData:{
+                handler:function(val,oldVal){
+                    let self = this;
+                    if(!self.firstAddModify){
+                        self.firstAddModify = !self.firstAddModify;
+                    }else{
+                        self.ifModify = true;
+                    }
+                    console.log(val)
+                    console.log(self.InitAddData)
+                    // $.each(val,function(index,value){
+                    //     let flag = false;
+                    //     $.each(self.InitAddData,function(i,v){
+                    //         if(value!=v){
+                    //             flag = true;
+                    //         }
+                    //     })
+                    //     if(flag){
+                    //         // console.log(value)
+                    //         self.redAr.push(value)
+                    //     }
+                    // })
+                    // console.log(self.redAr)
+                    // if(self.ifModify){
+                    //     $.each(val,function(index,value){
+                    //         let flag = false;
+                    //         $.each(self.InitAddData[0],function(i,iv){
+                    //             if(value!=iv){
+                    //                 flag = true;
+                    //                 console.log(value)
+                    //             }
+                    //         })
+                            
+                    //         if(flag){
+                    //             self.redAr.push(value)
+                    //         }
+                    //     })
+                    // }
+                    
+                    // console.log(self.redAr)
+                    // console.log(self.updateList)
+                    // console.log(self.updateList.length)
+                    // if(self.addList.length>0&&self.updateList.length==0){
+                    //     self.redAr = self.addList;
+                    //     console.log(self.redAr)
+                    // }else if(self.addList.length==0&&self.updateList.length>0){
+                    //     self.redAr = self.updateList;
+                    //     console.log(self.redAr)
+                    // }
+                    
+                },
+                deep:true,
             }
         },
         
@@ -814,6 +873,7 @@
                 let self = this;
                 if(self.$route.params.id!='default'){
                     self.firstModify = false;
+                    self.firstAddModify = false;
                     //根据仓库id获取仓库信息
                     self.$axios.gets('/api/services/app/StockManagement/Get',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
@@ -892,11 +952,59 @@
                     self.loadAddData();
                 }
             },
+            getType(obj){
+                //tostring会返回对应不同的标签的构造函数
+                var toString = Object.prototype.toString;
+                var map = {
+                    '[object Boolean]'  : 'boolean', 
+                    '[object Number]'   : 'number', 
+                    '[object String]'   : 'string', 
+                    '[object Function]' : 'function', 
+                    '[object Array]'    : 'array', 
+                    '[object Date]'     : 'date', 
+                    '[object RegExp]'   : 'regExp', 
+                    '[object Undefined]': 'undefined',
+                    '[object Null]'     : 'null', 
+                    '[object Object]'   : 'object'
+                };
+                if(obj instanceof Element) {
+                    return 'element';
+                }
+                return map[toString.call(obj)];
+            },
+            deepCopy(data){
+                let self = this;
+                var type = self.getType(data);
+                var obj;
+                if(type === 'array'){
+                    obj = [];
+                } else if(type === 'object'){
+                    obj = {};
+                } else {
+                    //不再具有下一层次
+                    return data;
+                }
+                if(type === 'array'){
+                    for(var i = 0, len = data.length; i < len; i++){
+                        obj.push(self.deepCopy(data[i]));
+                    }
+                } else if(type === 'object'){
+                    for(var key in data){
+                        obj[key] = self.deepCopy(data[key]);
+                    }
+                }
+                return obj;
+            },
             loadAddData:function(){
                 let self = this;
                 this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',{id:self.$route.params.id}).then(function(res){
-                        // console.log(res);
+                        console.log(res);
                         self.repositoryAddressData = res.result;
+                        self.InitAddData = self.deepCopy(res.result);
+                        // $.each(res.result,function(index,v) {
+                        //     self.InitAddData.push(v)
+                        // })
+                        console.log(self.InitAddData)
                         for(let i in self.repositoryAddressData){
                             if(self.repositoryAddressData[i].isDefault == true){
                                 self.checkedAr = self.repositoryAddressData[i]
@@ -905,7 +1013,7 @@
                         console.log(typeof(res.result[0].transportMethodId))
                         //运输方式
                         self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
-                            console.log(res);
+                            // console.log(res);
                             self.transAr = res.result;
                         },function(res){
                             console.log('err'+res)
