@@ -265,6 +265,7 @@ import dialogBox from '../../base/dialog/dialog'
                 httpUrl:{
                     creat:'/api/services/app/BrandManagement/GetAll',//数据初始化
                     del:'/api/services/app/BrandManagement/Delete',//行内删除
+                    getId:'/api/services/app/BrandManagement/Get',
                 },
                 column: [{
                     prop: 'brandCode',
@@ -343,7 +344,7 @@ import dialogBox from '../../base/dialog/dialog'
                 
             },
             isCancel(){
-                if(this.$store.state[this.tableModel+'NewColArray'].length>0||this.$store.state[this.tableModel+'UpdateColArray'].length>0){
+                if((this.$store.state[this.tableModel+'NewColArray'].length>0||this.$store.state[this.tableModel+'UpdateColArray'].length>0)&&!this.$store.state[this.tableModel+'IfDel']){
                     return false
                 }else{
                     return true
@@ -369,10 +370,10 @@ import dialogBox from '../../base/dialog/dialog'
                             }else{
                                 this.isUpdate=true;
                             }
-                            if(this.updateArray.length==0){//判断是否为第一行修改的数据
+                            if(this.updateArray.length==0&&!this.$store.state[this.tableModel+'IfDel']){//判断是否为第一行修改的数据
                                 this.updateArray.push(this.updateId)
                             }else{
-                                if(this.updateArray.indexOf(this.updateId)==-1){
+                                if(this.updateArray.indexOf(this.updateId)==-1&&!this.$store.state[this.tableModel+'IfDel']){
                                     this.updateArray.push(this.updateId)
                                 }else{
                                     return
@@ -519,11 +520,7 @@ import dialogBox from '../../base/dialog/dialog'
                     });
                 }else{
                     this.$store.dispatch('addCol',newcol);//表格行内新增
-                }              
-                // this.isUpdate=true;
-                // this.isAdd=true;
-                // this.tableData.unshift(newcol);
-                // this.addArray.unshift(newcol);                  
+                }                              
             },
             handleDel(row,index){//行内删除
                 this.dialogMessage="确认删除";
@@ -557,6 +554,7 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.$axios.gets('/api/services/app/BrandManagement/GetData',_this.searchItem).then(function(res){
                     //_this.tableData=res.result;
                     _this.$store.state[_this.tableModel+'Table']=res.result.items; 
+                    _this.$store.commit('setUpdateRowId',"")//置空修改行id
                     let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
                     _this.$store.commit('Init_pagination',totalPage)                    
                 })
