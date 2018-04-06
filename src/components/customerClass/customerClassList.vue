@@ -277,7 +277,7 @@ export default {
   },
   methods: {
     //---数据表格加载---------------------------------------------------
-    loadTableData(data) {
+   loadTableData(data) {
       //表格
       let self = this;
       self.tableLoading = true;
@@ -307,7 +307,7 @@ export default {
         });
     },
     //------------------------------------------------加载树形结构-------------------------
-    loadTree() {
+     loadTree() {
       let self = this;
       self.treeLoading = true;
       self.$axios.gets("api/services/app/ContactClassManagement/GetTreeList", {Ower:1}).then(
@@ -586,7 +586,6 @@ export default {
             filterNode(value, data) {//过滤节点
                 if (!value) return true;
                 return data.className.indexOf(value) !== -1;
-            }
   }
 };
 </script>

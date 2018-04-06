@@ -527,7 +527,7 @@ export default {
               )
               .then(
                 function(res) {
-                  console.log(res);
+                  // console.log(res);
                   self.ifModify = false;
                   self.goDetail();
                   self.open("修改成功", "el-icon-circle-check", "successERP");

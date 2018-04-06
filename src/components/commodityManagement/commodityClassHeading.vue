@@ -126,6 +126,7 @@
                 </el-row>
                 </el-col>
             </el-row>
+            <dialogBox :message="dialogMessage" :dialogVisible="dialogShow"  @confirm="delConfirm" @cancel="delCancel"></dialogBox>   
         </div>   
     </div>
 </template>
@@ -134,6 +135,7 @@
 import Btm from '../../base/btm/btm'
 import Tree from '../../base/tree/tree'
 import normalTable from '../../base/Table/normalTable'
+import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'customerInfor',
         data(){
@@ -152,6 +154,8 @@ import normalTable from '../../base/Table/normalTable'
                 "remark": "st54ring"
                 },
                 tableLoading:true,
+                dialogMessage:'',
+                dialogShow:false,
                 search:{
                     CategoryName:'',
                     IsService:'',
@@ -301,7 +305,6 @@ import normalTable from '../../base/Table/normalTable'
                 _this.tableLoading=true;
                 _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
-                    console.log(_this.tableData);
                     let countPage=res.result.totalCount;
                     _this.tableLoading=false;
                     _this.totalPage = Math.ceil(countPage/_this.eachPage);
@@ -324,8 +327,8 @@ import normalTable from '../../base/Table/normalTable'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){                      
-                        _this.$store.state[_this.tableModel+'Table'] = res.result;
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){                     
+                        _this.$store.state[_this.tableModel+'Table'] = res.result.items;
                         _this.totalCount=res.result.length
                         _this.tableLoading=false;
                         
@@ -347,7 +350,10 @@ import normalTable from '../../base/Table/normalTable'
             query(){//条件查询
                 let _this=this;
                 _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
-                    _this.$store.state[_this.tableModel+'Table']=res.result;                   
+                    _this.$store.state[_this.tableModel+'Table']=res.result.items;  
+                    let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
+                    _this.$store.commit('Init_pagination',totalPage)
+                    console.log(res.result);                 
                 })
             },
             modify(id){//查看编辑
@@ -405,48 +411,60 @@ import normalTable from '../../base/Table/normalTable'
                         message: '请勾选需要删除的记录！'
                     });
                 }else{
-                    let delAarry={
+                    this.dialogMessage="确定删除？";
+                    this.dialogShow=true;
+                }
+            },
+            delConfirm(){
+                let _this=this;
+                let delAarry={
                         "ids":[]
                     }
-                    for(let i in _this.SelectionChange){
-                        delAarry.ids.push(_this.SelectionChange[i].id)
-                    }
-                    _this.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            if(delAarry.length==1){//单条删除
-                                _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
-                                    _this.$store.dispatch('InitTable');
-                                    _this.$store.commit('setTableSelection',[])
-                                    _this.delAarry.ids=[];
-                                    _this.open('删除成功','el-icon-circle-check','successERP');    
-                                })
-                            }else{//批量删除
-                                
-                                 _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/BatchDelete',delAarry).then(function(res){
-                                    _this.$store.dispatch('InitTable');
-                                    _this.$store.commit('setTableSelection',[])
-                                    _this.delAarry.ids=[];
-                                    _this.open('删除成功','el-icon-circle-check','successERP');    
-                                })
-                            }  
-                        }).catch(() => {
-                            this.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
-
+                for(let i in _this.SelectionChange){
+                    delAarry.ids.push(_this.SelectionChange[i].id)
                 }
-            }
+                if(delAarry.length==1){//单条删除
+                    _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
+                        _this.$store.dispatch('InitTable');
+                        _this.$store.commit('setTableSelection',[])
+                        _this.dialogShow=false;
+                        _this.delAarry.ids=[];
+                        _this.loadTree();
+                        _this.open('删除成功','el-icon-circle-check','successERP');    
+                    }).catch(function(err){
+                        _this.$message({
+                            type: 'warning',
+                            message: err.error.message
+                        });
+                    })
+                }else{//批量删除
+                        _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/BatchDelete',delAarry).then(function(res){
+                        _this.$store.dispatch('InitTable');
+                        _this.$store.commit('setTableSelection',[])
+                        _this.dialogShow=false;
+                        _this.loadTree();
+                        _this.delAarry.ids=[];
+                        _this.open('删除成功','el-icon-circle-check','successERP');    
+                    }).catch(function(err){
+                        _this.$message({
+                            type: 'warning',
+                            message: err.error.message
+                        });
+                    });
+                }  
+                  
+            },
+            delCancel(){
+                this.dialogShow=false;
+            },
+
+            
         },
         components:{
             Btm,
             Tree,
-            normalTable
+            normalTable,
+            dialogBox
         }
     }
 </script>

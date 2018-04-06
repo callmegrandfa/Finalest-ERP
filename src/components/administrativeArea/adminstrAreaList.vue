@@ -340,8 +340,20 @@
                 this.$store.state.url = "/adminstrArea/adminstrAreaDetail/default";
                 this.$router.push({ path: this.$store.state.url });
             },
-            // 按钮删除---删除选择项(批量删除)
-            delRow: function() {
+            
+            // （行内按钮查看）查看详情
+            modify: function(row) {
+                // console.log(row.id)
+                this.$store.state.url = "/adminstrArea/adminstrAreaModify/" + row.id
+                this.$router.push({ path: this.$store.state.url })
+            },
+            
+            //右边搜索框
+            searchRight(){
+                this.getDataList();
+            },
+            // -----------------------删除功能
+            delRow() {// 按钮删除---删除选择项(批量删除)
                     let _this = this;
                     // console.log(_this.multipleSelection);
                     this.$axios
@@ -358,26 +370,14 @@
                         _this.getDataList();
                         });
             },
-            // （行内按钮查看）查看详情
-            modify: function(row) {
-                // console.log(row.id)
-                this.$store.state.url = "/adminstrArea/adminstrAreaModify/" + row.id
-                this.$router.push({ path: this.$store.state.url })
-            },
-            
-            //右边搜索框
-            searchRight(){
-                this.getDataList();
-            },
-            // 
-            confirm(){//多项删除
+            confirm(){//去人是否多项删除
                 let _this=this;
                 _this.choseAjax='rows'
                 if(_this.multipleSelection.ids.length>0){
                 _this.dialogUserConfirm=true;
                 }
             },
-            confirmDelThis(row){//单项删除
+            confirmDelThis(row){//确认是否单项删除
                 let _this=this;
                 _this.choseAjax='row'
                 _this.row=row;
@@ -391,7 +391,7 @@
                     _this.delRow()
                 }
             },
-            delThis(row){//删除行
+            delThis(){//单项删除
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/AdAreaManagement/Delete',{id:_this.row.id})
                 .then(function(res){
@@ -405,6 +405,7 @@
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
+            // -----------------------删除功能完
 
         },
 

@@ -30,6 +30,7 @@
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
                         <el-select placeholder=""
+                                   clearable 
                                    v-model="searchArea">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -56,7 +57,7 @@
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>仓库类型</label>
-                        <el-select v-model="searchType" placeholder="">
+                        <el-select v-model="searchType" placeholder="" clearable>
                             <el-option v-for="item in stockType"
                                         :key="item.value"
                                         :label="item.label"
@@ -342,7 +343,7 @@
             sureDel:function(){
                 let self = this;
                 if(self.who == 1){
-                    self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.whoId}).then(function(res){
+                    self.$axios.deletes('/api/services/app/StockManagement/Delete',{id:self.whoId}).then(function(res){
                         
                         self.allList.splice(self.whoIndex,1);
                         self.dialogDelConfirm = false;

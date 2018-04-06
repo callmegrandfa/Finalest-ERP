@@ -308,6 +308,9 @@
                         self.$router.push({path:self.$store.state.url})
                         self.open('保存成功','el-icon-circle-check','successERP');
                         self.dialogUserConfirm=false;
+                        // _this.addData.id=res.result.id;
+                        // console.log(res.result);
+                        self.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
                     })
@@ -327,8 +330,6 @@
                           self.clearData();
                           self.update=false;
                          console.log(self.update)
-                        
-                        
                     },function(res){    
                         self.open('保存失败','el-icon-error','faildERP');
                     })
