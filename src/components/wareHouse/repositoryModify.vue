@@ -387,6 +387,7 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson"
+                                    @click='upClick(scope.$index,scope.row)'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -819,48 +820,30 @@
                     }else{
                         self.ifModify = true;
                     }
-                    console.log(val)
-                    console.log(self.InitAddData)
-                    // $.each(val,function(index,value){
-                    //     let flag = false;
-                    //     $.each(self.InitAddData,function(i,v){
-                    //         if(value!=v){
-                    //             flag = true;
-                    //         }
-                    //     })
-                    //     if(flag){
-                    //         // console.log(value)
-                    //         self.redAr.push(value)
-                    //     }
-                    // })
+                    self.redAr=[]
+                    for(let i in val){
+                        let flag = true;
+                        for(let j in self.InitAddData){
+                            if(val[i].addressId == self.InitAddData[j].addressId&&
+                               val[i].completeAddress == self.InitAddData[j].completeAddress&&
+                               val[i].contactPerson == self.InitAddData[j].contactPerson&&
+                               val[i].groupId == self.InitAddData[j].groupId&&
+                               val[i].id == self.InitAddData[j].id&&
+                               val[i].isDefault == self.InitAddData[j].isDefault&&
+                               val[i].moblie == self.InitAddData[j].moblie&&
+                               val[i].phone == self.InitAddData[j].phone&&
+                               val[i].stockId == self.InitAddData[j].stockId&&
+                               val[i].transportMethodId == self.InitAddData[j].transportMethodId){
+                                   flag = false;
+                               }
+                        }
+                        // console.log(flag)
+                        if(flag){
+                            self.redAr.push(val[i])
+                        }
+                        
+                    }
                     // console.log(self.redAr)
-                    // if(self.ifModify){
-                    //     $.each(val,function(index,value){
-                    //         let flag = false;
-                    //         $.each(self.InitAddData[0],function(i,iv){
-                    //             if(value!=iv){
-                    //                 flag = true;
-                    //                 console.log(value)
-                    //             }
-                    //         })
-                            
-                    //         if(flag){
-                    //             self.redAr.push(value)
-                    //         }
-                    //     })
-                    // }
-                    
-                    // console.log(self.redAr)
-                    // console.log(self.updateList)
-                    // console.log(self.updateList.length)
-                    // if(self.addList.length>0&&self.updateList.length==0){
-                    //     self.redAr = self.addList;
-                    //     console.log(self.redAr)
-                    // }else if(self.addList.length==0&&self.updateList.length>0){
-                    //     self.redAr = self.updateList;
-                    //     console.log(self.redAr)
-                    // }
-                    
                 },
                 deep:true,
             }
@@ -892,7 +875,7 @@
 
                         //根据区id反向获得行政地区所有资料
                         self.$axios.gets('/api/services/app/AdAreaManagement/Get',{Id:res.result.adAreaId}).then(function(res){
-                            // console.log(res);
+                            console.log(res);
                             let ids = res.result.areaFullPathId;
                             let newid = ids.split('>')
                             
@@ -910,13 +893,17 @@
 
                             //根据市获得区
                             self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.cityId}).then(function(res){
-                                // console.log(res);
+                                console.log(res);
                                 self.areaDisArray = res.result;
                             },function(res){
                                 console.log('err'+res)
                             });
                             // self.opAr = res.result;
                         },function(res){
+                            self.proId = 0;
+                            self.cityId = 0;
+                            // self.repositoryData.adAreaId = 0;
+                            self.ifModify = false;
                             console.log('err'+res)
                         });
 
@@ -1004,13 +991,13 @@
                         // $.each(res.result,function(index,v) {
                         //     self.InitAddData.push(v)
                         // })
-                        console.log(self.InitAddData)
+                        // console.log(self.InitAddData)
                         for(let i in self.repositoryAddressData){
                             if(self.repositoryAddressData[i].isDefault == true){
                                 self.checkedAr = self.repositoryAddressData[i]
                             }
                         }
-                        console.log(typeof(res.result[0].transportMethodId))
+                        // console.log(typeof(res.result[0].transportMethodId))
                         //运输方式
                         self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
                             // console.log(res);
@@ -1063,11 +1050,13 @@
                         stock_MainTable:self.repositoryData,
                         stockAddress_ChildTable:self.repositoryAddressData
                     }
-                    console.log(submitData)
+                    // console.log(submitData)
                     self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',submitData).then(function(res){
                         console.log(res);
                         self.open('修改成功','el-icon-circle-check','successERP');
                         self.updateList = [];
+                        self.redAr = [];
+                        self.ifModify = false;
                     },function(res){
                         self.errorMessage = true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -1220,8 +1209,8 @@
                     }
                 }
 
-                console.log(self.allDelArray)
-                console.log(self.idArray)
+                // console.log(self.allDelArray)
+                // console.log(self.idArray)
 
                 if(self.allDelArray.ids.length>0){
                     // if(self.idArray.ids.indexOf(undefined)!=-1){
@@ -1302,7 +1291,7 @@
                                 x.push(value)
                             }
                         })
-                        console.log(x)
+                        // console.log(x)
                         self.repositoryAddressData = x;
                         self.addList = [];
                         for(let i in x){
@@ -1313,7 +1302,7 @@
                             }
                         }
                         // console.log()
-                        console.log(self.addList)
+                        // console.log(self.addList)
                         self.dialogDelConfirm = false;
                     // }
                     
@@ -1335,7 +1324,7 @@
             //------------------------------------------------------
             
             handleSelectionChange:function(val){//点击复选框选中的数据
-                console.log(val)
+                // console.log(val)
                 this.multipleSelection = val;
 
                 // if(val.id&&val.id>0){
@@ -1353,7 +1342,7 @@
                     for(let i in self.updateList){
                         if(row.id != self.updateList[i].id){
                             flag = true;
-                            console.log(flag) 
+                            // console.log(flag) 
                         }else{
                             flag= false;
                             break;        
@@ -1381,6 +1370,15 @@
                 let self = this;
                 self.ifModify = true;
             },
+            // upClick:function(index,row){
+            //     let self = this;
+            //     if(row.id&&row.id>0){
+            //         if(self.clickAr.indexOf(row.id)== -1){
+            //             self.clickAr.push(row.id)
+            //         }
+            //     }
+            //     console.log(self.clickAr)
+            // },
             //------------------------------------------------------
 
             //---修改返回提示-----------------------------------------
