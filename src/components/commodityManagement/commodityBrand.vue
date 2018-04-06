@@ -44,7 +44,7 @@
                         </el-col>
                         <el-col :span="12">
                             <div class="bgcolor smallBgcolor" >
-                            <el-input placeholder=""></el-input>
+                            <el-input placeholder="" v-model="searchItem.BrandEname"></el-input>
                             </div>
                         </el-col>
                     </el-row>
@@ -89,7 +89,7 @@
                             </el-col>
                             <el-col :span="ifWidth?24:22" class="pt5">         
                             <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
-                            <button v-show="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
+                            <button :disabled="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
                             <button class="erp_bt bt_save" @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
                             <button class="erp_bt bt_del" @click="delBatch"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
                             <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>                    
@@ -100,7 +100,7 @@
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
-                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel" :hasModify="hasModify"></normalTable>
+                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel" :hasModify="hasModify" :ifSave="isSave"></normalTable>
                              <!-- <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
                                 <el-table-column
                                     type="selection"
@@ -177,7 +177,8 @@
                     </el-row>
                 </el-col>
             </el-row>
-        </div>   
+            <dialogBox :message="dialogMessage" :dialogVisible="dialogShow"  @confirm="delConfirm" @cancel="delCancel"></dialogBox>   
+        </div>
     </div>
 </template>
 
@@ -185,6 +186,7 @@
 import normalTable from '../../base/Table/normalTable'
 import Query from '../../base/query/query'
 import Btm from '../../base/btm/btm'
+import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'customerInfor',
         data(){
@@ -201,12 +203,14 @@ import Btm from '../../base/btm/btm'
                 "isDefault": true,
                 "remark": "st54ring"
                 },
+                dialogMessage:'',
+                dialogShow:false,
                 searchItem:{
                     BrandCode:'',//品牌编码
                     BrandName:'',//品牌名称
+                    BrandEname:'',//品牌名称(英文)
                     Status:'',//状态
                 }, 
-                isCancel:false,//取消按钮是否可见
                 isUpdate:false,//是否进行修改
                 isAdd:false,//是否新增
                 options: [{
@@ -256,26 +260,29 @@ import Btm from '../../base/btm/btm'
                 updateId:'',
                 ifWidth:true,
                 cancelClick:false,//是否点击取消按钮
-                isSave:false,
                 turnPage:-1,//是否允许翻页
                 pageFlag:true,
                 httpUrl:{
                     creat:'/api/services/app/BrandManagement/GetAll',//数据初始化
                     del:'/api/services/app/BrandManagement/Delete',//行内删除
+                    getId:'/api/services/app/BrandManagement/Get',
                 },
                 column: [{
                     prop: 'brandCode',
                     label: '品牌编码',
                     control:'normal',
+                    required:true,
                     flag:true,//更改标识
                     },{
                     prop: 'brandName',
                     label: '品牌名称',
-                    control:'normal'
+                    control:'normal',
+                    required:true,
                     },{
                     prop: 'brandEname',
                     label: '英文名称',
-                    control:'normal'
+                    control:'normal',
+                    required:true,
                     },{
                     prop: 'remark',
                     label: '备注',
@@ -293,6 +300,7 @@ import Btm from '../../base/btm/btm'
                     label: '创建时间',
                     control:'datetime'
                     }],
+                isSave:false,
                 enableEdit:false,
                 tableModel:'commodityBrand',
                 hasModify:false,//是否包含查看按钮
@@ -335,11 +343,17 @@ import Btm from '../../base/btm/btm'
                 }
                 
             },
+            isCancel(){
+                if((this.$store.state[this.tableModel+'NewColArray'].length>0||this.$store.state[this.tableModel+'UpdateColArray'].length>0)&&!this.$store.state[this.tableModel+'IfDel']){
+                    return false
+                }else{
+                    return true
+                }
+            }
         },
         watch:{
             isUpdate:function(val,oldVal){
                 if(val==true){
-                    this.isCancel=true;
                     this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
                 }
             },
@@ -356,10 +370,10 @@ import Btm from '../../base/btm/btm'
                             }else{
                                 this.isUpdate=true;
                             }
-                            if(this.updateArray.length==0){//判断是否为第一行修改的数据
+                            if(this.updateArray.length==0&&!this.$store.state[this.tableModel+'IfDel']){//判断是否为第一行修改的数据
                                 this.updateArray.push(this.updateId)
                             }else{
-                                if(this.updateArray.indexOf(this.updateId)==-1){
+                                if(this.updateArray.indexOf(this.updateId)==-1&&!this.$store.state[this.tableModel+'IfDel']){
                                     this.updateArray.push(this.updateId)
                                 }else{
                                     return
@@ -402,7 +416,6 @@ import Btm from '../../base/btm/btm'
                 }
             },
             Init(){//数据初始化
-                this.isCancel=false;
                 this.isUpdate=false;
                 this.isAdd=false;
                 this.isSave=false;
@@ -485,7 +498,7 @@ import Btm from '../../base/btm/btm'
                     + seperator2 + date.getSeconds();
                 return currentdate;
             },
-            addCol(){//新增
+            addCol(){//新增              
                 let newcol={
                     "groupId":0,
                     "brandCode":"" ,
@@ -499,49 +512,59 @@ import Btm from '../../base/btm/btm'
                     "createdTime":this.GetDateTime()
                     //"seq":Math.max.apply(Math,this.tableData.map(function(o){return Number(o.seq);}))+1
                 };
-                 this.$store.dispatch('addCol',newcol);//表格行内新增
-                // this.isUpdate=true;
-                // this.isAdd=true;
-                // this.tableData.unshift(newcol);
-                // this.addArray.unshift(newcol);                  
+                let newArrayLength=this.$store.state[this.tableModel+'NewColArray'].length;
+                if(newArrayLength>2){
+                    this.$message({
+                        type: 'info',
+                        message: '请先编辑保存新增项'
+                    });
+                }else{
+                    this.$store.dispatch('addCol',newcol);//表格行内新增
+                }                              
             },
             handleDel(row,index){//行内删除
-                console.log(index);
-                this.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        console.log(this.addArray);
-                        if(row.brandCode==""||this.isAdd==true){
-                            this.tableData.splice(index,1);
-                            this.addArray.splice(index,1);
-                            console.log(this.addArray);
-                        }else{
-                            let _this=this;
-                            _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
-                                _this.loadTableData();
-                                _this.open('删除成功','el-icon-circle-check','successERP');              
-                            })
-                        }
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                });
+                this.dialogMessage="确认删除";
+                this.dialogShow=true;
+                // this.$confirm('确定删除?', '提示', {
+                //     confirmButtonText: '确定',
+                //     cancelButtonText: '取消',
+                //     type: 'warning',
+                //     center: true
+                //     }).then(() => {
+                //         if(row.brandCode==""||this.isAdd==true){
+                //             this.tableData.splice(index,1);
+                //             this.addArray.splice(index,1);
+                //             console.log(this.addArray);
+                //         }else{
+                //             let _this=this;
+                //             _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
+                //                 _this.loadTableData();
+                //                 _this.open('删除成功','el-icon-circle-check','successERP');              
+                //             })
+                //         }
+                //     }).catch(() => {
+                //         this.$message({
+                //             type: 'info',
+                //             message: '已取消删除'
+                //         });
+                // });
             },
             search(){//按条件查询
                 let _this=this;
                 _this.$axios.gets('/api/services/app/BrandManagement/GetData',_this.searchItem).then(function(res){
                     //_this.tableData=res.result;
-                    _this.$store.state[_this.tableModel+'Table']=res.result;                     
+                    _this.$store.state[_this.tableModel+'Table']=res.result.items; 
+                    _this.$store.commit('setUpdateRowId',"")//置空修改行id
+                    let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
+                    _this.$store.commit('Init_pagination',totalPage)                    
                 })
             },
             cancel(){//数据恢复到初始化状态 取消
-                this.cancelClick=true;
-                this.loadTableData();
+                this.isSave=false;
+                this.$store.dispatch('InitTable');
+                this.$store.commit('setUpdateRowId',"")//置空修改行id
+                this.$store.commit('setAddColArray',[])//置空新增集合
+                this.$store.commit('setUpdateColArray',[])//置空修改增集合
             },
             handleSelectionChange(val){//多选操作
                 this.SelectionChange=val;
@@ -572,6 +595,18 @@ import Btm from '../../base/btm/btm'
             },
             delBatch(){//批量删除
                 this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                if(this.SelectionChange.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请勾选需要更改删除的记录！'
+                    });
+                }else{
+                    this.dialogMessage="确认删除";
+                    this.dialogShow=true;
+                }                
+            },
+            delConfirm(){
+                this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
                 for(var i in this.SelectionChange){
                     this.idArray.ids.push(this.SelectionChange[i].id)
                 }
@@ -584,52 +619,58 @@ import Btm from '../../base/btm/btm'
                         return;
                 }
                 if(_this.idArray.ids.length>0){
-                    _this.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
-                                _this.$store.dispatch('InitTable');
-                                _this.$store.commit('setTableSelection',[])
-                                _this.idArray.ids=[];
-                                _this.open('删除成功','el-icon-circle-check','successERP');    
-                            })
-                        }).catch(() => {
-                            this.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
-                   
-                }else{
-                    this.$message({
-                        type: 'info',
-                        message: '请勾选需要删除的数据！'
-                    });
+                    _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
+                        _this.$store.dispatch('InitTable');
+                        _this.$store.commit('setTableSelection',[])
+                        _this.idArray.ids=[];
+                        _this.dialogShow=false;
+                        _this.open('删除成功','el-icon-circle-check','successERP');    
+                    })
                 }
+            },
+            delCancel(){
+                this.dialogShow=false;
             },
             save(){
                 let _this=this;
+                _this.isSave=true;
                 let newArray=_this.$store.state[_this.tableModel+'NewColArray'];
                 let newArrayLength=_this.$store.state[_this.tableModel+'NewColArray'].length;
                 let updateArray=_this.$store.state[_this.tableModel+'UpdateColArray'];
                 let updateArrayLength=_this.$store.state[_this.tableModel+'UpdateColArray'].length;
                 let tableData=_this.$store.state[_this.tableModel+'Table'];
                 // 新增保存
+                if(newArrayLength>0){//新增保存
+                    for(let i in newArray){
+                        if(newArray[i].brandCode==""||newArray[i].brandName==""||newArray[i].brandEname==""){
+                            this.$message({
+                                message: '红色框内为必填项！',
+                                type: 'error'
+                            });
+                            return;
+                        }
+                    }
+                }
                 if(newArrayLength>0){
                     if(newArrayLength==1){//单条新增
                         _this.$axios.posts('/api/services/app/BrandManagement/Create',newArray[0]).then(function(res){
-                            _this.$store.dispatch('InitTable')
-                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                             _this.$store.commit('setAddColArray',[])//置空新增集合
-                        }); 
+                            _this.$store.dispatch('InitTable');
+                            _this.isSave=false;
+                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
+                        }).catch(function(err){
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                            _this.isSave=false;
+                        })   
                     }else{//批量新增                      
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',newArray).then(function(res){
-                            _this.$store.dispatch('InitTable')
-                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                             _this.$store.commit('setAddColArray',[])//置空新增集合
+                            _this.$store.dispatch('InitTable');
+                            _this.isSave=false;
+                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                         }); 
                     }    
                 }
@@ -642,14 +683,18 @@ import Btm from '../../base/btm/btm'
                             }
                         }
                         _this.$axios.puts('/api/services/app/BrandManagement/Update',tableData[updataIndex]).then(function(res){
+                            _this.$store.commit('setUpdateRowId',"")//置空修改行id
+                            _this.$store.commit('setUpdateColArray',[])//置空修改集合
                             _this.$store.dispatch('InitTable');
-                             _this.$store.commit('setUpdateColArray',[])//置空新增集合
+                            _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         });
                     }else{//批量修改
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',tableData).then(function(res){
+                            _this.$store.commit('setUpdateRowId',"")//置空修改行id
+                            _this.$store.commit('setUpdateColArray',[])//置空修改集合
                             _this.$store.dispatch('InitTable');
-                             _this.$store.commit('setUpdateColArray',[])//置空新增集合
+                            _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         }); 
                     }
@@ -720,7 +765,8 @@ import Btm from '../../base/btm/btm'
             },
         },
         components:{
-            normalTable
+            normalTable,
+            dialogBox
         }
     }
 </script>
@@ -914,5 +960,9 @@ table .el-input__inner{
 /* 验证为空 */
 .errorclass{
     border:1px solid #f98b8b!important;
+}
+button.erp_bt[disabled] {
+    cursor: not-allowed;
+    background: #ccc;
 }
 </style>

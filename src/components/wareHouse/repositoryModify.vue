@@ -38,7 +38,7 @@
                 <span class="btDetail">新增</span>
             </button>
 
-            <button class="erp_bt bt_del" @click="delModify" :class="{erp_fb_bt:ifModify}">
+            <button class="erp_bt bt_del" @click="delModify(3)" :class="{erp_fb_bt:ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_del.png">
                 </div>
@@ -242,19 +242,25 @@
                         <div class="bgcolor area">
                             <label>行政地区</label>
                             <div class="areaBox">
-                                <el-select v-model="repositoryData.adAreaId" class="areaDrop" placeholder="选择省">
+                                <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
                                     <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
-                                </el-select>
-                                <el-select v-model="repositoryData.adAreaId" class="areaDrop" placeholder="选择市">
-                                    <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                    <el-option v-show="false" label="无" :value="provinceValue">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="repositoryData.adAreaId" class="areaDrop" placeholder="选择区">
-                                    <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                <el-select v-model="cityId" class="areaDrop" placeholder="选择市" @change='chooseCity(cityId)'>
+                                    <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" label="无" :value="cityValue">
                                     </el-option>
                                 </el-select>
-                                <el-input class="areaEntry" placeholder="街道办地址"></el-input>
+                                <el-select v-model="repositoryData.adAreaId" class="areaDrop" placeholder="选择区" @change='chooseDis()'>
+                                    <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" label="无" :value="areaValue">
+                                    </el-option>
+                                </el-select>
+                                <!-- <el-input class="areaEntry" placeholder="街道办地址"></el-input> -->
                             </div>
                         </div>
 
@@ -342,7 +348,7 @@
                 <span class="header-title">送货信息</span>
             </el-col>
 
-            <el-col :span="24" class="bg-white pl10">
+            <el-col :span="24" class="bg-white pl10 mb10">
                 <button class="erp_bt bt_add" @click='addCol'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
@@ -350,7 +356,7 @@
                     <span class="btDetail">增行</span>
                 </button>
                 
-                <button class="erp_bt bt_del" @click='delRow'>
+                <button class="erp_bt bt_del" @click='delMore(2)'>
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
@@ -372,12 +378,12 @@
                 </button>
           </el-col>
 
-          <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">
               <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
+                            <img v-show='redAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson"
@@ -421,6 +427,8 @@
                             <el-select  v-model="scope.row.transportMethodId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
                                 <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
+                                <el-option v-show="false" label="无" :value="TransValue">
+                                </el-option>
                             </el-select>
                         </template>
                     </el-table-column>
@@ -430,6 +438,8 @@
                             <el-select  v-model="scope.row.logisticsCompanyId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
                                 <el-option  v-for="item in logiAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
+                                <el-option v-show="false" label="无" :value="LogiValue">
+                                </el-option>
                             </el-select>
                         </template>
                     </el-table-column>
@@ -437,9 +447,9 @@
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
                             <el-radio  :label="true" 
-                                                v-model="scope.row.isDefault" 
-                                                @change.native="getCurrentRow(scope.$index,scope.row)" 
-                                                @change="handleChange(scope.$index,scope.row)"></el-radio>
+                                        v-model="scope.row.isDefault" 
+                                        @change.native="getCurrentRow(scope.$index,scope.row)" 
+                                        @change="handleChange(scope.$index,scope.row)"></el-radio>
                         </template>
                     </el-table-column>
 
@@ -455,7 +465,7 @@
 
                     <el-table-column label="操作">
                         <template slot-scope="scope">
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                            <el-button v-on:click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table> 
@@ -476,17 +486,17 @@
 
                 <div class="bgcolor">
                     <label>创建时间</label>
-                    <el-date-picker  type="date" placeholder="" disabled="disabled"></el-date-picker>
+                    <el-date-picker  type="date" placeholder="" disabled="disabled" v-model="repositoryData.createdTime"></el-date-picker>
                 </div>
 
                 <div class="bgcolor">
                     <label>修改人</label>
-                    <el-input placeholder="" disabled="disabled"></el-input>
+                    <el-input placeholder="" disabled="disabled" v-model="repositoryData.modifiedBy"></el-input>
                 </div>
 
                 <div class="bgcolor">
                     <label>修改时间</label>
-                    <el-date-picker type="date" placeholder="" disabled="disabled"></el-date-picker>
+                    <el-date-picker type="date" placeholder="" disabled="disabled" v-model="repositoryData.modifiedTime"></el-date-picker>
                 </div>
             </div> 
           </el-col>
@@ -580,6 +590,7 @@
             self.loadSelect();
             
         },
+        
         validators: {
             'repositoryData.ouId': function (value) {//所属组织
                 return this.Validator.value(value).required().integer();
@@ -606,7 +617,7 @@
                 return this.Validator.value(value).integer();
             },
             'repositoryData.manager': function (value) {//负责人
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.phone': function (value) {//电话
                 return this.Validator.value(value).maxLength(50);
@@ -635,20 +646,12 @@
                 getRepositoryAddressParams:{
                    id:'',
                 }, 
-                firstModify:false,
+                firstModify:false,//主表第一次修改
+                firstAddModify:false,//从表第一次修改
+
                 ifModify:false,//判断主表是否修改过
-                ifDoModify:false,//判断从表是否修改过
                 ifShow:true,//控制折叠页面
-                ou: [{//所属组织
-                    value:0,
-                    label: '恒康'
-                }, {
-                    value:1,
-                    label: '恒大'
-                }, {
-                    value:2,
-                    label: '361度'
-                }],
+                
                 //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -725,6 +728,10 @@
                 updateList:[],//更新上传的数组
                 addList:[],//新增上传的数组
                 multipleSelection:[],//需要删除的数组
+                // falsemultipleSelection:[],
+                allDelArray:{
+                    ids:[]
+                },
                 idArray:{
                     ids:[]
                 },//需要删除的数组id
@@ -765,6 +772,18 @@
                 who:'',//删除的是谁以及是否是多项删除
                 whoId:'',//单项删除的id
                 whoIndex:'',//单项删除的index
+                TransValue:0,
+                LogiValue:0,
+                provinceValue:0,
+                cityValue:0,
+                areaValue:0,
+                proId:'',
+                cityId:'',
+                disId:'',
+                //-----------------------------
+                redAr:[],//显示小红标的数组
+                InitAddData:[],//初始的从表数据
+
             }
         },
         computed:{
@@ -790,6 +809,60 @@
                     }
                 },
                 deep: true,
+            },
+
+            repositoryAddressData:{
+                handler:function(val,oldVal){
+                    let self = this;
+                    if(!self.firstAddModify){
+                        self.firstAddModify = !self.firstAddModify;
+                    }else{
+                        self.ifModify = true;
+                    }
+                    console.log(val)
+                    console.log(self.InitAddData)
+                    // $.each(val,function(index,value){
+                    //     let flag = false;
+                    //     $.each(self.InitAddData,function(i,v){
+                    //         if(value!=v){
+                    //             flag = true;
+                    //         }
+                    //     })
+                    //     if(flag){
+                    //         // console.log(value)
+                    //         self.redAr.push(value)
+                    //     }
+                    // })
+                    // console.log(self.redAr)
+                    // if(self.ifModify){
+                    //     $.each(val,function(index,value){
+                    //         let flag = false;
+                    //         $.each(self.InitAddData[0],function(i,iv){
+                    //             if(value!=iv){
+                    //                 flag = true;
+                    //                 console.log(value)
+                    //             }
+                    //         })
+                            
+                    //         if(flag){
+                    //             self.redAr.push(value)
+                    //         }
+                    //     })
+                    // }
+                    
+                    // console.log(self.redAr)
+                    // console.log(self.updateList)
+                    // console.log(self.updateList.length)
+                    // if(self.addList.length>0&&self.updateList.length==0){
+                    //     self.redAr = self.addList;
+                    //     console.log(self.redAr)
+                    // }else if(self.addList.length==0&&self.updateList.length>0){
+                    //     self.redAr = self.updateList;
+                    //     console.log(self.redAr)
+                    // }
+                    
+                },
+                deep:true,
             }
         },
         
@@ -800,12 +873,54 @@
                 let self = this;
                 if(self.$route.params.id!='default'){
                     self.firstModify = false;
+                    self.firstAddModify = false;
                     //根据仓库id获取仓库信息
-                    self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
+                    self.$axios.gets('/api/services/app/StockManagement/Get',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
                         self.repositoryData = res.result;
                         self.extraData = res.result;
                         self.getOuId = self.repositoryData.ouId;
+
+                        //行政地区所有省
+                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+                            // console.log(res);
+                            self.areaProArray = res.result;
+                            // self.loadIcon();
+                        },function(res){
+                            console.log('err'+res)
+                        });
+
+                        //根据区id反向获得行政地区所有资料
+                        self.$axios.gets('/api/services/app/AdAreaManagement/Get',{Id:res.result.adAreaId}).then(function(res){
+                            // console.log(res);
+                            let ids = res.result.areaFullPathId;
+                            let newid = ids.split('>')
+                            
+                            self.proId = parseInt(newid[0]);
+                            self.cityId = parseInt(newid[1]);
+                            self.disId = parseInt(newid[2]);
+
+                            //根据省获得市
+                            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.proId}).then(function(res){
+                                // console.log(res);
+                                self.areaCityArray = res.result;
+                            },function(res){
+                                console.log('err'+res)
+                            });
+
+                            //根据市获得区
+                            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.cityId}).then(function(res){
+                                // console.log(res);
+                                self.areaDisArray = res.result;
+                            },function(res){
+                                console.log('err'+res)
+                            });
+                            // self.opAr = res.result;
+                        },function(res){
+                            console.log('err'+res)
+                        });
+
+                        
 
                         //业务地区
                         self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.getOuId}).then(function(res){
@@ -837,16 +952,73 @@
                     self.loadAddData();
                 }
             },
+            getType(obj){
+                //tostring会返回对应不同的标签的构造函数
+                var toString = Object.prototype.toString;
+                var map = {
+                    '[object Boolean]'  : 'boolean', 
+                    '[object Number]'   : 'number', 
+                    '[object String]'   : 'string', 
+                    '[object Function]' : 'function', 
+                    '[object Array]'    : 'array', 
+                    '[object Date]'     : 'date', 
+                    '[object RegExp]'   : 'regExp', 
+                    '[object Undefined]': 'undefined',
+                    '[object Null]'     : 'null', 
+                    '[object Object]'   : 'object'
+                };
+                if(obj instanceof Element) {
+                    return 'element';
+                }
+                return map[toString.call(obj)];
+            },
+            deepCopy(data){
+                let self = this;
+                var type = self.getType(data);
+                var obj;
+                if(type === 'array'){
+                    obj = [];
+                } else if(type === 'object'){
+                    obj = {};
+                } else {
+                    //不再具有下一层次
+                    return data;
+                }
+                if(type === 'array'){
+                    for(var i = 0, len = data.length; i < len; i++){
+                        obj.push(self.deepCopy(data[i]));
+                    }
+                } else if(type === 'object'){
+                    for(var key in data){
+                        obj[key] = self.deepCopy(data[key]);
+                    }
+                }
+                return obj;
+            },
             loadAddData:function(){
                 let self = this;
-                this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',self.getRepositoryAddressParams).then(function(res){
-                        // console.log(res);
+                this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',{id:self.$route.params.id}).then(function(res){
+                        console.log(res);
                         self.repositoryAddressData = res.result;
+                        self.InitAddData = self.deepCopy(res.result);
+                        // $.each(res.result,function(index,v) {
+                        //     self.InitAddData.push(v)
+                        // })
+                        console.log(self.InitAddData)
                         for(let i in self.repositoryAddressData){
                             if(self.repositoryAddressData[i].isDefault == true){
                                 self.checkedAr = self.repositoryAddressData[i]
                             }
                         }
+                        console.log(typeof(res.result[0].transportMethodId))
+                        //运输方式
+                        self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
+                            // console.log(res);
+                            self.transAr = res.result;
+                        },function(res){
+                            console.log('err'+res)
+                        });
+
                     })
             },
                          //---下拉的数据-
@@ -861,14 +1033,7 @@
                     console.log('err'+res)
                 });
                 
-                //行政地区*2
-                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                //     // console.log(res);
-                //     self.adAr = res.result;
-                //     self.loadIcon();
-                // },function(res){
-                //     console.log('err'+res)
-                // });
+                
                 
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
@@ -877,13 +1042,7 @@
                 },function(res){
                     console.log('err'+res)
                 });
-                //运输方式
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
-                    console.log(res);
-                    self.transAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
+                
                 //物流公司
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'logisticsCompany'}).then(function(res){
                     // console.log(res);
@@ -896,45 +1055,57 @@
             //------------------------------------------------------------------
 
             //---修改完成保存----------------------------------------------
-            saveModify:function(){//修改仓库信息保存
+            saveModify:function(){//保存修改
                 let self = this;
-                
-                if(self.updateList.length>0){
-                    self.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
+                if(self.ifModify){
+                    let submitData = {};
+                    submitData = {
+                        stock_MainTable:self.repositoryData,
+                        stockAddress_ChildTable:self.repositoryAddressData
+                    }
+                    console.log(submitData)
+                    self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',submitData).then(function(res){
                         console.log(res);
-                        self.open('修改地址信息成功','el-icon-circle-check','successERP');
+                        self.open('修改成功','el-icon-circle-check','successERP');
                         self.updateList = [];
                     },function(res){
-                        self.open('修改失败','el-icon-error','faildERP');
                         self.errorMessage = true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
-                    
                 }
                 
-                // self.repositoryData.adAreaId == 1;
-                // console.log(self.repositoryData)
-                if(self.ifModify){
-                    self.$validate().then(function(success){
-                        if(success){
-                            self.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
-                                console.log(res);
-                                self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-                                self.ifModify = false;
-                            },function(res){
-                                self.open('修改失败','el-icon-error','faildERP');
-                                self.errorMessage = true;
-                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                            })
-                        }
-                    })
-                }else{
-                    //  self.open('没有需要保存的项目','el-icon-warning','noticERP');
-                };
+                // if(self.updateList.length>0){
+                //     self.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
+                //         console.log(res);
+                //         self.open('修改地址信息成功','el-icon-circle-check','successERP');
+                //         self.updateList = [];
+                //     },function(res){
+                //         self.open('修改失败','el-icon-error','faildERP');
+                //         self.errorMessage = true;
+                //         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                //     })
+                    
+                // }
+                
+                // if(self.ifModify){
+                //     self.$validate().then(function(success){
+                //         if(success){
+                //             self.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
+                //                 console.log(res);
+                //                 self.open('修改仓库信息成功','el-icon-circle-check','successERP');
+                //                 self.ifModify = false;
+                //             },function(res){
+                //                 self.open('修改失败','el-icon-error','faildERP');
+                //                 self.errorMessage = true;
+                //                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                //             })
+                //         }
+                //     })
+                // }
 
-                if(self.addList.length>0){
-                    self.createAddress();
-                }
+                // if(self.addList.length>0){
+                //     self.createAddress();
+                // }
                 
             },
 
@@ -982,17 +1153,17 @@
                 }
             },
 
-            createAddress:function(){//保存新增的仓库地址信息
-                let self = this;
+            // createAddress:function(){//保存新增的仓库地址信息
+            //     let self = this;
                 
-                this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
-                    console.log(res);
-                    self.open('新增地址成功','el-icon-circle-check','successERP');
-                    self.addList = [];
-                    self.loadData();
-                })
+            //     this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
+            //         console.log(res);
+            //         self.open('新增地址成功','el-icon-circle-check','successERP');
+            //         self.addList = [];
+            //         self.loadData();
+            //     })
                 
-            },
+            // },
             //------------------------------------------------------------
 
             //---控制是否可编辑---------------------------------------        
@@ -1008,6 +1179,7 @@
             //---表格编辑-------------------------------------------------
             addCol:function(){//增行
                 let self = this;
+                self.ifModify = true;
                 self.x++;
                 let newCol = 'newCol'+self.x;
                 self.rows.newCol ={
@@ -1025,59 +1197,155 @@
                 self.repositoryAddressData.unshift(self.rows.newCol);
                 self.addList.unshift(self.rows.newCol);
             },
+            //---从表单项删除-------------------------------------
             handleDelete:function(index,row,who){//表格内删除操作
                 let self = this;
                 self.who = who;
                 self.whoIndex = index;
                 self.whoId = row.id;
                 self.dialogDelConfirm = true;
-        },
-            delRow:function(){//删除选中的项
+            },
+            //---------------------------------------------------
+
+            //---批量删除----------------------------------------
+            delMore:function(num){
                 let self=this;
+                // self.who = 2;
                 for(let i in self.multipleSelection){
-                    self.idArray.ids.push(self.multipleSelection[i].id)
+                    self.allDelArray.ids.push(self.multipleSelection[i].id)
                 }
-                if(self.idArray.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
+                for(let i in self.multipleSelection){
+                    if(self.multipleSelection[i].id>0){
+                        self.idArray.ids.push(self.multipleSelection[i].id)
+                    }
                 }
-                
-                if(self.idArray.ids.length>0){
-                    console.log(self.idArray.ids)
-                    self.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
-                                self.loadAddData();
-                                self.open('删除成功','el-icon-circle-check','successERP');    
-                            })
-                        }).catch(() => {
-                            self.$message({
-                                type: 'info',
-                                message: '已取消删除'
-                            });
-                    });
-                }else{
+
+                console.log(self.allDelArray)
+                console.log(self.idArray)
+
+                if(self.allDelArray.ids.length>0){
+                    // if(self.idArray.ids.indexOf(undefined)!=-1){
+                    //     self.$message({
+                    //         type: 'warning',
+                    //         message: '新增数据请在行内删除'
+                    //     });
+                    //     return;
+                    // }
+                    self.dialogDelConfirm = true;   
+                    self.who = num;
+                } else{
                     self.$message({
                         type: 'info',
                         message: '请勾选需要删除的数据！'
                     });
                 }
+
             },
+            //--------------------------------------------------
+
+            //---顶部删除按钮-----------------------------------------
+            delModify:function(num){
+                let self = this;
+                self.who = num
+                self.dialogDelConfirm = true;
+            },
+            //-------------------------------------------------------
+
+            //---确认删除--------------------------------------------
+            sureDel:function(){
+                let self = this;
+                if(self.who ==1){
+                    self.idArray.ids = [];
+                    if(self.whoId>0){
+                        self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:self.whoId}).then(function(res){
+                            self.open('删除地址成功','el-icon-circle-check','successERP');
+                            self.repositoryAddressData.splice(self.whoIndex,1)
+                            self.dialogDelConfirm = false;
+                        },function(res){
+                            self.dialogDelConfirm = false;
+                            self.errorMessage = true;
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        }) 
+                    }else{
+                        self.repositoryAddressData.splice(self.whoIndex,1);
+                        self.addList.splice(self.whoIndex,1);
+                        self.dialogDelConfirm = false;
+                        self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    }
+                    
+                }
+
+                if(self.who == 2){
+                    // if(self.allDelArray == self.idArray){
+                    
+                        // self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
+                        //     self.open('删除地址成功','el-icon-circle-check','successERP');
+                        //     self.loadAddData();
+                        //     self.dialogDelConfirm = false;
+                        // },function(res){
+                        //     self.dialogDelConfirm = false;
+                        //     self.errorMessage = true;
+                        //     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        // })
+                    // }else{
+                        // console.log(self.addList)/
+                        // console.log(self.multipleSelection)
+                        let x = []; 
+                        $.each(self.repositoryAddressData,function(index,value){
+                            let flag = false;
+                            $.each(self.multipleSelection,function(i,val){
+                                if(value==val){
+                                    flag = true;
+                                }
+                            })
+                            if(!flag){
+                                x.push(value)
+                            }
+                        })
+                        console.log(x)
+                        self.repositoryAddressData = x;
+                        self.addList = [];
+                        for(let i in x){
+                            if(x[i].id==''||x[i].id==undefined){
+                                // console.log(x[i])
+                                self.addList.push(x[i])
+                                console.log(self.addList)
+                            }
+                        }
+                        // console.log()
+                        console.log(self.addList)
+                        self.dialogDelConfirm = false;
+                    // }
+                    
+                }
+
+                if(self.who == 3){
+                    self.$axios.deletes('/api/services/app/StockManagement/Delete',{id:self.$route.params.id}).then(function(res){
+                        self.open('删除仓库成功','el-icon-circle-check','successERP');
+                        self.back();
+                        self.dialogDelConfirm = false;
+                    },function(res){
+                        self.dialogDelConfirm = false;
+                        self.errorMessage = true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }) 
+                }
+                
+            },
+            //------------------------------------------------------
+            
             handleSelectionChange:function(val){//点击复选框选中的数据
+                console.log(val)
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
+
+                // if(val.id&&val.id>0){
+                    // this.multipleSelection = val;
+                // }
             },
 
             handleChange:function(index,row){
                 let self = this;
-                self.ifDoModify = true;
+                self.ifModify = true;
                 let flag = false;
                 if(self.updateList.length==0&&row.id>0){
                     flag = true;
@@ -1108,60 +1376,12 @@
                 self.repositoryAddressData[index].isDefault = true;
                 self.updateList.push(self.checkedAr)
             },
-            handleDelete:function(index,row){//表格内删除操作
-                let self = this;
-                
-                self.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
-                            self.repositoryAddressData.splice(index,1)
-                            self.loadAllList();
-                            self.open('删除成功','el-icon-circle-check','successERP');    
-                        })
-                    }).catch(() => {
-                        self.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
-                
-            },
+            
             Modify:function(){
                 let self = this;
-                console.log(123)
                 self.ifModify = true;
             },
             //------------------------------------------------------
-
-            //---确认删除--------------------------------------------
-            sureDel:function(){
-                let self = this;
-                self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.$route.params.id}).then(function(res){
-                    self.open('删除仓库成功','el-icon-circle-check','successERP');
-                    self.back();
-                    self.dialogDelConfirm = false;
-                },function(res){
-                    self.open('删除仓库失败','el-icon-error','faildERP');
-                    self.dialogDelConfirm = false;
-                    self.errorMessage = true;
-                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                }) 
-            },
-            //------------------------------------------------------
-
-            //---顶部删除按钮-----------------------------------------
-            delModify:function(){
-                let self = this;
-                if(!self.ifModify){
-                    self.dialogDelConfirm = true;
-                }
-                 
-            },
-            //-------------------------------------------------------
 
             //---修改返回提示-----------------------------------------
             isBack(){
@@ -1178,6 +1398,38 @@
                 self.back();
             },
             //-------------------------------------------------------
+
+            //---选择省市区-----------------------------------------------
+            chooseProvince:function(id){
+                let self = this;
+                // console.log(id)
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                    // console.log(res);
+                    self.areaCityArray = res.result;
+                    // self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+
+            },
+            chooseCity:function(id){
+                let self = this;
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                    // console.log(res);
+                    self.repositoryData.adAreaId = '';
+                    self.areaDisArray = res.result;
+                    
+
+                    // self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
+            chooseDis:function(){
+                let self = this;
+                // console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
+            },
+            //-----------------------------------------------------------
 
             //---open-------数据清除--------路由跳转-----------------------
             open(tittle,iconClass,className) {
@@ -1276,6 +1528,7 @@
             //-----------------------------------------------------
             //---提示错误----------------------------------------------
             showErrprTips(e){
+                // $('.tipsWrapper').css({display:'none'})
                 $('.tipsWrapper').each(function(){
                     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')

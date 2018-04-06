@@ -31,7 +31,7 @@
                     <span class="btDetail">保存并新增</span>
                 </button>
 
-                <button @click="cancel()" class="erp_bt bt_cancel"  :disabled="isDisable">
+                <button @click="cancel" class="erp_bt bt_cancel"  :disabled="isDisable">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -268,7 +268,7 @@
                 dialogUserConfirm:false,//信息更改提示控制
                 dialogDeleteConfirm:false,//删除信息提示控制
                 choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
-                btnValue:'',//存储点击单个删除还是多项删除按钮判断信息
+                btnValue:'',//存储点击返回还是修改按钮判断信息
             };
         },
         created() {
@@ -344,10 +344,12 @@
             sureDoing:function(){
                 let _this=this;
                 if (_this.btnValue=='toBack') {
-                    this.goback();
+                    _this.goback();
                 }else{
                     _this.dialogUserConfirm=false;
-                    _this.btnValue=='';
+                    _this.getDataList();
+                    _this.btnValue='';
+                    _this.update=false;
                 }
                 
             },
@@ -355,6 +357,13 @@
                 this.update = true;
                 this.isDisable=false;
                 // console.log(this.isDisable);
+            },
+            cancel(){// 取消
+                let _this=this;
+                _this.btnValue='isCancel';
+                if(_this.update){
+                    _this.dialogUserConfirm=true;
+                }
             },
             // --------------删除-----------
             confirmDelThis(){//确认单项删除

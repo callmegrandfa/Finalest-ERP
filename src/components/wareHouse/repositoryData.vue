@@ -59,73 +59,101 @@
                         <div class="tipsWrapper mb10">
                             <div class="errorTips">
                                 <p class="msgDetail">错误提示：
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.ouId')}">
-                                        所属组织{{ validation.firstError('createRepositoryParams.ouId') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.ouId')}">
+                                        所属组织{{ validation.firstError('createRepositoryParams.stock_MainTable.ouId') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockCode')}">
-                                        编码{{ validation.firstError('createRepositoryParams.stockCode') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.stockCode')}">
+                                        编码{{ validation.firstError('createRepositoryParams.stock_MainTable.stockCode') }},
                                     </span>
                                     
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockName')}">
-                                        名称{{ validation.firstError('createRepositoryParams.stockName') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.stockName')}">
+                                        名称{{ validation.firstError('createRepositoryParams.stock_MainTable.stockName') }},
                                     </span>
                                     
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockFullName')}">
-                                        全称{{ validation.firstError('createRepositoryParams.stockFullName') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.stockFullName')}">
+                                        全称{{ validation.firstError('createRepositoryParams.stock_MainTable.stockFullName') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.mnemonic')}">
-                                        助记码{{ validation.firstError('createRepositoryParams.mnemonic') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.mnemonic')}">
+                                        助记码{{ validation.firstError('createRepositoryParams.stock_MainTable.mnemonic') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockTypeId')}">
-                                        仓库类型{{ validation.firstError('createRepositoryParams.stockTypeId') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.stockTypeId')}">
+                                        仓库类型{{ validation.firstError('createRepositoryParams.stock_MainTable.stockTypeId') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.opAreaId')}">
-                                        业务地区{{ validation.firstError('createRepositoryParams.opAreaId') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.opAreaId')}">
+                                        业务地区{{ validation.firstError('createRepositoryParams.stock_MainTable.opAreaId') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.adAreaId')}">
-                                        行政地区{{ validation.firstError('createRepositoryParams.adAreaId') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.adAreaId')}">
+                                        行政地区{{ validation.firstError('createRepositoryParams.stock_MainTable.adAreaId') }},
                                     </span>
                                     
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.manager')}">
-                                        负责人{{ validation.firstError('createRepositoryParams.manager') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.manager')}">
+                                        负责人{{ validation.firstError('createRepositoryParams.stock_MainTable.manager') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.phone')}">
-                                        电话{{ validation.firstError('createRepositoryParams.phone') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.phone')}">
+                                        电话{{ validation.firstError('createRepositoryParams.stock_MainTable.phone') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.email')}">
-                                        Email{{ validation.firstError('createRepositoryParams.email') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.email')}">
+                                        Email{{ validation.firstError('createRepositoryParams.stock_MainTable.email') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.fax')}">
-                                        传真{{ validation.firstError('createRepositoryParams.fax') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.fax')}">
+                                        传真{{ validation.firstError('createRepositoryParams.stock_MainTable.fax') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress')}">
-                                        地址{{ validation.firstError('createRepositoryParams.stockAddress') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.stockAddress')}">
+                                        地址{{ validation.firstError('createRepositoryParams.stock_MainTable.stockAddress') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.remark')}">
-                                        备注{{ validation.firstError('createRepositoryParams.remark') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.remark')}">
+                                        备注{{ validation.firstError('createRepositoryParams.stock_MainTable.remark') }},
                                     </span>
 
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.status')}">
-                                        状态{{ validation.firstError('createRepositoryParams.status') }},
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.status')}">
+                                        状态{{ validation.firstError('createRepositoryParams.stock_MainTable.status') }},
                                     </span>
+                                    <!-- ！！！！！！！！！！！！！！从表   %%%%%%%%%%%%%%%%%%%%%%%%% -->
+                                    <!-- <span :class="{block : !validation.hasError('createRepositoryParams.contactPerson')}">
+                                        联系人{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.contactPerson') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.mobile')}">
+                                        手机{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.mobile') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.phone')}">
+                                        电话{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.phone') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.completeAddress')}">
+                                        送货地址{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.completeAddress') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.transportMethodId')}">
+                                        运输方式{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.transportMethodId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.logisticsCompanyId')}">
+                                        物流公司{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.logisticsCompanyId') }},
+                                    </span>
+
+                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.remark')}">
+                                        备注{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.remark') }},
+                                    </span> -->
                                 </p>
                             </div>
                         </div>
                         
                         <div class="bgcolor">
                             <label><small>*</small>所属组织</label>
-                            <el-select v-model="createRepositoryParams.ouId"
-                                       :class="{redBorder : validation.hasError('createRepositoryParams.ouId')}"
+                            <el-select v-model="createRepositoryParams.stock_MainTable.ouId"
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.ouId')}"
                                        class="ouId"
                                        @focus="showErrprTipsSelect"
                                        @change='Modify'
@@ -153,50 +181,50 @@
                         <div class="bgcolor">
                             <label><small>*</small>编码</label>
                             <el-input placeholder="" 
-                                      v-model="createRepositoryParams.stockCode"
+                                      v-model="createRepositoryParams.stock_MainTable.stockCode"
                                       class="stockCode"
                                       @change='Modify'
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.stockCode')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.stockCode')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label><small>*</small>名称</label>
                             <el-input placeholder="" 
-                                      v-model="createRepositoryParams.stockName"
+                                      v-model="createRepositoryParams.stock_MainTable.stockName"
                                       class="stockName"
                                       @change='editName'
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.stockName')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.stockName')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label><small>*</small>全称</label>
                             <el-input placeholder="" 
-                                      v-model="createRepositoryParams.stockFullName"
+                                      v-model="createRepositoryParams.stock_MainTable.stockFullName"
                                       class="stockFullName"
                                       @change='editFullName'
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.stockFullName')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.stockFullName')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>助记码</label>
                             <el-input placeholder="" 
-                                      v-model="createRepositoryParams.mnemonic"
+                                      v-model="createRepositoryParams.stock_MainTable.mnemonic"
                                       class="mnemonic"
                                       @change='Modify'
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.mnemonic')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.mnemonic')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label><small>*</small>仓库类型</label>
-                            <el-select v-model="createRepositoryParams.stockTypeId" 
+                            <el-select v-model="createRepositoryParams.stock_MainTable.stockTypeId" 
                                        placeholder=""
                                        @change='Modify'
                                        @focus="showErrprTipsSelect"
-                                       :class="{redBorder : validation.hasError('createRepositoryParams.stockTypeId')}"
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.stockTypeId')}"
                                        class="stockTypeId">
                                 <el-option v-for="item in stockType"
                                             :key="item.value"
@@ -208,11 +236,11 @@
 
                         <div class="bgcolor">
                             <label>业务地区</label>
-                            <el-select v-model="createRepositoryParams.opAreaId" 
+                            <el-select v-model="createRepositoryParams.stock_MainTable.opAreaId" 
                                        placeholder=""
                                        @change='Modify'
                                        @focus="showErrprTipsSelect"
-                                       :class="{redBorder : validation.hasError('createRepositoryParams.opAreaId')}"
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.opAreaId')}"
                                        class="opAreaId">
                                 <el-input placeholder="搜索..."
                                           class="selectSearch"
@@ -237,89 +265,88 @@
                         <div class="bgcolor area">
                             <label>行政地区</label>
                             <div class="areaBox">
-                                <el-select v-model="createRepositoryParams.adAreaId" class="areaDrop" placeholder="选择省">
+                                <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
                                     <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="createRepositoryParams.adAreaId" class="areaDrop" placeholder="选择市">
-                                    <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                <el-select  class="areaDrop" placeholder="选择市" v-model="cityId" @change='chooseCity(cityId)'>
+                                    <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="createRepositoryParams.adAreaId" class="areaDrop" placeholder="选择区">
-                                    <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                <el-select  class="areaDrop" placeholder="选择区" v-model="createRepositoryParams.stock_MainTable.adAreaId" @change='chooseDis()'>
+                                    <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                 </el-select>
-                                <el-input class="areaEntry" placeholder="街道办地址"></el-input>
                             </div>
                         </div>
 
                         <div class="bgcolor">
                             <label>负责人</label>
                             <el-input placeholder="" 
-                                      v-model="createRepositoryParams.manager"
+                                      v-model="createRepositoryParams.stock_MainTable.manager"
                                       class="manager"
                                       @change='Modify'
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.manager')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.manager')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>电话</label>
                             <el-input placeholder="" 
-                                      v-model="createRepositoryParams.phone"
+                                      v-model="createRepositoryParams.stock_MainTable.phone"
                                       class="phone"
                                       @change='Modify'
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.phone')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.phone')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>Email</label>
                             <el-input placeholder="" 
-                                      v-model="createRepositoryParams.email"
+                                      v-model="createRepositoryParams.stock_MainTable.email"
                                       class="email"
                                       @change='Modify'
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.email')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.email')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>传真</label>
-                            <el-input v-model="createRepositoryParams.fax"
+                            <el-input v-model="createRepositoryParams.stock_MainTable.fax"
                                       placeholder="" 
                                       @change='Modify'
                                       class="fax"
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.fax')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.fax')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>地址</label>
-                            <el-input v-model="createRepositoryParams.stockAddress"
+                            <el-input v-model="createRepositoryParams.stock_MainTable.stockAddress"
                                       placeholder="" 
                                       @change='Modify'
                                       class="stockAddress"
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.stockAddress')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.stockAddress')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label>备注</label>
                             <el-input placeholder="" 
-                                      v-model="createRepositoryParams.remark"
+                                      v-model="createRepositoryParams.stock_MainTable.remark"
                                       class="remark"
                                       @change='Modify'
                                       @focus="showErrprTips"
-                                      :class="{redBorder : validation.hasError('createRepositoryParams.remark')}"></el-input>
+                                      :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.remark')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
                             <label><small>*</small>状态</label>
-                            <el-select v-model="createRepositoryParams.status" 
+                            <el-select v-model="createRepositoryParams.stock_MainTable.status" 
                                        placeholder=""
                                        @change='Modify'
                                        @focus="showErrprTipsSelect"
-                                       :class="{redBorder : validation.hasError('createRepositoryParams.status')}"
+                                       :class="{redBorder : validation.hasError('createRepositoryParams.stock_MainTable.status')}"
                                        class="status">
                                 <el-option v-for="item in statusAr"  
                                            :key="item.itemValue" 
@@ -375,6 +402,7 @@
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
+                             <img class="abimg" src="../../../static/image/content/redremind.png"/>
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 
@@ -542,51 +570,112 @@
             self.loadSelect();
         },
         validators: {
-            'createRepositoryParams.ouId': function (value) {//所属组织
+            'createRepositoryParams.stock_MainTable.ouId': function (value) {//所属组织
                 return this.Validator.value(value).required().integer();
             },
-            'createRepositoryParams.stockCode': function (value) {//仓库编码
+            'createRepositoryParams.stock_MainTable.stockCode': function (value) {//仓库编码
                 return this.Validator.value(value).required().maxLength(50);
             },
-            'createRepositoryParams.stockName': function (value) {//仓库名称
+            'createRepositoryParams.stock_MainTable.stockName': function (value) {//仓库名称
                 return this.Validator.value(value).required().maxLength(50);
             },
-            'createRepositoryParams.stockFullName': function (value) {//仓库全称
+            'createRepositoryParams.stock_MainTable.stockFullName': function (value) {//仓库全称
                 return this.Validator.value(value).required().maxLength(50);
             },
-            'createRepositoryParams.mnemonic': function (value) {//助记码
+            'createRepositoryParams.stock_MainTable.mnemonic': function (value) {//助记码
                 return this.Validator.value(value).maxLength(50);
             },
-            'createRepositoryParams.stockTypeId': function (value) {//仓库类型
+            'createRepositoryParams.stock_MainTable.stockTypeId': function (value) {//仓库类型
                 return this.Validator.value(value).required().integer();
             },
-            'createRepositoryParams.opAreaId': function (value) {//业务地区
+            'createRepositoryParams.stock_MainTable.opAreaId': function (value) {//业务地区
                 return this.Validator.value(value).integer();
             },
-            'createRepositoryParams.adAreaId': function (value) {//行政地区
+            'createRepositoryParams.stock_MainTable.adAreaId': function (value) {//行政地区
                 return this.Validator.value(value).integer();
             },
-            'createRepositoryParams.manager': function (value) {//负责人
+            'createRepositoryParams.stock_MainTable.manager': function (value) {//负责人
                 return this.Validator.value(value).maxLength(50);
             },
-            'createRepositoryParams.phone': function (value) {//电话
+            'createRepositoryParams.stock_MainTable.phone': function (value) {//电话
                 return this.Validator.value(value).maxLength(50);
             },
-            'createRepositoryParams.email': function (value) {//Email 
+            'createRepositoryParams.stock_MainTable.email': function (value) {//Email 
                 return this.Validator.value(value).maxLength(50);
             },
-            'createRepositoryParams.fax': function (value) {//传真
+            'createRepositoryParams.stock_MainTable.fax': function (value) {//传真
                 return this.Validator.value(value).maxLength(50);
             },
-            'createRepositoryParams.stockAddress': function (value) {//地址
+            'createRepositoryParams.stock_MainTable.stockAddress': function (value) {//地址
                 return this.Validator.value(value).maxLength(50);
             },
-            'createRepositoryParams.remark': function (value) {//备注
+            'createRepositoryParams.stock_MainTable.remark': function (value) {//备注
                 return this.Validator.value(value).maxLength(50);
             },
-            'createRepositoryParams.status': function (value) {//状态
+            'createRepositoryParams.stock_MainTable.status': function (value) {//状态
+            // console.log(this.createRepositoryParams.stockAddress_ChildTable)
                 return this.Validator.value(value).required().integer();
+                
             },
+
+            
+            // 'createRepositoryParams.stockAddress_ChildTable': function (value) {//联系人
+            //     let self = this;
+            //     if(self.addList.length>0){
+            //         console.log(self.createRepositoryParams.stockAddress_ChildTable)
+            //         console.log('我是你爸爸')
+            //         return this.Validator.value(value).maxLength(50);
+            //     }else{
+            //         console.log('我是你妈妈')
+            //         return this.Validator.value(value)
+            //     }
+            // },
+            // 'createRepositoryParams.stockAddress_ChildTable[].mobile': function (value) {//手机
+            //     let self = this;
+            //     if(self.addList.length>0){
+            //         return this.Validator.value(value).maxLength(20);
+            //     }else{
+            //         return this.Validator.value(value)
+            //     }
+            // },
+            // 'createRepositoryParams.stockAddress_ChildTable.phone': function (value) {//电话
+            //     let self = this;
+            //     if(self.addList.length>0){
+            //         return this.Validator.value(value).maxLength(20);
+            //     }else{
+            //         return this.Validator.value(value)
+            //     }
+            // },
+            // 'createRepositoryParams.stockAddress_ChildTable.completeAddress': function (value) {//送货地址
+            //     let self = this;
+            //     if(self.addList.length>0){
+            //         console.log('我是你大爷')
+            //         return this.Validator.value(value).required().maxLength(200);
+            //     }else{
+            //         return this.Validator.value(value)
+            //     }
+            // },
+            // 'createRepositoryParams.stockAddress_ChildTable.transportMethodId': function (value) {//运输方式
+            //     if(this.addList.length>0){
+            //         return this.Validator.value(value).maxLength(200);
+            //     }else{
+            //         return this.Validator.value(value)
+            //     }
+            // },
+            // 'createRepositoryParams.stockAddress_ChildTable.logisticsCompanyId': function (value) {//物流公司
+            //     if(this.addList.length>0){
+            //         return this.Validator.value(value).maxLength(200);
+            //     }else{
+            //         return this.Validator.value(value)
+            //     }
+            // },
+            // 'createRepositoryParams.stockAddress_ChildTable.remark': function (value) {//备注
+            //     if(this.addList.length>0){
+            //         return this.Validator.value(value).maxLength(200);
+            //     }else{
+            //         return this.Validator.value(value)
+            //     }
+            // },
         },
         computed:{
             countOu () {
@@ -624,7 +713,7 @@
                 self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
                     // console.log(res);
                     self.defaultOuId = res.result.id;
-                    self.createRepositoryParams.ouId = self.defaultOuId;
+                    self.createRepositoryParams.stock_MainTable.ouId = self.defaultOuId;
                     //加载完成拿回下拉的默认值
                     self.ouItem.ouFullname = res.result.ouFullname;
                     self.ouItem.id =  res.result.id;
@@ -648,14 +737,15 @@
                     console.log('err'+res)
                 });
                 
-                //行政地区*2
-                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                //     // console.log(res);
-                //     self.adAr = res.result;
-                //     self.loadIcon();
-                // },function(res){
-                //     console.log('err'+res)
-                // });
+                //行政地区
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+                    console.log(res);
+                    self.areaProArray = res.result;
+                    // self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
                     console.log(res);
@@ -694,13 +784,13 @@
                         self.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
                             console.log(res);
                             self.open('创建仓库成功','el-icon-circle-check','successERP');
-                            self.createReAddress(res.result);
+                            // self.createReAddress(res.result);
                         },function(){
                             self.open('创建失败','el-icon-error','faildERP');
                             self.errorMessage=true;
                             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         })
-                        self.Cancel();
+                        self.clearData();
                     }
                 })
                 
@@ -709,45 +799,78 @@
             //-------------------------------------------------------
 
             //---创建------------------------------------------------
-            createRepository:function(){//创建新仓库
+            createRepository:function(){//创建
                 let self = this;
                 $('.tipsWrapper').css({display:'block'})
-                self.$validate().then(function(success){
-                    if(success){
-                        self.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
-                            console.log(res);
-                            self.open('创建仓库成功','el-icon-circle-check','successERP');
-                            self.createReAddress(res.result);
-                            self.goModify(res.result)
-                        },function(res){
-                            self.open('创建失败','el-icon-error','faildERP');
-                            self.errorMessage=true;
-                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        })
-                    }
-                })
-            },
-            createReAddress:function(id){//创建新的仓库地址
-                let self = this;
-                console.log(id)
                 if(self.addList.length>0){
-                    for(let i in self.addList){
-                        self.addList[i].stockId = id;
-                    }
-                    
-                    this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
-                        console.log(res);
-                        self.open('创建仓库地址成功','el-icon-circle-check','successERP');
-                        self.addList = [];
-                        // self.loadData();
-                    },function(res){
-                        self.open('创建失败','el-icon-error','faildERP');
-                        self.errorMessage=true;
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    self.createRepositoryParams.stockAddress_ChildTable = self.addList;
+                    self.$validate().then(function(success){
+                        if(success){
+                            let push = false;
+                            for(let i in self.createRepositoryParams.stockAddress_ChildTable){
+                                if(self.createRepositoryParams.stockAddress_ChildTable[i].completeAddress!=''){
+                                    push = true;
+                                }else{
+                                    self.$message({
+                                        type: 'info',
+                                        message: '送货地址必填'
+                                    });
+                                    $('.tipsWrapper').css({display:'none'})
+                                }
+
+                            }
+                            if(push){
+                                self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',self.createRepositoryParams).then(function(res){
+                                    console.log(res);
+                                    $('.tipsWrapper').css({display:'none'})
+                                    self.open('创建成功','el-icon-circle-check','successERP');
+                                    self.goModify(res.result)
+                                },function(res){
+                                    console.log(res)
+                                    self.errorMessage=true;
+                                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                                })
+                            }
+                        }
+                    })
+                }else{
+                    self.$validate().then(function(success){
+                        if(success){
+                            self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',self.createRepositoryParams).then(function(res){
+                                console.log(res);
+                                $('.tipsWrapper').css({display:'none'})
+                                self.open('创建成功','el-icon-circle-check','successERP');
+                                self.goModify(res.result)
+                            },function(res){
+                                console.log(res)
+                                self.errorMessage=true;
+                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            })
+                        }
                     })
                 }
-                
             },
+            // createReAddress:function(id){//创建新的仓库地址
+            //     let self = this;
+            //     console.log(id)
+            //     if(self.addList.length>0){
+            //         for(let i in self.addList){
+            //             self.addList[i].stockId = id;
+            //         }
+                    
+            //         this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
+            //             console.log(res);
+            //             self.open('创建仓库地址成功','el-icon-circle-check','successERP');
+            //             self.addList = [];
+            //             // self.loadData();
+            //         },function(res){
+            //             self.open('创建失败','el-icon-error','faildERP');
+            //             self.errorMessage=true;
+            //             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+            //         })
+            //     }
+                
+            // },
             //-------------------------------------------------------
           
             //---表格编辑--------------------------------------------
@@ -756,18 +879,20 @@
                 self.x++;
                 let newCol = 'newCol'+self.x;
                 self.rows.newCol ={
-                    groupId:'1',//集团ID
-                    stockId:'',//仓库ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    moblie:'',
-                    phone:'',//联系电话
-                    logisticsCompanyId:'',//物流公司
-                    isDefault:false,//是否默认
-                    remark:'',//备注
+                    id: 0,
+                    completeAddress: "",
+                    stockId: 0,
+                    addressId: 0,
+                    transportMethodId: '',
+                    contactPerson: "",
+                    phone: "",
+                    moblie: "",
+                    logisticsCompanyId: '',
+                    isDefault: false,
+                    remark: ''
                 };
                 // self.allList.unshift(self.rows.newCol);
+                self.createRepositoryParams.stockAddress_ChildTable.unshift(self.rows.newCol)
                 self.addList.unshift(self.rows.newCol);
                 // console.log(self.rows)
             },
@@ -844,11 +969,10 @@
             //-------------------------------------------------------
 
             //---取消按钮-------------------------------------------
-            Cancel:function(){
+            clearData:function(){
                 let self = this;
-                if(self.Modify){
+                if(self.ifModify){
                     self.dialogUserConfirm = true;
-                    self.backCancel = 1;//为1是取消
                 }
                 
             },
@@ -900,6 +1024,35 @@
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
             //-------------------------------------------------------
+
+            //---选择省市区-----------------------------------------------
+            chooseProvince:function(id){
+                let self = this;
+                // console.log(id)
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                    // console.log(res);
+                    self.areaCityArray = res.result;
+                    // self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+
+            },
+            chooseCity:function(id){
+                let self = this;
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                    // console.log(res);
+                    self.areaDisArray = res.result;
+                    // self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
+            chooseDis:function(){
+                let self = this;
+                console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
+            },
+            //-----------------------------------------------------------
             //---树-------------------------------------------------------------
             loadIcon(){
                 let _this=this;
@@ -1048,7 +1201,6 @@
         data(){
             return {
                 defaultOuId:'',//默认的ouid
-                backCancel:'',//判断是返回还是取消
                 allList:[],
                 auditInformation:{//审计信息
                     createName:"",
@@ -1083,6 +1235,8 @@
                 areaProArray:[],//行政地区(省)
                 areaCityArray:[],//行政地区(市)
                 areaDisArray:[],//行政地区(区)
+                proId:'',//省id
+                cityId:'',//市id
                 adSearch:'',//树形搜索框的
                 selectAdProps:{
                     children: 'items',
@@ -1126,34 +1280,37 @@
                 value: '',
                 tableData:[],
                 
-                createRepositoryParams:{//创建新仓库的参数
-                    "ouId": '',
-                    "stockCode": "",
-                    "stockName": "",
-                    "stockFullName": "",
-                    "opAreaId": '',
-                    "adAreaId": 10,
-                    "stockTypeId": 0,
-                    "fax": "",
-                    "email":  '',
-                    "status": 0,
-                    "mnemonic": "",
-                    "stockAddress": "",
-                    "manager": "",
-                    "phone": "",
-                    "remark": ""
+                createRepositoryParams:{
+                    stock_MainTable: {
+                        ouId: '',
+                        stockCode: "",
+                        stockName: "",
+                        stockFullName: "",
+                        stockTypeId: 0,
+                        status: 1,
+                        opAreaId: '',
+                        adAreaId: '',
+                        mnemonic: "",
+                        stockAddress: "",
+                        fax: "",
+                        email: "",
+                        manager: "",
+                        phone: "",
+                        remark: ""
+                    },
+                    stockAddress_ChildTable: []
                 },
-                createRepositoryAddressParams:{//创建新的仓库地址参数
-                    groupId:'1',//集团ID
-                    stockId:'',//仓库ID
-                    completeAddress:'',//详情地址
-                    transportMethodId:'',//运输方式
-                    contactPerson:'',//联系人
-                    phone:'',//联系电话
-                    logisticsCompanyId:'',//物流公司
-                    isDefault:false,//是否默认
-                    remark:'',//备注
-                },
+                // createRepositoryAddressParams:{//创建新的仓库地址参数
+                //     groupId:'1',//集团ID
+                //     stockId:'',//仓库ID
+                //     completeAddress:'',//详情地址
+                //     transportMethodId:'',//运输方式
+                //     contactPerson:'',//联系人
+                //     phone:'',//联系电话
+                //     logisticsCompanyId:'',//物流公司
+                //     isDefault:false,//是否默认
+                //     remark:'',//备注
+                // },
                 x:0,//增行的下标
                 rows:[],//增行的数组
                 addList:[],//新增上传的数组

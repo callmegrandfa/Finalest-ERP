@@ -455,13 +455,13 @@
                     console.log('err'+res)
                 })
                 //行政地区*2
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                    // console.log(res);
-                    self.opAr = res.result;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                })
+                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                //     // console.log(res);
+                //     self.opAr = res.result;
+                //     self.loadIcon();
+                // },function(res){
+                //     console.log('err'+res)
+                // })
                 //业务地区*1
                 self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:1}).then(function(res){
                     // console.log(res);

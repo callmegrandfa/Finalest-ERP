@@ -63,6 +63,8 @@ export default new vuex.Store({
         currency:{ name: 'currency', url: '/currency/currencyList/:id', parent: '', default: '/customer/currencyList/:id' } , //币种管理
         currencyList:{ name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
 
+        commodityBrand:{name: 'commodityBrand', url: '/commodityBrand/:id', parent: 'commodityBrand', default: '/commodityBrand/:id' },//商品品牌
+
         bill:{ name: 'bill', url: '/bill/billList/:id', parent: '', default: '/bill/billList/:id' } , //模板2.0
         billDetails:{ name: 'billDetails', url: '/bill/billDetails/:id', parent: 'bill' } ,
         billList:{ name: 'billList', url: '/bill/billList/:id', parent: 'bill' } ,
@@ -111,9 +113,13 @@ export default new vuex.Store({
 
         department:{ name: 'department', url: '/department/departmentList/:id', parent: '', default: '/department/departmentList/:id' } , //部门资料
         departmentList:{ name: 'departmentList', url: '/department/departmentList/:id', parent: 'department' } ,
+        departmentDetail:{ name: 'departmentDetail', url: '/department/departmentDetail/:id', parent: 'department' } ,
+        departmentModify:{ name: 'departmentModify', url: '/department/departmentModify/:id', parent: 'department' } ,
 
-        shop:{ name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //部门资料
+        shop:{ name: 'shop', url: '/shop/shopList/:id', parent: '', default: '/shop/shopList/:id' } , //店铺资料
         shopList:{ name: 'shopList', url: '/shop/shopList/:id', parent: 'shop' } ,
+        shopDetail:{ name: 'shopDetail', url: '/shop/shopDetail/:id', parent: 'shop' } ,
+        shopModify:{ name: 'shopModify', url: '/shop/shopModify/:id', parent: 'shop' } ,
 
         dictionary:{ name: 'dictionary', url: '/dictionary/dictionaryList/:id', parent: '', default: '/dictionary/dictionaryList/:id' } , //系统字典
         dictionaryList:{ name: 'dictionaryList', url: '/dictionary/dictionaryList/:id', parent: 'dictionary' } ,
@@ -726,9 +732,11 @@ export default new vuex.Store({
         commodityBrandHttpApi:'',
         commodityBrandTable:[],//品牌表格数据
         commodityBrandNewCol:'',
+        commodityBrandIfDel:false,//是否删除
         commodityBrandNewColArray:[],//表格内新增数据集合
         commodityBrandUpdateColArray:[],//表格内修改数据集合
         commodityBrandSelection:[],//选中数据集合
+        commodityBrandUpdateRow:'',//修改表格行数据
         commodityBrandUpdateRowId:'',//修改的表格行ID
         commodityBrandCurrentPage:1,
         commodityBrandTotalPagination:10,//总页数
@@ -764,6 +772,9 @@ export default new vuex.Store({
         Init_pagination(state,data){//页码总数
             state[state.tableName+'TotalPagination']=data
         },
+        setIfDel(state,data){//配置是否删除参数
+            state[state.tableName+'IfDel']=data
+        },
         setHttpApi(state,api){//api地址
             state[state.tableName+'HttpApi']=api;
         },
@@ -779,15 +790,17 @@ export default new vuex.Store({
         setUpdateColArray(state,array){//重置行内修改集合
             state[state.tableName+'UpdateColArray']=array;
         },
-        setTableSelection(state,array){
+        setTableSelection(state,array){//设置表格多选集合
             state[state.tableName+'Selection']=array;
+        },
+        setUpdateRowId(state,id){//重置修改行id
+            state[state.tableName+'UpdateRowId']=id;
         },
         add_col(state,data){//表格行内新增
             state[state.tableName+'Table'].unshift(data);
             state[state.tableName+'NewColArray'].unshift(data);
         },
         Add_UpdateArray(state,data){//行内修改集合
-            console.log(data)
             state[state.tableName+'UpdateColArray'].push(data);
         },
         get_RowId(state,data){//行id
@@ -811,19 +824,11 @@ export default new vuex.Store({
         addCol(context,item){//添加行
             //通过参数传递
             context.commit('add_col',item)
-            // if(context.state[context.state.tableName+'NewCol']==""){
-            //     return
-            // }else{
-            //     console.log(context.state.tableName+'NewCol');
-            //     context.commit('add_col',context.state[context.state.tableName+'NewCol'])
-            // }
         },
         AddUpdateArray(context){//更改行id
             if(context.state[context.state.tableName+'UpdateColArray'].length==0){
                 if(context.state[context.state.tableName+'UpdateRowId']!=""&&typeof(context.state[context.state.tableName+'UpdateRowId'])!="undefined")
-                console.log(context.state[context.state.tableName+'UpdateRowId']);
                 context.commit('Add_UpdateArray',context.state[context.state.tableName+'UpdateRowId'])
-                //context.state.updateColArray.push( context.state.rowId);
             }else{
                 if(context.state[context.state.tableName+'UpdateColArray'].indexOf(context.state[context.state.tableName+'UpdateRowId'])==-1&&context.state[context.state.tableName+'UpdateRowId']!=""&&typeof(context.state[context.state.tableName+'UpdateRowId'])!="undefined"){
                     context.commit('Add_UpdateArray',context.state[context.state.tableName+'UpdateRowId'])
