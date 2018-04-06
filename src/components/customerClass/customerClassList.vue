@@ -585,7 +585,9 @@ export default {
         },
             filterNode(value, data) {//过滤节点
                 if (!value) return true;
-                return data.className.indexOf(value) !== -1;
+             return data.className.indexOf(value) !== -1
+              }  
+       
   }
 };
 </script>
