@@ -343,12 +343,34 @@ table .el-input__icon{
         height: 24px;
         border-radius: 50%;
     }   
-    .el-tree .el-checkbox__inner{
+    .el-tree .el-checkbox__inner,.square_el .el-checkbox__inner{
       width: 14px;
       height: 14px;
       border-radius: 0;
     }
-    .el-tree .el-checkbox__inner::after {
+    .el-checkbox__inner::after{
+      -webkit-box-sizing: content-box;
+      box-sizing: content-box;
+      content: "";
+      border: 3px solid #fff;
+      border-left: 0;
+      border-top: 0;
+      height: 11px;
+      left: 6px;
+      position: absolute;
+      top: 1px;
+      -webkit-transform: rotate(45deg) scaleY(0);
+      transform: rotate(45deg) scaleY(0);
+      width: 6px;
+      -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+      -webkit-transform-origin: center;
+      transform-origin: center;
+  }
+    .el-tree .el-checkbox__inner::after,.square_el .el-checkbox__inner::after{
       -webkit-box-sizing: content-box;
       box-sizing: content-box;
       content: "";
@@ -370,28 +392,7 @@ table .el-input__icon{
       -webkit-transform-origin: center;
       transform-origin: center;
   }
-    .el-checkbox__inner::after{
-        -webkit-box-sizing: content-box;
-        box-sizing: content-box;
-        content: "";
-        border: 3px solid #fff;
-        border-left: 0;
-        border-top: 0;
-        height: 11px;
-        left: 6px;
-        position: absolute;
-        top: 1px;
-        -webkit-transform: rotate(45deg) scaleY(0);
-        transform: rotate(45deg) scaleY(0);
-        width: 6px;
-        -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        -webkit-transform-origin: center;
-        transform-origin: center;
-    }
+
  
     /* 按钮 应用请更改图片相对路径 详情参考register.vue*/
     /* <button class="erp_bt bt_add"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
@@ -1497,11 +1498,4 @@ color:#f66;
 }
 .header_ops{
   text-align: right;
-}
-.checkbox_group{
-  background-color: #f2f2f2;
-  padding:10px 10px 0 10px;
-}
-.checkbox_group .el-checkbox{
-  margin-bottom: 10px;
 }
