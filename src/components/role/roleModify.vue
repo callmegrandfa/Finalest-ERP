@@ -1927,7 +1927,7 @@ export default({
       line-height: 30px;
       padding-left: 10px;
   }
-  .add {
+  .roleModify .add{
     position: absolute;
     top: 6px;
     left: 18%;
@@ -1942,9 +1942,6 @@ export default({
     text-decoration: none;
     font-size: 23px;
     font-weight: bold;
-}
- .add:hover{
-  background-color: #354052;
 }
  /*收起*/
  .checkBoxOuUser{

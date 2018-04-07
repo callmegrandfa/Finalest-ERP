@@ -83,9 +83,7 @@
   background-color: #fff;
   overflow: hidden;
 }
-.el-dialog__header{
-  border-bottom: 1px solid #F9F9F9;
-}
+
 /* textarea */
 .el-textarea__inner{
   border: 1px solid rgb(194, 202, 216);
@@ -1398,12 +1396,24 @@ color:#f66;
 }
 /* 自定义穿梭框 */
 .transfer_btns .el_transfer.el-button.is-round{
-  /* padding: 10px; */
   margin: auto;
   display: block;
 }
 .el_transfer.el-button.is-round{
-  padding: 10px;
+    padding: 7px;
+    color: #fff;
+    border-color: #a0cfff;
+}
+.transfer_footer {
+  text-align: right;
+}
+.transfer_footer .el_transfer.el-button.is-round{
+  border-radius: 10%;
+}
+.el_transfer.el-button.is-round.is-disabled{
+  background-color: transparent;
+  color: #a0a0a0;
+  border-color: #c9d1d1;
 }
  .transfer_btns .el_transfer.el-button.is-round:first-child{
   margin-bottom: 10px;
@@ -1475,6 +1485,7 @@ color:#f66;
   color: #fff;
   margin-right: 20px;
 }
+
 .isConfirm_wrapper{
   text-align: right;
 }
