@@ -457,6 +457,7 @@ import dialogBox from '../../base/dialog/dialog'
                             this.loadTableData();
                         }).catch(() => {
                             this.currentPage=this.turnPage 
+                           console.log($(document).find(".el-pager li").html().eq(0));
                             this.pageFlag=false;
                             return;      
                     });
@@ -525,29 +526,6 @@ import dialogBox from '../../base/dialog/dialog'
             handleDel(row,index){//行内删除
                 this.dialogMessage="确认删除";
                 this.dialogShow=true;
-                // this.$confirm('确定删除?', '提示', {
-                //     confirmButtonText: '确定',
-                //     cancelButtonText: '取消',
-                //     type: 'warning',
-                //     center: true
-                //     }).then(() => {
-                //         if(row.brandCode==""||this.isAdd==true){
-                //             this.tableData.splice(index,1);
-                //             this.addArray.splice(index,1);
-                //             console.log(this.addArray);
-                //         }else{
-                //             let _this=this;
-                //             _this.$axios.deletes('/api/services/app/BrandManagement/Delete',{Id:row.id}).then(function(res){
-                //                 _this.loadTableData();
-                //                 _this.open('删除成功','el-icon-circle-check','successERP');              
-                //             })
-                //         }
-                //     }).catch(() => {
-                //         this.$message({
-                //             type: 'info',
-                //             message: '已取消删除'
-                //         });
-                // });
             },
             search(){//按条件查询
                 let _this=this;
@@ -612,10 +590,11 @@ import dialogBox from '../../base/dialog/dialog'
                 }
                 let _this=this;
                 if(_this.idArray.ids.indexOf(undefined)!=-1){
-                        this.$message({
+                        _this.$message({
                             type: 'warning',
                             message: '新增数据请在行内删除'
                         });
+                        _this.dialogShow=false;
                         return;
                 }
                 if(_this.idArray.ids.length>0){
