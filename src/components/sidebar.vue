@@ -88,6 +88,12 @@ export default {
                 ]
             },
             {
+                name:'用户组',
+                thirdInfo:[
+                    {name:'用户组',address:'userGroup'},
+                ]
+            },
+            {
                 name:'客户分类',
                 thirdInfo:[
                     {name:'客户分类',address:'customerClass'},

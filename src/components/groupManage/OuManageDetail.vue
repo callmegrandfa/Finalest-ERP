@@ -195,7 +195,7 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>上级业务单元</label>
-                    <el-select class="ouParentid"
+                    <el-select clearable class="ouParentid"
                     
                     @change="isUpdate"
                     @focus="showErrprTipsSelect"
@@ -233,7 +233,7 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>会计方案</label>
-                    <el-select filterable  class="accCchemeId"
+                    <el-select clearable filterable  class="accCchemeId"
                     
                     
                     @focus="showErrprTipsSelect"
@@ -265,7 +265,7 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>本位币种</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     
                     @change="isUpdate"
                     placeholder=""
@@ -284,7 +284,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     
                     @change="isUpdate"
                     placeholder=""
@@ -337,7 +337,7 @@
                 </div>
                  <div class="bgcolor">
                     <label>启用状态</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     
                     @change="isUpdate"
                     @focus="showErrprTipsSelect"
@@ -406,7 +406,7 @@
                             
                             <div class="bgcolor">
                                 <label>上级公司</label>
-                                <el-select filterable  
+                                <el-select clearable filterable  
                                 
                                 @change="isUpdate"
                                 @focus="showErrprTipsSelect"
@@ -433,7 +433,7 @@
                             </div>
                             <div class="bgcolor">
                                 <label>启用状态</label>
-                                <el-select filterable  
+                                <el-select clearable filterable  
                                 
                                 @change="isUpdate"
                                 @focus="showErrprTipsSelect"
@@ -745,7 +745,7 @@
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select filterable  
+                                    <el-select clearable filterable  
                                     @change="isUpdate"
                                     v-model="test"
                                     placeholder=""
@@ -769,7 +769,7 @@
                             <el-col :span="24"  class="getPadding">
                                 <div class="bgcolor">
                                     <label>上级业务组织</label>
-                                    <el-select filterable 
+                                    <el-select clearable filterable 
                                     v-model="test"
                                     @change="isUpdate"
                                     placeholder=""
@@ -792,7 +792,7 @@
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
-                                    <el-select filterable  
+                                    <el-select clearable filterable  
                                     @change="isUpdate"
                                     v-model="test"
                                     placeholder=""
@@ -953,8 +953,8 @@ export default({
                 "legalPersonIdnr": "",
                 "mgtDeptCode": "",
                 "mgtDeptName": "",
-                // "businessStart": "2018-03-13T01:03:22.616Z",
-                // "businessEnd": "2018-03-13T01:03:22.616Z",
+                "businessStart": "",
+                "businessEnd": "",
                 "legalPersonType": "",
                 "introduction": "",
                 "contact": "",
@@ -1040,152 +1040,194 @@ export default({
       },
 
 
-      'basCompany.ouParentid': function (value) {//上级公司
-        if(this.Company){
-            return this.Validator.value(value).integer();
-        }else{
-            return this.Validator.value(value)
+       'basCompany.ouParentid': function (value) {//上级公司
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+                return this.Validator.value(value).integer();
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.status': function (value) {//启用状态
-        if(this.Company){
-            return this.Validator.value(value).integer();
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+                return this.Validator.value(value).integer();
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.regCapital': function (value) {//注册资本
-        if(this.Company){
-            return this.Validator.value(value).integer();
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+                return this.Validator.value(value).integer();
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.legalPerson': function (value) {//法人代表
-        if(this.Company){
-            return this.Validator.value(value).maxLength(50);
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+                return this.Validator.value(value).maxLength(50);
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.vatRegno': function (value) {//纳税人登记号
-        if(this.Company){
-           return this.Validator.value(value).maxLength(200);
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+            return this.Validator.value(value).maxLength(200);
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.regtime': function (value) {//成立日期
-        if(this.Company){
-           return this.Validator.value(value);
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+            return this.Validator.value(value);
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.legalPersonIdnr': function (value) {//法人身份证号码
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).maxLength(50);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.mgtDeptCode': function (value) {//主管部门代码
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).maxLength(50);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.mgtDeptName': function (value) {//主管部门名称
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).maxLength(50);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.legalPersonType': function (value) {//纳税人类别
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).maxLength(50);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.businessAddress': function (value) {//营业地址
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).maxLength(200);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'dateRange': function (value) {//营业或有效期限
-        if(this.Company){
-            return this.Validator.value(value);
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+                return this.Validator.value(value);
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.introduction': function (value) {//公司简介
-        if(this.Company){
-            return this.Validator.value(value).maxLength(200);
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+                return this.Validator.value(value).maxLength(200);
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.contactAddress': function (value) {//通讯地址
-        if(this.Company){
-            return this.Validator.value(value).maxLength(200);
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+                return this.Validator.value(value).maxLength(200);
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.zipCode': function (value) {//邮政编码
-        if(this.Company){
-            return this.Validator.value(value).maxLength(20);
-        }else{
-            return this.Validator.value(value)
+        if(typeof(value)!='undefined'){
+            if(this.Company){
+                return this.Validator.value(value).maxLength(20);
+            }else{
+                return this.Validator.value(value)
+            }
         }
       },
       'basCompany.contact': function (value) {//联系人
+      if(typeof(value)!='undefined'){
         if(this.Company){
            return this.Validator.value(value).maxLength(50);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.fax': function (value) {//传真
+      if(typeof(value)!='undefined'){
         if(this.Company){
            return this.Validator.value(value).maxLength(50);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.phone': function (value) {//电话
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).integer();
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.email': function (value) {//email
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).maxLength(50);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.webUrl': function (value) {//web网址
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).maxLength(200);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
       'basCompany.remark': function (value) {//备注
+      if(typeof(value)!='undefined'){
         if(this.Company){
             return this.Validator.value(value).maxLength(200);
         }else{
             return this.Validator.value(value)
         }
+      }
       },
     },
     computed:{
@@ -1414,14 +1456,17 @@ export default({
             .then(function (success) {
                 if (success) {
                     $('.tipsWrapper').css({display:'none'})
+                    
                    if(_this.Company){
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
                         _this.addData.basCompany=_this.basCompany;
                     }else{
                         _this.basCompany={}
+                        delete _this.addData.basCompany
+                        // _this.addData.basCompany={}
                     }
-                    
+                    // console.log(_this.addData)
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                         _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由

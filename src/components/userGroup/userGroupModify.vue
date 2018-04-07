@@ -44,7 +44,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                          
                         @change="isUpdate"
                         placeholder=""
@@ -83,7 +83,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         class="status" 
                          
                         @change="isUpdate"
