@@ -1,7 +1,7 @@
 <template>
   <div class="res-modify">
         <el-row class="bg-white pt10 pb10 bb1 fixed">
-            <button class="erp_bt bt_back" @click="isBack">
+            <button class="erp_bt bt_back" @click="isBack(1)">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_back.png">
                 </div>
@@ -17,7 +17,7 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_cancel" @click="Cancel()" :class="{erp_fb_bt:!ifModify}">
+            <button class="erp_bt bt_cancel" @click="Cancel(2)" :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
@@ -58,7 +58,7 @@
         <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
                 <el-row class="bg-white ft12 pr10 pt10">
-                    <el-col :span="24" class="getPadding">
+                    <el-col :span="24">
                         <div class="tipsWrapper" name="ouId">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.ouId')}">
                                 <p class="msgDetail">错误提示：所属组织{{ validation.firstError('repositoryData.ouId') }}</p>
@@ -387,7 +387,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson"
-                                    @click='upClick(scope.$index,scope.row)'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -652,6 +651,8 @@
 
                 ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
+
+                backCancel:'',//判断信息提示确定的点击事件
                 
                 //---所属组织树形下拉-----
                 ouSearch:'',
@@ -1156,13 +1157,7 @@
             //------------------------------------------------------------
 
             //---控制是否可编辑---------------------------------------        
-            Cancel(){
-                let self = this;
-                self.loadData();
-                self.ifModify = false;
-                $('.tipsWrapper').css({display:'none'})
-                // }
-            },
+            
             //-------------------------------------------------------
 
             //---表格编辑-------------------------------------------------
@@ -1373,30 +1368,40 @@
                 let self = this;
                 self.ifModify = true;
             },
-            // upClick:function(index,row){
-            //     let self = this;
-            //     if(row.id&&row.id>0){
-            //         if(self.clickAr.indexOf(row.id)== -1){
-            //             self.clickAr.push(row.id)
-            //         }
-            //     }
-            //     console.log(self.clickAr)
-            // },
             //------------------------------------------------------
 
-            //---修改返回提示-----------------------------------------
+            //---修改返回\取消提示-----------------------------------------
             isBack(){
                 let self=this;
                 if(self.ifModify){
                     self.dialogUserConfirm=true;
+                    self.backCancel = 1;
                     // self.choseDoing='back'
                 }else{
                     self.back()
                 }
             },
+            Cancel(){
+                let self = this;
+                if(self.ifModify){
+                    self.dialogUserConfirm=true;
+                    self.backCancel = 2;
+                    $('.tipsWrapper').css({display:'none'})
+                }
+                
+                
+                // }
+            },
             sureDoing:function(){
                 let self = this;
-                self.back();
+                if(self.backCancel ==1){
+                    self.back();
+                }else if(self.backCancel == 2){
+                    self.loadData();
+                    self.ifModify = false;
+                    self.dialogUserConfirm=false;
+                }
+                
             },
             //-------------------------------------------------------
 
@@ -1719,6 +1724,9 @@
     text-align:center;
     border:none;
     background-color:#FAFAFA;
+}
+.res-modify .display_block{
+    margin-bottom:5px;
 }
 .el-select.areaDrop,.el-input.areaEntry{
     width: 100px;
