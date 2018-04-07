@@ -31,7 +31,7 @@
                 <span class="btDetail">保存并新增</span>
             </button>
 
-            <button class="erp_bt bt_add" @click="goDetail" :class="{erp_fb_bt:ifModify}">
+            <button class="erp_bt bt_add" @click="addNew" :class="{erp_fb_bt:ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_add.png">
                 </div>
@@ -1235,8 +1235,11 @@
             //---顶部删除按钮-----------------------------------------
             delModify:function(num){
                 let self = this;
-                self.who = num
-                self.dialogDelConfirm = true;
+                if(!self.ifModify){
+                    self.who = num
+                    self.dialogDelConfirm = true;
+                }
+                
             },
             //-------------------------------------------------------
 
@@ -1449,6 +1452,13 @@
             goDetail(){//点击新增跳转
                 this.$store.state.url='/repository/repositoryData/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            addNew:function(){
+                let self = this;
+                if(!self.ifModify){
+                    this.$store.state.url='/repository/repositoryData/default'
+                    this.$router.push({path:this.$store.state.url})//点击切换路由
+                }
             },
             //------------------------------------------------------------
             //---树-------------------------------------------------------------
