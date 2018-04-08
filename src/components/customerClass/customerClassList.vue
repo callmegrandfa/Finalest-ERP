@@ -630,10 +630,17 @@ export default {
                   
             })
         },
+<<<<<<< HEAD
         filterNode(value, data) {//过滤节点
             if (!value) return true;
             return data.className.indexOf(value) !== -1;
             }
+=======
+      filterNode(value, data) {//过滤节点
+          if (!value) return true;
+          return data.className.indexOf(value) !== -1;
+          }
+>>>>>>> 1e63cf7164e268b289815aa09bd24d0a902ac037
   }
 };
 </script>
