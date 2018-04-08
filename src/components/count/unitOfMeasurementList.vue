@@ -234,7 +234,7 @@
 </template>
 <script>
     export default {
-        name:'countList',
+        name:'unitOfMeasurementList',
         data(){
             return {
                 ifWidth:true,

@@ -69,7 +69,29 @@
                 </span>
         </el-dialog>
         <!-- 表单验证的错误提示信息 -->
-	        <el-row>
+        <el-row>
+            <el-col :span="24">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span :class="{block : !validation.hasError('addData.areaParentId')}">
+                                上级地区{{ validation.firstError('addData.areaParentId') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.areaCode')}">
+                                地区编码{{ validation.firstError('addData.areaCode') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.areaName')}">
+                                地区名称{{ validation.firstError('addData.areaName') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.status')}">
+                                状态{{ validation.firstError('addData.status') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+	        <!-- <el-row>
                 <el-col>
                     <div class="errTipsWrapper" name="areaParentId">
                         <div class="errorTips" :class="{block : !validation.hasError('addData.areaParentId')}">
@@ -92,7 +114,7 @@
                       </div>
                     </div>
                 </el-col>
-            </el-row>
+            </el-row> -->
         <!-- 表单 -->
         <el-row>
             <div class="admstr-form-wrapper pt15">
@@ -104,7 +126,8 @@
                             :class="{redBorder : validation.hasError('addData.areaParentId')}"
                             class="areaParentId" 
                             placeholder=""
-                            v-model="addData.areaParentId">
+                            v-model="addData.areaParentId"
+                            @focus="showErrTips">
                                 <!-- <el-input
                                     placeholder="搜索..."
                                     class="selectSearch"
@@ -137,7 +160,7 @@
                             <el-input 
                             class="areaCode" 
                             :class="{redBorder : validation.hasError('addData.areaCode')}"
-                            v-model="addData.areaCode"></el-input>
+                            v-model="addData.areaCode"  @focus="showErrTips"></el-input>
                         </div>
                     </div>
                 </el-col>
@@ -148,7 +171,7 @@
                             <el-input 
                             class="areaName" 
                             :class="{redBorder : validation.hasError('addData.areaName')}"
-                            v-model="addData.areaName"></el-input>
+                            v-model="addData.areaName"  @focus="showErrTips"></el-input>
                         </div>
                     </div>
                 </el-col>
@@ -184,7 +207,7 @@
                             class="status" 
                             placeholder=""
                             :class="{redBorder : validation.hasError('addData.status')}"
-                            v-model="addData.status">
+                            v-model="addData.status"  @focus="showErrTips">
                                 <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                                 </el-option>
                             </el-select>
@@ -310,6 +333,9 @@
                 customClass:className
                 });
         },
+        showErrTips(e){// 错误提示信息
+            $('.tipsWrapper').css({display:'none'});
+        },
         GetDateTime() {//获取当前时间
             let date=new Date();
             return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
@@ -338,9 +364,11 @@
         // -----------------取消与返回功能完
         save() {// 保存
             let _this=this;
+            $('.tipsWrapper').css({display:'block'})
             _this.$validate().then(
                 function (success) { 
                     if (success){
+                        $('.tipsWrapper').css({display:'none'});
                         _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData)
                             .then(
                                 rsp=>{
@@ -426,6 +454,8 @@
             let _this=this;
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
             // 启用状态
+            // console.log(res.result);
+            
              _this.selectData.Status001=res.result;
             });
         },

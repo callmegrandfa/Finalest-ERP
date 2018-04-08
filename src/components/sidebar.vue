@@ -198,6 +198,7 @@ export default {
         let _this=this;
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
+            console.log(res[1].childNodes)
             _this.childNodes=res;
             _this.$nextTick(function(){
                 let x={}
