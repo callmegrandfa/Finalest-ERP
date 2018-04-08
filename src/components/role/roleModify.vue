@@ -1040,10 +1040,16 @@ export default({
                         ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
-                    console.log(_this.addData)
+                    // console.log(_this.addData)
                     //ajax
                     _this.$axios.puts('/api/services/app/Role/Update',_this.addData)
                     .then(function(res){
+                        _this.auditInformation={//审计信息
+                            createdBy:res.result.createdBy,
+                            createdTime:res.result.createdTime,
+                            modifiedBy:res.result.modifiedBy,
+                            modifiedTime:res.result.modifiedTime,
+                        }
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -1441,7 +1447,7 @@ export default({
             // /api/services/app/Role/GetAllPermissions
             _this.$axios.gets('/api/services/app/Role/GetPermissions',{Id:_this.$route.params.id})
             .then(function(res){
-                console.log(res)
+                // console.log(res)
                 _this.checked=res.result.items;
                 _this.pageTable=res.result.items;
                 _this.clickFnTreeData=[];
@@ -1807,7 +1813,7 @@ export default({
             
            .then(function(response){//获取已选角色
                 let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
-                console.log(response)
+                // console.log(response)
                 if(totalCheckedAll>0){
                     _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
                     .then(function(resp){//获取已选角色
