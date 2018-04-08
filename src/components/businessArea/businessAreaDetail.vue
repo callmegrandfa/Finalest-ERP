@@ -394,10 +394,12 @@
         },
         getDefault(){
             let _this=this;
-            _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
-             // 默认用户业务组织
-            _this.addData.ouId=res.result.id;
-            })
+            if(_this.$route.params.id=="default"){
+                _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+                // 默认用户业务组织
+                _this.addData.ouId=res.result.id;
+                })
+            }
         },
         getSelectData(){
             let _this=this;

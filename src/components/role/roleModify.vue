@@ -1035,8 +1035,7 @@ export default({
 
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
-                    //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
                     console.log(_this.addData)

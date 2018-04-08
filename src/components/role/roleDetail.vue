@@ -799,7 +799,7 @@ export default({
         // _this.loadOuTable();//分配组织表格分页数据
         // _this.getAllCheckOu();//获取所有已关联组织数据
         // _this.getAllOulength();//获取所有数据长度判断是否全选
-        // _this.loadOuTreeAll();//关联组织树形所有数据
+        _this.loadOuTreeAll();//关联组织树形所有数据
         // _this.loadOuTreeLeft();////关联组织树形左侧已选数据
         // _this.getCheckFn();//获取已关联权限
         // _this.getAllFn();//获取所有权限
@@ -1021,7 +1021,7 @@ export default({
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
                     //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
                     //ajax
@@ -1246,14 +1246,14 @@ export default({
     
         //     })
         // },
-        // loadOuTreeAll(){
-        //     let _this=this;
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:_this.$route.params.id})
-        //     .then(function(res){
-        //         _this.ouTreeDataRight=res.result;
-        //     },function(res){
-        //     })
-        // },
+        loadOuTreeAll(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
+            .then(function(res){
+                _this.ouTreeDataRight=res.result;
+            },function(res){
+            })
+        },
         // loadOuTreeLeft(){
         //     let _this=this;
         //     _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{id:_this.$route.params.id})

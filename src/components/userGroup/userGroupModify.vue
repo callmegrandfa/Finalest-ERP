@@ -17,7 +17,7 @@
                         <small>*</small>用户组编码</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="userGroupCode" 
                         :class="{redBorder : validation.hasError('addData.userGroupCode')}" 
                         v-model="addData.userGroupCode"></el-input>
@@ -31,7 +31,7 @@
                         <label><small>*</small>用户组名称</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="userGroupName" 
                         :class="{redBorder : validation.hasError('addData.userGroupName')}" 
                         v-model="addData.userGroupName"></el-input>
@@ -46,7 +46,7 @@
                         <label><small>*</small>所属组织</label>
                         <el-select clearable filterable  
                          
-                        @change="isUpdate"
+                        
                         placeholder=""
                         class="ouId" 
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
@@ -86,7 +86,7 @@
                         <el-select clearable filterable  
                         class="status" 
                          
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
                         v-model="addData.status">
@@ -104,7 +104,7 @@
                         <label>备注</label>
                         <el-input
                          
-                        @change="isUpdate"
+                        
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
                         v-model="addData.remark"
@@ -224,7 +224,6 @@
             details:'',
             message:'',
         },
-        update:false,
         dialogUserConfirm:false,//信息更改提示控制
         choseDoing:'',//存储点击按钮判断信息
       }
@@ -363,7 +362,7 @@
         },
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
@@ -372,7 +371,7 @@
         },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -401,12 +400,8 @@
         Cancel(){
                 this.validation.reset();
                 this.getData();
-                this.update=false;
                 this.firstModify=false;
                 this.ifModify=false;
-        },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
         },
         back(row){
             this.$store.state.url='/userGroup/userGroupList/default'
@@ -428,7 +423,6 @@
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.firstModify=false;
                         _this.ifModify=false;
-                        _this.update=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true; 
@@ -444,9 +438,6 @@
                     _this.$axios.puts('/api/services/app/UserGroup/Update',_this.addData)
                     .then(function(res){
                         _this.open('保存成功','el-icon-circle-check','successERP');
-                        _this.update=false;
-                        _this.firstModify=false;
-                        _this.ifModify=false;
                         _this.add();
                     },function(res){   
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
