@@ -43,7 +43,7 @@
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.accStartMonth')}">
-                            启用月份{{ validation.firstError('addData.accStartMonth') }},
+                            启用年月{{ validation.firstError('addData.accStartMonth') }},
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.baseCurrencyId')}">
@@ -250,17 +250,17 @@
                     </el-select>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>启用月份</label>
+                    <label><small>*</small>启用年月</label>
                     <el-date-picker 
                     
                     
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
                     class="accStartMonth datepicker" 
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd" 
+                    format="yyyy-MM"
+                    value-format="yyyy-MM" 
                     v-model="addData.accStartMonth" 
-                    type="date" 
+                    type="month" 
                     ></el-date-picker>
                 </div>
                 <div class="bgcolor">
@@ -1014,7 +1014,7 @@ export default({
       'addData.accCchemeId': function (value) {//会计方案
          return this.Validator.value(value).required().maxLength(50);
       },
-      'addData.accStartMonth': function (value) {//启用月份
+      'addData.accStartMonth': function (value) {//启用年月
          return this.Validator.value(value).required();
       },
       'addData.baseCurrencyId': function (value) {//本位币种id
@@ -1208,9 +1208,9 @@ export default({
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
-            // 会计期间方案值,启用月份
+            // 会计期间方案值,启用年月
                 _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案
-                _this.addData.accStartMonth=res.result.accStartMonth;//启用月份
+                _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
                 _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
             })
             if(_this.$route.params.id!="default"){

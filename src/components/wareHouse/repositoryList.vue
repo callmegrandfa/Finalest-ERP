@@ -683,4 +683,7 @@ input::-webkit-input-placeholder{
     height: 30px;
     border-radius: 30px;
 }
+.res-list .el-table .cell{
+    font-size:12px;
+}
 </style>

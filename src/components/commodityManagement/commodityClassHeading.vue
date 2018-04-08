@@ -167,27 +167,27 @@ import dialogBox from '../../base/dialog/dialog'
                     class: 'erp_bt bt_add',
                     imgsrc: '../../../static/image/common/bt_add.png',
                     text: '新增',
-                    show:true
+                    disabled:false
                 },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
                     text: '删除',
-                    show:true
+                    disabled:false
                 },{
                     class: 'erp_bt bt_audit',
                     imgsrc: '../../../static/image/common/bt_audit.png',
                     text: '审核',
-                    show:true 
+                    disabled:false 
                 },{
                     class: 'erp_bt bt_in',
                     imgsrc: '../../../static/image/common/bt_in.png',
                     text: '导入',
-                    show:true
+                    disabled:false
                 },{
                     class: 'erp_bt bt_out',
                     imgsrc: '../../../static/image/common/bt_inOut.png',
                     text: '导出',
-                    show:true
+                    disabled:false
                 }]},
                 httpUrl:{
                    creat:'http://192.168.100.107:8082/api/services/app/CategoryManagement/GetAll',//数据初始化

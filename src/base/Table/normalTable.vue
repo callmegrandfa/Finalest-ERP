@@ -32,7 +32,7 @@
 		props:['methodsUrl','cols','isDisable','tableName','hasModify',"ifSave"],
 		data(){
 			return{
-                currentPage:1,//当前页码
+                // currentPage:1,//当前页码
                 totalPage:10,//总页数
                 eachPage:10,//每页显示条数
                 tableLoading:true,//加载动画
@@ -52,24 +52,18 @@
                 delRow:'',
                 dialogMessage:'',
                 delDialog:false,
-                turnPage:-1,
-                targetPage:-1,
+                pageFlag:true,
 			}
         },
         created:function(){
             this.$store.commit('setTableName',this.tableName)
             this.$store.commit('setHttpApi', this.methodsUrl.creat)
             this.$store.dispatch('InitTable');//初始化表格数据
-            setTimeout(() => {
+            setTimeout(() => {//拷贝初始化数据，和修改行做对比
                 let table= this.deepClone(this.$store.state[this.tableName+'Table'])
                 this.$store.commit('Init_TableClone', table);
                 this.tableClone=this.$store.state[this.tableName+'TableClone'];
                 }, 1500);
-                let _this=this;
-             $(document).on("click",".el-pager>li",function(){
-                _this.targetPage=$(this).html();
-               
-            })
         },
         components:{
             dialogBox
@@ -77,6 +71,14 @@
         computed:{
             tableData(){//表格数据
                 return this.$store.state[this.tableName+'Table'];   
+            },
+            currentPage:{
+                get:function(){
+                    return this.$store.state[this.tableName+'CurrentPage'];
+                },
+                set:function(newValue){
+                   this.$store.state[this.tableName+'CurrentPage']=newValue;
+                }
             },
             newColArray(){//新增数据集合
                 if(!this.isDisable){
@@ -105,7 +107,7 @@
             newColArray:{
                 handler:function(val,oldVal){
                     if(val.length>0){
-                        this.turnPage=$(document).find(".el-pagination.is-background .el-pager li.active").html();
+                        this.turnPage=Number($(document).find(".el-pagination.is-background .el-pager li.active").html());
                     }
                 },
                 deep:true
@@ -113,7 +115,7 @@
             updateColArray:{
                 handler:function(val,oldVal){
                     if(val.length>0){
-                        this.turnPage=$(document).find(".el-pagination.is-background .el-pager li.active").html();
+                        this.turnPage=Number($(document).find(".el-pagination.is-background .el-pager li.active").html());
                     }
                 },
                 deep:true
@@ -165,7 +167,11 @@
                     _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
                     _this.newColArray.splice(_this.delIndex,1);
                     _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
-                    _this.$store.commit('setIfDel',true);//设置删除参数为真
+                    if(_this.newColArray.length==0){
+                        _this.$store.commit('setIfDel',true);//设置删除参数为真
+                    }else{
+                        _this.$store.commit('setIfDel',false);//设置删除参数为假
+                    }
                     _this.delDialog=false;
                 }else{
                     _this.$axios.deletes(_this.methodsUrl.del,{Id:_this.delRow.id}).then(function(res){
@@ -201,7 +207,7 @@
                 this.$store.commit('setTableSelection',val)
             },
             handleCurrentChange:function(val){//获取当前页码,分页
-                if(this.newColArray.length>0||this.updateColArray.length>0){
+                if((this.newColArray.length>0||this.updateColArray.length>0)&&this.pageFlag){
                     this.$confirm('当前存在未保存修改项，是否继续翻页?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -214,17 +220,16 @@
                             this.$store.commit('setAddColArray',[])//置空修改增集合 
                         }).catch(() => {
                             this.pageFlag=false;
-                            $(document).find(".el-pager li").eq(this.turnPage-1).addClass('active');
-                            $(document).find(".el-pager li").eq(this.targetPage-1).removeClass('active');
-                            this.$store.commit('setCurrentPage',this.turnPage)
+                            this.$store.commit('setCurrentPage',1)
                             return;     
                     });
-                }else{
+                }else if(this.newColArray.length==0&&this.updateColArray.length==0){
                     this.$store.commit('setCurrentPage',val)//跳转至目标分页
                     this.$store.dispatch('InitTable');//初始化表格数据
                     this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                     this.$store.commit('setAddColArray',[])//置空修改增集合 
                 }
+                setTimeout(() => {this.pageFlag = true}, 1000)
                 
             },
             // 数据深拷贝
