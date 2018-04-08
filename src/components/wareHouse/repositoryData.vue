@@ -402,6 +402,7 @@
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
+                             <img class="abimg" src="../../../static/image/content/redremind.png"/>
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 
@@ -778,20 +779,8 @@
 
             saveAdd:function(){//创建新的仓库并且清除数据
                 let self = this;
-                self.$validate().then(function(success){
-                    if(success){
-                        self.$axios.posts('/api/services/app/StockManagement/CreateRepository',self.createRepositoryParams).then(function(res){
-                            console.log(res);
-                            self.open('创建仓库成功','el-icon-circle-check','successERP');
-                            // self.createReAddress(res.result);
-                        },function(){
-                            self.open('创建失败','el-icon-error','faildERP');
-                            self.errorMessage=true;
-                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        })
-                        self.clearData();
-                    }
-                })
+                self.isAddNew = 1;
+                self.createRepository();
                 
               
             },
@@ -800,6 +789,7 @@
             //---创建------------------------------------------------
             createRepository:function(){//创建
                 let self = this;
+                console.log(self.isAddNew)
                 $('.tipsWrapper').css({display:'block'})
                 if(self.addList.length>0){
                     self.createRepositoryParams.stockAddress_ChildTable = self.addList;
@@ -823,7 +813,13 @@
                                     console.log(res);
                                     $('.tipsWrapper').css({display:'none'})
                                     self.open('创建成功','el-icon-circle-check','successERP');
-                                    self.goModify(res.result)
+                                    if(self.isAddNew == 1){
+                                        self.loadSelect();
+                                        self.initData();
+                                    }else{
+                                        self.goModify(res.result)
+                                    }
+                                    
                                 },function(res){
                                     console.log(res)
                                     self.errorMessage=true;
@@ -839,7 +835,12 @@
                                 console.log(res);
                                 $('.tipsWrapper').css({display:'none'})
                                 self.open('创建成功','el-icon-circle-check','successERP');
-                                self.goModify(res.result)
+                                if(self.isAddNew == 1){
+                                    self.loadSelect();
+                                    self.initData();
+                                }else{
+                                    self.goModify(res.result)
+                                }
                             },function(res){
                                 console.log(res)
                                 self.errorMessage=true;
@@ -849,32 +850,12 @@
                     })
                 }
             },
-            // createReAddress:function(id){//创建新的仓库地址
-            //     let self = this;
-            //     console.log(id)
-            //     if(self.addList.length>0){
-            //         for(let i in self.addList){
-            //             self.addList[i].stockId = id;
-            //         }
-                    
-            //         this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
-            //             console.log(res);
-            //             self.open('创建仓库地址成功','el-icon-circle-check','successERP');
-            //             self.addList = [];
-            //             // self.loadData();
-            //         },function(res){
-            //             self.open('创建失败','el-icon-error','faildERP');
-            //             self.errorMessage=true;
-            //             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-            //         })
-            //     }
-                
-            // },
             //-------------------------------------------------------
           
             //---表格编辑--------------------------------------------
             addCol:function(){//增行
                 let self = this;
+                self.ifModify = true;
                 self.x++;
                 let newCol = 'newCol'+self.x;
                 self.rows.newCol ={
@@ -967,14 +948,6 @@
             },
             //-------------------------------------------------------
 
-            //---取消按钮-------------------------------------------
-            clearData:function(){
-                let self = this;
-                if(self.ifModify){
-                    self.dialogUserConfirm = true;
-                }
-                
-            },
             //----------------------------------------------------
 
             //---弹出提示-----------------------------------------
@@ -1195,11 +1168,45 @@
             },
             //------------------------------------------------------------
 
+            //---数据初始化-----------------------------------------------
+            initData:function(){
+                let self = this;
+                self.allList = [];
+                self.ifModify = false;
+                self.isAddNew = '';
+                self.x = 0,//增行的下标
+                self.rows = [],//增行的数组
+                self.addList = [],//新增上传的数组
+                self.createRepositoryParams={
+                    stock_MainTable: {
+                        ouId: '',
+                        stockCode: "",
+                        stockName: "",
+                        stockFullName: "",
+                        stockTypeId: 0,
+                        status: 1,
+                        opAreaId: '',
+                        adAreaId: '',
+                        mnemonic: "",
+                        stockAddress: "",
+                        fax: "",
+                        email: "",
+                        manager: "",
+                        phone: "",
+                        remark: ""
+                    },
+                    stockAddress_ChildTable: []
+                };
+                self.validation.reset();
+            },
+            //-----------------------------------------------------------
+
         },
 
         data(){
             return {
                 defaultOuId:'',//默认的ouid
+                isAddNew:'',//判断点击的是保存还是保存新增
                 allList:[],
                 auditInformation:{//审计信息
                     createName:"",
@@ -1213,10 +1220,6 @@
                 ifShow:true,//控制折叠页面
                 ifCan:true,//控制启用状态
                 ifModify:false,
-                // ifSave:-1,//保存按钮（是否可见）
-                queryOuId:{//ouManagement的搜索Id
-                    id:'2'
-                },
                 //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -1277,7 +1280,6 @@
                 }],
 
                 value: '',
-                tableData:[],
                 
                 createRepositoryParams:{
                     stock_MainTable: {

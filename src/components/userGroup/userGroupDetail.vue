@@ -42,7 +42,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         placeholder=""
                         class="ouId" 
                         @change="isUpdate"
@@ -80,7 +80,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         class="status" 
                         @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.status')}" 

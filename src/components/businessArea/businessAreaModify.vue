@@ -15,7 +15,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select  
+                        <el-select clearable  
                          
                         @change="changeOuId"
                         class="ouId" 
@@ -54,9 +54,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>上级业务地区</label>
-                        <el-select  
+                        <el-select clearable  
                          
-                        @change="isUpdate"
+                        
                         class="areaParentId" 
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
@@ -80,6 +80,8 @@
                             </el-tree>
                             <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
                             </el-option>
+                             <!-- <el-option v-show="false" :label="item_area_no.areaName" :value="item_area_no.id">
+                            </el-option> -->
                             <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
                             </el-option> -->
                         </el-select>
@@ -94,7 +96,7 @@
                         <small>*</small>业务地区编码</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="areaCode" 
                         :class="{redBorder : validation.hasError('addData.areaCode')}" 
                         v-model="addData.areaCode"></el-input>
@@ -110,7 +112,7 @@
                         <label><small>*</small>业务地区名称</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="areaName" 
                         :class="{redBorder : validation.hasError('addData.areaName')}" 
                         v-model="addData.areaName"></el-input>
@@ -125,7 +127,7 @@
                         <label>负责人</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="manager" 
                         :class="{redBorder : validation.hasError('addData.manager')}" 
                         v-model="addData.manager"  
@@ -141,7 +143,7 @@
                         <label>备注</label>
                         <el-input
                          
-                        @change="isUpdate"
+                        
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
                         v-model="addData.remark"
@@ -158,9 +160,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                          
-                        @change="isUpdate"
+                        
                         class="status" 
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
@@ -262,7 +264,7 @@
     // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
-        // 错误信息提示结束
+    // 错误信息提示结束
        
 
         search_ou:'',
@@ -282,6 +284,10 @@
         item_area:{
             id:"",
             areaName:""
+        },
+        item_area_no:{
+            id:0,
+            ouFullname:"无"
         },
         selectTree_area:[
         ],
@@ -317,7 +323,6 @@
             // area:[],//上级业务地区
             ou:[],//组织
         },
-        update:false,
         dialogUserConfirm:false,//信息更改提示控制
         choseDoing:'',//存储点击按钮判断信息
         response:{
@@ -418,16 +423,23 @@
         },
         changeOuId(){
             let _this=this;
-            _this.isUpdate();
             _this.getAreaTree(_this.addData.ouId)
+             _this.addData.areaParentId=0;
+             _this.item_area.id=0;
+             _this.item_area.areaName='无'
         },
         getAreaTree(OuId){
             let _this=this;
-             _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:OuId})
-                .then(function(res){
+            _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:OuId})
+            .then(function(res){
+                if(res.result==null || res.result==[]){
+                    _this.selectTree_area=[]
+                }else{
                     _this.selectTree_area=res.result;
                     _this.loadIcon();
-                },function(res){
+                }
+                
+            },function(res){
             })
         },
         getData(){
@@ -509,7 +521,7 @@
         },
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
@@ -518,7 +530,7 @@
         },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -551,12 +563,8 @@
         Cancel(){
                 this.validation.reset();
                 this.getData();
-                this.update=false;
                 this.firstModify=false;
                 this.ifModify=false;
-        },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -581,7 +589,6 @@
                 if (success) {
                     _this.$axios.puts('/api/services/app/OpAreaManagement/Update',_this.addData)
                     .then(function(res){
-                        _this.update=false;
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.firstModify=false;
                         _this.ifModify=false;
@@ -619,7 +626,6 @@
                 if (success) {
                     _this.$axios.puts('/api/services/app/OpAreaManagement/Update',_this.addData)
                     .then(function(res){
-                        _this.update=false;
                         _this.add()
                         _this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
                     },function(res){

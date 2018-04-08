@@ -14,7 +14,7 @@
 
                 <!-- <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select  v-model="searchData.OuType">
+                    <el-select clearable  v-model="searchData.OuType">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             <span style="float: left">{{ item.label }}</span>
                             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
@@ -25,7 +25,7 @@
                 <div class="bgcolor smallBgcolor"><label>角色名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
-                    <el-select  v-model="searchData.ouId" placeholder="">
+                    <el-select clearable  v-model="searchData.ouId" placeholder="">
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
