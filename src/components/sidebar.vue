@@ -328,11 +328,16 @@ export default {
                 // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
                 if(flag){
                     if(typeof(_this.$store.state[menuUrl])!='undefined'){
-                        temporary.push(pushItem);
-                        window.localStorage.setItem('ERP',JSON.stringify(temporary));
-                        _this.switch();
+                        if(typeof(_this.$store.state[menuUrl].url)!='undefined' && typeof(_this.$store.state[_this.$store.state[menuUrl].parent])!='undefined'){
+                            temporary.push(pushItem);
+                            window.localStorage.setItem('ERP',JSON.stringify(temporary));
+                            _this.switch();
+                        }else{
+                            alert('路由重定向出错')
+                        }
+                        
                     }else{
-                        alert('web地址错误')
+                        alert('路由重定向未定义')
                     }
                     
                 }else{
