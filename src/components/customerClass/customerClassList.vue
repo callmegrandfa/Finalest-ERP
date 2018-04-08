@@ -35,7 +35,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button @click="delRow" class="erp_bt bt_del">
+                    <button @click="confirm" class="erp_bt bt_del">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -119,7 +119,13 @@
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="goModify(scope.row.id)" >查看</el-button>
                                     <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="confirmDel(scope.row)" >删除</el-button>
+                                    <!-- <el-button type="text" size="small"  @click="confirmDel(scope.row)" >删除</el-button> -->
+
+
+
+                                    <!-- <el-button type="text"  @click="modify(scope.row)">修改</el-button> -->
+                                    <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
+                                    <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -136,12 +142,30 @@
 
             </el-col>
         </el-row>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
@@ -149,14 +173,14 @@
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
                     <p class="dialog_font dialog_body_message">数据提交有误!</p>
                 </el-col>
-                <el-collapse-transition>     
+                <el-collapse-transition>
+                    
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                            <vue-scroll :ops="$store.state.option">
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
-                            </vue-scroll> 
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll>  
                         </el-col>
                       
                 </el-collapse-transition>   
@@ -236,11 +260,18 @@ export default {
           height: "0"
         }
       },
+      dialogUserConfirm:false,//删除提示
+      detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
+      detailParentName:'',//tree节点点击获取前往detail新增页上级菜单name
       detail_message_ifShow: false,
       errorMessage: false,
       dateabc:'',
       // 错误信息提示结束
-
+       response:{
+                details:'',
+                message:'',
+                validationErrors:[],
+            },
       selfAr: [] //根据id获得树形节点本身
     };
   },
@@ -323,6 +354,7 @@ export default {
           }
         );
     },
+    // -------------------------加载图标-----------------------------------------------
     loadIcon() {
       let self = this;
       self.$nextTick(function() {
@@ -345,6 +377,7 @@ export default {
         });
       });
     },
+    // -------------------------------------------加载状态框---------------------------------
     loadStatus: function() {
       //加载状态下拉框
       let self = this;
@@ -398,10 +431,19 @@ export default {
     // ---跳转--------open----------------------------------------------
     goDetail() {
       //点击新增跳转
-      this.$store.state.url = "/customerClass/customerClassDetail/default";
-      this.$router.push({ path: this.$store.state.url }); //点击切换路由
+      // this.$store.state.url = "/customerClass/customerClassDetail/default";
+      // this.$router.push({ path: this.$store.state.url }); //点击切换路由
+      let self=this;
+      if(typeof(self.detailParentId)=='number'){
+          self.$store.state.url='/customerClass/customerClassDetail/'+self.detailParentId
+          self.$router.push({path:this.$store.state.url})//点击切换路由
+          
+      }else{
+          self.$store.state.url='/customerClass/customerClassDetail/default'
+          self.$router.push({path:this.$store.state.url})//点击切换路由
+      }
     },
-
+// -------------------------------修改--------------------
     goModify: function(id) {
       //点击跳转修改页modify
       this.$store.state.url = "/customerClass/customerClassModify/" + id;
@@ -436,8 +478,6 @@ export default {
         ouId: "1", //组织单元ID
         classCode: "", //部门代码
         className: "", //部门名称
-        // director: "", //负责人
-        // phone: "", //电话
         classParentId: "", //父客户id
         remark: "", //备注
         status: "" //启用状态
@@ -480,41 +520,42 @@ export default {
       //点击复选框选中的数据
       this.multipleSelection = val;
     },
-    confirmDel(row) {
-      let self = this;
-      this.$confirm("确定删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        center: true
-      })
-        .then(() => {
-          self.delThis(row);
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    delThis(row) {
+    // --------多项删除--------------
+     confirm(){
+                let _this=this;
+                _this.choseAjax='rows'
+                if(_this.multipleSelection.length>0){
+                _this.dialogUserConfirm=true;
+                }
+            },
+    //-------------删除行------------------------------
+  confirmDelThis(row){//单项删除
+            let _this=this;
+            _this.choseAjax='row'
+            _this.row=row;
+            _this.dialogUserConfirm=true;
+        },
+    delThis(){
       //删除行
       let self = this;
-      self.$axios
-        .deletes("/api/services/app/ContactClassManagement/Delete", {
-          id: row.id
-        })
+      self.$axios.deletes("/api/services/app/ContactClassManagement/Delete", { id: self.row.id})
         .then(
           function(res) {
+            self.dialogUserConfirm=false;
             self.open("删除成功", "el-icon-circle-check", "successERP");
             self.loadTableData();
+            self.loadTree();
           },
           function(res) {
-            self.errorMessage = true;
+           if(res && res!=''){
+            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+            self.dialogUserConfirm=false;
+            self.errorMessage=true;
+            self.open('删除失败','el-icon-error','faildERP');
           }
         );
     },
+     
     // -------------------------------删除行----------------------
     delRow() {
       let self = this;
@@ -522,46 +563,50 @@ export default {
         self.idArray.ids.push(self.multipleSelection[i].id);
       }
       if (self.idArray.ids.length > 0) {
-        self
-          .$confirm("确定删除?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-            center: true
-          })
-          .then(() => {
-            self.$axios
-              .posts(
-                "/api/services/app/ContactClassManagement/BatchDelete",
-                self.idArray
-              )
+        self.$axios .posts( "/api/services/app/ContactClassManagement/BatchDelete",self.idArray )
               .then(
                 function(res) {
-                  self.loadTableData();
                   // self.loadTree() ;//删除成功加载树形节点
-                  self.open("删除成功", "el-icon-circle-check", "successERP");
+                   self.open("删除成功", "el-icon-circle-check", "successERP");
+                   self.loadTableData();
+                   self.loadTree();
                   self.idArray = {
                     ids: []
                   };
+                  self.dialogUserConfirm=false;
                 },
                 function(res) {
-                  self.errorMessage = true;
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                     _this.errorMessage=true;
+                     _this.dialogUserConfirm=false;
+                     _this.open('删除失败','el-icon-error','faildERP');
                 }
               );
-          })
-          .catch(() => {
-            self.$message({
-              type: "info",
-              message: "已取消删除"
-            });
-          });
-      } else {
-        self.$message({
-          type: "info",
-          message: "请勾选需要删除的数据！"
-        });
       }
     },
+    getErrorMessage(message,details,validationErrors){
+              let self=this;
+              self.response.message='';
+              self.response.details='';
+              self.response.validationErrors=[];
+              if(details!=null && details){
+                  self.response.details=details;
+              }
+              if(message!=null && message){
+                  self.response.message=message;
+              }
+              if(message!=null && message){
+                  self.response.validationErrors=validationErrors;
+              }
+          },
+    sureAjax(){
+            let self=this;
+            if(self.choseAjax=='row'){
+                self.delThis()
+            }else if(self.choseAjax=='rows'){
+                self.delRow()
+            }
+        },
       nodeClick(data){//点击树形控件节点时的回调
             let self=this;
             // console.log(data);
@@ -570,6 +615,8 @@ export default {
             }else{
               self.dateabc=data;
             }
+            self.detailParentId=data.id;//
+             self.detailParentName=data.moduleName;
             // self.dateabc=data.id;
             console.log(self.dateabc)
             self.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:self.dateabc,ContactOwner:1,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
@@ -583,11 +630,10 @@ export default {
                   
             })
         },
-            filterNode(value, data) {//过滤节点
-                if (!value) return true;
-             return data.className.indexOf(value) !== -1
-              }  
-       
+        filterNode(value, data) {//过滤节点
+            if (!value) return true;
+            return data.className.indexOf(value) !== -1;
+            }
   }
 };
 </script>
@@ -598,7 +644,7 @@ export default {
   line-height: 15px;
   color: #f66;
 }
-.dialogBtn {
+/* .dialogBtn {
   display: block;
   float: left;
   width: 50%;
@@ -622,6 +668,31 @@ export default {
 }
 .dialogBtn:hover {
   color: #6699ff;
+} */
+.dialogBtn{
+    display: block;
+    float: left;
+    width: 50%;
+    height: 100%;
+    background-color: #fff;
+    color: #c9c9c9;
+    border: none;
+    border-top: 1px solid #c9c9c9;
+    outline: none;
+    cursor: pointer;
+}
+.dialogBtn:focus{
+    outline: none;
+}
+.dialog-footer .dialogBtn:first-child{
+   border-right: 1px solid #c9c9c9;
+}
+.dialog-footer{
+    padding:0;
+    height: 50px;
+}
+.dialogBtn:hover{
+     color: #6699FF;
 }
 .TreeMenu {
   position: absolute;

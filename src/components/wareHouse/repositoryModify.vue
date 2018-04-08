@@ -8,8 +8,6 @@
                 <span class="btDetail">返回</span>
             </button>
 
-            
-
             <button class="erp_bt bt_save" @click="saveModify" :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_save.png">
@@ -472,35 +470,35 @@
             </el-col>
         </el-row>
 
-      <el-row class="ft12 pr10 pt10 br3">
-          <el-col :span='24' class="bg-white pl10 pt10 pb10">
-              <span style="color:black;font-size:16px;font-weight:bolder;">审计信息</span>
-          </el-col>
+        <el-row class="ft12 pr10 pt10 br3">
+            <el-col :span='24' class="bg-white pl10 pt10 pb10">
+                <span style="color:black;font-size:16px;font-weight:bolder;">审计信息</span>
+            </el-col>
 
-          <el-col :span="24" class="bg-white pb10">   
-              <div>
-                <div class="bgcolor">
-                    <label>创建人</label>
-                    <el-input placeholder="" disabled="disabled" v-model="repositoryData.createdBy"></el-input>
-                </div>
+            <el-col :span="24" class="bg-white pb10">   
+                <div>
+                    <div class="bgcolor">
+                        <label>创建人</label>
+                        <el-input placeholder="" disabled="disabled" v-model="repositoryData.createdBy"></el-input>
+                    </div>
 
-                <div class="bgcolor">
-                    <label>创建时间</label>
-                    <el-date-picker  type="date" placeholder="" disabled="disabled" v-model="repositoryData.createdTime"></el-date-picker>
-                </div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-date-picker  type="date" placeholder="" disabled="disabled" v-model="repositoryData.createdTime"></el-date-picker>
+                    </div>
 
-                <div class="bgcolor">
-                    <label>修改人</label>
-                    <el-input placeholder="" disabled="disabled" v-model="repositoryData.modifiedBy"></el-input>
-                </div>
+                    <div class="bgcolor">
+                        <label>修改人</label>
+                        <el-input placeholder="" disabled="disabled" v-model="repositoryData.modifiedBy"></el-input>
+                    </div>
 
-                <div class="bgcolor">
-                    <label>修改时间</label>
-                    <el-date-picker type="date" placeholder="" disabled="disabled" v-model="repositoryData.modifiedTime"></el-date-picker>
-                </div>
-            </div> 
-          </el-col>
-      </el-row>
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-date-picker type="date" placeholder="" disabled="disabled" v-model="repositoryData.modifiedTime"></el-date-picker>
+                    </div>
+                </div> 
+            </el-col>
+        </el-row>
 
         <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
@@ -580,15 +578,11 @@
     export default{
         name:'repositoryModify',
         created:function(){
-            // let self = this;
-            // self.loadData();
-            // self.loadSelect();
         },
         mounted:function(){
             let self = this;
             self.loadData();
             self.loadSelect();
-            
         },
         
         validators: {
@@ -652,7 +646,7 @@
                 ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
 
-                backCancel:'',//判断信息提示确定的点击事件
+                backCancel:'',//判断信息提示确定的点击事件  返回、取消
                 
                 //---所属组织树形下拉-----
                 ouSearch:'',

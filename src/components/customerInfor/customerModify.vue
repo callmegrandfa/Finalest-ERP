@@ -9,40 +9,46 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify&&!ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
-
-                <button class="erp_bt bt_del" @click="delCustomer(7)" v-show='!ifModify&&!ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_del.png">
-                    </div>
-                    <span class="btDetail">删除</span>
-                </button>
-
-                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify||ifDoModify'>
+                <button class="erp_bt bt_save" @click="saveModify" :class="{erp_fb_bt:!ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button class="erp_bt bt_saveAdd" v-show='ifModify||ifDoModify'>
+                <button @click="Cancel()" class="erp_bt bt_cancel" :class="{erp_fb_bt:!ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
+
+                <button class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
 
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
+                <button class="erp_bt bt_add" @click="goDetail" :class="{erp_fb_bt:ifModify}">
                     <div class="btImg">
-                        <img src="../../../static/image/common/bt_cancel.png">
+                        <img src="../../../static/image/common/bt_add.png">
                     </div>
-                    <span class="btDetail">取消</span>
+                    <span class="btDetail">新增</span>
                 </button>
+
+                <button class="erp_bt bt_del" @click="delCustomer(7)" :class="{erp_fb_bt:ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+
+                
+
+                
+
+                
 
                 
                 
@@ -403,7 +409,6 @@
                                     <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                                     </el-option>
                                 </el-select>
-                                <el-input class="areaEntry" placeholder="街道办地址"></el-input>
                             </div>
                         </div>
 
@@ -852,13 +857,28 @@ export default({
         self.loadData();
         self.loadSelect();
     },
+    watch:{
+        customerData:{
+            handler: function (val, oldVal) {
+                let self = this;
+                if(!self.firstModify){
+                    self.firstModify = !self.firstModify;
+                }else{
+                    self.ifModify = true;
+                }
+            },
+            deep: true,
+        }
+    },
     data() {
         return{
             getOuId:'',//保存获取的ouid
             ifShow:true,
             radio:'',
+            firstModify:false,//进入页面数据改变一次
             ifModify:false,//判断主表是否修改过
             ifDoModify:false,//判断从表是否修改过
+            backCancel:'',//判断信息提示确定的点击事件
             //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -1123,6 +1143,8 @@ export default({
         loadData:function(){
             let self = this;
             if(self.$route.params.id!='default'){
+                self.firstModify = false;
+                // self.firstAddModify = false;
                 //根据id获得的客户信息
                 this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
                     
@@ -1496,18 +1518,6 @@ export default({
                 })
                
             }
-        },
-        //-------------------------------------------------------
-
-        //---控制按钮显示及隐藏-----------------------------------     
-        Cancel(){
-            let self = this;
-            // if(self.isEdit==false){
-                // self.isEdit=!self.isEdit;
-                self.loadData();
-                self.ifModify = false;
-                $('.tipsWrapper').css({display:'none'})
-            // }
         },
         //-------------------------------------------------------
 
@@ -1917,14 +1927,28 @@ export default({
             let self=this;
             if(self.ifModify){
                 self.dialogUserConfirm=true;
-                // self.choseDoing='back'
+                self.backCancel = 1;
             }else{
                 self.back()
             }
         },
+        Cancel(){
+            let self = this;
+            if(self.ifModify){
+                self.dialogUserConfirm=true;
+                self.backCancel = 2;
+                $('.tipsWrapper').css({display:'none'})
+            }
+        },
         sureDoing:function(){
             let self = this;
-            self.back();
+            if(self.backCancel ==1){
+                self.back();
+            }else if(self.backCancel == 2){
+                self.loadData();
+                self.ifModify = false;
+                self.dialogUserConfirm=false;
+            }
         },
         //-------------------------------------------------------
         //---提示错误----------------------------------------------
