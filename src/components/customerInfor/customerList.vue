@@ -426,8 +426,8 @@
                 let self = this;
                 this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
-                    self.allList = res.result;
-                    self.total = res.result.length;
+                    self.allList = res.result.items;
+                    self.total = res.result.totalCount;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
                 },function(res){
                     console.log('err'+res)

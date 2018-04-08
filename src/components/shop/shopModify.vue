@@ -9,41 +9,40 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify&&!ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
-
-                <button class="erp_bt bt_del" @click="delShop(3)" v-show='!ifModify&&!ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_del.png">
-                    </div>
-                    <span class="btDetail">删除</span>
-                </button>
-
-                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify||ifDoModify'>
+                <button class="erp_bt bt_save" @click="saveModify" :class="{erp_fb_bt:!ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button class="erp_bt bt_saveAdd" v-show='ifModify||ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_saveAdd.png">
-                    </div>
-                    <span class="btDetail">保存并新增</span>
-                </button>
-
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify||ifDoModify'>
+                <button @click="Cancel()" class="erp_bt bt_cancel" :class="{erp_fb_bt:!ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
                     <span class="btDetail">取消</span>
                 </button>
 
+                <button class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_saveAdd.png">
+                    </div>
+                    <span class="btDetail">保存并新增</span>
+                </button>
+
+                <button class="erp_bt bt_add" @click="goDetail" :class="{erp_fb_bt:ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+
+                <button class="erp_bt bt_del" @click="delShop(3)" :class="{erp_fb_bt:ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
                 
                 
                 <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
@@ -640,6 +639,7 @@ export default({
             getOuId:'',//进入页面获取的ouid
             ifShow:true,
             radio:'',
+            firstModify:false,//
             ifModify:false,//判断主表是否修改过
             ifDoModify:false,//判断从表是否修改过
             ifUp:false,//判断从表是否为修改
@@ -806,16 +806,36 @@ export default({
         
     },
     computed:{
-            countOu () {
-                return this.ouItem;
-            },
-            countAd () {
-                return this.adItem;
-            },
-            countOp () {
-                return this.opItem;
-            },
-        }, 
+        countOu () {
+            return this.ouItem;
+        },
+        countAd () {
+            return this.adItem;
+        },
+        countOp () {
+            return this.opItem;
+        },
+    }, 
+    watch:{
+        shopData:{
+            handler:function(val,oldVal){
+                let self = this;
+                // if(!self.firstModify){
+                //     self.firstModify = !self.firstModify
+                //     console.log(self.firstModify)
+                // }else if(self.firstModify){
+                    
+                //     self.ifModify = true;
+                //     console.log(self.ifModify)
+                // }
+                // console.log(self.shopData.shopName)
+                
+                console.log(self.firstModify)
+                console.log(self.shopData)
+            }
+        },
+        deep: true,
+    },
     methods:{
         //---获取数据--------------------------------------------
         loadData:function(){
@@ -823,7 +843,7 @@ export default({
             if(self.$route.params.id!='default'){
                 //根据id获得的客户信息
                 this.$axios.gets('/api/services/app/ShopManagement/Get',{id:self.$route.params.id}).then(function(res){
-                    
+                    // console.log(res)
                     self.shopData = res.result;
                     self.contactData = self.shopData.shopContacts;
                     console.log(self.shopData);
