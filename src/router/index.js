@@ -654,13 +654,18 @@ router.beforeEach((to, from, next) => {
     if (store.state.accessToken != '') {
         // store.state[to.name].url=to.fullPath;
         // store.state[store.state[to.name].parent].url=to.fullPath
+        console.log(to.name)
         if(typeof(store.state[to.name])!='undefined'){
             document.title = to.name
-            store.state[to.name].url=to.fullPath;
-            store.state[store.state[to.name].parent].url=to.fullPath
-            next()
+            if(typeof(store.state[to.name].url)!='undefined' && typeof(store.state[store.state[to.name].parent].url)!='undefined'){
+                store.state[to.name].url=to.fullPath;
+                store.state[store.state[to.name].parent].url=to.fullPath
+                next()
+            }else{
+                alert('路由web地址或父级名称未定义')
+            }
         }else{
-            alert('路由定向出错')
+            alert('路由定向不存在')
         }
         
     }else{
