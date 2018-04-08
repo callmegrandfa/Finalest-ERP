@@ -35,6 +35,7 @@ export default new vuex.Store({
         tableData:[],//表格数据
 
 //------------------------------------------------------------------------路由数据----------------------------------------------------------------------
+        home:{ name: 'home', url: '/home', parent: 'home', default: '/home' } , //首页
         order:{ name: 'order', url: '/order/orderList/:id', parent: '', default: '/order/orderList/:id' } , //采购管理
         orderDetails:{ name: 'orderDetails', url: '/order/orderDetails/:id', parent: 'order' } ,
         orderList:{ name: 'orderList', url: '/order/orderList/:id', parent: 'order' } ,

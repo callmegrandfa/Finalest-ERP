@@ -295,9 +295,9 @@ const routes = [
         },
         children: [
             { path: '/home', component: home, name: 'home' },
-            { path: '/shortData', component: shortData, name: 'shortData' },
-            { path: '/longData', component: longData, name: 'longData' },
-            { path: '/midData', component: midData, name: 'midData' },
+            // { path: '/shortData', component: shortData, name: 'shortData' },
+            // { path: '/longData', component: longData, name: 'longData' },
+            // { path: '/midData', component: midData, name: 'midData' },
             {
                 path: '/repository',
                 component: repository,
@@ -654,7 +654,6 @@ router.beforeEach((to, from, next) => {
     if (store.state.accessToken != '') {
         // store.state[to.name].url=to.fullPath;
         // store.state[store.state[to.name].parent].url=to.fullPath
-        console.log(to.name)
         if(typeof(store.state[to.name])!='undefined'){
             document.title = to.name
             if(typeof(store.state[to.name].url)!='undefined' && typeof(store.state[store.state[to.name].parent].url)!='undefined'){
