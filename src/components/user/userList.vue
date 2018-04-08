@@ -1,7 +1,7 @@
 <template>
     <div class="userList">
         <el-row class="bg-white">
-             <el-col :span="ifWidth?5:0" v-show="ifWidth">
+             <el-col :span="ifWidth?5:0" v-show="ifWidth" class="search-container">
                 <el-row class="h48 pl15">
                     <el-col :span="18" class="btn-for-search">
                         <img src="../../../static/image/common/search_btn.png">
@@ -14,7 +14,7 @@
 
                 <!-- <div class="mt20 bgcolor smallBgcolor">
                     <label><small>*</small>组织类型</label>
-                    <el-select filterable   v-model="searchData.OuType">
+                    <el-select clearable filterable   v-model="searchData.OuType">
                         <el-option v-for="item in options" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
                         </el-option>
                     </el-select>
@@ -24,7 +24,7 @@
                 <div class="bgcolor smallBgcolor">
                     <label>用户组</label>
                     <!-- <el-input v-model="searchData.UserGroupId" placeholder=""></el-input> -->
-                    <el-select filterable   v-model="searchData.UserGroupId" placeholder="">
+                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
                         <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
                         </el-option>
                     </el-select>
@@ -32,7 +32,7 @@
                 <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
                     <!-- <el-input v-model="searchData.OuId" placeholder=""></el-input> -->
-                    <el-select v-model="searchData.OuId" placeholder="">
+                    <el-select clearable v-model="searchData.OuId" placeholder="">
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
@@ -58,28 +58,28 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>身份类型</label>
-                    <el-select filterable   v-model="searchData.UserType" placeholder="">
+                    <el-select clearable filterable   v-model="searchData.UserType" placeholder="">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>语种</label>
-                    <el-select filterable   v-model="searchData.LanguageId" placeholder="">
+                    <el-select clearable filterable   v-model="searchData.LanguageId" placeholder="">
                        <el-option v-for="item in selectData.languageId" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>关联角色</label>
-                    <el-select filterable   v-model="searchData.RoleId" placeholder="">
+                    <el-select clearable filterable   v-model="searchData.RoleId" placeholder="">
                         <el-option v-for="item in selectData.roles" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>状态</label>
-                    <el-select filterable   v-model="searchData.Status" placeholder="">
+                    <el-select clearable filterable   v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -439,8 +439,10 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
+                    _this.getHeight()
                     },function(res){
                     _this.tableLoading=false;
+                    _this.getHeight()
                 })
             },
             handleCurrentChange(val) {//页码改变
@@ -607,7 +609,15 @@
                 let _this=this;
                 _this.page=1
                 _this.ajaxTable({DisplayName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            getHeight(){
+                $(".search-container").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+                $(".border-left").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+            },
         },
     }
 </script>
@@ -640,7 +650,6 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 498px;
 }
 .btn{
     display: inline-block;

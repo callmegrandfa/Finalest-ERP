@@ -1,11 +1,11 @@
 <template>
-     <div class="customer-infor-wrapper" style="float:left;background:#fff;width:100%;">
+     <div class="staff-infor-wrapper" style="float:left;background:#fff;width:100%;">
         <div id="bgc">
             <!-- 按钮组 -->
             <div class="btnBd">
                 <el-row >
                     <el-col :span="24">
-                        <button class="erp_bt bt_back" @click="goBack">
+                        <button class="erp_bt bt_back" @click="isBack">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_back.png">
                                 </div>
@@ -17,25 +17,25 @@
                                 </div>
                                 <span class="btDetail">保存</span>
                         </button>
-                         <button class="erp_bt bt_cancel">
+                        <button class="erp_bt bt_cancel" @click="cancel">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_cancel.png">
                                 </div>
                                 <span class="btDetail">取消</span>
                         </button>
-                        <button class="erp_bt bt_saveAdd" @click="addNew">
+                        <button class="erp_bt bt_saveAdd" @click="saveAdd">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_saveAdd.png">
                                 </div>
                                 <span class="btDetail">保存并新增</span>
                         </button>
-                        <button class="erp_bt bt_add" :disabled="isTrue">
+                        <button class="erp_fb_bt bt_add" :disabled="isTrue">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
                                 <span class="btDetail">新增</span>
                         </button>
-                        <button class="erp_bt bt_del" :disabled="isTrue">
+                        <button class="erp_fb_bt bt_del" :disabled="isTrue">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_del.png">
                                 </div>
@@ -65,6 +65,24 @@
                     </div>
                 </el-col>
             </el-row>
+             <!-- dialog数据变动提示(是否忽略更改) -->
+            <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    </el-col>
+                </el-col>
+                <!--  -->
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUpdateConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
+            <!-- dialog -->
             <!-- form表单 -->
             <div class="staff_detail_form">
                 <el-row style="margin-top:20px">
@@ -206,6 +224,22 @@
                 <el-row>
                     <el-col :span="6">
                         <div class="bgcolor smallBgcolor">
+                            <label><small></small>状态</label>
+                        </div>
+                    </el-col>
+                    <el-col :span="18">
+                        <div >
+                            <el-select v-model="addList.status">
+                               <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                                </el-option>
+                            </el-select>
+                           
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="6">
+                        <div class="bgcolor smallBgcolor">
                             <label><small></small>备注</label>
                         </div>
                     </el-col>
@@ -230,6 +264,7 @@
                     ou:[],//组织
                     depart:[],//部门
                     shop:[],//部门
+                    Status001:[],//启用状态
                 },
                 filterOu:'',
                 selectTree_ou:[],
@@ -244,12 +279,8 @@
                     label: 'deptName',
                     id:'id'
                 },
-
-
-
                 // -----------------------------
-                // --------------增加数据
-                addList:{
+                addList:{// --------------增加数据
                         "ouId": null,
                         "employeeCode": "",
                         "employeeName": "",
@@ -262,6 +293,7 @@
                         "shopId": 0,
                         "remark": "",
                         "employeeTypeIds": [],
+                        "status": 1,
                         "id": 0
                 },
                 employeeIdoptions:[//------职员类型--------
@@ -270,10 +302,9 @@
                     { label: '3',text: '仓库'}, 
                     { label: '4',text: '店员'}, 
                 ],
-
-
-
-                isTrue:true,
+                isTrue:false,
+                isUpdate:false,
+                dialogUpdateConfirm:false,
                 id:'',
             }                                                        
         },
@@ -294,6 +325,17 @@
             this.loadTree();
             this.loadDepartTree();
         },
+        watch:{
+            addList:{
+                handler: function (val, oldVal) {
+                    let _this = this;
+                    if(!_this.isUpdate){
+                        _this.isUpdate = true;
+                    }
+                },
+                deep: true,
+            }
+        },
         methods: {
             //---------------------------获取下拉框选项数据
             getSelectData(){//获取下拉选项数据
@@ -305,6 +347,9 @@
                 (function(res){  // 店铺
                     _this.selectData.shop=res.result.items;
                     // console.log(res.result.items);
+                });
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+                _this.selectData.Status001=res.result;// 启用状态
                 });
                 _this.getSelectDepart();
             },
@@ -376,7 +421,7 @@
             },
             nodeClick_depart(data,node,self){//所属部门树形控件的回调
                 let _this=this;
-                console.log(data);
+                // console.log(data);
                 // console.log(data.id);
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
@@ -397,7 +442,7 @@
               })
             },
             // -----------------按钮组功能
-            save(){// 保存---新增并保存
+            save(){// 保存
                 let _this=this;
                 _this.$validate().then(
                     function (success) {
@@ -407,6 +452,8 @@
                                     // console.log(_this.addList);
                                     // console.log(rsp);
                                     _this.open('保存成功','el-icon-circle-check','successERP');
+                                    _this.isTrue=false;
+                                    _this.isUpdate=false;
                                     },
                                     res=>{
                                          _this.open('保存失败','el-icon-error','faildERP');
@@ -417,29 +464,59 @@
                     }
                 );
 
-
-
-
-                
-                
-                // _this.$validate();
-                
             },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            cancel(){// 取消
+                this.isBack();
+            },
+            isBack(){//是否返回
+                let _this=this;
+                if(_this.isUpdate){
+                    _this.dialogUpdateConfirm=true;
+                }else{
+                _this.goBack();
+                }
+            },
+            sureDoing(){
+                this.goBack();
+            },
+            goBack:function(){//返回
+                this.$store.state.url='/staff/staffList/default'
+                this.$router.push({path:this.$store.state.url})
+            },
+            saveAdd(){// 保存并新增
+                let _this=this;
+                _this.$validate().then(
+                    function (success) {
+                        if (success) {
+                            _this.addList.employeeCode=_this.form.employeeCode;
+                            _this.addList.employeeName=_this.form.employeeName;
+                            _this.addList.ouId=_this.form.ouId;
+                            _this.addList.mobile=_this.form.mobile;
+                            _this.addList.deptId=_this.form.department;
+                            _this.addList.sex=_this.form.sex;
+                            _this.addList.birthday=_this.form.birthday;
+                            _this.addList.shopId=_this.form.shopName;
+                            _this.addList.employeeTypeIds=_this.form.employeeTypes;
+                            _this.addList.remark=_this.form.remark;
+                            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
+                                            rsp=>{
+                                                // console.log(rsp);
+                                                _this.open('保存成功','el-icon-circle-check','successERP');
+                                                _this.reset();
+                                                _this.isUpdate=false;
+                                                
+                                            },
+                                            res=>{
+                                                _this.open('保存失败','el-icon-error','faildERP');
+                                            }
+                            )
+                        }
+                      
+                    }
+                );
+               
+            },
+           
             // --------------------------------------------
             // 错误提示信息
             showErrTips(e){
@@ -463,42 +540,7 @@
                 });
             },
             // -----------------按钮组功能
-            goBack:function(){//返回
-                this.$store.state.url='/staff/staffList/default'
-                this.$router.push({path:this.$store.state.url})
-            },
-            addNew(){// 新增
-                let _this=this;
-                _this.$validate().then(
-                    function (success) {
-                        if (success) {
-                            _this.addList.employeeCode=_this.form.employeeCode;
-                            _this.addList.employeeName=_this.form.employeeName;
-                            _this.addList.ouId=_this.form.ouId;
-                            _this.addList.mobile=_this.form.mobile;
-                            _this.addList.deptId=_this.form.department;
-                            _this.addList.sex=_this.form.sex;
-                            _this.addList.birthday=_this.form.birthday;
-                            _this.addList.shopId=_this.form.shopName;
-                            _this.addList.employeeTypeIds=_this.form.employeeTypes;
-                            _this.addList.remark=_this.form.remark;
-                            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
-                                            rsp=>{
-                                                // console.log(rsp);
-                                                _this.open('保存成功','el-icon-circle-check','successERP');
-                                                _this.reset();
-                                            },
-                                            res=>{
-                                                _this.open('保存失败','el-icon-error','faildERP');
-                                            }
-                            )
-                        }
-                      
-                    }
-                );
-               
-            },
-           
+            
             reset(){// 重新验证并设置值
                     this.form.employeeCode='';
                     this.form.employeeName='';
@@ -526,20 +568,21 @@
 .block{
     display: none;
 }
-.customer-infor-wrapper{
+.staff-infor-wrapper{
     position: relative;
 }
 .staff_detail_form{
     padding-left: 30%;
     width: 30%;
+    margin-bottom: 20px;
 }
 .staff_detail_form .chePT{
     padding-top:5px;
 }
-.customer-infor-wrapper .smallBgcolor .el-input{
+.staff-infor-wrapper .smallBgcolor .el-input{
     width: 100% !important ;
 }
-.customer-infor-wrapper .bgcolor label{
+.staff-infor-wrapper .bgcolor label{
     width: 100% !important ;
     margin-right: 0; 
 }
@@ -565,13 +608,13 @@
 .staff_detail_form .el-select{
     display: block !important ;
 }
-.customer-infor-wrapper .redBorder .el-input__inner{
+.staff-infor-wrapper .staff_detail_form .redBorder .el-input__inner{
   border-color: #f66;
 }
-.staff_detail_form .el-input__inner{
-    height: 35px;
+.staff-infor-wrapper .staff_detail_form .el-input__inner{
+    height: 35px !important;
     font-size:12px;
-    border: 1px solid #dcdfe6 !important;
+    border: 1px solid #dcdfe6 ;
 }
 </style>
 

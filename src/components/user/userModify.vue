@@ -17,7 +17,7 @@
                         <small>*</small>用户编码</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="userCode" 
                         :class="{redBorder : validation.hasError('addData.userCode')}" 
                         v-model="addData.userCode" 
@@ -33,7 +33,7 @@
                     <label><small>*</small>用户名称</label>
                     <el-input 
                      
-                    @change="isUpdate"
+                    
                     class="displayName" 
                     :class="{redBorder : validation.hasError('addData.displayName')}" 
                     v-model="addData.displayName"  
@@ -49,7 +49,7 @@
                     <label><small>*</small>手机号码</label>
                     <el-input 
                      
-                    @change="isUpdate"
+                    
                     class="phoneNumber" 
                     :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
                     v-model="addData.phoneNumber"  
@@ -65,7 +65,7 @@
                     <label><small>*</small>邮箱</label>
                     <el-input 
                      
-                    @change="isUpdate"
+                    
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
                     v-model="addData.email"  
@@ -79,9 +79,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属用户组</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                      
-                    @change="isUpdate"
+                    
                     class="userGroupId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
@@ -98,9 +98,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属组织</label>
-                    <el-select 
+                    <el-select clearable 
                      
-                    @change="isUpdate"
+                    
                     class="ouId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.ouId')}"
@@ -138,9 +138,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>身份类型</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                      
-                    @change="isUpdate"
+                    
                     class="userType" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userType')}"
@@ -157,9 +157,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>语种</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                      
-                    @change="isUpdate"
+                    
                     class="languageId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
@@ -179,7 +179,7 @@
                         <div class="rangeDate">
                             <el-date-picker
                              
-                            @change="isUpdate"
+                            
                             v-model="dateRange"
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
@@ -202,9 +202,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                          
-                        @change="isUpdate"
+                        
                         class="status" 
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"
@@ -233,7 +233,7 @@
                         <label>备注</label>
                         <el-input
                          
-                         @change="isUpdate"
+                         
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}"
                         v-model="addData.remark"
@@ -286,13 +286,14 @@
                 <el-col :span="11" class="transfer_warapper">
                         <el-col :span="24" class="transfer_header">
                             <span>已选</span>
-                            <div class="transfer_search">
-                               <el-autocomplete
-                                class="search_input"
-                                placeholder="搜索..."
-                                >
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                </el-autocomplete>
+                            <div class="transfer_search" @keyup.enter="searchLeftTable">
+                               <el-input
+                                    placeholder="搜索..."
+                                    v-model="searchTableLeft"
+                                    class="search_input"
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
                             </div>    
                         </el-col>    
                         <el-col :span="24" class="transfer_table">
@@ -329,13 +330,14 @@
                 <el-col :span="11" class="transfer_warapper">
                     <el-col :span="24" class="transfer_header">
                         <span>可选</span>
-                        <div class="transfer_search">
-                            <el-autocomplete
-                            class="search_input"
-                            placeholder="搜索..."
-                            >
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-autocomplete>
+                        <div class="transfer_search" @keyup.enter="searchRightTable">
+                            <el-input
+                                placeholder="搜索..."
+                                v-model="searchTableRight"
+                                class="search_input"
+                                >
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
                         </div>
                     </el-col>    
                     <el-col :span="24" class="transfer_table">
@@ -440,7 +442,10 @@
     data(){
       return{
         firstModify:false,
+        secondModify:false,
         ifModify:false,
+        searchTableLeft:'',//搜索
+        searchTableRight:'',//搜索
     // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -495,7 +500,6 @@
             userGroupId:[],//所属用户组
             languageId:[],//语种
         },
-        update:false, 
 // ------------关联角色dialog-------------
         dialogTableVisible:false,//控制对话框
         checkedTable:[],//已选所有数据
@@ -508,9 +512,12 @@
         selection_nochecked: [],//复选框选中数据
         is_nocheked:true,//可选
         is_cheked:true,//已选
+        LeftWitchPage:"pagination",//分页判断条用函数
+        RightWitchPage:"pagination",//分页判断条用函数
 //---------left表格-------------
         pageIndexLeft:1,//分页的当前页码
         totalPageLeft:0,//当前分页总数
+        searchLeftDatas:[],//左侧搜索之后所有数据，未分页
         oneItemLeft:10,//每页有多少条信息
         pageLeft:1,//当前页 
         totalItemLeft:0,//总共有多少条消息  
@@ -519,6 +526,7 @@
  //---------right表格-------------         
         totalItemRight:0,//总共有多少条消息 
         pageIndexRight:1,//分页的当前页码
+        searchRightDatas:[],//右侧搜索之后所有数据，未分页
         totalPageRight:0,//当前分页总数
         oneItemRight:10,//每页有多少条信息
         pageRight:1,//当前页 
@@ -586,6 +594,17 @@
                 let _this=this;
                 if(!_this.firstModify){
                     _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        checkedTable:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.secondModify){ 
+                    _this.secondModify=!_this.secondModify;
                 }else{
                     _this.ifModify=true
                 }
@@ -735,7 +754,7 @@
         },
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
@@ -744,7 +763,7 @@
         },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -774,15 +793,12 @@
             this.$store.state.url='/user/userList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
         },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
-        },
         Cancel(){
                 this.validation.reset();
                 this.getData();
                 this.GetRoles()
-                this.update=false;
                 this.firstModify=false;
+                this.secondModify=false;
                 this.ifModify=false;
         },
         getErrorMessage(message,details,validationErrors){
@@ -816,7 +832,7 @@
                     .then(function(res){
                         _this.firstModify=false;
                         _this.ifModify=false;
-                        _this.update=false;
+                        this.secondModify=false;
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -839,7 +855,6 @@
                     _this.addData.effectiveEnd=_this.dateRange[1];
                     _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
-                        _this.update=false;
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.add()
                     },function(res){
@@ -1002,6 +1017,8 @@
         },
         GetRoles(){//获取左侧表格数据
             let _this=this;
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.$axios.gets('/api/services/app/User/GetRoles',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
            .then(function(response){//获取已选角色
                 let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
@@ -1038,25 +1055,27 @@
         },
         noCheck_push_check(){//从右往左添加数据
             let _this=this;
-            _this.update=true;
-            
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.showChecked=_this.pagination(_this.selection_nochecked,[],_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination([],_this.selection_nochecked,_this.oneItemRight,_this.pageRight,'right')
         },
         check_push_noCheck(){//从左往右添加数据
             let _this=this;
-            _this.update=true;
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.showChecked=_this.pagination([],_this.selection_checked,_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination(_this.selection_checked,[],_this.oneItemRight,_this.pageRight,'right')
            
         },
         check_push_noCheckThis(val){//删除一个关联角色
             let _this=this;
-                let json=[val]
-                _this.update=true;
-                _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
-                _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
-                _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
+            let json=[val]
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
+            _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
+            _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
+            _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
         },
         cancelPush(){//取消
             let _this=this;
@@ -1067,57 +1086,117 @@
             let _this=this;
             if(_this.pageLeft>1){
                 _this.pageLeft--
+                if(_this.LeftWitchPage=="pagination"){
+                    _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
+                }else if(_this.LeftWitchPage=="searchLeftTable"){
+                    _this.showChecked=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).nowData
+                    _this.totalItemLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalItem
+                    _this.totalPageLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalPage
+                }
                 
-                _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
             }
         },
         pageAddLeft(){//左侧表格向右翻页
             let _this=this;
             if(_this.pageLeft<=_this.totalPageLeft){
                 _this.pageLeft++
-                _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
+                if(_this.LeftWitchPage=="pagination"){//穿梭分页
+                    _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left');
+                }else if(_this.LeftWitchPage=="searchLeftTable"){//搜索分页
+                    _this.showChecked=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).nowData
+                    _this.totalItemLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalItem
+                    _this.totalPageLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalPage
+                }
             }
         },
         pageDownRight(){//右侧表格向左翻页
             let _this=this;
             if(_this.pageRight>1){
                 _this.pageRight--
-                _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
+                if(_this.RightWitchPage=="pagination"){
+                    _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right');
+                }else if(_this.RightWitchPage=="searchRightTable"){//搜索分页
+                    _this.showNoChecked=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).nowData
+                    _this.totalItemRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalItem
+                    _this.totalPageRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalPage
+                }
             }    
         },
         pageAddRight(){//右侧表格向右翻页
             let _this=this;
             if(_this.pageRight<_this.totalPageRight){
                 _this.pageRight++
-                _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
+                if(_this.RightWitchPage=="pagination"){
+                    _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right');
+                }else if(_this.RightWitchPage=="searchRightTable"){//搜索分页
+                    _this.showNoChecked=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).nowData
+                    _this.totalItemRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalItem
+                    _this.totalPageRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalPage
+                }
             }
         },
-        // queryLeft(queryString, cb) {
-        //     var restaurants=[]
-        //     $.each(this.showChecked,function(index,value){
-        //         let item={'value':value.displayName,'id':value.id};
-        //         restaurants.push(item)
-        //     })
-        //     var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-        //     clearTimeout(this.timeout);
-        //     this.timeout = setTimeout(() => {
-        //     cb(results);
-        //     }, 100 * Math.random());
-        // },
-        // queryRight(queryString, cb) {
-        //     var restaurants=[]
-        //     $.each(this.showNoChecked,function(index,value){
-        //         let item={'value':value.displayName,'id':value.id};
-        //         restaurants.push(item)
-        //     })
-        //     var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-        //     clearTimeout(this.timeout);
-        //     this.timeout = setTimeout(() => {
-        //     cb(results);
-        //     }, 100 * Math.random());
-        // },
+        paginationUserSearch(data,oneItem,thisPage){//数据分页
+        //checkAllata分页数据
+        //oneItem每页有多少条信息
+        //thisPage当前页
+            let _this=this;
+            let x={}
+            let nowData=[];
+            // console.log(checkAllata)
+            let startIndex=(thisPage-1)*oneItem;//起始数据所在位置
+            let endIndex=startIndex + oneItem;
+                if(data.length>0){
+                    if(endIndex>data.length){
+                        endIndex=data.length
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        // console.log(data[startIndex])
+                        nowData.push(data[startIndex])
+                    }
+                }
+            // _this.ouTotalItem=data.length;//总共多少条数据
+            // _this.ouTotalPage=Math.ceil(data.length/oneItem);//有多少页
+            x={TotalItem:data.length,TotalPage:Math.ceil(data.length/oneItem),nowData:nowData};
+            return x
+        },
+        searchLeftTable(){
+            let _this=this;
+            // checkTable
+            let newJson=[];
+            let patt1 = new RegExp(_this.searchTableLeft);
+            $.each(_this.checkedTable,function(index,val){
+                let str=val.displayName;
+                let result = patt1.test(str);
+                if(result){
+                    newJson.push(val)
+                }
+            })
+            _this.LeftWitchPage="searchLeftTable";
+            _this.searchLeftDatas=newJson;
+            _this.showChecked=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).nowData
+            _this.totalItemLeft=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).TotalItem
+            _this.totalPageLeft=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).TotalPage
+           
+        },
+        searchRightTable(){
+            let _this=this;
+            // nocheckTable
+            let newJson=[];
+            let patt1 = new RegExp(_this.searchTableRight);
+            $.each(_this.nocheckedTable,function(index,val){
+                let str=val.displayName;
+                let result = patt1.test(str);
+                if(result){
+                    newJson.push(val)
+                }
+            })
+            _this.RightWitchPage="searchRightTable"
+            _this.searchRightDatas=newJson;
+            _this.showNoChecked=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).nowData
+            _this.totalItemRight=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).TotalItem
+            _this.totalPageRight=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).TotalPage
+           
+        },
     }
 
 })

@@ -29,7 +29,7 @@
                         <div class="bgcolor bgLongWidth"><label>
                             <small>*</small>角色编码</label>
                             <el-input 
-                            @change="isUpdate"
+                            
                             class="roleCode" 
                             :class="{redBorder : validation.hasError('addData.roleCode')}" 
                             v-model="addData.roleCode" 
@@ -44,7 +44,7 @@
                         <div class="bgcolor bgLongWidth"><label>
                             <small>*</small>角色名称</label>
                             <el-input 
-                            @change="isUpdate"
+                            
                             class="displayName" 
                             :class="{redBorder : validation.hasError('addData.displayName')}" 
                             v-model="addData.displayName" 
@@ -58,9 +58,9 @@
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select 
+                        <el-select clearable 
                         class="ouId" 
-                        @change="isUpdate"
+                        
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.ouId')}"
                         v-model="addData.ouId">
@@ -97,9 +97,9 @@
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                             <label>状态</label>
-                            <el-select filterable  
+                            <el-select clearable filterable  
                             class="status" 
-                            @change="isUpdate"
+                            
                             placeholder=""
                             :class="{redBorder : validation.hasError('addData.status')}"
                             v-model="addData.status">
@@ -116,7 +116,7 @@
                         <div class="bgcolor bgLongWidth">
                             <label>备注</label>
                             <el-input
-                            @change="isUpdate"
+                            
                             class="remark" 
                             :class="{redBorder : validation.hasError('addData.remark')}"
                             v-model="addData.remark"
@@ -489,8 +489,9 @@
                              <el-col :span="24" class="chooseFn">
                                 <el-checkbox @change="CheckAllFn" v-model="checkAllFns">全选</el-checkbox>
                                 <el-checkbox @change="showCheckFn" v-model="showCheckFns">查看已选</el-checkbox>
+                                <i class="fa fa-cog" aria-hidden="true" @click="nextDivIsShow = !nextDivIsShow"></i>
                             </el-col>
-                            <el-col :span="24" class="checkbox_group">
+                            <el-col :span="24" class="checkbox_group" v-show="nextDivIsShow">
                                 <span v-for="(x,index) in showCheckedFnTable" :key="index">
                                     <span v-for="(i,inde) in x.children" :key="inde">
                                         <el-checkbox
@@ -606,6 +607,9 @@ export default({
     data() {
         return{
             firstModify:false,
+            secondModify:false,
+            thirdModify:false,
+            forthModify:false,
             ifModify:false,
         // 错误信息提示开始
             detail_message_ifShow:false,
@@ -615,7 +619,6 @@ export default({
                 details:'',
                 message:'',
             },
-             update:false,
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
             search_ou:'',
@@ -735,6 +738,7 @@ export default({
             searchBottomUser:'',//搜索
 
 //-----------关联权限---------------
+            nextDivIsShow:true,//按钮组显示隐藏
             filterTextFn:'',//树形搜索框值
             // dialogFn:false,
             checked:[],//展示所有权限
@@ -797,12 +801,13 @@ export default({
         // _this.loadOuTable();//分配组织表格分页数据
         // _this.getAllCheckOu();//获取所有已关联组织数据
         // _this.getAllOulength();//获取所有数据长度判断是否全选
-        // _this.loadOuTreeAll();//关联组织树形所有数据
+        _this.loadOuTreeAll();//关联组织树形所有数据
         // _this.loadOuTreeLeft();////关联组织树形左侧已选数据
         // _this.getCheckFn();//获取已关联权限
         // _this.getAllFn();//获取所有权限
         _this.fnLoadTree();//分配权限树形
         _this.getAllUserData()//获取所有用户数据
+        _this.getDefault()
         // _this.getModifyData();//根据id获取数据
     },
     
@@ -827,6 +832,43 @@ export default({
             },
             deep:true,
         },
+        clickFnTreeData:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.secondModify){ 
+                    _this.secondModify=!_this.secondModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        showCheckedUserTable:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.thirdModify){ 
+                    _this.thirdModify=!_this.thirdModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        ouCheckAll:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.forthModify){ 
+                    _this.forthModify=!_this.forthModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        
     },
     methods:{
         getSelectData(){
@@ -834,6 +876,13 @@ export default({
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
             // 启用状态
             _this.selectData.Status001=res.result;
+            })
+        },
+        getDefault(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+             // 默认用户业务组织
+            _this.addData.ouId=res.result.id;
             })
         },
         // getModifyData(){
@@ -871,7 +920,7 @@ export default({
         },
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
@@ -880,7 +929,7 @@ export default({
         },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -907,15 +956,34 @@ export default({
             }
         },
         Cancel(){
-                this.validation.reset();
-                this.getModifyData();
-                this.update=false;
-                this.firstModify=false;
-                this.ifModify=false;
+            let _this=this;
+            _this.validation.reset();
+            _this.addData={
+                "ouId": "",
+                "roleCode": "",
+                "displayName": "",
+                "status": 1,
+                "remark": "",
+            },
+            _this.checkedUserTable=[]
+            _this.showCheckedUserTable=[]
+            _this.nocheckedUserTable=_this.allUsers;
+            _this.showCheckedUser=[];
+            _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')
+            _this.pageIndexBottomUser=1;//分页的当前页码
+            _this.totalPageBottomUser=0,//当前分页总数
+            _this.totalItemBottomUser=0,//总共有多少条消息 
+            _this.checkAllFns=false,//全选
+            _this.showCheckFns=false,//查看已选
+            _this.fnLoadTree();//分配权限树形
+            // _this.getAllUserData()//获取所有用户数据
+            _this.firstModify=false;
+            _this.secondModify=false;
+            _this.thirdModify=false;
+            _this.forthModify=false;
+            _this.ifModify=false;
         },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
-        },
+      
         getErrorMessage(message,details,validationErrors){
             let _this=this;
             _this.response.message='';
@@ -955,7 +1023,7 @@ export default({
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
                     //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
                     //ajax
@@ -1180,14 +1248,14 @@ export default({
     
         //     })
         // },
-        // loadOuTreeAll(){
-        //     let _this=this;
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:_this.$route.params.id})
-        //     .then(function(res){
-        //         _this.ouTreeDataRight=res.result;
-        //     },function(res){
-        //     })
-        // },
+        loadOuTreeAll(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
+            .then(function(res){
+                _this.ouTreeDataRight=res.result;
+            },function(res){
+            })
+        },
         // loadOuTreeLeft(){
         //     let _this=this;
         //     _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{id:_this.$route.params.id})
@@ -1777,10 +1845,10 @@ export default({
                         _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')
                         _this.showCheckedUser=_this.pagination([],[],_this.oneItemLeftUser,_this.pageLeftUser,'left')
                     }else{
+                        _this.showCheckedUserTable=[]
                         _this.nocheckedUserTable=_this.allUsers;
                         _this.showCheckedUser=[];
-                        _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')
-                        
+                        _this.showNoCheckedUser=_this.pagination([],[],_this.oneItemRightUser,_this.pageRightUser,'right')    
                     }
                     _this.userTableLoading=false;
                 },function(res){
@@ -1820,7 +1888,6 @@ export default({
         check_push_noCheck_userThis(val){//删除一个关联角色
                 let json=[val]
                 let _this=this;
-                _this.update=true;
                 _this.checkedUserTable=_this.uniqueArray(_this.checkedUserTable,json);
                 _this.showNoCheckedUser=_this.pagination(json,[],_this.oneItemRightUser,_this.pageRightUser,'right')
                 _this.showCheckedUser=_this.pagination([],json,_this.oneItemLeftUser,_this.pageLeftUser,'left')
@@ -1837,6 +1904,7 @@ export default({
              _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
             _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
             _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+        
 
         },
         cancelPushUser(){//取消
@@ -1900,13 +1968,20 @@ export default({
   </script>
 
   <style>
-  .roleDetail{
-      font-family: 'microsoft yahei';
-  }
+.roleDetail{
+    font-family: 'microsoft yahei';
+}
   .chooseFn{
-      height: 30px;
-      line-height: 30px;
-      padding-left: 10px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 10px;
+  }
+  .chooseFn .fa-cog{
+    cursor: pointer;
+    color: #c9d1d1;
+    float: right;
+    line-height: 30px;
+    font-size: 20px;
   }
   .roleDetail .add{
     position: absolute;

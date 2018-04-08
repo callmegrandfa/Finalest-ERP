@@ -553,7 +553,6 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 380px;
 }
 </style>
 

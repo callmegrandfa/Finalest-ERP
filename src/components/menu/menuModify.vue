@@ -16,7 +16,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>菜单编码</label>
                         <el-input 
-                        @change="isUpdate"
+                        
                         class="moduleCode" 
                         :class="{redBorder : validation.hasError('addData.moduleCode')}" 
                         v-model="addData.moduleCode"  
@@ -31,7 +31,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>菜单名称</label>
                         <el-input 
-                        @change="isUpdate"
+                        
                         class="moduleName" 
                         :class="{redBorder : validation.hasError('addData.moduleName')}" 
                         v-model="addData.moduleName"  
@@ -45,9 +45,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>子系统</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         class="systemId" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.systemId')}" 
                         placeholder=""
                         v-model="addData.systemId">
@@ -63,10 +63,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>上级菜单</label>
-                    <el-select
+                    <el-select clearable
                         class="moduleParentId" 
                         placeholder=""
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                         v-model="addData.moduleParentId"  >
                         <el-input
@@ -100,8 +100,8 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable  
-                        @change="isUpdate"
+                        <el-select clearable filterable  
+                        
                         v-model="addData.status"
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder="">
@@ -123,9 +123,9 @@
                         v-model="addData.ico"  
                         placeholder=""></el-input> -->
                         <i :class="addData.ico" aria-hidden="true" style="position: absolute;right: 35px;z-index: 10;top: 6px;font-size: 25px;"></i>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         class="ico" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.ico')}" 
                         placeholder=""
                         v-model="addData.ico">
@@ -144,7 +144,7 @@
                         <label>web地址</label>
                         <el-input 
                         class="url" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.url')}" 
                         v-model="addData.url"  
                         placeholder=""></el-input>
@@ -159,7 +159,7 @@
                         <label>备注</label>
                         <el-input
                             type="textarea"
-                            @change="isUpdate"
+                            
                             :class="{redBorder : validation.hasError('addData.remark')}" 
                             :autosize="{ minRows: 4, maxRows: 10}"
                             v-model="addData.remark"
@@ -212,14 +212,15 @@
                         <el-col :span="11" class="transfer_warapper">
                             <el-col :span="24" class="transfer_header">
                                 <span>已选</span>
-                                <div class="transfer_search">
-                                    <el-autocomplete
-                                    class="search_input"
-                                    placeholder="搜索..."
-                                    >
-                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                    </el-autocomplete>
-                                </div>    
+                                <div class="transfer_search" @keyup.enter="searchLeftTable">
+                                    <el-input
+                                        placeholder="搜索..."
+                                        v-model="searchTableLeft"
+                                        class="search_input"
+                                        >
+                                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-input>
+                                </div>       
                             </el-col>    
                             <el-col :span="24" class="transfer_table">
                                 <el-table 
@@ -244,13 +245,14 @@
                         <el-col :span="11" class="transfer_warapper">
                             <el-col :span="24" class="transfer_header">
                                 <span>可选</span>
-                                <div class="transfer_search">
-                                    <el-autocomplete
-                                    class="search_input"
-                                    placeholder="搜索..."
-                                    >
-                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                    </el-autocomplete>
+                                <div class="transfer_search" @keyup.enter="searchRightTable">
+                                    <el-input
+                                        placeholder="搜索..."
+                                        v-model="searchTableRight"
+                                        class="search_input"
+                                        >
+                                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-input>
                                 </div>
                             </el-col>    
                             <el-col :span="24" class="transfer_table">
@@ -334,8 +336,10 @@
     data(){
         return{
             firstModify:false,
+            secondModify:false,
             ifModify:false,
-            update:false,
+            searchTableLeft:'',//搜索
+            searchTableRight:'',//搜索
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
             // 错误信息提示开始
@@ -460,6 +464,18 @@
             },
             deep:true,
         },
+        checked:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.secondModify){ 
+                    _this.secondModify=!_this.secondModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
     },
     methods:{
         getData(){
@@ -568,17 +584,24 @@
             })
         },
          selectNodeClick(data,dialogTableVisible,self){
+
             let _this=this;
-            _this.item.id=data.id;
-            _this.item.moduleName=data.moduleName;
-            // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
-            })
+            // console.log(data.id)
+            // console.log(_this.addData.id)
+            if(_this.addData.id==data.id){
+                alert("上级菜单不能为菜单本身")
+            }else{
+                _this.item.id=data.id;
+                _this.item.moduleName=data.moduleName;
+                // _this.$nextTick(function(){
+                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                // })
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
+            }
         },
         loadParent(){
             let _this=this;
@@ -630,7 +653,7 @@
         },
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
@@ -639,7 +662,7 @@
         },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -668,8 +691,8 @@
         Cancel(){
                 this.validation.reset();
                 this.getData();
-                this.update=false;
                 this.firstModify=false;
+                this.secondModify=false;
                 this.ifModify=false;
         },
         CancelTree(){
@@ -685,9 +708,6 @@
             _this.checkTable=[];
             _this.nocheckTable=[];
             _this.storeNodeClickData=[]
-        },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
         },
         back(){
             this.$store.state.url='/menu/menuList/default'
@@ -737,8 +757,8 @@
                     .then(function(res){
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.firstModify=false;
+                        _this.secondModify=false;
                         _this.ifModify=false;
-                        _this.update=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -877,7 +897,6 @@
         check_push_noCheck_FnThis(val){//删除一个关联角色
             let _this=this;
                 let json=[val]
-                _this.update=true;
                 if(_this.storeNodeClickData[_this.nowClickNode]){
                     _this.storeNodeClickData[_this.nowClickNode].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
                     _this.storeNodeClickData[_this.nowClickNode].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
@@ -888,33 +907,72 @@
                 _this.checked=_this.uniqueArray(_this.checked,json);
         },
         nodeClick(data){
-            let _this=this;
-            let all=data.children;
-            let checkClick=[];
-            let nocheckedClick=[];
-            _this.nowClickNode=data.displayName;
-            if(!_this.storeNodeClickData[data.displayName]){
-                if(_this.checked.length>0){
-                    for(let i=0;_this.checked.length>i;i++){
-                        for(let x=0;all.length>x;x++){
-                            if(_this.checked[i].permissionName==all[x].permissionName){
-                                checkClick.push(all[x])
+            if(data.permissionName==""){
+                let _this=this;
+                let all=data.children;
+                let checkClick=[];
+                let nocheckedClick=[];
+                _this.nowClickNode=data.displayName;
+                if(!_this.storeNodeClickData[data.displayName]){
+                    if(_this.checked.length>0){
+                        for(let i=0;_this.checked.length>i;i++){
+                            for(let x=0;all.length>x;x++){
+                                if(_this.checked[i].permissionName==all[x].permissionName){
+                                    checkClick.push(all[x])
+                                }
                             }
                         }
+                        nocheckedClick=_this.uniqueArray(all,checkClick)
+                    }else{
+                        nocheckedClick=all
                     }
-                    nocheckedClick=_this.uniqueArray(all,checkClick)
-                }else{
-                    nocheckedClick=all
+
+                    _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
                 }
+                
+        
+                
 
-                _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
+                _this.checkTable=_this.storeNodeClickData[data.displayName].check;
+                _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
             }
+        },
+        searchLeftTable(){
+            let _this=this;
+            // checkTable
+            if(_this.nowClickNode!=""){
+                let newJson=[];
+                let patt1 = new RegExp(_this.searchTableLeft);
+                $.each(_this.storeNodeClickData[_this.nowClickNode].check,function(index,val){
+                    let str=val.displayName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val)
+                    }
+                })
             
-    
+                _this.storeNodeClickData[_this.nowClickNode].searchDataCheck=newJson;
+                _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].searchDataCheck;
+            }
+           
+        },
+        searchRightTable(){
+            let _this=this;
+            // nocheckTable
+            if(_this.nowClickNode!=""){
+                let newJson=[];
+                let patt1 = new RegExp(_this.searchTableRight);
+                $.each(_this.storeNodeClickData[_this.nowClickNode].nochecked,function(index,val){
+                    let str=val.displayName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val)
+                    }
+                })
             
-
-            _this.checkTable=_this.storeNodeClickData[data.displayName].check;
-            _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
+                _this.storeNodeClickData[_this.nowClickNode].searchDataNoCheck=newJson;
+                _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].searchDataNoCheck;
+            }
         },
     }
 

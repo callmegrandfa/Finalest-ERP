@@ -15,7 +15,7 @@
                     </div>
                     <span class="btDetail">保存</span>
                   </button>
-              <button class="erp_bt bt_cancel":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button class="erp_bt bt_cancel" @click="Cancel(2)" :class="{erp_fb_bt:!ifModify}">
                   <div class="btImg"><img src="../../../static/image/common/bt_cancel.png">
                   </div>
                   <span class="btDetail">取消</span>
@@ -43,7 +43,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="24">
+            <el-col :span="24" style="margin-top:30px;">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>上级客户分类</label>
@@ -69,7 +69,8 @@
                                        :key="count.id" 
                                        :label="count.className" 
                                        :value="count.id"
-                                       id="businessDetail_confirmSelect"></el-option>
+                                       id="businessDetail_confirmSelect">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('customerClassData.classParentId') }}</div>
@@ -275,6 +276,7 @@ export default {
       //---上级客户树--------
       selectParentTree: [], //选择上级客户分类
       parentSearch: "", //搜索上级客户分类
+      backCancel:'',//判断信息提示确定的点击事件  返回、取消
       selectParentProps: {
         children: "childNodes",
         label: "className",
@@ -291,7 +293,7 @@ export default {
         groupId: 1,
         // "cuId": '',
         classCode: "",
-        className: "",
+        className: [],
         classParentId: "",
         remark: "",
         status: "",
@@ -351,12 +353,6 @@ export default {
         .required()
         .maxLength(20);
     },
-    //   'customerClassData.manager': function (value) {//负责人
-    //       return this.Validator.value(value).maxLength(20);
-    //   },
-    //   'customerClassData.remark': function (value) {//备注
-    //       return this.Validator.value(value).maxLength(200);
-    //   },
     "customerClassData.status": function(value) {
       //状态
       return this.Validator.value(value)
@@ -375,12 +371,12 @@ export default {
             id: self.$route.params.id
           })
           .then(function(res) {
-            // console.log(res);
+            console.log(res);
             self.customerClassData = res.result;
             // self.ouItem.id = self.customerClassData.classParentId;
             // self.ouItem.ouName = self.customerClassData.ouFullname;
             self.parentItem.id = self.customerClassData.classParentId;
-            self.parentItem.className = self.customerClassData.deptParentName;
+            self.parentItem.className = self.customerClassData.className;
           });
       }
     },
@@ -432,7 +428,6 @@ export default {
         .then(
           function(res) {
             // console.log(res)
-
             self.status = res.result;
           },
           function(res) {}
@@ -446,14 +441,6 @@ export default {
       if (!value) return true;
       return data.className.indexOf(value) !== -1;
     },
-    // ouNodeClick:function(data){
-    //     let self = this;
-    //     self.ouItem.id = data.id;
-    //     self.ouItem.ouName = data.ouFullname;
-    //     self.$nextTick(function(){
-    //         $('#ou_confirmSelect').click()
-    //     })
-    // },
     nodeClick: function(data) {
       let self = this;
       self.parentItem.id = data.id;
@@ -481,17 +468,33 @@ export default {
       let self = this;
       if (self.ifModify) {
         self.dialogUserConfirm = true;
-        self.choseDoing='back'
+        self.backCancel = 1;
+        // self.choseDoing='back'
       } else {
         self.back();
       }
     },
     sureDoing: function() {
       let self = this;
-      self.back();
+      if(self.backCancel ==1){
+          self.back();
+      }else if(self.backCancel == 2){
+          self.loadData();
+          self.ifModify = false;
+          self.dialogUserConfirm=false;
+      }
     },
+    Cancel(){
+      let self = this;
+      if(self.ifModify){
+          self.dialogUserConfirm=true;
+          self.backCancel = 2;
+          $('.tipsWrapper').css({display:'none'})
+      }
+  },
+    //------------------保存修改---------------------------
     save() {
-      //保存修改
+      
       let self = this;
         self.customerClassData.id = self.$route.params.id;
         self.$validate().then(function(success) {
@@ -513,8 +516,8 @@ export default {
           }
         });
     },
+    //----------------保存修改并新增---------------------
     saveAdd: function() {
-      //保存修改并新增
       let self = this;
       if ((self.ifModify = true)) {
         self.customerClassData.id = self.$route.params.id;
@@ -566,22 +569,7 @@ export default {
           }
         );
     },
-    //---控制是否可编辑---------------------------------------
-    // Update() {
-    //   //修改
-    //   if (this.isEdit == true) {
-    //     this.isEdit = !this.isEdit;
-    //   }
-    // },
-    Cancel() {
-      let self = this;
-      if (self.isEdit == false) {
-        self.isEdit = !self.isEdit;
-        self.loadData();
-      }
-    },
-    //-------------------------------------------------------
-
+   
     //---open---路由切换--------------------------------------
     open(tittle, iconClass, className) {
       this.$notify({
@@ -657,31 +645,6 @@ export default {
 .pt15 {
   padding-top: 15px;
 }
-/* .erp_fb_bt {
-    height: 36px;
-    padding: 0 10px;
-    border: none;
-    position: relative;
-    cursor: no-drop;
-    float: left;
-    margin-right: 2px;
-    background-color: #cccccc;
-}
-.erp_fb_bt .btImg {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    top: 10px;
-}
-.erp_fb_bt .btDetail {
-    font-size: 12px;
-    color: #fff;
-    display: block;
-    height: 100%;
-    width: 100;
-    line-height: 36px;
-    padding-left: 20px;
-} */
 .customerClassModify .errorTips {
   margin-bottom: 10px;
   margin-top: -10px;

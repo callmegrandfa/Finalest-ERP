@@ -16,7 +16,7 @@
                    <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>用户组编码</label>
                         <el-input 
-                        @change="isUpdate"
+                        
                         class="userGroupCode" 
                         :class="{redBorder : validation.hasError('addData.userGroupCode')}" 
                         v-model="addData.userGroupCode"></el-input>
@@ -29,7 +29,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>用户组名称</label>
                         <el-input 
-                        @change="isUpdate"
+                        
                         class="userGroupName" 
                         :class="{redBorder : validation.hasError('addData.userGroupName')}" 
                         v-model="addData.userGroupName"></el-input>
@@ -42,10 +42,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         placeholder=""
                         class="ouId" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
                         v-model="addData.ouId"
                         >
@@ -80,9 +80,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         class="status" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
                         v-model="addData.status">
@@ -99,7 +99,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
-                        @change="isUpdate"
+                        
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
                         v-model="addData.remark"
@@ -181,6 +181,8 @@
   export default({
     data(){
       return{
+        firstModify:false,
+        ifModify:false,
          // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -220,8 +222,6 @@
 //----------按钮操作--------------
         choseDoing:'',//存储点击按钮判断信息
         dialogUserConfirm:false,//信息更改提示控制
-        update:false,
-      
       }
     },
      validators: {
@@ -253,7 +253,18 @@
       },
       search_ou(val) {
         this.$refs.tree.filter(val);
-      }
+      },
+      addData:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.firstModify){
+                    _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
     },
     methods: {
         filterNode_ou(value, data) {
@@ -287,9 +298,9 @@
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 所属组织
                 _this.selectData.ou=res.result;
-                if(_this.$route.params.id!="default"){
-                    _this.addData.ouId=parseInt(_this.$route.params.id.split(',')[1]);
-                }
+                // if(_this.$route.params.id!="default"){
+                //     _this.addData.ouId=parseInt(_this.$route.params.id.split(',')[1]);
+                // }
             })
             // _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
             // // 所属用户组
@@ -387,19 +398,16 @@
     //-------------按钮操作-----------
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
                 _this.back()
             }
         },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
-        },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -419,7 +427,8 @@
         Cancel(){
             let _this=this;
             _this.clearData();
-            _this.update=false;
+            _this.ifModify=false;
+            _this.firstModify=false;
         },
         clearData(){
             let _this=this;
@@ -431,7 +440,7 @@
                 "remark": "",
                 "status": 1
             }
-            _this.getDefault()
+            // _this.getDefault()
             _this.validation.reset();
         },
         saveAdd(){

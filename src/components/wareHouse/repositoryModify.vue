@@ -1,14 +1,12 @@
 <template>
   <div class="res-modify">
         <el-row class="bg-white pt10 pb10 bb1 fixed">
-            <button class="erp_bt bt_back" @click="isBack">
+            <button class="erp_bt bt_back" @click="isBack(1)">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_back.png">
                 </div>
                 <span class="btDetail">返回</span>
             </button>
-
-            
 
             <button class="erp_bt bt_save" @click="saveModify" :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
@@ -17,7 +15,7 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_cancel" @click="Cancel()" :class="{erp_fb_bt:!ifModify}">
+            <button class="erp_bt bt_cancel" @click="Cancel(2)" :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
@@ -58,7 +56,7 @@
         <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
                 <el-row class="bg-white ft12 pr10 pt10">
-                    <el-col :span="24" class="getPadding">
+                    <el-col :span="24">
                         <div class="tipsWrapper" name="ouId">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.ouId')}">
                                 <p class="msgDetail">错误提示：所属组织{{ validation.firstError('repositoryData.ouId') }}</p>
@@ -387,7 +385,6 @@
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson"
-                                    @click='upClick(scope.$index,scope.row)'
                                     @change='handleChange(scope.$index,scope.row)'
                                     type="text"/>
                         </template>
@@ -473,35 +470,35 @@
             </el-col>
         </el-row>
 
-      <el-row class="ft12 pr10 pt10 br3">
-          <el-col :span='24' class="bg-white pl10 pt10 pb10">
-              <span style="color:black;font-size:16px;font-weight:bolder;">审计信息</span>
-          </el-col>
+        <el-row class="ft12 pr10 pt10 br3">
+            <el-col :span='24' class="bg-white pl10 pt10 pb10">
+                <span style="color:black;font-size:16px;font-weight:bolder;">审计信息</span>
+            </el-col>
 
-          <el-col :span="24" class="bg-white pb10">   
-              <div>
-                <div class="bgcolor">
-                    <label>创建人</label>
-                    <el-input placeholder="" disabled="disabled" v-model="repositoryData.createdBy"></el-input>
-                </div>
+            <el-col :span="24" class="bg-white pb10">   
+                <div>
+                    <div class="bgcolor">
+                        <label>创建人</label>
+                        <el-input placeholder="" disabled="disabled" v-model="repositoryData.createdBy"></el-input>
+                    </div>
 
-                <div class="bgcolor">
-                    <label>创建时间</label>
-                    <el-date-picker  type="date" placeholder="" disabled="disabled" v-model="repositoryData.createdTime"></el-date-picker>
-                </div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-date-picker  type="date" placeholder="" disabled="disabled" v-model="repositoryData.createdTime"></el-date-picker>
+                    </div>
 
-                <div class="bgcolor">
-                    <label>修改人</label>
-                    <el-input placeholder="" disabled="disabled" v-model="repositoryData.modifiedBy"></el-input>
-                </div>
+                    <div class="bgcolor">
+                        <label>修改人</label>
+                        <el-input placeholder="" disabled="disabled" v-model="repositoryData.modifiedBy"></el-input>
+                    </div>
 
-                <div class="bgcolor">
-                    <label>修改时间</label>
-                    <el-date-picker type="date" placeholder="" disabled="disabled" v-model="repositoryData.modifiedTime"></el-date-picker>
-                </div>
-            </div> 
-          </el-col>
-      </el-row>
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-date-picker type="date" placeholder="" disabled="disabled" v-model="repositoryData.modifiedTime"></el-date-picker>
+                    </div>
+                </div> 
+            </el-col>
+        </el-row>
 
         <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
@@ -581,15 +578,11 @@
     export default{
         name:'repositoryModify',
         created:function(){
-            // let self = this;
-            // self.loadData();
-            // self.loadSelect();
         },
         mounted:function(){
             let self = this;
             self.loadData();
             self.loadSelect();
-            
         },
         
         validators: {
@@ -652,6 +645,8 @@
 
                 ifModify:false,//判断主表是否修改过
                 ifShow:true,//控制折叠页面
+
+                backCancel:'',//判断信息提示确定的点击事件  返回、取消
                 
                 //---所属组织树形下拉-----
                 ouSearch:'',
@@ -1156,13 +1151,7 @@
             //------------------------------------------------------------
 
             //---控制是否可编辑---------------------------------------        
-            Cancel(){
-                let self = this;
-                self.loadData();
-                self.ifModify = false;
-                $('.tipsWrapper').css({display:'none'})
-                // }
-            },
+            
             //-------------------------------------------------------
 
             //---表格编辑-------------------------------------------------
@@ -1373,30 +1362,40 @@
                 let self = this;
                 self.ifModify = true;
             },
-            // upClick:function(index,row){
-            //     let self = this;
-            //     if(row.id&&row.id>0){
-            //         if(self.clickAr.indexOf(row.id)== -1){
-            //             self.clickAr.push(row.id)
-            //         }
-            //     }
-            //     console.log(self.clickAr)
-            // },
             //------------------------------------------------------
 
-            //---修改返回提示-----------------------------------------
+            //---修改返回\取消提示-----------------------------------------
             isBack(){
                 let self=this;
                 if(self.ifModify){
                     self.dialogUserConfirm=true;
+                    self.backCancel = 1;
                     // self.choseDoing='back'
                 }else{
                     self.back()
                 }
             },
+            Cancel(){
+                let self = this;
+                if(self.ifModify){
+                    self.dialogUserConfirm=true;
+                    self.backCancel = 2;
+                    $('.tipsWrapper').css({display:'none'})
+                }
+                
+                
+                // }
+            },
             sureDoing:function(){
                 let self = this;
-                self.back();
+                if(self.backCancel ==1){
+                    self.back();
+                }else if(self.backCancel == 2){
+                    self.loadData();
+                    self.ifModify = false;
+                    self.dialogUserConfirm=false;
+                }
+                
             },
             //-------------------------------------------------------
 
@@ -1719,6 +1718,9 @@
     text-align:center;
     border:none;
     background-color:#FAFAFA;
+}
+.res-modify .display_block{
+    margin-bottom:5px;
 }
 .el-select.areaDrop,.el-input.areaEntry{
     width: 100px;

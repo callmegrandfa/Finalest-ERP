@@ -23,7 +23,7 @@
                         <div class="bgcolor bgLongWidth"><label>
                             <small>*</small>角色编码</label>
                             <el-input 
-                            @change="isUpdate"
+                            
                             class="roleCode" 
                             :class="{redBorder : validation.hasError('addData.roleCode')}" 
                             v-model="addData.roleCode" 
@@ -38,7 +38,7 @@
                         <div class="bgcolor bgLongWidth"><label>
                             <small>*</small>角色名称</label>
                             <el-input 
-                            @change="isUpdate"
+                            
                             class="displayName" 
                             :class="{redBorder : validation.hasError('addData.displayName')}" 
                             v-model="addData.displayName" 
@@ -52,9 +52,9 @@
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select 
+                        <el-select clearable 
                         class="ouId" 
-                        @change="isUpdate"
+                        
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.ouId')}"
                         v-model="addData.ouId">
@@ -91,9 +91,9 @@
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                             <label>状态</label>
-                            <el-select filterable  
+                            <el-select clearable filterable  
                             class="status" 
-                            @change="isUpdate"
+                            
                             placeholder=""
                             :class="{redBorder : validation.hasError('addData.status')}"
                             v-model="addData.status">
@@ -110,7 +110,7 @@
                         <div class="bgcolor bgLongWidth">
                             <label>备注</label>
                             <el-input
-                            @change="isUpdate"
+                            
                             class="remark" 
                             :class="{redBorder : validation.hasError('addData.remark')}"
                             v-model="addData.remark"
@@ -483,8 +483,9 @@
                              <el-col :span="24" class="chooseFn">
                                 <el-checkbox @change="CheckAllFn" v-model="checkAllFns">全选</el-checkbox>
                                 <el-checkbox @change="showCheckFn" v-model="showCheckFns">查看已选</el-checkbox>
+                                <i class="fa fa-cog" aria-hidden="true" @click="nextDivIsShow = !nextDivIsShow"></i>
                             </el-col>
-                            <el-col :span="24" class="checkbox_group">
+                            <el-col :span="24" class="checkbox_group" v-show="nextDivIsShow">
                                 <span v-for="(x,index) in showCheckedFnTable" :key="index">
                                     <span v-for="(i,inde) in x.children" :key="inde">
                                         <el-checkbox
@@ -600,6 +601,9 @@ export default({
     data() {
         return{
             firstModify:false,
+            secondModify:false,
+            thirdModify:false,
+            forthModify:false,
             ifModify:false,
         // 错误信息提示开始
             detail_message_ifShow:false,
@@ -609,7 +613,6 @@ export default({
                 details:'',
                 message:'',
             },
-             update:false,
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
             option: {//滚动条样式
@@ -772,6 +775,7 @@ export default({
             searchBottomUser:'',//搜索
 
 //-----------关联权限---------------
+            nextDivIsShow:true,//按钮组显示隐藏
             filterTextFn:'',//树形搜索框值
             // dialogFn:false,
             checked:[],//展示所有权限
@@ -844,20 +848,57 @@ export default({
     },
     
     watch: {
-      search_ou(val) {
-        this.$refs.tree_ou.filter(val);
-      },
-      filterTextOu(val) {
-        this.$refs.tree.filter(val);
-      },
-      filterTextFn(val) {
-        this.$refs.tree_fn.filter(val);
-      },
-      addData:{
+        search_ou(val) {
+            this.$refs.tree_ou.filter(val);
+        },
+        filterTextOu(val) {
+            this.$refs.tree.filter(val);
+        },
+        filterTextFn(val) {
+            this.$refs.tree_fn.filter(val);
+        },
+        addData:{
             handler:function(val,oldVal){
+                
                 let _this=this;
-                if(!_this.firstModify){
+                if(!_this.firstModify){ 
                     _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        clickFnTreeData:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.secondModify){ 
+                    _this.secondModify=!_this.secondModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        showCheckedUserTable:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.thirdModify){ 
+                    _this.thirdModify=!_this.thirdModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        ouCheckAll:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.forthModify){ 
+                    _this.forthModify=!_this.forthModify;
                 }else{
                     _this.ifModify=true
                 }
@@ -909,7 +950,7 @@ export default({
         },
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
@@ -918,7 +959,7 @@ export default({
         },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -945,14 +986,18 @@ export default({
             }
         },
         Cancel(){
-                this.validation.reset();
-                this.getModifyData();
-                this.update=false;
-                this.firstModify=false;
-                this.ifModify=false;
-        },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
+            let _this=this
+            _this.validation.reset();
+            _this.getModifyData();
+            _this.GetUsers();
+            _this.getAllCheckOu();//关联组织树形所有数据
+            // _this.loadOuTable();
+            _this.fnLoadTree();//分配权限树形
+            _this.firstModify=false;
+            _this.secondModify=false;
+            _this.thirdModify=false;
+            _this.forthModify=false;
+            _this.ifModify=false;
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -992,14 +1037,19 @@ export default({
 
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
-                    //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
-                    console.log(_this.addData)
+                    // console.log(_this.addData)
                     //ajax
                     _this.$axios.puts('/api/services/app/Role/Update',_this.addData)
                     .then(function(res){
+                        _this.auditInformation={//审计信息
+                            createdBy:res.result.createdBy,
+                            createdTime:res.result.createdTime,
+                            modifiedBy:res.result.modifiedBy,
+                            modifiedTime:res.result.modifiedTime,
+                        }
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -1183,8 +1233,7 @@ export default({
             _this.ouTableLoading=true
 
             _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:_this.ouOneItem})
-            .then(function(res){ 
-                // console.log(res)
+            .then(function(res){
                 _this.ouCheckAll=res.result.items;
                 _this.ouTotalItem=res.result.totalCount
                 _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
@@ -1206,23 +1255,25 @@ export default({
                 if(resp.result.totalCount>0){
                     _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:resp.result.totalCount})
                     .then(function(res){ 
-                        // console.log(res)
                         _this.ouCheckAll=res.result.items;
                         _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
                         _this.ouTableLoading=false;
                         })
                 }else{
-                    _this.ouCheckAll=[]
+                    _this.ouCheckAll=[];
+                    _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
                     _this.ouTableLoading=false;
                 }
     
             })
+    
         },
         loadOuTreeAll(){
             let _this=this;
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:_this.$route.params.id})
             .then(function(res){
                 _this.ouTreeDataRight=res.result;
+
             },function(res){
             })
         },
@@ -1396,7 +1447,7 @@ export default({
             // /api/services/app/Role/GetAllPermissions
             _this.$axios.gets('/api/services/app/Role/GetPermissions',{Id:_this.$route.params.id})
             .then(function(res){
-                console.log(res)
+                // console.log(res)
                 _this.checked=res.result.items;
                 _this.pageTable=res.result.items;
                 _this.clickFnTreeData=[];
@@ -1762,6 +1813,7 @@ export default({
             
            .then(function(response){//获取已选角色
                 let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
+                // console.log(response)
                 if(totalCheckedAll>0){
                     _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
                     .then(function(resp){//获取已选角色
@@ -1839,7 +1891,6 @@ export default({
         check_push_noCheck_userThis(val){//删除一个关联角色
                 let json=[val]
                 let _this=this;
-                _this.update=true;
                 _this.checkedUserTable=_this.uniqueArray(_this.checkedUserTable,json);
                 _this.showNoCheckedUser=_this.pagination(json,[],_this.oneItemRightUser,_this.pageRightUser,'right')
                 _this.showCheckedUser=_this.pagination([],json,_this.oneItemLeftUser,_this.pageLeftUser,'left')
@@ -1926,6 +1977,13 @@ export default({
       height: 30px;
       line-height: 30px;
       padding-left: 10px;
+  }
+   .chooseFn .fa-cog{
+       cursor: pointer;
+        color: #c9d1d1;
+        float: right;
+        line-height: 30px;
+        font-size: 20px;
   }
   .roleModify .add{
     position: absolute;

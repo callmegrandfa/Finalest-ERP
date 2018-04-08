@@ -1,7 +1,7 @@
 <template>
     <div class="userGroupList">
         <el-row class="bg-white">
-             <el-col :span="ifWidth?5:0" v-show="ifWidth">
+             <el-col :span="ifWidth?5:0" v-show="ifWidth" class="search-container">
                 <el-row class="h48 pl15">
                     <el-col :span="18" class="btn-for-search">
                         <img src="../../../static/image/common/search_btn.png">
@@ -15,7 +15,7 @@
                 <div class="bgcolor smallBgcolor"><label>用户组名称</label><el-input v-model="searchData.UserGroupName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
-                    <el-select v-model="searchData.OuId" placeholder="">
+                    <el-select clearable v-model="searchData.OuId" placeholder="">
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
@@ -385,8 +385,10 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
+                    _this.getHeight()
                     },function(res){
                     _this.tableLoading=false;
+                    _this.getHeight()
                 })
             },
             handleCurrentChange(val) {//页码改变
@@ -546,7 +548,15 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({UserGroupName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            getHeight(){
+                $(".search-container").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+                $(".border-left").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+            },
         },
     }
 </script>
@@ -579,7 +589,6 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 498px;
 }
 .btn{
     display: inline-block;
