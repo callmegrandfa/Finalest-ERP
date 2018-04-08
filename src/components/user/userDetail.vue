@@ -173,9 +173,9 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                     </el-select>
                     </div>
@@ -542,11 +542,11 @@
         ],
         item:{
             id:'',
-            ouFullname:''
+            ouName:''
         },
         selectProps: {
             children: 'children',
-            label: 'ouFullname',
+            label: 'ouName',
             id:'id'
         },
 
@@ -779,7 +779,7 @@
     //   },
         filterNode(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         loadTree(){
             let _this=this;
@@ -806,7 +806,7 @@
         nodeClick(data,node,self){
             let _this=this;
             _this.item.id=data.id;
-            _this.item.ouFullname=data.ouFullname;
+            _this.item.ouName=data.ouName;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })

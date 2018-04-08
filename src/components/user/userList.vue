@@ -50,9 +50,9 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -188,7 +188,7 @@
                             </el-table-column>
                             <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
                             <el-table-column prop="userGroupName" label="所属用户组"></el-table-column>
-                            <el-table-column prop="ouFullname" label="所属组织"></el-table-column>
+                            <el-table-column prop="ouName" label="所属组织"></el-table-column>
                             <el-table-column prop="userTypeTValue" label="身份类型"></el-table-column>
                             <el-table-column prop="languageDisplayName" label="语种"></el-table-column>
                             <el-table-column prop="statusTValue" label="状态">
@@ -316,11 +316,11 @@
                 ],
                 item:{
                     id:'',
-                    ouFullname:'',
+                    ouName:'',
                 },
                 selectProps: {
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
 
@@ -563,7 +563,7 @@
             },
             filterNode(value, data) {
                 if (!value) return true;
-                return data.ouFullname.indexOf(value) !== -1;
+                return data.ouName.indexOf(value) !== -1;
             },
             loadTree(){
                 let _this=this;
@@ -590,7 +590,7 @@
             nodeClick(data,node,self){
                 let _this=this;
                 _this.item.id=data.id;
-                _this.item.ouFullname=data.ouFullname;
+                _this.item.ouName=data.ouName;
                 // _this.$nextTick(function(){
                 //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 // })

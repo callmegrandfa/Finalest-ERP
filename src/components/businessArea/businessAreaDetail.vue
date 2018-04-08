@@ -72,7 +72,7 @@
                             :props="selectProps_area"
                             node-key="id"
                             default-expand-all
-                            ref="tree"
+                            ref="area_tree"
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_area"
@@ -366,7 +366,7 @@
     },
      watch: {
       search_area(val) {
-        this.$refs.tree.filter(val);
+        this.$refs.area_tree.filter(val);
       },
       search_ou(val) {
         this.$refs.tree.filter(val);
@@ -386,7 +386,7 @@
     methods: {
         filterNode_ou(value, data) {
             if (!value) return true;
-            return data.ouFullName.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         filterNode_area(value, data) {
             if (!value) return true;

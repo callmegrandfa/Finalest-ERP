@@ -391,9 +391,9 @@
                         @node-click="nodeClick_ou"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                     </el-select>
                 </div>
@@ -1145,11 +1145,11 @@ export default({
             ],
             item_ou:{
                 id:'',
-                ouFullname:''
+                ouName:''
             },
             selectProps: {
                 children: 'children',
-                label: 'ouFullname',
+                label: 'ouName',
                 id:'id'
             },
             search_companyOuId:'',//所属公司
@@ -1656,7 +1656,7 @@ export default({
         },
         filterNode(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         filterNode_companyOuId(value, data) {
             if (!value) return true;
@@ -1710,7 +1710,7 @@ export default({
                 alert("上级业务单元不能为业务单元本身")
             }else{
                 // _this.item_ou.id=data.id;
-                // _this.item_ou.ouFullname=data.ouFullname;
+                // _this.item_ou.ouName=data.ouName;
                 // _this.$nextTick(function(){
                 //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 // })

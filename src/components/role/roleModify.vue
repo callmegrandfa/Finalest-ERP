@@ -79,7 +79,7 @@
                             </el-tree>
                             <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                             </el-option>
-                            <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                                 </el-option> -->
                         </el-select>
                         </div>
@@ -712,7 +712,7 @@ export default({
             ouTreeDataLeft:[],//
             ouDefaultPropsLeft:{
                 children: 'children',
-                label: 'ouFullname',
+                label: 'ouName',
                 id:'id'
             },
 //-------------穿梭按钮-----------
@@ -796,7 +796,7 @@ export default({
             fnTreeData:[],
             result:[],
             defaultProps: {
-                children: 'children',
+                children: 'no',
                 label: 'displayName',
                 value:'permissionName'
             },           
@@ -1337,13 +1337,12 @@ export default({
             
         },
         isCheckAllOu(){//是否全选
-            // let _this=this;
-            // console.log(_this.allOuLength)
-            // if(_this.$refs.tree.getCheckedNodes().length==_this.allOuLength){
-            //     _this.checkAllOu=true
-            // }else{
-            //     _this.checkAllOu=false
-            // }
+            let _this=this;
+            if(_this.$refs.tree.getCheckedNodes().length==_this.allOuLength){
+                _this.checkAllOu=true
+            }else{
+                _this.checkAllOu=false
+            }
         },
         showCheckTree(){//查看已选
             let _this=this;
@@ -1586,7 +1585,7 @@ export default({
         },
         filterNode_ou(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         loadTree_ou(){
             let _this=this;
