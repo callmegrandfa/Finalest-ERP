@@ -72,7 +72,7 @@
                         <small>*</small>用户编码</label>
                         <el-input 
                         class="userCode" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.userCode')}" 
                         v-model="addData.userCode" 
                         placeholder=""></el-input>
@@ -86,7 +86,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>用户名称</label>
                     <el-input 
-                    @change="isUpdate"
+                    
                     class="displayName" 
                     :class="{redBorder : validation.hasError('addData.displayName')}" 
                     v-model="addData.displayName"  
@@ -101,7 +101,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>手机号码</label>
                     <el-input 
-                    @change="isUpdate"
+                    
                     class="phoneNumber" 
                     :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
                     v-model="addData.phoneNumber"  
@@ -116,7 +116,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>邮箱</label>
                     <el-input 
-                    @change="isUpdate"
+                    
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
                     v-model="addData.email"  
@@ -130,10 +130,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属用户组</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     class="userGroupId" 
                     placeholder=""
-                    @change="isUpdate"
+                    
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
                     v-model="addData.userGroupId">
                         <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
@@ -148,10 +148,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属组织</label>
-                    <el-select 
+                    <el-select clearable 
                     class="ouId" 
                     placeholder=""
-                    @change="isUpdate"
+                    
                     :class="{redBorder : validation.hasError('addData.ouId')}"
                     v-model="addData.ouId">
                         <!-- <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
@@ -187,10 +187,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>身份类型</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     class="userType" 
                     placeholder=""
-                    @change="isUpdate"
+                    
                     :class="{redBorder : validation.hasError('addData.userType')}"
                     v-model="addData.userType">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
@@ -205,9 +205,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>语种</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     class="languageId" 
-                    @change="isUpdate"
+                    
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
                     v-model="addData.languageId">
@@ -225,7 +225,7 @@
                         <label>有效时间</label>
                         <div class="rangeDate">
                             <el-date-picker
-                            @change="isUpdate"
+                            
                             v-model="dateRange"
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
@@ -248,9 +248,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         class="status" 
-                        @change="isUpdate"
+                        
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"
                         v-model="addData.status">
@@ -278,7 +278,7 @@
                         <label>备注</label>
                         <el-input
                         class="remark" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.remark')}"
                         v-model="addData.remark"
                         type="textarea"
@@ -526,6 +526,9 @@
   export default({
     data(){
       return{
+        firstModify:false,
+        secondModify:false,
+        ifModify:false,
         timeout:null,
          // 错误信息提示开始
         detail_message_ifShow:false,
@@ -623,7 +626,6 @@
 //----------按钮操作--------------
         choseDoing:'',//存储点击按钮判断信息
         dialogUserConfirm:false,//信息更改提示控制
-        update:false,
       }
     },
      validators: {
@@ -672,7 +674,32 @@
     watch: {
       search(val) {
         this.$refs.tree.filter(val);
-      }
+      },
+       addData:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.firstModify){
+                    _this.firstModify=!_this.firstModify;
+                    // _this.ifModify=true
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        checkedTable:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.secondModify){ 
+                    _this.secondModify=!_this.secondModify;
+                    // _this.ifModify=true
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
     },
     methods: {
         getDefault(){
@@ -994,14 +1021,12 @@
         },
         noCheck_push_check(){//从右往左添加数据
             let _this=this;
-            _this.update=true;
             
             _this.showChecked=_this.pagination(_this.selection_nochecked,[],_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination([],_this.selection_nochecked,_this.oneItemRight,_this.pageRight,'right')
         },
         check_push_noCheck(){//从左往右添加数据
             let _this=this;
-            _this.update=true;
             _this.showChecked=_this.pagination([],_this.selection_checked,_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination(_this.selection_checked,[],_this.oneItemRight,_this.pageRight,'right')
            
@@ -1010,7 +1035,6 @@
             let _this=this;
             if(!_this.isEdit){
                 let json=[val]
-                _this.update=true;
                 _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
                 _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
                 _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
@@ -1082,19 +1106,16 @@
 //-------------按钮操作-----------
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
                 _this.back()
             }
         },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
-        },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -1114,7 +1135,11 @@
         Cancel(){
             let _this=this;
             _this.clearData();
-            _this.update=false;
+            _this.getAllRoleData();
+            //  _this.getDefault()
+            _this.firstModify=false;
+            _this.secondModify=false;
+            _this.ifModify=false;
         },
         clearData(){
             let _this=this;
@@ -1135,7 +1160,7 @@
             _this.addData.effectiveStart='';
             _this.addData.effectiveEnd='';
             _this.dateRange=[];
-            _this.getDefault()
+            // _this.getDefault()
             _this.validation.reset();
         },
         saveAdd(){

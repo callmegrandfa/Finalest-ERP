@@ -3,23 +3,23 @@
          <!-- 按钮组 -->
         <el-row>
             <el-col :span="24">
-                <button @click="goback" class="erp_bt bt_back">
+                <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
                     <span class="btDetail">返回</span>
-                </button>
-                <button  @click="add" class="erp_bt bt_add" :disabled="isAdd">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
+                </button>                
                 <button @click="save" class="erp_bt bt_save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
+                </button>
+                <button class="erp_bt bt_cancel" @click="cancel">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
                 </button>
                 <button @click="saveAdd" class="erp_bt bt_saveAdd">
                     <div class="btImg">
@@ -27,7 +27,19 @@
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
-                <button class="erp_bt bt_auxiliary bt_width">
+                <button class="erp_fb_bt bt_add">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+                <button class="erp_fb_bt bt_del">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+                <!-- <button class="erp_bt bt_auxiliary bt_width">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_auxiliary.png">
                     </div>
@@ -35,7 +47,7 @@
                     <div class="btRightImg">
                         <img src="../../../static/image/common/bt_down_right.png">
                     </div>
-                </button>
+                </button> -->
             </el-col>
         </el-row>
 
@@ -64,6 +76,23 @@
                     </div>
                 </el-col>
         </el-row>
+        <!-- dialog数据变动提示(是否忽略更改) -->
+        <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    </el-col>
+                </el-col>
+                <!--  -->
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUpdateConfirm = false">取 消</button>
+                </span>
+        </el-dialog>
 
         <!-- 表单 -->
         <el-row>
@@ -187,9 +216,8 @@
         data(){
              return{
                  isDisabled:true,//是否禁用创建人与创建时间               
-                 isAdd:true,//是否禁用增加键               
-                // 表单增加参数
-                 addData:{
+                 isAdd:true,//是否禁用增加键                              
+                 addData:{ // 表单增加参数
                     "groupId": 0,
                     "contactOwner": 2,
                     "levelNo": 0,
@@ -205,13 +233,12 @@
                     "remark": "",
                     "createdBy" :this.$store.state.name,
                     "createdTime"  : this.GetDateTime(),
-                },
-                //  下拉框的选项数据
-                selectData:{
+                },               
+                selectData:{ //  下拉框的选项数据
                     Status001:[],//启用状态
                     upSupplierClass:[],// 上级供应商分类
                 },
-                 // -------树形控件数据
+                 // --------------------树形控件数据
                  supplierClasTree:[],
                  defaultProps: {
                     children: 'childNodes',
@@ -222,6 +249,9 @@
                     Id:'',
                     className:'',
                 },
+                // ----------提示框信息
+                dialogUpdateConfirm:false,
+                isUpdate:false,
 
              }
         },
@@ -248,6 +278,20 @@
             count () {
                 return this.treeNode;
                 },
+        },
+        watch:{
+            addData:{
+                handler: function (val, oldVal) {
+                    let _this = this;
+                    // console.log("数据改变了");
+                    if(!_this.isUpdate){
+                        _this.isUpdate = !_this.isUpdate;
+                        // console.log(_this.isUpdate);
+                        
+                    }
+                },
+                deep: true,
+            }
         },
         methods:{
             GetDateTime() {//获取当前时间
@@ -278,11 +322,10 @@
                 this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
                 this.$router.push({ path: this.$store.state.url });
             },
-            add(){ //新增
-                this.reset();
-                // _this.isDisabled=true;
-
-            },
+            // add(){ //新增
+            //     this.reset();
+            //     // _this.isDisabled=true;
+            // },
             save() {// 保存
                 let _this=this;
                 _this.$validate().then(
@@ -327,6 +370,26 @@
                         }
                     );
             },
+            // -----------------取消与返回功能
+            cancel(){// 取消
+                this.isBack();
+            },
+            goBack() { // 返回
+                this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
+                this.$router.push({ path: this.$store.state.url });
+            },
+            isBack(){//是否返回
+                let _this=this;
+                if(_this.isUpdate){
+                    _this.dialogUpdateConfirm=true;
+                }else{
+                    _this.goBack();
+                }
+            },
+            sureDoing(){
+                this.goBack();
+            },
+            // -----------------取消与返回功能完
             // ----------树形控件相关----------
             loadIcon(){//添加文件夹图标
                 let _this=this;
@@ -408,7 +471,8 @@
     /* .supClasDetail-wrapper .bgcolor.bgLongWidth .el-select{
         width: 100%;
         } */
-.supClasDetail-wrapper .bgcolor.bgLongWidth .el-select .el-input{
-        width:100%;
-}
+    .supClasDetail-wrapper .bgcolor.bgLongWidth .el-select .el-input{
+            width:100%;
+    }
+
 </style>
