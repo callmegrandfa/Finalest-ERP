@@ -1,7 +1,7 @@
 <template>
   <div class="res-modify">
         <el-row class="bg-white pt10 pb10 bb1 fixed">
-            <button class="erp_bt bt_back" @click="isBack">
+            <button class="erp_bt bt_back" @click="isBack(1)">
                 <div class="btImg">
                 <img src="../../../static/image/common/bt_back.png">
                 </div>
@@ -17,7 +17,7 @@
                 <span class="btDetail">保存</span>
             </button>
 
-            <button class="erp_bt bt_cancel" @click="Cancel()" :class="{erp_fb_bt:!ifModify}">
+            <button class="erp_bt bt_cancel" @click="Cancel(2)" :class="{erp_fb_bt:!ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_cancel.png">
                 </div>
@@ -31,7 +31,7 @@
                 <span class="btDetail">保存并新增</span>
             </button>
 
-            <button class="erp_bt bt_add" @click="goDetail" :class="{erp_fb_bt:ifModify}">
+            <button class="erp_bt bt_add" @click="addNew" :class="{erp_fb_bt:ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_add.png">
                 </div>
@@ -58,7 +58,7 @@
         <el-collapse-transition>
             <div v-show="ifShow" class="bb1">
                 <el-row class="bg-white ft12 pr10 pt10">
-                    <el-col :span="24" class="getPadding">
+                    <el-col :span="24">
                         <div class="tipsWrapper" name="ouId">
                             <div class="errorTips" :class="{block : !validation.hasError('repositoryData.ouId')}">
                                 <p class="msgDetail">错误提示：所属组织{{ validation.firstError('repositoryData.ouId') }}</p>
@@ -242,16 +242,22 @@
                         <div class="bgcolor area">
                             <label>行政地区</label>
                             <div class="areaBox">
-                                <el-select v-model="repositoryData.adAreaId" class="areaDrop" placeholder="选择省">
+                                <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
                                     <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
-                                </el-select>
-                                <el-select v-model="repositoryData.adAreaId" class="areaDrop" placeholder="选择市">
-                                    <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                    <el-option v-show="false" label="无" :value="provinceValue">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="repositoryData.adAreaId" class="areaDrop" placeholder="选择区">
-                                    <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                <el-select v-model="cityId" class="areaDrop" placeholder="选择市" @change='chooseCity(cityId)'>
+                                    <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" label="无" :value="cityValue">
+                                    </el-option>
+                                </el-select>
+                                <el-select v-model="repositoryData.adAreaId" class="areaDrop" placeholder="选择区" @change='chooseDis()'>
+                                    <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" label="无" :value="areaValue">
                                     </el-option>
                                 </el-select>
                                 <!-- <el-input class="areaEntry" placeholder="街道办地址"></el-input> -->
@@ -372,12 +378,12 @@
                 </button>
           </el-col>
 
-          <!-- <el-col :span='24' class="bg-white pl10 pr10 pt10 pb10 bb1">repositoryAddressData -->
               <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
+                            <img v-show='redAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson"
@@ -421,6 +427,8 @@
                             <el-select  v-model="scope.row.transportMethodId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
                                 <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
+                                <el-option v-show="false" label="无" :value="TransValue">
+                                </el-option>
                             </el-select>
                         </template>
                     </el-table-column>
@@ -430,6 +438,8 @@
                             <el-select  v-model="scope.row.logisticsCompanyId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
                                 <el-option  v-for="item in logiAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
                                 </el-option>
+                                <el-option v-show="false" label="无" :value="LogiValue">
+                                </el-option>
                             </el-select>
                         </template>
                     </el-table-column>
@@ -437,9 +447,9 @@
                     <el-table-column prop="isDefault" label="默认">
                         <template slot-scope="scope">
                             <el-radio  :label="true" 
-                                                v-model="scope.row.isDefault" 
-                                                @change.native="getCurrentRow(scope.$index,scope.row)" 
-                                                @change="handleChange(scope.$index,scope.row)"></el-radio>
+                                        v-model="scope.row.isDefault" 
+                                        @change.native="getCurrentRow(scope.$index,scope.row)" 
+                                        @change="handleChange(scope.$index,scope.row)"></el-radio>
                         </template>
                     </el-table-column>
 
@@ -476,17 +486,17 @@
 
                 <div class="bgcolor">
                     <label>创建时间</label>
-                    <el-date-picker  type="date" placeholder="" disabled="disabled"></el-date-picker>
+                    <el-date-picker  type="date" placeholder="" disabled="disabled" v-model="repositoryData.createdTime"></el-date-picker>
                 </div>
 
                 <div class="bgcolor">
                     <label>修改人</label>
-                    <el-input placeholder="" disabled="disabled"></el-input>
+                    <el-input placeholder="" disabled="disabled" v-model="repositoryData.modifiedBy"></el-input>
                 </div>
 
                 <div class="bgcolor">
                     <label>修改时间</label>
-                    <el-date-picker type="date" placeholder="" disabled="disabled"></el-date-picker>
+                    <el-date-picker type="date" placeholder="" disabled="disabled" v-model="repositoryData.modifiedTime"></el-date-picker>
                 </div>
             </div> 
           </el-col>
@@ -580,6 +590,7 @@
             self.loadSelect();
             
         },
+        
         validators: {
             'repositoryData.ouId': function (value) {//所属组织
                 return this.Validator.value(value).required().integer();
@@ -606,7 +617,7 @@
                 return this.Validator.value(value).integer();
             },
             'repositoryData.manager': function (value) {//负责人
-                return this.Validator.value(value).required().maxLength(50);
+                return this.Validator.value(value).maxLength(50);
             },
             'repositoryData.phone': function (value) {//电话
                 return this.Validator.value(value).maxLength(50);
@@ -635,20 +646,14 @@
                 getRepositoryAddressParams:{
                    id:'',
                 }, 
-                firstModify:false,
+                firstModify:false,//主表第一次修改
+                firstAddModify:false,//从表第一次修改
+
                 ifModify:false,//判断主表是否修改过
-                ifDoModify:false,//判断从表是否修改过
                 ifShow:true,//控制折叠页面
-                ou: [{//所属组织
-                    value:0,
-                    label: '恒康'
-                }, {
-                    value:1,
-                    label: '恒大'
-                }, {
-                    value:2,
-                    label: '361度'
-                }],
+
+                backCancel:'',//判断信息提示确定的点击事件
+                
                 //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -769,6 +774,18 @@
                 who:'',//删除的是谁以及是否是多项删除
                 whoId:'',//单项删除的id
                 whoIndex:'',//单项删除的index
+                TransValue:0,
+                LogiValue:0,
+                provinceValue:0,
+                cityValue:0,
+                areaValue:0,
+                proId:'',
+                cityId:'',
+                disId:'',
+                //-----------------------------
+                redAr:[],//显示小红标的数组
+                InitAddData:[],//初始的从表数据
+
             }
         },
         computed:{
@@ -794,6 +811,42 @@
                     }
                 },
                 deep: true,
+            },
+
+            repositoryAddressData:{
+                handler:function(val,oldVal){
+                    let self = this;
+                    if(!self.firstAddModify){
+                        self.firstAddModify = !self.firstAddModify;
+                    }else{
+                        self.ifModify = true;
+                    }
+                    self.redAr=[]
+                    for(let i in val){
+                        let flag = true;
+                        for(let j in self.InitAddData){
+                            if(val[i].addressId == self.InitAddData[j].addressId&&
+                               val[i].completeAddress == self.InitAddData[j].completeAddress&&
+                               val[i].contactPerson == self.InitAddData[j].contactPerson&&
+                               val[i].groupId == self.InitAddData[j].groupId&&
+                               val[i].id == self.InitAddData[j].id&&
+                               val[i].isDefault == self.InitAddData[j].isDefault&&
+                               val[i].moblie == self.InitAddData[j].moblie&&
+                               val[i].phone == self.InitAddData[j].phone&&
+                               val[i].stockId == self.InitAddData[j].stockId&&
+                               val[i].transportMethodId == self.InitAddData[j].transportMethodId){
+                                   flag = false;
+                               }
+                        }
+                        // console.log(flag)
+                        if(flag){
+                            self.redAr.push(val[i])
+                        }
+                        
+                    }
+                    // console.log(self.redAr)
+                },
+                deep:true,
             }
         },
         
@@ -804,12 +857,58 @@
                 let self = this;
                 if(self.$route.params.id!='default'){
                     self.firstModify = false;
+                    self.firstAddModify = false;
                     //根据仓库id获取仓库信息
-                    self.$axios.posts('/api/services/app/StockManagement/QueryRepositoryDetail',{id:self.$route.params.id}).then(function(res){  
+                    self.$axios.gets('/api/services/app/StockManagement/Get',{id:self.$route.params.id}).then(function(res){  
                         console.log(res)               
                         self.repositoryData = res.result;
                         self.extraData = res.result;
                         self.getOuId = self.repositoryData.ouId;
+
+                        //行政地区所有省
+                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+                            // console.log(res);
+                            self.areaProArray = res.result;
+                            // self.loadIcon();
+                        },function(res){
+                            console.log('err'+res)
+                        });
+
+                        //根据区id反向获得行政地区所有资料
+                        self.$axios.gets('/api/services/app/AdAreaManagement/Get',{Id:res.result.adAreaId}).then(function(res){
+                            console.log(res);
+                            let ids = res.result.areaFullPathId;
+                            let newid = ids.split('>')
+                            
+                            self.proId = parseInt(newid[0]);
+                            self.cityId = parseInt(newid[1]);
+                            self.disId = parseInt(newid[2]);
+
+                            //根据省获得市
+                            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.proId}).then(function(res){
+                                // console.log(res);
+                                self.areaCityArray = res.result;
+                            },function(res){
+                                console.log('err'+res)
+                            });
+
+                            //根据市获得区
+                            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.cityId}).then(function(res){
+                                console.log(res);
+                                self.areaDisArray = res.result;
+                            },function(res){
+                                console.log('err'+res)
+                            });
+                            // self.opAr = res.result;
+                        },function(res){
+                            self.proId = 0;
+                            self.cityId = 0;
+                            // self.repositoryData.adAreaId = 0;
+                            self.ifModify = false;
+                            console.log('err'+res)
+                        });
+
+                        
 
                         //业务地区
                         self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.getOuId}).then(function(res){
@@ -841,16 +940,73 @@
                     self.loadAddData();
                 }
             },
+            getType(obj){
+                //tostring会返回对应不同的标签的构造函数
+                var toString = Object.prototype.toString;
+                var map = {
+                    '[object Boolean]'  : 'boolean', 
+                    '[object Number]'   : 'number', 
+                    '[object String]'   : 'string', 
+                    '[object Function]' : 'function', 
+                    '[object Array]'    : 'array', 
+                    '[object Date]'     : 'date', 
+                    '[object RegExp]'   : 'regExp', 
+                    '[object Undefined]': 'undefined',
+                    '[object Null]'     : 'null', 
+                    '[object Object]'   : 'object'
+                };
+                if(obj instanceof Element) {
+                    return 'element';
+                }
+                return map[toString.call(obj)];
+            },
+            deepCopy(data){
+                let self = this;
+                var type = self.getType(data);
+                var obj;
+                if(type === 'array'){
+                    obj = [];
+                } else if(type === 'object'){
+                    obj = {};
+                } else {
+                    //不再具有下一层次
+                    return data;
+                }
+                if(type === 'array'){
+                    for(var i = 0, len = data.length; i < len; i++){
+                        obj.push(self.deepCopy(data[i]));
+                    }
+                } else if(type === 'object'){
+                    for(var key in data){
+                        obj[key] = self.deepCopy(data[key]);
+                    }
+                }
+                return obj;
+            },
             loadAddData:function(){
                 let self = this;
-                this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',self.getRepositoryAddressParams).then(function(res){
-                        // console.log(res);
+                this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',{id:self.$route.params.id}).then(function(res){
+                        console.log(res);
                         self.repositoryAddressData = res.result;
+                        self.InitAddData = self.deepCopy(res.result);
+                        // $.each(res.result,function(index,v) {
+                        //     self.InitAddData.push(v)
+                        // })
+                        // console.log(self.InitAddData)
                         for(let i in self.repositoryAddressData){
                             if(self.repositoryAddressData[i].isDefault == true){
                                 self.checkedAr = self.repositoryAddressData[i]
                             }
                         }
+                        // console.log(typeof(res.result[0].transportMethodId))
+                        //运输方式
+                        self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
+                            // console.log(res);
+                            self.transAr = res.result;
+                        },function(res){
+                            console.log('err'+res)
+                        });
+
                     })
             },
                          //---下拉的数据-
@@ -865,14 +1021,7 @@
                     console.log('err'+res)
                 });
                 
-                //行政地区*2
-                // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-                //     // console.log(res);
-                //     self.adAr = res.result;
-                //     self.loadIcon();
-                // },function(res){
-                //     console.log('err'+res)
-                // });
+                
                 
                 //状态
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
@@ -881,13 +1030,7 @@
                 },function(res){
                     console.log('err'+res)
                 });
-                //运输方式
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TransportMethod'}).then(function(res){
-                    console.log(res);
-                    self.transAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
+                
                 //物流公司
                 self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'logisticsCompany'}).then(function(res){
                     // console.log(res);
@@ -900,45 +1043,59 @@
             //------------------------------------------------------------------
 
             //---修改完成保存----------------------------------------------
-            saveModify:function(){//修改仓库信息保存
+            saveModify:function(){//保存修改
                 let self = this;
-                
-                if(self.updateList.length>0){
-                    self.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
+                if(self.ifModify){
+                    let submitData = {};
+                    submitData = {
+                        stock_MainTable:self.repositoryData,
+                        stockAddress_ChildTable:self.repositoryAddressData
+                    }
+                    // console.log(submitData)
+                    self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',submitData).then(function(res){
                         console.log(res);
-                        self.open('修改地址信息成功','el-icon-circle-check','successERP');
+                        self.open('修改成功','el-icon-circle-check','successERP');
                         self.updateList = [];
+                        self.redAr = [];
+                        self.ifModify = false;
                     },function(res){
-                        self.open('修改失败','el-icon-error','faildERP');
                         self.errorMessage = true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
-                    
                 }
                 
-                // self.repositoryData.adAreaId == 1;
-                // console.log(self.repositoryData)
-                if(self.ifModify){
-                    self.$validate().then(function(success){
-                        if(success){
-                            self.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
-                                console.log(res);
-                                self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-                                self.ifModify = false;
-                            },function(res){
-                                self.open('修改失败','el-icon-error','faildERP');
-                                self.errorMessage = true;
-                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                            })
-                        }
-                    })
-                }else{
-                    //  self.open('没有需要保存的项目','el-icon-warning','noticERP');
-                };
+                // if(self.updateList.length>0){
+                //     self.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
+                //         console.log(res);
+                //         self.open('修改地址信息成功','el-icon-circle-check','successERP');
+                //         self.updateList = [];
+                //     },function(res){
+                //         self.open('修改失败','el-icon-error','faildERP');
+                //         self.errorMessage = true;
+                //         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                //     })
+                    
+                // }
+                
+                // if(self.ifModify){
+                //     self.$validate().then(function(success){
+                //         if(success){
+                //             self.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
+                //                 console.log(res);
+                //                 self.open('修改仓库信息成功','el-icon-circle-check','successERP');
+                //                 self.ifModify = false;
+                //             },function(res){
+                //                 self.open('修改失败','el-icon-error','faildERP');
+                //                 self.errorMessage = true;
+                //                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                //             })
+                //         }
+                //     })
+                // }
 
-                if(self.addList.length>0){
-                    self.createAddress();
-                }
+                // if(self.addList.length>0){
+                //     self.createAddress();
+                // }
                 
             },
 
@@ -986,32 +1143,27 @@
                 }
             },
 
-            createAddress:function(){//保存新增的仓库地址信息
-                let self = this;
+            // createAddress:function(){//保存新增的仓库地址信息
+            //     let self = this;
                 
-                this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
-                    console.log(res);
-                    self.open('新增地址成功','el-icon-circle-check','successERP');
-                    self.addList = [];
-                    self.loadData();
-                })
+            //     this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
+            //         console.log(res);
+            //         self.open('新增地址成功','el-icon-circle-check','successERP');
+            //         self.addList = [];
+            //         self.loadData();
+            //     })
                 
-            },
+            // },
             //------------------------------------------------------------
 
             //---控制是否可编辑---------------------------------------        
-            Cancel(){
-                let self = this;
-                self.loadData();
-                self.ifModify = false;
-                $('.tipsWrapper').css({display:'none'})
-                // }
-            },
+            
             //-------------------------------------------------------
 
             //---表格编辑-------------------------------------------------
             addCol:function(){//增行
                 let self = this;
+                self.ifModify = true;
                 self.x++;
                 let newCol = 'newCol'+self.x;
                 self.rows.newCol ={
@@ -1052,8 +1204,8 @@
                     }
                 }
 
-                console.log(self.allDelArray)
-                console.log(self.idArray)
+                // console.log(self.allDelArray)
+                // console.log(self.idArray)
 
                 if(self.allDelArray.ids.length>0){
                     // if(self.idArray.ids.indexOf(undefined)!=-1){
@@ -1078,8 +1230,11 @@
             //---顶部删除按钮-----------------------------------------
             delModify:function(num){
                 let self = this;
-                self.who = num
-                self.dialogDelConfirm = true;
+                if(!self.ifModify){
+                    self.who = num
+                    self.dialogDelConfirm = true;
+                }
+                
             },
             //-------------------------------------------------------
 
@@ -1134,7 +1289,7 @@
                                 x.push(value)
                             }
                         })
-                        console.log(x)
+                        // console.log(x)
                         self.repositoryAddressData = x;
                         self.addList = [];
                         for(let i in x){
@@ -1145,7 +1300,7 @@
                             }
                         }
                         // console.log()
-                        console.log(self.addList)
+                        // console.log(self.addList)
                         self.dialogDelConfirm = false;
                     // }
                     
@@ -1167,7 +1322,7 @@
             //------------------------------------------------------
             
             handleSelectionChange:function(val){//点击复选框选中的数据
-                console.log(val)
+                // console.log(val)
                 this.multipleSelection = val;
 
                 // if(val.id&&val.id>0){
@@ -1177,7 +1332,7 @@
 
             handleChange:function(index,row){
                 let self = this;
-                self.ifDoModify = true;
+                self.ifModify = true;
                 let flag = false;
                 if(self.updateList.length==0&&row.id>0){
                     flag = true;
@@ -1185,7 +1340,7 @@
                     for(let i in self.updateList){
                         if(row.id != self.updateList[i].id){
                             flag = true;
-                            console.log(flag) 
+                            // console.log(flag) 
                         }else{
                             flag= false;
                             break;        
@@ -1208,49 +1363,79 @@
                 self.repositoryAddressData[index].isDefault = true;
                 self.updateList.push(self.checkedAr)
             },
-            // handleDelete:function(index,row){//表格内删除操作
-            //     let self = this;
-                
-            //     self.$confirm('确定删除?', '提示', {
-            //         confirmButtonText: '确定',
-            //         cancelButtonText: '取消',
-            //         type: 'warning',
-            //         center: true
-            //         }).then(() => {
-            //             self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:row.id}).then(function(res){
-            //                 self.repositoryAddressData.splice(index,1)
-            //                 self.loadAllList();
-            //                 self.open('删除成功','el-icon-circle-check','successERP');    
-            //             })
-            //         }).catch(() => {
-            //             self.$message({
-            //                 type: 'info',
-            //                 message: '已取消删除'
-            //             });
-            //         });
-                
-            // },
+            
             Modify:function(){
                 let self = this;
                 self.ifModify = true;
             },
             //------------------------------------------------------
 
-            //---修改返回提示-----------------------------------------
+            //---修改返回\取消提示-----------------------------------------
             isBack(){
                 let self=this;
                 if(self.ifModify){
                     self.dialogUserConfirm=true;
+                    self.backCancel = 1;
                     // self.choseDoing='back'
                 }else{
                     self.back()
                 }
             },
+            Cancel(){
+                let self = this;
+                if(self.ifModify){
+                    self.dialogUserConfirm=true;
+                    self.backCancel = 2;
+                    $('.tipsWrapper').css({display:'none'})
+                }
+                
+                
+                // }
+            },
             sureDoing:function(){
                 let self = this;
-                self.back();
+                if(self.backCancel ==1){
+                    self.back();
+                }else if(self.backCancel == 2){
+                    self.loadData();
+                    self.ifModify = false;
+                    self.dialogUserConfirm=false;
+                }
+                
             },
             //-------------------------------------------------------
+
+            //---选择省市区-----------------------------------------------
+            chooseProvince:function(id){
+                let self = this;
+                // console.log(id)
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                    // console.log(res);
+                    self.areaCityArray = res.result;
+                    // self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                });
+
+            },
+            chooseCity:function(id){
+                let self = this;
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                    // console.log(res);
+                    self.repositoryData.adAreaId = '';
+                    self.areaDisArray = res.result;
+                    
+
+                    // self.loadIcon();
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
+            chooseDis:function(){
+                let self = this;
+                // console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
+            },
+            //-----------------------------------------------------------
 
             //---open-------数据清除--------路由跳转-----------------------
             open(tittle,iconClass,className) {
@@ -1272,6 +1457,13 @@
             goDetail(){//点击新增跳转
                 this.$store.state.url='/repository/repositoryData/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            addNew:function(){
+                let self = this;
+                if(!self.ifModify){
+                    this.$store.state.url='/repository/repositoryData/default'
+                    this.$router.push({path:this.$store.state.url})//点击切换路由
+                }
             },
             //------------------------------------------------------------
             //---树-------------------------------------------------------------
@@ -1349,6 +1541,7 @@
             //-----------------------------------------------------
             //---提示错误----------------------------------------------
             showErrprTips(e){
+                // $('.tipsWrapper').css({display:'none'})
                 $('.tipsWrapper').each(function(){
                     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
                         $(this).addClass('display_block')
@@ -1531,6 +1724,9 @@
     text-align:center;
     border:none;
     background-color:#FAFAFA;
+}
+.res-modify .display_block{
+    margin-bottom:5px;
 }
 .el-select.areaDrop,.el-input.areaEntry{
     width: 100px;

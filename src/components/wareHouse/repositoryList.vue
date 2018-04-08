@@ -30,6 +30,7 @@
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
                         <el-select placeholder=""
+                                   clearable 
                                    v-model="searchArea">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -56,7 +57,7 @@
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>仓库类型</label>
-                        <el-select v-model="searchType" placeholder="">
+                        <el-select v-model="searchType" placeholder="" clearable>
                             <el-option v-for="item in stockType"
                                         :key="item.value"
                                         :label="item.label"
@@ -134,8 +135,8 @@
                             <el-table-column prop="stockFullName" label="仓库全称"></el-table-column>
                             <el-table-column prop="stockTypeId" label="仓库类型">
                                 <template slot-scope="scope">
-                                    <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[0].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[1].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.stockTypeId==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[0].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.stockTypeId==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='stockType[1].label' disabled=""></el-input>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="opAreaId_AreaName" label="业务地区"></el-table-column>
@@ -248,7 +249,7 @@
         
         created:function(){
             this.getOuId();
-            this.getAllList();
+            // this.getAllList();
             // this.loadSelect();
             
         },
@@ -273,6 +274,7 @@
                     self.defaultOuId = res.result.id;
 
                     self.loadSelect();
+                    self.getAllList(self.defaultOuId);
                 },function(res){
                     console.log('err'+res)
                 });
@@ -281,7 +283,7 @@
             getAllList:function(){//获取所有仓库列表
                 let self = this; 
 
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:'1',Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
                     console.log(res);
                     self.allList = res.data;
                     self.total = res.total;
@@ -307,16 +309,15 @@
             //---条件查找------------------------------------------
             searchList:function(){//根据条件查找仓库信息
                 let self = this;
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
-                    console.log(res);
-                    if(res.total>0){
-                        self.allList = res.data;
-                        self.total = res.total;
-                    }else{
-                        self.getAllList();
-                    }
-
-                })
+                if(self.searchCode == ''&&self.searchName == ''&&self.searchArea == ''&&self.searchType == ''){
+                    self.getAllList();
+                }else{
+                    this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,StockCode:self.searchCode,StockName:self.searchName,AreaCode:self.searchArea,StockTypeId:self.searchType,Start:'0',Length:'100'}).then(function(res){
+                        console.log(res);
+                            self.allList = res.data;
+                            self.total = res.total;
+                    })
+                }
             },
             //----------------------------------------------------
 
@@ -342,7 +343,7 @@
             sureDel:function(){
                 let self = this;
                 if(self.who == 1){
-                    self.$axios.deletes('/api/services/app/StockManagement/DeleteRepository',{id:self.whoId}).then(function(res){
+                    self.$axios.deletes('/api/services/app/StockManagement/Delete',{id:self.whoId}).then(function(res){
                         
                         self.allList.splice(self.whoIndex,1);
                         self.dialogDelConfirm = false;
@@ -681,5 +682,8 @@ input::-webkit-input-placeholder{
 .res-list .bAreaSearch .el-input__inner{
     height: 30px;
     border-radius: 30px;
+}
+.res-list .el-table .cell{
+    font-size:12px;
 }
 </style>

@@ -17,7 +17,7 @@
                         <small>*</small>用户编码</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="userCode" 
                         :class="{redBorder : validation.hasError('addData.userCode')}" 
                         v-model="addData.userCode" 
@@ -33,7 +33,7 @@
                     <label><small>*</small>用户名称</label>
                     <el-input 
                      
-                    @change="isUpdate"
+                    
                     class="displayName" 
                     :class="{redBorder : validation.hasError('addData.displayName')}" 
                     v-model="addData.displayName"  
@@ -49,7 +49,7 @@
                     <label><small>*</small>手机号码</label>
                     <el-input 
                      
-                    @change="isUpdate"
+                    
                     class="phoneNumber" 
                     :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
                     v-model="addData.phoneNumber"  
@@ -65,7 +65,7 @@
                     <label><small>*</small>邮箱</label>
                     <el-input 
                      
-                    @change="isUpdate"
+                    
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
                     v-model="addData.email"  
@@ -79,9 +79,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属用户组</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                      
-                    @change="isUpdate"
+                    
                     class="userGroupId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
@@ -98,9 +98,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属组织</label>
-                    <el-select 
+                    <el-select clearable 
                      
-                    @change="isUpdate"
+                    
                     class="ouId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.ouId')}"
@@ -138,9 +138,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>身份类型</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                      
-                    @change="isUpdate"
+                    
                     class="userType" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.userType')}"
@@ -157,9 +157,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>语种</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                      
-                    @change="isUpdate"
+                    
                     class="languageId" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
@@ -179,7 +179,7 @@
                         <div class="rangeDate">
                             <el-date-picker
                              
-                            @change="isUpdate"
+                            
                             v-model="dateRange"
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
@@ -202,9 +202,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                          
-                        @change="isUpdate"
+                        
                         class="status" 
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"
@@ -233,7 +233,7 @@
                         <label>备注</label>
                         <el-input
                          
-                         @change="isUpdate"
+                         
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}"
                         v-model="addData.remark"
@@ -440,6 +440,7 @@
     data(){
       return{
         firstModify:false,
+        secondModify:false,
         ifModify:false,
     // 错误信息提示开始
         detail_message_ifShow:false,
@@ -495,7 +496,6 @@
             userGroupId:[],//所属用户组
             languageId:[],//语种
         },
-        update:false, 
 // ------------关联角色dialog-------------
         dialogTableVisible:false,//控制对话框
         checkedTable:[],//已选所有数据
@@ -586,6 +586,17 @@
                 let _this=this;
                 if(!_this.firstModify){
                     _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        checkedTable:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.secondModify){ 
+                    _this.secondModify=!_this.secondModify;
                 }else{
                     _this.ifModify=true
                 }
@@ -735,7 +746,7 @@
         },
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
@@ -744,7 +755,7 @@
         },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -774,15 +785,12 @@
             this.$store.state.url='/user/userList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
         },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
-        },
         Cancel(){
                 this.validation.reset();
                 this.getData();
                 this.GetRoles()
-                this.update=false;
                 this.firstModify=false;
+                this.secondModify=false;
                 this.ifModify=false;
         },
         getErrorMessage(message,details,validationErrors){
@@ -816,7 +824,7 @@
                     .then(function(res){
                         _this.firstModify=false;
                         _this.ifModify=false;
-                        _this.update=false;
+                        this.secondModify=false;
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -839,7 +847,6 @@
                     _this.addData.effectiveEnd=_this.dateRange[1];
                     _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
-                        _this.update=false;
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.add()
                     },function(res){
@@ -1038,14 +1045,12 @@
         },
         noCheck_push_check(){//从右往左添加数据
             let _this=this;
-            _this.update=true;
             
             _this.showChecked=_this.pagination(_this.selection_nochecked,[],_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination([],_this.selection_nochecked,_this.oneItemRight,_this.pageRight,'right')
         },
         check_push_noCheck(){//从左往右添加数据
             let _this=this;
-            _this.update=true;
             _this.showChecked=_this.pagination([],_this.selection_checked,_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination(_this.selection_checked,[],_this.oneItemRight,_this.pageRight,'right')
            
@@ -1053,7 +1058,6 @@
         check_push_noCheckThis(val){//删除一个关联角色
             let _this=this;
                 let json=[val]
-                _this.update=true;
                 _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
                 _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
                 _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')

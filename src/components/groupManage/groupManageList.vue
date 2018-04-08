@@ -1,15 +1,14 @@
 <template>
     <div class="groupList">
         <el-row class="h48 pt5 bg-white">
-            <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <!-- <button v-on:click="Update()" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>            -->
             <button v-on:click="Save()"  class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button v-on:click="Cancel()" v-show="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button v-on:click="Cancel()" :disabled="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
         </el-row>
         <el-row class="bg-white pt20">
                 <div class="bgcolor reset">
-                    <label>集团编码</label><el-input v-model="entryItem.groupCode" ></el-input>
+                    <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
                 </div>
                 <div class="bgcolor reset">
                     <label>集团名称</label><el-input v-model="entryItem.groupName" ></el-input>
@@ -117,6 +116,7 @@
                     remark:'',//备注
                     status:'',//启用状态
                     id:'',//id
+                    areaId:'',
                 },
                 currencyOptions: [],
                 tableData:[],
@@ -156,28 +156,20 @@
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
-                update:false,
-                isCancel:false,//是否显示取消按钮
-                entryItemBak:'',
+                isCancel:true,//是否显示取消按钮
+                entryChangeTimes:0,
                 areaFullPathName:'',
                 areaFullPathArray:[],
             }
         },
         watch:{
-            areaFullPathName:function(val,oldVal){
-                if(val!=""){
-                    this.areaFullPathArray=val.split(">");
-                    this.entryItem.areaProId=this.areaFullPathArray[0];
-                    this.entryItem.areaCityId=this.areaFullPathArray[1];
-                    this.entryItem.areaDisId=this.areaFullPathArray[2];
-                    console.log(this.entryItem.areaProId,this.entryItem.areaCityId,this.entryItem.areaDisId);
-                }
-            },
-            entryItemBak:{
+            entryItem:{
                 handler(val, oldVal){
-                   if(oldVal!=""){
+                   this.entryChangeTimes++
+                   if(this.entryChangeTimes>=2){
+                       this.isCancel=false;
+                   }else{
                        this.isCancel=true;
-                       this.update=true;
                    }
                 },
                 deep:true
@@ -203,16 +195,20 @@
             },
             loadTableData(){//表格
                  let _this=this;
-                _this.$axios.gets('/api/services/app/GroupManagement/Get',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
-                    console.log(res.result);
+                _this.$axios.gets('/api/services/app/GroupManagement/Get',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){
+                    _this.entryChangeTimes=0; 
                     _this.areaFullPathName=res.result.areaId_AreaFullPathName;
+                    _this.areaFullPathArray=_this.areaFullPathName.split(">");
+                    _this.entryItem.areaProId=_this.areaFullPathArray[0];
+                    _this.entryItem.areaCityId=_this.areaFullPathArray[1];
+                    _this.entryItem.areaDisId=_this.areaFullPathArray[2];
                     _this.entryItem.groupCode=res.result.groupCode;
                     _this.entryItem.groupName=res.result.groupName;
                     _this.entryItem.groupFullname=res.result.groupFullname;
                     _this.entryItem.localCurrencyId=res.result.localCurrencyId;
                     _this.entryItem.accSchemeId=res.result.accSchemeId;
                     _this.entryItem.accStartMonth=res.result.accStartMonth;
-                    //_this.entryItem.areaProId=res.result.areaId;
+                    _this.entryItem.areaId=res.result.areaId;
                     _this.entryItem.industry=res.result.industry;
                     _this.entryItem.address=res.result.address;
                     _this.entryItem.phone=res.result.phone;
@@ -241,9 +237,6 @@
             //     this.isEdit=false;
             //     this.isCancel=true;
             // },
-            isUpdate(){//判断是否修改过信息
-                this.update=true;
-            },
             ChoosePro(){//选择省份
                 let _this=this;
                 this.areaDis=false;
@@ -257,21 +250,27 @@
             },
             ChooseCity(){//选择市
                 let _this=this;
-                _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:_this.entryItem.areaCityId}).then(function(res){ 
-                    _this.areaDisArray=res.result;
-                    _this.entryItem.areaDisId="";
-                    _this.areaDis=true;
-                  },function(res){
-                })
+                if(_this.areaCityArray.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请先选择省份！'
+                    });
+                }else{
+                    _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:_this.entryItem.areaCityId}).then(function(res){ 
+                        _this.areaDisArray=res.result;
+                        _this.entryItem.areaDisId="";
+                        _this.areaDis=true;
+                    },function(res){
+                    })
+                } 
             },
             ChooseDis(){//选择区
                 
             },
             Save(){
                 let _this=this;
-
                 let updateItem={
-                    groupName: _this.entryItem.groupCode,
+                    groupName: _this.entryItem.groupName,
                     groupFullname:_this.entryItem.groupFullname,
                     localCurrencyId: _this.entryItem.localCurrencyId,
                     accSchemeId:_this.entryItem.accSchemeId,
@@ -283,29 +282,29 @@
                     remark:_this.entryItem.remark,
                     status: _this.entryItem.status
                 }
-                if(_this.entryItem.areaDisId!=""){
+                if(_this.entryItem.areaDisId!=""&&typeof(_this.entryItem.areaDisId)!="string"){
                     updateItem.areaId=_this.entryItem.areaDisId
-                }else if(_this.entryItem.areaDisId==""&&_this.entryItem.areaCityId!=""){
+                }else if(_this.entryItem.areaDisId==""&&_this.entryItem.areaCityId!=""&&typeof(_this.entryItem.areaCityId)!="string"){
                     updateItem.areaId=_this.entryItem.areaCityId
-                }else if(_this.entryItem.areaProId!=""&&_this.entryItem.areaCityId==""){
+                }else if(_this.entryItem.areaProId!=""&&_this.entryItem.areaCityId==""&&typeof(_this.entryItem.areaProId)!="string"){
                     updateItem.areaId=_this.entryItem.areaProId
+                }else if(typeof(this.entryItem.areaDisId)=="string"&&typeof(_this.entryItem.areaCityId)=="string"&&typeof(_this.entryItem.areaProId)=="string"){
+                    updateItem.areaId=_this.entryItem.areaId
                 }
-                if(_this.update){
+                if(!_this.isCancel){
                     _this.$axios.puts('/api/services/app/GroupManagement/Update',updateItem).then(function(res){ 
                         _this.open('修改成功','el-icon-circle-check','successERP');
                         _this.isEdit=!_this.isEdit;
                         },function(res){
                         _this.open('修改失败','el-icon-error','faildERP');
                     });
-                    _this.update=false;
+                    _this.isCancel=true;
                 }else{
                     _this.open('没有需要保存的项目','el-icon-warning','noticERP');
                 }
             },
             Cancel(){
-               this.isCancel=false;
-               this.update=false;
-               this.loadTableData();
+                this.loadTableData();
                 
             },
             loadTree(){
@@ -614,5 +613,9 @@
 }
 .areaDrop .el-input__inner,.areaEntry .el-input__inner{
     height: 32px!important;
+}
+button.erp_bt[disabled] {
+    cursor: not-allowed;
+    background: #ccc;
 }
 </style>
