@@ -314,10 +314,9 @@
                 },
                 selectProps_area: {
                     children: 'childItems',
-                    label: 'name',
+                    label: 'areaName',
                     id:'id'
                 },
-                AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
 
                 tableLoading:false,
                 treeLoading:false,
@@ -345,7 +344,7 @@
                 ],
                 defaultProps: {
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
                 pageIndex:1,//分页的当前页码
@@ -476,7 +475,7 @@
                    _this.treeLoading=false;
                })
                //地区
-                _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
                 .then(function(res){
                     _this.selectTree_area=res.result;
                     _this.loadIcon();
@@ -629,7 +628,7 @@
             nodeClick(data){
                  let _this=this;
                  _this.detailParentId=data.id;
-                 _this.detailParentName=data.ouFullname;
+                 _this.detailParentName=data.ouName;
                  _this.page=1
                  _this.ajaxTable({OuParentid:_this.detailParentId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                  
@@ -637,7 +636,7 @@
             nodeClick_area(data,node,self){
                 let _this=this;
                 _this.item.id=data.id;
-                _this.item.areaName=data.name;
+                _this.item.areaName=data.areaName;
                 _this.$nextTick(function(){
                     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 })

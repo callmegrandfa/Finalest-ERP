@@ -328,10 +328,19 @@ export default {
                 _this.$store.state.url=menuUrl;//储存当前url在router里的name
                 // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
                 if(flag){
-                    temporary.push(pushItem);
+                    if(typeof(_this.$store.state[menuUrl])!='undefined'){
+                        temporary.push(pushItem);
+                        window.localStorage.setItem('ERP',JSON.stringify(temporary));
+                        _this.switch();
+                    }else{
+                        alert('web地址错误')
+                    }
+                    
+                }else{
+                    _this.switch();
                 }
-                window.localStorage.setItem('ERP',JSON.stringify(temporary));
-                _this.switch();
+                
+                
                 if(_this.$route.fullPath=='/'){
                     $.each(temporary,function(index,val){
                         if(val.name==pushItem.name){

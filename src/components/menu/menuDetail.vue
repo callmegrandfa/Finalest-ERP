@@ -247,7 +247,6 @@
                             <el-col :span="24" class="transfer_header">
                                 <span>可选</span>
                                 <div class="transfer_search" @keyup.enter="searchRightTable">
-                                   
                                     <el-input
                                         placeholder="搜索..."
                                         v-model="searchTableRight"
@@ -255,7 +254,6 @@
                                         >
                                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                                     </el-input>
-                                    
                                 </div>
                             </el-col>    
                             <el-col :span="24" class="transfer_table">
@@ -341,8 +339,8 @@
             firstModify:false,
             secondModify:false,
             ifModify:false,
-            searchTableLeft:'',
-            searchTableRight:'',
+            searchTableLeft:'',//搜索
+            searchTableRight:'',//搜索
             // 错误信息提示开始
             detail_message_ifShow:false,
             errorMessage:false,
@@ -371,7 +369,7 @@
             }],
             componyTree:[],
             defaultProps: {
-                children: 'children',
+                children: 'no',
                 label: 'displayName',
                 value:'permissionName'
             },
@@ -671,28 +669,30 @@
             return result;
         },
         nodeClick(data,event){
-           let _this=this;
-            let all=data.children;
-            let checkClick=[];
-            let nocheckedClick=[];
-            _this.nowClickNode=data.displayName;
-            if(!_this.storeNodeClickData[data.displayName]){
-                if(_this.checked.length>0){
-                    for(let i=0;_this.checked.length>i;i++){
-                        for(let x=0;all.length>x;x++){
-                            if(_this.checked[i].permissionName==all[x].permissionName){
-                                checkClick.push(all[x])
+            if(data.permissionName==""){
+                let _this=this;
+                let all=data.children;
+                let checkClick=[];
+                let nocheckedClick=[];
+                _this.nowClickNode=data.displayName;
+                if(!_this.storeNodeClickData[data.displayName]){
+                    if(_this.checked.length>0){
+                        for(let i=0;_this.checked.length>i;i++){
+                            for(let x=0;all.length>x;x++){
+                                if(_this.checked[i].permissionName==all[x].permissionName){
+                                    checkClick.push(all[x])
+                                }
                             }
                         }
+                        nocheckedClick=_this.uniqueArray(all,checkClick)
+                    }else{
+                        nocheckedClick=all
                     }
-                    nocheckedClick=_this.uniqueArray(all,checkClick)
-                }else{
-                    nocheckedClick=all
+                    _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
                 }
-                _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
+                _this.checkTable=_this.storeNodeClickData[data.displayName].check;
+                _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
             }
-            _this.checkTable=_this.storeNodeClickData[data.displayName].check;
-            _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
         },
         rightFn_change(val){
             let _this=this;
@@ -749,29 +749,39 @@
         searchLeftTable(){
             let _this=this;
             // checkTable
-            let newJson=[];
-            let patt1 = new RegExp(_this.searchTableLeft);
-            $.each(_this.checkTable,function(index,val){
-                let str=val.displayName;
-                let result = patt1.test(str);
-                if(result){
-                    newJson.push(val)
-                }
-            })
+            if(_this.nowClickNode!=""){
+                let newJson=[];
+                let patt1 = new RegExp(_this.searchTableLeft);
+                $.each(_this.storeNodeClickData[_this.nowClickNode].check,function(index,val){
+                    let str=val.displayName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val)
+                    }
+                })
+            
+                _this.storeNodeClickData[_this.nowClickNode].searchDataCheck=newJson;
+                _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].searchDataCheck;
+            }
            
         },
         searchRightTable(){
             let _this=this;
             // nocheckTable
-            let newJson=[];
-            let patt1 = new RegExp(_this.searchTableRight);
-            $.each(_this.nocheckTable,function(index,val){
-                let str=val.displayName;
-                let result = patt1.test(str);
-                if(result){
-                    newJson.push(val)
-                }
-            })
+            if(_this.nowClickNode!=""){
+                let newJson=[];
+                let patt1 = new RegExp(_this.searchTableRight);
+                $.each(_this.storeNodeClickData[_this.nowClickNode].nochecked,function(index,val){
+                    let str=val.displayName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val)
+                    }
+                })
+            
+                _this.storeNodeClickData[_this.nowClickNode].searchDataNoCheck=newJson;
+                _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].searchDataNoCheck;
+            }
         },
 //-------------按钮操作-----------
         isBack(){
