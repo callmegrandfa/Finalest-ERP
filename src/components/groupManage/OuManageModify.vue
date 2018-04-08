@@ -1617,16 +1617,22 @@ export default({
         },
         nodeClick_ou(data,node,self){
             let _this=this;
-            // _this.item_ou.id=data.id;
-            // _this.item_ou.ouFullname=data.ouFullname;
-            // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
-            })
+            // console.log(data)
+            // console.log(_this.addData)
+            if(_this.addData.id==data.id){
+                alert("上级业务单元不能为业务单元本身")
+            }else{
+                // _this.item_ou.id=data.id;
+                // _this.item_ou.ouFullname=data.ouFullname;
+                // _this.$nextTick(function(){
+                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                // })
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
+            }
         },
         isBack(){
             let _this=this;

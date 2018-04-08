@@ -584,17 +584,24 @@
             })
         },
          selectNodeClick(data,dialogTableVisible,self){
+
             let _this=this;
-            _this.item.id=data.id;
-            _this.item.moduleName=data.moduleName;
-            // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
-            })
+            // console.log(data.id)
+            // console.log(_this.addData.id)
+            if(_this.addData.id==data.id){
+                alert("上级菜单不能为菜单本身")
+            }else{
+                _this.item.id=data.id;
+                _this.item.moduleName=data.moduleName;
+                // _this.$nextTick(function(){
+                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                // })
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
+            }
         },
         loadParent(){
             let _this=this;

@@ -565,7 +565,6 @@
     },
     nodeClick_area(data,node,self){
         let _this=this;
-        
         _this.item_area.id=data.id;
         _this.item_area.areaName=data.areaName;
         _this.$nextTick(function(){
