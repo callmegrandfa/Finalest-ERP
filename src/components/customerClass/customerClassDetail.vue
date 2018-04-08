@@ -64,13 +64,17 @@
                                      ref="tree"
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
-                                     @node-click="nodeClick"></el-tree> 
+                                     @node-click="nodeClick"
+                                     
+                                     ></el-tree> 
 
-                            <el-option v-show="false"
+                            <!-- <el-option v-show="false"
                                        :key="count.id" 
                                        :label="count.className" 
                                        :value="count.id"
-                                       id="customerClass_confirmSelect"></el-option>
+                                       id="customerClass_confirmSelect"></el-option> -->
+                                       <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.classParentId') }}</div>
@@ -132,7 +136,9 @@
                             <el-option v-for="item in status" 
                                        :key="item.itemValue" 
                                        :label="item.itemName" 
-                                       :value="item.itemValue"></el-option>
+                                       :value="item.itemValue">
+                            </el-option>
+                            
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
@@ -203,7 +209,7 @@
                 },
                 parentItem:{
                     id:'',
-                    className:'',
+                    className:'1111',
                 },
                 
                 status: [],//状态
@@ -223,6 +229,10 @@
                     "mnemonic": "1",
                     "createdBy" :'',
                     "createdTime"  :''
+                    },
+                    selectData:{//select数据
+                        Status001:[],//启用状态
+                        menu:[],//菜单
                     },
                 choseDoing:'',//存储点击按钮判断信息
                 dialogUserConfirm:false,//信息更改提示控制
@@ -251,6 +261,8 @@
             let self = this;
             self.loadParentTree();
             self.loadStatus();
+            self.getDefault();
+            self.getSelectData();
         },
     computed:{
         count () {
@@ -258,6 +270,18 @@
             },
     },  
     methods: {
+        getSelectData(){
+            let _this=this;
+            // _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+            // // 启用状态
+            // _this.selectData.Status001=res.result;
+            // })
+           _this.$axios.gets('api/services/app/ContactClassManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+            // 菜单
+            _this.selectData.menu=res.result.items;
+           
+            })
+        },
         //---加载数据上级商品树-------------------------------------------  
         loadParentTree(){
             let self=this;
@@ -271,11 +295,21 @@
                 
             })
         },
+        getDefault(){
+            let _this=this;
+            if(_this.$route.params.id!="default"){
+                _this.addData.classParentId=parseInt(_this.$route.params.id);
+                _this.parentItem.className = '111111';
+                _this.parentItem.id=_this.$route.params.id;
+                console.log(_this.$route.params.name)
+                // alert(1)
+            }
+        },
         //加载状态下拉框
         loadStatus:function(){
             let self = this;
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                // console.log(res)        
+                console.log(res)        
             self.status = res.result;            
             },function(res){
                 
@@ -318,20 +352,22 @@
             });
         },
         saveAdd:function(){
-            let self = this;
-            self.$validate().then(function (success) {
+            let _this = this;
+            _this.$validate().then(function (success) {
+                console.log(success);
                 if (success) {
-                    self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){
+                    _this.$axios.posts('/api/services/app/ContactClassManagement/Create',_this.addData).then(function(res){
                         //  self.addData=res.result;
-                         self.addData.id=res.result.id;
-                         self.$store.state.url='/customerClass/customerClassDetail/default'
-                         self.$router.push({path:self.$store.state.url})
-                         self.open('保存成功','el-icon-circle-check','successERP');
-                          self.clearData();
-                          self.update=false;
-                         console.log(self.update)
+                         _this.addData.id=res.result.id;
+                         _this.$store.state.url='/customerClass/customerClassDetail/default'
+                         _this.$router.push({path:_this.$store.state.url})
+                         _this.open('保存成功','el-icon-circle-check','successERP');
+                          _this.clearData();
+                          _this.validation.reset();
+                          _this.update=false;
+                         console.log(_this.update)
                     },function(res){    
-                        self.open('保存失败','el-icon-error','faildERP');
+                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             });
@@ -397,9 +433,9 @@
                 "mnemonic": "1",
                 "createdBy" :'',
                 "createdTime"  :''
-            },
+            }
             // self.getDefault()
-            self.validation.reset();
+            
         },
         //---------------------------------------------------------
         //---下拉树------------------------------------------------.
@@ -409,12 +445,17 @@
                 return data.className.indexOf(value) !== -1;
         },
 
-        nodeClick:function(data){
-            let self = this;
-            self.parentItem.id = data.id;
-            self.parentItem.className = data.className;
-            self.$nextTick(function(){
-                $('#customerClass_confirmSelect').click()
+        nodeClick:function(data,node,self){
+            let _this = this;
+            _this.parentItem.id = data.id;
+            _this.parentItem.className = data.className;
+            // self.$nextTick(function(){
+            //     $('#customerClass_confirmSelect').click()
+            // })
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
             })
         },
         //-------------按钮操作-----------
