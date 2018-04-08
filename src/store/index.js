@@ -142,15 +142,20 @@ export default new vuex.Store({
         staff:{ name: 'staff', url: '/staff/staffList/:id', parent: '', default: '/staff/staffList/:id' } , 
         staffList:{ name: 'staffList', url: '/staff/staffList/:id', parent: 'staff' } ,
         staffDetail:{ name: 'staffDetail', url: '/staff/staffDetail/:id', parent: 'staff' } ,
+        staffModify: { name: 'staffModify', url: '/staff/staffModify/:id', parent: 'staff' } ,
         //计量单位
-        count:{ name: 'count', url: '/count/countList/:id', parent: '' , default: '/count/countList/:id' }, 
+        unitOfMeasurement: { name: 'unitOfMeasurement', url: '/unitOfMeasurement/unitOfMeasurementList/:id', parent: '', default: '/unitOfMeasurement/unitOfMeasurementList/:id' }, 
+        unitOfMeasurementList: { name: 'unitOfMeasurementList', url: '/unitOfMeasurement/unitOfMeasurementList/:id', parent: 'unitOfMeasurement' , default: '/unitOfMeasurement/unitOfMeasurementList/:id' }, 
         //行政地区
         adminstrArea:{ name: 'adminstrArea', url: '/adminstrArea/adminstrAreaList/:id', parent: '', default: '/adminstrArea/adminstrAreaList/:id' }, 
-        adminstrAreaDetail:{ name: 'adminstrAreaDetail', url: '/adminstrArea/adminstrAreaDetail/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaList/:id' }, 
-        adminstrArea:{ name: 'adminstrArea', url: '/adminstrArea/adminstrAreaModify/:id', parent: '', default: '/adminstrArea/adminstrAreaModify/:id' },
+        adminstrAreaList: { name: 'adminstrAreaList', url: '/adminstrArea/adminstrAreaList/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaList/:id' }, 
+        adminstrAreaDetail: { name: 'adminstrAreaDetail', url: '/adminstrArea/adminstrAreaDetail/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaDetail/:id' }, 
+        adminstrAreaModify: { name: 'adminstrAreaModify', url: '/adminstrArea/adminstrAreaModify/:id', parent: 'adminstrArea', default: '/adminstrArea/adminstrAreaModify/:id' }, 
+       
         //供应商分类
         supplierClassify:{ name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: '', default: '/supplierClassify/supplierClassifyList/:id' },
-        supplierClassifyDetail:{ name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
+        supplierClassifyList: { name: 'supplierClassifyList', url: '/supplierClassify/supplierClassifyList/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
+        supplierClassifyDetail: { name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyDetail/:id' },
         supplierClassifyModify:{ name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
 //----------------------------------------------------------------------------路由数据-----------------------------------------------------------------------
 

@@ -210,8 +210,8 @@ const staffDetail = () =>
 const staffModify = () =>
     import ('../components/staffInfo/staffModify')
     // 计量单位
-const count=()=>import('../components/count/count')
-const countList=()=>import('../components/count/countList')
+const unitOfMeasurement = () => import('../components/count/unitOfMeasurement')
+const unitOfMeasurementList = () => import('../components/count/unitOfMeasurementList')
     // 行政地区
 const adminstrArea = () => import('../components/administrativeArea/adminstrArea')
 const adminstrAreaList = () => import('../components/administrativeArea/adminstrAreaList')
@@ -516,17 +516,8 @@ const routes = [
                 path: '/staff',
                 component: staff,
                 name: 'staff',
-                redirect: function() { //职员资料组
-                    let name = 'staff';
-                    let activeRouter = store.state.activeRouter;
-                    for (let i = 0; i < activeRouter.length; i++) {
-                        if (activeRouter[i].name == name) {
-
-                            return activeRouter[i].url;
-
-                            break;
-                        }
-                    }
+                redirect: function () { //职员资料组
+                    return redirectRouter('staff')
                 },
                 children: [
                     { path: '/staff/staffList/:id', component: staffList, name: 'staffList' },
@@ -611,14 +602,14 @@ const routes = [
                 ]
             },
             {
-                path: '/count',
-                component: count,
-                name: 'count',
+                path: '/unitOfMeasurement',
+                component: unitOfMeasurement,
+                name: 'unitOfMeasurement',
                 redirect: function () { //计量单位
-                    return redirectRouter('count')
+                    return redirectRouter('unitOfMeasurement')
                 },
                 children:[
-                    { path: '/count/countList/:id', component: countList, name:'countList'}
+                    { path: '/unitOfMeasurement/unitOfMeasurementList/:id', component: unitOfMeasurementList, name:'unitOfMeasurementList'}
                 ],
 
             },

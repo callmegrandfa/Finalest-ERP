@@ -293,7 +293,7 @@
                     // console.log(_this.multipleSelection);
                 },
                 nodeClick(data){// 节点被点击时的回调
-                    console.log(data);
+                    // console.log(data);
                     let _this=this;
                     _this.upAreaName=data.areaName;
                     _this.upParentId=data.id;
