@@ -227,13 +227,6 @@ const supplierClassifyModify = () => import('../components/supplierClassify/supp
 let redirectRouter = function(routerName) { //重定向
     // let activeRouter = store.state.activeRouter;
     return store.state[routerName].url
-    // for (let i = 0; i < activeRouter.length; i++) {
-    //     if (activeRouter[i].name == routerName) {
-    //         return activeRouter[i].url;
-    //         break;
-    //     }
-    // }
-    
 }
 Vue.use(Router)
 const routes = [
@@ -498,16 +491,7 @@ const routes = [
             { path: '/specificationOfGoods/:id', component: specificationOfGoods, name: 'specificationOfGoods' },
 
             { path: '/tenant', component: tenant,name:'tenant',redirect: function(){//租户管理
-              let name='tenant';
-              let activeRouter=store.state.activeRouter;
-              for(let i=0;i<activeRouter.length;i++){
-                  if(activeRouter[i].name==name){
-
-                    return activeRouter[i].url;
-
-                    break;
-                  }
-              }
+                return redirectRouter('tenant')
             },children:[
                 { path: '/tenant/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
                 { path: '/tenant/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
@@ -517,16 +501,7 @@ const routes = [
                 component: staff,
                 name: 'staff',
                 redirect: function() { //职员资料组
-                    let name = 'staff';
-                    let activeRouter = store.state.activeRouter;
-                    for (let i = 0; i < activeRouter.length; i++) {
-                        if (activeRouter[i].name == name) {
-
-                            return activeRouter[i].url;
-
-                            break;
-                        }
-                    }
+                    return redirectRouter('staff')
                 },
                 children: [
                     { path: '/staff/staffList/:id', component: staffList, name: 'staffList' },
@@ -676,27 +651,21 @@ router.beforeEach((to, from, next) => {
     //         }
     //     }
     // })
-    if (store.state.accessToken != '' && typeof(store.state.accessToken)!='undefined') {
-        document.title = to.name
-        // let activeRouter = store.state.activeRouter;
-        store.state[to.name].url=to.fullPath;
-        store.state[store.state[to.name].parent].url=to.fullPath
-        // let parent = '';
-        // let url = '';
-        // for (let i = 0; i < activeRouter.length; i++) {
-        //     if (activeRouter[i].name == to.name) {
-        //         parent = activeRouter[i].parent;
-        //         url = activeRouter[i].url;
-        //         break
-        //     }
-        // }
-        // for (let i = 0; i < activeRouter.length; i++) {
-        //     if (activeRouter[i].name == parent) {
-        //         activeRouter[i].url = url
-        //         break
-        //     }
-        // }
+    if (store.state.accessToken != '') {
+        // store.state[to.name].url=to.fullPath;
+        // store.state[store.state[to.name].parent].url=to.fullPath
+        if(typeof(store.state[to.name])!='undefined'){
+            document.title = to.name
+            store.state[to.name].url=to.fullPath;
+            store.state[store.state[to.name].parent].url=to.fullPath
+            next()
+        }else{
+            alert('路由定向出错')
+        }
+        
+    }else{
+        next()
     }
-    next()
+    
 })
 export default router

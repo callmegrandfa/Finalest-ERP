@@ -314,7 +314,7 @@
                 },
                 selectProps_area: {
                     children: 'childItems',
-                    label: 'name',
+                    label: 'areaName',
                     id:'id'
                 },
 
@@ -475,7 +475,7 @@
                    _this.treeLoading=false;
                })
                //地区
-                _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
+                _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
                 .then(function(res){
                     _this.selectTree_area=res.result;
                     _this.loadIcon();
@@ -636,7 +636,7 @@
             nodeClick_area(data,node,self){
                 let _this=this;
                 _this.item.id=data.id;
-                _this.item.areaName=data.name;
+                _this.item.areaName=data.areaName;
                 _this.$nextTick(function(){
                     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 })
