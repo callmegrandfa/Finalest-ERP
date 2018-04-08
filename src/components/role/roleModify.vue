@@ -483,8 +483,9 @@
                              <el-col :span="24" class="chooseFn">
                                 <el-checkbox @change="CheckAllFn" v-model="checkAllFns">全选</el-checkbox>
                                 <el-checkbox @change="showCheckFn" v-model="showCheckFns">查看已选</el-checkbox>
+                                <i class="fa fa-cog" aria-hidden="true" @click="nextDivIsShow = !nextDivIsShow"></i>
                             </el-col>
-                            <el-col :span="24" class="checkbox_group">
+                            <el-col :span="24" class="checkbox_group" v-show="nextDivIsShow">
                                 <span v-for="(x,index) in showCheckedFnTable" :key="index">
                                     <span v-for="(i,inde) in x.children" :key="inde">
                                         <el-checkbox
@@ -774,6 +775,7 @@ export default({
             searchBottomUser:'',//搜索
 
 //-----------关联权限---------------
+            nextDivIsShow:true,//按钮组显示隐藏
             filterTextFn:'',//树形搜索框值
             // dialogFn:false,
             checked:[],//展示所有权限
@@ -1035,14 +1037,19 @@ export default({
 
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
-                    //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
-                    console.log(_this.addData)
+                    // console.log(_this.addData)
                     //ajax
                     _this.$axios.puts('/api/services/app/Role/Update',_this.addData)
                     .then(function(res){
+                        _this.auditInformation={//审计信息
+                            createdBy:res.result.createdBy,
+                            createdTime:res.result.createdTime,
+                            modifiedBy:res.result.modifiedBy,
+                            modifiedTime:res.result.modifiedTime,
+                        }
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -1440,7 +1447,7 @@ export default({
             // /api/services/app/Role/GetAllPermissions
             _this.$axios.gets('/api/services/app/Role/GetPermissions',{Id:_this.$route.params.id})
             .then(function(res){
-                console.log(res)
+                // console.log(res)
                 _this.checked=res.result.items;
                 _this.pageTable=res.result.items;
                 _this.clickFnTreeData=[];
@@ -1806,7 +1813,7 @@ export default({
             
            .then(function(response){//获取已选角色
                 let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
-                console.log(response)
+                // console.log(response)
                 if(totalCheckedAll>0){
                     _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
                     .then(function(resp){//获取已选角色
@@ -1970,6 +1977,13 @@ export default({
       height: 30px;
       line-height: 30px;
       padding-left: 10px;
+  }
+   .chooseFn .fa-cog{
+       cursor: pointer;
+        color: #c9d1d1;
+        float: right;
+        line-height: 30px;
+        font-size: 20px;
   }
   .roleModify .add{
     position: absolute;

@@ -680,16 +680,22 @@
         },
         nodeClick_area(data,node,self){
             let _this=this;
-            _this.item_area.id=data.id;
-            _this.item_area.areaName=data.areaName;
-            _this.$nextTick(function(){
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            })
-            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-            //     if($(this).attr('date')==data.id){
-            //         $(this).click()
-            //     }
-            // })
+            //  console.log(data.id)
+            // console.log(_this.addData)
+            if(_this.addData.id==data.id){
+                alert("上级业务地区不能为业务地区本身")
+            }else{
+                _this.item_area.id=data.id;
+                _this.item_area.areaName=data.areaName;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                })
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // })
+            }
         },
     }
 

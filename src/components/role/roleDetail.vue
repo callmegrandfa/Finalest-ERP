@@ -489,8 +489,9 @@
                              <el-col :span="24" class="chooseFn">
                                 <el-checkbox @change="CheckAllFn" v-model="checkAllFns">全选</el-checkbox>
                                 <el-checkbox @change="showCheckFn" v-model="showCheckFns">查看已选</el-checkbox>
+                                <i class="fa fa-cog" aria-hidden="true" @click="nextDivIsShow = !nextDivIsShow"></i>
                             </el-col>
-                            <el-col :span="24" class="checkbox_group">
+                            <el-col :span="24" class="checkbox_group" v-show="nextDivIsShow">
                                 <span v-for="(x,index) in showCheckedFnTable" :key="index">
                                     <span v-for="(i,inde) in x.children" :key="inde">
                                         <el-checkbox
@@ -737,6 +738,7 @@ export default({
             searchBottomUser:'',//搜索
 
 //-----------关联权限---------------
+            nextDivIsShow:true,//按钮组显示隐藏
             filterTextFn:'',//树形搜索框值
             // dialogFn:false,
             checked:[],//展示所有权限
@@ -799,7 +801,7 @@ export default({
         // _this.loadOuTable();//分配组织表格分页数据
         // _this.getAllCheckOu();//获取所有已关联组织数据
         // _this.getAllOulength();//获取所有数据长度判断是否全选
-        // _this.loadOuTreeAll();//关联组织树形所有数据
+        _this.loadOuTreeAll();//关联组织树形所有数据
         // _this.loadOuTreeLeft();////关联组织树形左侧已选数据
         // _this.getCheckFn();//获取已关联权限
         // _this.getAllFn();//获取所有权限
@@ -1021,7 +1023,7 @@ export default({
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
                     //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
                     //ajax
@@ -1246,14 +1248,14 @@ export default({
     
         //     })
         // },
-        // loadOuTreeAll(){
-        //     let _this=this;
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:_this.$route.params.id})
-        //     .then(function(res){
-        //         _this.ouTreeDataRight=res.result;
-        //     },function(res){
-        //     })
-        // },
+        loadOuTreeAll(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
+            .then(function(res){
+                _this.ouTreeDataRight=res.result;
+            },function(res){
+            })
+        },
         // loadOuTreeLeft(){
         //     let _this=this;
         //     _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{id:_this.$route.params.id})
@@ -1966,13 +1968,20 @@ export default({
   </script>
 
   <style>
-  .roleDetail{
-      font-family: 'microsoft yahei';
-  }
+.roleDetail{
+    font-family: 'microsoft yahei';
+}
   .chooseFn{
-      height: 30px;
-      line-height: 30px;
-      padding-left: 10px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 10px;
+  }
+  .chooseFn .fa-cog{
+    cursor: pointer;
+    color: #c9d1d1;
+    float: right;
+    line-height: 30px;
+    font-size: 20px;
   }
   .roleDetail .add{
     position: absolute;
