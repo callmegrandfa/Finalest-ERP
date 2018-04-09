@@ -832,7 +832,7 @@
                     .then(function(res){
                         _this.firstModify=false;
                         _this.ifModify=false;
-                        this.secondModify=false;
+                        _this.secondModify=false;
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}

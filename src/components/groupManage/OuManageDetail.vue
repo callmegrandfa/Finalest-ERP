@@ -1307,14 +1307,6 @@ export default({
             _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
             // 会计期间方案
                 _this.selectData.accCchemeId=res.result.items;
-                for(let i=0;i<_this.selectData.accCchemeId.length;i++){
-                    console.log(_this.selectData.accCchemeId[i].accperiodSchemeName) 
-                    // if(_this.selectData.accCchemeId[i].id == _this.addData.accCchemeId){
-                    //     console.log(1)
-                    //    console.log(_this.selectData.accCchemeId[i].accperiodSchemeName) 
-                    // }
-                }
-                // console.log(_this.selectData.accCchemeId[0].id)
             })
             _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
