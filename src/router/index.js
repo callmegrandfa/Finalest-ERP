@@ -656,9 +656,13 @@ router.beforeEach((to, from, next) => {
         // store.state[store.state[to.name].parent].url=to.fullPath
         if(typeof(store.state[to.name])!='undefined'){
             document.title = to.name
+            // console.log(to.name);
+            
             if(typeof(store.state[to.name].url)!='undefined' && typeof(store.state[store.state[to.name].parent].url)!='undefined'){
+
                 store.state[to.name].url=to.fullPath;
                 store.state[store.state[to.name].parent].url=to.fullPath
+                // console.log(to.fullPath);
                 next()
             }else{
                 alert('路由web地址或父级名称未定义')
