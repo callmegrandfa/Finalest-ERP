@@ -121,12 +121,12 @@ export default {
                     {name:'币种资料',address:'currency'},
                 ]
             },
-            // {
-            //     name:'会计期间',
-            //     thirdInfo:[
-            //         {name:'会计期间',address:'account'},
-            //     ]
-            // },
+            {
+                name:'会计期间',
+                thirdInfo:[
+                    {name:'会计期间',address:'account'},
+                ]
+            },
             {
                 name:'单据模板',
                 thirdInfo:[
