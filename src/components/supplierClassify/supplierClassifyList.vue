@@ -190,6 +190,9 @@
                 // ------------
                 rightKeyword:'',
                 tableLoading:false,
+                // -----------上级供应商分类的传递参数
+                upClassName:'',
+                upClassId:'',
                 
              }
          },
@@ -230,8 +233,10 @@
             },
            //-----------按钮组功能---------------
             goAdd(){ //增加去详情页(detail)
-                this.$store.state.url = "/supplierClassify/supplierClassifyDetail/default";
-                this.$router.push({ path: this.$store.state.url });
+                // this.$store.state.url = "/supplierClassify/supplierClassifyDetail/default";
+                // this.$router.push({ path: this.$store.state.url });
+
+                 this.$router.push({  name:'supplierClassifyDetail',params: {upParentId:this.upClassId,upClassName:this.upClassName}});
             },
             //------------分页器函数
             handleCurrentChange(val){
@@ -266,13 +271,15 @@
                 let _this=this;
                 // console.log(data);
                 _this.inputId=data.id;
-            //     _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
-            //         rsp=>{
-            //         //  console.log(rsp.result);
-            //          _this.tableData=rsp.result.items;
-            //          _this.totalCount=rsp.result.totalCount;
-            //          _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
-            //    })
+                _this.upClassName=data.className;
+                _this.upClassId=data.id;
+                // //     _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
+                //         rsp=>{
+                //         //  console.log(rsp.result);
+                //          _this.tableData=rsp.result.items;
+                //          _this.totalCount=rsp.result.totalCount;
+                //          _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
+                //    })
                 _this.getDataList();
             },
             getSonNode(data) {//获取树形节点子节点

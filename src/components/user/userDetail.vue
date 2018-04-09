@@ -173,9 +173,9 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                     </el-select>
                     </div>
@@ -389,14 +389,15 @@
                 <el-col :span="11" class="transfer_warapper">
                         <el-col :span="24" class="transfer_header">
                             <span>已选</span>
-                            <div class="transfer_search">
-                                <el-autocomplete
-                                class="search_input"
-                                placeholder="搜索..."
-                                >
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                </el-autocomplete>
-                            </div>    
+                            <div class="transfer_search" @keyup.enter="searchLeftTable">
+                               <el-input
+                                    placeholder="搜索..."
+                                    v-model="searchTableLeft"
+                                    class="search_input"
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>       
                         </el-col>    
                         <el-col :span="24" class="transfer_table">
                             <el-table 
@@ -431,13 +432,14 @@
                 <el-col :span="11" class="transfer_warapper">
                     <el-col :span="24" class="transfer_header">
                         <span>可选</span>
-                        <div class="transfer_search">
-                            <el-autocomplete
-                            class="search_input"
-                            placeholder="搜索..."
-                            >
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-autocomplete>
+                        <div class="transfer_search" @keyup.enter="searchRightTable">
+                            <el-input
+                                placeholder="搜索..."
+                                v-model="searchTableRight"
+                                class="search_input"
+                                >
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
                         </div>
                     </el-col>    
                     <el-col :span="24" class="transfer_table">
@@ -529,7 +531,8 @@
         firstModify:false,
         secondModify:false,
         ifModify:false,
-        timeout:null,
+        searchTableLeft:'',//搜索
+        searchTableRight:'',//搜索
          // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -539,11 +542,11 @@
         ],
         item:{
             id:'',
-            ouFullname:''
+            ouName:''
         },
         selectProps: {
             children: 'children',
-            label: 'ouFullname',
+            label: 'ouName',
             id:'id'
         },
 
@@ -589,7 +592,8 @@
         totalCount:0,
 
         
-        // ------------关联角色dialog-------------
+// ------------关联角色dialog-------------
+        dialogTableVisible:false,//控制对话框
         checkedTable:[],//已选所有数据
         showChecked:[],//右侧表格展示的数据
         // roleCodesCancel:[],//表格数据，用于取消操作
@@ -600,10 +604,13 @@
         selection_nochecked: [],//复选框选中数据
         is_nocheked:true,//可选
         is_cheked:true,//已选
+        LeftWitchPage:"pagination",//分页判断条用函数
+        RightWitchPage:"pagination",//分页判断条用函数
 //---------left表格-------------
         pageIndexLeft:1,//分页的当前页码
         totalPageLeft:0,//当前分页总数
         oneItemLeft:10,//每页有多少条信息
+        searchLeftDatas:[],//左侧搜索之后所有数据，未分页
         pageLeft:1,//当前页 
         totalItemLeft:0,//总共有多少条消息  
         leftDownBtn:true,//分页按钮是否显示
@@ -611,6 +618,7 @@
  //---------right表格-------------         
         totalItemRight:0,//总共有多少条消息 
         pageIndexRight:1,//分页的当前页码
+        searchRightDatas:[],//右侧搜索之后所有数据，未分页
         totalPageRight:0,//当前分页总数
         oneItemRight:10,//每页有多少条信息
         pageRight:1,//当前页 
@@ -771,7 +779,7 @@
     //   },
         filterNode(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         loadTree(){
             let _this=this;
@@ -798,7 +806,7 @@
         nodeClick(data,node,self){
             let _this=this;
             _this.item.id=data.id;
-            _this.item.ouFullname=data.ouFullname;
+            _this.item.ouName=data.ouName;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
@@ -977,6 +985,8 @@
         getAllRoleData(){
             let _this=this;
             _this.checkedTable=[]
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:1})//获取所有角色
             .then(function(re){ 
                 let totalAll=re.result.totalCount;//获取总共当前关联角色条数
@@ -1021,26 +1031,28 @@
         },
         noCheck_push_check(){//从右往左添加数据
             let _this=this;
-            
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.showChecked=_this.pagination(_this.selection_nochecked,[],_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination([],_this.selection_nochecked,_this.oneItemRight,_this.pageRight,'right')
         },
         check_push_noCheck(){//从左往右添加数据
             let _this=this;
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.showChecked=_this.pagination([],_this.selection_checked,_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination(_this.selection_checked,[],_this.oneItemRight,_this.pageRight,'right')
            
         },
         check_push_noCheckThis(val){//删除一个关联角色
             let _this=this;
-            if(!_this.isEdit){
-                let json=[val]
-                _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
-                _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
-                _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
-            }else{
-                return false
-            }
+            let json=[val]
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
+            _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
+            _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
+            _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
+
         },
         cancelPush(){//取消
             let _this=this;
@@ -1049,60 +1061,57 @@
         },
         pageDownLeft(){//左侧表格向左翻页
             let _this=this;
-            if(_this.pageLeft>1){
+             if(_this.pageLeft>1){
                 _this.pageLeft--
+                if(_this.LeftWitchPage=="pagination"){
+                    _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
+                }else if(_this.LeftWitchPage=="searchLeftTable"){
+                    _this.showChecked=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).nowData
+                    _this.totalItemLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalItem
+                    _this.totalPageLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalPage
+                }
                 
-                _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
             }
         },
         pageAddLeft(){//左侧表格向右翻页
             let _this=this;
             if(_this.pageLeft<=_this.totalPageLeft){
                 _this.pageLeft++
-                _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
+                if(_this.LeftWitchPage=="pagination"){//穿梭分页
+                    _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left');
+                }else if(_this.LeftWitchPage=="searchLeftTable"){//搜索分页
+                    _this.showChecked=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).nowData
+                    _this.totalItemLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalItem
+                    _this.totalPageLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalPage
+                }
             }
         },
         pageDownRight(){//右侧表格向左翻页
             let _this=this;
             if(_this.pageRight>1){
                 _this.pageRight--
-                _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
-            }    
+                if(_this.RightWitchPage=="pagination"){
+                    _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right');
+                }else if(_this.RightWitchPage=="searchRightTable"){//搜索分页
+                    _this.showNoChecked=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).nowData
+                    _this.totalItemRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalItem
+                    _this.totalPageRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalPage
+                }
+            }      
         },
         pageAddRight(){//右侧表格向右翻页
             let _this=this;
             if(_this.pageRight<_this.totalPageRight){
                 _this.pageRight++
-                _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
+                if(_this.RightWitchPage=="pagination"){
+                    _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right');
+                }else if(_this.RightWitchPage=="searchRightTable"){//搜索分页
+                    _this.showNoChecked=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).nowData
+                    _this.totalItemRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalItem
+                    _this.totalPageRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalPage
+                }
             }
         },
-        // queryLeft(queryString, cb) {
-        //     var restaurants=[]
-        //     $.each(this.showChecked,function(index,value){
-        //         let item={'value':value.displayName,'id':value.id};
-        //         restaurants.push(item)
-        //     })
-        //     var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-        //     clearTimeout(this.timeout);
-        //     this.timeout = setTimeout(() => {
-        //     cb(results);
-        //     }, 100 * Math.random());
-        // },
-        // queryRight(queryString, cb) {
-        //     var restaurants=[]
-        //     $.each(this.showNoChecked,function(index,value){
-        //         let item={'value':value.displayName,'id':value.id};
-        //         restaurants.push(item)
-        //     })
-        //     console.log(restaurants)
-        //     var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-        //     clearTimeout(this.timeout);
-        //     this.timeout = setTimeout(() => {
-        //     cb(results);
-        //     }, 100 * Math.random());
-        // },
 //-------------按钮操作-----------
         isBack(){
             let _this=this;
@@ -1187,6 +1196,68 @@
                     })
                 }
             });
+        },
+        paginationUserSearch(data,oneItem,thisPage){//数据分页
+        //checkAllata分页数据
+        //oneItem每页有多少条信息
+        //thisPage当前页
+            let _this=this;
+            let x={}
+            let nowData=[];
+            // console.log(checkAllata)
+            let startIndex=(thisPage-1)*oneItem;//起始数据所在位置
+            let endIndex=startIndex + oneItem;
+                if(data.length>0){
+                    if(endIndex>data.length){
+                        endIndex=data.length
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        // console.log(data[startIndex])
+                        nowData.push(data[startIndex])
+                    }
+                }
+            // _this.ouTotalItem=data.length;//总共多少条数据
+            // _this.ouTotalPage=Math.ceil(data.length/oneItem);//有多少页
+            x={TotalItem:data.length,TotalPage:Math.ceil(data.length/oneItem),nowData:nowData};
+            return x
+        },
+        searchLeftTable(){
+            let _this=this;
+            // checkTable
+            let newJson=[];
+            let patt1 = new RegExp(_this.searchTableLeft);
+            $.each(_this.checkedTable,function(index,val){
+                let str=val.displayName;
+                let result = patt1.test(str);
+                if(result){
+                    newJson.push(val)
+                }
+            })
+            _this.LeftWitchPage="searchLeftTable";
+            _this.searchLeftDatas=newJson;
+            _this.showChecked=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).nowData
+            _this.totalItemLeft=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).TotalItem
+            _this.totalPageLeft=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).TotalPage
+           
+        },
+        searchRightTable(){
+            let _this=this;
+            // nocheckTable
+            let newJson=[];
+            let patt1 = new RegExp(_this.searchTableRight);
+            $.each(_this.nocheckedTable,function(index,val){
+                let str=val.displayName;
+                let result = patt1.test(str);
+                if(result){
+                    newJson.push(val)
+                }
+            })
+            _this.RightWitchPage="searchRightTable"
+            _this.searchRightDatas=newJson;
+            _this.showNoChecked=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).nowData
+            _this.totalItemRight=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).TotalItem
+            _this.totalPageRight=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).TotalPage
+           
         },
     }
 

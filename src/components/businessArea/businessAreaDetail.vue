@@ -72,7 +72,7 @@
                             :props="selectProps_area"
                             node-key="id"
                             default-expand-all
-                            ref="tree"
+                            ref="area_tree"
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_area"
@@ -366,7 +366,7 @@
     },
      watch: {
       search_area(val) {
-        this.$refs.tree.filter(val);
+        this.$refs.area_tree.filter(val);
       },
       search_ou(val) {
         this.$refs.tree.filter(val);
@@ -386,7 +386,7 @@
     methods: {
         filterNode_ou(value, data) {
             if (!value) return true;
-            return data.ouFullName.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         filterNode_area(value, data) {
             if (!value) return true;
@@ -394,10 +394,12 @@
         },
         getDefault(){
             let _this=this;
-            _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
-             // 默认用户业务组织
-            _this.addData.ouId=res.result.id;
-            })
+            if(_this.$route.params.id=="default"){
+                _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+                // 默认用户业务组织
+                _this.addData.ouId=res.result.id;
+                })
+            }
         },
         getSelectData(){
             let _this=this;
@@ -563,7 +565,6 @@
     },
     nodeClick_area(data,node,self){
         let _this=this;
-        
         _this.item_area.id=data.id;
         _this.item_area.areaName=data.areaName;
         _this.$nextTick(function(){

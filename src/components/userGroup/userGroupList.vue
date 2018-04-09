@@ -1,7 +1,7 @@
 <template>
     <div class="userGroupList">
         <el-row class="bg-white">
-             <el-col :span="ifWidth?5:0" v-show="ifWidth">
+             <el-col :span="ifWidth?5:0" v-show="ifWidth" class="search-container">
                 <el-row class="h48 pl15">
                     <el-col :span="18" class="btn-for-search">
                         <img src="../../../static/image/common/search_btn.png">
@@ -33,9 +33,9 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -267,11 +267,11 @@
                 ],
                 item:{
                     id:'',
-                    ouFullname:'',
+                    ouName:'',
                 },
                 selectProps: {
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
 
@@ -385,8 +385,10 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
+                    _this.getHeight()
                     },function(res){
                     _this.tableLoading=false;
+                    _this.getHeight()
                 })
             },
             handleCurrentChange(val) {//页码改变
@@ -500,7 +502,7 @@
             },
             filterNode(value, data) {
                 if (!value) return true;
-                return data.ouFullname.indexOf(value) !== -1;
+                return data.ouName.indexOf(value) !== -1;
             },
             loadTree(){
                 let _this=this;
@@ -527,7 +529,7 @@
             nodeClick(data,node,self){
                 let _this=this;
                 _this.item.id=data.id;
-                _this.item.ouFullname=data.ouFullname;
+                _this.item.ouName=data.ouName;
                 // _this.$nextTick(function(){
                 //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 // })
@@ -546,7 +548,15 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({UserGroupName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            getHeight(){
+                $(".search-container").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+                $(".border-left").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+            },
         },
     }
 </script>
@@ -579,7 +589,6 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 498px;
 }
 .btn{
     display: inline-block;

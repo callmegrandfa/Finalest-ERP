@@ -58,7 +58,29 @@
         </el-row>
 
         <!-- 表单验证的错误提示信息 -->
-	    <el-row>
+        <el-row>
+            <el-col :span="24">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span :class="{block : !validation.hasError('addData.classParentId')}">
+                                上级供应商分类{{ validation.firstError('addData.classParentId') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.classCode')}">
+                                供应商分类编码{{ validation.firstError('addData.classCode') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.className')}">
+                                供应商分类名称{{ validation.firstError('addData.className') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.status')}">
+                                状态{{ validation.firstError('addData.status') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+	    <!-- <el-row>
             <el-col>
                 <div class="errTipsWrapper" name="classParentId">
                         <div class="errorTips" :class="{block : !validation.hasError('addData.classParentId')}">
@@ -81,7 +103,7 @@
                       </div>
                     </div>
                 </el-col>
-        </el-row>
+        </el-row> -->
         <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -112,6 +134,7 @@
                             placeholder=""
                             v-model="addData.classParentId"
                             @change="isUpdate"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.classParentId')}">
                                 <!-- 树形控件 -->
                                 <el-tree
@@ -140,6 +163,7 @@
                             @change="isUpdate" 
                             class="classCode" 
                             v-model="addData.classCode"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.classCode')}"></el-input>
                         </div>
                     </div>
@@ -152,6 +176,7 @@
                             class="className" 
                             @change="isUpdate"
                             v-model="addData.className"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.className')}"></el-input>
                         </div>
                     </div>
@@ -177,6 +202,7 @@
                             <label><small>*</small>状态</label>
                             <el-select filterable  
                             class="status" 
+                            @focus="showErrTips"
                             @change="isUpdate"
                             placeholder=""
                             v-model="addData.status"
@@ -323,6 +349,9 @@
                 customClass:className
                     });
             },
+            showErrTips(e){// 表单错误提示信息
+                $('.tipsWrapper').css({display:'none'});
+            },
             //---------------获取下拉框选项数据 
             getSelectData(){
                 let _this=this;
@@ -407,9 +436,11 @@
            
             save() {// 保存
                 let _this=this;
+                $('.tipsWrapper').css({display:'block'})
                 _this.$validate().then(
                     function (success) { 
                         if (success){
+                            $('.tipsWrapper').css({display:'none'});
                             _this.$axios.puts('/api/services/app/ContactClassManagement/Update',_this.addData).then(
                                 rsp=>{
                                     _this.open('保存成功','el-icon-circle-check','successERP'); 

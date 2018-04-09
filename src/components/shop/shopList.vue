@@ -179,7 +179,7 @@
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column type="selection" fixed></el-table-column>
-                            <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
+                            <el-table-column prop="ouName" label="所属组织" fixed></el-table-column>
                             <el-table-column prop="shopCode" label="店铺编码" fixed>
                                 <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{scope.row.shopCode}}</el-button>
