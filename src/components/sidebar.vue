@@ -121,12 +121,12 @@ export default {
                     {name:'币种资料',address:'currency'},
                 ]
             },
-            // {
-            //     name:'会计期间',
-            //     thirdInfo:[
-            //         {name:'会计期间',address:'account'},
-            //     ]
-            // },
+            {
+                name:'会计期间',
+                thirdInfo:[
+                    {name:'会计期间',address:'account'},
+                ]
+            },
             {
                 name:'单据模板',
                 thirdInfo:[
@@ -198,6 +198,7 @@ export default {
         let _this=this;
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
+            console.log(res[1].childNodes)
             _this.childNodes=res;
             _this.$nextTick(function(){
                 let x={}
@@ -327,10 +328,24 @@ export default {
                 _this.$store.state.url=menuUrl;//储存当前url在router里的name
                 // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
                 if(flag){
-                    temporary.push(pushItem);
+                    if(typeof(_this.$store.state[menuUrl])!='undefined'){
+                        if(typeof(_this.$store.state[menuUrl].url)!='undefined' && typeof(_this.$store.state[_this.$store.state[menuUrl].parent])!='undefined'){
+                            temporary.push(pushItem);
+                            window.localStorage.setItem('ERP',JSON.stringify(temporary));
+                            _this.switch();
+                        }else{
+                            alert('路由重定向出错')
+                        }
+                        
+                    }else{
+                        alert('路由重定向未定义')
+                    }
+                    
+                }else{
+                    _this.switch();
                 }
-                window.localStorage.setItem('ERP',JSON.stringify(temporary));
-                _this.switch();
+                
+                
                 if(_this.$route.fullPath=='/'){
                     $.each(temporary,function(index,val){
                         if(val.name==pushItem.name){

@@ -333,6 +333,9 @@ table .el-input__icon{
 
 /* checkbox */
 /* <el-checkbox v-model="">集团公司</el-checkbox> */
+.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+  background-color: #39ca7757;
+}
 .bgcolor .el-checkbox{
       width: auto;
     }
@@ -1325,9 +1328,14 @@ color:#f66;
 }
 .dialog_confirm_message .dialog_body_icon{
   text-align: center;
-  color: #f90;
   font-size: 50px;
   margin-bottom: 20px;
+}
+.dialog_confirm_message .dialog_body_icon .el-icon-question{
+  color: #f90;
+}
+.dialog_confirm_message .dialog_body_icon .el-icon-warning{
+  color: #F16C2B;
 }
 .el-dialog__footer{
   border-bottom-left-radius: 10px;
@@ -1347,11 +1355,13 @@ color:#f66;
  border-top: 1px solid #e4e4e4;
  color: #c0c4cc;
 }
-
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+  width: 100%;
+}
 .dialog_confirm_message .el-dialog__footer .dialog_footer_bt:first-child{
   border-right: 1px solid #e4e4e4;
 }
-.dialog_confirm_message .el-dialog__footer .dialog_footer_bt:last-child{
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt:nth-child(2){
   color:#32D3E3;
 }
 .dialog_confirm_message .el-dialog__footer .dialog_footer_bt:focus{

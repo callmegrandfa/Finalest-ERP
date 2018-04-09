@@ -45,20 +45,16 @@
 
             
             
-            <div class="toggle-btn">
-                <span @click='ifShow = !ifShow'>收起</span>
-                <i class="el-icon-arrow-up"></i>
-            </div>
+            <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-row>
 
         <el-collapse-transition>
-            <div v-show="ifShow" class="bb1">
-                 <!-- ft12 pr10  -->
+            <div v-show="ifShow">
                 <el-row class="bg-white pt10">
                     <el-col :span="24" class="getPadding">
-                        <div class="tipsWrapper mb10">
+                        <div class="tipsWrapper">
                             <div class="errorTips">
-                                <p class="msgDetail">错误提示：
+                                <p class="msgDetail">
                                     <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.ouId')}">
                                         所属组织{{ validation.firstError('createRepositoryParams.stock_MainTable.ouId') }},
                                     </span>
@@ -789,12 +785,13 @@
             //---创建------------------------------------------------
             createRepository:function(){//创建
                 let self = this;
-                console.log(self.isAddNew)
+                // console.log(self.isAddNew)
                 $('.tipsWrapper').css({display:'block'})
                 if(self.addList.length>0){
                     self.createRepositoryParams.stockAddress_ChildTable = self.addList;
                     self.$validate().then(function(success){
                         if(success){
+                            $('.tipsWrapper').css({display:'none'})
                             let push = false;
                             for(let i in self.createRepositoryParams.stockAddress_ChildTable){
                                 if(self.createRepositoryParams.stockAddress_ChildTable[i].completeAddress!=''){
@@ -811,7 +808,7 @@
                             if(push){
                                 self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',self.createRepositoryParams).then(function(res){
                                     console.log(res);
-                                    $('.tipsWrapper').css({display:'none'})
+                                    
                                     self.open('创建成功','el-icon-circle-check','successERP');
                                     if(self.isAddNew == 1){
                                         self.loadSelect();
@@ -831,9 +828,10 @@
                 }else{
                     self.$validate().then(function(success){
                         if(success){
+                            $('.tipsWrapper').css({display:'none'})
                             self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',self.createRepositoryParams).then(function(res){
-                                console.log(res);
-                                $('.tipsWrapper').css({display:'none'})
+                                // console.log(res);
+                                
                                 self.open('创建成功','el-icon-circle-check','successERP');
                                 if(self.isAddNew == 1){
                                     self.loadSelect();
@@ -1239,17 +1237,17 @@
                 areaDisArray:[],//行政地区(区)
                 proId:'',//省id
                 cityId:'',//市id
-                adSearch:'',//树形搜索框的
-                selectAdProps:{
-                    children: 'items',
-                    label: 'areaName',
-                    id:'id'
-                },
-                adItem:{
-                    id:'',
-                    areaName:'',
-                },
-                adAr:[],//行政地区下拉框
+                // adSearch:'',//树形搜索框的
+                // selectAdProps:{
+                //     children: 'items',
+                //     label: 'areaName',
+                //     id:'id'
+                // },
+                // adItem:{
+                //     id:'',
+                //     areaName:'',
+                // },
+                // adAr:[],//行政地区下拉框
                 //-----------------------
                 //---业务地区树形下拉-----
                     opSearch:'',//树形搜索框的
@@ -1491,6 +1489,9 @@ input::-webkit-input-placeholder{
     border:none;
     background-color:#FAFAFA;
 }
+.res-detail  .errorTips{
+    margin-bottom: 10px;
+} 
 .el-select.areaDrop,.el-input.areaEntry{
     width: 100px;
 }

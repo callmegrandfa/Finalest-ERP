@@ -45,26 +45,51 @@
                     </el-col>
                 </el-row>
             </div>
-            <!-- 错误提示信息 -->
-	        <el-row>
+            <!-- 表单验证错误提示信息 -->
+            <el-row>
+                <el-col :span="24">
+                    <div class="tipsWrapper">
+                        <div class="errorTips">
+                            <p class="msgDetail">错误提示：
+                                <span 
+                                :class="{block : !validation.hasError('addList.employeeCode')}">
+                                职员编码{{ validation.firstError('addList.employeeCode') }},
+                                </span>
+                                <span 
+                                :class="{block : !validation.hasError('addList.employeeName')}">
+                                职员名称{{ validation.firstError('addList.employeeName') }},
+                                </span>
+                                <span 
+                                :class="{block : !validation.hasError('addList.ouId')}">
+                                所属组织{{ validation.firstError('addList.ouId') }},
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+
+           
+
+	        <!-- <el-row>
                 <el-col>
-                    <div class="errTipsWrapper" name="employeeCode">
+                    <div class=tipsWrapper" name="employeeCode">
                       <div class="errorTips" :class="{block : !validation.hasError('addList.employeeCode')}">
                           <p class="msgDetail">错误提示：{{ validation.firstError('addList.employeeCode') }}</p>
                       </div>
                     </div>
-                    <div class="errTipsWrapper" name="employeeName">
+                    <div class=tipsWrapper" name="employeeName">
                       <div class="errorTips" :class="{block : !validation.hasError('addList.employeeName')}">
                           <p class="msgDetail">错误提示：{{ validation.firstError('addList.employeeName') }}</p>
                       </div>
                     </div>
-                    <div class="errTipsWrapper" name="ouId">
+                    <div class=tipsWrapper" name="ouId">
                       <div class="errorTips" :class="{block : !validation.hasError('addList.ouId')}">
-                          <p class="msgDetail">错误提示：{{ validation.firstError('form.ouId') }}</p>
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.ouId') }}</p>
                       </div>
                     </div>
                 </el-col>
-            </el-row>
+            </el-row> -->
              <!-- dialog数据变动提示(是否忽略更改) -->
             <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
                 <template slot="title">
@@ -93,7 +118,7 @@
                     </el-col>
                     <el-col :span="18">
                         <div>
-                            <el-input v-model="addList.employeeCode" class="employeeCode"  :class="{redBorder : validation.hasError('addList.employeeCode')}" ></el-input>
+                            <el-input v-model="addList.employeeCode" class="employeeCode"  :class="{redBorder : validation.hasError('addList.employeeCode')}"  @focus="showErrTips"></el-input>
                         </div>
                     </el-col>
                 </el-row>
@@ -105,7 +130,7 @@
                     </el-col>
                     <el-col :span="18">
                         <div>
-                            <el-input v-model="addList.employeeName" class="employeeName"  :class="{redBorder : validation.hasError('addList.employeeName')}" ></el-input>
+                            <el-input v-model="addList.employeeName" class="employeeName"  :class="{redBorder : validation.hasError('addList.employeeName')}"  @focus="showErrTips"></el-input>
                         </div>
                     </el-col>
                 </el-row>
@@ -117,7 +142,7 @@
                     </el-col>
                     <el-col :span="18">
                         <div>
-                            <el-select class="ouId" :class="{redBorder :           validation.hasError('addList.ouId')}" v-model="addList.ouId" placeholder="" >
+                            <el-select class="ouId" :class="{redBorder :           validation.hasError('addList.ouId')}" v-model="addList.ouId" placeholder=""  @focus="showErrTips">
                                 <el-input
                                     placeholder="输入关键字进行过滤"
                                     v-model="filterOu" 
@@ -319,24 +344,38 @@
                 return this.Validator.value(value).required().integer();
                     },
         },
-        created:function(){
+        created(){
             // 所属组织下拉选项框
             this.getSelectData();
             this.loadTree();
             this.loadDepartTree();
+            // 获取默认数据
+            this.getDefault();
         },
-        watch:{
-            addList:{
-                handler: function (val, oldVal) {
-                    let _this = this;
-                    if(!_this.isUpdate){
-                        _this.isUpdate = true;
-                    }
-                },
-                deep: true,
-            }
-        },
+        // watch:{
+        //     addList:{
+        //         handler: function (val, oldVal) {
+        //             let _this = this;
+        //             if(!_this.isUpdate){
+        //                 _this.isUpdate = true;
+        //             }
+        //         },
+        //         deep: true,
+        //     }
+        // },
         methods: {
+            getDefault(){// 默认用户所属组织
+                let _this=this;
+                _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(rsp=>{ 
+                    _this.addList.ouId=rsp.result.id;
+                });
+
+                this.GetDateTime();//获取当前时间
+            },
+            GetDateTime() {//获取当前时间
+                let date=new Date();
+                return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
+            }, 
             //---------------------------获取下拉框选项数据
             getSelectData(){//获取下拉选项数据
                 let _this=this;
@@ -431,22 +470,14 @@
                 _this.getSelectDepart();
                 _this.loadDepartTree();
             },
-            // -----------错误提示信息
-            showErrTips(e){
-                $('.errTipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-              })
-            },
             // -----------------按钮组功能
             save(){// 保存
                 let _this=this;
+                $('.tipsWrapper').css({display:'block'})
                 _this.$validate().then(
                     function (success) {
                         if (success) {
+                            $('.tipsWrapper').css({display:'none'})
                             _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
                                 rsp=>{
                                     // console.log(_this.addList);
@@ -520,14 +551,9 @@
             // --------------------------------------------
             // 错误提示信息
             showErrTips(e){
-                $('.errTipsWrapper').each(function(){
-                if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-                    $(this).addClass('display_block')
-                }else{
-                    $(this).removeClass('display_block')
-                }
-              })
+                $('.tipsWrapper').css({display:'none'});
             },
+           
             // 成功的提示框
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -559,45 +585,45 @@
 </script>
 
 
-<style scoped>
-.btnBd{
-    /* height: 48px; */
-    padding: 5px;
-    border-bottom: 1px solid #e4e4e4 !important;
-}
-.block{
-    display: none;
-}
-.staff-infor-wrapper{
-    position: relative;
-}
-.staff_detail_form{
-    padding-left: 30%;
-    width: 30%;
-    margin-bottom: 20px;
-}
-.staff_detail_form .chePT{
-    padding-top:5px;
-}
-.staff-infor-wrapper .smallBgcolor .el-input{
-    width: 100% !important ;
-}
-.staff-infor-wrapper .bgcolor label{
-    width: 100% !important ;
-    margin-right: 0; 
-}
-.smallBgcolor .el-input--suffix{
-    width: 100% !important ;
-}
-.smallBgcolor .el-input{
-    width: 100% !important ;
-}
-.bgcolor{
-    overflow:  visible; 
-}
-.smallBgcolor>label {
-    line-height: 35px;
-}
+ <style scoped>
+    .btnBd{
+        /* height: 48px; */
+        padding: 5px;
+        border-bottom: 1px solid #e4e4e4 !important;
+    }
+    .block{
+        display: none;
+    }
+    .staff-infor-wrapper{
+        position: relative;
+    }
+    .staff_detail_form{
+        padding-left: 30%;
+        width: 30%;
+        margin-bottom: 20px;
+    }
+    .staff_detail_form .chePT{
+        padding-top:5px;
+    }
+    .staff-infor-wrapper .smallBgcolor .el-input{
+        width: 100% !important ;
+    }
+    .staff-infor-wrapper .bgcolor label{
+        width: 100% !important ;
+        margin-right: 0; 
+    }
+    .smallBgcolor .el-input--suffix{
+        width: 100% !important ;
+    }
+    .smallBgcolor .el-input{
+        width: 100% !important ;
+    }
+    .bgcolor{
+        overflow:  visible; 
+    }
+    .smallBgcolor>label {
+        line-height: 35px;
+    }
 </style>
 
 

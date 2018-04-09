@@ -360,7 +360,7 @@
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>上级业务单元</label>
+                    <label>上级业务单元</label>
                     <el-select clearable class="ouParentid"
                      
                     @change="isUpdate"
@@ -368,12 +368,6 @@
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
                     placeholder=""
                     v-model="addData.ouParentid">
-                        <!-- <el-option 
-                        v-for="item in selectData.ouParentid" 
-                        :key="item.id" 
-                        :label="item.ouName" 
-                        :value="item.id">
-                        </el-option> -->
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
@@ -382,6 +376,7 @@
                         <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTree"
+                        :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
                         default-expand-all
@@ -417,7 +412,7 @@
                 <div class="bgcolor">
                     <label><small>*</small>启用年月</label>
                     <el-date-picker 
-                     
+                    disabled 
                     @change="isUpdate"
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
@@ -449,43 +444,53 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select clearable filterable  
-                     
+                    <!-- <el-select filterable              
                     @change="isUpdate"
                     placeholder=""
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.companyOuId')}"
                     class="companyOuId" 
                     v-model="addData.companyOuId">
-                        <!-- <el-option 
+                        <el-option 
                         v-for="item in selectData.companys" 
                         :key="item.id" 
                         :label="item.ouName" 
                         :value="item.id" 
                         >
-                        </el-option> -->
-                        <el-input
-                        placeholder="搜索..."
-                        class="selectSearch"
-                        v-model="search_companyOuId">
-                        </el-input>
-                        <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                        :data="selectTree_companyOuId"
-                        :props="selectProps_companyOuId"
-                        node-key="id"
-                        default-expand-all
-                        ref="tree_companyOuId"
-                        :filter-node-method="filterNode_companyOuId"
-                        :expand-on-click-node="false"
-                        @node-click="nodeClick_companyOuId"
-                        >
+                        </el-option>
+                    </el-select> -->
+
+                    <el-select class="companyOuId"
+                        clearable filterable
+                        @change="isUpdate"
+                        @focus="showErrprTipsSelect"
+                        :class="{redBorder : validation.hasError('addData.ouParentid')}"
+                        placeholder=""
+                        v-model="addData.companyOuId">
+                            <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search">
+                            </el-input>
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="selectTreeCompany"
+                            :highlight-current="true"
+                            :props="selectPropsCompany"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree"
+                            :filter-node-method="filterNode"
+                            :expand-on-click-node="false"
+                            @node-click="nodeClick"
+                            >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_companyOuId.id" :label="item_companyOuId.ouName" :value="item_companyOuId.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.companys" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
                         </el-option>
                     </el-select>
+
                 </div>
                 <div class="bgcolor">
                     <label>联系人</label>
@@ -599,35 +604,20 @@
                             placeholder=""
                             class="ouParentid" 
                             v-model="basCompany.ouParentid">
-                                <el-input
-                                v-show="!basCompany.isGroupCompany"
-                                placeholder="搜索..."
-                                class="selectSearch"
-                                v-model="search_company">
-                                </el-input>
-                                <el-tree
-                                v-show="!basCompany.isGroupCompany"
-                                oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                :data="selectTree_company"
-                                :props="selectProps_company"
-                                node-key="id"
-                                default-expand-all
-                                ref="tree_company"
-                                :filter-node-method="filterNode_company"
-                                :expand-on-click-node="false"
-                                @node-click="nodeClick_company"
+                                <el-option 
+                                    v-if="!basCompany.isGroupCompany"
+                                v-for="item in selectData.companys" 
+                                :key="item.id" 
+                                :label="item.ouName" 
+                                :value="item.id" 
                                 >
-                                </el-tree>
-                                <!-- <el-option v-show="false" :key="item_company.id" :label="item_company.ouName" :value="item_company.id">
-                                </el-option> -->
-                                <el-option v-show="false" v-for="item in selectData.companys" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                                 </el-option>
 
                                 <el-option 
-                                    v-show="basCompany.isGroupCompany"
-                                    :label="groupCompany.label" 
-                                    :value="groupCompany.value" 
-                                    >
+                                v-if="basCompany.isGroupCompany"
+                                :label="groupCompany.label" 
+                                :value="groupCompany.value" 
+                                >
                                 </el-option>
                             </el-select>
                         </div>
@@ -1082,7 +1072,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -1104,27 +1094,23 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
-        <!-- dialog -->                                                    
+        <!-- dialog -->                                         
 </div>
 </template>
 
@@ -1143,6 +1129,7 @@ export default({
             search:'',
              selectTree:[
             ],
+            selectTreeCompany:[],
             item_ou:{
                 id:'',
                 ouFullname:''
@@ -1152,29 +1139,10 @@ export default({
                 label: 'ouFullname',
                 id:'id'
             },
-            search_companyOuId:'',//所属公司
-            selectTree_companyOuId:[
-            ],
-            item_companyOuId:{
-                id:'',
-                ouName:''
-            },
-            selectProps_companyOuId: {
+            //选择所属公司
+            selectPropsCompany:{
                 children: 'children',
-                label: 'ouName',
-                id:'id'
-            },    
-
-            search_company:'',//上级公司
-            selectTree_company:[
-            ],
-            item_company:{
-                id:'',
-                ouName:''
-            },
-            selectProps_company: {
-                children: 'children',
-                label: 'ouName',
+                label: 'ouFullname',
                 id:'id'
             },
             groupCompany:{
@@ -1267,10 +1235,10 @@ export default({
          return this.Validator.value(value).required().maxLength(50);
       },
       'addData.ouParentid': function (value) {//上级业务单元
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).integer();
       },
       'addData.accCchemeId': function (value) {//会计方案
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).required().integer();
       },
       'addData.accStartMonth': function (value) {//启用年月
          return this.Validator.value(value).required();
@@ -1502,12 +1470,6 @@ export default({
       search(val) {
         this.$refs.tree.filter(val);
       },
-      search_companyOuId(val) {
-        this.$refs.tree_companyOuId.filter(val);
-      },
-      search_company(val) {
-        this.$refs.tree_company.filter(val);
-      },
       addData:{
             handler:function(val,oldVal){
                 let _this=this;
@@ -1658,14 +1620,6 @@ export default({
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
         },
-        filterNode_companyOuId(value, data) {
-            if (!value) return true;
-            return data.ouName.indexOf(value) !== -1;
-        },
-        filterNode_company(value, data) {
-            if (!value) return true;
-            return data.ouName.indexOf(value) !== -1;
-        },
         loadTree(){
             let _this=this;
             _this.treeLoading=true;
@@ -1675,16 +1629,10 @@ export default({
                 _this.loadIcon();
             },function(res){
             })
-            _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
-            .then(function(res){
-                _this.selectTree_companyOuId=res.result;
-                // _this.selectTree_company=res.result;
-                _this.loadIcon();
-            },function(res){
-            })
              _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
             .then(function(res){
-                _this.selectTree_company=res.result;
+                console.log(res);
+                _this.selectTreeCompany=res.result;
                 _this.loadIcon();
             },function(res){
             })
@@ -1704,27 +1652,8 @@ export default({
         },
         nodeClick_ou(data,node,self){
             let _this=this;
-            // console.log(data)
-            // console.log(_this.addData)
-            if(_this.addData.id==data.id){
-                alert("上级业务单元不能为业务单元本身")
-            }else{
-                // _this.item_ou.id=data.id;
-                // _this.item_ou.ouFullname=data.ouFullname;
-                // _this.$nextTick(function(){
-                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-                // })
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
-                })
-            }
-        },
-        nodeClick_companyOuId(data,node,self){
-            let _this=this;
-            // _this.item_companyOuId.id=data.id;
-            // _this.item_companyOuId.ouName=data.ouName;
+            // _this.item_ou.id=data.id;
+            // _this.item_ou.ouFullname=data.ouFullname;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
@@ -1734,19 +1663,20 @@ export default({
                 }
             })
         },
-        nodeClick_company(data,node,self){
-            let _this=this;
-            // _this.item_companyOuId.id=data.id;
-            // _this.item_companyOuId.ouName=data.ouName;
-            // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
-            })
-        },
+        // 
+        nodeClick(data,node,self){
+        let _this=this;
+        // _this.item_ou.id=data.id;
+        // _this.item_ou.ouFullname=data.ouFullname;
+        // _this.$nextTick(function(){
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        // })
+        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+        if($(this).attr('date')==data.id){
+            $(this).click()
+        }
+    })
+    },
         isBack(){
             let _this=this;
             if(_this.update){
@@ -2008,9 +1938,14 @@ export default({
                 regtime:''//公司成立时间
             };
         },
-        getStartMonth(){
+        getStartMonth(){//根据会计期间生成启用年月
             let _this=this;
              _this.update=true;
+            _this.$axios.gets('/api/services/app/AccperiodSheme/Get',{id:_this.addData.accCchemeId})
+            .then(function(res){
+                _this.addData.accStartMonth=res.result.checkDate
+            },function(res){
+            })
         }
     }
 

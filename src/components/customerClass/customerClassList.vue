@@ -4,6 +4,7 @@
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-input placeholder="搜索..."
+                              clearable filterable
                               v-model="searchLeft" 
                               class="bCustSearch">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -58,9 +59,10 @@
                      <div class="search_input_group">
                             <div class="search_input_wapper">
                                 <el-input
-                                    v-model="InputName" 
-                                    @change="searchRight"
+                                   v-model="SearchKey"
+                                    clearable filterable
                                     placeholder="搜索..."
+                                   @change="searchRight"
                                     class="search_input">
                                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                                 </el-input>
@@ -171,7 +173,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -272,8 +274,10 @@ export default {
                 message:'',
                 validationErrors:[],
             },
-      selfAr: [] //根据id获得树形节点本身
+      selfAr: [] ,//根据id获得树形节点本身
+      SearchKey:'',//右上搜索
     };
+     
   },
   //----------------创建------------------------------
   created: function() {
@@ -330,7 +334,7 @@ export default {
     // ---------------------------------------获取所有列表数据-----------------
     getDataList() {
       let self = this;
-      self.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {ContactOwner:1,InputName: self.InputName,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList", {SearchKey:self.SearchKey,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
            console.log(res);
           self.tableData = res.result.items;
           self.totalItem = res.result.totalCount;
@@ -473,7 +477,7 @@ export default {
       self.dialogData = {
         //dialog数据
         id: "",
-        Ower: "1",
+        Ower: 1,
         groupId: "1", //集团ID
         ouId: "1", //组织单元ID
         classCode: "", //部门代码
@@ -516,6 +520,7 @@ export default {
       }
       
     },
+    
     handleSelectionChange(val) {
       //点击复选框选中的数据
       this.multipleSelection = val;
@@ -551,7 +556,7 @@ export default {
             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
             self.dialogUserConfirm=false;
             self.errorMessage=true;
-            self.open('删除失败','el-icon-error','faildERP');
+            // self.open('删除失败','el-icon-error','faildERP');
           }
         );
     },
@@ -570,8 +575,8 @@ export default {
                    self.open("删除成功", "el-icon-circle-check", "successERP");
                    self.loadTableData();
                    self.loadTree();
-                  self.idArray = {
-                    ids: []
+                   self.idArray = {
+                    ids: [],
                   };
                   self.dialogUserConfirm=false;
                 },
@@ -579,7 +584,7 @@ export default {
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                      _this.errorMessage=true;
                      _this.dialogUserConfirm=false;
-                     _this.open('删除失败','el-icon-error','faildERP');
+                    //  _this.open('删除失败','el-icon-error','faildERP');
                 }
               );
       }
@@ -618,7 +623,7 @@ export default {
             self.detailParentId=data.id;//
              self.detailParentName=data.moduleName;
             // self.dateabc=data.id;
-            console.log(self.dateabc)
+            // console.log(self.dateabc)
             self.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:self.dateabc,ContactOwner:1,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
                 res=>{
                   console.log(res);
@@ -644,31 +649,6 @@ export default {
   line-height: 15px;
   color: #f66;
 }
-/* .dialogBtn {
-  display: block;
-  float: left;
-  width: 50%;
-  height: 100%;
-  background-color: #fff;
-  color: #c9c9c9;
-  border: none;
-  border-top: 1px solid #c9c9c9;
-  outline: none;
-  cursor: pointer;
-}
-.dialogBtn:focus {
-  outline: none;
-}
-.dialog-footer .dialogBtn:first-child {
-  border-right: 1px solid #c9c9c9;
-}
-.dialog-footer {
-  padding: 0;
-  height: 50px;
-}
-.dialogBtn:hover {
-  color: #6699ff;
-} */
 .dialogBtn{
     display: block;
     float: left;

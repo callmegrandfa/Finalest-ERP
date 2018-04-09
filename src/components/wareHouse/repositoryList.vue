@@ -113,6 +113,21 @@
                             </div>
                             <span class="btDetail">辅助功能</span>
                         </button>
+                        <div class="search_input_group">
+                        <div class="search_input_wapper" @keyup.enter="submitSearch">
+                            <el-input
+                                v-model="SearchKey"
+                                placeholder="搜索..."
+                                class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
+                    </div>
                     </el-col>
                     
                 </el-row>
@@ -469,11 +484,18 @@
                     $('#op_confirmSelect').click()
                 })
             },
+            submitSearch(){
+                let _this=this;
+                _this.page=1
+                alert(_this.SearchKey)
+                //  _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+            }
             //-----------------------------------------------
         },
         
         data(){
             return{ 
+                SearchKey:'',//模糊查询
                 defaultOuId:'',//默认ouid
                 allList:[],//获取所有的列表数据
                 total:'',//数据总条数
