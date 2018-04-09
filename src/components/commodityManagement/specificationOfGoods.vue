@@ -93,6 +93,24 @@
                 </el-col>
             </el-row> 
         </div>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
     </div>
 </template>
 
@@ -117,6 +135,7 @@ import Tree from '../../base/tree/tree'
                 "remark": "st54ring"
                 },
                 value1:'',
+                dialogUserConfirm: false,
                 searchItem:{
                     specCode:'',//规格编码
                     specName:'',//规格名称
@@ -218,7 +237,7 @@ import Tree from '../../base/tree/tree'
               isSave:false,
               eachPage:10,//每页有多少条信息
               page:1,//当前页
-              settt:''
+              addabc:''
             }
         },
         created:function(){   
@@ -361,10 +380,10 @@ import Tree from '../../base/tree/tree'
 
                     this.loadTableData();
                 }else if(data == '删除'){
+                    let _this=this;
                     for(var i in this.SelectionChange){
                         this.idArray.ids.push(this.SelectionChange[i].id)
                     }
-                    let _this=this;
                     if(_this.idArray.ids.indexOf(undefined)!=-1){
                             this.$message({
                                 type: 'warning',
@@ -373,23 +392,7 @@ import Tree from '../../base/tree/tree'
                             return;
                     }
                     if(_this.idArray.ids.length>0){
-                        _this.$confirm('确定删除?', '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning',
-                            center: true
-                            }).then(() => {
-                                _this.$axios.posts('/api/services/app/SpecValueManagement/BatchDelete',_this.idArray).then(function(res){
-                                    _this.loadTableData();
-                                    _this.open('删除成功','el-icon-circle-check','successERP');    
-                                })
-                            }).catch(() => {
-                                this.$message({
-                                    type: 'info',
-                                    message: '已取消删除'
-                                });
-                        });
-                       
+                        _this.dialogUserConfirm = true;
                     }else{
                         this.$message({
                             type: 'info',
@@ -418,7 +421,6 @@ import Tree from '../../base/tree/tree'
                         });
                     }
                 }else if(data == '停用'){
-                    alert(1)
                     let handleArray=[];
                     if(this.SelectionChange.length>0){
                         this.isUpdate=true;
@@ -442,34 +444,48 @@ import Tree from '../../base/tree/tree'
                     }
                 }
             },
+            sureAjax(){
+                let _this=this;
+                if(_this.addabc != ''){
+                    if(_this.addabc.specValueCode==""||this.isAdd==true){
+                        this.tableData.splice(index,1);
+                        this.addArray.splice(index,1);
+                        _this.dialogUserConfirm = false;
+                        console.log(this.addArray);
+                    }else{
+                        _this.$axios.deletes('/api/services/app/SpecValueManagement/Delete',{Id:_this.addabc.id}).then(function(res){
+                            _this.loadTableData();
+                            _this.loadTree();
+                            _this.dialogUserConfirm = false;
+                            _this.open('删除成功','el-icon-circle-check','successERP');              
+                        })
+                    }
+                }else{
+                    for(var i in this.SelectionChange){
+                        this.idArray.ids.push(this.SelectionChange[i].id)
+                    }
+                    if(_this.idArray.ids.indexOf(undefined)!=-1){
+                                this.$message({
+                                    type: 'warning',
+                                    message: '新增数据请在行内删除'
+                                });
+                                return;
+                        }
+                    if(_this.idArray.ids.length>0){
+                        _this.$axios.posts('/api/services/app/SpecValueManagement/BatchDelete',_this.idArray).then(function(res){
+                            _this.loadTableData();
+                            _this.dialogUserConfirm = false;
+                            _this.open('删除成功','el-icon-circle-check','successERP');    
+                        })
+                    }
+                }
+                
+            },
             handleDel(row,index){//行内删除
                 let _this=this;
-                console.log(index);
-                this.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        console.log(this.addArray);
-                        if(row.brandCode==""||this.isAdd==true){
-                            this.tableData.splice(index,1);
-                            this.addArray.splice(index,1);
-                            console.log(this.addArray);
-                        }else{
-                            let _this=this;
-                            _this.$axios.deletes('/api/services/app/SpecValueManagement/Delete',{Id:row.id}).then(function(res){
-                                _this.loadTableData();
-                                _this.loadTree();
-                                _this.open('删除成功','el-icon-circle-check','successERP');              
-                            })
-                        }
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                });
+                _this.dialogUserConfirm = true;
+                 _this.addabc =  row      
+
             },
             loadTableData(){
                 let _this=this;
@@ -537,18 +553,6 @@ import Tree from '../../base/tree/tree'
                         }
                     })
                 })
-            },
-            closeLeft:function(){
-                let self = this;
-                self.ifWidth = false;
-                let obgh=document.getElementById('bgl');
-                obgh.style.width="100%";
-            },
-            openLeft:function(){
-               let self = this;
-               self.ifWidth = true;
-               let obgh=document.getElementById('bgl');
-                obgh.style.width="calc(100% - 340px)";
             },
             rowClick(row){//获取行id
                 this.updateId=row.id
