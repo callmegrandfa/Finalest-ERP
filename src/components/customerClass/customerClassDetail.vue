@@ -224,6 +224,37 @@
                 <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
             </span>
         </el-dialog>
+        <!-- dialog创建保存失败错误提示-->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="$store.state.option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll>  
+                        </el-col>
+                    
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
         <!-- dialog -->
   </div>
   </template>
@@ -270,6 +301,12 @@
                 choseDoing:'',//存储点击按钮判断信息
                 dialogUserConfirm:false,//信息更改提示控制
                 update:false,
+                errorMessage:false,//错误信息提示
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                },
             }
         },
      validators: {
@@ -382,30 +419,39 @@
                         self.dialogUserConfirm=false;
                         // _this.addData.id=res.result.id;
                         // console.log(res.result);
-                        self.open('保存成功','el-icon-circle-check','successERP');
-                    },function(res){    
-                        self.open('保存失败','el-icon-error','faildERP');
+                        // self.open('保存成功','el-icon-circle-check','successERP');
+                    },function(res){
+
+                        // self.open('保存失败','el-icon-error','faildERP');
+                         if(res && res!=''){ 
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                            self.dialogUserConfirm=false;
+                            self.errorMessage=true;
                     })
                 }
             });
         },
         saveAdd:function(){
-            let _this = this;
-            _this.$validate().then(function (success) {
+            let self = this;
+            self.$validate().then(function (success) {
                 console.log(success);
                 if (success) {
-                    _this.$axios.posts('/api/services/app/ContactClassManagement/Create',_this.addData).then(function(res){
+                    self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){
                         //  self.addData=res.result;
-                         _this.addData.id=res.result.id;
-                         _this.$store.state.url='/customerClass/customerClassDetail/default'
-                         _this.$router.push({path:_this.$store.state.url})
-                         _this.open('保存成功','el-icon-circle-check','successERP');
-                          _this.clearData();
-                          _this.validation.reset();
-                          _this.update=false;
-                         console.log(_this.update)
+                         self.addData.id=res.result.id;
+                         self.$store.state.url='/customerClass/customerClassDetail/default'
+                         self.$router.push({path:self.$store.state.url})
+                         self.open('保存成功','el-icon-circle-check','successERP');
+                          self.clearData();
+                          self.validation.reset();
+                          self.update=false;
+                        //  console.log(self.update)
                     },function(res){    
-                        _this.open('保存失败','el-icon-error','faildERP');
+                        // self.open('保存失败','el-icon-error','faildERP');
+                        if(res && res!=''){ 
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                        self.dialogUserConfirm=false;
+                        self.errorMessage=true;
                     })
                 }
             });
@@ -546,6 +592,21 @@
                     $(this).removeClass('display_block')
                 }
             })
+        },
+         getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
         },
     }
 
