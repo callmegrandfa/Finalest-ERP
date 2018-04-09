@@ -15,7 +15,7 @@
                 <div class="bgcolor smallBgcolor"><label>用户组名称</label><el-input v-model="searchData.UserGroupName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
-                    <el-select v-model="searchData.OuId" placeholder="">
+                    <el-select clearable v-model="searchData.OuId" placeholder="">
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"

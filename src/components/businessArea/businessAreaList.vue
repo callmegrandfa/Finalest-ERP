@@ -459,16 +459,19 @@
                 _this.page=1
                 if(data.areaName!=undefined){
                     _this.nodeClickId=data.id;
-                    _this.detailParentId=0;
+                    // _this.detailParentId=0;
                     _this.detailParentId=data.id;
+                    _this.detailParentName=data.name;
+                    // _this.detailOuName=data.ouName;
                 }else{  
                      _this.nodeClickId=data.ouId;
                     _this.detailParentId=0;
+                    _this.detailParentName="无";
                     
                 }
                 _this.tableLoading=true;
                 // _this.detailParentId=data.id;
-                _this.detailParentName=data.name;
+                // _this.detailParentName=data.name;
                 _this.ouId=data.ouId;
                 _this.ajaxTable({ParentId:_this.nodeClickId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"nodeClick");
             },

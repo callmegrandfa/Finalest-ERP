@@ -10,35 +10,36 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button @click="goAdd"  class="erp_bt bt_add" :disabled="!isDisable">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
-
-                <button @click="save" class="erp_bt bt_save"  :disabled="isDisable">
+                <button @click="save" :class="{erp_fb_bt:!update}" class="erp_bt bt_save"  :disabled="!update">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button @click="saveAdd" class="erp_bt bt_saveAdd" :disabled="isDisable">
+                <button @click="cancel" class="erp_bt bt_cancel" :class="{erp_fb_bt:!update}"  :disabled="!update">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
+               
+                <button @click="saveAdd" class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!update}" :disabled="!update">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
 
-                <button @click="cancel" class="erp_bt bt_cancel"  :disabled="isDisable">
+               <button @click="goAdd" class="erp_bt bt_add" 
+               :class="{erp_fb_bt:update}" :disabled="update">
                     <div class="btImg">
-                        <img src="../../../static/image/common/bt_cancel.png">
+                        <img src="../../../static/image/common/bt_add.png">
                     </div>
-                    <span class="btDetail">取消</span>
+                    <span class="btDetail">新增</span>
                 </button>
 
-                <button @click="confirmDelThis" class="erp_bt bt_del" :disabled="!isDisable">
+                <button @click="confirmDelThis" :class="{erp_fb_bt:update}" class="erp_bt bt_del" :disabled="update">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                          </div>
@@ -232,7 +233,7 @@
         name:'adminstrAreaModify',
         data() {
             return {
-                isDisable:true,
+                // isDisable:false,
                 update:false,
                 
                 addData:{// 修改数据列表
@@ -295,6 +296,18 @@
                 return this.treeNode;
                 },
         },
+        // watch:{
+        //     addData:{
+        //         handler: function (val, oldVal) {
+        //             let _this = this;
+        //             console.log("数据改变了");
+        //             if(!_this.update){
+        //                 _this.update = true;
+        //             }
+        //         },
+        //         deep: true,
+        //     }
+        // },
         methods: {
             // 获取数据渲染
             getDataList(){
@@ -355,7 +368,7 @@
             },
             isUpdate() {//判断是否修改过信息
                 this.update = true;
-                this.isDisable=false;
+                // this.isDisable=true;
                 // console.log(this.isDisable);
             },
             cancel(){// 取消
@@ -390,14 +403,8 @@
                     _this.goback();
                 });
             },
-            // --------------删除-----------
-            cancel(){// 取消
-                let _this=this;
-                _this.btnValue='isCancel';
-                if(_this.update){
-                    _this.dialogUserConfirm=true;
-                }
-            },
+            // --------------删除完-----------
+           
             goAdd(){// 去新增
                 //点击切换路由去添加
                 this.$store.state.url = "/adminstrArea/adminstrAreaDetail/default";
@@ -520,5 +527,10 @@
     }
     .admstr-modify-wrapper .el-row:last-child{
         padding-bottom: 15px;
+    }
+</style>
+ <style>
+    .admstr-modify-wrapperr .admstr-form-wrapper .bgcolor.bgLongWidth .el-textarea{
+        width: calc(100% - 90px);
     }
 </style>

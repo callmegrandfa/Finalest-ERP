@@ -732,9 +732,11 @@ export default new vuex.Store({
         commodityBrandHttpApi:'',
         commodityBrandTable:[],//品牌表格数据
         commodityBrandNewCol:'',
+        commodityBrandIfDel:false,//是否删除
         commodityBrandNewColArray:[],//表格内新增数据集合
         commodityBrandUpdateColArray:[],//表格内修改数据集合
         commodityBrandSelection:[],//选中数据集合
+        commodityBrandUpdateRow:'',//修改表格行数据
         commodityBrandUpdateRowId:'',//修改的表格行ID
         commodityBrandCurrentPage:1,
         commodityBrandTotalPagination:10,//总页数
@@ -769,6 +771,9 @@ export default new vuex.Store({
         },
         Init_pagination(state,data){//页码总数
             state[state.tableName+'TotalPagination']=data
+        },
+        setIfDel(state,data){//配置是否删除参数
+            state[state.tableName+'IfDel']=data
         },
         setHttpApi(state,api){//api地址
             state[state.tableName+'HttpApi']=api;

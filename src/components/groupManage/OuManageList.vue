@@ -14,7 +14,7 @@
 
                 <div class="mt20 bgcolor smallBgcolor">
                     <label>组织类型</label>
-                    <el-select filterable   v-model="searchData.OuType" placeholder="">
+                    <el-select clearable filterable v-model="searchData.OuType" placeholder="">
                         <el-option v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
@@ -23,7 +23,11 @@
                 <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属公司</label>
+<<<<<<< HEAD
                     <!-- <el-select filterable   v-model="searchData.companyOuId" placeholder="">
+=======
+                    <el-select clearable filterable   v-model="searchData.CompanyOuId" placeholder="">
+>>>>>>> 2f22586c9ad36ffd9c8f859789dde214906778c1
                         <el-option 
                         v-for="item in selectData.companys" 
                         :key="item.id" 
@@ -57,7 +61,7 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>行政地区</label>
-                    <el-select v-model="searchData.AreaId" placeholder="">
+                    <el-select clearable v-model="searchData.AreaId" placeholder="">
                         <!-- <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option> -->
                         <el-input
@@ -84,7 +88,7 @@
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>启用状态</label>
-                    <el-select filterable   v-model="searchData.Status" placeholder="">
+                    <el-select clearable filterable   v-model="searchData.Status" placeholder="">
                         <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>

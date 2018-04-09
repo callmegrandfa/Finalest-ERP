@@ -80,11 +80,11 @@
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="deptParentName" label="上级部门"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop='status' label="状态">
-                                <template slot-scope="scope">
+                            <el-table-column prop='statusTValue' label="状态">
+                                <!-- <template slot-scope="scope">
                                     <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[0].itemName' disabled=""></el-input>
                                     <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[1].itemName' disabled=""></el-input>
-                                </template>
+                                </template> -->
                             </el-table-column>
                             <el-table-column prop='createdBy' label="创建人"></el-table-column>
                             <el-table-column prop='createdTime' width="180" label="创建时间"></el-table-column>
@@ -177,7 +177,7 @@
                     value:'2',
                     label: '行政地区'
                 }],
-                statusC:[],//状态
+                // statusC:[],//状态
                 tableData:[],
                 componyTree:  [{
                     ouFullname:'部门管理',
@@ -249,7 +249,7 @@
             let self = this;
             self.loadTableData();
             self.loadTree();
-            self.loadStatus();
+            // self.loadStatus();
         },
         validators: {
             'dialogData.deptCode':function(value){//部门编码
@@ -302,7 +302,7 @@
                 let self=this;
                 self.treeLoading=true;
                 self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
-                    console.log(res)
+                    // console.log(res)
                     self.componyTree[0].children=res.result
                     // console.log(self.componyTree)
                     self.treeLoading=false;
@@ -324,14 +324,15 @@
                     })
                 })
             },
-            loadStatus:function(){//加载状态下拉框
-                let self = this;
-                self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    self.statusC = res.result;       
-               },function(res){
-                   
-               })
-            },
+            // loadStatus:function(){//加载状态下拉框
+            //     let self = this;
+            //     self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+            //         self.statusC = res.result;       
+            //         console.log(self.statusC)
+            //    },function(res){
+
+            //    })
+            // },
             //---------------------------------------------------------------
 
             //---保存--------------------------------------------------------
