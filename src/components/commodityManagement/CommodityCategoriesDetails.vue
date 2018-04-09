@@ -338,9 +338,6 @@ import Btm from '../../base/btm/btm'
             },
             addItem:{
                 handler: function (val, oldVal) {
-                    // if(this.$route.params.id=="default"){
-                    //     this.changeTimes=1;
-                    // }
                     this.changeTimes++
                     if(this.changeTimes==2){
                         this.bottonbox.botton[2].disabled=false;
@@ -351,6 +348,7 @@ import Btm from '../../base/btm/btm'
             classTree:{
                  handler: function (val, oldVal) {
                     if(val.length>0){
+                        console.log(val);
                         this.treeNode.categoryParentid=val[0].categoryParentid;
                         this.treeNode.categoryName=val[0].categoryName;
                         this.addItem.categoryParentid=val[0].categoryParentid;
@@ -378,10 +376,6 @@ import Btm from '../../base/btm/btm'
                     + seperator2 + date.getSeconds();
                 return currentdate;
             },
-            // back(){//点击新增跳转
-            //     this.$store.state.url='/commodityleimu/commodityClassHeading/default'
-            //     this.$router.push({path:this.$store.state.url})//点击切换路由
-            // },
             btmlog:function(data){              
                 if(data=="取消"){
                     if(this.$route.params.id=="default"){
@@ -394,6 +388,19 @@ import Btm from '../../base/btm/btm'
                     this.bottonbox.botton[2].disabled=true;
                 }else if(data=="新增保存"){
                     this.save();
+                }else if(data=="删除"){
+                    let _this=this;
+                    _this.$axios.deletes('/api/services/app/CategoryManagement/Delete',{Id:_this.$route.params.id}).then(function(res){
+                        _this.$store.state.url=_this.bottonbox.url+'/default';
+           		        _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                        _this.open('删除成功','el-icon-circle-check','successERP'); 
+                        _this.delDialog=false;  
+                    }).catch(function(err){
+                        _this.$message({
+                            type: 'warning',
+                            message: err.error.message
+                        });
+                    }) 
                 }
             },
             InitModify(){

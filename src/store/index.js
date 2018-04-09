@@ -729,14 +729,17 @@ export default new vuex.Store({
             {code:'fa fa-wrench',label:"",},
         ],
         tableName:'',//表格名称
-        commodityClassHeadingHttpApi:'',
+        // 商品类目
+        commodityClassHeadingHttpApi:'',//接口
         commodityClassHeadingTable:[],//商品类目表格数据
-        commodityClassHeadingUpdateColArray:[],
         commodityClassHeadingSelection:[],//选中数据集合
-        commodityClassHeadingCurrentPage:1,
+        commodityClassHeadingCurrentPage:1,//当前分页
         commodityClassHeadingTotalPagination:10,//总页数
+
+        //商品品牌
         commodityBrandHttpApi:'',
         commodityBrandTable:[],//品牌表格数据
+        commodityBrandTableClone:[],//品牌表格数据clone
         commodityBrandNewCol:'',
         commodityBrandIfDel:false,//是否删除
         commodityBrandNewColArray:[],//表格内新增数据集合
@@ -774,6 +777,9 @@ export default new vuex.Store({
         } ,
         Init_Table(state,data){//表格数据模型
             state[state.tableName+'Table']=data;
+        },
+        Init_TableClone(state,data){
+            state[state.tableName+'TableClone']=data;
         },
         Init_pagination(state,data){//页码总数
             state[state.tableName+'TotalPagination']=data
