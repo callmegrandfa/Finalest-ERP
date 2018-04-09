@@ -498,16 +498,16 @@ const routes = [
             { path: '/specificationOfGoods/:id', component: specificationOfGoods, name: 'specificationOfGoods' },
 
             { path: '/tenant', component: tenant,name:'tenant',redirect: function(){//租户管理
-              let name='tenant';
-              let activeRouter=store.state.activeRouter;
-              for(let i=0;i<activeRouter.length;i++){
-                  if(activeRouter[i].name==name){
+            //   let name='tenant';
+            //   let activeRouter=store.state.activeRouter;
+            //   for(let i=0;i<activeRouter.length;i++){
+            //       if(activeRouter[i].name==name){
 
-                    return activeRouter[i].url;
+            //         return activeRouter[i].url;
 
-                    break;
-                  }
-              }
+            //         break;
+            //       }
+            //   }
             },children:[
                 { path: '/tenant/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
                 { path: '/tenant/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
@@ -676,6 +676,7 @@ router.beforeEach((to, from, next) => {
     //         }
     //     }
     // })
+
     if (store.state.accessToken != '' && typeof(store.state.accessToken)!='undefined') {
         document.title = to.name
         // let activeRouter = store.state.activeRouter;
