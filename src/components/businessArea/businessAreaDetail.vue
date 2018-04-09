@@ -55,7 +55,7 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>上级业务地区</label>
+                        <label>上级业务地区</label>
                         <el-select clearable filterable  
                         class="areaParentId" 
                        
@@ -346,7 +346,7 @@
           return this.Validator.value(value).required().integer();
       },
       'addData.areaParentId': function (value) {//上级业务地区
-          return this.Validator.value(value).required().integer();
+          return this.Validator.value(value).integer();
       },
       'addData.status': function (value) {//启用状态
          return this.Validator.value(value).required().integer();
@@ -547,6 +547,21 @@
             }
         });
       },
+      getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
+        },
     nodeClick_ou(data,node,self){
         let _this=this;
         _this.item_ou.id=data.id;

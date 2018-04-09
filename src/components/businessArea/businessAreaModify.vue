@@ -54,7 +54,7 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>上级业务地区</label>
+                        <label>上级业务地区</label>
                         <el-select clearable  
                          
                         
@@ -355,7 +355,7 @@
             return this.Validator.value(value).required().integer();
         },
         'addData.areaParentId': function (value) {//上级业务地区
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'addData.status': function (value) {//启用状态
             return this.Validator.value(value).required().integer();

@@ -194,7 +194,7 @@
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>上级业务单元</label>
+                    <label>上级业务单元</label>
                     <el-select clearable class="ouParentid"
                     
                     @change="isUpdate"
@@ -1041,10 +1041,10 @@ export default({
          return this.Validator.value(value).required().maxLength(50);
       },
       'addData.ouParentid': function (value) {//上级业务单元
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).integer();
       },
       'addData.accCchemeId': function (value) {//会计方案
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).required().integer();
       },
       'addData.accStartMonth': function (value) {//启用年月
          return this.Validator.value(value).required();
