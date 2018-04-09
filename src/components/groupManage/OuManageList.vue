@@ -33,6 +33,7 @@
                         </el-option>
                     </el-select> -->
                     <el-select class="companyOuId"
+                    clearable filterable
                     v-model="searchData.companyOuId" placeholder="">
                         <el-input
                         placeholder="搜索..."
