@@ -66,7 +66,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-
+                            :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
@@ -185,24 +185,12 @@
                     node-key="ouId"
                     ref="tree"
                     :filter-node-method="filterNode"
-                    highlight-current
+                    :highlight-current="true"
                     @node-click="ouNodeClickRight"
                     @check-change="isCheckAllOu"
                     :expand-on-click-node="false"
                     :props="ouDefaultPropsRight">
                     </el-tree>
-                <!-- <el-tree
-                :data="ouTreeDataRight"
-                :props="ouDefaultPropsRight"
-                node-key="id"
-                default-expand-all
-                show-checkbox
-                highlight-current
-                @check-change="ouCheckChangeRight"
-                ref="tree"
-                :expand-on-click-node="false"
-                @node-click="ouNodeClickRight">
-                </el-tree>   -->
                 </vue-scroll>
             </el-col>
             <!-- <el-button @click="getCheckedNodes">通过 node 获取</el-button>
@@ -431,6 +419,7 @@
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
                                         v-loading="fnTreeLoading" 
+                                        :highlight-current="true"
                                         :data="fnTreeData"
                                         :props="defaultProps"
                                         node-key="id"

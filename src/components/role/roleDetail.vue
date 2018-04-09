@@ -72,7 +72,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-
+                            :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
@@ -162,41 +162,6 @@
                         </div>
                            <!-- 分配组织 -->
 <el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
-        <!-- <el-col :span="11" class="transfer_warapper">
-                <el-col :span="24" class="transfer_header">
-                    <span>已选</span>
-                    <div class="transfer_search">
-                        <el-autocomplete
-                        class="search_input"
-                        placeholder="搜索..."
-                        >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-autocomplete>
-                    </div>    
-                </el-col>    
-                <el-col :span="24" class="transfer_table">
-                   <vue-scroll :ops="$store.state.option">
-                    <el-tree
-                    :data="ouTreeDataLeft"
-                    :props="ouDefaultPropsLeft"
-                    node-key="id"
-                    default-expand-all
-                    show-checkbox
-                    @check-change="ouCheckChangeLeft"
-                    ref="ouTreeLeft"
-                    :expand-on-click-node="false"
-                    @node-click="ouNodeClickLeft">
-                    </el-tree>  
-                    </vue-scroll>
-                </el-col>
-               
-        </el-col> -->
-        <!-- <el-col :span="2" class="transfer_btns">
-            <el-col :span="24" class="transfer_btn_wrapper">
-                <el-button class="el_transfer" :disabled="fromOuRight" @click="fromRightOu" type="primary" icon="el-icon-arrow-left" round></el-button>
-                <el-button class="el_transfer" :disabled="fromOuLeft" @click="fromLeftOu" type="primary" icon="el-icon-arrow-right" round></el-button>
-            </el-col>
-        </el-col> -->
         <span slot="title">
             <span>分配组织</span>
             <a  href="javascript:;" class="add" @click="addNewOu">+</a>
@@ -222,28 +187,16 @@
                     <el-tree
                     :data="ouTreeDataRight"
                     show-checkbox
+                    :highlight-current="true"
                     default-expand-all
                     node-key="ouId"
                     ref="tree"
                     :filter-node-method="filterNode"
-                    highlight-current
                     @node-click="ouNodeClickRight"
                     @check-change="isCheckAllOu"
                     :expand-on-click-node="false"
                     :props="ouDefaultPropsRight">
                     </el-tree>
-                <!-- <el-tree
-                :data="ouTreeDataRight"
-                :props="ouDefaultPropsRight"
-                node-key="id"
-                default-expand-all
-                show-checkbox
-                highlight-current
-                @check-change="ouCheckChangeRight"
-                ref="tree"
-                :expand-on-click-node="false"
-                @node-click="ouNodeClickRight">
-                </el-tree>   -->
                 </vue-scroll>
             </el-col>
             <!-- <el-button @click="getCheckedNodes">通过 node 获取</el-button>
@@ -470,6 +423,7 @@
                             <el-col :span="24" class="fnTreeWrapper">
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
+                                        :highlight-current="true"
                                         v-loading="fnTreeLoading" 
                                         :data="fnTreeData"
                                         :props="defaultProps"

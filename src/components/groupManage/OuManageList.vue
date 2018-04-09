@@ -43,6 +43,7 @@
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTreeCompany"
                         :props="selectPropsCompany"
+                        :highlight-current="true"
                         node-key="id"
                         default-expand-all
                         ref="tree"
@@ -69,6 +70,7 @@
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :data="selectTree_area"
                             :props="selectProps_area"
+                            :highlight-current="true"
                             node-key="id"
                             default-expand-all
                             ref="tree"

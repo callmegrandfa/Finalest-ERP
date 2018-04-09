@@ -77,6 +77,7 @@
                             <el-tree
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :data="selectTree"
+                            :highlight-current="true"
                             :props="selectProps"
                             node-key="id"
                             default-expand-all
@@ -198,6 +199,7 @@
                         <el-col :span="24" class="transfer_fixed">
                             <vue-scroll :ops="$store.state.option">  
                                 <el-tree
+                                    :highlight-current="true"
                                     :data="componyTree"
                                     :props="defaultProps"
                                     node-key="id"
