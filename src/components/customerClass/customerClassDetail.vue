@@ -48,7 +48,8 @@
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>上级客户分类</label>
-                        <el-select class="classParentId" 
+                        <el-select class="classParentId"
+                                   clearable filterable 
                                    :class="{redBorder : validation.hasError('addData.classParentId')}" 
                                    placeholder=""
                                    v-model="addData.classParentId">
@@ -129,7 +130,8 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
                         <el-select  class="status" 
-                                     @change="isUpdate"
+                                    clearable filterable
+                                    @change="isUpdate"
                                     :class="{redBorder : validation.hasError('addData.status')}" 
                                     placeholder=""
                                     v-model="addData.status">
@@ -268,7 +270,12 @@
         count () {
             return this.parentItem;
             },
-    },  
+    },
+    watch: {
+        parentSearch(val) {
+           this.$refs.tree.filter(val);
+        }
+    },
     methods: {
         getSelectData(){
             let _this=this;
@@ -510,7 +517,7 @@
             })
         },
 
-       //-------------按钮操作-----------
+       
     }
 
 })

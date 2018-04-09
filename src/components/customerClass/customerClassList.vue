@@ -4,6 +4,7 @@
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-input placeholder="搜索..."
+                              clearable filterable
                               v-model="searchLeft" 
                               class="bCustSearch">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -59,7 +60,7 @@
                             <div class="search_input_wapper">
                                 <el-input
                                    v-model="SearchKey"
-                                   
+                                    clearable filterable
                                     placeholder="搜索..."
                                    @change="searchRight"
                                     class="search_input">
@@ -316,7 +317,7 @@ export default {
       let self = this;
       self.tableLoading = true;
       self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList",{Id:0,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
-            // console.log(res);
+            console.log(res);
             self.tableData = res.result.items;
             // console.log(self.tableData)
             self.totalItem = res.result.totalCount;
@@ -622,7 +623,7 @@ export default {
             self.detailParentId=data.id;//
              self.detailParentName=data.moduleName;
             // self.dateabc=data.id;
-            console.log(self.dateabc)
+            // console.log(self.dateabc)
             self.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:self.dateabc,ContactOwner:1,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
                 res=>{
                   console.log(res);

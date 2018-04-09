@@ -48,6 +48,7 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>上级客户分类</label>
                         <el-select class="classParentId" 
+                                   clearable filterable
                                    :class="{redBorder : validation.hasError('customerClassData.classParentId')}" 
                                    placeholder=""            
                                    @change='Modify()'
@@ -126,6 +127,7 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
                         <el-select  class="status"
+                                     clearable filterable
                                     :class="{redBorder : validation.hasError('customerClassData.status')}" 
                                     placeholder=""
                                     v-model="customerClassData.status">
@@ -269,6 +271,11 @@ export default {
       return this.parentItem;
     }
   },
+  watch: {
+    parentSearch(val) {
+      this.$refs.tree.filter(val);
+    }
+  },
   data() {
     return {
       ifModify: false, //判断是否修改过
@@ -293,7 +300,7 @@ export default {
         groupId: 1,
         // "cuId": '',
         classCode: "",
-        className: [],
+        className: "",
         classParentId: "",
         remark: "",
         status: "",
