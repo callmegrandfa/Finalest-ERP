@@ -461,6 +461,7 @@
                     </el-select> -->
 
                     <el-select class="companyOuId"
+                        clearable filterable
                         @change="isUpdate"
                         @focus="showErrprTipsSelect"
                         :class="{redBorder : validation.hasError('addData.ouParentid')}"

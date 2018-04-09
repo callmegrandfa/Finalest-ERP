@@ -48,7 +48,8 @@
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>上级客户分类</label>
-                        <el-select class="classParentId" 
+                        <el-select class="classParentId"
+                                   clearable filterable 
                                    :class="{redBorder : validation.hasError('addData.classParentId')}" 
                                    placeholder=""
                                    v-model="addData.classParentId">
@@ -73,7 +74,7 @@
                                        :label="count.className" 
                                        :value="count.id"
                                        id="customerClass_confirmSelect"></el-option> -->
-                                       <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
+                                       <el-option  v-show="false" v-for="item in selectData.customerClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -129,7 +130,8 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
                         <el-select  class="status" 
-                                     @change="isUpdate"
+                                    clearable filterable
+                                    @change="isUpdate"
                                     :class="{redBorder : validation.hasError('addData.status')}" 
                                     placeholder=""
                                     v-model="addData.status">
@@ -144,7 +146,7 @@
                     <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
-            <el-col :span="24">
+            <!-- <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
@@ -172,8 +174,39 @@
                     </div>
                   
                 </div>    
-            </el-col>
+            </el-col> -->
       </el-row>
+      <el-row>
+    <el-col :span="24" class="getPadding">
+        <h4 class="h4">审计信息</h4>
+        <div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="addData.createdBy" disabled></el-input></div>
+            <div class="bgcolor">
+                <label>创建时间</label>
+                <el-date-picker
+                v-model="addData.createdTime"
+                type="date"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
+                disabled
+                placeholder="">
+                </el-date-picker>
+            </div>
+            <div class="bgcolor"><label>修改人</label><el-input  v-model="addData.modifiedBy" disabled></el-input></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker
+                v-model="addData.modifiedTime"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
+                type="date"
+                disabled
+                placeholder="">
+                </el-date-picker>
+            </div>
+        </div>                                  
+    </el-col>
+</el-row>       
        <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -232,7 +265,7 @@
                     },
                     selectData:{//select数据
                         Status001:[],//启用状态
-                        menu:[],//菜单
+                        customerClass:[],//客户分类
                     },
                 choseDoing:'',//存储点击按钮判断信息
                 dialogUserConfirm:false,//信息更改提示控制
@@ -268,7 +301,12 @@
         count () {
             return this.parentItem;
             },
-    },  
+    },
+    watch: {
+        parentSearch(val) {
+           this.$refs.tree.filter(val);
+        }
+    },
     methods: {
         getSelectData(){
             let _this=this;
@@ -277,8 +315,8 @@
             // _this.selectData.Status001=res.result;
             // })
            _this.$axios.gets('api/services/app/ContactClassManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
-            // 菜单
-            _this.selectData.menu=res.result.items;
+            // 客户分类
+            _this.selectData.customerClass=res.result.items;
            
             })
         },
@@ -301,7 +339,7 @@
                 _this.addData.classParentId=parseInt(_this.$route.params.id);
                 _this.parentItem.className = '111111';
                 _this.parentItem.id=_this.$route.params.id;
-                console.log(_this.$route.params.name)
+                // console.log(_this.$route.params.name)
                 // alert(1)
             }
         },
@@ -509,8 +547,6 @@
                 }
             })
         },
-
-       //-------------按钮操作-----------
     }
 
 })
@@ -526,16 +562,22 @@
     margin-bottom: 10px;
     margin-top: -10px;
 }
+.customerClassDetail .getPadding {
+    padding: 0 10px;
+}
  .customerClassDetail .el-row{
+   padding: 15px 0;
+    border-bottom: 1px solid #e4e4e4;
     background-color: #fff;
-  }
+ }
+
  .customerClassDetail .el-row:first-child{
    padding: 7px 0;
    border-bottom: 1px solid #e4e4e4;
   }
-  .customerClassDetail .el-row:last-child{
-    padding-bottom: 15px;
-  }
+ .customerClassDetail .el-row:last-child {
+  padding-bottom: 15px;
+}
   .customerClassDetail .bgcolor .isGive{
     display: block;
     float: left;
