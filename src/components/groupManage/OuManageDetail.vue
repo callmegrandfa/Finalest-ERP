@@ -43,7 +43,7 @@
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.accStartMonth')}">
-                            启用月份{{ validation.firstError('addData.accStartMonth') }},
+                            启用年月{{ validation.firstError('addData.accStartMonth') }},
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.baseCurrencyId')}">
@@ -250,7 +250,7 @@
                     </el-select>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>启用月份</label>
+                    <label><small>*</small>启用年月</label>
                     <el-date-picker 
                     
                     
@@ -284,7 +284,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select filterable  
+                    <!-- <el-select filterable  
                     
                     @change="isUpdate"
                     placeholder=""
@@ -299,6 +299,36 @@
                         :value="item.id" 
                         >
                         </el-option>
+                    </el-select> -->
+                    
+                    <el-select class="companyOuId"
+                    
+                    @change="isUpdate"
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.ouParentid')}"
+                    placeholder=""
+                    v-model="addData.companyOuId">
+                        <el-input
+                        placeholder="搜索..."
+                        class="selectSearch"
+                        v-model="search">
+                        </el-input>
+                        <el-tree
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        :data="selectTreeCompany"
+                        :props="selectPropsCompany"
+                        node-key="id"
+                        default-expand-all
+                        ref="tree"
+                        :filter-node-method="filterNode"
+                        :expand-on-click-node="false"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        </el-option> -->
+                        <el-option v-show="false" v-for="item in selectData.companys" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -909,6 +939,7 @@ export default({
             search:'',
              selectTree:[
             ],
+            selectTreeCompany:[],
             item_ou:{
                 id:'',
                 ouFullname:''
@@ -918,7 +949,11 @@ export default({
                 label: 'ouFullname',
                 id:'id'
             },
-
+            selectPropsCompany:{
+                 children: 'children',
+                label: 'ouFullname',
+                id:'id'
+            },
              test:'',   
             dateRange:[],//有效时间
             companys:1,
@@ -1014,7 +1049,7 @@ export default({
       'addData.accCchemeId': function (value) {//会计方案
          return this.Validator.value(value).required().maxLength(50);
       },
-      'addData.accStartMonth': function (value) {//启用月份
+      'addData.accStartMonth': function (value) {//启用年月
          return this.Validator.value(value).required();
       },
       'addData.baseCurrencyId': function (value) {//本位币种id
@@ -1196,6 +1231,7 @@ export default({
     created:function(){
         let _this=this;
          _this.loadTree();
+          _this.loadTreeCompany();
          _this.getSelectData();
          _this.getDefault();
     },  
@@ -1208,9 +1244,11 @@ export default({
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
-            // 会计期间方案值,启用月份
+                console.log(res);
+            // 会计期间方案值,启用年月
                 _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案
-                _this.addData.accStartMonth=res.result.accStartMonth;//启用月份
+                
+                _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
                 _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
             })
             if(_this.$route.params.id!="default"){
@@ -1230,6 +1268,14 @@ export default({
             _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
             // 会计期间方案
                 _this.selectData.accCchemeId=res.result.items;
+                for(let i=0;i<_this.selectData.accCchemeId.length;i++){
+                    console.log(_this.selectData.accCchemeId[i].accperiodSchemeName) 
+                    // if(_this.selectData.accCchemeId[i].id == _this.addData.accCchemeId){
+                    //     console.log(1)
+                    //    console.log(_this.selectData.accCchemeId[i].accperiodSchemeName) 
+                    // }
+                }
+                // console.log(_this.selectData.accCchemeId[0].id)
             })
             _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
@@ -1305,19 +1351,30 @@ export default({
             },function(res){
             })
         },
-        loadIcon(){
-            let _this=this;
-            _this.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                    }
-                })
+        loadTreeCompany(){
+        let _this=this;
+        _this.treeLoading=true;
+        _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
+        .then(function(res){
+            // console.log(res);
+            _this.selectTreeCompany=res.result;
+            _this.loadIcon();
+        },function(res){
+        })
+    },
+    loadIcon(){
+        let _this=this;
+        _this.$nextTick(function () {
+            $('.preNode').remove();   
+            $('.el-tree-node__label').each(function(){
+                if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                    $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                }else{
+                    $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                }
             })
-        },
+        })
+    },
          nodeClick_ou(data,node,self){
             let _this=this;
             _this.item_ou.id=data.id;
@@ -1331,6 +1388,19 @@ export default({
             }
         })
         },
+       nodeClick(data,node,self){
+        let _this=this;
+        _this.item_ou.id=data.id;
+        _this.item_ou.ouFullname=data.ouFullname;
+        // _this.$nextTick(function(){
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        // })
+        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+        if($(this).attr('date')==data.id){
+            $(this).click()
+        }
+    })
+    },
         back(){
             this.$store.state.url='/OuManage/OuManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由

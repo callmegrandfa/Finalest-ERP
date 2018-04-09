@@ -43,7 +43,7 @@
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.accStartMonth')}">
-                            启用月份{{ validation.firstError('addData.accStartMonth') }},
+                            启用年月{{ validation.firstError('addData.accStartMonth') }},
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.baseCurrencyId')}">
@@ -182,7 +182,7 @@
                 </div>
                 <div class="tipsWrapper" name="accStartMonth">
                     <div class="errorTips" :class="{block : !validation.hasError('addData.accStartMonth')}">
-                        <p class="msgDetail">错误提示：启用月份{{ validation.firstError('addData.accStartMonth') }}</p>
+                        <p class="msgDetail">错误提示：启用年月{{ validation.firstError('addData.accStartMonth') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="baseCurrencyId">
@@ -368,12 +368,6 @@
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
                     placeholder=""
                     v-model="addData.ouParentid">
-                        <!-- <el-option 
-                        v-for="item in selectData.ouParentid" 
-                        :key="item.id" 
-                        :label="item.ouName" 
-                        :value="item.id">
-                        </el-option> -->
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
@@ -415,7 +409,7 @@
                     </el-select>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>启用月份</label>
+                    <label><small>*</small>启用年月</label>
                     <el-date-picker 
                      
                     @change="isUpdate"
@@ -449,7 +443,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select filterable  
+                    <!-- <el-select filterable  
                      
                     @change="isUpdate"
                     placeholder=""
@@ -464,7 +458,37 @@
                         :value="item.id" 
                         >
                         </el-option>
+                    </el-select> -->
+
+                    <el-select class="companyOuId"
+                        @change="isUpdate"
+                        @focus="showErrprTipsSelect"
+                        :class="{redBorder : validation.hasError('addData.ouParentid')}"
+                        placeholder=""
+                        v-model="addData.companyOuId">
+                            <el-input
+                            placeholder="搜索..."
+                            class="selectSearch"
+                            v-model="search">
+                            </el-input>
+                            <el-tree
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :data="selectTreeCompany"
+                            :props="selectPropsCompany"
+                            node-key="id"
+                            default-expand-all
+                            ref="tree"
+                            :filter-node-method="filterNode"
+                            :expand-on-click-node="false"
+                            @node-click="nodeClick"
+                            >
+                        </el-tree>
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        </el-option> -->
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        </el-option>
                     </el-select>
+
                 </div>
                 <div class="bgcolor">
                     <label>联系人</label>
@@ -1107,6 +1131,7 @@ export default({
             search:'',
              selectTree:[
             ],
+            selectTreeCompany:[],
             item_ou:{
                 id:'',
                 ouFullname:''
@@ -1116,7 +1141,12 @@ export default({
                 label: 'ouFullname',
                 id:'id'
             },
-
+            //选择所属公司
+            selectPropsCompany:{
+                children: 'children',
+                label: 'ouFullname',
+                id:'id'
+            },
             groupCompany:{
                 value:0,
                 label:"无上级公司"
@@ -1212,7 +1242,7 @@ export default({
       'addData.accCchemeId': function (value) {//会计方案
          return this.Validator.value(value).required().maxLength(50);
       },
-      'addData.accStartMonth': function (value) {//启用月份
+      'addData.accStartMonth': function (value) {//启用年月
          return this.Validator.value(value).required();
       },
       'addData.baseCurrencyId': function (value) {//本位币种id
@@ -1559,6 +1589,13 @@ export default({
                 _this.loadIcon();
             },function(res){
             })
+             _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
+            .then(function(res){
+                console.log(res);
+                _this.selectTreeCompany=res.result;
+                _this.loadIcon();
+            },function(res){
+            })
         },
         loadIcon(){
             let _this=this;
@@ -1586,6 +1623,20 @@ export default({
                 }
             })
         },
+        // 
+        nodeClick(data,node,self){
+        let _this=this;
+        // _this.item_ou.id=data.id;
+        // _this.item_ou.ouFullname=data.ouFullname;
+        // _this.$nextTick(function(){
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        // })
+        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+        if($(this).attr('date')==data.id){
+            $(this).click()
+        }
+    })
+    },
         isBack(){
             let _this=this;
             if(_this.update){
