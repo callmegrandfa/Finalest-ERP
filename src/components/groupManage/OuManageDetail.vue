@@ -1604,6 +1604,7 @@ export default({
         Cancel(){
             let _this=this;
             _this.clearData();
+            $('.tipsWrapper').css({display:'none'})
             _this.update=false;
         },
         clearData(){

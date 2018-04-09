@@ -187,16 +187,15 @@
                         :data="tableData" 
                         border 
                         style="width: 100%" 
-                        stripe 
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
-                            <el-table-column type="selection" fixed="left"></el-table-column>
-                            <el-table-column prop="ouCode" label="编码" fixed="left">
+                            <el-table-column type="selection" fixed></el-table-column>
+                            <el-table-column prop="ouCode" label="编码" fixed>
                                 <template slot-scope="scope">
                                     <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].ouCode}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="ouName" label="名称" fixed="left">
+                            <el-table-column prop="ouName" label="名称" fixed>
                                 <template slot-scope="scope">
                                     <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].ouName}}</el-button>
                                 </template>

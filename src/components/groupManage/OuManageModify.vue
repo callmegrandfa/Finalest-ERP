@@ -1797,6 +1797,7 @@ export default({
         },
         Cancel(){
             let _this=this;
+             $('.tipsWrapper').css({display:'none'})
             _this.validation.reset();
             _this.getData();
             _this.update=false;

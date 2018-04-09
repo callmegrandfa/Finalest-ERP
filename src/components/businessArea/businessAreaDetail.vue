@@ -477,9 +477,9 @@
         changeOuId(){
             let _this=this;
             _this.getAreaTree(_this.addData.ouId)
-             _this.addData.areaParentId=0;
-             _this.item_area.id=0;
-             _this.item_area.areaName="无"
+             _this.addData.areaParentId='';
+            //  _this.item_area.id=0;
+            //  _this.item_area.areaName="无"
         },
         getAreaTree(OuId){
             let _this=this;
