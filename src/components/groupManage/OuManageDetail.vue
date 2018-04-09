@@ -194,7 +194,7 @@
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>上级业务单元</label>
+                    <label>上级业务单元</label>
                     <el-select clearable class="ouParentid"
                     
                     @change="isUpdate"
@@ -216,6 +216,7 @@
                         <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTree"
+                        :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
                         default-expand-all
@@ -253,7 +254,7 @@
                     <label><small>*</small>启用年月</label>
                     <el-date-picker 
                     
-                    
+                    disabled 
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
                     class="accStartMonth datepicker" 
@@ -301,7 +302,7 @@
                     </el-select> -->
                     
                     <el-select class="companyOuId"
-                    
+                     clearable filterable
                     @change="isUpdate"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -315,6 +316,7 @@
                         <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTreeCompany"
+                        :highlight-current="true"
                         :props="selectPropsCompany"
                         node-key="id"
                         default-expand-all
@@ -880,7 +882,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -902,27 +904,23 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
-        <!-- dialog -->                                                 
+        <!-- dialog -->                                     
 </div>
 </template>
 
@@ -1043,10 +1041,10 @@ export default({
          return this.Validator.value(value).required().maxLength(50);
       },
       'addData.ouParentid': function (value) {//上级业务单元
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).integer();
       },
       'addData.accCchemeId': function (value) {//会计方案
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).required().integer();
       },
       'addData.accStartMonth': function (value) {//启用年月
          return this.Validator.value(value).required();
@@ -1285,11 +1283,24 @@ export default({
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
-                console.log(res);
             // 会计期间方案值,启用年月
-                _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
-                _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
-                _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
+                // _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
+                // _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
+                _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
+                    // 会计期间方案下拉
+                    _this.selectData.accCchemeId=res.result.items;
+                    let flag=false;
+                    $.each(_this.selectData.accCchemeId,function(index,value){
+                        if(value.id==res.result.accSchemeId){
+                            flag=true;
+                        }
+                    })
+                    if(flag){
+                        _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
+                        _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
+                    }
+                })
+                // _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
             })
             if(_this.$route.params.id!="default"){
                 _this.addData.ouParentid=parseInt(_this.$route.params.id);
@@ -1305,18 +1316,10 @@ export default({
             // 上级业务单元(所属组织)
                 _this.selectData.ouParentid=res.result;
             })
-            _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
-            // 会计期间方案
-                _this.selectData.accCchemeId=res.result.items;
-                for(let i=0;i<_this.selectData.accCchemeId.length;i++){
-                    console.log(_this.selectData.accCchemeId[i].accperiodSchemeName) 
-                    // if(_this.selectData.accCchemeId[i].id == _this.addData.accCchemeId){
-                    //     console.log(1)
-                    //    console.log(_this.selectData.accCchemeId[i].accperiodSchemeName) 
-                    // }
-                }
-                // console.log(_this.selectData.accCchemeId[0].id)
-            })
+            // _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
+            // // 会计期间方案
+            //     _this.selectData.accCchemeId=res.result.items;
+            // })
             _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
                 _this.selectData.baseCurrencyId=res.result.items;
@@ -1378,8 +1381,13 @@ export default({
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
         },
-        getStartMonth(){
-
+        getStartMonth(){//根据会计期间生成启用年月
+            let _this=this;
+            _this.$axios.gets('/api/services/app/AccperiodSheme/Get',{id:_this.addData.accCchemeId})
+            .then(function(res){
+                _this.addData.accStartMonth=res.result.checkDate 
+            },function(res){
+            })
         },
         loadTree(){
             let _this=this;
@@ -1596,6 +1604,7 @@ export default({
         Cancel(){
             let _this=this;
             _this.clearData();
+            $('.tipsWrapper').css({display:'none'})
             _this.update=false;
         },
         clearData(){

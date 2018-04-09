@@ -48,10 +48,11 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>上级客户分类</label>
                         <el-select class="classParentId" 
+                                   clearable filterable
                                    :class="{redBorder : validation.hasError('customerClassData.classParentId')}" 
                                    placeholder=""            
                                    @change='Modify()'
-                                   v-model="customerClassData.classParentId">
+                                   v-model="customerClassData.classParentId_ClassName">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="parentSearch"></el-input>
@@ -126,6 +127,7 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
                         <el-select  class="status"
+                                     clearable filterable
                                     :class="{redBorder : validation.hasError('customerClassData.status')}" 
                                     placeholder=""
                                     v-model="customerClassData.status">
@@ -138,7 +140,7 @@
                     <div class="error_tips">{{ validation.firstError('customerClassData.status') }}</div>
                 </div>    
             </el-col>
-            <el-col :span="24">
+            <!-- <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
@@ -157,14 +159,6 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建时间</label>
-
-                        <!-- <el-input class="createdTime" 
-                                  :class="{redBorder : validation.hasError('customerClassData.createdTime')}" 
-                                   :disabled="isEdit" 
-                                  v-model="customerClassData.createdTime"
-                                  :autosize="{ minRows: 4, maxRows: 4}">
-                                   @change='Modify()'></el-input>
-                        </el-input> -->
                         <el-date-picker
                                   v-model="customerClassData.createdTime"
                                   type="date"
@@ -177,8 +171,39 @@
                     </div>
                   
                 </div>    
-            </el-col>
+            </el-col>-->
       </el-row>
+      <el-row>
+    <el-col :span="24" class="getPadding">
+        <h4 class="h4">审计信息</h4>
+        <div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
+            <div class="bgcolor">
+                <label>创建时间</label>
+                <el-date-picker
+                v-model="customerClassData.createdTime"
+                type="date"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
+                disabled
+                placeholder="">
+                </el-date-picker>
+            </div>
+            <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker
+                v-model="customerClassData.modifiedTime"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
+                type="date"
+                disabled
+                placeholder="">
+                </el-date-picker>
+            </div>
+        </div>                                  
+    </el-col>
+</el-row>       
       <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -228,7 +253,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -269,6 +294,11 @@ export default {
       return this.parentItem;
     }
   },
+  watch: {
+    parentSearch(val) {
+      this.$refs.tree.filter(val);
+    }
+  },
   data() {
     return {
       ifModify: false, //判断是否修改过
@@ -293,8 +323,9 @@ export default {
         groupId: 1,
         // "cuId": '',
         classCode: "",
-        className: [],
+        className: "",
         classParentId: "",
+        classParentId_ClassName:"",
         remark: "",
         status: "",
         createdBy: "",
@@ -375,7 +406,7 @@ export default {
             self.customerClassData = res.result;
             // self.ouItem.id = self.customerClassData.classParentId;
             // self.ouItem.ouName = self.customerClassData.ouFullname;
-            self.parentItem.id = self.customerClassData.classParentId;
+            // self.parentItem.id = self.customerClassData.classParentId;
             self.parentItem.className = self.customerClassData.className;
           });
       }
@@ -387,7 +418,7 @@ export default {
         .gets("api/services/app/ContactClassManagement/GetTreeList",{Ower:1})
         .then(
           function(res) {
-            console.log(res);
+            // console.log(res);
             self.selectParentTree = res;
             self.loadIcon();
           },
@@ -510,7 +541,12 @@ export default {
                   // console.log(self.ifModify);
                 },
                 function(res) {
-                  self.open("修改失败", "el-icon-error", "faildERP");
+                  // self.open("修改失败", "el-icon-error", "faildERP");
+                   if(res && res!=''){ 
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }
+                    self.dialogUserConfirm=false;
+                    self.errorMessage=true;
                 }
               );
           }
@@ -536,7 +572,12 @@ export default {
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                 },
                 function(res) {
-                  self.open("修改失败", "el-icon-error", "faildERP");
+                  // self.open("修改失败", "el-icon-error", "faildERP");
+                  if(res && res!=''){ 
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }
+                    self.dialogUserConfirm=false;
+                    self.errorMessage=true;
                 }
               );
           }
@@ -558,7 +599,7 @@ export default {
             self.dialogDelConfirm = false;
           },
           function(res) {
-            self.open("删除客户失败", "el-icon-error", "faildERP");
+            // self.open("删除客户失败", "el-icon-error", "faildERP");
             self.dialogDelConfirm = false;
             self.errorMessage = true;
             self.getErrorMessage(
@@ -566,6 +607,10 @@ export default {
               res.error.details,
               res.error.validationErrors
             );
+            // if(res && res!=''){ 
+            //     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+            //     self.dialogUserConfirm=false;
+            //     _this.errorMessage=true;
           }
         );
     },
@@ -633,7 +678,22 @@ export default {
           $(this).removeClass("display_block");
         }
       });
-    }
+    },
+      getErrorMessage(message,details,validationErrors){
+            let self=this;
+            self.response.message='';
+            self.response.details='';
+            self.response.validationErrors=[];
+            if(details!=null && details){
+                self.response.details=details;
+            }
+            if(message!=null && message){
+                self.response.message=message;
+            }
+            if(message!=null && message){
+                self.response.validationErrors=validationErrors;
+            }
+        }
     //------------------------------------------------------
   }
 };
@@ -650,7 +710,12 @@ export default {
   margin-top: -10px;
 }
 .customerClassModify .el-row {
-  background-color: #fff;
+    padding: 15px 0;
+    border-bottom: 1px solid #e4e4e4;
+    background-color: #fff;
+}
+.customerClassModify .getPadding {
+    padding: 0 10px;
 }
 .customerClassModify .el-row:first-child {
   padding: 7px 0;
