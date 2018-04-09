@@ -111,6 +111,38 @@
             </span>
         </el-dialog>
         <!-- dialog -->
+         <!-- dialog错误信息提示 -->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="$store.state.option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
     </div>
 </template>
 
@@ -135,6 +167,15 @@ import Tree from '../../base/tree/tree'
                 "remark": "st54ring"
                 },
                 value1:'',
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
+                 // 错误信息提示开始
+                detail_message_ifShow:false,
+                errorMessage:false,
+                // 错误信息提示结束
                 dialogUserConfirm: false,
                 searchItem:{
                     specCode:'',//规格编码
@@ -335,6 +376,12 @@ import Tree from '../../base/tree/tree'
                                 _this.statusButton(false,false,true) 
                                 _this.open('创建商品规格值成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
+                            },function(res){
+                                if(res && res!=''){
+                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                    _this.dialogUserConfirm=false;
+                                    _this.errorMessage=true;
+                                }
                             }); 
                         }else{//批量新增 
 
@@ -343,6 +390,12 @@ import Tree from '../../base/tree/tree'
                                 _this.statusButton(false,false,true) 
                                 _this.open('创建商品规格值成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
+                            },function(res){
+                                if(res && res!=''){
+                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                    _this.dialogUserConfirm=false;
+                                    _this.errorMessage=true;
+                                }
                             }); 
                         }                    
                     }else if( _this.isUpdate){//修改保存
@@ -362,7 +415,11 @@ import Tree from '../../base/tree/tree'
                                 _this.loadTree();
                                 _this.open('保存商品规格值成功','el-icon-circle-check','successERP');   
                             },function(res){
-                                console.log(res)
+                                if(res && res!=''){
+                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                    _this.dialogUserConfirm=false;
+                                    _this.errorMessage=true;
+                                }
                             });
                         }else{//批量修改
                            
@@ -372,6 +429,12 @@ import Tree from '../../base/tree/tree'
                                 _this.loadTableData();
                                 _this.open('保存商品规格值成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
+                            },function(res){
+                                if(res && res!=''){
+                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                    _this.dialogUserConfirm=false;
+                                    _this.errorMessage=true;
+                                }
                             }); 
                         }
                     }
@@ -444,6 +507,21 @@ import Tree from '../../base/tree/tree'
                     }
                 }
             },
+            getErrorMessage(message,details,validationErrors){
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
+            },
             sureAjax(){
                 let _this=this;
                 if(_this.addabc != ''){
@@ -458,6 +536,12 @@ import Tree from '../../base/tree/tree'
                             _this.loadTree();
                             _this.dialogUserConfirm = false;
                             _this.open('删除成功','el-icon-circle-check','successERP');              
+                        },function(res){
+                            if(res && res!=''){
+                                _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                _this.dialogUserConfirm=false;
+                                _this.errorMessage=true;
+                            }
                         })
                     }
                 }else{
@@ -476,6 +560,12 @@ import Tree from '../../base/tree/tree'
                             _this.loadTableData();
                             _this.dialogUserConfirm = false;
                             _this.open('删除成功','el-icon-circle-check','successERP');    
+                        },function(res){
+                            if(res && res!=''){
+                                _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                _this.dialogUserConfirm=false;
+                                _this.errorMessage=true;
+                            }
                         })
                     }
                 }
