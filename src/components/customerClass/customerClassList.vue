@@ -173,7 +173,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -556,7 +556,7 @@ export default {
             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
             self.dialogUserConfirm=false;
             self.errorMessage=true;
-            self.open('删除失败','el-icon-error','faildERP');
+            // self.open('删除失败','el-icon-error','faildERP');
           }
         );
     },
@@ -584,7 +584,7 @@ export default {
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                      _this.errorMessage=true;
                      _this.dialogUserConfirm=false;
-                     _this.open('删除失败','el-icon-error','faildERP');
+                    //  _this.open('删除失败','el-icon-error','faildERP');
                 }
               );
       }

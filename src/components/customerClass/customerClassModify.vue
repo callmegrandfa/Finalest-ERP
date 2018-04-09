@@ -253,7 +253,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -541,7 +541,12 @@ export default {
                   // console.log(self.ifModify);
                 },
                 function(res) {
-                  self.open("修改失败", "el-icon-error", "faildERP");
+                  // self.open("修改失败", "el-icon-error", "faildERP");
+                   if(res && res!=''){ 
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }
+                    self.dialogUserConfirm=false;
+                    self.errorMessage=true;
                 }
               );
           }
@@ -567,7 +572,12 @@ export default {
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                 },
                 function(res) {
-                  self.open("修改失败", "el-icon-error", "faildERP");
+                  // self.open("修改失败", "el-icon-error", "faildERP");
+                  if(res && res!=''){ 
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }
+                    self.dialogUserConfirm=false;
+                    self.errorMessage=true;
                 }
               );
           }
@@ -589,7 +599,7 @@ export default {
             self.dialogDelConfirm = false;
           },
           function(res) {
-            self.open("删除客户失败", "el-icon-error", "faildERP");
+            // self.open("删除客户失败", "el-icon-error", "faildERP");
             self.dialogDelConfirm = false;
             self.errorMessage = true;
             self.getErrorMessage(
@@ -597,6 +607,10 @@ export default {
               res.error.details,
               res.error.validationErrors
             );
+            // if(res && res!=''){ 
+            //     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+            //     self.dialogUserConfirm=false;
+            //     _this.errorMessage=true;
           }
         );
     },
@@ -664,7 +678,22 @@ export default {
           $(this).removeClass("display_block");
         }
       });
-    }
+    },
+      getErrorMessage(message,details,validationErrors){
+            let self=this;
+            self.response.message='';
+            self.response.details='';
+            self.response.validationErrors=[];
+            if(details!=null && details){
+                self.response.details=details;
+            }
+            if(message!=null && message){
+                self.response.message=message;
+            }
+            if(message!=null && message){
+                self.response.validationErrors=validationErrors;
+            }
+        }
     //------------------------------------------------------
   }
 };
