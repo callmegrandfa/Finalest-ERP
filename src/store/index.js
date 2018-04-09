@@ -65,6 +65,7 @@ export default new vuex.Store({
         currencyList:{ name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
 
         commodityBrand:{name: 'commodityBrand', url: '/commodityBrand/:id', parent: 'commodityBrand', default: '/commodityBrand/:id' },//商品品牌
+        specificationOfGoods:{name: 'specificationOfGoods', url: '/specificationOfGoods/:id', parent: 'specificationOfGoods', default: '/specificationOfGoods/:id' },//商品品牌
 
         bill:{ name: 'bill', url: '/bill/billList/:id', parent: 'bill', default: '/bill/billList/:id' } , //模板2.0
         billDetails:{ name: 'billDetails', url: '/bill/billDetails/:id', parent: 'bill' } ,
