@@ -52,7 +52,7 @@
                                    :class="{redBorder : validation.hasError('customerClassData.classParentId')}" 
                                    placeholder=""            
                                    @change='Modify()'
-                                   v-model="customerClassData.classParentId">
+                                   v-model="customerClassData.classParentId_ClassName">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="parentSearch"></el-input>
@@ -140,7 +140,7 @@
                     <div class="error_tips">{{ validation.firstError('customerClassData.status') }}</div>
                 </div>    
             </el-col>
-            <el-col :span="24">
+            <!-- <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
@@ -159,14 +159,6 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建时间</label>
-
-                        <!-- <el-input class="createdTime" 
-                                  :class="{redBorder : validation.hasError('customerClassData.createdTime')}" 
-                                   :disabled="isEdit" 
-                                  v-model="customerClassData.createdTime"
-                                  :autosize="{ minRows: 4, maxRows: 4}">
-                                   @change='Modify()'></el-input>
-                        </el-input> -->
                         <el-date-picker
                                   v-model="customerClassData.createdTime"
                                   type="date"
@@ -179,8 +171,39 @@
                     </div>
                   
                 </div>    
-            </el-col>
+            </el-col>-->
       </el-row>
+      <el-row>
+    <el-col :span="24" class="getPadding">
+        <h4 class="h4">审计信息</h4>
+        <div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
+            <div class="bgcolor">
+                <label>创建时间</label>
+                <el-date-picker
+                v-model="customerClassData.createdTime"
+                type="date"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
+                disabled
+                placeholder="">
+                </el-date-picker>
+            </div>
+            <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker
+                v-model="customerClassData.modifiedTime"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
+                type="date"
+                disabled
+                placeholder="">
+                </el-date-picker>
+            </div>
+        </div>                                  
+    </el-col>
+</el-row>       
       <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -302,6 +325,7 @@ export default {
         classCode: "",
         className: "",
         classParentId: "",
+        classParentId_ClassName:"",
         remark: "",
         status: "",
         createdBy: "",
@@ -382,7 +406,7 @@ export default {
             self.customerClassData = res.result;
             // self.ouItem.id = self.customerClassData.classParentId;
             // self.ouItem.ouName = self.customerClassData.ouFullname;
-            self.parentItem.id = self.customerClassData.classParentId;
+            // self.parentItem.id = self.customerClassData.classParentId;
             self.parentItem.className = self.customerClassData.className;
           });
       }
@@ -394,7 +418,7 @@ export default {
         .gets("api/services/app/ContactClassManagement/GetTreeList",{Ower:1})
         .then(
           function(res) {
-            console.log(res);
+            // console.log(res);
             self.selectParentTree = res;
             self.loadIcon();
           },
@@ -657,7 +681,12 @@ export default {
   margin-top: -10px;
 }
 .customerClassModify .el-row {
-  background-color: #fff;
+    padding: 15px 0;
+    border-bottom: 1px solid #e4e4e4;
+    background-color: #fff;
+}
+.customerClassModify .getPadding {
+    padding: 0 10px;
 }
 .customerClassModify .el-row:first-child {
   padding: 7px 0;
