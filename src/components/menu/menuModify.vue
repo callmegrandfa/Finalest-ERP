@@ -62,7 +62,7 @@
             <el-col :span="24"  class="pt15">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                    <label><small>*</small>上级菜单</label>
+                    <label>上级菜单</label>
                     <el-select clearable
                         class="moduleParentId" 
                         placeholder=""
@@ -142,7 +142,7 @@
             <el-col :span="24"  class="pt15">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label>web地址</label>
+                        <label><small>*</small>路由地址</label>
                         <el-input 
                         class="url" 
                         
@@ -174,12 +174,12 @@
             <el-col :span="24"  class="pt15">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label>功能权限</label>
+                        <label><small>*</small>功能权限</label>
                         <div class="addZoo">
                             <a class="add" href="javascript:;" @click="showDialog">+</a>
                         </div>
                     </div>
-                    <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('checked') }}</div>
                 </div>    
             </el-col>
             <el-col :span="24">
@@ -287,7 +287,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -309,24 +309,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -427,21 +423,28 @@
       'addData.status': function (value) {//
          return this.Validator.value(value).required().integer();
       },
-    //   'addData.ico': function (value) {//图标
-    //      return this.Validator.value(value).maxLength(200);
-    //   },
+      'addData.ico': function (value) {//图标
+         return this.Validator.value(value).maxLength(200);
+      },
       'addData.systemId': function (value) {//子系统
          return this.Validator.value(value).required().integer();
       },
       'addData.moduleParentId': function (value) {//上级菜单
-          return this.Validator.value(value).required().integer();
+          return this.Validator.value(value).integer();
       },
-    //   'addData.url': function (value) {//web地址
-    //      return this.Validator.value(value).maxLength(1000);
-    //   },
-    //   'addData.remark': function (value) {//
-    //      return this.Validator.value(value).maxLength(200);
-    //   }
+      'addData.url': function (value) {//路由地址
+         return this.Validator.value(value).required().maxLength(1000);
+      },
+      'addData.remark': function (value) {//
+         return this.Validator.value(value).maxLength(200);
+      },
+      'checked': function (value) {//
+            return this.Validator.value(value).custom(function () {
+                if (value.length<1) {
+                   return '必选'
+                }
+            });
+        },
     },
     created:function(){
         let _this=this;
