@@ -284,12 +284,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-<<<<<<< HEAD
-                    <!-- <el-select filterable  
-=======
-                    <el-select clearable filterable  
->>>>>>> 2f22586c9ad36ffd9c8f859789dde214906778c1
-                    
+                    <!-- <el-select filterable                 
                     @change="isUpdate"
                     placeholder=""
                     @focus="showErrprTipsSelect"
@@ -1290,15 +1285,9 @@ export default({
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
-<<<<<<< HEAD
                 console.log(res);
             // 会计期间方案值,启用年月
-                _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案
-                
-=======
-            // 会计期间方案值,启用年月
-                _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案
->>>>>>> 2f22586c9ad36ffd9c8f859789dde214906778c1
+                _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
                 _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
                 _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
             })

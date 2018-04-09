@@ -443,12 +443,7 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-<<<<<<< HEAD
-                    <!-- <el-select filterable  
-=======
-                    <el-select clearable filterable  
->>>>>>> 2f22586c9ad36ffd9c8f859789dde214906778c1
-                     
+                    <!-- <el-select filterable              
                     @change="isUpdate"
                     placeholder=""
                     @focus="showErrprTipsSelect"

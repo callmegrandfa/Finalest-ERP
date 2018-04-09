@@ -23,11 +23,7 @@
                 <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属公司</label>
-<<<<<<< HEAD
                     <!-- <el-select filterable   v-model="searchData.companyOuId" placeholder="">
-=======
-                    <el-select clearable filterable   v-model="searchData.CompanyOuId" placeholder="">
->>>>>>> 2f22586c9ad36ffd9c8f859789dde214906778c1
                         <el-option 
                         v-for="item in selectData.companys" 
                         :key="item.id" 

@@ -52,7 +52,29 @@
         </el-row>
 
         <!-- 表单验证的错误提示信息 -->
-	    <el-row>
+        <el-row>
+            <el-col :span="24">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span :class="{block : !validation.hasError('addData.classParentId')}">
+                                上级供应商分类{{ validation.firstError('addData.classParentId') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.classCode')}">
+                                供应商分类编码{{ validation.firstError('addData.classCode') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.className')}">
+                                供应商分类名称{{ validation.firstError('addData.className') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.status')}">
+                                状态{{ validation.firstError('addData.status') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+	    <!-- <el-row>
             <el-col>
                 <div class="errTipsWrapper" name="classParentId">
                         <div class="errorTips" :class="{block : !validation.hasError('addData.classParentId')}">
@@ -75,7 +97,7 @@
                       </div>
                     </div>
                 </el-col>
-        </el-row>
+        </el-row> -->
         <!-- dialog数据变动提示(是否忽略更改) -->
         <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
                 <template slot="title">
@@ -103,6 +125,7 @@
                             <label><small>*</small>上级供应商分类</label>
                             <el-select filterable  
                             class="classParentId"
+                            @focus="showErrTips"
                             placeholder=""
                             v-model="addData.classParentId"
                             :class="{redBorder : validation.hasError('addData.classParentId')}">
@@ -134,6 +157,7 @@
                             <el-input 
                             class="classCode" 
                             v-model="addData.classCode"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.classCode')}"></el-input>
                         </div>
                     </div>
@@ -145,6 +169,7 @@
                             <el-input 
                             class="className" 
                             v-model="addData.className"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.className')}"></el-input>
                         </div>
                     </div>
@@ -170,6 +195,7 @@
                             <el-select filterable  
                             class="status" 
                             placeholder=""
+                            @focus="showErrTips"
                             v-model="addData.status"
                             :class="{redBorder : validation.hasError('addData.status')}"
                             >
@@ -258,7 +284,7 @@
         created(){
             this.getSelectData();
             this.loadTree();
-            this.GetDateTime();
+            this.getDefault();
         },
         validators: {
             'addData.classParentId': function (value) {//上级供应商分类
@@ -294,12 +320,22 @@
             }
         },
         methods:{
+            getDefault(){// 获取默认值
+                let _this=this;
+                // console.log(this.$route.params);
+                // _this.addData.classParentId=_this.$route.params.upParentId;
+                _this.treeNode.className=_this.$route.params.upClassName;
+                // _this.treeNode.Id=_this.$route.params.upParentId;
+                console.log(_this.treeNode.className);
+                console.log(_this.treeNode.Id);
+                _this.GetDateTime();//获取当前时间
+            },
             GetDateTime() {//获取当前时间
                 let date=new Date();
                 return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
             },          
-            // 成功的提示框
-            open(tittle,iconClass,className) {//提示框
+            // 提示框
+            open(tittle,iconClass,className) {//成功的提示框
                 this.$notify({
                 position: 'bottom-right',
                 iconClass:iconClass,
@@ -309,15 +345,17 @@
                 customClass:className
                     });
             },
-            //---------------获取下拉框选项数据 
-            getSelectData(){
+            showErrTips(e){// 表单错误提示信息
+                $('.tipsWrapper').css({display:'none'});
+            },
+            getSelectData(){ //---------------获取下拉框选项数据 
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
                     // 启用状态
                     _this.selectData.Status001=res.result;
                 })
             },
-             //---------------按钮组功能 
+            //---------------按钮组功能 
             goback() {//返回
                 this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
                 this.$router.push({ path: this.$store.state.url });
@@ -328,9 +366,11 @@
             // },
             save() {// 保存
                 let _this=this;
+                $('.tipsWrapper').css({display:'block'})
                 _this.$validate().then(
                     function (success) { 
                         if (success){
+                        $('.tipsWrapper').css({display:'none'});
                             _this.$axios.posts('/api/services/app/ContactClassManagement/Create',_this.addData).then(
                                 rsp=>{
                                     _this.open('保存成功','el-icon-circle-check','successERP'); 

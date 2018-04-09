@@ -212,14 +212,15 @@
                         <el-col :span="11" class="transfer_warapper">
                             <el-col :span="24" class="transfer_header">
                                 <span>已选</span>
-                                <div class="transfer_search">
-                                    <el-autocomplete
-                                    class="search_input"
-                                    placeholder="搜索..."
-                                    >
-                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                    </el-autocomplete>
-                                </div>    
+                                <div class="transfer_search" @keyup.enter="searchLeftTable">
+                                    <el-input
+                                        placeholder="搜索..."
+                                        v-model="searchTableLeft"
+                                        class="search_input"
+                                        >
+                                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-input>
+                                </div>       
                             </el-col>    
                             <el-col :span="24" class="transfer_table">
                                 <el-table 
@@ -244,13 +245,14 @@
                         <el-col :span="11" class="transfer_warapper">
                             <el-col :span="24" class="transfer_header">
                                 <span>可选</span>
-                                <div class="transfer_search">
-                                    <el-autocomplete
-                                    class="search_input"
-                                    placeholder="搜索..."
-                                    >
-                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                    </el-autocomplete>
+                                <div class="transfer_search" @keyup.enter="searchRightTable">
+                                    <el-input
+                                        placeholder="搜索..."
+                                        v-model="searchTableRight"
+                                        class="search_input"
+                                        >
+                                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-input>
                                 </div>
                             </el-col>    
                             <el-col :span="24" class="transfer_table">
@@ -336,6 +338,8 @@
             firstModify:false,
             secondModify:false,
             ifModify:false,
+            searchTableLeft:'',//搜索
+            searchTableRight:'',//搜索
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
             // 错误信息提示开始
@@ -364,7 +368,7 @@
             }],
             componyTree:[],
             defaultProps: {
-                children: 'children',
+                children: 'no',
                 label: 'displayName',
                 value:'permissionName'
             },
@@ -580,17 +584,24 @@
             })
         },
          selectNodeClick(data,dialogTableVisible,self){
+
             let _this=this;
-            _this.item.id=data.id;
-            _this.item.moduleName=data.moduleName;
-            // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
-            })
+            // console.log(data.id)
+            // console.log(_this.addData.id)
+            if(_this.addData.id==data.id){
+                alert("上级菜单不能为菜单本身")
+            }else{
+                _this.item.id=data.id;
+                _this.item.moduleName=data.moduleName;
+                // _this.$nextTick(function(){
+                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                // })
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                })
+            }
         },
         loadParent(){
             let _this=this;
@@ -896,33 +907,72 @@
                 _this.checked=_this.uniqueArray(_this.checked,json);
         },
         nodeClick(data){
-            let _this=this;
-            let all=data.children;
-            let checkClick=[];
-            let nocheckedClick=[];
-            _this.nowClickNode=data.displayName;
-            if(!_this.storeNodeClickData[data.displayName]){
-                if(_this.checked.length>0){
-                    for(let i=0;_this.checked.length>i;i++){
-                        for(let x=0;all.length>x;x++){
-                            if(_this.checked[i].permissionName==all[x].permissionName){
-                                checkClick.push(all[x])
+            if(data.permissionName==""){
+                let _this=this;
+                let all=data.children;
+                let checkClick=[];
+                let nocheckedClick=[];
+                _this.nowClickNode=data.displayName;
+                if(!_this.storeNodeClickData[data.displayName]){
+                    if(_this.checked.length>0){
+                        for(let i=0;_this.checked.length>i;i++){
+                            for(let x=0;all.length>x;x++){
+                                if(_this.checked[i].permissionName==all[x].permissionName){
+                                    checkClick.push(all[x])
+                                }
                             }
                         }
+                        nocheckedClick=_this.uniqueArray(all,checkClick)
+                    }else{
+                        nocheckedClick=all
                     }
-                    nocheckedClick=_this.uniqueArray(all,checkClick)
-                }else{
-                    nocheckedClick=all
+
+                    _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
                 }
+                
+        
+                
 
-                _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
+                _this.checkTable=_this.storeNodeClickData[data.displayName].check;
+                _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
             }
+        },
+        searchLeftTable(){
+            let _this=this;
+            // checkTable
+            if(_this.nowClickNode!=""){
+                let newJson=[];
+                let patt1 = new RegExp(_this.searchTableLeft);
+                $.each(_this.storeNodeClickData[_this.nowClickNode].check,function(index,val){
+                    let str=val.displayName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val)
+                    }
+                })
             
-    
+                _this.storeNodeClickData[_this.nowClickNode].searchDataCheck=newJson;
+                _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].searchDataCheck;
+            }
+           
+        },
+        searchRightTable(){
+            let _this=this;
+            // nocheckTable
+            if(_this.nowClickNode!=""){
+                let newJson=[];
+                let patt1 = new RegExp(_this.searchTableRight);
+                $.each(_this.storeNodeClickData[_this.nowClickNode].nochecked,function(index,val){
+                    let str=val.displayName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val)
+                    }
+                })
             
-
-            _this.checkTable=_this.storeNodeClickData[data.displayName].check;
-            _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
+                _this.storeNodeClickData[_this.nowClickNode].searchDataNoCheck=newJson;
+                _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].searchDataNoCheck;
+            }
         },
     }
 

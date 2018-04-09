@@ -40,9 +40,9 @@
                             @node-click="nodeClick_ou"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                            <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                             </el-option> -->
-                            <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -72,7 +72,7 @@
                             :props="selectProps_area"
                             node-key="id"
                             default-expand-all
-                            ref="tree"
+                            ref="area_tree"
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_area"
@@ -270,13 +270,13 @@
         search_ou:'',
         item_ou:{
             id:"",
-            ouFullname:""
+            ouName:""
         },
         selectTree_ou:[
         ],
         selectProps_ou: {
             children: 'children',
-            label: 'ouFullname',
+            label: 'ouName',
             id:'id'
         },
 
@@ -287,7 +287,7 @@
         },
         item_area_no:{
             id:0,
-            ouFullname:"无"
+            ouName:"无"
         },
         selectTree_area:[
         ],
@@ -374,7 +374,7 @@
     },
     watch: {
         search_area(val) {
-            this.$refs.tree.filter(val);
+            this.$refs.area_tree.filter(val);
         },
         search_ou(val) {
             this.$refs.tree.filter(val);
@@ -466,7 +466,7 @@
                     createdBy:res.result.createdBy,
                 }    
                  _this.item_ou.id=res.result.ouId;
-                 _this.item_ou.ouFullname=res.result.ouFullname;
+                 _this.item_ou.ouName=res.result.ouName;
                 _this.item_area.id=res.result.areaParentId;
                 _this.item_area.areaName=res.result.areaParentId_AreaName;
                 _this.getAreaTree(res.result.ouId)
@@ -476,7 +476,7 @@
         },
          filterNode_ou(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         filterNode_area(value, data) {
             if (!value) return true;
@@ -668,7 +668,7 @@
         nodeClick_ou(data,node,self){
             let _this=this;
             // _this.item_ou.id=data.id;
-            // _this.item_ou.ouFullname=data.ouFullname;
+            // _this.item_ou.ouName=data.ouName;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
@@ -680,16 +680,22 @@
         },
         nodeClick_area(data,node,self){
             let _this=this;
-            _this.item_area.id=data.id;
-            _this.item_area.areaName=data.areaName;
-            _this.$nextTick(function(){
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            })
-            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-            //     if($(this).attr('date')==data.id){
-            //         $(this).click()
-            //     }
-            // })
+            //  console.log(data.id)
+            // console.log(_this.addData)
+            if(_this.addData.id==data.id){
+                alert("上级业务地区不能为业务地区本身")
+            }else{
+                _this.item_area.id=data.id;
+                _this.item_area.areaName=data.areaName;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                })
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // })
+            }
         },
     }
 
