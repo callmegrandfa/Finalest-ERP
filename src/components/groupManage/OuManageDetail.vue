@@ -202,6 +202,12 @@
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
                     placeholder=""
                     v-model="addData.ouParentid">
+                        <!-- <el-option 
+                        v-for="item in selectData.ouParentid" 
+                        :key="item.id" 
+                        :label="item.ouName" 
+                        :value="item.id">
+                        </el-option> -->
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
@@ -219,9 +225,9 @@
                         @node-click="nodeClick_ou"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
                             </el-option>
                     </el-select>
                 </div>
@@ -278,35 +284,50 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <el-select clearable filterable  
-                    
+                    <!-- <el-select filterable                 
                     @change="isUpdate"
                     placeholder=""
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.companyOuId')}"
                     class="companyOuId" 
                     v-model="addData.companyOuId">
+                        <el-option 
+                        v-for="item in selectData.companys" 
+                        :key="item.id" 
+                        :label="item.ouName" 
+                        :value="item.id" 
+                        >
+                        </el-option>
+                    </el-select> -->
+                    
+                    <el-select class="companyOuId"
+                    
+                    @change="isUpdate"
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.ouParentid')}"
+                    placeholder=""
+                    v-model="addData.companyOuId">
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
-                        v-model="search_companyOuId">
+                        v-model="search">
                         </el-input>
                         <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                        :data="selectTree_companyOuId"
-                        :props="selectProps_companyOuId"
+                        :data="selectTreeCompany"
+                        :props="selectPropsCompany"
                         node-key="id"
                         default-expand-all
-                        ref="tree_companyOuId"
-                        :filter-node-method="filterNode_companyOuId"
+                        ref="tree"
+                        :filter-node-method="filterNode"
                         :expand-on-click-node="false"
-                        @node-click="nodeClick_companyOuId"
+                        @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_companyOuId.id" :label="item_companyOuId.ouName" :value="item_companyOuId.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.companys" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
-                        </el-option>
+                        <el-option v-show="false" v-for="item in selectData.companys" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -422,32 +443,17 @@
                                 placeholder=""
                                 class="ouParentid" 
                                 v-model="basCompany.ouParentid">
-                                    <el-input
-                                    v-show="!basCompany.isGroupCompany"
-                                    placeholder="搜索..."
-                                    class="selectSearch"
-                                    v-model="search_company">
-                                    </el-input>
-                                    <el-tree
-                                    v-show="!basCompany.isGroupCompany"
-                                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                    :data="selectTree_company"
-                                    :props="selectProps_company"
-                                    node-key="id"
-                                    default-expand-all
-                                    ref="tree_company"
-                                    :filter-node-method="filterNode_company"
-                                    :expand-on-click-node="false"
-                                    @node-click="nodeClick_company"
+                                    <el-option 
+                                    v-if="!basCompany.isGroupCompany"
+                                    v-for="item in selectData.companys" 
+                                    :key="item.id" 
+                                    :label="item.ouName" 
+                                    :value="item.id" 
                                     >
-                                    </el-tree>
-                                    <!-- <el-option v-show="false" :key="item_company.id" :label="item_company.ouName" :value="item_company.id">
-                                    </el-option> -->
-                                    <el-option v-show="false" v-for="item in selectData.companys" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                                     </el-option>
 
                                     <el-option 
-                                    v-show="basCompany.isGroupCompany"
+                                    v-if="basCompany.isGroupCompany"
                                     label="无上级公司" 
                                     value=0 
                                     >
@@ -932,42 +938,22 @@ export default({
             search:'',
              selectTree:[
             ],
+            selectTreeCompany:[],
             item_ou:{
                 id:'',
-                ouName:''
+                ouFullname:''
             },
             selectProps: {
                 children: 'children',
-                label: 'ouName',
+                label: 'ouFullname',
                 id:'id'
             },
-            
-            search_companyOuId:'',//所属公司
-            selectTree_companyOuId:[
-            ],
-            item_companyOuId:{
-                id:'',
-                ouName:''
-            },
-            selectProps_companyOuId: {
-                children: 'children',
-                label: 'ouName',
-                id:'id'
-            },    
-
-            search_company:'',//上级公司
-            selectTree_company:[
-            ],
-            item_company:{
-                id:'',
-                ouName:''
-            },
-            selectProps_company: {
-                children: 'children',
-                label: 'ouName',
+            selectPropsCompany:{
+                 children: 'children',
+                label: 'ouFullname',
                 id:'id'
             },
-            test:'',   
+             test:'',   
             dateRange:[],//有效时间
             companys:1,
             show:true,
@@ -1286,26 +1272,22 @@ export default({
     created:function(){
         let _this=this;
          _this.loadTree();
+          _this.loadTreeCompany();
          _this.getSelectData();
          _this.getDefault();
     },  
      watch: {
       search(val) {
         this.$refs.tree.filter(val);
-      },
-      search_companyOuId(val) {
-        this.$refs.tree_companyOuId.filter(val);
-      },
-      search_company(val) {
-        this.$refs.tree_company.filter(val);
-      },
+      }
     },
     methods:{
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
+                console.log(res);
             // 会计期间方案值,启用年月
-                _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案
+                _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
                 _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
                 _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
             })
@@ -1326,6 +1308,14 @@ export default({
             _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
             // 会计期间方案
                 _this.selectData.accCchemeId=res.result.items;
+                for(let i=0;i<_this.selectData.accCchemeId.length;i++){
+                    console.log(_this.selectData.accCchemeId[i].accperiodSchemeName) 
+                    // if(_this.selectData.accCchemeId[i].id == _this.addData.accCchemeId){
+                    //     console.log(1)
+                    //    console.log(_this.selectData.accCchemeId[i].accperiodSchemeName) 
+                    // }
+                }
+                // console.log(_this.selectData.accCchemeId[0].id)
             })
             _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
@@ -1386,93 +1376,71 @@ export default({
         },
         filterNode(value, data) {
             if (!value) return true;
-            return data.ouName.indexOf(value) !== -1;
-        },
-        filterNode_companyOuId(value, data) {
-            if (!value) return true;
-            return data.ouName.indexOf(value) !== -1;
-        },
-        filterNode_company(value, data) {
-            if (!value) return true;
-            return data.ouName.indexOf(value) !== -1;
+            return data.ouFullname.indexOf(value) !== -1;
         },
         getStartMonth(){
 
         },
         loadTree(){
             let _this=this;
+            _this.treeLoading=true;
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
                 _this.loadIcon();
             },function(res){
             })
-             _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
-            .then(function(res){
-                _this.selectTree_companyOuId=res.result;
-                // _this.selectTree_company=res.result;
-                _this.loadIcon();
-            },function(res){
-            })
-             _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
-            .then(function(res){
-                _this.selectTree_company=res.result;
-                _this.loadIcon();
-            },function(res){
-            })
         },
-        loadIcon(){
-            let _this=this;
-            _this.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                    }
-                })
+        loadTreeCompany(){
+        let _this=this;
+        _this.treeLoading=true;
+        _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
+        .then(function(res){
+            // console.log(res);
+            _this.selectTreeCompany=res.result;
+            _this.loadIcon();
+        },function(res){
+        })
+    },
+    loadIcon(){
+        let _this=this;
+        _this.$nextTick(function () {
+            $('.preNode').remove();   
+            $('.el-tree-node__label').each(function(){
+                if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                    $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                }else{
+                    $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                }
             })
-        },
+        })
+    },
          nodeClick_ou(data,node,self){
             let _this=this;
             _this.item_ou.id=data.id;
-            _this.item_ou.ouName=data.ouName;
+            _this.item_ou.ouFullname=data.ouFullname;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
-            })
+            if($(this).attr('date')==data.id){
+                $(this).click()
+            }
+        })
         },
-        nodeClick_companyOuId(data,node,self){
-            let _this=this;
-            // _this.item_companyOuId.id=data.id;
-            // _this.item_companyOuId.ouName=data.ouName;
-            // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
-            })
-        },
-        nodeClick_company(data,node,self){
-            let _this=this;
-            // _this.item_companyOuId.id=data.id;
-            // _this.item_companyOuId.ouName=data.ouName;
-            // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                if($(this).attr('date')==data.id){
-                    $(this).click()
-                }
-            })
-        },
+       nodeClick(data,node,self){
+        let _this=this;
+        _this.item_ou.id=data.id;
+        _this.item_ou.ouFullname=data.ouFullname;
+        // _this.$nextTick(function(){
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        // })
+        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+        if($(this).attr('date')==data.id){
+            $(this).click()
+        }
+    })
+    },
         back(){
             this.$store.state.url='/OuManage/OuManageList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
@@ -1531,7 +1499,7 @@ export default({
         },
         isGroupCompany(){
             let _this=this;
-            _this.isUpdate();
+            _this.isUpdate()
             _this.basCompany.ouParentid='';
         },
         getErrorMessage(message,details,validationErrors){
