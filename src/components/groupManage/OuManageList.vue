@@ -23,13 +23,35 @@
                 <div class="bgcolor smallBgcolor"><label>名称</label><el-input v-model="searchData.Name" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属公司</label>
-                    <el-select clearable filterable   v-model="searchData.CompanyOuId" placeholder="">
+                    <!-- <el-select filterable   v-model="searchData.companyOuId" placeholder="">
                         <el-option 
                         v-for="item in selectData.companys" 
                         :key="item.id" 
                         :label="item.ouName" 
                         :value="item.id" 
                         >
+                        </el-option>
+                    </el-select> -->
+                    <el-select class="companyOuId"
+                    v-model="searchData.companyOuId" placeholder="">
+                        <el-input
+                        placeholder="搜索..."
+                        class="selectSearch"
+                        v-model="search">
+                        </el-input>
+                        <el-tree
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        :data="selectTreeCompany"
+                        :props="selectPropsCompany"
+                        node-key="id"
+                        default-expand-all
+                        ref="tree"
+                        :filter-node-method="filterNode_company"
+                        :expand-on-click-node="false"
+                        @node-click="nodeClick_company"
+                        >
+                        </el-tree>
+                        <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -297,6 +319,7 @@
             return {
             // 错误信息提示开始
             detail_message_ifShow:false,
+            search:"",
             errorMessage:false,
             // 错误信息提示结束      
 //--------------确认删除开始-----------------               
@@ -308,6 +331,7 @@
                 search_area:'',
                 selectTree_area:[
                 ],
+                selectTreeCompany:[],//公司树
                 item:{
                     id:"",
                     areaName:"",
@@ -317,6 +341,11 @@
                     label: 'name',
                     id:'id'
                 },
+                 selectPropsCompany:{
+                    children: 'children',
+                    label: 'ouFullname',
+                    id:'id'
+                   },
                 AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
 
                 tableLoading:false,
@@ -324,7 +353,7 @@
                 searchData:{
                     OuCode: "",//编码
                     Name: "",//名称
-                    CompanyOuId:'',//所属公司
+                    companyOuId:'',//所属公司
                     AreaId: '',//行政地区
                     Status: '',//启用状态
                     OuType: '',//组织类型
@@ -345,7 +374,7 @@
                 ],
                 defaultProps: {
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
                 pageIndex:1,//分页的当前页码
@@ -374,11 +403,16 @@
                 _this.getSelectData();
                 _this.loadTableData();
                 _this.loadTree();
+                _this.loadTreeCompany();
                 
              },
          watch: {
             search_area(val) {
                 this.$refs.tree.filter(val);
+            },
+            search(val) {
+             this.$refs.tree.filter(val);
+            
             },
         },
         methods:{
@@ -404,6 +438,10 @@
             filterNode_area(value, data) {
                 if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
+            },
+            filterNode_company(value, data) {
+               if (!value) return true;
+               return data.ouFullname.indexOf(value) !== -1;
             },
             closeLeft:function(){
                let self = this;
@@ -432,6 +470,7 @@
                  let _this=this;
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/OuManagement/GetAll',data).then(function(res){ 
+                    // console.log(res);
                     _this.load=event;
                     _this.tableData=res.result.items;
                     $.each(_this.tableData,function(index,val){
@@ -469,6 +508,7 @@
                 _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
                 .then(function(res){
+                    // console.log(res);
                     _this.componyTree=res.result;
                     _this.treeLoading=false;
                     _this.loadIcon()
@@ -479,6 +519,26 @@
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
                 .then(function(res){
                     _this.selectTree_area=res.result;
+                    _this.loadIcon();
+                },function(res){
+                })
+                // //公司
+                // _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
+                //     .then(function(res){
+                //         console.log(res);
+                //         _this.selectTreeCompany=res.result;
+                //         _this.loadIcon();
+                //     },function(res){
+                //     })
+            },
+                loadTreeCompany(){
+                let _this=this;
+                _this.treeLoading=true;
+                _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
+                .then(function(res){
+                 
+                    _this.selectTreeCompany=res.result;
+                       console.log( _this.selectTreeCompany);
                     _this.loadIcon();
                 },function(res){
                 })
@@ -514,7 +574,7 @@
                  _this.searchDataClick={
                     OuCode:_this.searchData.OuCode,//编码
                     Name: _this.searchData.Name,//名称
-                    CompanyOuId:_this.searchData.CompanyOuId,//所属公司
+                    companyOuId:_this.searchData.companyOuId,//所属公司
                     AreaId: _this.searchData.AreaId,//行政地区
                     Status: _this.searchData.Status,//启用状态
                     OuType: _this.searchData.OuType,//组织类型
@@ -642,11 +702,16 @@
                     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 })
                 
-                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                //     if($(this).attr('date')==data.id){
-                //         $(this).click()
-                //     }
-                // })
+            },
+            // 点击所属公司节点
+             nodeClick_company(data,node,self){
+                let _this=this;
+                _this.item.id=data.id;
+                _this.item.ouFullname=data.ouFullname;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                })
+                
             },
             modify(row){
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id

@@ -85,7 +85,7 @@
                             </el-tree>
                             <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                             </el-option>
-                            <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                            <!-- <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                                 </el-option> -->
                         </el-select>
                         </div>
@@ -675,7 +675,7 @@ export default({
             ouTreeDataLeft:[],//
             ouDefaultPropsLeft:{
                 children: 'children',
-                label: 'ouFullname',
+                label: 'ouName',
                 id:'id'
             },
 //-------------穿梭按钮-----------
@@ -759,7 +759,7 @@ export default({
             fnTreeData:[],
             result:[],
             defaultProps: {
-                children: 'children',
+                children: 'no',
                 label: 'displayName',
                 value:'permissionName'
             },           
@@ -800,7 +800,7 @@ export default({
 
         // _this.loadOuTable();//分配组织表格分页数据
         // _this.getAllCheckOu();//获取所有已关联组织数据
-        // _this.getAllOulength();//获取所有数据长度判断是否全选
+        _this.getAllOulength();//获取所有数据长度判断是否全选
         _this.loadOuTreeAll();//关联组织树形所有数据
         // _this.loadOuTreeLeft();////关联组织树形左侧已选数据
         // _this.getCheckFn();//获取已关联权限
@@ -1316,13 +1316,12 @@ export default({
             
         },
         isCheckAllOu(){//是否全选
-            // let _this=this;
-            // console.log(_this.allOuLength)
-            // if(_this.$refs.tree.getCheckedNodes().length==_this.allOuLength){
-            //     _this.checkAllOu=true
-            // }else{
-            //     _this.checkAllOu=false
-            // }
+            let _this=this;
+            if(_this.$refs.tree.getCheckedNodes().length==_this.allOuLength){
+                _this.checkAllOu=true
+            }else{
+                _this.checkAllOu=false
+            }
         },
         showCheckTree(){//查看已选
             let _this=this;
@@ -1584,7 +1583,7 @@ export default({
         },
         filterNode_ou(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         loadTree_ou(){
             let _this=this;

@@ -368,7 +368,7 @@
             }],
             componyTree:[],
             defaultProps: {
-                children: 'children',
+                children: 'no',
                 label: 'displayName',
                 value:'permissionName'
             },
