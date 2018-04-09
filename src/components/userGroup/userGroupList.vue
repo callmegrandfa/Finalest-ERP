@@ -24,6 +24,7 @@
                         <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTree"
+                        :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
                         default-expand-all
@@ -33,9 +34,9 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -187,7 +188,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">确认删除？</p>
                 </el-col>
             </el-col>
@@ -209,24 +210,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -267,11 +264,11 @@
                 ],
                 item:{
                     id:'',
-                    ouFullname:'',
+                    ouName:'',
                 },
                 selectProps: {
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
 
@@ -385,10 +382,14 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
-                    _this.getHeight()
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     },function(res){
                     _this.tableLoading=false;
-                    _this.getHeight()
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                 })
             },
             handleCurrentChange(val) {//页码改变
@@ -502,7 +503,7 @@
             },
             filterNode(value, data) {
                 if (!value) return true;
-                return data.ouFullname.indexOf(value) !== -1;
+                return data.ouName.indexOf(value) !== -1;
             },
             loadTree(){
                 let _this=this;
@@ -529,7 +530,7 @@
             nodeClick(data,node,self){
                 let _this=this;
                 _this.item.id=data.id;
-                _this.item.ouFullname=data.ouFullname;
+                _this.item.ouName=data.ouName;
                 // _this.$nextTick(function(){
                 //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 // })

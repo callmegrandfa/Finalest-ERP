@@ -44,8 +44,30 @@
                     </el-col>
                 </el-row>
             </div>
-            <!-- 表单错误提示信息 -->
-             <el-row>
+            <!-- 表单验证错误提示信息 -->
+            <el-row>
+                <el-col :span="24">
+                    <div class="tipsWrapper">
+                        <div class="errorTips">
+                            <p class="msgDetail">错误提示：
+                                <span 
+                                :class="{block : !validation.hasError('form.employeeCode')}">
+                                职员编码{{ validation.firstError('form.employeeCode') }},
+                                </span>
+                                <span 
+                                :class="{block : !validation.hasError('form.employeeName')}">
+                                职员名称{{ validation.firstError('form.employeeName') }},
+                                </span>
+                                <span 
+                                :class="{block : !validation.hasError('form.ouId')}">
+                                所属组织{{ validation.firstError('form.ouId') }},
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+            <!-- <el-row>
                 <el-col>
                     <div class="errTipsWrapper" name="employeeCode">
                       <div class="errorTips" :class="{block : !validation.hasError('form.employeeCode')}">
@@ -63,7 +85,7 @@
                       </div>
                     </div>
                 </el-col>
-            </el-row>
+            </el-row> -->
 	        <!-- 表单 -->
              <div class="staff_modify_form">
                 <el-row style="margin-top:20px">
@@ -74,7 +96,7 @@
                     </el-col>
                     <el-col :span="18">
                         <div>
-                            <el-input v-model="form.employeeCode" class="employeeCode"  :class="{redBorder : validation.hasError('form.employeeCode')}"  @change="isUpdate"></el-input>
+                            <el-input v-model="form.employeeCode" class="employeeCode"  :class="{redBorder : validation.hasError('form.employeeCode')}"  @change="isUpdate" @focus="showErrTips"></el-input>
                         </div>
                     </el-col>
                 </el-row>
@@ -86,7 +108,7 @@
                     </el-col>
                     <el-col :span="18">
                         <div>
-                            <el-input  @change="isUpdate" v-model="form.employeeName" class="employeeName"  :class="{redBorder : validation.hasError('form.employeeName')}" ></el-input>
+                            <el-input @focus="showErrTips"  @change="isUpdate" v-model="form.employeeName" class="employeeName"  :class="{redBorder : validation.hasError('form.employeeName')}" ></el-input>
                         </div>
                     </el-col>
                 </el-row>
@@ -98,7 +120,7 @@
                     </el-col>
                     <el-col :span="18">
                         <div>
-                            <el-select  @change="isUpdate" class="ouId" :class="{redBorder :           validation.hasError('form.ouId')}" v-model="form.ouId" placeholder="" >
+                            <el-select @focus="showErrTips"  @change="isUpdate" class="ouId" :class="{redBorder :           validation.hasError('form.ouId')}" v-model="form.ouId" placeholder="" >
                                 <el-input
                                     placeholder="输入关键字进行过滤"
                                     v-model="filterOu" 
@@ -375,17 +397,18 @@ export default {
     },
     methods: {
             showErrTips(e) {// 错误提示信息
-                $(".errTipsWrapper").each(function() {
-                    if (
-                    $(e.target)
-                        .parent(".el-input")
-                        .hasClass($(this).attr("name"))
-                    ) {
-                    $(this).addClass("display_block");
-                    } else {
-                    $(this).removeClass("display_block");
-                    }
-                });
+                $('.tipsWrapper').css({display:'none'});
+                // $(".errTipsWrapper").each(function() {
+                //     if (
+                //     $(e.target)
+                //         .parent(".el-input")
+                //         .hasClass($(this).attr("name"))
+                //     ) {
+                //     $(this).addClass("display_block");
+                //     } else {
+                //     $(this).removeClass("display_block");
+                //     }
+                // });
             },
         //---------------------------获取下拉框选项数据
                 getSelectData(){//获取下拉选项数据
@@ -581,20 +604,22 @@ export default {
                 },
                 save() {// 保存修改的数据
                     let _this = this;
+                    $('.tipsWrapper').css({display:'block'})
                     _this.$validate().then(function(success) {
                         if (success) {
-                        _this.updateList.ouId = _this.form.ouId;
-                        _this.updateList.employeeCode = _this.form.employeeCode;
-                        _this.updateList.employeeName = _this.form.employeeName;
-                        _this.updateList.mobile = _this.form.mobile;
-                        _this.updateList.deptId = _this.form.deptId;
-                        _this.updateList.sex = _this.form.sex;
-                        _this.updateList.birthday = _this.form.birthday;
-                        _this.updateList.shopId = _this.form.shopId;
-                        _this.updateList.employeeTypeIds = _this.form.employeeTypeIds;
-                        _this.updateList.remark = _this.form.remark;
-                        _this.updateList.status = _this.form.status;
-                        _this.updateList.id = _this.form.id;
+                            $('.tipsWrapper').css({display:'none'})
+                            _this.updateList.ouId = _this.form.ouId;
+                            _this.updateList.employeeCode = _this.form.employeeCode;
+                            _this.updateList.employeeName = _this.form.employeeName;
+                            _this.updateList.mobile = _this.form.mobile;
+                            _this.updateList.deptId = _this.form.deptId;
+                            _this.updateList.sex = _this.form.sex;
+                            _this.updateList.birthday = _this.form.birthday;
+                            _this.updateList.shopId = _this.form.shopId;
+                            _this.updateList.employeeTypeIds = _this.form.employeeTypeIds;
+                            _this.updateList.remark = _this.form.remark;
+                            _this.updateList.status = _this.form.status;
+                            _this.updateList.id = _this.form.id;
                         if (_this.update) {
                             _this.$axios
                             .puts(
