@@ -439,10 +439,14 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
-                    _this.getHeight()
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     },function(res){
                     _this.tableLoading=false;
-                    _this.getHeight()
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                 })
             },
             handleCurrentChange(val) {//页码改变

@@ -882,6 +882,8 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
              // 默认用户业务组织
             _this.addData.ouId=res.result.id;
+            _this.item_ou.id=res.result.id;
+            _this.item_ou.ouName=res.result.ouName;
             })
         },
         // getModifyData(){

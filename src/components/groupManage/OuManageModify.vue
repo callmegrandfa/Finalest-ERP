@@ -411,7 +411,7 @@
                 <div class="bgcolor">
                     <label><small>*</small>启用年月</label>
                     <el-date-picker 
-                     
+                    disabled 
                     @change="isUpdate"
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
@@ -1939,9 +1939,14 @@ export default({
                 regtime:''//公司成立时间
             };
         },
-        getStartMonth(){
+        getStartMonth(){//根据会计期间生成启用年月
             let _this=this;
              _this.update=true;
+            _this.$axios.gets('/api/services/app/AccperiodSheme/Get',{id:_this.addData.accCchemeId})
+            .then(function(res){
+                _this.addData.accStartMonth=res.result.checkDate
+            },function(res){
+            })
         }
     }
 

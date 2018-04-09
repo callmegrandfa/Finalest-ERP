@@ -253,7 +253,7 @@
                     <label><small>*</small>启用年月</label>
                     <el-date-picker 
                     
-                    
+                    disabled 
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
                     class="accStartMonth datepicker" 
@@ -1286,8 +1286,22 @@ export default({
             let _this=this;
             _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
             // 会计期间方案值,启用年月
-                _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
-                _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
+                // _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
+                // _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
+                _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
+                    // 会计期间方案下拉
+                    _this.selectData.accCchemeId=res.result.items;
+                    let flag=false;
+                    $.each(_this.selectData.accCchemeId,function(index,value){
+                        if(value.id==res.result.accSchemeId){
+                            flag=true;
+                        }
+                    })
+                    if(flag){
+                        _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
+                        _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
+                    }
+                })
                 // _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
             })
             if(_this.$route.params.id!="default"){
@@ -1304,10 +1318,10 @@ export default({
             // 上级业务单元(所属组织)
                 _this.selectData.ouParentid=res.result;
             })
-            _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
-            // 会计期间方案
-                _this.selectData.accCchemeId=res.result.items;
-            })
+            // _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
+            // // 会计期间方案
+            //     _this.selectData.accCchemeId=res.result.items;
+            // })
             _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
                 _this.selectData.baseCurrencyId=res.result.items;
@@ -1369,8 +1383,13 @@ export default({
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
         },
-        getStartMonth(){
-
+        getStartMonth(){//根据会计期间生成启用年月
+            let _this=this;
+            _this.$axios.gets('/api/services/app/AccperiodSheme/Get',{id:_this.addData.accCchemeId})
+            .then(function(res){
+                _this.addData.accStartMonth=res.result.checkDate 
+            },function(res){
+            })
         },
         loadTree(){
             let _this=this;
