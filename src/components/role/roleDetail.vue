@@ -135,7 +135,7 @@
     <el-row class="nopadding"> 
         <div class="tabZoo">
             <el-col :span="24">
-               <el-tabs v-model="activeName">
+               <el-tabs v-model="activeName" @tab-click="handleClick">
                    <!-- - - - - - - - - - - - - - - - - - - - 分配组织- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="管理组织" name="ou" class="getPadding" style="z-index:-1000">
                         <button class="erp_bt bt_add" @click="dialogOuIsShow">
@@ -456,7 +456,6 @@
                     </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - 分配功能- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="分配功能" name="fn" class="getPadding" style="z-index:-1000">
-<!-- - - - - - - - - - - - - - - - - - - - 分配功能- - - - - - - - - - - - - - - - - - - - -  -->
                         <!-- tree -->
                         <el-col :span="5">
                             <el-col :span="24" class="Fn_Tree_search">
@@ -965,6 +964,12 @@ export default({
                 "status": 1,
                 "remark": "",
             },
+             _this.ouCheckAll=[];
+             _this.showPageTableOu=[];
+            _this.ouPageIndex=1;
+            _this.ouTotalPage=0;
+            _this.ouPage=1;
+            _this.ouTotalItem=0;
             _this.checkedUserTable=[]
             _this.showCheckedUserTable=[]
             _this.nocheckedUserTable=_this.allUsers;
@@ -1088,19 +1093,11 @@ export default({
             _this.$store.state.url='/role/roleDetail/default';
             _this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
         },
-        // deleteThis(){
-        //      let _this=this;
-        //     _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.$route.params.id})
-        //     .then(function(res){
-        //         _this.dialogUserConfirm=false;
-        //         _this.open('删除成功','el-icon-circle-check','successERP');
-        //         _this.add();
-        //     },function(res){
-        //         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-        //         _this.dialogUserConfirm=false;
-        //         _this.errorMessage=true;
-        //     })
-        // },
+        handleClick(tab, event){///点击标签页控制重置数据后表格的宽度
+            let _this=this;
+            $(tab.$el).find('table').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
+            $(tab.$el).find('.el-table__empty-block').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
+        },
         
 //-------------关联组织-----------
         getAllOulength(){

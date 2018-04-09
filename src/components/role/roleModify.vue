@@ -129,7 +129,7 @@
     <el-row class="nopadding"> 
         <div class="tabZoo">
             <el-col :span="24">
-               <el-tabs v-model="activeName">
+               <el-tabs v-model="activeName" @tab-click="handleClick">
                    <!-- - - - - - - - - - - - - - - - - - - - 分配组织- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="管理组织" name="ou" class="getPadding" style="z-index:-1000">
                         <button class="erp_bt bt_add" @click="dialogOuIsShow">
@@ -156,41 +156,6 @@
                         </div>
                            <!-- 分配组织 -->
 <el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
-        <!-- <el-col :span="11" class="transfer_warapper">
-                <el-col :span="24" class="transfer_header">
-                    <span>已选</span>
-                    <div class="transfer_search">
-                        <el-autocomplete
-                        class="search_input"
-                        placeholder="搜索..."
-                        >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-autocomplete>
-                    </div>    
-                </el-col>    
-                <el-col :span="24" class="transfer_table">
-                   <vue-scroll :ops="$store.state.option">
-                    <el-tree
-                    :data="ouTreeDataLeft"
-                    :props="ouDefaultPropsLeft"
-                    node-key="id"
-                    default-expand-all
-                    show-checkbox
-                    @check-change="ouCheckChangeLeft"
-                    ref="ouTreeLeft"
-                    :expand-on-click-node="false"
-                    @node-click="ouNodeClickLeft">
-                    </el-tree>  
-                    </vue-scroll>
-                </el-col>
-               
-        </el-col> -->
-        <!-- <el-col :span="2" class="transfer_btns">
-            <el-col :span="24" class="transfer_btn_wrapper">
-                <el-button class="el_transfer" :disabled="fromOuRight" @click="fromRightOu" type="primary" icon="el-icon-arrow-left" round></el-button>
-                <el-button class="el_transfer" :disabled="fromOuLeft" @click="fromLeftOu" type="primary" icon="el-icon-arrow-right" round></el-button>
-            </el-col>
-        </el-col> -->
         <span slot="title">
             <span>分配组织</span>
             <a  href="javascript:;" class="add" @click="addNewOu">+</a>
@@ -998,6 +963,10 @@ export default({
             _this.thirdModify=false;
             _this.forthModify=false;
             _this.ifModify=false;
+            // $('table').each(function(){
+            //     $(this).css('width',$(this).parent('.el-table__header-wrapper').css('width'))
+            //     $(this).next('el-table__empty-block').css('width',$(this).parent('.el-table__header-wrapper').css('width'))
+            // })
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -1121,7 +1090,11 @@ export default({
                 _this.errorMessage=true;
             })
         },
-        
+        handleClick(tab, event){//点击标签页控制重置数据后表格的宽度
+            let _this=this;
+           $(tab.$el).find('table').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
+            $(tab.$el).find('.el-table__empty-block').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
+        },
 //-------------关联组织-----------
         getAllOulength(){
             let _this=this;

@@ -1285,11 +1285,10 @@ export default({
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
-                console.log(res);
             // 会计期间方案值,启用年月
                 _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
                 _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
-                _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
+                // _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
             })
             if(_this.$route.params.id!="default"){
                 _this.addData.ouParentid=parseInt(_this.$route.params.id);
