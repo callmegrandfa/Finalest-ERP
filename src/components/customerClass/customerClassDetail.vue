@@ -9,7 +9,7 @@
                     <span class="btDetail">返回</span>
                 </button>     
 
-                <button @click="save" class="erp_bt bt_save">
+                <button @click="save" plain class="erp_bt bt_save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
@@ -21,7 +21,7 @@
                     </div>
                     <span class="btDetail">取消</span>
                 </button>
-                <button @click='saveAdd' class="erp_bt bt_saveAdd">
+                <button @click='saveAdd'plain class="erp_bt bt_saveAdd">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
@@ -187,8 +187,8 @@
                 <el-date-picker
                 v-model="addData.createdTime"
                 type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
                 disabled
                 placeholder="">
                 </el-date-picker>
@@ -252,8 +252,8 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -409,8 +409,8 @@
         //---保存---------------------------------------------
            save(){
             let self=this; 
-            self.$validate().then(function (success) {
-                if(success) {   
+                self.$validate().then(function (success) {
+                if (success) {
                    self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){  
                         // console.log(res.result);
                         self.addData.id=res.result.id;
@@ -619,6 +619,12 @@
 <style scoped>
 .pt15{
     padding-top: 15px;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
+    width: 100%;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+    color: #ccc;
 }
 .customerClassDetail  .errorTips{
     margin-bottom: 10px;

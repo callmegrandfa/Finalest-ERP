@@ -9,7 +9,7 @@
                     <span class="btDetail">返回</span>
                 </button>
                 
-              <button @click="save" class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button @click="save" plain class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                     <div class="btImg">
                       <img src="../../../static/image/common/bt_save.png">
                     </div>
@@ -20,7 +20,7 @@
                   </div>
                   <span class="btDetail">取消</span>
               </button>
-              <button @click="saveAdd"class="erp_bt bt_saveAdd":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button @click="saveAdd" plain class="erp_bt bt_saveAdd":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
                 </div>
@@ -256,7 +256,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -272,8 +272,8 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->  
@@ -539,12 +539,11 @@ export default {
       }
   },
     //------------------保存修改---------------------------
-    save() {
-      
+    save() {                                                                                                                                                                                                                                                                                                                                                                                                                               
       let self = this;
         self.customerClassData.id = self.$route.params.id;
         self.$validate().then(function(success) {
-          if (success) {console.log(self.customerClassData)
+          if (success) {
             self.$axios
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
