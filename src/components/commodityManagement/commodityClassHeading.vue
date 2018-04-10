@@ -92,7 +92,7 @@
                             </el-tree>
                         </el-col>
                         <el-col :span="19" class="pb10" style="background:#fff">
-                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :hasControl="hasControl"></normalTable>
+                            <Table  :methodsUrl="httpUrl" :cols="column" :HttpParams='HttpParams' :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :command="command"></Table>
                             <!-- <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
                                 <el-table-column type="selection" label="" width="50">
                                 </el-table-column>
@@ -134,7 +134,7 @@
 <script>
 import Btm from '../../base/btm/btm'
 import Tree from '../../base/tree/tree'
-import normalTable from '../../base/Table/normalTable'
+import Table from '../../base/Table/Table'
 import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'customerInfor',
@@ -190,32 +190,36 @@ import dialogBox from '../../base/dialog/dialog'
                     disabled:false
                 }]},
                 httpUrl:{
-                   creat:'/api/services/app/CategoryManagement/GetAll',//数据初始化
+                   Initial:'/api/services/app/CategoryManagement/GetAll',//数据初始化
                    view:'/commodityleimu/CommodityCategoriesDetails/',//查看详情
-                   del:'/api/services/app/CategoryManagement/Delete'//单条删除
+                   delete:'/api/services/app/CategoryManagement/Delete'//单条删除
                 },
                 isDisable:true,
                 column: [{
                     prop: 'categoryParentName',
                     label: '上级类目',
-                    control:'normal',
+                    controls:'text',
                     isDisable:true,
+                    sortable:false,
                     }, {
                     prop: 'categoryCode',
                     label: '类目编码',
-                    control:'normal',
+                    controls:'text',
                     isDisable:true,
+                    sortable:false,
                     }, {
                     prop: 'categoryName',
                     label: '类目名称',
-                    control:'normal',
+                    controls:'text',
                     isDisable:true,
+                    sortable:false,
                     }, {
                     prop: 'status',
                     label: '状态',
-                    control:'select',
+                    controls:'select',
                     isDisable:true,
-                    statusOptions:[{
+                    sortable:false,
+                    dataSource:[{
                         value: 1,
                         label: '启用'
                     },{
@@ -225,13 +229,22 @@ import dialogBox from '../../base/dialog/dialog'
                     }, {
                     prop: 'mnemonic',
                     label: '助记码',
-                    control:'normal',
+                    controls:'text',
                     isDisable:true,
+                    sortable:false,
                     }, {
                     prop: 'isService',
                     label: '服务类',
-                    control:'checkbox',
+                    controls:'checkbox',
                     isDisable:true,
+                    sortable:false,
+                }],
+                command:[{
+                    text:'查看',
+                    class:'green'
+                },{
+                    text:'删除',
+                    class:'blue'
                 }],
                 statusOptions:[{
                         value: 1,
@@ -243,6 +256,10 @@ import dialogBox from '../../base/dialog/dialog'
                 enableEdit:true,
                 mutiSelect:true,//多选栏
                 tableModel:'commodityClassHeading',
+                HttpParams:{
+                    SkipCount:(this.$store.state.commodityClassHeadingCurrentPage-1)*this.$store.state.commodityClassHeadingEachPage,
+                    MaxResultCount:this.$store.state.commodityClassHeadingEachPage
+                },
                 hasControl:{
                     control:true,
                     modify:true,
@@ -318,17 +335,6 @@ import dialogBox from '../../base/dialog/dialog'
                     })
                 }
             },
-            loadTableData(){
-                let _this=this;
-                _this.tableLoading=true;
-                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
-                    _this.tableData=res.result.items;
-                    let countPage=res.result.totalCount;
-                    _this.tableLoading=false;
-                    _this.totalPage = Math.ceil(countPage/_this.eachPage);
-                  
-                })
-            },
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
@@ -370,21 +376,8 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
                     _this.$store.state[_this.tableModel+'Table']=res.result.items;  
                     let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
-                    _this.$store.commit('Init_pagination',totalPage)
-                    console.log(res.result);                 
+                    _this.$store.commit('Init_pagination',totalPage)               
                 })
-            },
-            modify(id){//查看编辑
-                this.$store.state.url='/commodityleimu/CommodityCategoriesDetails/'+id
-                this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
-            },
-            handleCurrentChange:function(val){//获取当前页码,分页
-                this.currentPage=val;
-                console.log(this.currentPage);
-                this.loadTableData();
-            },
-            handleSelectionChange(val){//多选操作
-                this.SelectionChange=val;
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -395,43 +388,6 @@ import dialogBox from '../../base/dialog/dialog'
                 duration: 3000,
                 customClass:className
                 });
-            },
-            del(data){//单条删除
-                let _this=this;
-                _this.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:data}).then(function(res){
-                            _this.loadTableData();
-                            _this.open('删除成功','el-icon-circle-check','successERP');    
-                        }).catch(function(err){
-                            _this.$message({
-                                type: 'warning',
-                                message: err.error.message
-                            });
-                        })  
-                    }).catch(() => {
-                        _this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                });
-            },
-            delData(){//选取(批量)删除
-                let _this=this;
-                _this.SelectionChange=this.$store.state[this.tableModel+'Selection'];
-                if(_this.SelectionChange.length==0){
-                    _this.$message({
-                        type: 'info',
-                        message: '请勾选需要删除的记录！'
-                    });
-                }else{
-                    this.dialogMessage="确定删除？";
-                    this.dialogShow=true;
-                }
             },
             delConfirm(){
                 let _this=this;
@@ -475,13 +431,12 @@ import dialogBox from '../../base/dialog/dialog'
             delCancel(){
                 this.dialogShow=false;
             },
-
             
         },
         components:{
             Btm,
             Tree,
-            normalTable,
+            Table,
             dialogBox
         }
     }

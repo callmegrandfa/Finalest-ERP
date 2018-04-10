@@ -185,6 +185,14 @@ const CommodityCategories = () =>
     import ('../components/commodityManagement/CommodityCategories')
 const CommodityCategoriesDetails = () =>
     import ('../components/commodityManagement/CommodityCategoriesDetails')
+
+const storeHouse = () =>//仓库演示
+    import ('../components/storeHouse/storeHouse')
+const storeHouseList = () =>
+    import ('../components/storeHouse/storeHouseList')
+const storeHouseModify = () =>
+    import ('../components/storeHouse/storeHouseModify')
+
 const commodityBrand = () =>
     import ('../components/commodityManagement/commodityBrand')
 const commodityClassHeading = () =>
@@ -520,6 +528,18 @@ const routes = [
                     { path: '/commodityleimu/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
                     // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
                     { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
+                ]
+            },{
+                path: '/storeHouse',
+                component: storeHouse,
+                name: 'storeHouse',
+                redirect: function() { //仓库演示
+                    return redirectRouter('storeHouse')
+                },
+                children: [
+                    { path: '/storeHouse/storeHouseList/:id', component: storeHouseList, name: 'storeHouseList' }, //商品类目
+                    // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/storeHouse/storeHouseModify/:id', component: storeHouseModify, name: 'storeHouseModify' },
                 ]
             },
             {

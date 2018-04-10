@@ -89,6 +89,10 @@ export default new vuex.Store({
         CommodityCategoriesDetails:{ name: 'CommodityCategoriesDetails', url: '/commodityleimu/CommodityCategoriesDetails/:id', parent: 'commodityleimu' } ,
         commodityClassHeading:{ name: 'commodityClassHeading', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu' } ,
 
+        storeHouse:{ name: 'storeHouse', url: '/storeHouse/storeHouseList/:id', parent: 'storeHouse', default: '/storeHouse/storeHouseList/:id' } , //仓库演示
+        storeHouseModify:{ name: 'storeHouseModify', url: '/storeHouse/storeHouseModify/:id', parent: 'storeHouse' } ,
+        storeHouseList:{ name: 'storeHouseList', url: '/storeHouse/storeHouseList/:id', parent: 'storeHouse' } ,
+
         Property:{ name: 'Property', url: '/Property/classProperty/:id', parent: 'Property', default: '/Property/classProperty/:id' } , //类目属性规格
         classProperty:{ name: 'classProperty', url: '/Property/classProperty/:id', parent: 'Property' } ,
         classPropertyDetails:{ name: 'classPropertyDetails', url: '/Property/classPropertyDetails/:id', parent: 'Property' } ,
@@ -732,31 +736,20 @@ export default new vuex.Store({
         tableName:'',//表格名称
         // 商品类目
         commodityClassHeadingHttpApi:'',//接口
+        commdityClassHeadingParams:'',
         commodityClassHeadingTable:[],//商品类目表格数据
-        commodityClassHeadingstatusOptions:[{//状态下拉数据
-            value: 1,
-            label: '启用'
-        },{
-            value: 0,
-            label: '未启用'
-        }],
+        commodityClassHeadingTotalCount:0,//总条数
         commodityClassHeadingSelection:[],//选中数据集合
         commodityClassHeadingCurrentPage:1,//当前分页
         commodityClassHeadingTotalPagination:10,//总页数
-
+        commodityClassHeadingEachPage:10,//每页显示条数
         //商品品牌
         commodityBrandHttpApi:'',
+        commodityBrandParams:'',
         commodityBrandTable:[],//品牌表格数据
         commodityBrandTableClone:[],//品牌表格数据clone
         commodityBrandNewCol:'',
         commodityBrandIfDel:true,//是否删除
-        commodityBrandstatusOptions:[{//状态下拉数据
-            value: 1,
-            label: '启用'
-        },{
-            value: 0,
-            label: '未启用'
-        }],
         commodityBrandNewColArray:[],//表格内新增数据集合
         commodityBrandUpdateColArray:[],//表格内修改数据集合
         commodityBrandSelection:[],//选中数据集合
@@ -764,6 +757,8 @@ export default new vuex.Store({
         commodityBrandUpdateRowId:'',//修改的表格行ID
         commodityBrandCurrentPage:1,
         commodityBrandTotalPagination:10,//总页数
+        commodityBrandTotalCount:0,//总条数
+        commodityBrandEachPage:10,//每页显示条数
         queryparams:{},
         tableLoading:true,
         totalPage:10,//总页数
@@ -799,6 +794,9 @@ export default new vuex.Store({
         Init_pagination(state,data){//页码总数
             state[state.tableName+'TotalPagination']=data
         },
+        Init_TotalCount(state,data){//总条数
+            state[state.tableName+'TotalCount']=data
+        },
         // Init_status(state,data){//状态下拉
         //     state[state.tableName+'statusOptions']=data
         // },
@@ -808,11 +806,17 @@ export default new vuex.Store({
         setHttpApi(state,api){//api地址
             state[state.tableName+'HttpApi']=api;
         },
+        setHttpParams(state,api){//api请求参数
+            state[state.tableName+'Params']=api;
+        },
         setTableName(state,name){//对应表格名称
             state.tableName=name;
         },
         setCurrentPage(state,page){//当前页码
            state[state.tableName+'CurrentPage']=page;
+        },
+        setEachPage(state,page){//设置每页显示条数
+            state[state.tableName+'EachPage']=page;
         },
         setAddColArray(state,array){//重置行内新增集合
             state[state.tableName+'NewColArray']=array;
@@ -840,13 +844,15 @@ export default new vuex.Store({
     actions:{
         InitTable(context){//表格初始化
             axios.get(context.state[context.state.tableName+'HttpApi'],{
-                params:{
-                    SkipCount:(context.state[context.state.tableName+'CurrentPage']-1)*context.state.eachPage,
-                    MaxResultCount:context.state.eachPage
-                }
+                params:context.state[context.state.tableName+'Params']
+                // params:{
+                //     SkipCount:(context.state[context.state.tableName+'CurrentPage']-1)*context.state[context.state.tableName+'EachPage'],
+                //     MaxResultCount:context.state[context.state.tableName+'EachPage']
+                // }
             }).then(function(res){
                 context.commit('Init_Table',res.data.result.items);
-                let totalPage=Math.ceil(res.data.result.totalCount/context.state.eachPage);
+                context.commit('Init_TotalCount',Number(res.data.result.totalCount));
+                let totalPage=Math.ceil(res.data.result.totalCount/context.state[context.state.tableName+'EachPage']);
                 context.commit('Init_pagination',totalPage);
                 },function(res){
             })
