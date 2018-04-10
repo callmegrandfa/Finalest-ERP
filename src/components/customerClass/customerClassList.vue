@@ -138,7 +138,8 @@
                                         @current-change="handleCurrentChange"
                                         :current-page="pageIndex"
                                         :page-size="oneItem"
-                                        :total="totalItem"></el-pagination>   
+                                        :total="totalItem">
+                        </el-pagination>   
                     </el-col>
                 </el-row>
 
