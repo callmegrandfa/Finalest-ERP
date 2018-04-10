@@ -187,8 +187,8 @@
                 <el-date-picker
                 v-model="addData.createdTime"
                 type="date"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss" 
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
                 disabled
                 placeholder="">
                 </el-date-picker>
