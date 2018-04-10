@@ -78,11 +78,13 @@ export default new vuex.Store({
 
         commodityProperty:{ name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
         commodityPropertyDetails:{ name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
+        commodityPropertyModify:{ name: 'commodityPropertyModify', url: '/commodityProperty/commodityPropertyModify/:id', parent: 'commodityProperty' },
         commodityPropertyList:{ name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
 
         commercial:{ name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: 'commercial', default: '/commercial/commercialSpecification/:id' } , //商品规格
         commercialSpecification:{ name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' } ,
         commercialSpecificationDetails:{ name: 'commercialSpecificationDetails', url: '/commercial/commercialSpecificationDetails/:id', parent: 'commercial' } ,
+        commercialSpecificationModify:{ name: 'commercialSpecificationModify', url: '/commercial/commercialSpecificationModify/:id', parent: 'commercial' } ,
 
         commodityleimu:{ name: 'commodityleimu', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu', default: '/commodityleimu/commodityClassHeading/:id' } , //商品类目
         // { name: 'CommodityCategories', url: '/commodityleimu/CommodityCategories/:id', parent: 'commodityleimu' } ,
@@ -162,7 +164,7 @@ export default new vuex.Store({
         supplierClassify:{ name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
         supplierClassifyList: { name: 'supplierClassifyList', url: '/supplierClassify/supplierClassifyList/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
         supplierClassifyDetail: { name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyDetail/:id' },
-        supplierClassifyModify:{ name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
+        supplierClassifyModify: { name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyModify/:id' },
 //----------------------------------------------------------------------------路由数据-----------------------------------------------------------------------
 
         // activeRouter: [ //进入页面子路由，重定向路由。name,parent,defult不变,url将被重定向(name=parent)

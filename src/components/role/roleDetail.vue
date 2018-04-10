@@ -831,7 +831,13 @@ export default({
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
              // 默认用户业务组织
-            _this.addData.ouId=res.result.id;
+             _this.addData={
+                "ouId": res.result.id,
+                "roleCode": "",
+                "displayName": "",
+                "status": 1,
+                "remark": "",
+            },
             _this.item_ou.id=res.result.id;
             _this.item_ou.ouName=res.result.ouName;
             })
@@ -909,13 +915,7 @@ export default({
         Cancel(){
             let _this=this;
             _this.validation.reset();
-            _this.addData={
-                "ouId": "",
-                "roleCode": "",
-                "displayName": "",
-                "status": 1,
-                "remark": "",
-            },
+            _this.getDefault();
              _this.ouCheckAll=[];
              _this.showPageTableOu=[];
             _this.ouPageIndex=1;

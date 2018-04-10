@@ -1015,7 +1015,6 @@ export default({
                 OUType:[],//组织类型
                 ou:[],
             },
-            update:false,
             isEdit:true,//是否可编辑
              response:{
                 details:'',
@@ -1604,6 +1603,7 @@ export default({
         Cancel(){
             let _this=this;
             _this.clearData();
+            $('.tipsWrapper').css({display:'none'})
             _this.update=false;
         },
         clearData(){

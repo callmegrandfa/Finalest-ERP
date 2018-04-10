@@ -80,7 +80,7 @@
                                     </el-table-column>
                                     <el-table-column prop="modifiedTime" label="修改时间" width="">
                                     </el-table-column>
-                                    <el-table-column prop="address7" label="操作" width="">
+                                    <el-table-column prop="address7" label="操作" width="" fixed="right">
                                         <template slot-scope="scope">
                                             <el-button type="text" size="small"  v-on:click="handleDel(scope.row,scope.$index)">删除</el-button>
                                         </template>
@@ -273,11 +273,13 @@ import Tree from '../../base/tree/tree'
                 tableModel:'commodityBrand',
               totalPage:100,//当前分页总数
               isUpdate:false,//是否进行修改
+              isUpdate1:true,//是否进行修改
               ifWidth:true,
               updateId:'',
               isSave:false,
               eachPage:10,//每页有多少条信息
               page:1,//当前页
+              addbac: [],
               addabc:''
             }
         },
@@ -300,13 +302,15 @@ import Tree from '../../base/tree/tree'
             tableData:{
                 handler: function (val, oldVal) {
                         if(oldVal.length>0){
-                            
+                            console.log(this.updateArray.length)
                             if(this.updateArray.length == 0 && this.updateId==""){
                              
                                 this.isUpdate=false
                             }else if(this.addData1.createList.length == 0){
                                 this.statusButton(true,true,false) 
                                 this.isUpdate=true;
+                            }else{
+                                this.isUpdate1=false;
                             }
                             if(this.updateArray.length==0){//判断是否为第一行修改的数据
                                 this.updateArray.push(this.updateId)
@@ -358,7 +362,7 @@ import Tree from '../../base/tree/tree'
 
                     this.isSave=true;
                     let _this=this;
-                    if(_this.addData1.createList.length>0 && !_this.isUpdate){//新增保存
+                    if(_this.addData1.createList.length>0 ){//新增保存
 
                         for(let i in _this.addData1.createList){
                             if(_this.addData1.createList[i].specValueCode==""||_this.addData1.createList[i].specValueName==""){
@@ -398,7 +402,7 @@ import Tree from '../../base/tree/tree'
                                 }
                             }); 
                         }                    
-                    }else if( _this.isUpdate){//修改保存
+                    }else if( _this.isUpdate ){//修改保存
 
                         if(_this.updateArray.length==1){//单条修改
                             let updataIndex = -1;
@@ -408,11 +412,11 @@ import Tree from '../../base/tree/tree'
                                     
                                 }
                             }
-                            alert(1)
                             _this.tableData[updataIndex].status = 0
                             _this.$axios.puts('/api/services/app/SpecValueManagement/Update',_this.tableData[updataIndex]).then(function(res){
                                 _this.loadTableData();
                                 _this.loadTree();
+                                _this.statusButton(false,false,true) 
                                 _this.open('保存商品规格值成功','el-icon-circle-check','successERP');   
                             },function(res){
                                 if(res && res!=''){
@@ -427,6 +431,7 @@ import Tree from '../../base/tree/tree'
                             console.log(_this.addData1)
                             _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
                                 _this.loadTableData();
+                                _this.statusButton(false,false,true) 
                                 _this.open('保存商品规格值成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
                             },function(res){
@@ -439,8 +444,8 @@ import Tree from '../../base/tree/tree'
                         }
                     }
                 }else if(data == '取消'){
-                    _this.bottonbox.botton.splice(2,1);
-
+                    
+                    _this.statusButton(false,false,true) 
                     this.loadTableData();
                 }else if(data == '删除'){
                     let _this=this;

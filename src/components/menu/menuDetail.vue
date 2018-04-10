@@ -85,11 +85,12 @@
                             :filter-node-method="filterNode"
                             :expand-on-click-node="false"
                             @node-click="selectNodeClick"
+                            :render-content="renderContent_moduleParentId"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item.id" :label="item.moduleName" :value="item.id">
+                            <!-- <el-option class="select_tree_option" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option> -->
-                            <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            <el-option class="select_tree_option" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -547,6 +548,7 @@
             .then(function(res){
                 _this.selectTree=res;
                 _this.loadIcon()
+                _this.loadCheckSelect('moduleParentId',_this.addData.moduleParentId)
             },function(res){
             })
         },
@@ -563,6 +565,16 @@
                 })
             })
         },
+        loadCheckSelect(selectName,key){
+            let _this=this;
+            _this.$nextTick(function () { 
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                     if($(this).attr('data-id')==key){
+                        $(this).click()
+                    }
+                })
+            })
+        },
         selectNodeClick(data,node,self){
             let _this=this;
             _this.item.id=data.id;
@@ -572,9 +584,10 @@
             // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 if($(this).attr('date')==data.id){
-                    $(this).click()
+                     $(this).click()
                 }
             })
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,})
         },
         loadPermission(){
             let _this=this;
@@ -887,6 +900,13 @@
                 }
             });
         },
+        renderContent_moduleParentId(h, { node, data, store }){
+            return (
+                <span class="el-tree-node__label" data-id={data.id}>
+                    {data.moduleName}
+                </span>
+            );
+        }
     }
 
   })
