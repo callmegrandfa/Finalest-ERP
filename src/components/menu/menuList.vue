@@ -1,7 +1,7 @@
 <template>
     <div class="menuListForm">
         <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :span="5" class="tree-container">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <!-- <el-input
                         placeholder="搜索..."
@@ -17,7 +17,7 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-autocomplete>
                 </el-col>
-                <el-col :span='24' class="tree-container" >
+                <el-col :span='24'>
                     <el-tree
                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
                     v-loading="treeLoading" 
@@ -275,7 +275,6 @@
                 let _this=this;
                 _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/ModuleManagement/GetListByCondition',data).then(function(res){ 
-                    console.log(res)
                     _this.restaurants=[]
                     _this.load=event;
                     _this.tableData=res.items;
