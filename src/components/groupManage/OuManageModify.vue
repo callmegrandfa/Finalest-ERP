@@ -605,7 +605,7 @@
                             class="ouParentid" 
                             v-model="basCompany.ouParentid">
                                 <el-option 
-                                    v-if="!basCompany.isGroupCompany"
+                                v-if="!basCompany.isGroupCompany"
                                 v-for="item in selectData.companys" 
                                 :key="item.id" 
                                 :label="item.ouName" 
@@ -1535,6 +1535,37 @@ export default({
                     "id":res.result.id,
                     "ouTypes":res.result.ouTypes
                 };
+                // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(resp){ 
+                // // 上级业务单元(所属组织)
+                //     let flag=false
+                //     _this.selectData.ouParentid=resp.result;
+                //     $.each(resp.result,function(index,value){
+                //         console.log(value)
+                //         if(res.result.ouParentid==value.id){
+                //             flag=true
+                //         }
+                //     })
+                //     if(!flag){
+                //         _this.addData.ouParentid=''
+                //     }else{
+                //         _this.addData.accCchemeId=res.result.accCchemeId
+                //     }
+                // })
+                // _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(resp){ 
+                // // 会计期间方案
+                //     _this.selectData.accCchemeId=resp.result.items;
+                //      let flag=false
+                //     $.each(resp.result,function(index,value){
+                //         if(res.result.accCchemeId==value.id){
+                //             flag=true
+                //         }
+                //     })
+                //     if(!flag){
+                //         _this.addData.accCchemeId=''
+                //     }else{
+                //         _this.addData.accCchemeId=res.result.accCchemeId
+                //     }
+                // })
                 _this.change_ouType()
                 // _this.basOuTypes=res.result.ouTypes;
              

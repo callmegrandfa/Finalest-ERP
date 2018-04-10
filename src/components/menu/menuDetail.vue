@@ -85,11 +85,12 @@
                             :filter-node-method="filterNode"
                             :expand-on-click-node="false"
                             @node-click="selectNodeClick"
+                            :render-content="renderContent_moduleParentId"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item.id" :label="item.moduleName" :value="item.id">
+                            <!-- <el-option class="select_tree_option" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option> -->
-                            <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            <el-option class="select_tree_option" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -560,6 +561,9 @@
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                     }
+                     if($(this).attr('data-id')==_this.addData.moduleParentId){
+                        $(this).click()
+                    }
                 })
             })
         },
@@ -572,7 +576,9 @@
             // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 if($(this).attr('date')==data.id){
-                    $(this).click()
+                     $(this).css({
+                         top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+$(self.$el).height(),
+                     }).click()
                 }
             })
         },
@@ -887,6 +893,13 @@
                 }
             });
         },
+        renderContent_moduleParentId(h, { node, data, store }){
+            return (
+                <span class="el-tree-node__label" data-id={data.id}>
+                    {data.moduleName}
+                </span>
+            );
+        }
     }
 
   })
