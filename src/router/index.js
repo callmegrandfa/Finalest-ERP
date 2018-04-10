@@ -230,7 +230,12 @@ const supplierClassify = () => import('../components/supplierClassify/supplierCl
 const supplierClassifyList = () => import('../components/supplierClassify/supplierClassifyList')
 const supplierClassifyDetail = () => import('../components/supplierClassify/supplierClassifyDetail')
 const supplierClassifyModify = () => import('../components/supplierClassify/supplierClassifyModify')
-    
+  
+// 商品档案
+const goodsFiles = () => import('../components/commodityManagement/goodsFiles/goodsFiles')
+const goodsFilesDetail = () => import('../components/commodityManagement/goodsFiles/goodsFilesDetail')
+const goodsFilesList = () => import('../components/commodityManagement/goodsFiles/goodsFilesList')
+const goodsFilesModify = () => import('../components/commodityManagement/goodsFiles/goodsFilesModify')
 
 let redirectRouter = function(routerName) { //重定向
     // let activeRouter = store.state.activeRouter;
@@ -644,6 +649,20 @@ const routes = [
                     { path: '/supplierClassify/supplierClassifyList/:id', component: supplierClassifyList, name: 'supplierClassifyList' },
                     { path: '/supplierClassify/supplierClassifyDetail/:id', component: supplierClassifyDetail, name: 'supplierClassifyDetail' },
                     { path: '/supplierClassify/supplierClassifyModify/:id', component: supplierClassifyModify, name: 'supplierClassifyModify' },
+                ],
+
+            },
+            {
+                path: '/goodsFiles',
+                component: goodsFiles,
+                name: 'goodsFiles',
+                redirect: function () { //商品档案
+                    return redirectRouter('goodsFiles')
+                },
+                children:[
+                    { path: '/goodsFiles/goodsFilesList/:id', component: goodsFilesList, name:'goodsFilesList'},
+                    { path: '/goodsFiles/goodsFilesDetail/:id', component: goodsFilesDetail, name:'goodsFilesDetail'},
+                    { path: '/goodsFiles/goodsFilesModify/:id', component: goodsFilesModify, name:'goodsFilesModify'},
                 ],
 
             },

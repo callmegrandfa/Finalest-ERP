@@ -1,7 +1,7 @@
 <template>
     <div class="bAreaListForm">
         <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :span="5"  class="search-container">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-autocomplete
                     v-model="searchLeft"
@@ -12,24 +12,26 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-autocomplete>
                 </el-col>
-                <el-col :span='24' class="tree-container" id="areaTree">
-                    <el-tree
-                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                    v-loading="treeLoading" 
-                    :highlight-current="true"
-                    :data="componyTree"
-                    :props="defaultProps"
-                    node-key="id"
-                    default-expand-all
-                    ref="tree"
-                    :expand-on-click-node="false"
-                    :filter-node-method="filterNode"
-                    @node-click="nodeClick"
-                    >
-                    </el-tree>
+                <el-col :span='24' class="tree-container">
+                    <!-- <vue-scroll :ops="$store.state.option"> -->
+                        <el-tree
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        v-loading="treeLoading" 
+                        :highlight-current="true"
+                        :data="componyTree"
+                        :props="defaultProps"
+                        node-key="id"
+                        default-expand-all
+                        ref="tree"
+                        :expand-on-click-node="false"
+                        :filter-node-method="filterNode"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                    <!-- </vue-scroll> -->
                 </el-col>   
             </el-col>
-            <el-col :span='19' class="border-left" id="areaTable">
+            <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -355,11 +357,11 @@
                  }
             },
             getHeight(){
-                $("#area").css({
-                    minHeight:$('.bAreaListForm .bg-white').css('height')
+                $(".search-container").css({
+                    height:$('.bg-white').css('height')
                 })
-                $("#areaTable").css({
-                    minHeight:$('.bAreaListForm .bg-white').css('height')
+                $(".border-left").css({
+                    height:$('.bg-white').css('height')
                 })
             },
             goDetail(){

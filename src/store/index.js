@@ -18,6 +18,9 @@ export default new vuex.Store({
             hRail: {
                 height: '0',
             },
+            hBar: {
+                height: '0',
+            },
         },
         slidbarHeight: 0,
         closeItem: [], //存储关闭页签
@@ -39,10 +42,17 @@ export default new vuex.Store({
         order:{ name: 'order', url: '/order/orderList/:id', parent: 'order', default: '/order/orderList/:id' } , //采购管理
         orderDetails:{ name: 'orderDetails', url: '/order/orderDetails/:id', parent: 'order' } ,
         orderList:{ name: 'orderList', url: '/order/orderList/:id', parent: 'order' } ,
+
         OuManage:{ name: 'OuManage', url: '/OuManage/OuManageList/:id', parent: 'OuManage', default: '/OuManage/OuManageList/:id' } , //组织管理
         OuManageDetail:{ name: 'OuManageDetail', url: '/OuManage/OuManageDetail/:id', parent: 'OuManage' } ,
         OuManageModify:{ name: 'OuManageModify', url: '/OuManage/OuManageModify/:id', parent: 'OuManage' } ,
         OuManageList:{ name: 'OuManageList', url: '/OuManage/OuManageList/:id', parent: 'OuManage' } ,
+
+        goodsFiles:{ name: 'goodsFiles', url: '/goodsFiles/goodsFilesList/:id', parent: 'goodsFiles', default: '/goodsFiles/goodsFilesList/:id' } , //商品档案
+        goodsFilesDetail:{ name: 'goodsFilesDetail', url: '/goodsFiles/goodsFilesDetail/:id', parent: 'goodsFiles' } ,
+        goodsFilesModify:{ name: 'goodsFilesModify', url: '/goodsFiles/goodsFilesModify/:id', parent: 'goodsFiles' } ,
+        goodsFilesList:{ name: 'goodsFilesList', url: '/goodsFiles/goodsFilesList/:id', parent: 'goodsFiles' } ,
+
         repository:{ name: 'repository', url: '/repository/repositoryList/:id', parent: 'repository', default: '/repository/repositoryList/:id' } , //仓库管理
         repositoryList:{ name: 'repositoryList', url: '/repository/repositoryList/:id', parent: 'repository' } ,
         repositoryData:{ name: 'repositoryData', url: '/repository/repositoryData/:id', parent: 'repository' } ,
@@ -102,10 +112,6 @@ export default new vuex.Store({
         tenant:{ name: 'tenant', url: '/tenant/tenantManagement/:id', parent: 'tenant', default: '/tenant/tenantManagement/:id' } , //租户管理
         tenantManagement:{ name: 'tenantManagement', url: '/tenant/tenantManagement/:id', parent: 'tenant' } ,
         tenantManagementAdd:{ name: 'tenantManagementAdd', url: '/tenant/tenantManagementAdd/:id', parent: 'tenant' } ,
-
-        Record:{ name: 'Record', url: '/Record/commodityRecord/:id', parent: 'Record', default: '/Record/commodityRecord/:id' } , //商品档案
-        commodityRecord:{ name: 'commodityRecord', url: '/Record/commodityRecord/:id', parent: 'Record' } ,
-        commodityRecordDetails:{ name: 'commodityRecordDetails', url: '/Record/commodityRecordDetails/:id', parent: 'Record' } ,
 
         groupManage:{ name: 'groupManage', url: '/groupManage/groupManageList/:id', parent: 'groupManage', default: '/groupManage/groupManageList/:id' } , //集团管理
         groupManageList:{ name: 'groupManageList', url: '/groupManage/groupManageList/:id', parent: 'groupManage' } ,
