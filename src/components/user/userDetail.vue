@@ -687,7 +687,6 @@
                 let _this=this;
                 if(!_this.firstModify){
                     _this.firstModify=!_this.firstModify;
-                    // _this.ifModify=true
                 }else{
                     _this.ifModify=true
                 }
@@ -713,7 +712,24 @@
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
             // 默认用户业务组织
-            _this.addData.ouId=res.result.id;
+                _this.addData={
+                    "userCode": "",
+                    "displayName": "",
+                    "phoneNumber": "",
+                    "email": "",
+                    "userGroupId": "",
+                    "ouId": res.result.id,
+                    "status": 1,
+                    "userType": "",
+                    "languageId": "",
+                    "isReg": false,
+                    "remark": "",
+                    "roleCodes": []
+                };
+                _this.addData.effectiveStart='';
+                _this.addData.effectiveEnd='';
+                _this.dateRange=[];
+                _this.validation.reset();
             })
         },
         getSelectData(){
@@ -1144,32 +1160,13 @@
             let _this=this;
             _this.clearData();
             _this.getAllRoleData();
-            //  _this.getDefault()
             _this.firstModify=false;
             _this.secondModify=false;
             _this.ifModify=false;
         },
         clearData(){
             let _this=this;
-            _this.addData={
-                "userCode": "",
-                "displayName": "",
-                "phoneNumber": "",
-                "email": "",
-                "userGroupId": "",
-                "ouId": "",
-                "status": 1,
-                "userType": "",
-                "languageId": "",
-                "isReg": false,
-                "remark": "",
-                "roleCodes": []
-            }
-            _this.addData.effectiveStart='';
-            _this.addData.effectiveEnd='';
-            _this.dateRange=[];
-            // _this.getDefault()
-            _this.validation.reset();
+            _this.getDefault()
         },
         saveAdd(){
             let _this=this;

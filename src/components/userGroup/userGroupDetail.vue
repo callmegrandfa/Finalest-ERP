@@ -271,7 +271,15 @@
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
             // 默认用户业务组织
-            _this.addData.ouId=res.result.id;
+            _this.addData={
+                "groupId": 1,
+                "ouId": res.result.id,
+                "userGroupCode": "",
+                "userGroupName": "",
+                "remark": "",
+                "status": 1
+            }
+            _this.validation.reset();
             })
         },
         getSelectData(){
@@ -428,16 +436,7 @@
         },
         clearData(){
             let _this=this;
-            _this.addData={
-                "groupId": 1,
-                "ouId": "",
-                "userGroupCode": "",
-                "userGroupName": "",
-                "remark": "",
-                "status": 1
-            }
-            // _this.getDefault()
-            _this.validation.reset();
+            _this.getDefault()
         },
         saveAdd(){
             let _this=this;
