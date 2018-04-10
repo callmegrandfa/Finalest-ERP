@@ -728,6 +728,12 @@ export default {
     border-bottom: 1px solid #e4e4e4;
     background-color: #fff;
 }
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
+    width: 100%;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+    color: #ccc;
+}
 .customerClassModify .getPadding {
     padding: 0 10px;
 }
