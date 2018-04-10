@@ -52,6 +52,7 @@
                                    clearable filterable 
                                    :class="{redBorder : validation.hasError('addData.classParentId')}" 
                                    placeholder=""
+                                   @change="isUpdate"
                                    v-model="addData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
