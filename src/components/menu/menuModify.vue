@@ -62,7 +62,7 @@
             <el-col :span="24"  class="pt15">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                    <label><small>*</small>上级菜单</label>
+                    <label>上级菜单</label>
                     <el-select clearable
                         class="moduleParentId" 
                         placeholder=""
@@ -77,6 +77,7 @@
                             <el-tree
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :data="selectTree"
+                            :highlight-current="true"
                             :props="selectProps"
                             node-key="id"
                             default-expand-all
@@ -84,11 +85,12 @@
                             :filter-node-method="filterNode"
                             :expand-on-click-node="false"
                             @node-click="selectNodeClick"
+                            :render-content="renderContent_moduleParentId"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item.id" :label="item.moduleName" :value="item.id">
+                            <!-- <el-option class="select_tree_option" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option> -->
-                            <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
+                            <el-option  class="select_tree_option" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -141,7 +143,7 @@
             <el-col :span="24"  class="pt15">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label>web地址</label>
+                        <label><small>*</small>路由地址</label>
                         <el-input 
                         class="url" 
                         
@@ -173,12 +175,12 @@
             <el-col :span="24"  class="pt15">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label>功能权限</label>
+                        <label><small>*</small>功能权限</label>
                         <div class="addZoo">
                             <a class="add" href="javascript:;" @click="showDialog">+</a>
                         </div>
                     </div>
-                    <div class="error_tips_info">{{ validation.firstError('addData.areaParentId') }}</div>
+                    <div class="error_tips_info">{{ validation.firstError('checked') }}</div>
                 </div>    
             </el-col>
             <el-col :span="24">
@@ -198,6 +200,7 @@
                         <el-col :span="24" class="transfer_fixed">
                             <vue-scroll :ops="$store.state.option">  
                                 <el-tree
+                                    :highlight-current="true"
                                     :data="componyTree"
                                     :props="defaultProps"
                                     node-key="id"
@@ -285,7 +288,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -307,24 +310,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -425,21 +424,28 @@
       'addData.status': function (value) {//
          return this.Validator.value(value).required().integer();
       },
-    //   'addData.ico': function (value) {//图标
-    //      return this.Validator.value(value).maxLength(200);
-    //   },
+      'addData.ico': function (value) {//图标
+         return this.Validator.value(value).maxLength(200);
+      },
       'addData.systemId': function (value) {//子系统
          return this.Validator.value(value).required().integer();
       },
       'addData.moduleParentId': function (value) {//上级菜单
-          return this.Validator.value(value).required().integer();
+          return this.Validator.value(value).integer();
       },
-    //   'addData.url': function (value) {//web地址
-    //      return this.Validator.value(value).maxLength(1000);
-    //   },
-    //   'addData.remark': function (value) {//
-    //      return this.Validator.value(value).maxLength(200);
-    //   }
+      'addData.url': function (value) {//路由地址
+         return this.Validator.value(value).required().maxLength(1000);
+      },
+      'addData.remark': function (value) {//
+         return this.Validator.value(value).maxLength(200);
+      },
+      'checked': function (value) {//
+            return this.Validator.value(value).custom(function () {
+                if (value.length<1) {
+                   return '必选'
+                }
+            });
+        },
     },
     created:function(){
         let _this=this;
@@ -566,11 +572,11 @@
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
             .then(function(res){
                 _this.selectTree=res;
-                _this.loadIcon();
+                _this.loadIcon(_this.addData.moduleParentId);
             },function(res){
             })
         },
-        loadIcon(){
+        loadIcon(key){
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
@@ -580,14 +586,14 @@
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                     }
+                    if($(this).attr('data-id')==key){
+                        $(this).click()
+                    }
                 })
             })
         },
          selectNodeClick(data,dialogTableVisible,self){
-
             let _this=this;
-            // console.log(data.id)
-            // console.log(_this.addData.id)
             if(_this.addData.id==data.id){
                 alert("上级菜单不能为菜单本身")
             }else{
@@ -598,7 +604,9 @@
                 // })
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
-                        $(this).click()
+                        $(this).css({
+                            top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,
+                        }).click()
                     }
                 })
             }
@@ -762,7 +770,6 @@
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             })    
@@ -804,7 +811,6 @@
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
-                        _this.open('保存失败','el-icon-error','faildERP');
                     })
                 }
             })    
@@ -974,6 +980,13 @@
                 _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].searchDataNoCheck;
             }
         },
+        renderContent_moduleParentId(h, { node, data, store }){
+            return (
+                <span class="el-tree-node__label" data-id={data.id}>
+                    {data.moduleName}
+                </span>
+            );
+        }
     }
 
   })

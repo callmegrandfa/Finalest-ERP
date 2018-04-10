@@ -45,18 +45,14 @@
 
             
             
-            <div class="toggle-btn">
-                <span @click='ifShow = !ifShow'>收起</span>
-                <i class="el-icon-arrow-up"></i>
-            </div>
+            <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-row>
 
         <el-collapse-transition>
-            <div v-show="ifShow" class="bb1">
-                 <!-- ft12 pr10  -->
+            <div v-show="ifShow">
                 <el-row class="bg-white pt10">
                     <el-col :span="24" class="getPadding">
-                        <div class="tipsWrapper mb10">
+                        <div class="tipsWrapper">
                             <div class="errorTips">
                                 <p class="msgDetail">错误提示：
                                     <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.ouId')}">
@@ -172,7 +168,7 @@
                                         @node-click="ouNodeClick"></el-tree>
                                 <el-option v-show="false"
                                            :key="countOu.id" 
-                                           :label="countOu.ouFullname" 
+                                           :label="countOu.ouName" 
                                            :value="countOu.id"
                                            id="ou_confirmSelect"></el-option>
                             </el-select>
@@ -402,7 +398,7 @@
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
-                             <img class="abimg" src="../../../static/image/content/redremind.png"/>
+                            <img class="abimg" src="../../../static/image/content/redremind.png"/>
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 
@@ -711,11 +707,11 @@
 
                 //获取当前默认ouid
                 self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
-                    // console.log(res);
+                    console.log(res);
                     self.defaultOuId = res.result.id;
                     self.createRepositoryParams.stock_MainTable.ouId = self.defaultOuId;
                     //加载完成拿回下拉的默认值
-                    self.ouItem.ouFullname = res.result.ouFullname;
+                    self.ouItem.ouName = res.result.ouName;
                     self.ouItem.id =  res.result.id;
 
                     //业务地区
@@ -789,12 +785,13 @@
             //---创建------------------------------------------------
             createRepository:function(){//创建
                 let self = this;
-                console.log(self.isAddNew)
+                // console.log(self.isAddNew)
                 $('.tipsWrapper').css({display:'block'})
                 if(self.addList.length>0){
                     self.createRepositoryParams.stockAddress_ChildTable = self.addList;
                     self.$validate().then(function(success){
                         if(success){
+                            $('.tipsWrapper').css({display:'none'})
                             let push = false;
                             for(let i in self.createRepositoryParams.stockAddress_ChildTable){
                                 if(self.createRepositoryParams.stockAddress_ChildTable[i].completeAddress!=''){
@@ -811,7 +808,7 @@
                             if(push){
                                 self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',self.createRepositoryParams).then(function(res){
                                     console.log(res);
-                                    $('.tipsWrapper').css({display:'none'})
+                                    
                                     self.open('创建成功','el-icon-circle-check','successERP');
                                     if(self.isAddNew == 1){
                                         self.loadSelect();
@@ -831,9 +828,10 @@
                 }else{
                     self.$validate().then(function(success){
                         if(success){
+                            $('.tipsWrapper').css({display:'none'})
                             self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',self.createRepositoryParams).then(function(res){
-                                console.log(res);
-                                $('.tipsWrapper').css({display:'none'})
+                                // console.log(res);
+                                
                                 self.open('创建成功','el-icon-circle-check','successERP');
                                 if(self.isAddNew == 1){
                                     self.loadSelect();
@@ -1050,13 +1048,14 @@
                     return data.areaName.indexOf(value) !== -1;
             },
             ouNodeClick:function(data){
-                // console.log(data)
+                console.log(data)
                 let self = this;
                 self.createRepositoryParams.opAreaId = '';
                 self.opItem.areaName = '';
 
                 self.ouItem.id = data.id;
-                self.ouItem.ouFullname = data.ouFullname;
+                self.ouItem.ouName = data.ouName;
+                console.log(self.ouItem.ouName)
                 self.$nextTick(function(){
                     $('#ou_confirmSelect').click()
                 })
@@ -1224,12 +1223,12 @@
                 ouSearch:'',
                 selectOuProps:{
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
                 ouItem:{
                     id:'',
-                    ouFullname:'',
+                    ouName:'',
                 },
                 ouAr:[],//所属组织下拉框
                 //-----------------------
@@ -1239,17 +1238,17 @@
                 areaDisArray:[],//行政地区(区)
                 proId:'',//省id
                 cityId:'',//市id
-                adSearch:'',//树形搜索框的
-                selectAdProps:{
-                    children: 'items',
-                    label: 'areaName',
-                    id:'id'
-                },
-                adItem:{
-                    id:'',
-                    areaName:'',
-                },
-                adAr:[],//行政地区下拉框
+                // adSearch:'',//树形搜索框的
+                // selectAdProps:{
+                //     children: 'items',
+                //     label: 'areaName',
+                //     id:'id'
+                // },
+                // adItem:{
+                //     id:'',
+                //     areaName:'',
+                // },
+                // adAr:[],//行政地区下拉框
                 //-----------------------
                 //---业务地区树形下拉-----
                     opSearch:'',//树形搜索框的
@@ -1491,8 +1490,15 @@ input::-webkit-input-placeholder{
     border:none;
     background-color:#FAFAFA;
 }
-.el-select.areaDrop,.el-input.areaEntry{
-    width: 100px;
+.res-detail  .errorTips{
+    margin-bottom: 10px;
+} 
+.res-detail .area{
+    width:510px;
+    margin-right:0px;
+}
+.res-detail .el-select.areaDrop,.el-input.areaEntry{
+    width: 136px;
 }
 .areaDrop input,.areaEntry input{
     border: none!important;

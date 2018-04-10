@@ -185,6 +185,14 @@ const CommodityCategories = () =>
     import ('../components/commodityManagement/CommodityCategories')
 const CommodityCategoriesDetails = () =>
     import ('../components/commodityManagement/CommodityCategoriesDetails')
+
+const storeHouse = () =>//仓库演示
+    import ('../components/storeHouse/storeHouse')
+const storeHouseList = () =>
+    import ('../components/storeHouse/storeHouseList')
+const storeHouseModify = () =>
+    import ('../components/storeHouse/storeHouseModify')
+
 const commodityBrand = () =>
     import ('../components/commodityManagement/commodityBrand')
 const commodityClassHeading = () =>
@@ -195,8 +203,16 @@ const commodityPropertyList = () =>//商品属性列表
     import ('../components/commodityManagement/commodityPropertyList')
 const commodityPropertyDetails = () =>//商品属性详情
     import ('../components/commodityManagement/commodityPropertyDetails') 
-
-   
+const commodityPropertyModify = () =>//商品属性详情
+    import ('../components/commodityManagement/commodityPropertyModify') 
+const commercial= ()=>//商品规格平台
+    import ('../components/commodityManagement/commercial')
+const commercialSpecification= ()=>//商品规格平台列表
+    import ('../components/commodityManagement/commercialSpecification')
+const commercialSpecificationDetails= ()=>//商品规格平台详情
+    import ('../components/commodityManagement/commercialSpecificationDetails')
+const commercialSpecificationModify= ()=>//商品规格平台详情
+    import ('../components/commodityManagement/commercialSpecificationModify')   
 
 const specificationOfGoods= ()=>//商品规格
     import ('../components/commodityManagement/specificationOfGoods')  
@@ -521,6 +537,31 @@ const routes = [
                     // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
                     { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
                 ]
+            },{
+                path: '/storeHouse',
+                component: storeHouse,
+                name: 'storeHouse',
+                redirect: function() { //仓库演示
+                    return redirectRouter('storeHouse')
+                },
+                children: [
+                    { path: '/storeHouse/storeHouseList/:id', component: storeHouseList, name: 'storeHouseList' }, //商品类目
+                    // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/storeHouse/storeHouseModify/:id', component: storeHouseModify, name: 'storeHouseModify' },
+                ]
+            },
+            {
+                path: '/commercial',
+                component: commercial,
+                name: 'commercial',
+                redirect: function() { //采购管理
+                    return redirectRouter('commercial')
+                },
+                children: [
+                    { path: '/commercial/commercialSpecification/:id', component: commercialSpecification, name: 'commercialSpecification' },
+                    { path: '/commercial/commercialSpecificationDetails/:id', component: commercialSpecificationDetails, name: 'commercialSpecificationDetails' },
+                    { path: '/commercial/commercialSpecificationModify/:id', component: commercialSpecificationModify, name: 'commercialSpecificationModify' },
+                ]
             },
             {
                 path: '/commodityProperty',
@@ -532,6 +573,7 @@ const routes = [
                 children: [
                     { path: '/commodityProperty/commodityPropertyList/:id', component: commodityPropertyList, name: 'commodityPropertyList' }, //商品属性
                     // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/commodityProperty/commodityPropertyModify/:id', component: commodityPropertyModify, name: 'commodityPropertyModify' },
                     { path: '/commodityProperty/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
                 ]
             },
@@ -656,9 +698,13 @@ router.beforeEach((to, from, next) => {
         // store.state[store.state[to.name].parent].url=to.fullPath
         if(typeof(store.state[to.name])!='undefined'){
             document.title = to.name
+            // console.log(to.name);
+            
             if(typeof(store.state[to.name].url)!='undefined' && typeof(store.state[store.state[to.name].parent].url)!='undefined'){
+
                 store.state[to.name].url=to.fullPath;
                 store.state[store.state[to.name].parent].url=to.fullPath
+                // console.log(to.fullPath);
                 next()
             }else{
                 alert('路由web地址或父级名称未定义')

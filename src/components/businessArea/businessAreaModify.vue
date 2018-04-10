@@ -31,6 +31,7 @@
                             <el-tree
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :data="selectTree_ou"
+                            :highlight-current="true"
                             :props="selectProps_ou"
                             node-key="id"
                             default-expand-all
@@ -38,11 +39,12 @@
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_ou"
+                            :render-content="renderContent_ouId"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
+                            <!-- <el-option class="select_tree_option" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id" :date="item_ou.id">
                             </el-option> -->
-                            <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                            <el-option class="select_tree_option" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -53,7 +55,7 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>上级业务地区</label>
+                        <label>上级业务地区</label>
                         <el-select clearable  
                          
                         
@@ -69,6 +71,7 @@
                             <el-tree
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :data="selectTree_area"
+                            :highlight-current="true"
                             :props="selectProps_area"
                             node-key="id"
                             default-expand-all
@@ -76,13 +79,12 @@
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_area"
+                            :render-content="renderContent_areaParentId"
                             >
                             </el-tree>
-                            <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
+                            <el-option class="select_tree_option" :key="item_area.id" :label="item_area.areaName" :value="item_area.id" :date="item_area.id">
                             </el-option>
-                             <!-- <el-option v-show="false" :label="item_area_no.areaName" :value="item_area_no.id">
-                            </el-option> -->
-                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            <!-- <el-option class="select_tree_option" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
                             </el-option> -->
                         </el-select>
                     </div>
@@ -209,7 +211,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -231,24 +233,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -357,7 +355,7 @@
             return this.Validator.value(value).required().integer();
         },
         'addData.areaParentId': function (value) {//上级业务地区
-            return this.Validator.value(value).required().integer();
+            return this.Validator.value(value).integer();
         },
         'addData.status': function (value) {//启用状态
             return this.Validator.value(value).required().integer();
@@ -369,7 +367,7 @@
     created () {
         let _this=this;
         _this.getSelectData();
-        _this.loadTree();  
+        // _this.loadTree();  
         _this.getData()
     },
     watch: {
@@ -424,9 +422,9 @@
         changeOuId(){
             let _this=this;
             _this.getAreaTree(_this.addData.ouId)
-             _this.addData.areaParentId=0;
-             _this.item_area.id=0;
-             _this.item_area.areaName='无'
+             _this.addData.areaParentId="";
+            //  _this.item_area.id=0;
+            //  _this.item_area.areaName='无'
         },
         getAreaTree(OuId){
             let _this=this;
@@ -436,7 +434,7 @@
                     _this.selectTree_area=[]
                 }else{
                     _this.selectTree_area=res.result;
-                    _this.loadIcon();
+                    _this.loadIcon('areaParentId',_this.addData.areaParentId);
                 }
                 
             },function(res){
@@ -470,6 +468,7 @@
                 _this.item_area.id=res.result.areaParentId;
                 _this.item_area.areaName=res.result.areaParentId_AreaName;
                 _this.getAreaTree(res.result.ouId)
+                _this.loadTree('ouId',res.result.ouId);  
             },function(res){    
 
             })  
@@ -635,7 +634,7 @@
                 }
             });
         },
-        loadTree(){
+        loadTree(selectName,key){
            let _this=this;
             //地区
             // _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:_this.addData.OuId})
@@ -648,19 +647,22 @@
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon();
+                _this.loadIcon(selectName,key);
             },function(res){
             })
         },
-        loadIcon(){
+        loadIcon(selectName,key){
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
+                $('.'+selectName+' .el-tree-node__label').each(function(){
                     if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
                         $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                    if($(this).attr('data-id')==key){ 
+                        $(this).click()
                     }
                 })
             })
@@ -670,11 +672,15 @@
             // _this.item_ou.id=data.id;
             // _this.item_ou.ouName=data.ouName;
             // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({
+            //     top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+            // }).click();
+        // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 if($(this).attr('date')==data.id){
-                    $(this).click()
+                    $(this).css({
+                        top:$(self.$el).offset().top - $(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+                    }).click()
                 }
             })
         },
@@ -688,14 +694,34 @@
                 _this.item_area.id=data.id;
                 _this.item_area.areaName=data.areaName;
                 _this.$nextTick(function(){
-                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({
+                        top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+                    }).click();
                 })
-                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //  $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 //     if($(this).attr('date')==data.id){
-                //         $(this).click()
+                //         $(this).css({
+                            //     top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,
+                            // }).click()
                 //     }
                 // })
             }
+        },
+        renderContent_ouId(h, { node, data, store }){
+            return (
+                <span class="el-tree-node__label" data-id={data.id}>
+                    {data.ouName}
+                </span>
+            );
+        },
+        renderContent_areaParentId(h, { node, data, store }){
+            console.log(data)
+            return (
+                
+                <span class="el-tree-node__label" data-id={data.id}>
+                    {data.areaName}
+                </span>
+            );
         },
     }
 
