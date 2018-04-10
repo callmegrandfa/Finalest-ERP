@@ -46,13 +46,13 @@
             <el-col :span="24" style="margin-top:30px;">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级客户分类</label>
+                        <label>上级客户分类</label>
                         <el-select class="classParentId" 
                                    clearable filterable
                                    :class="{redBorder : validation.hasError('customerClassData.classParentId')}" 
                                    placeholder=""            
                                    @change='Modify()'
-                                   v-model="customerClassData.classParentId_ClassName">
+                                   v-model="customerClassData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="parentSearch"></el-input>
@@ -67,9 +67,9 @@
                                      :expand-on-click-node="false"
                                      @node-click="nodeClick"></el-tree>
                             <el-option v-show="false"
-                                       :key="count.id" 
-                                       :label="count.className" 
-                                       :value="count.id"
+                                       :key="parentItem.id" 
+                                       :label="parentItem.className" 
+                                       :value="parentItem.id"
                                        id="businessDetail_confirmSelect">
                             </el-option>
                         </el-select>
@@ -290,9 +290,9 @@ export default {
     // countOu () {
     //     return this.ouItem;
     //     },
-    count() {
-      return this.parentItem;
-    }
+    // count() {
+    //   return this.parentItem;
+    // }
   },
   watch: {
     parentSearch(val) {
@@ -318,7 +318,7 @@ export default {
       },
       //--------------------
       status: [],
-      customerClassData: {
+       customerClassData: {
         id: "",
         groupId: 1,
         // "cuId": '',
@@ -368,9 +368,7 @@ export default {
     //   },
     "customerClassData.classParentId": function(value) {
       //上级客户分类
-      return this.Validator.value(value)
-        .required()
-        .integer();
+      return this.Validator.value(value) .integer();
     },
     "customerClassData.classCode": function(value) {
       //客户分类编码
@@ -406,8 +404,9 @@ export default {
             self.customerClassData = res.result;
             // self.ouItem.id = self.customerClassData.classParentId;
             // self.ouItem.ouName = self.customerClassData.ouFullname;
-            // self.parentItem.id = self.customerClassData.classParentId;
-            self.parentItem.className = self.customerClassData.className;
+            self.parentItem.id = self.customerClassData.classParentId;
+            // console.log(self.parentItem.id);
+            self.parentItem.className = self.customerClassData.classParentId_ClassName;
           });
       }
     },
@@ -529,12 +528,12 @@ export default {
       let self = this;
         self.customerClassData.id = self.$route.params.id;
         self.$validate().then(function(success) {
-          if (success) {
+          if (success) {console.log(self.customerClassData)
             self.$axios
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
-                  // console.log(res);
+                  console.log(res);
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                     // 修改成功，点返回不弹出对话框
                    self.ifModify = false;
