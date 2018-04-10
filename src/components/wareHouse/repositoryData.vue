@@ -1238,17 +1238,6 @@
                 areaDisArray:[],//行政地区(区)
                 proId:'',//省id
                 cityId:'',//市id
-                // adSearch:'',//树形搜索框的
-                // selectAdProps:{
-                //     children: 'items',
-                //     label: 'areaName',
-                //     id:'id'
-                // },
-                // adItem:{
-                //     id:'',
-                //     areaName:'',
-                // },
-                // adAr:[],//行政地区下拉框
                 //-----------------------
                 //---业务地区树形下拉-----
                     opSearch:'',//树形搜索框的
