@@ -26,18 +26,18 @@
                     </vue-scroll> 
                 </ul>
             </li>
-            <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1">
+            <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1" v-if="item.status==1">
                 <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
                 <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
                 <ul class="slidUl slid1">
                     <vue-scroll :key="item.id" :ops="ops">
-                        <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2">
+                        <li class="two" v-for="i in item.childNodes"  @mouseenter="enter2" v-if="i.status==1">
                             <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
                             <a href="javascript:;" @click="storageData" :moduleParentId="i.moduleParentId" :menuname="i.moduleName" :menuUrl="i.url">{{i.moduleName}}</a>
                             <diV class="triangle"></diV>
                             <ul class="slidUl slid2" v-show="i.childNodes.length>0" >
                                 <vue-scroll :key="i.id" :ops="ops">
-                                    <li class="three" v-for="it in i.childNodes">
+                                    <li class="three" v-for="it in i.childNodes" v-if="it.status==1">
                                         <!-- <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url" @click="storageData"><i :class="i.ico"></i></span> -->
                                         <a href="javascript:;" :menuId="it.id" :moduleParentId="it.moduleParentId" :menuUrl="it.url" :menuname="it.moduleName" @click="storageData">{{it.moduleName}}</a>
                                     </li>
@@ -198,26 +198,26 @@ export default {
         let _this=this;
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
-            console.log(res[1].childNodes)
+            // console.log(res[1].childNodes)
             _this.childNodes=res;
-            _this.$nextTick(function(){
-                let x={}
-                $('.one').each(function(index){
-                    x[index]=[];
-                    $(this).find('.three a').each(function(z){
-                        x[index].push($(this).attr('menuurl'))
-                    })
-                    $(this).attr('data-url',x[index])
-                    if($(this).attr('data-url')!=undefined){
-                        for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
-                            if($(this).attr('data-url').split(',')[i]==_this.$route.path.split('/')[1]){
-                                $(this).addClass('menu_active')
-                                break
-                            }
-                        }
-                    }
-                })
-            })
+            // _this.$nextTick(function(){
+            //     let x={}
+            //     $('.one').each(function(index){
+            //         x[index]=[];
+            //         $(this).find('.three a').each(function(z){
+            //             x[index].push($(this).attr('menuurl'))
+            //         })
+            //         $(this).attr('data-url',x[index])
+            //         if($(this).attr('data-url')!=undefined){
+            //             for(let i=0;i<$(this).attr('data-url').split(',').length;i++){
+            //                 if($(this).attr('data-url').split(',')[i]==_this.$route.path.split('/')[1]){
+            //                     $(this).addClass('menu_active')
+            //                     break
+            //                 }
+            //             }
+            //         }
+            //     })
+            // })
         },function(res){
 
            

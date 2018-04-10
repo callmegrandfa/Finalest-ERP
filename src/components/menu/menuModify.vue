@@ -572,11 +572,11 @@
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
             .then(function(res){
                 _this.selectTree=res;
-                _this.loadIcon();
+                _this.loadIcon(_this.addData.moduleParentId);
             },function(res){
             })
         },
-        loadIcon(){
+        loadIcon(key){
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
@@ -586,14 +586,13 @@
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                     }
-                    if($(this).attr('data-id')==_this.addData.moduleParentId){
-                    $(this).click()
-                }
+                    if($(this).attr('data-id')==key){
+                        $(this).click()
+                    }
                 })
             })
         },
          selectNodeClick(data,dialogTableVisible,self){
-
             let _this=this;
             if(_this.addData.id==data.id){
                 alert("上级菜单不能为菜单本身")
@@ -606,7 +605,7 @@
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
                         $(this).css({
-                            top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+$(self.$el).height(),
+                            top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,
                         }).click()
                     }
                 })

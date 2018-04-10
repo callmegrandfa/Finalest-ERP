@@ -548,6 +548,7 @@
             .then(function(res){
                 _this.selectTree=res;
                 _this.loadIcon()
+                _this.loadCheckSelect('moduleParentId',_this.addData.moduleParentId)
             },function(res){
             })
         },
@@ -561,7 +562,14 @@
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                     }
-                     if($(this).attr('data-id')==_this.addData.moduleParentId){
+                })
+            })
+        },
+        loadCheckSelect(selectName,key){
+            let _this=this;
+            _this.$nextTick(function () { 
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                     if($(this).attr('data-id')==key){
                         $(this).click()
                     }
                 })
@@ -576,11 +584,10 @@
             // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 if($(this).attr('date')==data.id){
-                     $(this).css({
-                         top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+$(self.$el).height(),
-                     }).click()
+                     $(this).click()
                 }
             })
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,})
         },
         loadPermission(){
             let _this=this;
