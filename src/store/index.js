@@ -735,6 +735,13 @@ export default new vuex.Store({
         // 商品类目
         commodityClassHeadingHttpApi:'',//接口
         commodityClassHeadingTable:[],//商品类目表格数据
+        commodityClassHeadingstatusOptions:[{//状态下拉数据
+            value: 1,
+            label: '启用'
+        },{
+            value: 0,
+            label: '未启用'
+        }],
         commodityClassHeadingSelection:[],//选中数据集合
         commodityClassHeadingCurrentPage:1,//当前分页
         commodityClassHeadingTotalPagination:10,//总页数
@@ -744,7 +751,14 @@ export default new vuex.Store({
         commodityBrandTable:[],//品牌表格数据
         commodityBrandTableClone:[],//品牌表格数据clone
         commodityBrandNewCol:'',
-        commodityBrandIfDel:false,//是否删除
+        commodityBrandIfDel:true,//是否删除
+        commodityBrandstatusOptions:[{//状态下拉数据
+            value: 1,
+            label: '启用'
+        },{
+            value: 0,
+            label: '未启用'
+        }],
         commodityBrandNewColArray:[],//表格内新增数据集合
         commodityBrandUpdateColArray:[],//表格内修改数据集合
         commodityBrandSelection:[],//选中数据集合
@@ -787,6 +801,9 @@ export default new vuex.Store({
         Init_pagination(state,data){//页码总数
             state[state.tableName+'TotalPagination']=data
         },
+        // Init_status(state,data){//状态下拉
+        //     state[state.tableName+'statusOptions']=data
+        // },
         setIfDel(state,data){//配置是否删除参数
             state[state.tableName+'IfDel']=data
         },
@@ -808,9 +825,9 @@ export default new vuex.Store({
         setTableSelection(state,array){//设置表格多选集合
             state[state.tableName+'Selection']=array;
         },
-        setUpdateRowId(state,id){//重置修改行id
-            state[state.tableName+'UpdateRowId']=id;
-        },
+        // setUpdateRowId(state,id){//重置修改行id
+        //     state[state.tableName+'UpdateRowId']=id;
+        // },
         add_col(state,data){//表格行内新增
             state[state.tableName+'Table'].unshift(data);
             state[state.tableName+'NewColArray'].unshift(data);

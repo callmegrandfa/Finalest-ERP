@@ -49,7 +49,7 @@
                             <el-col :span="12">
                                 <div class="bgcolor smallBgcolor">
                                     <el-select  v-model="search.Status" >
-                                        <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value">
+                                        <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -92,7 +92,7 @@
                             </el-tree>
                         </el-col>
                         <el-col :span="19" class="pb10" style="background:#fff">
-                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel" :hasModify="hasModify"></normalTable>
+                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :hasControl="hasControl"></normalTable>
                             <!-- <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
                                 <el-table-column type="selection" label="" width="50">
                                 </el-table-column>
@@ -190,38 +190,64 @@ import dialogBox from '../../base/dialog/dialog'
                     disabled:false
                 }]},
                 httpUrl:{
-                   creat:'http://192.168.100.107:8082/api/services/app/CategoryManagement/GetAll',//数据初始化
+                   creat:'/api/services/app/CategoryManagement/GetAll',//数据初始化
                    view:'/commodityleimu/CommodityCategoriesDetails/',//查看详情
                    del:'/api/services/app/CategoryManagement/Delete'//单条删除
                 },
+                isDisable:true,
                 column: [{
                     prop: 'categoryParentName',
                     label: '上级类目',
-                    control:'normal'
+                    control:'normal',
+                    isDisable:true,
                     }, {
                     prop: 'categoryCode',
                     label: '类目编码',
-                    control:'normal'
+                    control:'normal',
+                    isDisable:true,
                     }, {
                     prop: 'categoryName',
                     label: '类目名称',
-                    control:'normal'
+                    control:'normal',
+                    isDisable:true,
                     }, {
                     prop: 'status',
                     label: '状态',
-                    control:'select'
+                    control:'select',
+                    isDisable:true,
+                    statusOptions:[{
+                        value: 1,
+                        label: '启用'
+                    },{
+                        value: 0,
+                        label: '未启用'
+                    }]
                     }, {
                     prop: 'mnemonic',
                     label: '助记码',
-                    control:'normal'
+                    control:'normal',
+                    isDisable:true,
                     }, {
                     prop: 'isService',
                     label: '服务类',
-                    control:'checkbox'
+                    control:'checkbox',
+                    isDisable:true,
                 }],
+                statusOptions:[{
+                        value: 1,
+                        label: '启用'
+                    },{
+                        value: 0,
+                        label: '未启用'
+                    }],
                 enableEdit:true,
+                mutiSelect:true,//多选栏
                 tableModel:'commodityClassHeading',
-                hasModify:true,
+                hasControl:{
+                    control:true,
+                    modify:true,
+                    del:false,
+                },
                 SystemOptions: [{
                     value: null,
                     label: '全部'
@@ -232,14 +258,6 @@ import dialogBox from '../../base/dialog/dialog'
                     value: true,
                     label: '是'
                     }],
-                StatusOptions:[{
-                    value: 1,
-                    label: '启用'
-                },{
-                    value: 0,
-                    label: '未启用'
-                }],
-
                 value: '',
                 classTree:  [//类目tree
                     // {areaName:'根目录',id:'0',items:[]},
@@ -317,7 +335,6 @@ import dialogBox from '../../base/dialog/dialog'
                     _this.$axios.gets('/api/services/app/CategoryManagement/GetCategoryTree')
                     .then(function(res){
                         _this.classTree=res
-                        console.log(_this.classTree)
                         _this.treeLoading=false;
                         _this.loadIcon();
                 },function(res){
@@ -327,10 +344,11 @@ import dialogBox from '../../base/dialog/dialog'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{inputId:data.id}).then(function(res){                     
+                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{Id:data.id,SkipCount:(_this.currentPage-1)*_this.$store.state.eachPage,MaxResultCount:_this.$store.state.eachPage}).then(function(res){                     
                         _this.$store.state[_this.tableModel+'Table'] = res.result.items;
-                        _this.totalCount=res.result.length
-                        _this.tableLoading=false;
+                        let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
+                        _this.$store.commit('Init_pagination',totalPage);
+                        _this.$store.commit('setCurrentPage',1)//设置当前页码为初始值1    
                         
                     })
             },
