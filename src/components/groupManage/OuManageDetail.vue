@@ -1015,7 +1015,6 @@ export default({
                 OUType:[],//组织类型
                 ou:[],
             },
-            update:false,
             isEdit:true,//是否可编辑
              response:{
                 details:'',
