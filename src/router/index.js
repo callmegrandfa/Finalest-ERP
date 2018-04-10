@@ -197,7 +197,14 @@ const commodityPropertyDetails = () =>//商品属性详情
     import ('../components/commodityManagement/commodityPropertyDetails') 
 const commodityPropertyModify = () =>//商品属性详情
     import ('../components/commodityManagement/commodityPropertyModify') 
-   
+const commercial= ()=>//商品规格平台
+    import ('../components/commodityManagement/commercial')
+const commercialSpecification= ()=>//商品规格平台列表
+    import ('../components/commodityManagement/commercialSpecification')
+const commercialSpecificationDetails= ()=>//商品规格平台详情
+    import ('../components/commodityManagement/commercialSpecificationDetails')
+const commercialSpecificationModify= ()=>//商品规格平台详情
+    import ('../components/commodityManagement/commercialSpecificationModify')   
 
 const specificationOfGoods= ()=>//商品规格
     import ('../components/commodityManagement/specificationOfGoods')  
@@ -521,6 +528,19 @@ const routes = [
                     { path: '/commodityleimu/commodityClassHeading/:id', component: commodityClassHeading, name: 'commodityClassHeading' }, //商品类目
                     // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
                     { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
+                ]
+            },
+            {
+                path: '/commercial',
+                component: commercial,
+                name: 'commercial',
+                redirect: function() { //采购管理
+                    return redirectRouter('commercial')
+                },
+                children: [
+                    { path: '/commercial/commercialSpecification/:id', component: commercialSpecification, name: 'commercialSpecification' },
+                    { path: '/commercial/commercialSpecificationDetails/:id', component: commercialSpecificationDetails, name: 'commercialSpecificationDetails' },
+                    { path: '/commercial/commercialSpecificationModify/:id', component: commercialSpecificationModify, name: 'commercialSpecificationModify' },
                 ]
             },
             {
