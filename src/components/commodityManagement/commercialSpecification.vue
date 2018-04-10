@@ -1,15 +1,15 @@
 <template>
-    <div class="commercialSpecification" style="background:#fff;width:100%;float:left">
-        <div id="left-box" style="min-width:275px;width:275px;float:left">
-        <el-row class="bg-white" >
+    <div class="commercialSpecification commodity" >
+        <div id="left-box" class="left-box" >
+        <el-row class="bg-white" v-show="ifWidth">
             <el-col :span="24">
                 <el-row class="h48 pl15">
                     <el-col :span="18">
-                        <i class="el-icon-search"></i>
+                        <img src="../../../static/image/common/search_btn.png" class="closeLeft" >
                         <span>查询</span>
                     </el-col>
-                    <el-col :span="5">
-                        <span class="fs12 open" @click="packUp">+ 收起</span>
+                    <el-col :span="2" :offset="4">
+                        <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -18,9 +18,9 @@
                                 <label>规格编码</label>
                        </div>
                     </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" style="margin-top:20px">
-                        <el-input placeholder="请录入单号"></el-input>
+                    <el-col :span="12">
+                        <div class="bgcolor smallBgcolor" style="margin-top:20px">
+                        <el-input placeholder="" v-model="searchItem.specCode"></el-input>
                         </div>
                     </el-col>
                 </el-row>
@@ -30,9 +30,9 @@
                                 <label>规格名称</label>
                        </div>
                     </el-col>
-                    <el-col :span="14">
-                        <div class="smallBgcolor" >
-                        <el-input placeholder="请录入单号"></el-input>
+                    <el-col :span="12">
+                        <div class="bgcolor smallBgcolor" >
+                        <el-input placeholder="" v-model="searchItem.specName" ></el-input>
                         </div>
                     </el-col>
                 </el-row>
@@ -42,26 +42,10 @@
                                 <label>控件类型</label>
                         </div>
                     </el-col>
-                    <el-col :span="14">
+                    <el-col :span="12">
                         <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <div class="bgcolor smallBgcolor" >
-                                <label>必填</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="14">
-                        <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <el-select  v-model="searchItem.controlType" >
+                            <el-option  v-for="item in controlTypeoptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
 
                             </el-select>
@@ -74,10 +58,10 @@
                                 <label>状态</label>
                         </div>
                     </el-col>
-                    <el-col :span="14">
+                    <el-col :span="12">
                         <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="value" >
-                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                            <el-select  v-model="searchItem.status" >
+                            <el-option  v-for="item in statusoptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
 
                             </el-select>
@@ -86,9 +70,9 @@
                 </el-row>
                 
                 <el-row>
-                    <el-col :span="8">&nbsp;</el-col>
+                    <el-col :span="8"><div class="height1"></div></el-col>
                     <el-col style="text-align:center;margin-bottom:20px;" :span="14">
-                        <span class="search-btn" style="float:left;margin-left:10px;">查询</span>
+                        <span class="search-btn" style="float:left;margin-left:10px;" @click="search()" >查询</span>
                     </el-col>
                 </el-row>
             </el-col>
@@ -97,45 +81,44 @@
         <div id="bs" style="float:left;">
             <el-row  >
                 <el-col :span="24" class="border-left" id="bg-white">
-                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
-                     <el-row class="" style="position:relative">
-                        
-                        <div style="width:100%">
-                            
-                        <el-row>
+                    <el-col :span="ifWidth?0:2" class="search-block">
+                        <div @click="openLeft">
+                            <img src="../../../static/image/common/search_btn.png">
+                            <span>查询</span>
+                            <span class='open-search'>+</span>
+                        </div>
+                    </el-col>
+                    <el-col :span="ifWidth?24:22" > 
+                        <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                    </el-col>
                         <el-col :span="24" class="" style="display">
-                            <el-table :data="tableData" border  class="text-center">
-                                <el-table-column prop="date" label="序号" >
-                                    
+                            <el-table :data="tableData" border @row-click="rowClick" class="text-center" @selection-change="handleSelectionChange">
+                                <el-table-column prop="name" type="selection" label="" >
                                 </el-table-column>
-                                <el-table-column prop="name" label="" >
+                                <el-table-column prop="specCode" label="属性编码">
+                                </el-table-column>
+                                <el-table-column prop="specName" label="属性名称">
                                     <template slot-scope="scope">
-                                        <el-checkbox  ></el-checkbox>
+                                        <el-button type="text"    >{{tableData[scope.$index].specName}}</el-button>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="address" label="属性编码">
+                                <el-table-column prop="status" label="状态" >
                                 </el-table-column>
-                                <el-table-column prop="address2" label="属性名称">
+                                <el-table-column prop="controlType" label="控件类型">
+                                </el-table-column>
+                                <el-table-column prop="seq" label="显示顺序">
+                                </el-table-column>
+                                <!-- <el-table-column prop="isSystem" label="必填" width="">
                                     <template slot-scope="scope">
-                                        <el-button type="text"    >{{tableData[scope.$index].address2}}</el-button>
+                                        <el-checkbox v-model="tableData[scope.$index].isSystem" disabled="disabled" ></el-checkbox>
                                     </template>
-                                </el-table-column>
-                                <el-table-column prop="address3" label="状态" >
-                                </el-table-column>
-                                <el-table-column prop="address4" label="控件类型">
-                                </el-table-column>
-                                <el-table-column prop="address5" label="显示顺序">
-                                </el-table-column>
-                                <el-table-column prop="address6" label="必填" width="">
-                                    <template slot-scope="scope">
-                                        <el-checkbox  ></el-checkbox>
-                                    </template>
-                                </el-table-column>
+                                </el-table-column> -->
                                 <el-table-column prop="address7" label="备注" width="">
                                 </el-table-column> 
                                 <el-table-column prop="address8" label="操作" width="">
                                     <template slot-scope="scope">
                                         <el-button type="text" size="small" @click="modify(scope.row)"  >查看</el-button>
+                                        <el-button type="text" size="small" @click="handleDel(scope.row,scope.$index)"  >删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -150,19 +133,35 @@
                          </el-pagination> 
                           
                         </el-col>
-                    </el-row>
-                        </div>  
-                    </el-row>
+
 
                 </el-col>
             </el-row> 
-        </div> 
+        </div>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font yes" @click="sureAjax">确 认</button>
+                <button class="dialog_footer_bt dialog_font no" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog --> 
     </div>
 </template>
 
 <script>
     import Query from '../../base/query/query'
-    import Btm from '../../base/btm/btm'
+    import Btm from '../../base/btm1/btm'
     export default{
         name:'customerInfor',
         data(){
@@ -179,193 +178,251 @@
                 "isDefault": true,
                 "remark": "st54ring"
                 },
+                ifWidth:true,
+                dialogUserConfirm:false,//用户删除保存提示信息
+                searchItem:{
+                    specCode:'',//规格编码
+                    specName:'',//规格名称
+                    controlType: '',//控制类型
+                    status: '',//状态
+                    SkipCount:'',
+                    MaxResultCount: ''
+                }, 
                 bottonbox:{
                     url: '/commercial/commercialSpecificationDetails',
                    botton:[{
                     class: 'erp_bt bt_add',
+                    show:true,
                     imgsrc: '../../../static/image/common/bt_add.png',
-                    text: '新增'
+                    text: '新增',
+                    increased: true
                 },{
                     class: 'erp_bt bt_del',
+                    show:true,
                     imgsrc: '../../../static/image/common/bt_del.png',
-                    text: '删除'
+                    text: '删除',
+                    increased: true
                 },{
                     class: 'erp_bt bt_audit',
+                    show:true,
                     imgsrc: '../../../static/image/common/bt_audit.png',
-                    text: '审核'
+                    text: '审核',
+                    increased: true
                 },{
                     class: 'erp_bt bt_in',
+                    show:true,
                     imgsrc: '../../../static/image/common/bt_in.png',
-                    text: '导入'
+                    text: '导入',
+                    increased: true
                 },{
                     class: 'erp_bt bt_out',
+                    show:true,
                     imgsrc: '../../../static/image/common/bt_inOut.png',
-                    text: '导出'
-                },{
-                    class: 'erp_bt bt_version',
-                    imgsrc: '../../../static/image/common/bt_start.png',
-                    text: '启用'
-                },{
-                    class: 'erp_bt bt_auxiliary',
-                    imgsrc: '../../../static/image/common/bt_stop.png',
-                    text: '停用'
+                    text: '导出',
+                    increased: true
                 }]},
-                options: [{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                    }],
-
+                controlTypeoptions:[{
+                    value: 0,
+                    label: '下拉'
+                },{
+                    value: 1,
+                    label: '手工录入'
+                }, {
+                    value: '',
+                    label: ''
+                }],
+                statusoptions:[{
+                    value: 0,
+                    label: '已审'
+                },{
+                    value: 1,
+                    label: '未审'
+                }, {
+                    value: '',
+                    label: ''
+                }],
+                isSystemoptions:[{
+                    value: true,
+                    label: '必填'
+                },{
+                    value: false,
+                    label: '不必填'
+                }],
                 value: '',
-                tableData: [{
-                                 date: '1',
-                                 name: '1',
-                                address: '1',
-                                address2: '材质',
-                                address3: '已启用',
-                                address4: '下拉',
-                                address5: '1',
-                                address6: '',
-                                address7: '改姓可',
-                                address8: '查看',
-                            }, {
-                                 date: '2',
-                                name: '1',
-                                address: '1.1',
-                                address2: '材质',
-                                address3: '已停用',
-                                address4: '日期',
-                                address5: '2',
-                                address6: '好用',
-                               
-                                address7: '好用',
-                                address8: '查看',
-                            }, {
-                                date: '3',
-                                name: '1',
-                                address: '1.2',
-                                address2: '洗涤方式',
-                                address3: '已启用',
-                                address4: '手工录入',
-                                address5: '3',
-                                address6: '',
-                                
-                                address7: '不好用',
-                                address8: '查看',
-                            }, {
-                                date: '4',
-                                name: '1',
-                                address: '2',
-                                address2: '款式',
-                                address3: '已停用',
-                                address4: '关联档案',
-                                
-                                address5: '4',
-                                address6: '',
-                                address7: '',
-                                address8: '查看',
-                        }],
-
-                    componyTree: [{
-                        label: '一级 1',
-                        children: [{
-                            label: '二级 1-1',
-                            children: [{
-                            label: '三级 1-1-1'
-                            }]
-                        }]
-                        }, {
-                        label: '一级 2',
-                        children: [{
-                            label: '二级 2-1',
-                            children: [{
-                            label: '三级 2-1-1'
-                            }]
-                        }, {
-                            label: '二级 2-2',
-                            children: [{
-                            label: '三级 2-2-1'
-                            }]
-                        }]
-                        }, {
-                        label: '一级 3',
-                        children: [{
-                            label: '二级 3-1',
-                            children: [{
-                            label: '三级 3-1-1'
-                            }]
-                        }, {
-                            label: '二级 3-2',
-                            children: [{
-                            label: '三级 3-2-1'
-                            }]
-                        }]
-                        }],
-
-                    pageIndex:-1,//分页的当前页码
-              totalPage:100,//当前分页总数
+                tableData: [],
+                SelectionChange:[],
+                pageIndex:-1,//分页的当前页码
+                 currentPage:1,//分页的当前页码
+                totalPage:100,//当前分页总数
+                eachPage:10,//每页有多少条信息
+                page:1,//当前页
+                updateId:'',
+                hangid:''
             }
         },
+        created:function(){    
+            this.loadTableData();
+        },
         mounted:function(){
-            
             let content1=document.getElementById('bg-white');//设置高度为全屏
             let height1=window.innerHeight-123;
             content1.style.minHeight=height1+'px';
-          },
+        },
         methods:{
+            closeLeft:function(){
+                let self = this;
+                self.ifWidth = false;
+                let obgh=document.getElementById('bs');
+                obgh.style.width="100%";
+            },
+            openLeft:function(){
+               let self = this;
+               self.ifWidth = true;
+               let obgh=document.getElementById('bs');
+                obgh.style.width="calc(100% - 340px)";
+            },
             btmlog:function(data){
-                let oleftBox=document.getElementById('left-box');
-                oleftBox.style.display="block";
-                let ocate= document.getElementById('bs')
-                ocate.style.width="calc(100% - 275px)";
-            },
-            querylog:function(data){
-                let _this=this;
-                if(data){
-                    let ocate= document.getElementById('bs')
-                    ocate.style.width="100%";
-                    _this.bottonbox.botton.push({
-                        class: 'erp_bt bt_auxiliary',
-                        imgsrc: '../../../static/image/common/bt_stop.png',
-                        text: '查询'
-                    })
-                }
-            },
-            storageData(e){
-                this.$store.state.url='/commercial/commercialSpecificationDetails/default'
-               this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-            packUp(){
-                let oleftBox=document.getElementById('left-box');
-                let obs=document.getElementById('bs');
-                let Re=document.getElementById('refer');
+                if(data == '删除'){
+                    let _this=this;
+                        if(_this.SelectionChange.length==0){
+                            _this.$message({
+                                type: 'info',
+                                message: '请勾选需要删除的记录！'
+                            });
 
-                oleftBox.style.display="none";
-                Re.style.display="block";
-                obs.style.width="100%";
+                        }else{
+                                _this.dialogUserConfirm=true;
+                           
+
+                        }
+                    }
+                },
+            
+            loadTableData(){
+                let _this=this;
+                // _this.tableLoading=true;
+                // console.log(_this.eachPage)
+                _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:(_this.page-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
+                    
+                    console.log(res.result.items)
+                    _this.tableData=res.result.items;
+                    for(let i=0;i<_this.tableData.length;i++){
+                        if(_this.tableData[i].status == 0){
+                           _this.tableData[i].status = '未审' 
+                        }else{
+                           _this.tableData[i].status = '已审'  
+                        }
+                        if(_this.tableData[i].controlType == 0){
+                           _this.tableData[i].controlType = '手工录入' 
+                        }else{
+                            _this.tableData[i].controlType = '下拉'
+                        }
+                    }
+                    
+                    // console.log(res.result.items)
+                    let countPage=res.result.totalCount;
+                    // _this.Init();
+                    _this.totalPage = Math.ceil(countPage/_this.eachPage);
+                  
+                })
             },
-            refer(){
-                let obs=document.getElementById('bs');
-                let oleftBox=document.getElementById('left-box');
-                let Re=document.getElementById('refer');
-                oleftBox.style.display="block";
-                obs.style.width="calc(100% - 275px)";
-                Re.style.display="none";
+            sureAjax(){
+                let _this=this;
+                 let delAarry={
+                    "ids":[]
+                }
+                for(let i in _this.SelectionChange){
+                    delAarry.ids.push(_this.SelectionChange[i].id)
+                }
+                // console.log(delAarry.ids.length)
+                if(delAarry.ids.length==1){//单条删除
+                    // console.log(delAarry.ids[0])
+                    _this.$axios.deletes('/api/services/app/SpecManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
+                        _this.loadTableData();
+                        _this.dialogUserConfirm=false;
+                        _this.open('删除成功','el-icon-circle-check','successERP');    
+                    },function(res){
+                                    console.log(res) 
+                                    _this.open('保存商品类目失败','el-icon-error','faildERP');
+                                    _this.errorMessage=true;
+                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                    console.log(res) 
+                                })
+                }else if(delAarry.ids.length > 1){//批量删除
+                    
+                     _this.$axios.posts('/api/services/app/SpecManagement/BatchDelete',delAarry).then(function(res){
+                        _this.loadTableData();
+                        _this.dialogUserConfirm=false;
+                        _this.open('删除成功','el-icon-circle-check','successERP');    
+                    },function(res){
+                                    console.log(res) 
+                                    _this.open('保存商品类目失败','el-icon-error','faildERP');
+                                    _this.errorMessage=true;
+                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                    console.log(res) 
+                                })
+                }else{
+                     _this.$axios.deletes('/api/services/app/SpecManagement/Delete',{Id:_this.hangid}).then(function(res){
+                        _this.loadTableData();
+                        _this.dialogUserConfirm=false;
+                        _this.open('删除成功','el-icon-circle-check','successERP');              
+                    },function(res){
+                                    console.log(res) 
+                                    _this.open('保存商品类目失败','el-icon-error','faildERP');
+                                    _this.errorMessage=true;
+                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                    console.log(res) 
+                                })
+                }       
             },
-            dell(){
-                let ocheck=document.getElementsByClassName('is-checked');
-            }
+            handleDel(row,index){//行内删除
+                this.dialogUserConfirm=true;
+                this.hangid=row.id
+                
+                
+            },
+            search(){
+                let _this=this;
+                // alert(1)
+                _this.searchItem.SkipCount= (_this.currentPage-1)*_this.eachPage;
+                _this.searchItem.MaxResultCount = _this.eachPage;
+                _this.$axios.gets('/api/services/app/SpecManagement/GetSearch',_this.searchItem).then(function(res){
+                    // console.log(res)
+                    _this.tableData=res.result.items; 
+                    for(let i=0;i<_this.tableData.length;i++){
+                        if(_this.tableData[i].status == 0){
+                           _this.tableData[i].status = '未审' 
+                        }else{
+                           _this.tableData[i].status = '已审'  
+                        }
+                        if(_this.tableData[i].controlType == 0){
+                           _this.tableData[i].controlType = '手工录入' 
+                        }else{
+                            _this.tableData[i].controlType = '下拉'
+                        }
+                    }                  
+                })
+            },
+            modify(row){//查看编辑
+                this.$store.state.url='/commercial/commercialSpecificationDetails/'+row.id
+                this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
+            },
+            handleSelectionChange(val) {//点击复选框选中的数据
+                this.SelectionChange=val;
+            },
+            rowClick(row){//获取行id
+                this.updateId=row.id
+            },
+            open(tittle,iconClass,className) {//提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
         },
         components:{
             Query,
@@ -378,6 +435,16 @@
 .commercialSpecification .fs14{
     font-size: 14px;
     color: rgba(0, 0, 0, 0.349019607843137);
+}
+.open-search{
+    background-image: url(../../../static/image/common/btn-circle.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #E3E3E3;
+    font-size: 12px;
+    width: 19px;
+    float: right;
+    margin-right: 10px;
 }
 .commercialSpecification .fs12{
     font-size: 12px;
@@ -441,13 +508,16 @@
     border-left: 1px solid #E4E4E4;
 }
 #bs{
-    width: calc(100% - 275px);
+    width: calc(100% - 340px);
 }
 </style>
 
 <style>
+.commodity .no{
+    background-color: blue !important;
+}
 .commercialSpecification .smallBgcolor .el-input input{
-    height: 32px !important;
+    height: 28px !important;
 }
 .commercialSpecification .bgcolor{
     width: 100%;

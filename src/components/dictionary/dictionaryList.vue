@@ -470,7 +470,6 @@
                         self.ar = [];
                         // self.loadTableData();
                     },function(res){ 
-                        self.open('创建失败','el-icon-error','faildERP');   
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
@@ -483,8 +482,7 @@
                         self.updateList = [];
                         self.ar = [];
                         // self.loadTableData();
-                    },function(res){    
-                        self.open('修改失败','el-icon-error','faildERP');  
+                    },function(res){
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
@@ -562,7 +560,7 @@
 
 
 
-                if(row.id!=0&&row.id!=''){
+                if(row.id>0){
                     let flag = false;
                     if(self.updateList.length==0){
                         flag = true;
@@ -745,10 +743,10 @@
                 if(self.dictId==0){
                     self.loadTableData()
                 }else{
-                    self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id}).then(function(res){ 
+                    self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id,SkipCount:'0',MaxResultCount:'100'}).then(function(res){ 
                         console.log(res)
-                        self.tableData = res.result;
-                        self.totalItem=res.result.length
+                        self.tableData = res.result.items;
+                        self.totalItem=res.result.totalCount;
                     },function(res){
                         self.tableLoading=false;
                     })

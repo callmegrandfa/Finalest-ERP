@@ -65,6 +65,7 @@ export default new vuex.Store({
         currencyList:{ name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
 
         commodityBrand:{name: 'commodityBrand', url: '/commodityBrand/:id', parent: 'commodityBrand', default: '/commodityBrand/:id' },//商品品牌
+        specificationOfGoods:{name: 'specificationOfGoods', url: '/specificationOfGoods/:id', parent: 'specificationOfGoods', default: '/specificationOfGoods/:id' },//商品品牌
 
         bill:{ name: 'bill', url: '/bill/billList/:id', parent: 'bill', default: '/bill/billList/:id' } , //模板2.0
         billDetails:{ name: 'billDetails', url: '/bill/billDetails/:id', parent: 'bill' } ,
@@ -77,16 +78,22 @@ export default new vuex.Store({
 
         commodityProperty:{ name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
         commodityPropertyDetails:{ name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
+        commodityPropertyModify:{ name: 'commodityPropertyModify', url: '/commodityProperty/commodityPropertyModify/:id', parent: 'commodityProperty' },
         commodityPropertyList:{ name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
 
         commercial:{ name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: 'commercial', default: '/commercial/commercialSpecification/:id' } , //商品规格
         commercialSpecification:{ name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' } ,
         commercialSpecificationDetails:{ name: 'commercialSpecificationDetails', url: '/commercial/commercialSpecificationDetails/:id', parent: 'commercial' } ,
+        commercialSpecificationModify:{ name: 'commercialSpecificationModify', url: '/commercial/commercialSpecificationModify/:id', parent: 'commercial' } ,
 
         commodityleimu:{ name: 'commodityleimu', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu', default: '/commodityleimu/commodityClassHeading/:id' } , //商品类目
         // { name: 'CommodityCategories', url: '/commodityleimu/CommodityCategories/:id', parent: 'commodityleimu' } ,
         CommodityCategoriesDetails:{ name: 'CommodityCategoriesDetails', url: '/commodityleimu/CommodityCategoriesDetails/:id', parent: 'commodityleimu' } ,
         commodityClassHeading:{ name: 'commodityClassHeading', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu' } ,
+
+        storeHouse:{ name: 'storeHouse', url: '/storeHouse/storeHouseList/:id', parent: 'storeHouse', default: '/storeHouse/storeHouseList/:id' } , //仓库演示
+        storeHouseModify:{ name: 'storeHouseModify', url: '/storeHouse/storeHouseModify/:id', parent: 'storeHouse' } ,
+        storeHouseList:{ name: 'storeHouseList', url: '/storeHouse/storeHouseList/:id', parent: 'storeHouse' } ,
 
         Property:{ name: 'Property', url: '/Property/classProperty/:id', parent: 'Property', default: '/Property/classProperty/:id' } , //类目属性规格
         classProperty:{ name: 'classProperty', url: '/Property/classProperty/:id', parent: 'Property' } ,
@@ -157,7 +164,7 @@ export default new vuex.Store({
         supplierClassify:{ name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
         supplierClassifyList: { name: 'supplierClassifyList', url: '/supplierClassify/supplierClassifyList/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
         supplierClassifyDetail: { name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyDetail/:id' },
-        supplierClassifyModify:{ name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
+        supplierClassifyModify: { name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyModify/:id' },
 //----------------------------------------------------------------------------路由数据-----------------------------------------------------------------------
 
         // activeRouter: [ //进入页面子路由，重定向路由。name,parent,defult不变,url将被重定向(name=parent)
@@ -729,16 +736,22 @@ export default new vuex.Store({
             {code:'fa fa-wrench',label:"",},
         ],
         tableName:'',//表格名称
-        commodityClassHeadingHttpApi:'',
+        // 商品类目
+        commodityClassHeadingHttpApi:'',//接口
+        commdityClassHeadingParams:'',
         commodityClassHeadingTable:[],//商品类目表格数据
-        commodityClassHeadingUpdateColArray:[],
+        commodityClassHeadingTotalCount:0,//总条数
         commodityClassHeadingSelection:[],//选中数据集合
-        commodityClassHeadingCurrentPage:1,
+        commodityClassHeadingCurrentPage:1,//当前分页
         commodityClassHeadingTotalPagination:10,//总页数
+        commodityClassHeadingEachPage:10,//每页显示条数
+        //商品品牌
         commodityBrandHttpApi:'',
+        commodityBrandParams:'',
         commodityBrandTable:[],//品牌表格数据
+        commodityBrandTableClone:[],//品牌表格数据clone
         commodityBrandNewCol:'',
-        commodityBrandIfDel:false,//是否删除
+        commodityBrandIfDel:true,//是否删除
         commodityBrandNewColArray:[],//表格内新增数据集合
         commodityBrandUpdateColArray:[],//表格内修改数据集合
         commodityBrandSelection:[],//选中数据集合
@@ -746,6 +759,8 @@ export default new vuex.Store({
         commodityBrandUpdateRowId:'',//修改的表格行ID
         commodityBrandCurrentPage:1,
         commodityBrandTotalPagination:10,//总页数
+        commodityBrandTotalCount:0,//总条数
+        commodityBrandEachPage:10,//每页显示条数
         queryparams:{},
         tableLoading:true,
         totalPage:10,//总页数
@@ -775,20 +790,35 @@ export default new vuex.Store({
         Init_Table(state,data){//表格数据模型
             state[state.tableName+'Table']=data;
         },
+        Init_TableClone(state,data){
+            state[state.tableName+'TableClone']=data;
+        },
         Init_pagination(state,data){//页码总数
             state[state.tableName+'TotalPagination']=data
         },
+        Init_TotalCount(state,data){//总条数
+            state[state.tableName+'TotalCount']=data
+        },
+        // Init_status(state,data){//状态下拉
+        //     state[state.tableName+'statusOptions']=data
+        // },
         setIfDel(state,data){//配置是否删除参数
             state[state.tableName+'IfDel']=data
         },
         setHttpApi(state,api){//api地址
             state[state.tableName+'HttpApi']=api;
         },
+        setHttpParams(state,api){//api请求参数
+            state[state.tableName+'Params']=api;
+        },
         setTableName(state,name){//对应表格名称
             state.tableName=name;
         },
         setCurrentPage(state,page){//当前页码
            state[state.tableName+'CurrentPage']=page;
+        },
+        setEachPage(state,page){//设置每页显示条数
+            state[state.tableName+'EachPage']=page;
         },
         setAddColArray(state,array){//重置行内新增集合
             state[state.tableName+'NewColArray']=array;
@@ -799,9 +829,9 @@ export default new vuex.Store({
         setTableSelection(state,array){//设置表格多选集合
             state[state.tableName+'Selection']=array;
         },
-        setUpdateRowId(state,id){//重置修改行id
-            state[state.tableName+'UpdateRowId']=id;
-        },
+        // setUpdateRowId(state,id){//重置修改行id
+        //     state[state.tableName+'UpdateRowId']=id;
+        // },
         add_col(state,data){//表格行内新增
             state[state.tableName+'Table'].unshift(data);
             state[state.tableName+'NewColArray'].unshift(data);
@@ -816,13 +846,15 @@ export default new vuex.Store({
     actions:{
         InitTable(context){//表格初始化
             axios.get(context.state[context.state.tableName+'HttpApi'],{
-                params:{
-                    SkipCount:(context.state[context.state.tableName+'CurrentPage']-1)*context.state.eachPage,
-                    MaxResultCount:context.state.eachPage
-                }
+                params:context.state[context.state.tableName+'Params']
+                // params:{
+                //     SkipCount:(context.state[context.state.tableName+'CurrentPage']-1)*context.state[context.state.tableName+'EachPage'],
+                //     MaxResultCount:context.state[context.state.tableName+'EachPage']
+                // }
             }).then(function(res){
                 context.commit('Init_Table',res.data.result.items);
-                let totalPage=Math.ceil(res.data.result.totalCount/context.state.eachPage);
+                context.commit('Init_TotalCount',Number(res.data.result.totalCount));
+                let totalPage=Math.ceil(res.data.result.totalCount/context.state[context.state.tableName+'EachPage']);
                 context.commit('Init_pagination',totalPage);
                 },function(res){
             })

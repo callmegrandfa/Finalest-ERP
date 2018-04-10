@@ -58,6 +58,36 @@
                 </span>
             </el-dialog>
         <!-- 右边部分 -->
+        <!-- dialog数据提交有误的详细提示信息 -->
+        <el-dialog :visible.sync="submitErrorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="$store.state.option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
         <el-col :span="ifWidth?19:24">
             <div class="leftBox">
                 <el-row class="h48">
@@ -78,7 +108,7 @@
                                             </div>
                                             <span class="btDetail">新增</span>
                                         </button>
-                                        <button @click="cancel" class="erp_bt bt_cancel" v-show="isEdit">
+                                        <button @click="cancel" :class="{erp_fb_bt:!isEdit}" class="erp_bt bt_cancel">
                                             <div class="btImg">
                                                 <img src="../../../static/image/common/bt_cancel.png">
                                             </div>
@@ -218,7 +248,7 @@
                                             <el-table-column  label="操作">
                                                 <template slot-scope="scope">
                                                     <el-button type="text"  @click="confirmDelThis(scope.row)" >删除</el-button>
-                                                    <el-button type="text"  @click="saveRow(scope.row)" >保存</el-button>
+                                                    <!-- <el-button type="text"  @click="saveRow(scope.row)" >保存</el-button> -->
                                                 </template>
                                             </el-table-column>
                                         </el-table>
@@ -239,7 +269,7 @@
             return {
                 ifWidth:true,
                 nodeId:-1,
-                isAdd:false,//是否新增
+                isAdd:true,//是否新增
                 isEdit:false,//是否编辑
                 activeNames:['1'],//折叠面板的默认激活状态
                 // --------------左侧搜索框数据
@@ -263,25 +293,51 @@
                 },
                 //---------------- 按钮组参数
                 addList:{//增加所需参数
-                    groupId: 0,
-                    unitCode: "",
-                    unitName: "",
-                    isBase: true,
-                    status: 1,
-                },
-                editList:{//修改所需参数
-                    "id": 0,
-                    "groupId": 0,
-                    "unitCode": "",
-                    "unitName": "",
-                    "isBase": true,
-                    "status": 0
+                    "unit_MainTable": {
+                        // "id": 0,
+                        // "groupId": 0,
+                        // "unitCode": "",
+                        // "unitName": "",
+                        // "isBase": true,
+                        // "status": 1,
                     },
-                 //---------------- 表单数据
+                    "unitConvert_ChildTable": [
+                        // {
+                        // "id": 0,
+                        // "groupId": 0,
+                        // "unitId": 0,
+                        // "destUnitId": 0,
+                        // "factor": 0,
+                        // "remark": "",
+                        // }
+                    ]
+                },
+
+                editList:{//修改所需参数
+                    "unit_MainTable": {
+                        // "id": 0,
+                        // "groupId": 0,
+                        // "unitCode": "",
+                        // "unitName": "",
+                        // "isBase": true,
+                        // "status": 1,
+                    },
+                    "unitConvert_ChildTable": [
+                        // {
+                        // "id": 0,
+                        // "groupId": 0,
+                        // "unitId": 0,
+                        // "destUnitId": 0,
+                        // "factor": 0,
+                        // "remark": "",
+                        // }
+                    ]
+                },
+                 //---------------- （主表）表单默认数据
                 formData:{
                     unitCode: "",
                     unitName: "",
-                    isBase: true,
+                    isBase: false,
                     status: 1,
                 },
                 // --------------列表数据
@@ -296,17 +352,22 @@
                     },
                 tabName:'1',
                 multipleSelection: {},//复选框选中数据
-                dialogUserConfirm:false,//确认提示框是否显示
+                // -----------------提示框数据
+                dialogUserConfirm:false,//确认是否删除提示框
+                submitErrorMessage:false,//数据提交有误提示框
+                detail_message_ifShow:false,//数据提交有误提示框详细信息
+                response:{
+                    details:'',
+                    message:'',
+                    validationErrors:[],
+                },
                 choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
-                // --------------树形控件与下拉框数据
+                // --------------从表树形控件与下拉框数据
                  treeNode:{
                     Id:'',
                     unitName:'',
                 },
                 countTree:[],
-                
-                
-
             }
         },
         created() {  
@@ -319,8 +380,7 @@
                 },
         },
         methods:{
-             // 提示信息
-            open(tittle, iconClass, className) {
+            open(tittle, iconClass, className) { // 提示信息
                 this.$notify({
                     position: "bottom-right",
                     iconClass: iconClass,
@@ -329,6 +389,21 @@
                     duration: 3000,
                     customClass: className
                 });
+            },
+            getErrorMessage(message,details,validationErrors){//获取提交错误的详细信息
+                let _this=this;
+                _this.response.message='';
+                _this.response.details='';
+                _this.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.response.validationErrors=validationErrors;
+                }
             },
             // ----------左侧搜索栏的收起与展开
             closeLeft: function() {
@@ -404,43 +479,61 @@
                        });
 
             },
-            // -------------------按钮组功能
+            // -------------------主表按钮组功能
             add(){//新增
                 let _this=this;
-               _this.isAdd=true;
-               _this.formData.unitCode='';
-               _this.formData.unitName='';
-
+                _this.isAdd=true;
+                _this.isEdit=false;
+                _this.nodeId=-1;
+                _this.formData.unitCode='';
+                _this.formData.unitName='';
+                _this.formData.isBase=false;
             },
-            save(){//按钮保存
+            save(){//主表按钮保存
                 let _this=this;
+                console.log(_this.isAdd);
+                console.log(_this.isEdit);
                 if (_this.isAdd) {//新增后保存
-                    _this.addList.unitCode=_this.formData.unitCode;
-                    _this.addList.unitName=_this.formData.unitName;
-                    _this.addList.isBase=_this.formData.isBase;
-                    _this.addList.status=_this.formData.status;
+                    console.log("新增后保存");
+                
+                    _this.addList.unit_MainTable=_this.formData;
+                    _this.addList.unitConvert_ChildTable=_this.tableList;
                     // console.log(_this.addList);
-                    _this.$axios.posts('/api/services/app/UnitManagement/Create',_this.addList)
+                    _this.$axios.posts('/api/services/app/UnitManagement/AggregateCreateOrUpdate',_this.addList)
                     .then(
-                        rsp=>{
+                        rsp=>{//success
+                            // console.log(rsp);
                             _this.isAdd=false;
                             _this.loadTree();
+                        },
+                        rsp=>{//error
+                            if(rsp && rsp!=''){ _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)};
+                            _this.submitErrorMessage=true;
                         }
                     )
                 }
                 if (_this.isEdit) {//修改后保存
-                    _this.editList.id=_this.nodeId;
-                    _this.editList.unitCode=_this.formData.unitCode;
-                    _this.editList.unitName=_this.formData.unitName;
-                    _this.editList.isBase=_this.formData.isBase;
-                    _this.editList.status=_this.formData.status;
+                console.log("修改后保存");
+                    _this.editList.unit_MainTable=_this.formData;
+                    _this.editList.unitConvert_ChildTable=_this.tableList;
+                    // _this.editList.id=_this.nodeId;
+                    // _this.editList.unitCode=_this.formData.unitCode;
+                    // _this.editList.unitName=_this.formData.unitName;
+                    // _this.editList.isBase=_this.formData.isBase;
+                    // _this.editList.status=_this.formData.status;
                     // console.log(_this.editList);
-                    _this.$axios.puts('/api/services/app/UnitManagement/Update',_this.editList)
+                    // console.log("修改了几个数据");
+                    _this.$axios.posts('/api/services/app/UnitManagement/AggregateCreateOrUpdate',_this.editList)
                     .then(
-                        rsp=>{
+                        rsp=>{//success
+                            // console.log(rsp);
                             _this.isEdit=false;
                             _this.loadTree();
-                        }
+                        },
+                        rsp=>{//error
+                           if(rsp && rsp!=''){ _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)};
+                            _this.submitErrorMessage=true;
+                        },
                     )
                 }               
             },
@@ -454,11 +547,12 @@
                         _this.loadTree();
                     }
                 )
-                
             },
-            edit(){//确认是否编辑
+            edit(){//确认是否编辑 
                 let _this=this;
-                _this.isEdit=true;
+                if (_this.nodeId!=-1) {
+                    _this.isEdit=true;
+                }
                 // console.log("值更改了");
             },
             cancel(){
@@ -490,23 +584,23 @@
                 _this.addRowList.unshift(newRow);
                 // console.log(_this.tableList);            
             },
-            saveRow(val){//保存所在行
-                // console.log("新增行数据");
-                // console.log(val);
-                 let _this=this;
-                 _this.addRowdata=val;
-                //  console.log( _this.addRowdata);
-                _this.$axios.posts('/api/services/app/UnitConvertManagement/Create',_this.addRowdata)
-                .then(
-                    rsp=>{
-                        // console.log(rsp.success);
-                        // console.log("表格行内保存成功");
-                        // console.log(rsp.result);
-                        _this.getNodeDetail();
-                    }
-                )
+            // saveRow(val){//保存所在行
+            //     // console.log("新增行数据");
+            //     // console.log(val);
+            //      let _this=this;
+            //      _this.addRowdata=val;
+            //     //  console.log( _this.addRowdata);
+            //     _this.$axios.posts('/api/services/app/UnitConvertManagement/Create',_this.addRowdata)
+            //     .then(
+            //         rsp=>{
+            //             // console.log(rsp.success);
+            //             // console.log("表格行内保存成功");
+            //             // console.log(rsp.result);
+            //             _this.getNodeDetail();
+            //         }
+            //     )
 
-            },
+            // },
             confirmDelThis(row){//确认单项删除
                 let _this=this;
                 // console.log("确认了吗");
@@ -524,7 +618,7 @@
                 },function(res){
                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
-                    _this.errorMessage=true;
+                    _this.submitErrorMessage=true;
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
@@ -589,16 +683,11 @@
                         $('#countTbale_confirmSelect').click()
                     })
             },
-           
-            
             // tab栏事件
             handleClick(tab, event){},
             filterNode(tab, event){},
         },
         mounted: function() {
-            // let content1 = document.getElementById("bg-white"); //设置高度为全屏
-            // let height1 = window.innerHeight - 123;
-            // content1.style.minHeight = height1 + "px";
         },
     }
 </script>

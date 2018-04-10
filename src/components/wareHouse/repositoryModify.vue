@@ -132,7 +132,6 @@
                             <el-select v-model="repositoryData.ouId"
                                        :class="{redBorder : validation.hasError('repositoryData.ouId')}"
                                        class="ouId"
-                                       @change="Modify"
                                        @focus="showErrprTipsSelect"
                                        placeholder="">
                                 <el-input placeholder="搜索..."
@@ -150,7 +149,7 @@
                                         @node-click="ouNodeClick"></el-tree> 
                                 <el-option v-show="false"
                                            :key="countOu.id" 
-                                           :label="countOu.ouFullname" 
+                                           :label="countOu.ouName" 
                                            :value="countOu.id"
                                            id="ou_confirmSelect"></el-option>
                             </el-select>
@@ -186,7 +185,6 @@
                             <label>助记码</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.mnemonic" 
-                                      @change="Modify()"
                                       @focus="showErrprTips"
                                       class="mnemonic"
                                       :class="{redBorder : validation.hasError('repositoryData.mnemonic')}"></el-input>
@@ -196,7 +194,6 @@
                             <label><small>*</small>仓库类型</label>
                             <el-select v-model="repositoryData.stockTypeId" 
                                        placeholder=""
-                                       @change="Modify()"
                                        @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('repositoryData.stockTypeId')}"
                                        class="stockTypeId">
@@ -212,7 +209,6 @@
                             <label>业务地区</label>
                             <el-select v-model="repositoryData.opAreaId" 
                                        placeholder=""
-                                       @change="Modify()"
                                        @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('repositoryData.opAreaId')}"
                                        class="opAreaId">
@@ -266,7 +262,6 @@
                             <label>负责人</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.manager"
-                                      @change="Modify()"
                                       @focus="showErrprTips"
                                       class="manager"
                                       :class="{redBorder : validation.hasError('repositoryData.manager')}"></el-input>
@@ -276,7 +271,6 @@
                             <label>电话</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.phone"
-                                      @change="Modify()"
                                       @focus="showErrprTips"
                                       class="phone"
                                       :class="{redBorder : validation.hasError('repositoryData.phone')}"></el-input>
@@ -286,7 +280,6 @@
                             <label>Email</label>
                             <el-input placeholder="" 
                                       v-model="repositoryData.email"
-                                      @change="Modify()"
                                       @focus="showErrprTips"
                                       class="email"
                                       :class="{redBorder : validation.hasError('repositoryData.email')}"></el-input>
@@ -295,7 +288,6 @@
                         <div class="bgcolor">
                             <label>传真</label>
                             <el-input v-model="repositoryData.fax"
-                                      @change="Modify()"
                                       @focus="showErrprTips"
                                       placeholder="" 
                                       class="fax"
@@ -305,7 +297,6 @@
                         <div class="bgcolor">
                             <label>地址</label>
                             <el-input v-model="repositoryData.stockAddress"
-                                      @change="Modify()"
                                       @focus="showErrprTips"
                                       placeholder="" 
                                       class="stockAddress"
@@ -317,7 +308,6 @@
                             <el-input placeholder="" 
                                       v-model="repositoryData.remark"
                                       @focus="showErrprTips"
-                                      @change="Modify()"
                                       class="remark"
                                       :class="{redBorder : validation.hasError('repositoryData.remark')}"></el-input>
                         </div>
@@ -326,7 +316,6 @@
                             <label><small>*</small>状态</label>
                             <el-select v-model="repositoryData.status" 
                                        placeholder=""
-                                       @change='Modify()'
                                        @focus="showErrprTipsSelect"
                                        :class="{redBorder : validation.hasError('repositoryData.status')}"
                                        class="status">
@@ -652,12 +641,12 @@
                 ouSearch:'',
                 selectOuProps:{
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
                 ouItem:{
                     id:'',
-                    ouFullname:'',
+                    ouName:'',
                 },
                 ouAr:[],//所属组织下拉框
                 //-----------------------
@@ -914,7 +903,7 @@
                         });
 
                         //加载完成拿回的下拉框的默认值
-                        self.ouItem.ouFullname = self.repositoryData.ouId_OuName;
+                        self.ouItem.ouName = self.repositoryData.ouId_OuName;
                         self.ouItem.id =  self.repositoryData.ouId;
 
                         self.adItem.areaName = self.repositoryData.adAreaId_AreaName;
@@ -1058,39 +1047,6 @@
                     })
                 }
                 
-                // if(self.updateList.length>0){
-                //     self.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
-                //         console.log(res);
-                //         self.open('修改地址信息成功','el-icon-circle-check','successERP');
-                //         self.updateList = [];
-                //     },function(res){
-                //         self.open('修改失败','el-icon-error','faildERP');
-                //         self.errorMessage = true;
-                //         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                //     })
-                    
-                // }
-                
-                // if(self.ifModify){
-                //     self.$validate().then(function(success){
-                //         if(success){
-                //             self.$axios.puts('/api/services/app/StockManagement/UpdateRepository',self.repositoryData).then(function(res){
-                //                 console.log(res);
-                //                 self.open('修改仓库信息成功','el-icon-circle-check','successERP');
-                //                 self.ifModify = false;
-                //             },function(res){
-                //                 self.open('修改失败','el-icon-error','faildERP');
-                //                 self.errorMessage = true;
-                //                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                //             })
-                //         }
-                //     })
-                // }
-
-                // if(self.addList.length>0){
-                //     self.createAddress();
-                // }
-                
             },
 
             saveAdd:function(){
@@ -1104,7 +1060,6 @@
                         self.updateList = [];
                         self.goDetail();
                     },function(res){
-                        self.open('修改失败','el-icon-error','faildERP');
                         self.errorMessage = true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
@@ -1120,7 +1075,6 @@
                                 self.open('修改仓库信息成功','el-icon-circle-check','successERP');
                                 self.ifModify = false;
                             },function(res){
-                                self.open('修改失败','el-icon-error','faildERP');
                                 self.errorMessage = true;
                                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             })
@@ -1136,23 +1090,9 @@
                     self.goDetail();
                 }
             },
-
-            // createAddress:function(){//保存新增的仓库地址信息
-            //     let self = this;
-                
-            //     this.$axios.posts('/api/services/app/StockAddressManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){//创建
-            //         console.log(res);
-            //         self.open('新增地址成功','el-icon-circle-check','successERP');
-            //         self.addList = [];
-            //         self.loadData();
-            //     })
-                
-            // },
             //------------------------------------------------------------
 
-            //---控制是否可编辑---------------------------------------        
             
-            //-------------------------------------------------------
 
             //---表格编辑-------------------------------------------------
             addCol:function(){//增行
@@ -1198,17 +1138,7 @@
                     }
                 }
 
-                // console.log(self.allDelArray)
-                // console.log(self.idArray)
-
                 if(self.allDelArray.ids.length>0){
-                    // if(self.idArray.ids.indexOf(undefined)!=-1){
-                    //     self.$message({
-                    //         type: 'warning',
-                    //         message: '新增数据请在行内删除'
-                    //     });
-                    //     return;
-                    // }
                     self.dialogDelConfirm = true;   
                     self.who = num;
                 } else{
@@ -1293,6 +1223,18 @@
                                 console.log(self.addList)
                             }
                         }
+                        // if(self.idArray.ids.length>0){
+
+                        // }
+                        self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
+                            self.open('删除地址成功','el-icon-circle-check','successERP');
+                            // self.loadAddData();
+                            self.dialogDelConfirm = false;
+                        },function(res){
+                            self.dialogDelConfirm = false;
+                            self.errorMessage = true;
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        })
                         // console.log()
                         // console.log(self.addList)
                         self.dialogDelConfirm = false;
@@ -1358,10 +1300,10 @@
                 self.updateList.push(self.checkedAr)
             },
             
-            Modify:function(){
-                let self = this;
-                self.ifModify = true;
-            },
+            // Modify:function(){
+            //     let self = this;
+            //     self.ifModify = true;
+            // },
             //------------------------------------------------------
 
             //---修改返回\取消提示-----------------------------------------
@@ -1382,9 +1324,6 @@
                     self.backCancel = 2;
                     $('.tipsWrapper').css({display:'none'})
                 }
-                
-                
-                // }
             },
             sureDoing:function(){
                 let self = this;
@@ -1481,7 +1420,7 @@
                 self.opItem.areaName = '';
                 
                 self.ouItem.id = data.id;
-                self.ouItem.ouFullname = data.ouFullname;
+                self.ouItem.ouName = data.ouName;
                 self.$nextTick(function(){
                     $('#ou_confirmSelect').click()
                 })
@@ -1519,7 +1458,7 @@
             },
             ouFilterNode(value, data) {
                 if (!value) return true;
-                    return data.ouFullname.indexOf(value) !== -1;
+                    return data.ouName.indexOf(value) !== -1;
             },
             opFilterNode(value, data) {
                 console.log(value)
@@ -1722,8 +1661,12 @@
 .res-modify .display_block{
     margin-bottom:5px;
 }
+.res-modify .area{
+    width:510px;
+    margin-right:0px;
+}
 .el-select.areaDrop,.el-input.areaEntry{
-    width: 100px;
+    width: 136px;
 }
 .areaDrop input,.areaEntry input{
     border: none!important;
