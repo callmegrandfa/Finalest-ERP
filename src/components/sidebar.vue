@@ -138,6 +138,11 @@ export default {
                      {name:'仓库资料',address:'repository'}, 
                 ]
             },{
+                name:'仓库资料演示',
+                thirdInfo:[
+                     {name:'仓库资料演示',address:'storeHouse'}, 
+                ]
+            },{
                 name:'系统字典',
                 thirdInfo:[
                      {name:'系统字典',address:'dictionaryList'}, 

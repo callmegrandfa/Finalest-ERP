@@ -347,11 +347,11 @@ import Btm from '../../base/btm/btm'
             },
             classTree:{
                  handler: function (val, oldVal) {
-                    if(val.length>0){
-                        this.treeNode.categoryParentid=val[0].id;
-                        this.treeNode.categoryName=val[0].categoryName;
-                        this.addItem.categoryParentid=val[0].id;
-                    }
+                    // if(val.length>0){
+                    //     this.treeNode.categoryParentid=val[0].id;
+                    //     this.treeNode.categoryName=val[0].categoryName;
+                    //     this.addItem.categoryParentid=val[0].id;
+                    // }
                 },
                 deep:true
             }
@@ -409,9 +409,10 @@ import Btm from '../../base/btm/btm'
                 }else{
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
                         _this.changeTimes=0;
+                        console.log(res);
                         _this.updateId=res.result.id;
                         _this.treeNode.categoryParentid=res.result.categoryParentid;
-                        _this.treeNode.categoryName=res.result.categoryName;
+                        _this.treeNode.categoryName=res.result.categoryParentName;
                         _this.addItem.categoryParentid=res.result.categoryParentid
                         _this.addItem.categoryCode=res.result.categoryCode;
                         _this.addItem.categoryName=res.result.categoryName;
@@ -440,7 +441,6 @@ import Btm from '../../base/btm/btm'
                     .then(function(res){
                         _this.classTree=res;
                         _this.InitCategoryid();
-                        console.log(res);
                         _this.loadIcon();
                         _this.treeLoading=false;
                 },function(res){
@@ -496,20 +496,20 @@ import Btm from '../../base/btm/btm'
                     let updateData=_this.addItem;
                    // _this.$set(updateData, 'id', _this.updateId);
                     _this.$axios.puts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Update',updateData).then(function(res){
-                        _this.InitModify();
+                        //_this.InitModify();
                         _this.InitCategoryid();
                         _this.validation.reset();
                         _this.isEdit=true;
-                        _this.bottonbox.botton[2].show=true;//修改按钮
-                        _this.bottonbox.botton[3].show=false;//取消按钮
+                        _this.bottonbox.botton[2].disabled=true;//取消按钮
                         _this.open('修改商品类目成功','el-icon-circle-check','successERP'); 
                         return;   
                     }); 
                 }else{
                     _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
-                        _this.InitModify();
+                        //_this.InitModify();
                         _this.InitCategoryid();
                         _this.InitData();
+                        _this.bottonbox.botton[2].disabled=true;//取消按钮
                         _this.validation.reset();
                         _this.open('保存商品类目成功','el-icon-circle-check','successERP');    
                     }); 
