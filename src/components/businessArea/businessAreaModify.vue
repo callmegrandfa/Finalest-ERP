@@ -39,11 +39,12 @@
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_ou"
+                            :render-content="renderContent_ouId"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
+                            <!-- <el-option class="select_tree_option" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id" :date="item_ou.id">
                             </el-option> -->
-                            <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                            <el-option class="select_tree_option" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -78,13 +79,12 @@
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_area"
+                            :render-content="renderContent_areaParentId"
                             >
                             </el-tree>
-                            <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
+                            <el-option class="select_tree_option" :key="item_area.id" :label="item_area.areaName" :value="item_area.id" :date="item_area.id">
                             </el-option>
-                             <!-- <el-option v-show="false" :label="item_area_no.areaName" :value="item_area_no.id">
-                            </el-option> -->
-                            <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                            <!-- <el-option class="select_tree_option" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
                             </el-option> -->
                         </el-select>
                     </div>
@@ -367,7 +367,7 @@
     created () {
         let _this=this;
         _this.getSelectData();
-        _this.loadTree();  
+        // _this.loadTree();  
         _this.getData()
     },
     watch: {
@@ -434,7 +434,7 @@
                     _this.selectTree_area=[]
                 }else{
                     _this.selectTree_area=res.result;
-                    _this.loadIcon();
+                    _this.loadIcon('areaParentId',_this.addData.areaParentId);
                 }
                 
             },function(res){
@@ -468,6 +468,7 @@
                 _this.item_area.id=res.result.areaParentId;
                 _this.item_area.areaName=res.result.areaParentId_AreaName;
                 _this.getAreaTree(res.result.ouId)
+                _this.loadTree('ouId',res.result.ouId);  
             },function(res){    
 
             })  
@@ -633,7 +634,7 @@
                 }
             });
         },
-        loadTree(){
+        loadTree(selectName,key){
            let _this=this;
             //地区
             // _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:_this.addData.OuId})
@@ -646,19 +647,22 @@
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon();
+                _this.loadIcon(selectName,key);
             },function(res){
             })
         },
-        loadIcon(){
+        loadIcon(selectName,key){
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
+                $('.'+selectName+' .el-tree-node__label').each(function(){
                     if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
                         $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                    }
+                    if($(this).attr('data-id')==key){ 
+                        $(this).click()
                     }
                 })
             })
@@ -668,11 +672,15 @@
             // _this.item_ou.id=data.id;
             // _this.item_ou.ouName=data.ouName;
             // _this.$nextTick(function(){
-            //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-            // })
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({
+            //     top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+            // }).click();
+        // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 if($(this).attr('date')==data.id){
-                    $(this).click()
+                    $(this).css({
+                        top:$(self.$el).offset().top - $(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+                    }).click()
                 }
             })
         },
@@ -686,14 +694,34 @@
                 _this.item_area.id=data.id;
                 _this.item_area.areaName=data.areaName;
                 _this.$nextTick(function(){
-                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({
+                        top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+                    }).click();
                 })
-                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //  $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 //     if($(this).attr('date')==data.id){
-                //         $(this).click()
+                //         $(this).css({
+                            //     top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,
+                            // }).click()
                 //     }
                 // })
             }
+        },
+        renderContent_ouId(h, { node, data, store }){
+            return (
+                <span class="el-tree-node__label" data-id={data.id}>
+                    {data.ouName}
+                </span>
+            );
+        },
+        renderContent_areaParentId(h, { node, data, store }){
+            console.log(data)
+            return (
+                
+                <span class="el-tree-node__label" data-id={data.id}>
+                    {data.areaName}
+                </span>
+            );
         },
     }
 

@@ -9,7 +9,7 @@
                     <span class="btDetail">返回</span>
                 </button>
                 
-              <button @click="save" class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button @click="save" plain class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                     <div class="btImg">
                       <img src="../../../static/image/common/bt_save.png">
                     </div>
@@ -20,7 +20,7 @@
                   </div>
                   <span class="btDetail">取消</span>
               </button>
-              <button @click="saveAdd"class="erp_bt bt_saveAdd":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button @click="saveAdd" plain class="erp_bt bt_saveAdd":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
                 </div>
@@ -51,7 +51,7 @@
                                    clearable filterable
                                    :class="{redBorder : validation.hasError('customerClassData.classParentId')}" 
                                    placeholder=""            
-                                   @change='Modify()'
+                                   @change='Modify'
                                    v-model="customerClassData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -84,7 +84,7 @@
                         <label><small>*</small>客户分类编码</label>
                         <el-input class="classCode" 
                                   placeholder=""
-                                  @change='Modify()'
+                                  @change='Modify'
                                   :class="{redBorder : validation.hasError('customerClassData.classCode')}" 
                                   v-model="customerClassData.classCode"></el-input>
                     </div>
@@ -100,7 +100,8 @@
                                    :class="{redBorder : validation.hasError('customerClassData.className')}" 
                                    v-model="customerClassData.className"
                                    placeholder=""
-                                   @change='Modify()'></el-input>
+                                   @change='Modify'>
+                         </el-input>
                     </div>
                     <div class="error_tips">{{ validation.firstError('customerClassData.className') }}</div>
                 </div>    
@@ -116,7 +117,7 @@
                                   v-model="customerClassData.remark"
                                   type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 4}"
-                                  @change='Modify()'></el-input>
+                                  @change='Modify'></el-input>
                     </div>
                     <div class="error_tips">{{ validation.firstError('customerClassData.remark') }}</div>
                 </div>       
@@ -134,7 +135,9 @@
                             <el-option v-for="item in status" 
                                        :key="item.itemValue" 
                                        :label="item.itemName" 
-                                       :value="item.itemValue"></el-option>
+                                       :value="item.itemValue"
+                                       @change='Modify'>
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('customerClassData.status') }}</div>
@@ -149,7 +152,7 @@
                                   :class="{redBorder : validation.hasError('customerClassData.createdTime')}" 
                                   v-model="customerClassData.createdBy"
                                   :autosize="{ minRows: 4, maxRows: 4}"
-                                   @change='Modify()'></el-input>
+                                   @change='Modify'></el-input>
                         </el-input>
                     </div>
                    
@@ -165,7 +168,7 @@
                                   format="yyyy-MM-dd"
                                   value-format="yyyy-MM-dd" 
                                   :disabled="isEdit" 
-                                   @change='Modify()'></el-input>
+                                   @change='Modify'></el-input>
                                   placeholder="">
                          </el-date-picker>
                     </div>
@@ -253,7 +256,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -269,8 +272,8 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->  
@@ -297,11 +300,24 @@ export default {
   watch: {
     parentSearch(val) {
       this.$refs.tree.filter(val);
+    },
+    customerClassData:{
+        handler: function (val, oldVal) {
+            let self = this;
+            if(!self.firstModify){
+                self.firstModify = !self.firstModify;
+            }else{
+                self.ifModify = true;
+            }
+        },
+        deep: true,
     }
+
   },
   data() {
     return {
       ifModify: false, //判断是否修改过
+      firstModify:false,//进入页面数据改变一次
       isEdit: true, //判断是否要修改
       //---上级客户树--------
       selectParentTree: [], //选择上级客户分类
@@ -523,12 +539,11 @@ export default {
       }
   },
     //------------------保存修改---------------------------
-    save() {
-      
+    save() {                                                                                                                                                                                                                                                                                                                                                                                                                               
       let self = this;
         self.customerClassData.id = self.$route.params.id;
         self.$validate().then(function(success) {
-          if (success) {console.log(self.customerClassData)
+          if (success) {
             self.$axios
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(

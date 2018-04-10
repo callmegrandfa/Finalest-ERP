@@ -138,7 +138,8 @@
                                         @current-change="handleCurrentChange"
                                         :current-page="pageIndex"
                                         :page-size="oneItem"
-                                        :total="totalItem"></el-pagination>   
+                                        :total="totalItem">
+                        </el-pagination>   
                     </el-col>
                 </el-row>
 
@@ -173,7 +174,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -189,8 +190,8 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                 <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->
