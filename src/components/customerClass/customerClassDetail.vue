@@ -47,7 +47,7 @@
             <el-col :span="24" class="pt15">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级客户分类</label>
+                        <label>上级客户分类</label>
                         <el-select class="classParentId"
                                    clearable filterable 
                                    :class="{redBorder : validation.hasError('addData.classParentId')}" 
@@ -311,7 +311,7 @@
         },
      validators: {
       'addData.classParentId': function (value) {//上级客户分类，父id
-         return this.Validator.value(value).required().integer();
+         return this.Validator.value(value).integer();
       },
       'addData.classCode': function (value) {//客户分类编码
          return this.Validator.value(value).required().maxLength(20);

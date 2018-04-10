@@ -298,7 +298,7 @@ export default {
     },
     "dialogData.classParentId": function(value) {
       //上级客户分类
-      return this.Validator.value(value).required().integer();
+      return this.Validator.value(value).integer();
     },
     "dialogData.remark": function(value) {
       //备注
@@ -486,25 +486,6 @@ export default {
         remark: "", //备注
         status: "" //启用状态
       };
-    },
-    //----------------------------------------------------------------
-
-    //---修改---------------------------------------------------------
-    modify: function(row) {
-      // console.log(row)
-      let self = this;
-      self.tittle = "修改";
-      self.dialogFormVisible = true;
-      self.dialogData.id = row.id;
-      self.dialogData.groupId = row.groupId;
-      // self.dialogData.ouId = row.ouId;
-      self.dialogData.classCode = row.classCode;
-      self.dialogData.className = row.className;
-      // self.dialogData.director = row.director;
-      // self.dialogData.phone = row.phone;
-      self.dialogData.classParentId = row.classParentId;
-      self.dialogData.status = row.status;
-      // console.log(self.dialogData);
     },
     //----------------------------------------------------------------
 
