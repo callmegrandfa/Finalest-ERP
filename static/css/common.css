@@ -343,6 +343,14 @@ table .el-input__icon{
 .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
   background-color: #39ca7757;
 }
+/* .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content .el-tree-node__label{
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+}
+.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content .el-tree-node__label:hover{
+  background-color: #39ca7757;
+} */
 .el-tree-node__label,
 .el-tree__empty-text{
   font-size: 12px;
@@ -1113,7 +1121,12 @@ end-placeholder="结束日期">
 .selectSearch input{
   height: 35px;
 }
-
+.select_tree_option{
+  opacity: 0;
+  position: absolute;
+  top:0;
+  height:0;
+}
  
  .bgcolor.bgLongWidth{
   margin-right: 0;

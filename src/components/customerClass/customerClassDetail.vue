@@ -9,7 +9,7 @@
                     <span class="btDetail">返回</span>
                 </button>     
 
-                <button @click="save" class="erp_bt bt_save">
+                <button @click="save" plain class="erp_bt bt_save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
@@ -21,7 +21,7 @@
                     </div>
                     <span class="btDetail">取消</span>
                 </button>
-                <button @click='saveAdd' class="erp_bt bt_saveAdd">
+                <button @click='saveAdd'plain class="erp_bt bt_saveAdd">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
@@ -47,11 +47,12 @@
             <el-col :span="24" class="pt15">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级客户分类</label>
+                        <label>上级客户分类</label>
                         <el-select class="classParentId"
                                    clearable filterable 
                                    :class="{redBorder : validation.hasError('addData.classParentId')}" 
                                    placeholder=""
+                                   @change="isUpdate"
                                    v-model="addData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -251,8 +252,8 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -311,7 +312,7 @@
         },
      validators: {
       'addData.classParentId': function (value) {//上级客户分类，父id
-         return this.Validator.value(value).required().integer();
+         return this.Validator.value(value).integer();
       },
       'addData.classCode': function (value) {//客户分类编码
          return this.Validator.value(value).required().maxLength(20);
@@ -408,8 +409,8 @@
         //---保存---------------------------------------------
            save(){
             let self=this; 
-            self.$validate().then(function (success) {
-                if(success) {   
+                self.$validate().then(function (success) {
+                if (success) {
                    self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){  
                         // console.log(res.result);
                         self.addData.id=res.result.id;

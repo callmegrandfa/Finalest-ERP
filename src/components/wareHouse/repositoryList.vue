@@ -167,9 +167,6 @@
                             </el-table-column>
                             <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
-                                    <!-- <span>{{scope.row}}</span> -->
-                                    <!-- <el-button v-on:click="handleEdit(scope.$index)" type="text"  size="small">修改</el-button> -->
-                                    <!-- <el-button v-show='scope.$index==ifSave' v-on:click="handleSave(scope.$index)" type="text" size="small">保存</el-button>  -->
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
                                     <el-button v-on:click="delRow(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                                 </template>
@@ -298,10 +295,10 @@
             getAllList:function(){//获取所有仓库列表
                 let self = this; 
 
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
-                    self.allList = res.data;
-                    self.total = res.total;
+                    self.allList = res.items;
+                    self.total = res.totalCount;
                     self.totalPage = Math.ceil(res.total/self.eachPage)
                 },function(res){
                     console.log(res)
