@@ -491,8 +491,8 @@
             },
             save(){//主表按钮保存
                 let _this=this;
-                console.log(_this.isAdd);
-                console.log(_this.isEdit);
+                // console.log(_this.isAdd);
+                // console.log(_this.isEdit);
                 if (_this.isAdd) {//新增后保存
                     console.log("新增后保存");
                 
