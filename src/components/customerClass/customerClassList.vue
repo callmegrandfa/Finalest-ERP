@@ -138,7 +138,8 @@
                                         @current-change="handleCurrentChange"
                                         :current-page="pageIndex"
                                         :page-size="oneItem"
-                                        :total="totalItem"></el-pagination>   
+                                        :total="totalItem">
+                        </el-pagination>   
                     </el-col>
                 </el-row>
 
@@ -173,7 +174,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -189,8 +190,8 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                 <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -552,6 +553,7 @@ export default {
         self.$axios .posts( "/api/services/app/ContactClassManagement/BatchDelete",self.idArray )
               .then(
                 function(res) {
+                  console.log(res);
                   // self.loadTree() ;//删除成功加载树形节点
                    self.open("删除成功", "el-icon-circle-check", "successERP");
                    self.loadTableData();
@@ -562,9 +564,13 @@ export default {
                   self.dialogUserConfirm=false;
                 },
                 function(res) {
-                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                     _this.errorMessage=true;
-                     _this.dialogUserConfirm=false;
+                    if(res && res!=''){ 
+                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                     self.errorMessage=true;
+                     self.dialogUserConfirm=false;
+                     self.idArray = {
+                    ids: [],
+                  };
                     //  _this.open('删除失败','el-icon-error','faildERP');
                 }
               );
@@ -625,6 +631,12 @@ export default {
 </script>
 
 <style scoped>
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
+    width: 100%;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+    color: #ccc;
+}
 .error_tips {
   height: 15px;
   line-height: 15px;

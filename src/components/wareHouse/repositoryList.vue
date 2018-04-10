@@ -295,10 +295,10 @@
             getAllList:function(){//获取所有仓库列表
                 let self = this; 
 
-                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,Start:(self.page-1)*self.eachPage,Length:self.eachPage}).then(function(res){
+                this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
-                    self.allList = res.data;
-                    self.total = res.total;
+                    self.allList = res.items;
+                    self.total = res.totalCount;
                     self.totalPage = Math.ceil(res.total/self.eachPage)
                 },function(res){
                     console.log(res)

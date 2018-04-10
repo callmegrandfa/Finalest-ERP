@@ -416,7 +416,7 @@
                         </el-col>
                         <el-col :span="24" class="transfer_footer">
                             <el-col :span="18">
-                                <span>总共有{{totalItemLeft}}条数据</span>
+                                <span>共{{totalPageLeft}}页</span>
                             </el-col>
                             <el-col :span="6">
                                 <el-button class="el_transfer" :disabled="leftDownBtn" @click="pageDownLeft" type="primary" icon="el-icon-arrow-left" round></el-button>
@@ -460,7 +460,7 @@
                     </el-col>
                     <el-col :span="24" class="transfer_footer">
                         <el-col :span="18">
-                            <span>总共有{{totalItemRight}}条数据</span>
+                            <span>共{{totalPageRight}}页</span>
                         </el-col>
                         <el-col :span="6">
                             <el-button class="el_transfer" :disabled="rightDownBtn" @click="pageDownRight" type="primary" icon="el-icon-arrow-left" round></el-button>
@@ -563,7 +563,7 @@
           "ouId": "",
           "status": 1,
           "userType": "",
-          "languageId": "",
+          "languageId": 9,
           "isReg": false,
           "remark": "",
           "roleCodes": []
@@ -711,6 +711,7 @@
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+                // console.log(res);
             // 默认用户业务组织
                 _this.addData={
                     "userCode": "",
@@ -730,6 +731,11 @@
                 _this.addData.effectiveEnd='';
                 _this.dateRange=[];
                 _this.validation.reset();
+            })
+             _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
+                //  console.log(res)
+            // 语种
+                _this.selectData.languageId=res.result.items;
             })
         },
         getSelectData(){

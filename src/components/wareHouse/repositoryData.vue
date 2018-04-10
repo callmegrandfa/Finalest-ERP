@@ -54,7 +54,7 @@
                     <el-col :span="24" class="getPadding">
                         <div class="tipsWrapper">
                             <div class="errorTips">
-                                <p class="msgDetail">
+                                <p class="msgDetail">错误提示：
                                     <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.ouId')}">
                                         所属组织{{ validation.firstError('createRepositoryParams.stock_MainTable.ouId') }},
                                     </span>
