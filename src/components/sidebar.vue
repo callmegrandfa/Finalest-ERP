@@ -176,7 +176,7 @@ export default {
                     {name:'商品规格',address:'specificationOfGoods'},
                     {name:'商品规格组',address:'specification'},
                     {name:'类目属性规格(平台)列表',address:'classPropertyList'},
-                    {name:'商品档案',address:'Record'},
+                    {name:'商品档案',address:'goodsFiles'},
                 ]
             },{
                 name:'基础资料',

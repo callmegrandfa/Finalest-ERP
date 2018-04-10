@@ -620,12 +620,6 @@
 .pt15{
     padding-top: 15px;
 }
-/* .dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
-    width: 100%;
-}
-.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
-    color: #ccc;
-} */
 .customerClassDetail  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;

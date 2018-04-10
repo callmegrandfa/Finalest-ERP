@@ -553,6 +553,7 @@ export default {
         self.$axios .posts( "/api/services/app/ContactClassManagement/BatchDelete",self.idArray )
               .then(
                 function(res) {
+                  console.log(res);
                   // self.loadTree() ;//删除成功加载树形节点
                    self.open("删除成功", "el-icon-circle-check", "successERP");
                    self.loadTableData();
@@ -563,9 +564,13 @@ export default {
                   self.dialogUserConfirm=false;
                 },
                 function(res) {
-                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                     _this.errorMessage=true;
-                     _this.dialogUserConfirm=false;
+                    if(res && res!=''){ 
+                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                     self.errorMessage=true;
+                     self.dialogUserConfirm=false;
+                     self.idArray = {
+                    ids: [],
+                  };
                     //  _this.open('删除失败','el-icon-error','faildERP');
                 }
               );
@@ -626,6 +631,12 @@ export default {
 </script>
 
 <style scoped>
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
+    width: 100%;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+    color: #ccc;
+}
 .error_tips {
   height: 15px;
   line-height: 15px;

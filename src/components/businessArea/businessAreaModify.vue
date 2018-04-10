@@ -367,7 +367,7 @@
     created () {
         let _this=this;
         _this.getSelectData();
-        // _this.loadTree();  
+        _this.loadTree();  
         _this.getData()
     },
     watch: {
@@ -468,7 +468,7 @@
                 _this.item_area.id=res.result.areaParentId;
                 _this.item_area.areaName=res.result.areaParentId_AreaName;
                 _this.getAreaTree(res.result.ouId)
-                _this.loadTree('ouId',res.result.ouId);  
+                // _this.loadTree('ouId',res.result.ouId);  
             },function(res){    
 
             })  
@@ -634,7 +634,7 @@
                 }
             });
         },
-        loadTree(selectName,key){
+        loadTree(){
            let _this=this;
             //地区
             // _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:_this.addData.OuId})
@@ -647,23 +647,23 @@
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon(selectName,key);
+                _this.loadIcon();
             },function(res){
             })
         },
-        loadIcon(selectName,key){
+        loadIcon(){
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
-                $('.'+selectName+' .el-tree-node__label').each(function(){
+                $('.el-tree-node__label').each(function(){
                     if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
                         $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                     }
-                    if($(this).attr('data-id')==key){ 
-                        $(this).click()
-                    }
+                    // if($(this).attr('data-id')==key){ 
+                    //     $(this).click()
+                    // }
                 })
             })
         },
@@ -715,9 +715,7 @@
             );
         },
         renderContent_areaParentId(h, { node, data, store }){
-            console.log(data)
             return (
-                
                 <span class="el-tree-node__label" data-id={data.id}>
                     {data.areaName}
                 </span>

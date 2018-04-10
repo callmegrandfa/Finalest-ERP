@@ -4,26 +4,52 @@
             <el-col :span="ifWidth?5:0" v-show="ifWidth" class="search-container">
                 <el-row class="h48 pl15">
                     <el-col :span="18" class="btn-for-search">
-                        <img src="../../../static/image/common/search_btn.png">
+                        <img src="../../../../static/image/common/search_btn.png">
                         <span>查询</span>
                     </el-col>
                     <el-col :span="2" :offset="4">
                         <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
-
-                <!-- <div class="mt20 bgcolor smallBgcolor">
-                    <label><small>*</small>组织类型</label>
-                    <el-select clearable  v-model="searchData.OuType">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            <span style="float: left">{{ item.label }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
-                        </el-option>
-                    </el-select>
-                </div> -->
-                <div class="mt20 bgcolor smallBgcolor"><label>角色编码</label><el-input v-model="searchData.roleCode" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>角色名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
+                <div class="mt20 bgcolor smallBgcolor"><label>商品编码</label><el-input v-model="searchData.roleCode" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>商品名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
+                    <label>上市时间(起)</label>
+                     <el-date-picker
+                    format="yyyy.MM.dd"
+                    type="date" 
+                    align="center"></el-date-picker>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>上市时间(终)</label>
+                    <el-date-picker
+                    format="yyyy.MM.dd"
+                    type="date" 
+                    align="center"></el-date-picker>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>类目</label>
+                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
+                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>品牌</label>
+                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
+                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>状态</label>
+                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
+                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
+                <!-- <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
                     <el-select clearable  v-model="searchData.ouId" placeholder="">
                         <el-input
@@ -47,7 +73,7 @@
                         <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option>
                     </el-select>
-                </div>
+                </div> -->
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -58,23 +84,22 @@
                 <el-row class="h48 ">
                     <el-col :span="ifWidth?0:2" class="search-block">
                         <div @click="openLeft">
-                            <img src="../../../static/image/common/search_btn.png">
+                            <img src="../../../../static/image/common/search_btn.png">
                             <span>查询</span>
                             <span class='open-search'>+</span>
                         </div>
                     </el-col>
                     <el-col :span="ifWidth?24:22" class="pt5">
-                        <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
-                        <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                        <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
+                        <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                        <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
                         <button class="erp_bt bt_out bt_width">
-                            <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
+                            <div class="btImg"><img src="../../../../static/image/common/bt_inOut.png"></div>
                             <span class="btDetail">导出</span>
-                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                            <div class="btRightImg"><img src="../../../../static/image/common/bt_down_right.png"></div>
                         </button>
-                        <button class="erp_bt bt_start"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                        <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>   
+                        <button class="erp_bt bt_start"><div class="btImg"><img src="../../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
+                        <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>   
                               
                         <div class="search_input_group">
                             <div class="search_input_wapper"  @keyup.enter="submitSearch">
@@ -137,17 +162,16 @@
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
                             <el-table-column type="selection" fixed="left"></el-table-column>
-                            <el-table-column prop="roleCode" label="角色编码" fixed="left">
+                            <el-table-column prop="roleCode" label="商品编码" fixed="left">
                                 <template slot-scope="scope">
                                     <el-button type="text"  @click="see(scope.row)">{{scope.row.roleCode}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="displayName" label="角色名称" fixed="left">
+                            <el-table-column prop="displayName" label="商品名称" fixed="left">
                                 <template slot-scope="scope">
                                     <el-button type="text"  @click="see(scope.row)">{{scope.row.displayName}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="ouName" label="所属组织"></el-table-column>
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
@@ -155,7 +179,10 @@
                                     <span v-else>{{scope.row.statusTValue}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="创建时间" width="160">
+                            <el-table-column prop="ouName" label="商品条码"></el-table-column>
+                            <el-table-column prop="ouName" label="品牌"></el-table-column>
+                            <el-table-column prop="ouName" label="类目"></el-table-column>
+                            <el-table-column label="上市日期" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker
                                     format="yyyy.MM.dd"
@@ -167,8 +194,8 @@
                             </el-table-column>
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
+                                     <el-button type="text"  @click="see(scope.row)" >查看</el-button>
                                      <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
-                                    <el-button type="text"  @click="see(scope.row)" >查看</el-button>
                                     <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
                                 </template>
                             </el-table-column>
@@ -555,7 +582,7 @@
     cursor: pointer;
 }
 .open-search{
-    background-image: url(../../../static/image/common/btn-circle.png);
+    background-image: url(../../../../static/image/common/btn-circle.png);
     background-repeat: no-repeat;
     background-position: center;
     color: #E3E3E3;
