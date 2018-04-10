@@ -360,7 +360,7 @@
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>上级业务单元</label>
+                    <label>上级业务单元</label>
                     <el-select clearable class="ouParentid"
                      
                     @change="isUpdate"
@@ -376,6 +376,7 @@
                         <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTree"
+                        :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
                         default-expand-all
@@ -411,7 +412,7 @@
                 <div class="bgcolor">
                     <label><small>*</small>启用年月</label>
                     <el-date-picker 
-                     
+                    disabled 
                     @change="isUpdate"
                     @focus="showErrprTipsRangedate"
                     :class="{redBorder : validation.hasError('addData.accStartMonth')}"
@@ -460,6 +461,7 @@
                     </el-select> -->
 
                     <el-select class="companyOuId"
+                        clearable filterable
                         @change="isUpdate"
                         @focus="showErrprTipsSelect"
                         :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -473,6 +475,7 @@
                             <el-tree
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :data="selectTreeCompany"
+                            :highlight-current="true"
                             :props="selectPropsCompany"
                             node-key="id"
                             default-expand-all
@@ -602,7 +605,7 @@
                             class="ouParentid" 
                             v-model="basCompany.ouParentid">
                                 <el-option 
-                                    v-if="!basCompany.isGroupCompany"
+                                v-if="!basCompany.isGroupCompany"
                                 v-for="item in selectData.companys" 
                                 :key="item.id" 
                                 :label="item.ouName" 
@@ -1069,7 +1072,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -1091,27 +1094,23 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
-        <!-- dialog -->                                                    
+        <!-- dialog -->                                         
 </div>
 </template>
 
@@ -1236,10 +1235,10 @@ export default({
          return this.Validator.value(value).required().maxLength(50);
       },
       'addData.ouParentid': function (value) {//上级业务单元
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).integer();
       },
       'addData.accCchemeId': function (value) {//会计方案
-         return this.Validator.value(value).required().maxLength(50);
+         return this.Validator.value(value).required().integer();
       },
       'addData.accStartMonth': function (value) {//启用年月
          return this.Validator.value(value).required();
@@ -1536,6 +1535,37 @@ export default({
                     "id":res.result.id,
                     "ouTypes":res.result.ouTypes
                 };
+                // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(resp){ 
+                // // 上级业务单元(所属组织)
+                //     let flag=false
+                //     _this.selectData.ouParentid=resp.result;
+                //     $.each(resp.result,function(index,value){
+                //         console.log(value)
+                //         if(res.result.ouParentid==value.id){
+                //             flag=true
+                //         }
+                //     })
+                //     if(!flag){
+                //         _this.addData.ouParentid=''
+                //     }else{
+                //         _this.addData.accCchemeId=res.result.accCchemeId
+                //     }
+                // })
+                // _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(resp){ 
+                // // 会计期间方案
+                //     _this.selectData.accCchemeId=resp.result.items;
+                //      let flag=false
+                //     $.each(resp.result,function(index,value){
+                //         if(res.result.accCchemeId==value.id){
+                //             flag=true
+                //         }
+                //     })
+                //     if(!flag){
+                //         _this.addData.accCchemeId=''
+                //     }else{
+                //         _this.addData.accCchemeId=res.result.accCchemeId
+                //     }
+                // })
                 _this.change_ouType()
                 // _this.basOuTypes=res.result.ouTypes;
              
@@ -1798,6 +1828,7 @@ export default({
         },
         Cancel(){
             let _this=this;
+             $('.tipsWrapper').css({display:'none'})
             _this.validation.reset();
             _this.getData();
             _this.update=false;
@@ -1939,9 +1970,14 @@ export default({
                 regtime:''//公司成立时间
             };
         },
-        getStartMonth(){
+        getStartMonth(){//根据会计期间生成启用年月
             let _this=this;
              _this.update=true;
+            _this.$axios.gets('/api/services/app/AccperiodSheme/Get',{id:_this.addData.accCchemeId})
+            .then(function(res){
+                _this.addData.accStartMonth=res.result.checkDate
+            },function(res){
+            })
         }
     }
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="commercialSpecificationDetails commodity">
+    <div class="group-management-wrapper commodity">
         <el-row class="bg-white">
             <el-col :span='24' class="border-left">
                 <btm :date="bottonbox" v-on:listbtm="btmlog"></btm>
@@ -394,7 +394,7 @@ import Textbox from '../../base/textbox/textbox'
                             }
                         })
                     }
-
+               
                     if(_this.preserve1){//修改保存
                        _this.$validate().then(function(success){
                             if(success){
@@ -421,7 +421,7 @@ import Textbox from '../../base/textbox/textbox'
                             }
                         }) 
                     }
-                }
+                     }
                     if(data == '保存并新增'){
                         if(_this.preserveAdd && _this.preserve1 == false){
                             _this.$validate().then(function(success){
@@ -435,7 +435,7 @@ import Textbox from '../../base/textbox/textbox'
                                         _this.statusBotton(false,false,false,true,true);
                                         _this.statusBottontwo(false,false,false,false,true,true);
                                         _this.bottonbox.botton[0].update = false;
-                                        _this.$store.state.url='/commercial/commercialSpecificationModify/default'
+                                        _this.$store.state.url='/commercial/commercialSpecificationDetails/default'
                                         _this.$router.push({path:_this.$store.state.url})//点击切换路由OuManage
                                         _this.open('创建商品类目成功','el-icon-circle-check','successERP');    
                                     },function(res){
@@ -461,7 +461,7 @@ import Textbox from '../../base/textbox/textbox'
                                         _this.statusBotton(false,false,false,true,true);
                                         _this.statusBottontwo(false,false,false,false,true,true);
                                         _this.bottonbox.botton[0].update = false;
-                                        _this.$store.state.url='/commercial/commercialSpecificationModify/default'
+                                        _this.$store.state.url='/commercial/commercialSpecificationDetails/default'
                                         _this.$router.push({path:_this.$store.state.url})//点击切换路由OuManage
                                         _this.open('保存商品类目成功','el-icon-circle-check','successERP');    
                                     },function(res){
@@ -479,7 +479,7 @@ import Textbox from '../../base/textbox/textbox'
                 if(data == '新增'){
                     if(_this.Add){
                         _this.bottonbox.botton[0].update=false;
-                        _this.$store.state.url='/commercial/commercialSpecificationModify/default'
+                        _this.$store.state.url='/commercial/commercialSpecificationDetails/default'
                         _this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
                     }  
                 }
@@ -564,22 +564,7 @@ import Textbox from '../../base/textbox/textbox'
                 this.abolish = d,//取消状态控制
                 this.Add = f,//新增状态控制
                 this.del = g//删除状态控制
-            },
-            getErrorMessage(message,details,validationErrors){
-                let _this=this;
-                _this.response.message='';
-                _this.response.details='';
-                _this.response.validationErrors=[];
-                if(details!=null && details){
-                    _this.response.details=details;
-                }
-                if(message!=null && message){
-                    _this.response.message=message;
-                }
-                if(message!=null && message){
-                    _this.response.validationErrors=validationErrors;
-                }
-            },
+            }
         },
         components:{
             Btm,
@@ -642,7 +627,7 @@ h4{
 </style>
 
 <style>
-.commercialSpecificationDetails .smallBgcolor .el-input input{
+.commodity .smallBgcolor .el-input input{
     height: 33px!important;
 }
 .el-checkbox__inner{

@@ -47,8 +47,9 @@
             <el-col :span="24" class="pt15">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级客户分类</label>
-                        <el-select class="classParentId" 
+                        <label>上级客户分类</label>
+                        <el-select class="classParentId"
+                                   clearable filterable 
                                    :class="{redBorder : validation.hasError('addData.classParentId')}" 
                                    placeholder=""
                                    v-model="addData.classParentId">
@@ -73,7 +74,7 @@
                                        :label="count.className" 
                                        :value="count.id"
                                        id="customerClass_confirmSelect"></el-option> -->
-                                       <el-option  v-show="false" v-for="item in selectData.menu" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
+                                       <el-option  v-show="false" v-for="item in selectData.customerClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -129,7 +130,8 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
                         <el-select  class="status" 
-                                     @change="isUpdate"
+                                    clearable filterable
+                                    @change="isUpdate"
                                     :class="{redBorder : validation.hasError('addData.status')}" 
                                     placeholder=""
                                     v-model="addData.status">
@@ -144,7 +146,7 @@
                     <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
-            <el-col :span="24">
+            <!-- <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
@@ -172,8 +174,39 @@
                     </div>
                   
                 </div>    
-            </el-col>
+            </el-col> -->
       </el-row>
+      <el-row>
+    <el-col :span="24" class="getPadding">
+        <h4 class="h4">审计信息</h4>
+        <div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="addData.createdBy" disabled></el-input></div>
+            <div class="bgcolor">
+                <label>创建时间</label>
+                <el-date-picker
+                v-model="addData.createdTime"
+                type="date"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
+                disabled
+                placeholder="">
+                </el-date-picker>
+            </div>
+            <div class="bgcolor"><label>修改人</label><el-input  v-model="addData.modifiedBy" disabled></el-input></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker
+                v-model="addData.modifiedTime"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
+                type="date"
+                disabled
+                placeholder="">
+                </el-date-picker>
+            </div>
+        </div>                                  
+    </el-col>
+</el-row>       
        <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -189,6 +222,37 @@
             <span slot="footer">
                 <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
                 <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog创建保存失败错误提示-->
+        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="$store.state.option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll>  
+                        </el-col>
+                    
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -232,16 +296,22 @@
                     },
                     selectData:{//select数据
                         Status001:[],//启用状态
-                        menu:[],//菜单
+                        customerClass:[],//客户分类
                     },
                 choseDoing:'',//存储点击按钮判断信息
                 dialogUserConfirm:false,//信息更改提示控制
                 update:false,
+                errorMessage:false,//错误信息提示
+                detail_message_ifShow:false,
+                response:{
+                    details:'',
+                    message:'',
+                },
             }
         },
      validators: {
       'addData.classParentId': function (value) {//上级客户分类，父id
-         return this.Validator.value(value).required().integer();
+         return this.Validator.value(value).integer();
       },
       'addData.classCode': function (value) {//客户分类编码
          return this.Validator.value(value).required().maxLength(20);
@@ -268,7 +338,12 @@
         count () {
             return this.parentItem;
             },
-    },  
+    },
+    watch: {
+        parentSearch(val) {
+           this.$refs.tree.filter(val);
+        }
+    },
     methods: {
         getSelectData(){
             let _this=this;
@@ -277,8 +352,8 @@
             // _this.selectData.Status001=res.result;
             // })
            _this.$axios.gets('api/services/app/ContactClassManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
-            // 菜单
-            _this.selectData.menu=res.result.items;
+            // 客户分类
+            _this.selectData.customerClass=res.result.items;
            
             })
         },
@@ -301,7 +376,7 @@
                 _this.addData.classParentId=parseInt(_this.$route.params.id);
                 _this.parentItem.className = '111111';
                 _this.parentItem.id=_this.$route.params.id;
-                console.log(_this.$route.params.name)
+                // console.log(_this.$route.params.name)
                 // alert(1)
             }
         },
@@ -344,30 +419,39 @@
                         self.dialogUserConfirm=false;
                         // _this.addData.id=res.result.id;
                         // console.log(res.result);
-                        self.open('保存成功','el-icon-circle-check','successERP');
-                    },function(res){    
-                        self.open('保存失败','el-icon-error','faildERP');
+                        // self.open('保存成功','el-icon-circle-check','successERP');
+                    },function(res){
+
+                        // self.open('保存失败','el-icon-error','faildERP');
+                         if(res && res!=''){ 
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                            self.dialogUserConfirm=false;
+                            self.errorMessage=true;
                     })
                 }
             });
         },
         saveAdd:function(){
-            let _this = this;
-            _this.$validate().then(function (success) {
+            let self = this;
+            self.$validate().then(function (success) {
                 console.log(success);
                 if (success) {
-                    _this.$axios.posts('/api/services/app/ContactClassManagement/Create',_this.addData).then(function(res){
+                    self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){
                         //  self.addData=res.result;
-                         _this.addData.id=res.result.id;
-                         _this.$store.state.url='/customerClass/customerClassDetail/default'
-                         _this.$router.push({path:_this.$store.state.url})
-                         _this.open('保存成功','el-icon-circle-check','successERP');
-                          _this.clearData();
-                          _this.validation.reset();
-                          _this.update=false;
-                         console.log(_this.update)
+                         self.addData.id=res.result.id;
+                         self.$store.state.url='/customerClass/customerClassDetail/default'
+                         self.$router.push({path:self.$store.state.url})
+                         self.open('保存成功','el-icon-circle-check','successERP');
+                          self.clearData();
+                          self.validation.reset();
+                          self.update=false;
+                        //  console.log(self.update)
                     },function(res){    
-                        _this.open('保存失败','el-icon-error','faildERP');
+                        // self.open('保存失败','el-icon-error','faildERP');
+                        if(res && res!=''){ 
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                        self.dialogUserConfirm=false;
+                        self.errorMessage=true;
                     })
                 }
             });
@@ -509,8 +593,21 @@
                 }
             })
         },
-
-       //-------------按钮操作-----------
+         getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
+        },
     }
 
 })
@@ -526,16 +623,22 @@
     margin-bottom: 10px;
     margin-top: -10px;
 }
+.customerClassDetail .getPadding {
+    padding: 0 10px;
+}
  .customerClassDetail .el-row{
+   padding: 15px 0;
+    border-bottom: 1px solid #e4e4e4;
     background-color: #fff;
-  }
+ }
+
  .customerClassDetail .el-row:first-child{
    padding: 7px 0;
    border-bottom: 1px solid #e4e4e4;
   }
-  .customerClassDetail .el-row:last-child{
-    padding-bottom: 15px;
-  }
+ .customerClassDetail .el-row:last-child {
+  padding-bottom: 15px;
+}
   .customerClassDetail .bgcolor .isGive{
     display: block;
     float: left;

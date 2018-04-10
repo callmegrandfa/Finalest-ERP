@@ -1,41 +1,42 @@
 <template>
     <div>
         <el-table class="normalTable" @row-click="rowClick" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
-            <el-table-column type="selection" label="" width="50">
+            <el-table-column type="selection" label="" width="50" v-show="mutiSelect">
             </el-table-column>
-            <el-table-column v-for="(item) in cols" :key="item.prop" :label="item.label" :prop="item.prop" >
+            <el-table-column v-for="item in cols" :key="item.prop" :label="item.label" :prop="item.prop" :width="item.width" :fixed="item.isFix">
                 <template slot-scope="scope" >
                     <img :id="scope.row.id" v-show='(scope.row.id==""||typeof(scope.row.id)=="undefined"||updateColArray.indexOf(scope.row.id)>=0)&&item.flag' class="update-icon" src="../../../static/image/content/redremind.png"/> 
-                    <el-checkbox v-if="item.control=='checkbox'" disabled v-model='scope.row[item.prop]'></el-checkbox>
-                    <el-input :class="{errorclass:item.required&&scope.row[item.prop]==''&&ifSave==true}"  class="noEdit" :disabled="isDisable" v-if="item.control=='normal'" v-model="scope.row[item.prop]"></el-input>
-                    <el-date-picker  v-if="item.control=='datetime'"  v-model="scope.row[item.prop]" readonly type="date"></el-date-picker>
-                    <el-select :disabled="isDisable" v-if="item.control=='select'"  v-model="scope.row[item.prop]" >
-                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                    <el-checkbox v-if="item.control=='checkbox'" :disabled="item.isDisable" v-model='scope.row[item.prop]'></el-checkbox>
+                    <el-input :disabled="item.isDisable" :class="[{errorclass:item.required&&scope.row[item.prop]==''&&ifSave==true},classMap[scope.row[item.prop]]]"   class="noEdit" v-if="item.control=='normal'" v-model="scope.row[item.prop]"></el-input>
+                    <el-date-picker :disabled="item.isDisable"  v-if="item.control=='datetime'"  v-model="scope.row[item.prop]" type="date"></el-date-picker>
+                    <el-select :disabled="item.isDisable" v-if="item.control=='select'"  v-model="scope.row[item.prop]" >
+                        <el-option  v-for="options in item.statusOptions" :key="options.value" :label="options.label" :value="options.value">
                         </el-option>
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="address12" label="操作" width="">
+            <el-table-column prop="address12" label="操作" width="" v-show='hasControl.control'>
                 <template slot-scope="scope">
-                    <el-button v-show="hasModify"  @click="modify(scope.row)" type="text" size="small"  >查看</el-button>
-                    <el-button @click="dialogOpen(scope.row,scope.$index)" type="text" size="small"  >删除</el-button>
+                    <el-button v-show="hasControl.modify"  @click="modify(scope.row)" type="text" size="small"  >查看</el-button>
+                    <el-button v-show="hasControl.del" @click="dialogOpen(scope.row,scope.$index)" type="text" size="small"  >删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination style="margin-top:20px;"  class="text-right" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, prev, pager, next"  :page-count="totalPagination" ></el-pagination>
-        <dialogBox :message="dialogMessage" :dialogVisible="dialogShow"  @confirm="delConfirm" @cancel="delCancel"></dialogBox>   
+        <dialogBox :message="dialogMessage" :dialogVisible="delDialog"  @confirm="delConfirm" @cancel="delCancel"></dialogBox>   
     </div>
 </template>
 <script type="text/javascript">
     import dialogBox from '../dialog/dialog'
 	export	default{
-		props:['methodsUrl','cols','isDisable','tableName','hasModify',"ifSave"],
+		props:['methodsUrl','cols','isDisable','tableName','mutiSelect',"ifSave",'hasControl'],
 		data(){
 			return{
-                currentPage:1,//当前页码
+                // currentPage:1,//当前页码
                 totalPage:10,//总页数
                 eachPage:10,//每页显示条数
                 tableLoading:true,//加载动画
+                tableClone:[],
                 updateId:'',//修改行id
                 rowIndex:'',//修改行index
                 updateRow:'',
@@ -50,13 +51,21 @@
                 delIndex:'',
                 delRow:'',
                 dialogMessage:'',
-                dialogShow:false,
+                delDialog:false,
+                pageFlag:true,
+                turnPage:-1,
 			}
         },
         created:function(){
+            this.classMap=[];
             this.$store.commit('setTableName',this.tableName)
             this.$store.commit('setHttpApi', this.methodsUrl.creat)
             this.$store.dispatch('InitTable');//初始化表格数据
+            setTimeout(() => {//拷贝初始化数据，和修改行做对比
+                let table= this.deepClone(this.$store.state[this.tableName+'Table'])
+                this.$store.commit('Init_TableClone', table);
+                this.tableClone=this.$store.state[this.tableName+'TableClone'];
+                }, 1500);
         },
         components:{
             dialogBox
@@ -64,6 +73,14 @@
         computed:{
             tableData(){//表格数据
                 return this.$store.state[this.tableName+'Table'];   
+            },
+            currentPage:{
+                get:function(){
+                    return this.$store.state[this.tableName+'CurrentPage'];
+                },
+                set:function(newValue){
+                   this.$store.state[this.tableName+'CurrentPage']=newValue;
+                }
             },
             newColArray(){//新增数据集合
                 if(!this.isDisable){
@@ -89,6 +106,22 @@
             $route(to) {//页签切换,重置表格数据模型名称
                   this.$store.commit('setTableName',to.name)
             },
+            newColArray:{
+                handler:function(val,oldVal){
+                    if(val.length>0){
+                        this.turnPage=Number($(document).find(".el-pagination.is-background .el-pager li.active").html());
+                    }
+                },
+                deep:true
+            },
+            updateColArray:{
+                handler:function(val,oldVal){
+                    if(val.length>0){
+                        this.turnPage=Number($(document).find(".el-pagination.is-background .el-pager li.active").html());
+                    }
+                },
+                deep:true
+            },
             tableData:{
                 handler: function (val, oldVal) {
                     if(oldVal.length>0&&!this.isDisable){
@@ -97,10 +130,15 @@
                                 this.rowIndex=i;
                             }
                         }
-                        if(!this.Compare(this.updateRow,this.$store.state[this.tableName+'Table'][this.rowIndex])){
-                            this.$store.dispatch('AddUpdateArray');//当表格数据初次加载完毕且表格为可编辑状态，其数据发生改变时   
+                        if(this.rowIndex==""){
+                            return
                         }else{
-                            console.log("xiangtong");
+                            if(!this.Compare(this.updateRow,this.$store.state[this.tableName+'Table'][this.rowIndex])||this.$store.state[this.tableName+'IfDel']){
+                                //this.$store.commit('setIfDel',false);
+                                this.$store.dispatch('AddUpdateArray');//当表格数据初次加载完毕且表格为可编辑状态，其数据发生改变时   
+                                this.rowIndex="";
+                                this.clickRow="";
+                            }
                         }
                         
                     }
@@ -118,7 +156,7 @@
                 _this.delIndex=index;
                 _this.delRow=row;
                 _this.dialogMessage="确定删除？";
-                _this.dialogShow=true;
+                _this.delDialog=true;
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -135,16 +173,20 @@
                 if(_this.newColArray.length>0){
                     _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
                     _this.newColArray.splice(_this.delIndex,1);
-                    _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
-                    _this.$store.commit('setIfDel',true);//设置删除参数为真
-                    _this.dialogShow=false;
+                    //_this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                    //_this.$store.commit('get_RowId',"")//置空修改行id
+                    if(_this.newColArray.length==0){
+                        _this.$store.commit('setIfDel',true);//设置删除参数为真
+                    }else{
+                        _this.$store.commit('setIfDel',false);//设置删除参数为假
+                    }
+                    _this.delDialog=false;
                 }else{
                     _this.$axios.deletes(_this.methodsUrl.del,{Id:_this.delRow.id}).then(function(res){
                         _this.$store.dispatch('InitTable');//初始化表格数据
-                        _this.open('删除成功','el-icon-circle-check','successERP'); 
-                        _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                        _this.open('删除成功','el-icon-circle-check','successERP');  
                         _this.$store.commit('setIfDel',true);//设置删除参数为真
-                        _this.dialogShow=false;  
+                        _this.delDialog=false;  
                     }).catch(function(err){
                         _this.$message({
                             type: 'warning',
@@ -154,28 +196,78 @@
                 }       
             },
             delCancel(){//取消删除
-                this.dialogShow=false;
+                this.delDialog=false;
             },
             rowClick(row){//获取行id
                 //this.updateId=row.id
                 this.clickRow=row;
-                this.InitUpdateRow(row.id);
+                //this.InitUpdateRow(row.id);
+                for(let i in this.tableClone){
+                    if(row.id==this.tableClone[i].id){
+                       this.updateRow=this.tableClone[i];
+                    }
+                }
                 this.$store.dispatch('getRowId',row.id);//传递获取的行id
             },
             handleSelectionChange(val){//多选操作
                 this.$store.commit('setTableSelection',val)
             },
             handleCurrentChange:function(val){//获取当前页码,分页
-                this.$store.commit('setCurrentPage',val)
-                this.$store.dispatch('InitTable');//初始化表格数据   
+                if((this.newColArray.length>0||this.updateColArray.length>0)&&this.pageFlag){
+                    this.$confirm('当前存在未保存修改项，是否继续翻页?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                        }).then(() => {
+                            this.$store.commit('setCurrentPage',val)//跳转至目标分页
+                            this.$store.dispatch('InitTable');//初始化表格数据
+                            this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                            this.$store.commit('setAddColArray',[])//置空修改增集合 
+                            this.$store.commit('get_RowId',"")//置空修改行id
+                            this.$store.commit('setIfDel',true);//设置删除参数为真
+                        }).catch(() => {
+                            this.pageFlag=false;
+                            // this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                            // this.$store.commit('setAddColArray',[])//置空修改增集合 
+                            this.$store.commit('setCurrentPage',this.turnPage)
+                            return;     
+                    });
+                }else if(this.newColArray.length==0&&this.updateColArray.length==0){
+                    this.$store.commit('setCurrentPage',val)//跳转至目标分页
+                    this.$store.dispatch('InitTable');//初始化表格数据
+                    this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                    this.$store.commit('setAddColArray',[])//置空修改增集合 
+                    this.$store.commit('get_RowId',"")//置空修改行id
+                }
+                setTimeout(() => {this.pageFlag = true}, 1000)
                 
             },
-            InitUpdateRow(id){//根据id获取修改行数据
-                let _this=this;
-                _this.$axios.gets(_this.methodsUrl.getId,{Id:id}).then(function(res){
-                    _this.updateRow=res.result;
-                    })
+            // 数据深拷贝
+            // 递归实现一个深拷贝
+            deepClone(source){
+                if(!source || typeof source !== 'object'){
+                    throw new Error('error arguments', 'shallowClone');
+                }
+                var targetObj = source.constructor === Array ? [] : {};
+                for(var keys in source){
+                    if(source.hasOwnProperty(keys)){
+                        if(source[keys] && typeof source[keys] === 'object'){
+                        targetObj[keys] = source[keys].constructor === Array ? [] : {};
+                        targetObj[keys] = this.deepClone(source[keys]);
+                        }else{
+                        targetObj[keys] = source[keys];
+                        }
+                    } 
+                }
+                return targetObj;
             },
+            // InitUpdateRow(id){//根据id获取修改行数据
+            //     let _this=this;
+            //     _this.$axios.gets(_this.methodsUrl.getId,{Id:id}).then(function(res){
+            //         _this.updateRow=res.result;
+            //     })
+            // },
             // 对比json对象的方法块
             isObj(object) {  
                 return object && typeof (object) == 'object' && Object.prototype.toString.call(object).toLowerCase() == "[object object]";  
@@ -239,5 +331,10 @@
     border: 0;
     color: #606266;
     text-align: center;
+}
+.normalTable .el-input.is-disabled .el-input__inner{
+    background-color: #fff;
+    border-color: #e4e7ed;
+    color: #606266;
 }
 </style>

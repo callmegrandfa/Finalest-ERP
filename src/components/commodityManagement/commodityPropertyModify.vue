@@ -41,6 +41,31 @@
                                         </el-option>
                                         
                                     </el-select>
+                                    <!-- <el-select 
+                                    class="propertyParentid"
+                                    @change="isUpdate" 
+                                    v-model="addData.propertyParentid"
+                                    placeholder="" :class="{redBorder : validation.hasError('addData.propertyParentid')}">
+                                    <el-input
+                                        placeholder="搜索..."
+                                        class="selectSearch"
+                                        v-model="treeQuery">
+                                    </el-input>
+                                        <el-tree
+                                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                        :data="classTree"
+                                        :props="defaultProps"
+                                        node-key="id"
+                                        default-expand-all
+                                        ref="tree"
+                                        :filter-node-method="filterNode"
+                                        :expand-on-click-node="false"
+                                         @node-click="nodeClick"
+                                        >
+                                        </el-tree>
+                                        <el-option v-show="false" :key="count.propertyParentid" :label="count.propertyName" :value="count.propertyParentid"   id="businessDetail_confirmSelect">
+                                        </el-option>
+                                    </el-select> -->
                                 </div>
                             </el-col>
                             <el-col :span="3"><div class="error_tips_info">{{ validation.firstError('addData.propertyParentid') }}</div></el-col>
@@ -145,34 +170,35 @@
                                 <!-- <el-select v-model="addData.controlType" >
                                     <el-option  v-for="item in ControlTypeOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
-                                </el-select> -->
-                                    <el-select 
-                                    class="propertyParentid"
-                                    @change="isUpdate" 
-                                    v-model="addData.relPropertyId"
-                                    placeholder="" :class="{redBorder : validation.hasError('addData.propertyParentid')}">
-                                    <el-input
-                                        placeholder="搜索..."
-                                        class="selectSearch"
-                                        v-model="treeQuery">
-                                    </el-input>
-                                        <el-tree
-                                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"  
-                                        :data="classTree"
-                                        :props="defaultProps"
-                                        node-key="id"
-                                        default-expand-all
-                                        ref="tree"
-                                        :filter-node-method="filterNode"
-                                        :expand-on-click-node="false"
-                                         @node-click="nodeClick"
-                                        >
-                                        </el-tree>
 
-                                        <el-option v-show="false" v-for="item in selectData" :key="item.id" :label="item.propertyName" :value="item.id" :date="item.id"  id="businessDetail_confirmSelect">
-                                        </el-option>
-                                        
-                                    </el-select>
+                                </el-select> -->
+                                <el-select 
+                                class="propertyParentid"
+                                @change="isUpdate" 
+                                v-model="addData.relPropertyId"
+                                placeholder="" >
+                                <el-input
+                                    placeholder="搜索..."
+                                    class="selectSearch"
+                                    v-model="treeQuery">
+                                </el-input>
+                                    <el-tree
+                                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"  
+                                    :data="classTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    default-expand-all
+                                    ref="tree"
+                                    :filter-node-method="filterNode"
+                                    :expand-on-click-node="false"
+                                     @node-click="nodeClick"
+                                    >
+                                    </el-tree>
+
+                                    <el-option v-show="false" v-for="item in selectData" :key="item.id" :label="item.propertyName" :value="item.id" :date="item.id"  id="businessDetail_confirmSelect">
+                                    </el-option>
+                                    
+                                </el-select>
                                 </div>
                             </el-col>
                         </el-row>
@@ -330,11 +356,10 @@ import Textbox from '../../base/textbox/textbox'
                 classTree:[],
                 ifWidth:true,
                 treeNode:{
-                    id:'',
+                    propertyParentid:'',
                     propertyName:'',
                 },
                 defaultProps: {
-
                     children:'childNodes',
                     label:'propertyName',
                     id:"id"
@@ -344,7 +369,7 @@ import Textbox from '../../base/textbox/textbox'
                 addData:{//键子对
                       levelNo: '',
                       propertyParentid:'',
-                      relPropertyId: '',
+                      relPropertyId: 0,
                       isBottom: true,
                       propertyCode: "",
                       propertyName: "",
@@ -373,33 +398,33 @@ import Textbox from '../../base/textbox/textbox'
                     show:true,
                     increased: true
                 },{
-                    class: 'erp_bt bt_save',
+                    class: 'erp_bt bt_save ',
                     imgsrc: '../../../static/image/common/bt_save.png',
                     text: '保存',
                     show:true,
-                    increased: true
-                },{ class: 'erp_bt bt_auxiliary cancel',
+                    increased: false
+                },{ class: 'erp_bt bt_auxiliary cancel ',
                     show:true, 
-                    increased: true,
+                    increased: false,
                     imgsrc: '../../../static/image/common/u470.png',
                     text: '取消'
                 },{
-                    class: 'erp_bt bt_save_add',
+                    class: 'erp_bt bt_save_add ',
                     imgsrc: '../../../static/image/common/bt_save.png',
                     text: '保存并新增',
+                    increased: false,
                     show:true,
-                    increased: true
-                },{  class: 'erp_bt bt_add after cccc',
+                },{  class: 'erp_bt bt_add after',
                     imgsrc: '../../../static/image/common/bt_add.png',
                     text: '新增',
                     show:true,
-                    increased: false
+                    increased: true
                 },{
-                    class: 'erp_bt bt_del cccc',
+                    class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
                     text: '删除',
                     show:true,
-                    increased: false
+                    increased: true
                 },{
                     class: 'erp_bt bt_auxiliary',
                     imgsrc: '../../../static/image/common/bt_audit.png',
@@ -407,6 +432,7 @@ import Textbox from '../../base/textbox/textbox'
                     show:true,
                     increased: true
                 }]},
+                selectData:[],
                 dataSourceOptions:[{
                     value: 0,
                     label: '0'
@@ -414,7 +440,6 @@ import Textbox from '../../base/textbox/textbox'
                     value: 1,
                     label: '1' 
                 }],
-                selectData:[],
                 ControlTypeOptions:[{
                     value: 0,
                     label: '下拉'
@@ -443,14 +468,11 @@ import Textbox from '../../base/textbox/textbox'
                     message:'',
                     validationErrors:[],
                 },
-                increased:false,//新增按钮
-                dellet:false,//删除按钮
-                savefa:true,//新增保存按钮
+                dellet:true,//删除按钮
                 savexiu:false,//修改保存按钮
-                abolish:true,//取消按钮
-                savefaadd:true,//保存并提交
+                savefaadd:false,//保存并提交
                 aboxiu:false,//修改取消
-
+                increased:true//新增按钮
             }
         },
         validators: {
@@ -474,6 +496,11 @@ import Textbox from '../../base/textbox/textbox'
             let _this=this;
             _this.InitModify();
             this.loadTree();
+            if(this.$route.params.id !="default"){
+               
+            }else{
+                
+            }
         },
         computed:{
             count () {
@@ -499,15 +526,41 @@ import Textbox from '../../base/textbox/textbox'
         methods:{
             InitModify(){
                 let _this=this;
-                if(_this.$route.params.id!="default"){
-                    _this.addData.propertyParentid=parseInt(_this.$route.params.id);
-                    _this.treeNode.propertyName=_this.$route.params.name;
-                    _this.treeNode.id=_this.$route.params.id;
+                if(_this.$route.params.id=="default"){
+                    return;
+                }else{
+                    _this.$axios.gets('/api/services/app/PropertyManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+                        // 菜单
+                        _this.selectData=res.result.items;
+                    })
+                    _this.$axios.gets('/api/services/app/PropertyManagement/Get',{Id:_this.$route.params.id}).then(function(res){
+                        // _this.updateId=res.result.id;
+                        console.log(res);
+                        _this.treeNode.propertyParentid=res.result.propertyParentid;
+                        _this.treeNode.propertyName=res.result.propertyParentName;
+                          _this.addData.levelNo=res.result.levelNo,
+                          _this.addData.propertyParentName = res.result.propertyName;
+                          _this.addData.propertyParentid=res.result.propertyParentid,
+                          _this.addData.relPropertyId= res.result.relPropertyId,
+                          _this.addData.isBottom= res.result.isBottom,
+                          _this.addData.propertyCode= res.result.propertyCode,
+                          _this.addData.propertyName= res.result.propertyName,
+                          _this.addData.propertyFullpathId= res.result.propertyFullpathId,
+                          _this.addData.propertyFullpathName= res.result.propertyFullpathName,
+                          _this.addData.controlType= res.result.controlType,
+                          _this.addData.required= res.result.required,
+                          _this.addData.isSystem= res.result.isSystem,
+                          _this.addData.seq=res.result.seq,
+                          _this.addData.dataSource= res.result.dataSource,
+                          _this.addData.status= res.result.status
+                          _this.addData.id= res.result.id
+                          _this.addData.createdTime=res.result.createdTime,//创建时间
+                          _this.addData.createdBy=res.result.createdBy,//创建人
+                          _this.addData.modifiedTime=res.result.modifiedTime//修改人
+                          _this.addData.modifiedBy=res.result.modifiedBy//修改时间
+                    })
                 }
-                _this.$axios.gets('/api/services/app/PropertyManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
-                    // 菜单
-                    _this.selectData=res.result.items;
-                })
+                 
             },
             loadTree(){//获取tree data
                     let _this=this;
@@ -558,7 +611,17 @@ import Textbox from '../../base/textbox/textbox'
             isUpdate(){
                 //判断是否修改过信息
                 let _this=this;
-                this.bottonbox.botton[0].update=true;   
+                this.bottonbox.botton[0].update=true; 
+                _this.bottonbox.botton[1].increased=true
+                _this.bottonbox.botton[2].increased=true
+                _this.bottonbox.botton[3].increased=true
+                _this.bottonbox.botton[4].increased=false
+                _this.bottonbox.botton[5].increased=false
+                _this.savexiu = true;//修改保存功能注释
+                _this.aboxiu = true;//注释修改取消按钮
+                _this.savefaadd = true;//注释保存并提交按钮
+                _this.increased = false;//激活新增按钮
+                _this.dellet = false;//激活删除按钮
                 if(_this.addData.controlType == 3){
                     _this.isDataSource=false;
                 }else{
@@ -567,11 +630,17 @@ import Textbox from '../../base/textbox/textbox'
             },
             nodeClick(data,node,self){
                 let _this=this;
+                // _this.treeNode.propertyParentid=data.propertyParentid;
+                // _this.treeNode.propertyName=data.propertyName;
+                // _this.$nextTick(function(){
+                //     $('#businessDetail_confirmSelect').click()
+                // })
                 _this.treeNode.id=data.id;
                 _this.treeNode.propertyName=data.propertyName;
                 // _this.$nextTick(function(){
                 //     $('#businessDetail_confirmSelect').click()
                 // })
+                console.log(_this.treeNode.id)
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
                         $(this).click()
@@ -579,140 +648,106 @@ import Textbox from '../../base/textbox/textbox'
                 })
             },
             InitData(){//数据重置
-                let _this=this;
-                _this.addData.propertyName = '';
-                _this.addData.propertyCode = '';
-                _this.addData.controlType = '';
-                // _this.addData.dataSource = '';
-                _this.addData.seq = '';
-                _this.addData.relPropertyId = '';
-                _this.addData.propertyParentid = '';
-
-                  // levelNo: '',
-                  // propertyParentid:'',
-                  // relPropertyId: '',
-                  // isBottom: true,
-                  // propertyFullpathId: "0",
-                  // propertyFullpathName: "默认",
-                  // controlType: '',
-                  // required: false,
-                  // isSystem: false,
-                  // seq:'',
-                  // dataSource: '',
-                  // status: '',
-                  //   createdTime:_this.GetDateTime(),//创建时间
-                  //   createdBy:_this.$store.state.name,//创建人
-                  //   modifiedTime:_this.GetDateTime(),//修改人
-                  //   modifiedBy:_this.$store.state.name//修改时间
-                    
-                
+                this.addData.propertyParentid="";//上级商品属性类目
+                this.addData.propertyCode="";//商品属性编码
+                this.addData.propertyName="";//商品属性名称
+                this.addData.controlType="";//控件类型
+                this.addData.dataSource="";//数据源
+                this.addData.seq="";//显示顺序
+                this.addData.levelNo="";//级联属性
+                this.addData.status="";//状态
+                this.addData.isSystem="";//系统属性
+                this.addData.required="";//是否必填
             },
             btmlog:function(data){
                 let _this=this;
                 if(data == '新增保存'){
-                    // _this.$validate()
-                    _this.$validate()
-                    .then(function (success) {
-                        if(success){
-                            if(_this.addData.levelNo != '' && _this.addData.propertyParentid !='' ){
-                                _this.addData.levelNo=parseInt(_this.addData.levelNo);
-                                _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);    
-                            }
-                            if(_this.addData.seq != ''){
-                                _this.addData.seq=parseInt(_this.addData.seq);
-                            }
-                            if(_this.addData.seq == ''){
-                               _this.addData.seq = 0;
-                            }
-                            if(_this.addData.status == ''){
-                                _this.addData.status = 0;
-                            }
-                            if(_this.addData.levelNo ==''){
-                               _this.addData.levelNo = 0; 
-                            }
-                            if(_this.addData.relPropertyId ==''){
-                               _this.addData.relPropertyId = 0; 
-                            }
-                            console.log(_this.addData);
-                            _this.$axios.posts('/api/services/app/PropertyManagement/Create',_this.addData).then(function(res){
-                                // _this.InitModify();
-                                _this.open('创建商品属性成功','el-icon-circle-check','successERP'); 
-                                _this.$store.state.url='/commodityProperty/commodityPropertyModify/'+res.result.id
-                                _this.$router.push({path:_this.$store.state.url})
-                                _this.InitModify();
-                                
-                                _this.bottonbox.botton[0].update=false;
-                            },function(res){
-                                _this.open('创建商品属性失败','el-icon-error','faildERP');
-                                // alert(res)
-                                console.log(res)
+                    if(_this.savexiu){
+
+                        _this.$validate()
+                        .then(function(){
+                            _this.addData.modifiedBy='admin';
+                          _this.addData.createdBy='admin';
+                          _this.addData.levelNo=parseInt(_this.addData.levelNo);
+                            _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);
+                            _this.addData.seq=parseInt(_this.addData.seq);
+                            console.log(_this.addData)
+                          _this.$axios.puts('/api/services/app/PropertyManagement/Update',_this.addData).then(function(res){
+                                // _this.$store.state.url='/tenant/tenantManagement/'+res.result.id;
+                                // _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                                _this.open('保存成功','el-icon-circle-check','successERP');
+                                _this.bottonbox.botton[1].increased=false
+                                _this.bottonbox.botton[2].increased=false
+                                _this.bottonbox.botton[3].increased=false
+                                _this.bottonbox.botton[4].increased=true
+                                _this.bottonbox.botton[5].increased=true
+                                _this.savexiu = false;//修改保存功能注释
+                                _this.aboxiu = false;//注释修改取消按钮
+                                _this.savefaadd = false;//注释保存并提交按钮
+                                _this.increased = true;//激活新增按钮
+                                _this.dellet = true;//激活删除按钮
+                                _this.bottonbox.botton[0].update=false; 
+                            },function(){
                                 _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                                 _this.dialogUserConfirm=false;
                                 _this.errorMessage=true;
-                                
+                                _this.open('保存失败','el-icon-error','faildERP');
                             });
-                        }
-                          
-                    }); 
+                        })
+                      
+                    }
                 }else if(data == '新增'){
-                    return; 
+                    if(_this.increased){
+                        this.$store.state.url=`/commodityProperty/commodityPropertyDetails/default`
+                        this.$router.push({path:this.$store.state.url});
+                    }  
                 }else if(data == '取消'){
-                        this.ifsql =false;
-                        _this.$store.state.url='/commodityProperty/commodityPropertyList/default';
-                         _this.$router.push({path:_this.$store.state.url});
+                   if(_this.aboxiu){
+                        _this.InitModify();
+                        _this.bottonbox.botton[1].increased=false
+                        _this.bottonbox.botton[2].increased=false
+                        _this.bottonbox.botton[3].increased=false
+                        _this.bottonbox.botton[4].increased=true
+                        _this.bottonbox.botton[5].increased=true
+                        _this.savexiu = false;//修改保存功能注释
+                        _this.aboxiu = false;//注释修改取消按钮
+                        _this.savefaadd = false;//注释保存并提交按钮
+                        _this.increased = true;//激活新增按钮
+                        _this.dellet = true;//激活删除按钮
+                        _this.bottonbox.botton[0].update=false; 
+                   } 
                 }else if(data == '删除'){
                     if(_this.dellet){
                         this.dialogUserConfirm = true;
-                        $('.bt_del').css('background','#f55e6e');
-                    }else{
-                        $('.bt_del').css('background','#ccc');
                     }
                 }else if(data == '保存并新增'){
-                    // console.log(_this.$validate().then(function(success){}))
-                    _this.$validate()
-                    .then(function (success) {
-                        // console.log(success)
-                        if(success){
-                            if(_this.addData.levelNo != '' && _this.addData.propertyParentid !='' ){
-                                _this.addData.levelNo=parseInt(_this.addData.levelNo);
-                                _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);    
-                            }
-                            if(_this.addData.seq != ''){
-                                _this.addData.seq=parseInt(_this.addData.seq);
-                            }
-                            if(_this.addData.seq == ''){
-                               _this.addData.seq = 0;
-                            }
-                            if(_this.addData.status == ''){
-                                _this.addData.status = 0;
-                            }
-                            if(_this.addData.levelNo ==''){
-                               _this.addData.levelNo = 0; 
-                            }
-                            if(_this.addData.relPropertyId ==''){
-                               _this.addData.relPropertyId = 0; 
-                            }
-                            _this.$axios.posts('/api/services/app/PropertyManagement/Create',_this.addData).then(function(res){                     
-                                _this.$store.state.url = `/commodityProperty/commodityPropertyDetails/default`
-                                _this.$router.push({path:_this.$store.state.url}); 
-                                _this.open('创建商品属性成功','el-icon-circle-check','successERP'); 
-                                _this.bottonbox.botton[0].update=false;
-                                _this.validation.reset();
-                                _this.InitData();
-                            },function(res){
-                                _this.open('创建失败','el-icon-error','faildERP');
-                                // alert(res)
-                                console.log(res)
-                                // _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    if(_this.savefaadd){
+                        _this.$validate()
+                        .then(function(){
+                            _this.addData.modifiedBy='admin';
+                            _this.addData.createdBy='admin';
+                            _this.addData.levelNo=parseInt(_this.addData.levelNo);
+                            _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);
+                            _this.addData.seq=parseInt(_this.addData.seq);
+                            console.log(_this.addData)
+                            _this.$axios.puts('http://192.168.100.107:8085/api/services/app/PropertyManagement/Update',_this.addData).then(function(res){
+                                // _this.$store.state.url='/tenant/tenantManagement/'+res.result.id;
+                                // _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                                _this.open('保存成功','el-icon-circle-check','successERP');
+                                // _this.InitData();
+                                // _this.validation.reset();
+                                _this.$store.state.url=`/commodityProperty/commodityPropertyDetails/default`
+                                _this.$router.push({path:_this.$store.state.url});
+                                _this.bottonbox.botton[0].update=false; 
+                            },function(){
+                                _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                                 _this.dialogUserConfirm=false;
                                 _this.errorMessage=true;
-                                
+                                _this.open('保存失败','el-icon-error','faildERP');
                             });
-                        }
-                          
-                    });
+                        })       
+                    }
                 }
-                 
             },
             sureAjax(){
                 let _this=this;

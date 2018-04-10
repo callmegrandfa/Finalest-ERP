@@ -66,7 +66,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-
+                            :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
@@ -129,7 +129,7 @@
     <el-row class="nopadding"> 
         <div class="tabZoo">
             <el-col :span="24">
-               <el-tabs v-model="activeName">
+               <el-tabs v-model="activeName" @tab-click="handleClick">
                    <!-- - - - - - - - - - - - - - - - - - - - 分配组织- - - - - - - - - - - - - - - - - - - - -  -->
                     <el-tab-pane label="管理组织" name="ou" class="getPadding" style="z-index:-1000">
                         <button class="erp_bt bt_add" @click="dialogOuIsShow">
@@ -156,41 +156,6 @@
                         </div>
                            <!-- 分配组织 -->
 <el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
-        <!-- <el-col :span="11" class="transfer_warapper">
-                <el-col :span="24" class="transfer_header">
-                    <span>已选</span>
-                    <div class="transfer_search">
-                        <el-autocomplete
-                        class="search_input"
-                        placeholder="搜索..."
-                        >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-autocomplete>
-                    </div>    
-                </el-col>    
-                <el-col :span="24" class="transfer_table">
-                   <vue-scroll :ops="$store.state.option">
-                    <el-tree
-                    :data="ouTreeDataLeft"
-                    :props="ouDefaultPropsLeft"
-                    node-key="id"
-                    default-expand-all
-                    show-checkbox
-                    @check-change="ouCheckChangeLeft"
-                    ref="ouTreeLeft"
-                    :expand-on-click-node="false"
-                    @node-click="ouNodeClickLeft">
-                    </el-tree>  
-                    </vue-scroll>
-                </el-col>
-               
-        </el-col> -->
-        <!-- <el-col :span="2" class="transfer_btns">
-            <el-col :span="24" class="transfer_btn_wrapper">
-                <el-button class="el_transfer" :disabled="fromOuRight" @click="fromRightOu" type="primary" icon="el-icon-arrow-left" round></el-button>
-                <el-button class="el_transfer" :disabled="fromOuLeft" @click="fromLeftOu" type="primary" icon="el-icon-arrow-right" round></el-button>
-            </el-col>
-        </el-col> -->
         <span slot="title">
             <span>分配组织</span>
             <a  href="javascript:;" class="add" @click="addNewOu">+</a>
@@ -220,24 +185,12 @@
                     node-key="ouId"
                     ref="tree"
                     :filter-node-method="filterNode"
-                    highlight-current
+                    :highlight-current="true"
                     @node-click="ouNodeClickRight"
                     @check-change="isCheckAllOu"
                     :expand-on-click-node="false"
                     :props="ouDefaultPropsRight">
                     </el-tree>
-                <!-- <el-tree
-                :data="ouTreeDataRight"
-                :props="ouDefaultPropsRight"
-                node-key="id"
-                default-expand-all
-                show-checkbox
-                highlight-current
-                @check-change="ouCheckChangeRight"
-                ref="tree"
-                :expand-on-click-node="false"
-                @node-click="ouNodeClickRight">
-                </el-tree>   -->
                 </vue-scroll>
             </el-col>
             <!-- <el-button @click="getCheckedNodes">通过 node 获取</el-button>
@@ -466,6 +419,7 @@
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
                                         v-loading="fnTreeLoading" 
+                                        :highlight-current="true"
                                         :data="fnTreeData"
                                         :props="defaultProps"
                                         node-key="id"
@@ -550,7 +504,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -572,27 +526,23 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
-        <!-- dialog -->                                                                
+        <!-- dialog -->                                                     
 </div>
 </template>
 
@@ -998,6 +948,10 @@ export default({
             _this.thirdModify=false;
             _this.forthModify=false;
             _this.ifModify=false;
+            // $('table').each(function(){
+            //     $(this).css('width',$(this).parent('.el-table__header-wrapper').css('width'))
+            //     $(this).next('el-table__empty-block').css('width',$(this).parent('.el-table__header-wrapper').css('width'))
+            // })
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -1121,7 +1075,11 @@ export default({
                 _this.errorMessage=true;
             })
         },
-        
+        handleClick(tab, event){//点击标签页控制重置数据后表格的宽度
+            let _this=this;
+           $(tab.$el).find('table').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
+            $(tab.$el).find('.el-table__empty-block').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
+        },
 //-------------关联组织-----------
         getAllOulength(){
             let _this=this;
