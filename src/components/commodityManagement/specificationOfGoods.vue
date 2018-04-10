@@ -80,7 +80,7 @@
                                     </el-table-column>
                                     <el-table-column prop="modifiedTime" label="修改时间" width="">
                                     </el-table-column>
-                                    <el-table-column prop="address7" label="操作" width="">
+                                    <el-table-column prop="address7" label="操作" width="" fixed="right">
                                         <template slot-scope="scope">
                                             <el-button type="text" size="small"  v-on:click="handleDel(scope.row,scope.$index)">删除</el-button>
                                         </template>
@@ -362,7 +362,7 @@ import Tree from '../../base/tree/tree'
 
                     this.isSave=true;
                     let _this=this;
-                    if(_this.addData1.createList.length>0 && _this.isUpdate1){//新增保存
+                    if(_this.addData1.createList.length>0 ){//新增保存
 
                         for(let i in _this.addData1.createList){
                             if(_this.addData1.createList[i].specValueCode==""||_this.addData1.createList[i].specValueName==""){
@@ -402,7 +402,7 @@ import Tree from '../../base/tree/tree'
                                 }
                             }); 
                         }                    
-                    }else if( _this.isUpdate && _this.isUpdate1){//修改保存
+                    }else if( _this.isUpdate ){//修改保存
 
                         if(_this.updateArray.length==1){//单条修改
                             let updataIndex = -1;
@@ -442,12 +442,10 @@ import Tree from '../../base/tree/tree'
                                 }
                             }); 
                         }
-                    }else{
-                        return;
                     }
                 }else if(data == '取消'){
                     
-                        _this.statusButton(false,false,true) 
+                    _this.statusButton(false,false,true) 
                     this.loadTableData();
                 }else if(data == '删除'){
                     let _this=this;

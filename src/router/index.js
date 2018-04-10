@@ -195,7 +195,8 @@ const commodityPropertyList = () =>//商品属性列表
     import ('../components/commodityManagement/commodityPropertyList')
 const commodityPropertyDetails = () =>//商品属性详情
     import ('../components/commodityManagement/commodityPropertyDetails') 
-
+const commodityPropertyModify = () =>//商品属性详情
+    import ('../components/commodityManagement/commodityPropertyModify') 
    
 
 const specificationOfGoods= ()=>//商品规格
@@ -532,6 +533,7 @@ const routes = [
                 children: [
                     { path: '/commodityProperty/commodityPropertyList/:id', component: commodityPropertyList, name: 'commodityPropertyList' }, //商品属性
                     // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/commodityProperty/commodityPropertyModify/:id', component: commodityPropertyModify, name: 'commodityPropertyModify' },
                     { path: '/commodityProperty/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
                 ]
             },
