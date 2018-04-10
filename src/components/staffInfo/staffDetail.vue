@@ -185,7 +185,7 @@
                                         :expand-on-click-node="false" @node-click="nodeClick_depart"
                                         class="filter-tree">
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.deptName" :value="item.id" :date="item.id">
+                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
                                         </el-option>
                             </el-select>
                         </div>
@@ -295,13 +295,13 @@
                 selectTree_ou:[],
                 selectProps_ou: {
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
                 selectTree_depart:[],
                 selectProps_depart: {
                     children: 'children',
-                    label: 'deptName',
+                    label: 'name',
                     id:'id'
                 },
                 // -----------------------------
@@ -379,7 +379,7 @@
             //---------------------------获取下拉框选项数据
             getSelectData(){//获取下拉选项数据
                 let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){  // 所属组织
+                _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){  // 所属组织
                     _this.selectData.ou=res.result;
                 });
                 _this.$axios.gets('/api/services/app/ShopManagement/GetAll').then
@@ -405,7 +405,7 @@
             //---------------------------获取树形控件数据
             loadTree(){// 加载所属组织树形控件
                 let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList')
                 .then(function(res){//组织
                     _this.selectTree_ou=res.result;
                     _this.loadIcon();
