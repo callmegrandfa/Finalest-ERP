@@ -168,7 +168,7 @@
                                         @node-click="ouNodeClick"></el-tree>
                                 <el-option v-show="false"
                                            :key="countOu.id" 
-                                           :label="countOu.ouFullname" 
+                                           :label="countOu.ouName" 
                                            :value="countOu.id"
                                            id="ou_confirmSelect"></el-option>
                             </el-select>
@@ -398,7 +398,7 @@
 
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
-                             <img class="abimg" src="../../../static/image/content/redremind.png"/>
+                            <img class="abimg" src="../../../static/image/content/redremind.png"/>
                             <input class="input-need" 
                                     :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                     v-model="scope.row.contactPerson" 
@@ -707,11 +707,11 @@
 
                 //获取当前默认ouid
                 self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
-                    // console.log(res);
+                    console.log(res);
                     self.defaultOuId = res.result.id;
                     self.createRepositoryParams.stock_MainTable.ouId = self.defaultOuId;
                     //加载完成拿回下拉的默认值
-                    self.ouItem.ouFullname = res.result.ouFullname;
+                    self.ouItem.ouName = res.result.ouName;
                     self.ouItem.id =  res.result.id;
 
                     //业务地区
@@ -1048,13 +1048,14 @@
                     return data.areaName.indexOf(value) !== -1;
             },
             ouNodeClick:function(data){
-                // console.log(data)
+                console.log(data)
                 let self = this;
                 self.createRepositoryParams.opAreaId = '';
                 self.opItem.areaName = '';
 
                 self.ouItem.id = data.id;
-                self.ouItem.ouFullname = data.ouFullname;
+                self.ouItem.ouName = data.ouName;
+                console.log(self.ouItem.ouName)
                 self.$nextTick(function(){
                     $('#ou_confirmSelect').click()
                 })
@@ -1222,12 +1223,12 @@
                 ouSearch:'',
                 selectOuProps:{
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
                 ouItem:{
                     id:'',
-                    ouFullname:'',
+                    ouName:'',
                 },
                 ouAr:[],//所属组织下拉框
                 //-----------------------
@@ -1492,8 +1493,12 @@ input::-webkit-input-placeholder{
 .res-detail  .errorTips{
     margin-bottom: 10px;
 } 
-.el-select.areaDrop,.el-input.areaEntry{
-    width: 100px;
+.res-detail .area{
+    width:510px;
+    margin-right:0px;
+}
+.res-detail .el-select.areaDrop,.el-input.areaEntry{
+    width: 136px;
 }
 .areaDrop input,.areaEntry input{
     border: none!important;
