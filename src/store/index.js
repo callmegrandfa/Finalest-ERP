@@ -84,6 +84,7 @@ export default new vuex.Store({
         commercial:{ name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: 'commercial', default: '/commercial/commercialSpecification/:id' } , //商品规格
         commercialSpecification:{ name: 'commercialSpecification', url: '/commercial/commercialSpecification/:id', parent: 'commercial' } ,
         commercialSpecificationDetails:{ name: 'commercialSpecificationDetails', url: '/commercial/commercialSpecificationDetails/:id', parent: 'commercial' } ,
+        commercialSpecificationModify:{ name: 'commercialSpecificationModify', url: '/commercial/commercialSpecificationModify/:id', parent: 'commercial' } ,
 
         commodityleimu:{ name: 'commodityleimu', url: '/commodityleimu/commodityClassHeading/:id', parent: 'commodityleimu', default: '/commodityleimu/commodityClassHeading/:id' } , //商品类目
         // { name: 'CommodityCategories', url: '/commodityleimu/CommodityCategories/:id', parent: 'commodityleimu' } ,
