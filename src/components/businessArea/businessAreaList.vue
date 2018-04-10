@@ -105,10 +105,10 @@
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="areaParentId_AreaName" label="上级业务地区"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="status" label="状态">
+                            <el-table-column prop="statusTValue" label="状态">
                                 <template slot-scope="scope">
-                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
-                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
                                     <span v-else >冻结</span>
                                 </template>
                             </el-table-column>
@@ -295,6 +295,7 @@
                 _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',data).then(function(res){ 
                     _this.restaurants=[]
+                    // console.log(res)
                     _this.load=event;
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount;

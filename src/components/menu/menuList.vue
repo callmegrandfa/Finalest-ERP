@@ -275,7 +275,7 @@
                 let _this=this;
                 _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/ModuleManagement/GetListByCondition',data).then(function(res){ 
-                    // console.log(event)
+                    console.log(res)
                     _this.restaurants=[]
                     _this.load=event;
                     _this.tableData=res.items;
