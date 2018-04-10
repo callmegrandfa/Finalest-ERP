@@ -237,41 +237,39 @@ import Tree from '../../base/tree/tree'
                 },
                 bottonbox:{
                     url: '/commodityProperty/commodityPropertyDetails',
+                    Add:true,
                    botton:[{
                     class: 'erp_bt bt_add',
                     imgsrc: '../../../static/image/common/bt_add.png',
                     show:true,
-                    text: '新增'
+                    detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
+                    detailParentName:'',//tree节点点击获取前往detail新增页上级菜单name
+                    text: '新增',
+                    increased: true
                 },{
                     class: 'erp_bt bt_del',
                     imgsrc: '../../../static/image/common/bt_del.png',
                     show:true,
-                    text: '删除'
+                    text: '删除',
+                    increased: true
                 },{
                     class: 'erp_bt bt_audit',
                     imgsrc: '../../../static/image/common/bt_audit.png',
                     show:true,
-                    text: '审核'
+                    text: '审核',
+                    increased: true
                 },{
                     class: 'erp_bt bt_in',
                     imgsrc: '../../../static/image/common/bt_in.png',
                     show:true,
-                    text: '导入'
+                    text: '导入',
+                    increased: true
                 },{
                     class: 'erp_bt bt_out',
                     imgsrc: '../../../static/image/common/bt_inOut.png',
                     show:true,
-                    text: '导出'
-                },{
-                    class: 'erp_bt bt_version',
-                    imgsrc: '../../../static/image/common/bt_start.png',
-                    show:true,
-                    text: '启用'
-                },{
-                    class: 'erp_bt bt_auxiliary',
-                    imgsrc: '../../../static/image/common/bt_stop.png',
-                    show:true,
-                    text: '停用'
+                    text: '导出',
+                    increased: true
                 }]},
                 RequiredOptions:[{
                     value: true,
@@ -279,6 +277,9 @@ import Tree from '../../base/tree/tree'
                     }, {
                     value: false,
                     label: '不必填'
+                }, {
+                    value: '',
+                    label: ''
                 }],
                 ControlTypeOptions:[{
                     value: 0,
@@ -292,19 +293,19 @@ import Tree from '../../base/tree/tree'
                     }, {
                     value: 3,
                     label: '关联档案'
+                }, {
+                    value: '',
+                    label: ''
                 }],
                 StatusOptions:[{
                     value: 0,
-                    label: '已提交'
+                    label: '启用'
                     }, {
                     value: 1,
-                    label: '不通过'
+                    label: '未启用'
                     }, {
-                    value: 2,
-                    label: '已反审'
-                    }, {
-                    value: 3,
-                    label: '通过'
+                    value: '',
+                    label: ''
                 }],
                 search:{
                     PropertyCode:'',
@@ -334,6 +335,7 @@ import Tree from '../../base/tree/tree'
                 },
                 // 错误信息提示结束
                 choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
+                
                 dialogUserConfirm:false,//用户删除保存提示信息
                 tableData: [],
                 currentPage:1,//分页的当前页码
@@ -344,6 +346,7 @@ import Tree from '../../base/tree/tree'
                 tableLoading:true,
                 treeLoading:true,
                 rowid: '',
+                Add:true
             }
         },
         created:function(){
@@ -370,7 +373,7 @@ import Tree from '../../base/tree/tree'
                 obgh.style.width="calc(100% - 340px)";
             },
             modify(row){
-                this.$store.state.url='/commodityProperty/commodityPropertyDetails/'+row.id;
+                this.$store.state.url='/commodityProperty/commodityPropertyModify/'+row.id;
                 this.$router.push({path:this.$store.state.url});
             },
             sureAjax(){
@@ -387,11 +390,12 @@ import Tree from '../../base/tree/tree'
                     }
                 let _this=this;
                 if(_this.idArray.ids.length>0){
-                    _this.$axios.posts('http://192.168.100.107:8085/api/services/app/PropertyManagement/BatchDelete',_this.idArray).then(function(res){
+                    _this.$axios.posts('/api/services/app/PropertyManagement/BatchDelete',_this.idArray).then(function(res){
                         _this.dialogUserConfirm=false;
                         _this.loadTableData();
                         _this.loadTree();
-                        _this.open('删除成功','el-icon-circle-check','successERP');    
+                        _this.open('删除成功','el-icon-circle-check','successERP'); 
+                        _this.bottonbox.botton[0].detailParentId = '';   
                     })         
                 }else{
                     _this.dialogUserConfirm=false;
@@ -424,8 +428,9 @@ import Tree from '../../base/tree/tree'
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
-                _this.$axios.gets('http://192.168.100.107:8085/api/services/app/PropertyManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
+                _this.$axios.gets('/api/services/app/PropertyManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
+                    console.log(res);
                     function compare(property){
                         return function(a,b){
                             var value1 = a[property];
@@ -445,11 +450,12 @@ import Tree from '../../base/tree/tree'
             },
             delThis(){
                 let _this=this;
-                this.$axios.deletes('http://192.168.100.107:8085/api/services/app/PropertyManagement/Delete',{Id:_this.rowid}).then(function(res){
+                this.$axios.deletes('/api/services/app/PropertyManagement/Delete',{Id:_this.rowid}).then(function(res){
                     _this.dialogUserConfirm=false;
                     _this.loadTableData();
                     _this.loadTree();
-                    _this.open('删除成功','el-icon-circle-check','successERP');              
+                    _this.open('删除成功','el-icon-circle-check','successERP');   
+                    _this.bottonbox.botton[0].detailParentId = '';           
                 },function(res){
                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     _this.dialogUserConfirm=false;
@@ -460,9 +466,10 @@ import Tree from '../../base/tree/tree'
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/PropertyManagement/GetPropertyTree')
+                    _this.$axios.gets('/api/services/app/PropertyManagement/GetPropertyTree')
                     .then(function(res){
                         _this.classTree=res;
+                        console.log(res)
                         _this.treeLoading=false;
                         _this.loadIcon();
                 },function(res){
@@ -472,14 +479,27 @@ import Tree from '../../base/tree/tree'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                console.log(data.id); 
-                    _this.$axios.gets('http://192.168.100.107:8085/api/services/app/PropertyManagement/GetPropertyList',{inputId:data.id}).then(function(res){       
-                        console.log(_this.tableData );                
-                        _this.tableData = res.result;
+                _this.bottonbox.botton[0].detailParentId=data.id;//
+                _this.bottonbox.botton[0].detailParentName=data.propertyName;
+                console.log(data.propertyName)
+                    _this.$axios.gets('/api/services/app/PropertyManagement/GetPropertyList',{Id:data.id}).then(function(res){    
+                        console.log(res)   
+                        // console.log(_this.tableData );                
+                        _this.tableData = res.result.items;
                         _this.modifyText();
-                        _this.totalCount=res.result.length
+                        _this.totalCount=res.result.items.length
                         _this.tableLoading=false;
+                        // console.log(1)
+                        // console.log(_this.tableData[0].levelNo)
+                        // if(_this.tableData[0].levelNo == 3){
+                        //     _this.bottonbox.Add = false;
+                        //     // alert(1)
+                        // }else{
+                        //    _this.bottonbox.Add = true; 
+                        // }
                         
+                    },function(res){
+                        console.log(res)
                     })
             },
             getErrorMessage(message,details,validationErrors){
@@ -514,7 +534,8 @@ import Tree from '../../base/tree/tree'
                 let _this=this;
                 _this.choseAjax = 'row';
                 _this.dialogUserConfirm=true;
-                _this.rowid=row.id
+                _this.rowid=row.id;
+
             },
             handleCurrentChange:function(val){//获取当前页码,分页
                 this.currentPage=val;
@@ -542,22 +563,21 @@ import Tree from '../../base/tree/tree'
                        _this.tableData[i].controlType='关联档案'  
                     }
                     if(_this.tableData[i].status == 0){
-                       _this.tableData[i].status='已提交' 
-                    }else if(_this.tableData[i].status == 1){
-                       _this.tableData[i].status='不通过'  
-                    }else if(_this.tableData[i].status == 2){
-                       _this.tableData[i].status='已反审'  
+                       _this.tableData[i].status='启用' 
                     }else{
-                       _this.tableData[i].status='通过'  
+                       _this.tableData[i].status='未启用'  
                     }
 
                 }
             },
             query(){//按条件查询
                 let _this=this;
-                _this.$axios.gets('http://192.168.100.107:8085/api/services/app/PropertyManagement/GetSearch',_this.search).then(function(res){
-                    _this.tableData=res.result; 
+                _this.$axios.gets('/api/services/app/PropertyManagement/GetSearch',_this.search).then(function(res){
+                    console.log(res)
+                    _this.tableData=res.result.items; 
                     _this.modifyText();                  
+                },function(res){
+                    console.log(res)
                 })
             },
             

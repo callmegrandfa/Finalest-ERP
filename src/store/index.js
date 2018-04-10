@@ -78,6 +78,7 @@ export default new vuex.Store({
 
         commodityProperty:{ name: 'commodityProperty', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty', default: '/commodityProperty/commodityPropertyList/:id' }, //商品属性
         commodityPropertyDetails:{ name: 'commodityPropertyDetails', url: '/commodityProperty/commodityPropertyDetails/:id', parent: 'commodityProperty' },
+        commodityPropertyModify:{ name: 'commodityPropertyModify', url: '/commodityProperty/commodityPropertyModify/:id', parent: 'commodityProperty' },
         commodityPropertyList:{ name: 'commodityPropertyList', url: '/commodityProperty/commodityPropertyList/:id', parent: 'commodityProperty' },
 
         commercial:{ name: 'commercial', url: '/commercial/commercialSpecification/:id', parent: 'commercial', default: '/commercial/commercialSpecification/:id' } , //商品规格
