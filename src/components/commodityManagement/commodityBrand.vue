@@ -100,7 +100,7 @@
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
-                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable="enableEdit" :tableName="tableModel" :hasModify="hasModify" :ifSave="isSave"></normalTable>
+                            <normalTable  :methodsUrl="httpUrl" :cols="column" :isDisable='isDisable' :mutiSelect="mutiSelect" :tableName="tableModel" :hasControl="hasControl" :ifSave="isSave"></normalTable>
                              <!-- <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
                                 <el-table-column
                                     type="selection"
@@ -262,43 +262,71 @@ import dialogBox from '../../base/dialog/dialog'
                     del:'/api/services/app/BrandManagement/Delete',//行内删除
                     getId:'/api/services/app/BrandManagement/Get',
                 },
+                isDisable:false,
                 column: [{
                     prop: 'brandCode',
                     label: '品牌编码',
                     control:'normal',
                     required:true,
                     flag:true,//更改标识
+                    isFix:"",
+                    width:"auto",
+                    isDisable:false,
                     },{
                     prop: 'brandName',
                     label: '品牌名称',
                     control:'normal',
                     required:true,
+                    width:"auto",
+                    isDisable:false,
                     },{
                     prop: 'brandEname',
                     label: '英文名称',
                     control:'normal',
                     required:true,
+                    width:"auto",
+                    isDisable:false,
                     },{
                     prop: 'remark',
                     label: '备注',
-                    control:'normal'
+                    control:'normal',
+                    width:"auto",
+                    isDisable:false,
                     },{
                     prop: 'status',
                     label: '状态',
-                    control:'select'
+                    control:'select',
+                    width:"auto",
+                    isDisable:false,
+                    statusOptions:[{
+                            value: 1,
+                            label: '启用'
+                        },{
+                            value: 0,
+                            label: '未启用'
+                        }]
                     },{
                     prop: 'createdBy',
                     label: '创建人',
-                    control:'normal'
+                    control:'normal',
+                    width:"auto",
+                    isDisable:true,
                     },{
                     prop: 'createdTime',
                     label: '创建时间',
-                    control:'datetime'
+                    control:'datetime',
+                    width:"auto",
+                    isDisable:true,
                     }],
                 isSave:false,
                 enableEdit:false,
                 tableModel:'commodityBrand',
-                hasModify:false,//是否包含查看按钮
+                hasControl:{//操作列控制
+                    control:true,//操作栏是否显示
+                    modify:false,//查看按钮是否显示
+                    del:true,//删除按钮是否显示
+                },
+                mutiSelect:true,//多选栏
                 commodityBrandNewCol:{
                     groupId:0,
                     brandCode:"" ,
@@ -339,7 +367,7 @@ import dialogBox from '../../base/dialog/dialog'
                 
             },
             isCancel(){
-                if((this.$store.state[this.tableModel+'NewColArray'].length>0||this.$store.state[this.tableModel+'UpdateColArray'].length>0)&&!this.$store.state[this.tableModel+'IfDel']){
+                if(this.$store.state[this.tableModel+'NewColArray'].length>0||this.$store.state[this.tableModel+'UpdateColArray'].length>0||!this.$store.state[this.tableModel+'IfDel']){
                     return false
                 }else{
                     return true
@@ -514,7 +542,7 @@ import dialogBox from '../../base/dialog/dialog'
                         message: '请先编辑保存新增项'
                     });
                 }else{
-                    this.$store.commit('setIfDel',false)//置空修改增集合 
+                    this.$store.commit('setIfDel',false)//重置修改参数
                     this.$store.dispatch('addCol',newcol);//表格行内新增
                 }                              
             },
@@ -527,7 +555,7 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.$axios.gets('/api/services/app/BrandManagement/GetData',_this.searchItem).then(function(res){
                     //_this.tableData=res.result;
                     _this.$store.state[_this.tableModel+'Table']=res.result.items; 
-                    _this.$store.commit('setUpdateRowId',"")//置空修改行id
+                    _this.$store.commit('get_RowId',"")//置空修改行id
                     let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
                     _this.$store.commit('Init_pagination',totalPage);
                     _this.$store.commit('setCurrentPage',1)//设置当前页码为初始值1             
@@ -536,7 +564,8 @@ import dialogBox from '../../base/dialog/dialog'
             cancel(){//数据恢复到初始化状态 取消
                 this.isSave=false;
                 this.$store.dispatch('InitTable');
-                this.$store.commit('setUpdateRowId',"")//置空修改行id
+                this.$store.commit('setIfDel',true)
+                this.$store.commit('get_RowId',"")//置空修改行id
                 this.$store.commit('setAddColArray',[])//置空新增集合
                 this.$store.commit('setUpdateColArray',[])//置空修改增集合
             },
@@ -632,6 +661,7 @@ import dialogBox from '../../base/dialog/dialog'
                         _this.$axios.posts('/api/services/app/BrandManagement/Create',newArray[0]).then(function(res){
                             _this.$store.commit('setAddColArray',[])//置空新增集合
                             _this.$store.dispatch('InitTable');
+                            _this.$store.commit('setIfDel',true)
                             _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                         }).catch(function(err){
@@ -645,6 +675,7 @@ import dialogBox from '../../base/dialog/dialog'
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',newArray).then(function(res){
                             _this.$store.commit('setAddColArray',[])//置空新增集合
                             _this.$store.dispatch('InitTable');
+                            _this.$store.commit('setIfDel',true)
                             _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                         }); 
@@ -659,16 +690,18 @@ import dialogBox from '../../base/dialog/dialog'
                             }
                         }
                         _this.$axios.puts('/api/services/app/BrandManagement/Update',tableData[updataIndex]).then(function(res){
-                            _this.$store.commit('setUpdateRowId',"")//置空修改行id
+                            _this.$store.commit('get_RowId',"")//置空修改行id
                             _this.$store.commit('setUpdateColArray',[])//置空修改集合
+                            _this.$store.commit('setIfDel',true)
                             _this.$store.dispatch('InitTable');
                             _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
                         });
                     }else{//批量修改
                         _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',tableData).then(function(res){
-                            _this.$store.commit('setUpdateRowId',"")//置空修改行id
+                            _this.$store.commit('get_RowId',"")//置空修改行id
                             _this.$store.commit('setUpdateColArray',[])//置空修改集合
+                            _this.$store.commit('setIfDel',true)
                             _this.$store.dispatch('InitTable');
                             _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    

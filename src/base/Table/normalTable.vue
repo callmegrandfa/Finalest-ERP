@@ -1,24 +1,24 @@
 <template>
     <div>
         <el-table class="normalTable" @row-click="rowClick" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
-            <el-table-column type="selection" label="" width="50">
+            <el-table-column type="selection" label="" width="50" v-show="mutiSelect">
             </el-table-column>
-            <el-table-column v-for="(item) in cols" :key="item.prop" :label="item.label" :prop="item.prop" >
+            <el-table-column v-for="item in cols" :key="item.prop" :label="item.label" :prop="item.prop" :width="item.width" :fixed="item.isFix">
                 <template slot-scope="scope" >
                     <img :id="scope.row.id" v-show='(scope.row.id==""||typeof(scope.row.id)=="undefined"||updateColArray.indexOf(scope.row.id)>=0)&&item.flag' class="update-icon" src="../../../static/image/content/redremind.png"/> 
-                    <el-checkbox v-if="item.control=='checkbox'" disabled v-model='scope.row[item.prop]'></el-checkbox>
-                    <el-input :class="{errorclass:item.required&&scope.row[item.prop]==''&&ifSave==true}"  class="noEdit" :disabled="isDisable" v-if="item.control=='normal'" v-model="scope.row[item.prop]"></el-input>
-                    <el-date-picker  v-if="item.control=='datetime'"  v-model="scope.row[item.prop]" readonly type="date"></el-date-picker>
-                    <el-select :disabled="isDisable" v-if="item.control=='select'"  v-model="scope.row[item.prop]" >
-                        <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                    <el-checkbox v-if="item.control=='checkbox'" :disabled="item.isDisable" v-model='scope.row[item.prop]'></el-checkbox>
+                    <el-input :disabled="item.isDisable" :class="[{errorclass:item.required&&scope.row[item.prop]==''&&ifSave==true},classMap[scope.row[item.prop]]]"   class="noEdit" v-if="item.control=='normal'" v-model="scope.row[item.prop]"></el-input>
+                    <el-date-picker :disabled="item.isDisable"  v-if="item.control=='datetime'"  v-model="scope.row[item.prop]" type="date"></el-date-picker>
+                    <el-select :disabled="item.isDisable" v-if="item.control=='select'"  v-model="scope.row[item.prop]" >
+                        <el-option  v-for="options in item.statusOptions" :key="options.value" :label="options.label" :value="options.value">
                         </el-option>
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="address12" label="操作" width="">
+            <el-table-column prop="address12" label="操作" width="" v-show='hasControl.control'>
                 <template slot-scope="scope">
-                    <el-button v-show="hasModify"  @click="modify(scope.row)" type="text" size="small"  >查看</el-button>
-                    <el-button @click="dialogOpen(scope.row,scope.$index)" type="text" size="small"  >删除</el-button>
+                    <el-button v-show="hasControl.modify"  @click="modify(scope.row)" type="text" size="small"  >查看</el-button>
+                    <el-button v-show="hasControl.del" @click="dialogOpen(scope.row,scope.$index)" type="text" size="small"  >删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -29,7 +29,7 @@
 <script type="text/javascript">
     import dialogBox from '../dialog/dialog'
 	export	default{
-		props:['methodsUrl','cols','isDisable','tableName','hasModify',"ifSave"],
+		props:['methodsUrl','cols','isDisable','tableName','mutiSelect',"ifSave",'hasControl'],
 		data(){
 			return{
                 // currentPage:1,//当前页码
@@ -53,9 +53,11 @@
                 dialogMessage:'',
                 delDialog:false,
                 pageFlag:true,
+                turnPage:-1,
 			}
         },
         created:function(){
+            this.classMap=[];
             this.$store.commit('setTableName',this.tableName)
             this.$store.commit('setHttpApi', this.methodsUrl.creat)
             this.$store.dispatch('InitTable');//初始化表格数据
@@ -128,10 +130,15 @@
                                 this.rowIndex=i;
                             }
                         }
-                        if(!this.Compare(this.updateRow,this.$store.state[this.tableName+'Table'][this.rowIndex])){
-                            this.$store.dispatch('AddUpdateArray');//当表格数据初次加载完毕且表格为可编辑状态，其数据发生改变时   
+                        if(this.rowIndex==""){
+                            return
                         }else{
-                            console.log("xiangtong");
+                            if(!this.Compare(this.updateRow,this.$store.state[this.tableName+'Table'][this.rowIndex])||this.$store.state[this.tableName+'IfDel']){
+                                //this.$store.commit('setIfDel',false);
+                                this.$store.dispatch('AddUpdateArray');//当表格数据初次加载完毕且表格为可编辑状态，其数据发生改变时   
+                                this.rowIndex="";
+                                this.clickRow="";
+                            }
                         }
                         
                     }
@@ -166,7 +173,8 @@
                 if(_this.newColArray.length>0){
                     _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
                     _this.newColArray.splice(_this.delIndex,1);
-                    _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                    //_this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                    //_this.$store.commit('get_RowId',"")//置空修改行id
                     if(_this.newColArray.length==0){
                         _this.$store.commit('setIfDel',true);//设置删除参数为真
                     }else{
@@ -176,8 +184,7 @@
                 }else{
                     _this.$axios.deletes(_this.methodsUrl.del,{Id:_this.delRow.id}).then(function(res){
                         _this.$store.dispatch('InitTable');//初始化表格数据
-                        _this.open('删除成功','el-icon-circle-check','successERP'); 
-                        _this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                        _this.open('删除成功','el-icon-circle-check','successERP');  
                         _this.$store.commit('setIfDel',true);//设置删除参数为真
                         _this.delDialog=false;  
                     }).catch(function(err){
@@ -200,7 +207,6 @@
                        this.updateRow=this.tableClone[i];
                     }
                 }
-                
                 this.$store.dispatch('getRowId',row.id);//传递获取的行id
             },
             handleSelectionChange(val){//多选操作
@@ -218,9 +224,13 @@
                             this.$store.dispatch('InitTable');//初始化表格数据
                             this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                             this.$store.commit('setAddColArray',[])//置空修改增集合 
+                            this.$store.commit('get_RowId',"")//置空修改行id
+                            this.$store.commit('setIfDel',true);//设置删除参数为真
                         }).catch(() => {
                             this.pageFlag=false;
-                            this.$store.commit('setCurrentPage',1)
+                            // this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                            // this.$store.commit('setAddColArray',[])//置空修改增集合 
+                            this.$store.commit('setCurrentPage',this.turnPage)
                             return;     
                     });
                 }else if(this.newColArray.length==0&&this.updateColArray.length==0){
@@ -228,6 +238,7 @@
                     this.$store.dispatch('InitTable');//初始化表格数据
                     this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                     this.$store.commit('setAddColArray',[])//置空修改增集合 
+                    this.$store.commit('get_RowId',"")//置空修改行id
                 }
                 setTimeout(() => {this.pageFlag = true}, 1000)
                 
@@ -320,5 +331,10 @@
     border: 0;
     color: #606266;
     text-align: center;
+}
+.normalTable .el-input.is-disabled .el-input__inner{
+    background-color: #fff;
+    border-color: #e4e7ed;
+    color: #606266;
 }
 </style>
