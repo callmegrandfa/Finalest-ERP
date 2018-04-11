@@ -374,7 +374,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                         
+                         :render-content="renderContent_ouParentid"
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
@@ -444,22 +444,6 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <!-- <el-select filterable              
-                    @change="isUpdate"
-                    placeholder=""
-                    @focus="showErrprTipsSelect"
-                    :class="{redBorder : validation.hasError('addData.companyOuId')}"
-                    class="companyOuId" 
-                    v-model="addData.companyOuId">
-                        <el-option 
-                        v-for="item in selectData.companys" 
-                        :key="item.id" 
-                        :label="item.ouName" 
-                        :value="item.id" 
-                        >
-                        </el-option>
-                    </el-select> -->
-
                     <el-select class="companyOuId"
                         clearable filterable
                         @change="isUpdate"
@@ -473,7 +457,7 @@
                             v-model="search">
                             </el-input>
                             <el-tree
-                             
+                             :render-content="renderContent_companyOuId"
                             :data="selectTreeCompany"
                             :highlight-current="true"
                             :props="selectPropsCompany"
@@ -1661,14 +1645,12 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
             },function(res){
             })
              _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
             .then(function(res){
                 // console.log(res);
                 _this.selectTreeCompany=res.result;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -1982,7 +1964,42 @@ export default({
                 _this.addData.accStartMonth=res.result.checkDate
             },function(res){
             })
-        }
+        },
+        renderContent_companyOuId(h, { node, data, store }){
+                
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
+        renderContent_ouParentid(h, { node, data, store }){
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
     }
 
 })        

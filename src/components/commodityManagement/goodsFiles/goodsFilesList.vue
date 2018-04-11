@@ -162,31 +162,35 @@
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
                             <el-table-column type="selection" fixed="left"></el-table-column>
-                            <el-table-column prop="roleCode" label="商品编码" fixed="left">
+                            <el-table-column prop="productCode" label="商品编码" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.roleCode}}</el-button>
+                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.productCode}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="displayName" label="商品名称" fixed="left">
+                            <el-table-column prop="productName" label="商品名称" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.displayName}}</el-button>
+                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.productName}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="status" label="状态">
+                            <el-table-column prop="statusTValue" label="状态">
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
                                     <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
                                     <span v-else>{{scope.row.statusTValue}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="ouName" label="商品条码"></el-table-column>
-                            <el-table-column prop="ouName" label="品牌"></el-table-column>
-                            <el-table-column prop="ouName" label="类目"></el-table-column>
+                            <el-table-column prop="uniqueMgt" label="商品条码">
+                                <template slot-scope="scope">
+                                    <el-checkbox disabled v-model="scope.row.uniqueMgt"></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="brandId" label="品牌"></el-table-column>
+                            <el-table-column prop="categoryId" label="类目"></el-table-column>
                             <el-table-column label="上市日期" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker
                                     format="yyyy.MM.dd"
-                                    v-model="tableData[scope.$index].createdTime" 
+                                    v-model="tableData[scope.$index].saleDate" 
                                     type="datetime" 
                                     readonly
                                     align="center"></el-date-picker>
@@ -360,7 +364,8 @@
             ajaxTable(data,event){
                  let _this=this;
                 _this.tableLoading=true
-                _this.$axios.gets('/api/services/app/Role/GetAll',data).then(function(res){ 
+                _this.$axios.gets('/api/services/app/ProductManagement/GetAll',data).then(function(res){ 
+                    console.log(res)
                     _this.load=event;
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
@@ -492,7 +497,7 @@
             },
             delThis(){//删除行
                 let _this=this;
-                _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.row.id})
+                _this.$axios.deletes('/api/services/app/ProductManagement/Delete',{id:_this.row.id})
                 .then(function(res){
                      _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
@@ -505,22 +510,22 @@
             },
             delRow(){
                 let _this=this;
-                for(let i=0;i<_this.multipleSelection.length;i++){
-                    _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
-                    .then(function(res){
-                        if(_this.load){
-                            _this.loadTableData();
-                        }else{
-                            _this.SimpleSearch();
-                        }
-                        _this.dialogUserConfirm=false;
-                        _this.open('删除成功','el-icon-circle-check','successERP');
-                    },function(res){
-                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                        _this.dialogUserConfirm=false;
-                         _this.errorMessage=true;
-                    })
+                let data={
+                    "createList": [],
+                    "updateList": [],
+                    "deleteList": _this.multipleSelection
                 }
+                _this.$axios.posts('/api/services/app/ProductManagement/CUDAggregate',data)
+                .then(function(res){
+                     _this.dialogUserConfirm=false;
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                        _this.loadTableData();
+                },function(res){
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                    
+                    _this.dialogUserConfirm=false;
+                    _this.errorMessage=true;
+                })
             },
             see(row){
                 this.$store.state.url='/goodsFiles/goodsFilesModify/'+row.id
@@ -555,7 +560,7 @@
     border-bottom: 1px solid #E4E4E4;
 }
 .mt20{
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .pl15{
     padding-left: 15px;

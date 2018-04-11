@@ -100,7 +100,7 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" border stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="systemId" label="系统"></el-table-column>
+                            <el-table-column prop="systemId_SystemName" label="系统"></el-table-column>
                             <el-table-column prop="moduleCode" label="模块编码">
                                 <template slot-scope="scope">
                                     <el-button type="text"  @click="modify(scope.row)">{{scope.row.moduleCode}}</el-button>
@@ -338,7 +338,7 @@
             },
              getHeight(){
                  $(".tree-container").css({
-                    height:parseInt($('.bg-white').css('height'))-48+'px'
+                    height:$('.bg-white').css('height')
                 })
                 $(".border-left").css({
                     height:$('.bg-white').css('height')
@@ -434,7 +434,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             delRow(){
@@ -454,7 +453,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.errorMessage=true;
                     _this.dialogUserConfirm=false;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
                 
             },

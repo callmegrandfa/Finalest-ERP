@@ -66,6 +66,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
+                            :render-content="renderContent_ou"
                             :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
@@ -179,6 +180,7 @@
             <el-col :span="24" class="transfer_table">
                 <vue-scroll :ops="$store.state.option">
                     <el-tree
+                    :render-content="renderContent_ouTreeDataRight"
                     :data="ouTreeDataRight"
                     show-checkbox
                     default-expand-all
@@ -418,6 +420,7 @@
                             <el-col :span="24" class="fnTreeWrapper">
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
+                                        :render-content="renderContent_Fn"
                                         v-loading="fnTreeLoading" 
                                         :highlight-current="true"
                                         :data="fnTreeData"
@@ -1936,7 +1939,58 @@ export default({
     //   },
     //   resetChecked() {
     //     this.$refs.tree.setCheckedKeys([]);
-    //   }
+    //   },
+    renderContent_Fn(h, { node, data, store }){
+             if(typeof(data.childre)!='undefined' && data.childre!=null && data.childre.length>0){
+                    return (
+                        <span class="el-tree-node__label">
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.displayName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label">
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.displayName}
+                        </span>
+                    );
+                }
+        },
+        renderContent_ou(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+        },
+        renderContent_ouTreeDataRight(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.ouId}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.ouId}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+        },
         
     }
        

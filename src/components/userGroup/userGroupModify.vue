@@ -58,7 +58,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-                             
+                             :render-content="renderContent_"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             :highlight-current="true"
@@ -357,7 +357,6 @@
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -490,7 +489,24 @@
                     $(this).click()
                 }
             })
-    },
+        },
+         renderContent_(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+        },
 }
 
 })
