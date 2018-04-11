@@ -434,7 +434,6 @@
                     _this.selectTree_area=[]
                 }else{
                     _this.selectTree_area=res.result;
-                    _this.loadIcon('areaParentId',_this.addData.areaParentId);
                 }
                 
             },function(res){
@@ -640,14 +639,12 @@
             // _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:_this.addData.OuId})
             // .then(function(res){
             //     _this.selectTree_area=res.result;
-            //     _this.loadIcon();
             // },function(res){
             // })
             //组织
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -708,18 +705,38 @@
             }
         },
         renderContent_ouId(h, { node, data, store }){
-            return (
-                <span class="el-tree-node__label" data-id={data.id}>
-                    {data.ouName}
-                </span>
-            );
+             if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
         },
         renderContent_areaParentId(h, { node, data, store }){
-            return (
-                <span class="el-tree-node__label" data-id={data.id}>
-                    {data.areaName}
-                </span>
-            );
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }
         },
     }
 
