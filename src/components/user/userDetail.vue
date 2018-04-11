@@ -231,8 +231,8 @@
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
                             type="daterange"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd" 
+                            format="yyyy-MM-dd HH:mm:ss"
+                            value-format="yyyy-MM-dd HH:mm:ss" 
                             range-separator="to"
                             align="center"
                             unlink-panels

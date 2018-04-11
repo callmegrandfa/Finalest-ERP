@@ -717,7 +717,173 @@
                     </el-col>
                 </el-tab-pane>
                 <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==2 && Business">
-                    <el-col :span="24">
+                    <!-- <el-col :span="24">
+                          <div class="financeInfo">
+                            <el-col :span="24"  class="getPadding">
+                                <div class="bgcolor">
+                                    <label>国税登记号</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>发税登记号</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>纳税人识别号</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>纳税人编码</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>纳税税种</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>委托税种</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>纳税组织</label>
+                                    <el-checkbox 
+                                    @change="isUpdate"
+                                    ></el-checkbox>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>启用状态</label>
+                                    <el-select clearable filterable  
+                                    @change="isUpdate"
+                                    v-model="test"
+                                    placeholder=""
+                                    class="status" >
+                                        <el-option 
+                                        v-for="item in selectData.Status001" 
+                                        :key="item.itemValue" 
+                                        :label="item.itemName" 
+                                        :value="item.itemValue" 
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </el-col>
+                         </div>
+                     </el-col>    -->
+                     <el-col :span="24">
+                          <div class="companyInfo">
+                            <el-col :span="24"  class="getPadding">
+                                <div class="bgcolor">
+                                    <label>上级业务组织</label>
+                                    <el-select clearable filterable 
+                                    v-model="test"
+                                    @change="isUpdate"
+                                    placeholder=""
+                                    >
+                                        <el-option 
+                                        v-for="item in selectData.ouParentid" 
+                                        :key="item.id" 
+                                        :label="item.ouName" 
+                                        :value="item.id">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>结算账务组织</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>启用状态</label>
+                                    <el-select clearable filterable  
+                                    @change="isUpdate"
+                                    v-model="test"
+                                    placeholder=""
+                                    class="status">
+                                        <el-option 
+                                        v-for="item in selectData.Status001" 
+                                        :key="item.itemValue" 
+                                        :label="item.itemName" 
+                                        :value="item.itemValue" 
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+                            </el-col>
+                         </div>
+                     </el-col>
+                </el-tab-pane>
+                <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==3 && Finance">
+                    <!-- <el-col :span="24">
+                          <div class="companyInfo">
+                            <el-col :span="24"  class="getPadding">
+                                <div class="bgcolor">
+                                    <label>上级业务组织</label>
+                                    <el-select clearable filterable 
+                                    v-model="test"
+                                    @change="isUpdate"
+                                    placeholder=""
+                                    >
+                                        <el-option 
+                                        v-for="item in selectData.ouParentid" 
+                                        :key="item.id" 
+                                        :label="item.ouName" 
+                                        :value="item.id">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>结算账务组织</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>启用状态</label>
+                                    <el-select clearable filterable  
+                                    @change="isUpdate"
+                                    v-model="test"
+                                    placeholder=""
+                                    class="status">
+                                        <el-option 
+                                        v-for="item in selectData.Status001" 
+                                        :key="item.itemValue" 
+                                        :label="item.itemName" 
+                                        :value="item.itemValue" 
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+                            </el-col>
+                         </div>
+                     </el-col>    -->
+                      <el-col :span="24">
                           <div class="financeInfo">
                             <el-col :span="24"  class="getPadding">
                                 <div class="bgcolor">
@@ -794,52 +960,6 @@
                          </div>
                      </el-col>   
                 </el-tab-pane>
-                <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==3 && Finance">
-                    <el-col :span="24">
-                          <div class="companyInfo">
-                            <el-col :span="24"  class="getPadding">
-                                <div class="bgcolor">
-                                    <label>上级业务组织</label>
-                                    <el-select clearable filterable 
-                                    v-model="test"
-                                    @change="isUpdate"
-                                    placeholder=""
-                                    >
-                                        <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>结算账务组织</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>启用状态</label>
-                                    <el-select clearable filterable  
-                                    @change="isUpdate"
-                                    v-model="test"
-                                    placeholder=""
-                                    class="status">
-                                        <el-option 
-                                        v-for="item in selectData.Status001" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue" 
-                                        ></el-option>
-                                    </el-select>
-                                </div>
-                            </el-col>
-                         </div>
-                     </el-col>   
-                </el-tab-pane>
             </el-tabs>
         </el-col>
     </div>
@@ -854,8 +974,8 @@
                 <el-date-picker
                 v-model="auditInfo.createdTime"
                 type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
                 disabled
                 placeholder="">
                 </el-date-picker>
@@ -865,8 +985,8 @@
                 <label>修改时间</label>
                 <el-date-picker
                 v-model="auditInfo.modifiedTime"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 type="date"
                 disabled
                 placeholder="">

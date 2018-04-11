@@ -496,9 +496,25 @@
         <h4 class="h4">审计信息</h4>
         <div>
             <div class="bgcolor"><label>创建人</label><el-input disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-date-picker type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor">
+                <label>创建时间</label>
+                <el-date-picker 
+                type="date" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
+                disabled>
+            </el-date-picker>
+        </div>
             <div class="bgcolor"><label>修改人</label><el-input disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-date-picker type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker 
+                type="date" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
+                disabled>
+                </el-date-picker>
+            </div>
         </div>                                  
     </el-col>
 </el-row>       

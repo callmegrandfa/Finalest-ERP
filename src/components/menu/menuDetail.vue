@@ -207,7 +207,8 @@
                                     node-key="id"
                                     default-expand-all
                                     @node-click="nodeClick"
-                                    :expand-on-click-node="false">
+                                    :expand-on-click-node="false"
+                                    :render-content="renderContent_componyTree">
                                 </el-tree>
                             </vue-scroll>
                         </el-col>
@@ -505,65 +506,29 @@
             if (!value) return true;
             return data.moduleName.indexOf(value) !== -1;
         },
-    //     showErrprTips(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //     showErrprTipsSelect(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //     showErrprTipsRangedate(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.$el).hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //   showErrprTipsTextArea(e){
-    //         $('.tipsWrapper').each(function(){
-    //           if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-    //               $(this).addClass('display_block')
-    //           }else{
-    //               $(this).removeClass('display_block')
-    //           }
-    //         })
-    //   },
       loadTree(){
             let _this=this;
             _this.treeLoading=true;
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
             .then(function(res){
                 _this.selectTree=res;
-                _this.loadIcon()
+                // _this.loadIcon()
                 _this.loadCheckSelect('moduleParentId',_this.addData.moduleParentId)
             },function(res){
             })
         },
         loadIcon(){
             let _this=this;
-            _this.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                    }
-                })
-            })
+            // _this.$nextTick(function () {
+            //     $('.preNode').remove();   
+            //     $('.el-tree-node__label').each(function(){
+            //         if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+            //             $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+            //         }else{
+            //             $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+            //         }
+            //     })
+            // })
         },
         loadCheckSelect(selectName,key){
             let _this=this;
@@ -665,7 +630,7 @@
         showDialog(){
             let _this=this;
             _this.dialogTableVisible = true;
-            _this.loadIcon()
+            // _this.loadIcon()
         },
         uniqueArray(array1, array2){//求差集
             var result = [];
@@ -901,11 +866,38 @@
             });
         },
         renderContent_moduleParentId(h, { node, data, store }){
-            return (
-                <span class="el-tree-node__label" data-id={data.id}>
-                    {data.moduleName}
-                </span>
-            );
+            if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.moduleName}
+                    </span>
+                );
+            }else{
+                 return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.moduleName}
+                    </span>
+                );
+            }
+        },
+        renderContent_componyTree(h, { node, data, store }){
+            if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.permissionName}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.displayName}
+                    </span>
+                );
+            }else{
+                 return (
+                    <span class="el-tree-node__label" data-id={data.permissionName}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.displayName}
+                    </span>
+                );
+            }
         }
     }
 

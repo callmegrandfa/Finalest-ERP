@@ -40,9 +40,13 @@
                     <div class="tipsWrapper mb10">
                         <div class="errorTips">
                             <p class="msgDetail">错误提示：
-                                <span :class="{block : !validation.hasError('createShopParams.ouId')}">
+                                <!-- <span :class="{block : !validation.hasError('createShopParams.ouId')}">
                                      所属组织{{ validation.firstError('createShopParams.ouId') }},
-                                </span>
+                                </span> -->
+                                 <span 
+                                    :class="{block : !validation.hasError('createShopParams.ouId')}">
+                                    编码{{ validation.firstError('createShopParams.ouId') }},
+                                    </span>
 
                                 <span :class="{block : !validation.hasError('createShopParams.contactCode')}">
                                      编码{{ validation.firstError('createShopParams.contactCode') }},

@@ -192,8 +192,8 @@
                         <el-date-picker
                         type="date"
                         disabled
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd">
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                         </el-date-picker>
                     </div>
                 </div>    

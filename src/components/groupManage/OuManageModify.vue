@@ -1044,8 +1044,8 @@
                 <el-date-picker
                 v-model="auditInfo.createdTime"
                 type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 disabled
                 placeholder="">
                 </el-date-picker>
@@ -1055,8 +1055,8 @@
                 <label>修改时间</label>
                 <el-date-picker
                 v-model="auditInfo.modifiedTime"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 type="date"
                 disabled
                 placeholder="">
