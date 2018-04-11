@@ -20,7 +20,7 @@
                         </el-col>
                         <el-col :span="12">
                             <div class="bgcolor smallBgcolor" style="margin-top:20px">
-                            <el-input v-model="searchItem.BrandCode"></el-input>
+                            <el-input v-model="queryParams.BrandCode"></el-input>
                             </div>
                         </el-col>
                     </el-row>
@@ -32,7 +32,7 @@
                         </el-col>
                         <el-col :span="12">
                             <div class="bgcolor smallBgcolor" >
-                            <el-input placeholder="" v-model="searchItem.BrandName"></el-input>
+                            <el-input placeholder="" v-model="queryParams.BrandName"></el-input>
                             </div>
                         </el-col>
                     </el-row>
@@ -44,7 +44,7 @@
                         </el-col>
                         <el-col :span="12">
                             <div class="bgcolor smallBgcolor" >
-                            <el-input placeholder="" v-model="searchItem.BrandEname"></el-input>
+                            <el-input placeholder="" v-model="queryParams.BrandEname"></el-input>
                             </div>
                         </el-col>
                     </el-row>
@@ -56,7 +56,7 @@
                         </el-col>
                         <el-col :span="12">
                             <div class="bgcolor smallBgcolor">
-                                <el-select  v-model="searchItem.Status" >
+                                <el-select  v-model="queryParams.Status" >
                                     <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
@@ -100,7 +100,7 @@
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
-                            <Table  :methodsUrl="httpUrl" :cols="column" :HttpParams="HttpParams" :isDisable='isDisable' :mutiSelect="mutiSelect" :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
+                            <Table  :methodsUrl="httpUrl" :hasPagination="hasPagination" :cols="column" :queryParams="queryParams" :HttpParams="HttpParams" :isDisable='isDisable' :mutiSelect="mutiSelect" :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                              <!-- <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
                                 <el-table-column
                                     type="selection"
@@ -205,7 +205,7 @@ import dialogBox from '../../base/dialog/dialog'
                 },
                 dialogMessage:'',
                 dialogShow:false,
-                searchItem:{
+                queryParams:{
                     BrandCode:'',//品牌编码
                     BrandName:'',//品牌名称
                     BrandEname:'',//品牌名称(英文)
@@ -219,6 +219,9 @@ import dialogBox from '../../base/dialog/dialog'
                     }, {
                     value: 1,
                     label: '启用'
+                    },{
+                    value: '',
+                    label: '全部'
                     }],
                 value: '',
                 tableData:[],
@@ -260,6 +263,8 @@ import dialogBox from '../../base/dialog/dialog'
                 httpUrl:{
                     Initial:'/api/services/app/BrandManagement/GetAll',//数据初始化
                     delete:'/api/services/app/BrandManagement/Delete',//行内删除
+                    query:'/api/services/app/BrandManagement/GetData',//条件查询
+                    treeQuery:'',//树节点查询
                 },
                 HttpParams:{
                     SkipCount:(this.$store.state.commodityBrandCurrentPage-1)*this.$store.state.commodityBrandEachPage,
@@ -331,6 +336,7 @@ import dialogBox from '../../base/dialog/dialog'
                 isSave:false,
                 enableEdit:false,
                 tableModel:'commodityBrand',
+                hasPagination:true,
                 command:[{
                     text:'删除',
                     class:'blue'
@@ -469,7 +475,6 @@ import dialogBox from '../../base/dialog/dialog'
                     let countPage=res.result.totalCount;
                     _this.Init();
                     _this.totalPage = Math.ceil(countPage/_this.eachPage);
-                  
                 })
             },
             showErrprTips(e){
@@ -539,12 +544,16 @@ import dialogBox from '../../base/dialog/dialog'
             },
             search(){//按条件查询
                 let _this=this;
-                _this.$axios.gets('/api/services/app/BrandManagement/GetData',_this.searchItem).then(function(res){
+                _this.$axios.gets('/api/services/app/BrandManagement/GetData',_this.queryParams).then(function(res){
                     //_this.tableData=res.result;
-                    _this.$store.state[_this.tableModel+'Table']=res.result.items; 
+                    _this.$store.commit('Init_ifQuery',true);
+                    
+                    _this.$store.commit('Init_Table',res.result.items);
+                    //_this.$store.state[_this.tableModel+'Table']=res.result.items; 
                     _this.$store.commit('get_RowId',"")//置空修改行id
-                    let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
+                    let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityBrandEachPage);
                     _this.$store.commit('Init_pagination',totalPage);
+                    _this.$store.commit('Init_TotalCount',res.result.totalCount);
                     _this.$store.commit('setCurrentPage',1)//设置当前页码为初始值1             
                 })
             },
