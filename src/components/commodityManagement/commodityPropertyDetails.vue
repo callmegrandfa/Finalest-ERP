@@ -152,7 +152,7 @@
                                     class="propertyParentid"
                                     @change="isUpdate" 
                                     v-model="addData.relPropertyId"
-                                    placeholder="" :class="{redBorder : validation.hasError('addData.propertyParentid')}">
+                                    placeholder="" >
                                     <el-input
                                         placeholder="搜索..."
                                         class="selectSearch"
