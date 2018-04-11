@@ -16,6 +16,13 @@
                 <span class="btDetail">保存</span>
             </button>
 
+            <button class="erp_bt bt_cancel" @click='isBack()'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_cancel.png">
+                </div>
+                <span class="btDetail">取消</span>
+            </button>
+
             <button class="erp_bt bt_saveAdd" @click="saveAdd">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
@@ -23,13 +30,20 @@
                 <span class="btDetail">保存并新增</span>
             </button>
 
-            <button class="erp_bt bt_cancel" @click='Cancel()'>
+            <button class="erp_fb_bt bt_add" :disabled='true'>
                 <div class="btImg">
-                    <img src="../../../static/image/common/bt_cancel.png">
+                    <img src="../../../static/image/common/bt_add.png">
                 </div>
-                <span class="btDetail">取消</span>
+                <span class="btDetail">新增</span>
             </button>
-            
+
+            <button class="erp_fb_bt bt_del" :disabled='true'>
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_del.png">
+                </div>
+                <span class="btDetail">删除</span>
+            </button>
+            <!-- <span>{{"sdtgdyh"+createShopParams.contactName}}</span> -->
             <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
     </el-row>
@@ -43,17 +57,17 @@
                                 <span :class="{block : !validation.hasError('createShopParams.ouId')}">
                                      所属组织{{ validation.firstError('createShopParams.ouId') }},
                                 </span>
-
-                                <span :class="{block : !validation.hasError('createShopParams.contactCode')}">
-                                     编码{{ validation.firstError('createShopParams.contactCode') }},
+                                <!-- <span>{{'1'+createShopParams.contactCode}}</span> -->
+                                <span :class="{block : !validation.hasError('createShopParams.shopCode')}">
+                                     编码{{ validation.firstError('createShopParams.shopCode') }},
                                 </span>
 
-                                <span :class="{block : !validation.hasError('createShopParams.contactName')}">
-                                     名称{{ validation.firstError('createShopParams.contactName') }},
+                                <span :class="{block : !validation.hasError('createShopParams.shopName')}">
+                                     名称{{ validation.firstError('createShopParams.shopName') }},
                                 </span>
 
-                                <span :class="{block : !validation.hasError('createShopParams.contactFullName')}">
-                                     全称{{ validation.firstError('createShopParams.contactFullName') }},
+                                <span :class="{block : !validation.hasError('createShopParams.shopFullname')}">
+                                     全称{{ validation.firstError('createShopParams.shopFullname') }},
                                 </span>
 
                                 <span :class="{block : !validation.hasError('createShopParams.mnemonic')}">
@@ -144,7 +158,7 @@
                                     @node-click="ouNodeClick"></el-tree> 
                             <el-option v-show="false"
                                     :key="countOu.id" 
-                                    :label="countOu.ouFullname" 
+                                    :label="countOu.ouName" 
                                     :value="countOu.id"
                                     id="ou_confirmSelect"></el-option>
                         </el-select>
@@ -205,6 +219,7 @@
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="stockId"
+                                    :disabled="createShopParams.shopWorkPropertyid === 0||createShopParams.shopWorkPropertyid === 2"
                                     :class="{redBorder : validation.hasError('createShopParams.stockId')}">
                             <el-option v-for="item in stockAr" 
                                     :key="item.id" 
@@ -266,22 +281,22 @@
                                        id="op_confirmSelect"></el-option>
                         </el-select>
                     </div>
+                    
                     <div class="bgcolor area">
                         <label>行政地区</label>
                         <div class="areaBox">
-                            <el-select v-model="createShopParams.adAreaId" class="areaDrop" placeholder="选择省">
+                            <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
                                 <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                                 </el-option>
                             </el-select>
-                            <el-select v-model="createShopParams.adAreaId" class="areaDrop" placeholder="选择市">
-                                <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            <el-select  class="areaDrop" placeholder="选择市" v-model="cityId" @change='chooseCity(cityId)'>
+                                <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
                                 </el-option>
                             </el-select>
-                            <el-select v-model="createShopParams.adAreaId" class="areaDrop" placeholder="选择区">
-                                <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                            <el-select  class="areaDrop" placeholder="选择区" v-model="createShopParams.adAreaId" @change='chooseDis()'>
+                                <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
                                 </el-option>
                             </el-select>
-                            <el-input class="areaEntry" placeholder="街道办地址"></el-input>
                         </div>
                     </div>
 
@@ -322,7 +337,7 @@
                     </div>
 
                     <div class="bgcolor">
-                        <label>状态</label>
+                        <label><small>*</small>状态</label>
                         <el-select v-model="createShopParams.status"
                                     class="status"
                                     placeholder=""
@@ -420,6 +435,7 @@
                             
                             <el-table-column prop="contactPerson" label="联系人" width="180">
                                 <template slot-scope="scope">
+                                    <img class="abimg" src="../../../static/image/content/redremind.png"/>
                                     <input class="input-need" 
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                         v-model="scope.row.contactPerson" 
@@ -577,167 +593,10 @@
 
 <script>
 export default({
-    data() {
-        return{
-            defaultOuId:'',
-            ifShow:true,
-            ifModify:false,//判断信息是否修改过
-            backCancle:'',//判断是返回还是取消
-            auditInformation:{//审计信息
-                createName:"",
-                createTime:"",
-                modifyName:"",
-                modifyTime:"",
-                startTime:"",
-                finishTime:"",
-                finishName:"",
-            },
-            search:'',
-            // item:{
-            //     id:'',
-            //     areaName:'',
-            // },
-            defaultProps: {
-                children: 'items',
-                label: 'areaName',
-                id:'id'
-            },  
-            //---所属组织树形下拉-----
-                ouSearch:'',
-                selectOuProps:{
-                    children: 'children',
-                    label: 'ouFullname',
-                    id:'id'
-                },
-                ouItem:{
-                    id:'',
-                    ouFullname:'',
-                },
-                ouAr:[],//所属组织下拉框
-            //-----------------------
-
-            //---行政地区树形下拉-----
-                areaProArray:[],//行政地区(省)
-                areaCityArray:[],//行政地区(市)
-                areaDisArray:[],//行政地区(区)
-                adSearch:'',//树形搜索框的
-                selectAdProps:{
-                    children: 'items',
-                    label: 'areaName',
-                    id:'id'
-                },
-                adItem:{
-                    id:'',
-                    areaName:'',
-                },
-                adAr:[],//行政地区下拉框
-            //-----------------------
-            //---业务地区树形下拉-----
-                opSearch:'',//树形搜索框的
-                selectOpProps:{
-                    children: 'childItems',
-                    label: 'areaName',
-                    id:'id'
-                },
-                opItem:{
-                    id:'',
-                    areaName:'',
-                },
-                opAr:[],//业务地区下拉框
-            //-----------------------
-            //---普通下拉------------
-            propertyAr:[],//店铺性质下拉框
-            stockAr:[],//对应仓库
-            gradeAr:[],//店铺等级下拉框
-            statusAr:[],//状态下拉框
-            sexAr:[],//性别下拉
-            busAr:[],//商圈下拉
-            //-----------------------
-            
-            activeName: 'contact',//tabs标签页默认激活name
-
-            createShopParams:{
-                ouId: '',
-                shopCode: "",
-                shopName: "",
-                shopFullname: "",
-                shopWorkPropertyid: 0,
-                opAreaId: '',
-                stockId: '',
-                mnemonic: "",
-                shopGradeid: '',
-                adAreaId: 10,
-                openingDate: "",
-                manager: "",
-                phone: "",
-                tradingAreaid: '',
-                shopAddress: "",
-                longitude: '',
-                latitude: '',
-                remark: "",
-                status:0,
-                brandCodes: [],
-                shopContacts: [
-                    {
-                    contactPerson: "",
-                    mobile: "",
-                    phone: "",
-                    isDefault: false,
-                    remark: "",
-                    position: "",
-                    sex: '',
-                    id: 0
-                    }
-                ],
-                id: 0
-            },
-
-            contactData:[],//银行数据列表，开始为空
-            addList:[],//需要添加的联系人信息
-
-
-            multipleSelection:[],//需要删除的银行数组
-
-            contactIndex:[],
-
-            x:0,
-            xrows:[],
-            backId:'',
-            //---确认删除-----------------               
-            dialogDelConfirm:false,//用户删除保存提示信息
-            //--------------------  
-
-            //---信息修改提示框------------
-            dialogUserConfirm:false,//信息更改提示控制
-            //----------------------------
-            //---错误提示框----------------
-            option: {
-                vRail: {
-                    width: '5px',
-                    pos: 'right',
-                    background: "#9093994d",
-                },
-                vBar: {
-                    width: '5px',
-                    pos: 'right',
-                    background: '#9093994d',
-                },
-                hRail: {
-                    height: '0',
-                },
-            },
-            errorMessage:false,
-            detail_message_ifShow:false,
-            response:{
-                details:'',
-                message:'',
-                validationErrors:[],
-            },
-            //-----------------------------
-            who:'',//删除的是谁以及是否是多项删除
-            // whoId:'',//单项删除的id
-            whoIndex:'',//单项删除的index
-        }
+    name:'shopDetail',
+    created () {
+        let self=this;
+        self.loadSelect();
     },
     validators: {
         'createShopParams.ouId': function (value) {//所属组织
@@ -779,9 +638,9 @@ export default({
         'createShopParams.tradingAreaid': function (value) {//商圈
             return this.Validator.value(value).maxLength(50);
         },
-        // 'createShopParams.status': function (value) {//状态
-        //     return this.Validator.value(value).integer();
-        // },
+        'createShopParams.status': function (value) {//状态
+            return this.Validator.value(value).required().integer();
+        },
         'createShopParams.shopAddress': function (value) {//店铺地址
             return this.Validator.value(value).maxLength(50);
         },
@@ -796,25 +655,22 @@ export default({
         },
     },
     computed:{
-            countOu () {
-                return this.ouItem;
-            },
-            countAd () {
-                return this.adItem;
-            },
-            countOp () {
-                return this.opItem;
-            },
-        },   
-    created () {
-        let self=this;
-        self.loadSelect();
-    },
-    watch: {
-      search(val) {
-        this.$refs.tree.filter(val);
-      }
-    },
+        countOu () {
+            return this.ouItem;
+        },
+        countAd () {
+            return this.adItem;
+        },
+        countOp () {
+            return this.opItem;
+        },
+    }, 
+    
+    // watch: {
+    //   search(val) {
+    //     this.$refs.tree.filter(val);
+    //   }
+    // },
     methods:{
         //---下拉的数据------------------------------------------------------
         loadSelect:function(){
@@ -833,7 +689,7 @@ export default({
                 self.defaultOuId = res.result.id;
                 self.createShopParams.ouId = self.defaultOuId;
                 //加载完成拿回下拉的默认值
-                self.ouItem.ouFullname = res.result.ouFullname;
+                self.ouItem.ouName = res.result.ouName;
                 self.ouItem.id =  res.result.id;
 
                 //业务地区
@@ -851,8 +707,8 @@ export default({
 
                 //对应仓库
                 self.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,Start:0,Length:100}).then(function(res){
-                    // console.log(res);
-                    self.stockAr = res.data;
+                    console.log(res);
+                    self.stockAr = res.result.items;
                 },function(res){
                     console.log('err'+res)
                 });
@@ -862,12 +718,21 @@ export default({
                 console.log('err'+res)
             });
 
+            //行政地区
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+                console.log(res);
+                self.areaProArray = res.result;
+                // self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+
             
             
             
             //店铺性质
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'ShopWorkProperty'}).then(function(res){
-                // console.log(res);
+                console.log(res);
                 self.propertyAr = res.result;
             },function(res){
                 console.log('err'+res)
@@ -937,7 +802,6 @@ export default({
                         self.goModify(self.backId);
                     },function(res){
                         console.log(res)
-                        self.open('创建失败','el-icon-error','faildERP')
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         self.errorMessage=true;
                     });
@@ -1106,62 +970,14 @@ export default({
         isBack(){
             let self=this;
             if(self.ifModify){
-                self.backCancle = 2;
                 self.dialogUserConfirm=true;
-                // self.choseDoing='back'
             }else{
                 self.back()
             }
         },
         sureDoing:function(){
             let self = this;
-            if(self.backCancle === 1){//为1是取消
-                self.backId = '';
-                self.dialogUserConfirm=false;
-                self.createShopParams = {//创建客户资料参数
-                    ouId: self.defaultOuId,
-                    shopCode: "",
-                    shopName: "",
-                    shopFullname: "",
-                    shopWorkPropertyid: 0,
-                    opAreaId: '',
-                    stockId: '',
-                    mnemonic: "",
-                    shopGradeid: '',
-                    adAreaId: 10,
-                    openingDate: "",
-                    manager: "",
-                    phone: "",
-                    tradingAreaid: '',
-                    shopAddress: "",
-                    longitude: '',
-                    latitude: '',
-                    remark: "",
-                    status:0,
-                    brandCodes: [],
-                    shopContacts: [
-                        {
-                        contactPerson: "",
-                        mobile: "",
-                        phone: "",
-                        isDefault: false,
-                        remark: "",
-                        position: "",
-                        sex: '',
-                        id: 0
-                        }
-                    ],
-                    id: 0
-                }
-                self.addList = [];
-                self.xrows = [];
-                self.backCancle = '';
-                self.ifModify = false;
-                $('.tipsWrapper').css({display:'none'})
-            }
-            if(self.backCancle === 2){//为2是返回
-                self.back();
-            }
+            self.back();
         },
         //-------------------------------------------------------
 
@@ -1217,7 +1033,7 @@ export default({
 
             self.opItem.areaName = '';
             self.ouItem.id = data.id;
-            self.ouItem.ouFullname = data.ouFullname;
+            self.ouItem.ouName = data.ouName;
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
@@ -1261,7 +1077,36 @@ export default({
             })
         },
         //-----------------------------------------------------
-        //---提示错误----------------------------------------------
+
+        //---选择省市区-----------------------------------------
+        chooseProvince:function(id){
+            let self = this;
+            // console.log(id)
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                // console.log(res);
+                self.areaCityArray = res.result;
+                // self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+
+        },
+        chooseCity:function(id){
+            let self = this;
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                // console.log(res);
+                self.areaDisArray = res.result;
+                // self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            })
+        },
+        chooseDis:function(){
+            let self = this;
+            console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
+        },
+        //-----------------------------------------------------
+        //---提示错误-------------------------------------------
         showErrprTips(e){
             $('.tipsWrapper').css({display:'none'})
         },
@@ -1290,7 +1135,156 @@ export default({
             }
         },
         //-------------------------------------------------------------
-    }
+    },
+
+    data() {
+        return{
+            defaultOuId:'',
+            ifShow:true,
+            ifModify:false,//判断信息是否修改过
+            auditInformation:{//审计信息
+                createName:"",
+                createTime:"",
+                modifyName:"",
+                modifyTime:"",
+                startTime:"",
+                finishTime:"",
+                finishName:"",
+            },
+            search:'',
+            defaultProps: {
+                children: 'items',
+                label: 'areaName',
+                id:'id'
+            },  
+            //---所属组织树形下拉-----
+                ouSearch:'',
+                selectOuProps:{
+                    children: 'children',
+                    label: 'ouName',
+                    id:'id'
+                },
+                ouItem:{
+                    id:'',
+                    ouName:'',
+                },
+                ouAr:[],//所属组织下拉框
+            //-----------------------
+
+            //---行政地区树形下拉-----
+                areaProArray:[],//行政地区(省)
+                areaCityArray:[],//行政地区(市)
+                areaDisArray:[],//行政地区(区)
+                proId:'',//省id
+                cityId:'',//市id
+            //-----------------------
+            //---业务地区树形下拉-----
+                opSearch:'',//树形搜索框的
+                selectOpProps:{
+                    children: 'childItems',
+                    label: 'areaName',
+                    id:'id'
+                },
+                opItem:{
+                    id:'',
+                    areaName:'',
+                },
+                opAr:[],//业务地区下拉框
+            //-----------------------
+            //---普通下拉------------
+            propertyAr:[],//店铺性质下拉框
+            stockAr:[],//对应仓库
+            gradeAr:[],//店铺等级下拉框
+            statusAr:[],//状态下拉框
+            sexAr:[],//性别下拉
+            busAr:[],//商圈下拉
+            //-----------------------
+            
+            activeName: 'contact',//tabs标签页默认激活name
+
+            createShopParams:{
+                ouId: '',
+                shopCode: "",
+                shopName: "",
+                shopFullname: "",
+                shopWorkPropertyid: 0,
+                opAreaId: '',
+                stockId: '',
+                mnemonic: "",
+                shopGradeid: '',
+                adAreaId: '',
+                openingDate: "",
+                manager: "",
+                phone: "",
+                tradingAreaid: '',
+                shopAddress: "",
+                longitude: '',
+                latitude: '',
+                remark: "",
+                status:1,
+                brandCodes: [],
+                shopContacts: [
+                    {
+                    contactPerson: "",
+                    mobile: "",
+                    phone: "",
+                    isDefault: false,
+                    remark: "",
+                    position: "",
+                    sex: '',
+                    id: 0
+                    }
+                ],
+                id: 0
+            },
+
+            contactData:[],//银行数据列表，开始为空
+            addList:[],//需要添加的联系人信息
+
+
+            multipleSelection:[],//需要删除的银行数组
+
+            contactIndex:[],
+
+            x:0,
+            xrows:[],
+            backId:'',
+            //---确认删除-----------------               
+            dialogDelConfirm:false,//用户删除保存提示信息
+            //--------------------  
+
+            //---信息修改提示框------------
+            dialogUserConfirm:false,//信息更改提示控制
+            //----------------------------
+            //---错误提示框----------------
+            option: {
+                vRail: {
+                    width: '5px',
+                    pos: 'right',
+                    background: "#9093994d",
+                },
+                vBar: {
+                    width: '5px',
+                    pos: 'right',
+                    background: '#9093994d',
+                },
+                hRail: {
+                    height: '0',
+                },
+            },
+            errorMessage:false,
+            detail_message_ifShow:false,
+            response:{
+                details:'',
+                message:'',
+                validationErrors:[],
+            },
+            //-----------------------------
+            who:'',//删除的是谁以及是否是多项删除
+            // whoId:'',//单项删除的id
+            whoIndex:'',//单项删除的index
+        }
+    },
        
 
   })
@@ -1299,7 +1293,7 @@ export default({
   <style>
   .block{
     display: none;
-    }
+}
     .bg-white{
         background: white;
     }
@@ -1414,8 +1408,12 @@ export default({
 .customerBasicForm .el-select-dropdown__item{
     text-align: center;
 }
+.customerBasicForm .area{
+    width:510px;
+    margin-right:0px;
+}
 .el-select.areaDrop,.el-input.areaEntry{
-    width: 100px;
+    width: 136px;
 }
 .areaDrop input,.areaEntry input{
     border: none!important;
