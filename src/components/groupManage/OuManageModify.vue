@@ -388,7 +388,7 @@
                         </el-tree>
                         <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                     </el-select>
                 </div>
@@ -487,7 +487,7 @@
                         </el-tree>
                         <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
                     </el-select>
 
@@ -1136,13 +1136,13 @@ export default({
             },
             selectProps: {
                 children: 'children',
-                label: 'ouFullname',
+                label: 'ouName',
                 id:'id'
             },
             //选择所属公司
             selectPropsCompany:{
                 children: 'children',
-                label: 'ouFullname',
+                label: 'ouName',
                 id:'id'
             },
             groupCompany:{
@@ -1492,6 +1492,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 上级业务单元(所属组织)
                 _this.selectData.ouParentid=res.result;
+                // console.log(res)
             })
             _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
             // 会计期间方案
@@ -1504,6 +1505,7 @@ export default({
              _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){ 
             // 公司
                 _this.selectData.companys=res.result;
+                // console.log(res)
             })
              _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'OUType'}).then(function(res){ 
             // 组织类型
@@ -1517,6 +1519,7 @@ export default({
         getData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/Get',{id:_this.$route.params.id})
+         
             .then(function(res){
                 _this.addData={
                     "ouCode": res.result.ouCode,
@@ -1535,6 +1538,7 @@ export default({
                     "id":res.result.id,
                     "ouTypes":res.result.ouTypes
                 };
+                   console.log(res);
                 // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(resp){ 
                 // // 上级业务单元(所属组织)
                 //     let flag=false
@@ -1662,7 +1666,7 @@ export default({
             })
              _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
             .then(function(res){
-                console.log(res);
+                // console.log(res);
                 _this.selectTreeCompany=res.result;
                 _this.loadIcon();
             },function(res){

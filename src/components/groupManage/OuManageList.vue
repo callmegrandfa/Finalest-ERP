@@ -536,7 +536,7 @@
                 .then(function(res){
                  
                     _this.selectTreeCompany=res.result;
-                       console.log( _this.selectTreeCompany);
+                    //    console.log( _this.selectTreeCompany);
                     _this.loadIcon();
                 },function(res){
                 })
