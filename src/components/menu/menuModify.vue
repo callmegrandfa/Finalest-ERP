@@ -51,7 +51,7 @@
                         :class="{redBorder : validation.hasError('addData.systemId')}" 
                         placeholder=""
                         v-model="addData.systemId">
-                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in selectData.systemId" :key="item.id" :label="item.systemName" :value="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -75,7 +75,7 @@
                             v-model="search">
                         </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree"
                             :highlight-current="true"
                             :props="selectProps"
@@ -392,6 +392,7 @@
             selectData:{//select数据
                 Status001:[],//启用状态
                 menu:[],//菜单
+                systemId:[],//子系统
             },
             response:{
                 details:'',
@@ -527,47 +528,15 @@
             // 菜单
             _this.selectData.menu=res.result.items;
             })
+            _this.$axios.gets('/api/services/app/SysSystemManagement/GetAllList').then(function(res){ 
+            // 子系统
+            _this.selectData.systemId=res.result;
+            })
         },
          filterNode(value, data) {
             if (!value) return true;
             return data.moduleName.indexOf(value) !== -1;
         },
-    //     showErrprTips(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //     showErrprTipsSelect(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //     showErrprTipsRangedate(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.$el).hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //   showErrprTipsTextArea(e){
-    //         $('.tipsWrapper').each(function(){
-    //           if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-    //               $(this).addClass('display_block')
-    //           }else{
-    //               $(this).removeClass('display_block')
-    //           }
-    //         })
-    //   },
       loadTree(){
             let _this=this;
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})

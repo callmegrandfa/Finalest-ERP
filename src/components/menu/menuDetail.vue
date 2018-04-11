@@ -51,7 +51,7 @@
                         :class="{redBorder : validation.hasError('addData.systemId')}" 
                         placeholder=""
                         v-model="addData.systemId">
-                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in selectData.systemId" :key="item.id" :label="item.systemName" :value="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -75,7 +75,7 @@
                             v-model="search">
                         </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree"
                             :highlight-current="true"
                             :props="selectProps"
@@ -387,6 +387,7 @@
             selectData:{//select数据
                 Status001:[],//启用状态
                 menu:[],//菜单
+                systemId:[],//子系统
             },
             response:{
                 details:'',
@@ -491,7 +492,10 @@
            _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
             // 菜单
             _this.selectData.menu=res.result.items;
-           
+            })
+            _this.$axios.gets('/api/services/app/SysSystemManagement/GetAllList').then(function(res){ 
+            // 子系统
+            _this.selectData.systemId=res.result;
             })
         },
         getDefault(){

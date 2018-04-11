@@ -41,7 +41,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                         
                         :data="selectTreeCompany"
                         :props="selectPropsCompany"
                         :highlight-current="true"
@@ -69,7 +69,7 @@
                             v-model="search_area">
                         </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_area"
                             :props="selectProps_area"
                             :highlight-current="true"
@@ -100,17 +100,19 @@
                 </div>
             </el-col>
             <el-col :span='4' class="border-left" v-loading="treeLoading" id="ouListTree">
-                <el-tree 
-                :data="componyTree"
-                :props="defaultProps"
-                :highlight-current="true"
-                node-key="id"
-                :expand-on-click-node="false"
-                :default-expanded-keys="expandId"
-                :render-content="renderContent_componyTree"
-                @node-click="nodeClick">
-                
-                </el-tree>
+                <vue-scroll :ops="$store.state.option">
+                    <el-tree 
+                    :data="componyTree"
+                    :props="defaultProps"
+                    :highlight-current="true"
+                    node-key="id"
+                    :expand-on-click-node="false"
+                    :default-expanded-keys="expandId"
+                    :render-content="renderContent_componyTree"
+                    @node-click="nodeClick">
+                    
+                    </el-tree>
+                </vue-scroll>
             </el-col>
              <el-col :span="ifWidth ? 15:20" class="border-left" id="ouListTable">
                 <el-row class="h48">
@@ -691,10 +693,10 @@
             },
             getHeight(){
                 $("#ouListTree").css({
-                    minHeight:$('.bg-white').css('height')
+                    height:$('.bg-white').css('height')
                 })
                 $("#ouListTable").css({
-                    minHeight:$('.bg-white').css('height')
+                    height:$('.bg-white').css('height')
                 })
             },
             nodeClick(data){
