@@ -849,7 +849,7 @@
                         self.getOuId = self.repositoryData.ouId;
 
                         //行政地区所有省
-                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
                             // console.log(res);
                             self.areaProArray = res.result;
                             // self.loadIcon();

@@ -947,7 +947,7 @@ export default({
                 id:'id'
             },
             selectPropsCompany:{
-                 children: 'children',
+                children: 'children',
                 label: 'ouFullname',
                 id:'id'
             },
@@ -1314,6 +1314,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 上级业务单元(所属组织)
                 _this.selectData.ouParentid=res.result;
+                // console.log(res)
             })
             // _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
             // // 会计期间方案
@@ -1324,6 +1325,7 @@ export default({
                 _this.selectData.baseCurrencyId=res.result.items;
             })
              _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){ 
+                   console.log(res)
             // 公司
                 _this.selectData.companys=res.result;
             })
