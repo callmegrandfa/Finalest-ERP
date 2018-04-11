@@ -21,7 +21,7 @@
                             </el-col>
                             <el-col :span="12">
                                 <div class="bgcolor smallBgcolor">
-                                <el-input v-model="search.CategoryName"></el-input>
+                                <el-input v-model="queryParams.CategoryName"></el-input>
                                 </div>
                             </el-col>
                         </el-row>
@@ -33,7 +33,7 @@
                             </el-col>
                             <el-col :span="12">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-select  v-model="search.IsService">
+                                    <el-select  v-model="queryParams.IsService">
                                         <el-option v-for="item in SystemOptions" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
@@ -48,7 +48,7 @@
                             </el-col>
                             <el-col :span="12">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-select  v-model="search.Status" >
+                                    <el-select  v-model="queryParams.Status" >
                                         <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
@@ -92,7 +92,7 @@
                             </el-tree>
                         </el-col>
                         <el-col :span="19" class="pb10" style="background:#fff">
-                            <Table  :methodsUrl="httpUrl" :cols="column" :HttpParams='HttpParams' :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :command="command"></Table>
+                            <Table  :methodsUrl="httpUrl" :hasPagination="hasPagination" :queryParams="queryParams" :cols="column" :HttpParams='HttpParams' :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :command="command"></Table>
                             <!-- <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
                                 <el-table-column type="selection" label="" width="50">
                                 </el-table-column>
@@ -156,11 +156,6 @@ import dialogBox from '../../base/dialog/dialog'
                 tableLoading:true,
                 dialogMessage:'',
                 dialogShow:false,
-                search:{
-                    CategoryName:'',
-                    IsService:'',
-                    Status:'',
-                },
                 bottonbox:{
                     url: '/commodityleimu/CommodityCategoriesDetails',
                    botton:[{
@@ -192,11 +187,20 @@ import dialogBox from '../../base/dialog/dialog'
                 httpUrl:{
                    Initial:'/api/services/app/CategoryManagement/GetAll',//数据初始化
                    view:'/commodityleimu/CommodityCategoriesDetails/',//查看详情
-                   delete:'/api/services/app/CategoryManagement/Delete'//单条删除
+                   delete:'/api/services/app/CategoryManagement/Delete',//单条删除
+                   query:'/api/services/app/CategoryManagement/GetSearch',//条件查询
+                   treeQuery:'/api/services/app/CategoryManagement/GetCategoryList',//树节点查询
                 },
                 isDisable:true,
+                queryParams:{//查询条件参数
+                    CategoryName:'',
+                    IsService:'',
+                    Status:'',
+                    SkipCount:(this.$store.state.commodityClassHeadingCurrentPage-1)*this.$store.state.commodityClassHeadingEachPage,
+                    MaxResultCount:this.$store.state.commodityClassHeadingEachPage,
+                },
                 column: [{
-                    prop: 'categoryParentName',
+                    prop: 'categoryParentid_CategoryName',
                     label: '上级类目',
                     controls:'text',
                     isDisable:true,
@@ -239,6 +243,7 @@ import dialogBox from '../../base/dialog/dialog'
                     isDisable:true,
                     sortable:false,
                 }],
+                hasPagination:true,
                 command:[{
                     text:'查看',
                     class:'green'
@@ -256,14 +261,9 @@ import dialogBox from '../../base/dialog/dialog'
                 enableEdit:true,
                 mutiSelect:true,//多选栏
                 tableModel:'commodityClassHeading',
-                HttpParams:{
+                HttpParams:{//数据初始化参数
                     SkipCount:(this.$store.state.commodityClassHeadingCurrentPage-1)*this.$store.state.commodityClassHeadingEachPage,
                     MaxResultCount:this.$store.state.commodityClassHeadingEachPage
-                },
-                hasControl:{
-                    control:true,
-                    modify:true,
-                    del:false,
                 },
                 SystemOptions: [{
                     value: null,
@@ -298,6 +298,14 @@ import dialogBox from '../../base/dialog/dialog'
         created:function(){       
            this.loadTree();
            //this.loadTableData();
+        },
+        watch:{
+            queryParams:{
+                handler:function(val,oldVal){
+                     
+                },
+                deep:true
+            },
         },
         methods:{
         	closeLeft:function(){
@@ -351,11 +359,12 @@ import dialogBox from '../../base/dialog/dialog'
                 let _this=this;
                 _this.tableLoading=true;
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{Id:data.id,SkipCount:(_this.currentPage-1)*_this.$store.state.eachPage,MaxResultCount:_this.$store.state.eachPage}).then(function(res){                     
-                        _this.$store.state[_this.tableModel+'Table'] = res.result.items;
-                        let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
+                        //_this.$store.state[_this.tableModel+'Table'] = res.result.items;
+                        _this.$store.commit('Init_Table',res.result.items);
+                        let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
                         _this.$store.commit('Init_pagination',totalPage);
+                        _this.$store.commit('Init_TotalCount',res.result.totalCount);
                         _this.$store.commit('setCurrentPage',1)//设置当前页码为初始值1    
-                        
                     })
             },
             loadIcon(){
@@ -373,10 +382,14 @@ import dialogBox from '../../base/dialog/dialog'
             },
             query(){//条件查询
                 let _this=this;
-                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.search).then(function(res){
-                    _this.$store.state[_this.tableModel+'Table']=res.result.items;  
-                    let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.eachPage);
-                    _this.$store.commit('Init_pagination',totalPage)               
+                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.queryParams).then(function(res){
+                    _this.$store.commit('Init_ifQuery',true)
+                    _this.$store.commit('Init_Table',res.result.items);
+                    //_this.$store.state[_this.tableModel+'Table']=res.result.items;  
+                    let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
+                    _this.$store.commit('Init_pagination',totalPage) 
+                    _this.$store.commit('Init_TotalCount',res.result.totalCount);
+                    _this.$store.commit('setCurrentPage',1)//设置当前页码为初始值1                       
                 })
             },
             open(tittle,iconClass,className) {//提示框
