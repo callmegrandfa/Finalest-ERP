@@ -9,19 +9,19 @@
                     <span class="btDetail">返回</span>
                 </button>     
 
-                <button @click="save" plain class="erp_bt bt_save">
+                <button plain @click="save"  class="erp_bt bt_save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
-                <button @click="isCancel"class="erp_bt bt_cancel">
+                <button @click="isBack"class="erp_bt bt_cancel">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
                     <span class="btDetail">取消</span>
                 </button>
-                <button @click='saveAdd'plain class="erp_bt bt_saveAdd">
+                <button  plain @click='saveAdd' class="erp_bt bt_saveAdd">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
@@ -56,7 +56,8 @@
                                    v-model="addData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
-                                      v-model="parentSearch"></el-input>
+                                      v-model="parentSearch">
+                                      </el-input>
 
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                      :data="selectParentTree"
@@ -184,26 +185,13 @@
             <div class="bgcolor"><label>创建人</label><el-input v-model="addData.createdBy" disabled></el-input></div>
             <div class="bgcolor">
                 <label>创建时间</label>
-                <el-date-picker
-                v-model="addData.createdTime"
-                type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
-                disabled
-                placeholder="">
-                </el-date-picker>
+                <el-input v-model="addData.createdTime" disabled></el-input>
+              
             </div>
             <div class="bgcolor"><label>修改人</label><el-input  v-model="addData.modifiedBy" disabled></el-input></div>
             <div class="bgcolor">
-                <label>修改时间</label>
-                <el-date-picker
-                v-model="addData.modifiedTime"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
-                type="date"
-                disabled
-                placeholder="">
-                </el-date-picker>
+                <label>修改时间</label> 
+               <el-input v-model="addData.modifiedTime" disabled></el-input>
             </div>
         </div>                                  
     </el-col>
@@ -292,8 +280,12 @@
                     "status": 1,
                     "remark": "",
                     "mnemonic": "1",
-                    "createdBy" :'',
-                    "createdTime"  :''
+                    // "createdBy" :'',
+                    // "createdTime"  :''
+                    createdTime:this.GetDateTime(),//创建时间
+                    createdBy:this.$store.state.name,//创建人
+                    modifiedTime:this.GetDateTime(),//修改人
+                    modifiedBy:this.$store.state.name//修改时间
                     },
                     selectData:{//select数据
                         Status001:[],//启用状态
@@ -404,7 +396,24 @@
                 })
             })
         },
-        //-----------------------------------------------------
+            GetDateTime: function () {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+        },
+    //-----------------------------------------------------
         
         //---保存---------------------------------------------
            save(){
@@ -620,6 +629,7 @@
 .pt15{
     padding-top: 15px;
 }
+
 .customerClassDetail  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
