@@ -13,22 +13,22 @@
                     </el-autocomplete>
                 </el-col>
                 <el-col :span='24' class="tree-container">
-                    <!-- <vue-scroll :ops="$store.state.option"> -->
+                    <vue-scroll :ops="$store.state.option">
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        :render-content="renderContent_componyTree"
                         v-loading="treeLoading" 
                         :highlight-current="true"
                         :data="componyTree"
                         :props="defaultProps"
+                        :default-expanded-keys="expandId"
                         node-key="id"
-                        default-expand-all
                         ref="tree"
                         :expand-on-click-node="false"
                         :filter-node-method="filterNode"
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                    <!-- </vue-scroll> -->
+                    </vue-scroll>
                 </el-col>   
             </el-col>
             <el-col :span='19' class="border-left">
@@ -226,6 +226,7 @@
                 componyTree:  [
                     // {areaName:'根目录',id:'0',items:[]},
                 ],
+                expandId:[],//默认展开
                 defaultProps: {
                     children: 'childItems',
                     label: 'name',
@@ -314,6 +315,15 @@
                     _this.tableLoading=false;
                 })
             },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
@@ -321,10 +331,10 @@
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
-                    _this.loadIcon();
                     _this.$nextTick(function(){
                         _this.getHeight()
                     })
+                    _this.expandId=_this.defauleExpandTree(res.result,'id')
                },function(res){
                    _this.treeLoading=false;
                    _this.$nextTick(function(){
@@ -357,8 +367,8 @@
                  }
             },
             getHeight(){
-                $(".search-container").css({
-                    height:$('.bg-white').css('height')
+                $(".tree-container").css({
+                    height:parseInt($('.bg-white').css('height'))-48+'px'
                 })
                 $(".border-left").css({
                     height:$('.bg-white').css('height')
@@ -501,7 +511,24 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            renderContent_componyTree(h, { node, data, store }){
+                if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }
+            },
         },
     }
 </script>

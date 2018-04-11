@@ -448,7 +448,7 @@
                 _this.ajaxTable(_this.searchDataClick,"SimpleSearch")
             },
             goDetail(){
-                this.$store.state.url='/role/roleDetail/default'
+                this.$store.state.url='/goodsFiles/goodsFilesDetail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
              handleSelectionChange(val) {//点击复选框选中的数据
@@ -523,7 +523,7 @@
                 }
             },
             see(row){
-                this.$store.state.url='/role/roleModify/'+row.id
+                this.$store.state.url='/goodsFiles/goodsFilesModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
              submitSearch(){

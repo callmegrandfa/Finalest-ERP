@@ -53,6 +53,10 @@ export default new vuex.Store({
         goodsFilesModify:{ name: 'goodsFilesModify', url: '/goodsFiles/goodsFilesModify/:id', parent: 'goodsFiles' } ,
         goodsFilesList:{ name: 'goodsFilesList', url: '/goodsFiles/goodsFilesList/:id', parent: 'goodsFiles' } ,
 
+        Record:{ name: 'Record', url: '/Record/commodityRecord/:id', parent: 'Record', default: '/Record/commodityRecord/:id' } , //商品档案
+        commodityRecord:{ name: 'commodityRecord', url: '/Record/commodityRecord/:id', parent: 'Record' } ,
+        commodityRecordDetails:{ name: 'commodityRecordDetails', url: '/Record/commodityRecordDetails/:id', parent: 'Record' } ,
+
         repository:{ name: 'repository', url: '/repository/repositoryList/:id', parent: 'repository', default: '/repository/repositoryList/:id' } , //仓库管理
         repositoryList:{ name: 'repositoryList', url: '/repository/repositoryList/:id', parent: 'repository' } ,
         repositoryData:{ name: 'repositoryData', url: '/repository/repositoryData/:id', parent: 'repository' } ,
@@ -741,11 +745,18 @@ export default new vuex.Store({
             {code:'fa fa-window-restore',label:"",},
             {code:'fa fa-wrench',label:"",},
         ],
+        OuId:'',//组织单元ID
         tableName:'',//表格名称
         // 商品类目
-        commodityClassHeadingHttpApi:'',//接口
+        commodityClassHeadingHttpApi:'',//初始化接口
+        commodityClassHeadingQueryApi:'',//查询接口
+        commodityClassHeadingTreeQueryApi:'',//树节点查询接口
         commdityClassHeadingParams:'',
         commodityClassHeadingTable:[],//商品类目表格数据
+        commodityClassHeadingQuery:false,//条件查询
+        commodityClassHeadingTreeQuery:false,//树节点查询
+        commodityClassHeadingQueryParams:"",//条件查询参数
+        commodityClassHeadingTreeQueryParams:"",//树节点查询参数
         commodityClassHeadingTotalCount:0,//总条数
         commodityClassHeadingSelection:[],//选中数据集合
         commodityClassHeadingCurrentPage:1,//当前分页
@@ -753,9 +764,15 @@ export default new vuex.Store({
         commodityClassHeadingEachPage:10,//每页显示条数
         //商品品牌
         commodityBrandHttpApi:'',
+        commodityBrandQueryApi:'',//查询接口
+        commodityBrandTreeQueryApi:'',//树节点查询接口
         commodityBrandParams:'',
         commodityBrandTable:[],//品牌表格数据
         commodityBrandTableClone:[],//品牌表格数据clone
+        commodityBrandQuery:false,//条件查询
+        commodityBrandTreeQuery:false,//树节点查询
+        commodityBrandQueryParams:"",//条件查询参数
+        commodityBrandTreeQueryParams:"",//树节点查询参数
         commodityBrandNewCol:'',
         commodityBrandIfDel:true,//是否删除
         commodityBrandNewColArray:[],//表格内新增数据集合
@@ -767,6 +784,28 @@ export default new vuex.Store({
         commodityBrandTotalPagination:10,//总页数
         commodityBrandTotalCount:0,//总条数
         commodityBrandEachPage:10,//每页显示条数
+        //仓库资料列表演示
+        storeHouseHttpApi:'',//接口
+        storeHouseParams:'',
+        storeHoseQueryParams:'',//查询参数
+        storeHouseTable:[],//商品类目表格数据
+        storeHouseTotalCount:0,//总条数
+        storeHouseSelection:[],//选中数据集合
+        storeHouseCurrentPage:1,//当前分页
+        storeHouseTotalPagination:10,//总页数
+        storeHouseEachPage:10,//每页显示条数
+        //仓库资料详情
+        storeHouseModifyHttpApi:'',
+        storeHouseModifyHttpParams:'',
+        storeHouseModifyTable:[],//商品类目表格数据
+        storeHouseModifySelection:[],//选中数据集合
+        storeHouseModifySelection:[],//选中数据集合
+        storeHouseModifyNewColArray:[],//表格内新增数据集合
+        storeHouseModifyUpdateColArray:[],//表格内修改数据集合
+        storeHouseModifyUpdateRow:'',//修改表格行数据
+        storeHouseModifyUpdateRowId:'',//修改的表格行ID
+        storeHouseModifyIfDel:true,//是否删除
+
         queryparams:{},
         tableLoading:true,
         totalPage:10,//总页数
@@ -805,17 +844,38 @@ export default new vuex.Store({
         Init_TotalCount(state,data){//总条数
             state[state.tableName+'TotalCount']=data
         },
+        Init_OuId(state,data){
+            state.OuId=data;
+        },
+        Init_ifQuery(state,data){//是否输入查询条件
+            state[state.tableName+'Query']=data
+        },
+        Init_ifTreeQuery(state,data){//是否点击树节点查询
+            state[state.tableName+'TreeQuery']=data
+        },
         // Init_status(state,data){//状态下拉
         //     state[state.tableName+'statusOptions']=data
         // },
         setIfDel(state,data){//配置是否删除参数
             state[state.tableName+'IfDel']=data
         },
-        setHttpApi(state,api){//api地址
+        setHttpApi(state,api){//初始化api地址
             state[state.tableName+'HttpApi']=api;
         },
-        setHttpParams(state,api){//api请求参数
-            state[state.tableName+'Params']=api;
+        setQueryApi(state,api){//查询api地址
+            state[state.tableName+'QueryApi']=api;
+        },
+        setTreeQueryApi(state,api){//查询树节点api地址
+            state[state.tableName+'TreeQueryApi']=api;
+        },
+        setHttpParams(state,params){//api请求参数
+            state[state.tableName+'Params']=params;
+        },
+        setQueryParams(state,params){//查询请求参数
+            state[state.tableName+'QueryParams']=params;
+        },
+        setTreeQueryParams(state,params){//查询树节点请求参数
+            state[state.tableName+'TreeQueryParams']=params;
         },
         setTableName(state,name){//对应表格名称
             state.tableName=name;
@@ -853,10 +913,28 @@ export default new vuex.Store({
         InitTable(context){//表格初始化
             axios.get(context.state[context.state.tableName+'HttpApi'],{
                 params:context.state[context.state.tableName+'Params']
-                // params:{
-                //     SkipCount:(context.state[context.state.tableName+'CurrentPage']-1)*context.state[context.state.tableName+'EachPage'],
-                //     MaxResultCount:context.state[context.state.tableName+'EachPage']
-                // }
+            }).then(function(res){
+                context.commit('Init_Table',res.data.result.items);
+                context.commit('Init_TotalCount',Number(res.data.result.totalCount));
+                let totalPage=Math.ceil(res.data.result.totalCount/context.state[context.state.tableName+'EachPage']);
+                context.commit('Init_pagination',totalPage);
+                },function(res){
+            })
+        },
+        QueryTable(context){//根据查询条件
+            axios.get(context.state[context.state.tableName+'QueryApi'],{
+                params:context.state[context.state.tableName+'QueryParams']
+            }).then(function(res){
+                context.commit('Init_Table',res.data.result.items);
+                context.commit('Init_TotalCount',Number(res.data.result.totalCount));
+                let totalPage=Math.ceil(res.data.result.totalCount/context.state[context.state.tableName+'EachPage']);
+                context.commit('Init_pagination',totalPage);
+                },function(res){
+            })
+        },
+        TreeQueryTable(context){//根据树节点查询条件
+            axios.get(context.state[context.state.tableName+'TreeQueryApi'],{
+                params:context.state[context.state.tableName+'TreeQueryParams']
             }).then(function(res){
                 context.commit('Init_Table',res.data.result.items);
                 context.commit('Init_TotalCount',Number(res.data.result.totalCount));

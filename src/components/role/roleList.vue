@@ -32,12 +32,12 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                         :render-content="renderContent_selectTree"
+                         :default-expanded-keys="expandId"
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
-                        default-expand-all
                         ref="tree"
                         :filter-node-method="filterNode"
                         :expand-on-click-node="false"
@@ -257,6 +257,7 @@
                     id:'',
                     ouName:'',
                 },
+                expandId:[],
                 selectProps: {
                     children: 'children',
                     label: 'ouName',
@@ -353,12 +354,21 @@
                 if (!value) return true;
                 return data.ouName.indexOf(value) !== -1;
             },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
             loadTree(){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
                 .then(function(res){
                     _this.selectTree=res.result;
-                    _this.loadIcon();
+                    _this.expandId=_this.defauleExpandTree(res.result,'id')
                 },function(res){
                 })
             },
@@ -511,6 +521,23 @@
                 $(".border-left").css({
                     minHeight:$('.bg-white').css('height')
                 })
+            },
+            renderContent_selectTree(h, { node, data, store }){
+                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
             },
             
         },

@@ -162,7 +162,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                         
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
@@ -231,8 +231,8 @@
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
                             type="daterange"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd" 
+                            format="yyyy-MM-dd HH:mm:ss"
+                            value-format="yyyy-MM-dd HH:mm:ss" 
                             range-separator="to"
                             align="center"
                             unlink-panels

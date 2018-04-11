@@ -58,7 +58,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             :highlight-current="true"
@@ -123,9 +123,27 @@
                 <h4 class="h4">审计信息</h4>
                 <div>
                     <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
-                    <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createdTime" type="date" disabled="disabled"></el-date-picker></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-date-picker 
+                        v-model="auditInformation.createdTime" 
+                        type="date" 
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        disabled>
+                        </el-date-picker>
+                    </div>
                     <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
-                    <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifiedTime" type="date" disabled="disabled"></el-date-picker></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-date-picker 
+                        v-model="auditInformation.modifiedTime" 
+                        type="date" 
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        disabled>
+                        </el-date-picker>
+                    </div>
                 </div>                                  
             </el-col>
         </el-row>     

@@ -30,7 +30,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             :highlight-current="true"
@@ -69,7 +69,7 @@
                             v-model="search_area">
                         </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_area"
                             :highlight-current="true"
                             :props="selectProps_area"
@@ -192,8 +192,8 @@
                         <el-date-picker
                         type="date"
                         disabled
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd">
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                         </el-date-picker>
                     </div>
                 </div>    

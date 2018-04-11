@@ -176,37 +176,24 @@
                 </div>    
             </el-col>-->
       </el-row>
-      <el-row>
-    <el-col :span="24" class="getPadding">
-        <h4 class="h4">审计信息</h4>
-        <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
-            <div class="bgcolor">
-                <label>创建时间</label>
-                <el-date-picker
-                v-model="customerClassData.createdTime"
-                type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
-                disabled
-                placeholder="">
-                </el-date-picker>
-            </div>
-            <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
-            <div class="bgcolor">
-                <label>修改时间</label>
-                <el-date-picker
-                v-model="customerClassData.modifiedTime"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
-                type="date"
-                disabled
-                placeholder="">
-                </el-date-picker>
-            </div>
-        </div>                                  
-    </el-col>
-</el-row>       
+          <el-row>
+            <el-col :span="24" class="getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-input v-model="customerClassData.createdTime" disabled></el-input>
+                      
+                    </div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label> 
+                      <el-input v-model="customerClassData.modifiedTime" disabled></el-input>
+                    </div>
+                </div>                                  
+            </el-col>
+        </el-row>  
       <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -344,8 +331,10 @@ export default {
         classParentId_ClassName:"",
         remark: "",
         status: "",
-        createdBy: "",
-        createdTime: ""
+        createdTime:this.GetDateTime(),//创建时间
+        createdBy:this.$store.state.name,//创建人
+        modifiedTime:this.GetDateTime(),//修改人
+        modifiedBy:this.$store.state.name//修改时间
       },
       //---确认删除-----------------
       dialogDelConfirm: false, //用户删除保存提示信息
@@ -480,7 +469,23 @@ export default {
         );
     },
     //-------------------------------------------------------
-
+     GetDateTime: function () {
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            },
     //---树--------------------------------------------------
     filterNode(value, data) {
       // console.log(data)
