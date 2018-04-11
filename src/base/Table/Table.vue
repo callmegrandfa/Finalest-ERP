@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table class="normalTable" @row-click="rowClick" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
-            <el-table-column type="selection" label="" width="50" v-show="mutiSelect">
+            <el-table-column type="selection" label="" width="50" v-if="mutiSelect">
             </el-table-column>
             <el-table-column v-for="item in cols" :key="item.prop" :label="item.label" :prop="item.prop" :width="item.width" :fixed="item.isFix" :sortable="item.sortable">
                 <template slot-scope="scope" >
@@ -20,7 +20,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="address12" label="操作" width="" v-show='command.length>0'>
+            <el-table-column prop="address12" label="操作" width="" v-if='command.length>0'>
                 <template slot-scope="scope">
                     <el-button v-for="item in command" :key="item.text" @click='btnClick(scope.row,scope.$index,$event);'  type="text" size="small" :class="item.class" >{{item.text}}</el-button>
                 </template>
@@ -30,7 +30,7 @@
             <!-- <el-col :span='12'>
                 共{{}}
             </el-col> -->
-            <el-col :span='24'>
+            <el-col :span='24' v-if="hasPagination">
                 <el-pagination style="margin-top:20px;" class="text-right" :page-size="eachPage" :page-sizes="[5, 10, 15]" :total="totalCount"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, sizes, prev, pager, next, jumper"  :page-count="totalPagination" ></el-pagination>
             </el-col>
         </el-row>
@@ -40,7 +40,7 @@
 <script type="text/javascript">
     import dialogBox from '../dialog/dialog'
 	export	default{
-		props:['methodsUrl','cols','isDisable','tableName','mutiSelect',"ifSave",'command','HttpParams'],
+		props:['methodsUrl','cols','isDisable','tableName','mutiSelect',"ifSave",'command','HttpParams',"queryParams",'hasPagination'],
 		data(){
 			return{
                 // currentPage:1,//当前页码
@@ -65,12 +65,15 @@
                 delDialog:false,
                 pageFlag:true,
                 turnPage:-1,
+                ParamsArray:[],
 			}
         },
         created:function(){
             this.classMap=[];
-            this.$store.commit('setTableName',this.tableName)
-            this.$store.commit('setHttpApi', this.methodsUrl.Initial);
+            this.$store.commit('setTableName',this.tableName)//传递具体数据模型名称
+            this.$store.commit('setHttpApi', this.methodsUrl.Initial);//传递数据初始化api
+            this.$store.commit('setQueryApi', this.methodsUrl.query);//传递查询数据初始化api
+            this.$store.commit('setTreeQueryApi', this.methodsUrl.treeQuery);//传递查询树节点数据初始化api
             this.$store.commit('setHttpParams', this.HttpParams);
             this.$store.dispatch('InitTable');//初始化表格数据
             setTimeout(() => {//拷贝初始化数据，和修改行做对比
@@ -157,7 +160,18 @@
                     }
                 },
                 deep: true
-            }
+            },
+            queryParams:{
+                handler: function (val, oldVal) {
+                    this.ParamsArray=[];
+                    for(let x in val){
+                        if(val[x]!=""){
+                            this.ParamsArray.push(val[x]);
+                        }
+                    }
+                },
+                deep: true
+            },
         },
         methods:{
             btnClick(row,index,event){
@@ -245,7 +259,14 @@
                             this.HttpParams.SkipCount=(val-1)*this.$store.state[this.tableName+'EachPage'];
                             this.HttpParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
                             this.$store.commit('setHttpParams', this.HttpParams);
-                            this.$store.dispatch('InitTable');//初始化表格数据
+                            if(this.$store.state[this.tableName+'Query']){//查询结果翻页
+                                this.$store.commit('setQueryParams', this.queryParams);
+                                this.$store.dispatch('QueryTable');//查询接口
+                            }else if(this.$store.state[this.tableName+'TreeQuery']){//树节点返回结果翻页
+
+                            }else{
+                                this.$store.dispatch('InitTable');//初始化表格数据
+                            }
                             this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                             this.$store.commit('setAddColArray',[])//置空修改增集合 
                             this.$store.commit('get_RowId',"")//置空修改行id
@@ -262,7 +283,14 @@
                     this.HttpParams.SkipCount=(val-1)*this.$store.state[this.tableName+'EachPage'];
                     this.HttpParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
                     this.$store.commit('setHttpParams', this.HttpParams);
-                    this.$store.dispatch('InitTable');//初始化表格数据
+                    if(this.$store.state[this.tableName+'Query']&&this.ParamsArray.length>0){//查询结果翻页                       
+                        this.$store.commit('setQueryParams', this.queryParams);
+                        this.$store.dispatch('QueryTable');//查询接口
+                    }else if(this.$store.state[this.tableName+'TreeQuery']){//树节点返回结果翻页
+
+                    }else{
+                        this.$store.dispatch('InitTable');//初始化表格数据
+                    }
                     this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                     this.$store.commit('setAddColArray',[])//置空修改增集合 
                     this.$store.commit('get_RowId',"")//置空修改行id

@@ -308,6 +308,9 @@ import Btm from '../../base/btm/btm'
             this.InitModify();
             if(this.$route.params.id=="default"){
                 this.isAdd=true;
+                this.bottonbox.botton[1].disabled=false;
+            }else{
+                this.bottonbox.botton[1].disabled=true;
             }
         },
         validators: {
@@ -340,6 +343,7 @@ import Btm from '../../base/btm/btm'
                 handler: function (val, oldVal) {
                     this.changeTimes++
                     if(this.changeTimes==2){
+                        this.bottonbox.botton[1].disabled=false;
                         this.bottonbox.botton[2].disabled=false;
                     }
                 },
@@ -412,7 +416,7 @@ import Btm from '../../base/btm/btm'
                         console.log(res);
                         _this.updateId=res.result.id;
                         _this.treeNode.categoryParentid=res.result.categoryParentid;
-                        _this.treeNode.categoryName=res.result.categoryParentName;
+                        _this.treeNode.categoryName=res.result.categoryParentid_CategoryName ;
                         _this.addItem.categoryParentid=res.result.categoryParentid
                         _this.addItem.categoryCode=res.result.categoryCode;
                         _this.addItem.categoryName=res.result.categoryName;
@@ -494,13 +498,14 @@ import Btm from '../../base/btm/btm'
                 _this.$validate()
                 if(!_this.isAdd){
                     let updateData=_this.addItem;
-                   // _this.$set(updateData, 'id', _this.updateId);
+                    _this.$set(updateData, 'id', _this.updateId);
                     _this.$axios.puts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Update',updateData).then(function(res){
                         //_this.InitModify();
                         _this.InitCategoryid();
                         _this.validation.reset();
                         _this.isEdit=true;
                         _this.bottonbox.botton[2].disabled=true;//取消按钮
+                        _this.bottonbox.botton[1].disabled=true;//保存按钮
                         _this.open('修改商品类目成功','el-icon-circle-check','successERP'); 
                         return;   
                     }); 
