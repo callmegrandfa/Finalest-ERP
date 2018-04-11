@@ -428,6 +428,7 @@
                         self.$router.push({path:self.$store.state.url})
                         self.open('保存成功','el-icon-circle-check','successERP');
                         self.dialogUserConfirm=false;
+                        console.log(res.result.createdTime)
                         // _this.addData.id=res.result.id;
                         // console.log(res.result);
                         // self.open('保存成功','el-icon-circle-check','successERP');
@@ -526,8 +527,8 @@
                 "status": 1,
                 "remark": "",
                 "mnemonic": "1",
-                "createdBy" :'',
-                "createdTime"  :''
+                // "createdBy" :'',
+                // "createdTime"  :''
             }
             // self.getDefault()
             

@@ -11,7 +11,8 @@
                     </el-input>
                 </el-col>
 
-                <el-col :span='24' class="tree-container" >
+                <el-col :span='24' class="tree-container transfer_fixed" >
+                    <vue-scroll :ops="$store.state.option">
                     <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
                              v-loading="treeLoading" 
                              :highlight-current="true"
@@ -24,6 +25,7 @@
                              :filter-node-method="filterNode"
                              @node-click="nodeClick">
                     </el-tree>
+                    </vue-scroll>
                 </el-col>   
             </el-col>
             
