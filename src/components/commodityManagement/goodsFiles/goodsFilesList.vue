@@ -1,45 +1,79 @@
 <template>
-    <div class="userGroupList">
+    <div class="roleList">
         <el-row class="bg-white">
-             <el-col :span="ifWidth?5:0" v-show="ifWidth" class="search-container">
+            <el-col :span="ifWidth?5:0" v-show="ifWidth" class="search-container">
                 <el-row class="h48 pl15">
                     <el-col :span="18" class="btn-for-search">
-                        <img src="../../../static/image/common/search_btn.png">
+                        <img src="../../../../static/image/common/search_btn.png">
                         <span>查询</span>
                     </el-col>
                     <el-col :span="2" :offset="4">
                         <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
-                <div class="mt20 bgcolor smallBgcolor"><label>用户组编码</label><el-input v-model="searchData.UserGroupCode" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>用户组名称</label><el-input v-model="searchData.UserGroupName" placeholder=""></el-input></div>
+                <div class="mt20 bgcolor smallBgcolor"><label>商品编码</label><el-input v-model="searchData.roleCode" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>商品名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
+                    <label>上市时间(起)</label>
+                     <el-date-picker
+                    format="yyyy.MM.dd"
+                    type="date" 
+                    align="center"></el-date-picker>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>上市时间(终)</label>
+                    <el-date-picker
+                    format="yyyy.MM.dd"
+                    type="date" 
+                    align="center"></el-date-picker>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>类目</label>
+                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
+                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>品牌</label>
+                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
+                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>状态</label>
+                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
+                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
+                <!-- <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
-                    <el-select clearable v-model="searchData.OuId" placeholder="">
+                    <el-select clearable  v-model="searchData.ouId" placeholder="">
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
                         v-model="search">
                         </el-input>
                         <el-tree
-                         :render-content="renderContent_selectTree"
-                         :default-expanded-keys="expandId"
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
+                        default-expand-all
                         ref="tree"
                         :filter-node-method="filterNode"
                         :expand-on-click-node="false"
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
-                        </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                        <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option>
                     </el-select>
-                </div>
+                </div> -->
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -47,32 +81,28 @@
             </el-col>
 
             <el-col :span="ifWidth?19:24" class="border-left">
-                <el-row class="h48">
+                <el-row class="h48 ">
                     <el-col :span="ifWidth?0:2" class="search-block">
                         <div @click="openLeft">
-                            <img src="../../../static/image/common/search_btn.png">
+                            <img src="../../../../static/image/common/search_btn.png">
                             <span>查询</span>
                             <span class='open-search'>+</span>
                         </div>
                     </el-col>
                     <el-col :span="ifWidth?24:22" class="pt5">
-                        <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
-                        <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                        <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
+                        <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                        <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
                         <button class="erp_bt bt_out bt_width">
-                            <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
+                            <div class="btImg"><img src="../../../../static/image/common/bt_inOut.png"></div>
                             <span class="btDetail">导出</span>
-                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                            <div class="btRightImg"><img src="../../../../static/image/common/bt_down_right.png"></div>
                         </button>
-                        <button class="erp_bt bt_start bt_width">
-                            <div class="btImg"><img src="../../../static/image/common/bt_start.png"></div>
-                            <span class="btDetail">启用</span>
-                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                        </button>
-                        <button class="erp_bt bt_stop bt_width"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
+                        <button class="erp_bt bt_start"><div class="btImg"><img src="../../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
+                        <button class="erp_bt bt_stop"><div class="btImg"><img src="../../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button>   
+                              
                         <div class="search_input_group">
-                            <div class="search_input_wapper" @keyup.enter="submitSearch">
+                            <div class="search_input_wapper"  @keyup.enter="submitSearch">
                                 <el-input
                                     placeholder="搜索..."
                                     v-model="Name"
@@ -81,7 +111,7 @@
                                 </el-input>
                             </div>
                             <div class="search_button_wrapper" @click="dialogUserDefined = true">
-                                <button class="userDefined">
+                                <button class="userDefined" >
                                     <i class="fa fa-cogs" aria-hidden="true"></i>自定义
                                 </button>
                             </div>
@@ -99,13 +129,13 @@
                         style="width: 100%" 
                         stripe 
                         ref="multipleTable">
-                            <el-table-column label="序号">
+                            <el-table-column label="序号" fixed="left">
                                  <template slot-scope="scope">
                                     {{scope.$index + 1}}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="field" label="字段"></el-table-column>
-                            <el-table-column prop="field" label="操作">
+                            <el-table-column prop="field" label="字段" fixed="left"></el-table-column>
+                            <el-table-column prop="field" label="操作" fixed="left">
                                 <template slot-scope="scope">
                                     <el-switch
                                         v-model="tableData[scope.$index].value"
@@ -132,37 +162,40 @@
                         @selection-change="handleSelectionChange" 
                         ref="multipleTable">
                             <el-table-column type="selection" fixed="left"></el-table-column>
-                            <el-table-column label="用户组编码">
+                            <el-table-column prop="roleCode" label="商品编码" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.userGroupCode}}</el-button>
+                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.roleCode}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="用户组名称">
+                            <el-table-column prop="displayName" label="商品名称" fixed="left">
                                 <template slot-scope="scope">
-                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.userGroupName}}</el-button>
+                                    <el-button type="text"  @click="see(scope.row)">{{scope.row.displayName}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="ouName" label="所属组织"></el-table-column>
-                            <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="createdBy" label="创建人"></el-table-column>
-                            
-                            <el-table-column prop="createdTime" label="创建时间" width="160">
+                            <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
-                                    <el-date-picker 
-                                    format="yyyy-MM-dd"
-                                    value-format="yyyy-MM-dd" 
-                                    v-model="scope.row.createdTime" 
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
+                                    <span v-else>{{scope.row.statusTValue}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="ouName" label="商品条码"></el-table-column>
+                            <el-table-column prop="ouName" label="品牌"></el-table-column>
+                            <el-table-column prop="ouName" label="类目"></el-table-column>
+                            <el-table-column label="上市日期" width="160">
+                                <template slot-scope="scope">
+                                    <el-date-picker
+                                    format="yyyy.MM.dd"
+                                    v-model="tableData[scope.$index].createdTime" 
                                     type="datetime" 
                                     readonly
-                                    align="center"
-                                    placeholder=""></el-date-picker>
+                                    align="center"></el-date-picker>
                                 </template>
                             </el-table-column>
-
                             <el-table-column label="操作" fixed="right">
                                  <template slot-scope="scope">
-                                    <el-button type="text"  @click="see(scope.row)" >查看</el-button>
-                                    <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
+                                     <el-button type="text"  @click="see(scope.row)" >查看</el-button>
+                                     <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
                                     <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
                                 </template>
                             </el-table-column>
@@ -199,7 +232,7 @@
             </span>
         </el-dialog>
         <!-- dialog -->
-        <!-- dialog错误信息提示 -->
+       <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
@@ -235,21 +268,6 @@
         data(){
             return {
                  // 错误信息提示开始
-                 option: {
-                    vRail: {
-                        width: '5px',
-                        pos: 'right',
-                        background: "#9093994d",
-                    },
-                    vBar: {
-                        width: '5px',
-                        pos: 'right',
-                        background: '#9093994d',
-                    },
-                    hRail: {
-                        height: '0',
-                    },
-                },
                 detail_message_ifShow:false,
                 errorMessage:false,
                 // 错误信息提示结束
@@ -266,7 +284,6 @@
                     id:'',
                     ouName:'',
                 },
-                expandId:[],
                 selectProps: {
                     children: 'children',
                     label: 'ouName',
@@ -275,83 +292,49 @@
 
 
                 tableLoading:false,
-                treeLoading:false,
                 searchData:{
-                    
+                    OuCode: "",//编码
+                    Name: "",//名称
+                    CompanyOuId:'',//所属公司
+                    AreaId: '',//行政地区
+                    Status: '',//启用状态
+                    OuType: '',//组织类型
                 },
                 searchDataClick:{},
                 tableSearchData:{},
-                selectData:{
-                    UserType:[],//身份类型
-                    Status001:[],//状态
-                    userGroupId:[],//用户组
-                    languageId:[],//语种
-                    roles:[],//角色
-                    ou:[],//组织
-                },
-               
+                
                 tableData:[],
 
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
-                page:1,//当前页 
-                totalItem:0,//总共有多少条消息
+                page:1,//当前页
                 treeCheck:[],
                 isClick:[],
                 load:'loadTableData',
-               
+                totalItem:0,//总共有多少条消息
                 ifWidth:true,
                 dialogUserDefined:false,//dialog
 
                 response:{
-                    details:'',
-                    message:'',
-                    validationErrors:[],
+                details:'',
+                message:'',
+                validationErrors:[],
                 },
                 Name:'',//右上角模糊查询
             }
-        },
-        created:function(){       
-            let _this=this;
-            _this.loadTree();
-            _this.loadTableData();
-            _this.getSelectData();
         },
         watch: {
             search(val) {
                 this.$refs.tree.filter(val);
             }
-        },     
-        methods:{
-            getSelectData(){
+        },  
+        created:function(){       
                 let _this=this;
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'UserType'}).then(function(res){ 
-                // 身份类型
-                _this.selectData.UserType=res.result;
-                })
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
-                // 启用状态
-                _this.selectData.Status001=res.result;
-                })
-                _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
-                // 所属用户组
-                    _this.selectData.userGroupId=res.result.items;
-                    _this.totalCount=res.result.totalCount;
-                })
-                _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
-                // 语种
-                    _this.selectData.languageId=res.result.items;
-                })
-                _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
-                // 语种
-                    _this.selectData.roles=res.result.items;
-                })
-                _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
-                // 所属组织
-                _this.selectData.ou=res.result;
-                })
-            },
+                _this.loadTree();
+                _this.loadTableData();
+             },
+        methods:{
             closeLeft:function(){
                let self = this;
                self.ifWidth = false;
@@ -372,12 +355,12 @@
             },
             loadTableData(){//表格
                 let _this=this;
-                _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"loadTableData");
+                _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},'loadTableData')
             },
             ajaxTable(data,event){
                  let _this=this;
                 _this.tableLoading=true
-                _this.$axios.gets('/api/services/app/UserGroup/GetAll',data).then(function(res){ 
+                _this.$axios.gets('/api/services/app/Role/GetAll',data).then(function(res){ 
                     _this.load=event;
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
@@ -393,6 +376,46 @@
                     })
                 })
             },
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.ouName.indexOf(value) !== -1;
+            },
+            loadTree(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                .then(function(res){
+                    _this.selectTree=res.result;
+                    _this.loadIcon();
+                },function(res){
+                })
+            },
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            nodeClick(data,node,self){
+                let _this=this;
+                _this.item.id=data.id;
+                _this.item.ouName=data.ouName;
+                _this.$nextTick(function(){
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                })
+                    
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // })
+            },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                  _this.page=val;
@@ -401,35 +424,35 @@
                  }else if(_this.load=="SimpleSearch"){
                      _this.SimpleSearch();
                  }else if(_this.load=="submitSearch"){
-                       _this.ajaxTable({UserGroupName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+                       _this.ajaxTable({DisplayName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
                  }
             },
             SimpleSearchClick(){
                 let _this=this;
+                 
                  _this.searchDataClick={
-                    UserGroupCode:_this.searchData.UserGroupCode,//
-                    UserGroupName: _this.searchData.UserGroupName,//
-                    OuId: _this.searchData.OuId,//
+                    roleCode:_this.searchData.roleCode,//
+                    displayName: _this.searchData.displayName,//
+                    ouId: _this.searchData.ouId,//
+                    status: _this.searchData.status,
+                    sorting:'',
                 }
-                _this.page=1
+                _this.page=1;
                 _this.SimpleSearch();
             },
             SimpleSearch(){//简单搜索
                  let _this=this;
-                _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
+                 _this.tableLoading=true;
+                 _this.searchDataClick.SkipCount=(_this.page-1)*_this.oneItem;
                  _this.searchDataClick.MaxResultCount=_this.oneItem;
-                 _this.ajaxTable(_this.searchDataClick,"SimpleSearch")
+                _this.ajaxTable(_this.searchDataClick,"SimpleSearch")
             },
             goDetail(){
-                this.$store.state.url='/userGroup/userGroupDetail/default'
+                this.$store.state.url='/goodsFiles/goodsFilesDetail/default'
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
              handleSelectionChange(val) {//点击复选框选中的数据
-                let _this=this;
-                _this.multipleSelection=[];
-                $.each(val,function(index,value){
-                    _this.multipleSelection.push({'id':value.id})
-                })
+                this.multipleSelection = val;
             },
             confirm(){//多项删除
                 let _this=this;
@@ -469,98 +492,46 @@
             },
             delThis(){//删除行
                 let _this=this;
-                _this.$axios.deletes('/api/services/app/UserGroup/Delete',{id:_this.row.id})
+                _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.row.id})
                 .then(function(res){
-                    _this.dialogUserConfirm=false;
+                     _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.loadTableData();
                 },function(res){
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                    _this.dialogUserConfirm=false;
-                    _this.errorMessage=true;
+                     _this.dialogUserConfirm=false;
+                      _this.errorMessage=true;
                 })
-             },
+            },
             delRow(){
                 let _this=this;
-                let data={
-                    "createList": [],
-                    "updateList": [],
-                    "deleteList": _this.multipleSelection
-                }
-                _this.$axios.posts('/api/services/app/UserGroup/CUDAggregate',data)
-                .then(function(res){
-                    if(_this.load){
-                        _this.loadTableData();
-                    }else{
-                        _this.SimpleSearch();
-                    }
-                    _this.dialogUserConfirm=false;
-                    _this.open('删除成功','el-icon-circle-check','successERP');
-                },function(res){
-                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                    _this.dialogUserConfirm=false;
-                    _this.errorMessage=true;
-                })
-            },
-            filterNode(value, data) {
-                if (!value) return true;
-                return data.ouName.indexOf(value) !== -1;
-            },
-            defauleExpandTree(data,key){
-                if(typeof(data[0])!='undefined'
-                && data[0]!=null 
-                && typeof(data[0][key])!='undefined'
-                && data[0][key]!=null
-                && data[0][key]!=''){
-                    return [data[0][key]]
-                }
-            },
-            loadTree(){
-                let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
-                .then(function(res){
-                    _this.selectTree=res.result;
-                    _this.expandId=_this.defauleExpandTree(res.result,'id')
-                },function(res){
-                })
-            },
-            loadIcon(){
-                let _this=this;
-                _this.$nextTick(function () {
-                    $('.preNode').remove();   
-                    $('.el-tree-node__label').each(function(){
-                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                for(let i=0;i<_this.multipleSelection.length;i++){
+                    _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
+                    .then(function(res){
+                        if(_this.load){
+                            _this.loadTableData();
                         }else{
-                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                            _this.SimpleSearch();
                         }
+                        _this.dialogUserConfirm=false;
+                        _this.open('删除成功','el-icon-circle-check','successERP');
+                    },function(res){
+                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                        _this.dialogUserConfirm=false;
+                         _this.errorMessage=true;
                     })
-                })
-            },
-            nodeClick(data,node,self){
-                let _this=this;
-                _this.item.id=data.id;
-                _this.item.ouName=data.ouName;
-                // _this.$nextTick(function(){
-                //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
-                // })
-                    
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
-                })
+                }
             },
             see(row){
-                this.$store.state.url='/userGroup/userGroupModify/'+row.id
+                this.$store.state.url='/goodsFiles/goodsFilesModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由
             },
-            submitSearch(){
+             submitSearch(){
                 let _this=this;
                 _this.page=1
-                 _this.ajaxTable({UserGroupName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+                _this.ajaxTable({displayName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
             },
-            getHeight(){
+             getHeight(){
                 $(".search-container").css({
                     minHeight:$('.bg-white').css('height')
                 })
@@ -568,32 +539,12 @@
                     minHeight:$('.bg-white').css('height')
                 })
             },
-            renderContent_selectTree(h, { node, data, store }){
-                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
-                    return (
-                        <span class="el-tree-node__label" data-id={data.id}>
-                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.ouName}
-                        </span>
-                    );
-                }else{
-                    return (
-                        <span class="el-tree-node__label" data-id={data.id}>
-                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.ouName}
-                        </span>
-                    );
-                }
-            },
+            
         },
     }
 </script>
 
 <style scoped>
-.halfWidth{
-    display: inline-block;
-    width: calc(50% - 10px)
-}
 .bg-white{
     background: white;
     border-radius: 3px;
@@ -617,6 +568,7 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
+
 }
 .btn{
     display: inline-block;
@@ -630,7 +582,7 @@
     cursor: pointer;
 }
 .open-search{
-    background-image: url(../../../static/image/common/btn-circle.png);
+    background-image: url(../../../../static/image/common/btn-circle.png);
     background-repeat: no-repeat;
     background-position: center;
     color: #E3E3E3;
@@ -642,13 +594,8 @@
 </style>
 
 <style>
-.userGroupList .el-button+.el-button{
+.roleList .el-button+.el-button{
     margin-left: 0;
 }
-.halfWidth.left input{
-    text-align: right;
-}
-.halfWidth.right input{
-    text-align: left;
-}
+
 </style>

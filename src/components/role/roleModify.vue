@@ -308,7 +308,7 @@
             </el-col>
             <el-col :span="24" class="transfer_footer">
                 <el-col :span="18">
-                    <span>总共有{{totalItemLeftUser}}条数据</span>
+                    <span>共{{totalPageLeftUser}}页</span>
                 </el-col>
                 <el-col :span="6">
                     <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
@@ -358,7 +358,7 @@
             </el-col>
             <el-col :span="24" class="transfer_footer">
                 <el-col :span="18">
-                    <span>总共有{{totalItemRightUser}}条数据</span>
+                    <span>共{{totalPageRightUser}}页</span>
                 </el-col>
                 <el-col :span="6">
                     <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button>
@@ -491,9 +491,27 @@
         <h4 class="h4">审计信息</h4>
         <div>
             <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createdTime" type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor">
+                <label>创建时间</label>
+                <el-date-picker 
+                v-model="auditInformation.createdTime" 
+                type="date" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
+                disabled>
+                </el-date-picker>
+            </div>
             <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifiedTime" type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker 
+                v-model="auditInformation.modifiedTime" 
+                type="date" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
+                disabled>
+                </el-date-picker>
+            </div>
         </div>                                  
     </el-col>
 </el-row>       

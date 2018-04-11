@@ -54,11 +54,11 @@
                     <el-col :span="24" class="getPadding">
                         <div class="tipsWrapper">
                             <div class="errorTips">
-                                <p class="msgDetail">
+                                <p class="msgDetail">错误提示：
                                     <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.ouId')}">
                                         所属组织{{ validation.firstError('createRepositoryParams.stock_MainTable.ouId') }},
                                     </span>
-
+                                    <!-- <span>{{'1'+createRepositoryParams.stock_MainTable.stockCode+"vsvsdvsdv"}}</span> -->
                                     <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.stockCode')}">
                                         编码{{ validation.firstError('createRepositoryParams.stock_MainTable.stockCode') }},
                                     </span>
@@ -114,34 +114,6 @@
                                     <span :class="{block : !validation.hasError('createRepositoryParams.stock_MainTable.status')}">
                                         状态{{ validation.firstError('createRepositoryParams.stock_MainTable.status') }},
                                     </span>
-                                    <!-- ！！！！！！！！！！！！！！从表   %%%%%%%%%%%%%%%%%%%%%%%%% -->
-                                    <!-- <span :class="{block : !validation.hasError('createRepositoryParams.contactPerson')}">
-                                        联系人{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.contactPerson') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.mobile')}">
-                                        手机{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.mobile') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.phone')}">
-                                        电话{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.phone') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.completeAddress')}">
-                                        送货地址{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.completeAddress') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.transportMethodId')}">
-                                        运输方式{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.transportMethodId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.logisticsCompanyId')}">
-                                        物流公司{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.logisticsCompanyId') }},
-                                    </span>
-
-                                    <span :class="{block : !validation.hasError('createRepositoryParams.stockAddress_ChildTable.remark')}">
-                                        备注{{ validation.firstError('createRepositoryParams.stockAddress_ChildTable.remark') }},
-                                    </span> -->
                                 </p>
                             </div>
                         </div>
@@ -684,14 +656,14 @@
                 return this.opItem;
             },
         },
-        watch:{
-            createRepositoryParams:{
-                handler:function(){
-                    console.log(123)
-                },
-                deep: true
-            }
-        },
+        // watch:{
+        //     createRepositoryParams:{
+        //         handler:function(){
+        //             console.log(123)
+        //         },
+        //         deep: true
+        //     }
+        // },
         methods:{
             //---下拉的数据------------------------------------------------------
             loadSelect:function(){
@@ -1238,17 +1210,6 @@
                 areaDisArray:[],//行政地区(区)
                 proId:'',//省id
                 cityId:'',//市id
-                // adSearch:'',//树形搜索框的
-                // selectAdProps:{
-                //     children: 'items',
-                //     label: 'areaName',
-                //     id:'id'
-                // },
-                // adItem:{
-                //     id:'',
-                //     areaName:'',
-                // },
-                // adAr:[],//行政地区下拉框
                 //-----------------------
                 //---业务地区树形下拉-----
                     opSearch:'',//树形搜索框的

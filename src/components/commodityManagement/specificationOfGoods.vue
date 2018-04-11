@@ -55,7 +55,7 @@
                                     </el-table-column>
                                     <el-table-column prop="remark" label="备注" width="100">
                                         <template slot-scope="scope">
-                                            <input class="input-need" :class="{errorclass:scope.row.remark==''&&isSave==true}" 
+                                            <input class="input-need"  
                                                     v-model="scope.row.remark" 
                                                     type="text"/>
                                         </template>
@@ -274,6 +274,7 @@ import Tree from '../../base/tree/tree'
               totalPage:100,//当前分页总数
               isUpdate:false,//是否进行修改
               isUpdate1:true,//是否进行修改
+              isUpdate2:true,//是否进行修改
               ifWidth:true,
               updateId:'',
               isSave:false,
@@ -306,7 +307,7 @@ import Tree from '../../base/tree/tree'
                             if(this.updateArray.length == 0 && this.updateId==""){
                              
                                 this.isUpdate=false
-                            }else if(this.addData1.createList.length == 0){
+                            }else if(this.addData1.createList.length == 0 && this.updateId !=""){
                                 this.statusButton(true,true,false) 
                                 this.isUpdate=true;
                             }else{
@@ -362,7 +363,7 @@ import Tree from '../../base/tree/tree'
 
                     this.isSave=true;
                     let _this=this;
-                    if(_this.addData1.createList.length>0 ){//新增保存
+                    if(_this.addData1.createList.length>0 && _this.isUpdate2){//新增保存
 
                         for(let i in _this.addData1.createList){
                             if(_this.addData1.createList[i].specValueCode==""||_this.addData1.createList[i].specValueName==""){
@@ -373,11 +374,12 @@ import Tree from '../../base/tree/tree'
                             }
                         }
                         if(_this.addData1.createList.length==1){//单条新增
-                            console.log(_this.addData1)
                             _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
                                 _this.loadTableData();
                                 _this.loadTree(); 
-                                _this.statusButton(false,false,true) 
+                                _this.statusButton(false,false,true);
+                                _this.isUpdate=true; 
+                                _this.isUpdate2 = true;
                                 _this.open('创建商品规格值成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
                             },function(res){
@@ -392,6 +394,8 @@ import Tree from '../../base/tree/tree'
                             _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
                                 _this.loadTableData();
                                 _this.statusButton(false,false,true) 
+                                _this.isUpdate=true;
+                                _this.isUpdate2 = true;
                                 _this.open('创建商品规格值成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
                             },function(res){
@@ -416,6 +420,8 @@ import Tree from '../../base/tree/tree'
                             _this.$axios.puts('/api/services/app/SpecValueManagement/Update',_this.tableData[updataIndex]).then(function(res){
                                 _this.loadTableData();
                                 _this.loadTree();
+                                _this.isUpdate=false;
+                                _this.isUpdate2 = true;
                                 _this.statusButton(false,false,true) 
                                 _this.open('保存商品规格值成功','el-icon-circle-check','successERP');   
                             },function(res){
@@ -426,11 +432,13 @@ import Tree from '../../base/tree/tree'
                                 }
                             });
                         }else{//批量修改
-                           
+                           _this.addData1.createList.splice(0,_this.addData1.createList.length);
                             _this.addData1.updateList=_this.tableData;
                             console.log(_this.addData1)
                             _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
                                 _this.loadTableData();
+                                _this.isUpdate2 = true;
+                                _this.isUpdate=false;
                                 _this.statusButton(false,false,true) 
                                 _this.open('保存商品规格值成功','el-icon-circle-check','successERP');    
                                 _this.isAdd=false
@@ -468,6 +476,9 @@ import Tree from '../../base/tree/tree'
                         });
                     }
                 }else if(data == '启用'){
+                    _this.statusButton(true,true,false) 
+                    _this.isUpdate2 = false;
+                    this.isUpdate=true;
                     let handleArray=[];
                     if(this.SelectionChange.length>0){
                         this.isUpdate=true;
@@ -489,6 +500,9 @@ import Tree from '../../base/tree/tree'
                         });
                     }
                 }else if(data == '停用'){
+                    _this.statusButton(true,true,false) 
+                    _this.isUpdate2 = false;
+                    this.isUpdate=true;
                     let handleArray=[];
                     if(this.SelectionChange.length>0){
                         this.isUpdate=true;

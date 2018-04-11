@@ -9,7 +9,7 @@
                     <span class="btDetail">返回</span>
                 </button>
                 
-              <button @click="save" class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button @click="save" plain class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                     <div class="btImg">
                       <img src="../../../static/image/common/bt_save.png">
                     </div>
@@ -20,7 +20,7 @@
                   </div>
                   <span class="btDetail">取消</span>
               </button>
-              <button @click="saveAdd"class="erp_bt bt_saveAdd":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button @click="saveAdd" plain class="erp_bt bt_saveAdd":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_saveAdd.png">
                 </div>
@@ -176,37 +176,24 @@
                 </div>    
             </el-col>-->
       </el-row>
-      <el-row>
-    <el-col :span="24" class="getPadding">
-        <h4 class="h4">审计信息</h4>
-        <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
-            <div class="bgcolor">
-                <label>创建时间</label>
-                <el-date-picker
-                v-model="customerClassData.createdTime"
-                type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
-                disabled
-                placeholder="">
-                </el-date-picker>
-            </div>
-            <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
-            <div class="bgcolor">
-                <label>修改时间</label>
-                <el-date-picker
-                v-model="customerClassData.modifiedTime"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
-                type="date"
-                disabled
-                placeholder="">
-                </el-date-picker>
-            </div>
-        </div>                                  
-    </el-col>
-</el-row>       
+          <el-row>
+            <el-col :span="24" class="getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-input v-model="customerClassData.createdTime" disabled></el-input>
+                      
+                    </div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label> 
+                      <el-input v-model="customerClassData.modifiedTime" disabled></el-input>
+                    </div>
+                </div>                                  
+            </el-col>
+        </el-row>  
       <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -256,7 +243,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据填报有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -272,8 +259,8 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->  
@@ -344,8 +331,10 @@ export default {
         classParentId_ClassName:"",
         remark: "",
         status: "",
-        createdBy: "",
-        createdTime: ""
+        createdTime:this.GetDateTime(),//创建时间
+        createdBy:this.$store.state.name,//创建人
+        modifiedTime:this.GetDateTime(),//修改人
+        modifiedBy:this.$store.state.name//修改时间
       },
       //---确认删除-----------------
       dialogDelConfirm: false, //用户删除保存提示信息
@@ -480,7 +469,23 @@ export default {
         );
     },
     //-------------------------------------------------------
-
+     GetDateTime: function () {
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            },
     //---树--------------------------------------------------
     filterNode(value, data) {
       // console.log(data)
@@ -539,12 +544,11 @@ export default {
       }
   },
     //------------------保存修改---------------------------
-    save() {
-      
+    save() {                                                                                                                                                                                                                                                                                                                                                                                                                               
       let self = this;
         self.customerClassData.id = self.$route.params.id;
         self.$validate().then(function(success) {
-          if (success) {console.log(self.customerClassData)
+          if (success) {
             self.$axios
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
@@ -728,6 +732,12 @@ export default {
     padding: 15px 0;
     border-bottom: 1px solid #e4e4e4;
     background-color: #fff;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
+    width: 100%;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+    color: #ccc;
 }
 .customerClassModify .getPadding {
     padding: 0 10px;

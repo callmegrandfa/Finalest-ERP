@@ -205,7 +205,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="24">
+                <!-- <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                             <label>创建人</label>
@@ -229,21 +229,24 @@
                             </el-date-picker>
                         </div>
                     </div>
-                </el-col>
+                </el-col> -->
                
             </div>
         </el-row>
+        <auditInfo :auditData='timeData'></auditInfo>   
+
     </div>
 </template>
 
  <script>
+ import auditInfo from '../Common/auditInfo';
     export default {
         name: "supplierClassifyDetail",
         data(){
              return{
-                 isDisabled:true,//是否禁用创建人与创建时间               
-                 isAdd:true,//是否禁用增加键                              
-                 addData:{ // 表单增加参数
+                isDisabled:true,//是否禁用创建人与创建时间               
+                isAdd:true,//是否禁用增加键                              
+                addData:{ // 表单增加参数
                     "groupId": 0,
                     "contactOwner": 2,
                     "levelNo": 0,
@@ -257,9 +260,13 @@
                     "seq": 0,
                     "status": 1,
                     "remark": "",
+                },  
+                timeData:{
                     "createdBy" :this.$store.state.name,
                     "createdTime"  : this.GetDateTime(),
-                },               
+                    "modifiedBy"  : this.$store.state.name,
+                    "modifiedTime"  : this.GetDateTime(),
+                },         
                 selectData:{ //  下拉框的选项数据
                     Status001:[],//启用状态
                     upSupplierClass:[],// 上级供应商分类
@@ -278,7 +285,6 @@
                 // ----------提示框信息
                 dialogUpdateConfirm:false,
                 isUpdate:false,
-
              }
         },
         created(){
@@ -323,16 +329,25 @@
             getDefault(){// 获取默认值
                 let _this=this;
                 // console.log(this.$route.params);
+                _this.$axios.gets('/api/services/app/ContactClassManagement/Get',{Id:_this.$route.params.upParentId}).then(
+                    rsp=>{
+                        // console.log("数据呢");
+                        _this.treeNode.className=rsp.result.className;
+                        _this.treeNode.Id=rsp.result.id;
+                        console.log(_this.treeNode.Id);
+                        console.log(_this.treeNode.className);
+                    }
+                )
                 // _this.addData.classParentId=_this.$route.params.upParentId;
-                _this.treeNode.className=_this.$route.params.upClassName;
+               
                 // _this.treeNode.Id=_this.$route.params.upParentId;
-                console.log(_this.treeNode.className);
-                console.log(_this.treeNode.Id);
+                // console.log(_this.treeNode.className);
+                // console.log(_this.treeNode.Id);
                 _this.GetDateTime();//获取当前时间
             },
             GetDateTime() {//获取当前时间
                 let date=new Date();
-                return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
+                return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
             },          
             // 提示框
             open(tittle,iconClass,className) {//成功的提示框
@@ -473,7 +488,11 @@
                 this.validation.reset();               
             },
             
-        }
+        },
+        components:{
+            auditInfo,
+
+        },
     }
 </script>
 
