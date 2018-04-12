@@ -291,8 +291,14 @@
                         let item={'value':value.areaName,'id':value.id};
                         _this.restaurants.push(item)
                     })
+                     _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     },function(res){
                     _this.tableLoading=false;
+                     _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                 })
             },
             defauleExpandTree(data,key){
@@ -311,16 +317,9 @@
                 .then(function(res){
                     _this.componyTree=res
                     _this.treeLoading=false;
-                    _this.loadIcon()
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
                     _this.expandId=_this.defauleExpandTree(res,'id')
                },function(res){
                     _this.treeLoading=false;
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
                })
             },
             loadIcon(){
@@ -338,7 +337,7 @@
             },
              getHeight(){
                  $(".tree-container").css({
-                    height:$('.bg-white').css('height')
+                    height:parseInt($('.bg-white').css('height'))-48+'px'
                 })
                 $(".border-left").css({
                     height:$('.bg-white').css('height')

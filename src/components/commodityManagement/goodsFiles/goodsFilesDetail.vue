@@ -53,10 +53,7 @@
                             :class="{block : !validation.hasError('addData.remark')}">
                             备注{{ validation.firstError('addData.remark') }},
                             </span> 
-                            <span 
-                            :class="{block : !validation.hasError('addData.validDays')}">
-                            保质天数{{ validation.firstError('addData.validDays') }},
-                            </span>
+                        
                         </p>
                     </div>
                 </div>
@@ -182,7 +179,6 @@
                 <el-col :span="24">
                     <div class="bgcolor longWidth">
                         <label></label>
-                        <el-checkbox v-model="addData.multiUnitEnabled">启用多单位</el-checkbox>
                         <el-checkbox v-model="addData.uniqueMgt">唯一码管理</el-checkbox>
                         <el-checkbox v-model="addData.lotMgt">批次管理</el-checkbox>
                         <el-checkbox v-model="addData.isSuite">是否套件</el-checkbox>
@@ -191,20 +187,8 @@
                 <el-col :span="24">
                     <div class="bgcolor">
                         <label></label>
-                        <el-checkbox v-model="addData.validityMgt">保持期管理</el-checkbox>
-                    </div>
-                </el-col>
-                <el-col :span="24">
-                    <div class="bgcolor ">
-                        <label>保质天数</label>
-                        <el-input 
-                        
-                        @change="isUpdate"
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('addData.validDays')}"
-                        class="validDays"
-                        v-model="addData.validDays"
-                        ></el-input>
+                        <el-checkbox v-model="addData.validityMgt">有效期管理</el-checkbox>
+                        <el-checkbox v-model="addData.multiUnitEnabled">启用多单位</el-checkbox>
                     </div>
                 </el-col>
             </el-col> 
@@ -283,6 +267,109 @@
         <el-col :span="24">
             <el-tabs v-model="activeName_two">
                 <el-tab-pane label="商品规格" name="goodsSize">
+                    <button class="erp_bt bt_add">
+                        <div class="btImg">
+                            <img src="../../../../static/image/common/bt_add.png">
+                        </div>
+                        <span class="btDetail">新增</span>
+                    </button>
+                     <button class="erp_bt bt_excel mb10">
+                            <div class="btImg">
+                                <img src="../../../../static/image/common/bt_excel.png">
+                            </div>
+                            <span class="btDetail">Excel</span>
+                        </button>
+
+                        <button class="erp_bt bt_del">
+                            <div class="btImg">
+                                <img src="../../../../static/image/common/bt_del.png">
+                            </div>
+                            <span class="btDetail">删除</span>
+                        </button>
+
+                        <button class="erp_bt bt_auxiliary">
+                            <div class="btImg">
+                                <img src="../../../../static/image/common/bt_auxiliary.png">
+                            </div>
+                            <span class="btDetail">辅助功能</span>
+                        </button>
+
+                        <el-table :data="bankData" stripe border style="width: 100%" @selection-change="handleSelectionChange">
+                            <el-table-column type="selection"></el-table-column>
+                            <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
+                                <template slot-scope="scope">
+                                   <el-select  v-model="scope.row.settlementCurrencyId" :class="[scope.$index%2==0?'bgw':'bgg']">
+                                        <el-option  v-for="item in curencyAr" :key="item.id" :label="item.currencyName" :value="item.id" >
+                                        </el-option>
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="accountNo" label="银行账号" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.accountNo" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="accountName" label="银行账户" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.accountName" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="openingBank" label="开户银行" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.openingBank" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="contactPerson" label="联系人" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.contactPerson" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="phone" label="联系电话" width="180">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.phone" 
+                                        type="text"    
+                                        v-on:click="handleBankEdit(scope.$index,scope.row)"/> 
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="isDefault" label="默认">
+                                <template slot-scope="scope">
+                                    <!-- <el-checkbox v-model="bankData[scope.$index].ifDefault"></el-checkbox> -->
+                                    <el-radio  :label="true" 
+                                                v-model="scope.row.isDefault" 
+                                                @change.native="getCurrentRow(scope.$index,scope.row)"></el-radio>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label='操作'>
+                                <template slot-scope="scope" >
+                                    <el-button v-on:click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        
                 </el-tab-pane>
             </el-tabs>
         </el-col>
@@ -566,13 +653,6 @@ export default({
       },
       'addData.remark': function (value) {//备注
          return this.Validator.value(value)
-      },
-      'addData.validDays': function (value) {//保质天数
-        if(this.isCategoryIdEmpty){
-            return this.Validator.value(value).integer();
-        }else{
-            return this.Validator.value(value)
-        }
       },
 
     },

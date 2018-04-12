@@ -365,7 +365,6 @@
                  let _this=this;
                 _this.tableLoading=true
                 _this.$axios.gets('/api/services/app/ProductManagement/GetAll',data).then(function(res){ 
-                    console.log(res)
                     _this.load=event;
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
