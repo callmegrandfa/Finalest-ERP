@@ -97,7 +97,8 @@
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
                 </div>
             </el-col>
-            <el-col :span='4' class="border-left" v-loading="treeLoading" id="ouListTree">
+            <el-col :span='4' class="border-left transfer_fixed" v-loading="treeLoading" id="ouListTree">
+                <vue-scroll :ops="$store.state.option">
                 <el-tree 
                 :data="componyTree"
                 :props="defaultProps"
@@ -107,6 +108,7 @@
                 :expand-on-click-node="false"
                 @node-click="nodeClick">
                 </el-tree>
+                </vue-scroll>
             </el-col>
              <el-col :span="ifWidth ? 15:20" class="border-left" id="ouListTable">
                 <el-row class="h48">

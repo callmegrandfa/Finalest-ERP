@@ -717,7 +717,53 @@
                     </el-col>
                 </el-tab-pane>
                 <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==2 && Business">
-                    <el-col :span="24">
+                 <el-col :span="24">
+                          <div class="companyInfo">
+                            <el-col :span="24"  class="getPadding">
+                                <div class="bgcolor">
+                                    <label>上级业务组织</label>
+                                    <el-select clearable filterable 
+                                    v-model="test"
+                                    @change="isUpdate"
+                                    placeholder=""
+                                    >
+                                        <el-option 
+                                        v-for="item in selectData.ouParentid" 
+                                        :key="item.id" 
+                                        :label="item.ouName" 
+                                        :value="item.id">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>结算账务组织</label>
+                                    <el-input 
+                                    @change="isUpdate"
+                                    class="legalPerson" 
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="bgcolor">
+                                    <label>启用状态</label>
+                                    <el-select clearable filterable  
+                                    @change="isUpdate"
+                                    v-model="test"
+                                    placeholder=""
+                                    class="status">
+                                        <el-option 
+                                        v-for="item in selectData.Status001" 
+                                        :key="item.itemValue" 
+                                        :label="item.itemName" 
+                                        :value="item.itemValue" 
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+                            </el-col>
+                         </div>
+                     </el-col>  
+                </el-tab-pane>
+                <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==3 && Finance">
+                      <el-col :span="24">
                           <div class="financeInfo">
                             <el-col :span="24"  class="getPadding">
                                 <div class="bgcolor">
@@ -788,52 +834,6 @@
                                         :value="item.itemValue" 
                                         >
                                         </el-option>
-                                    </el-select>
-                                </div>
-                            </el-col>
-                         </div>
-                     </el-col>   
-                </el-tab-pane>
-                <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==3 && Finance">
-                    <el-col :span="24">
-                          <div class="companyInfo">
-                            <el-col :span="24"  class="getPadding">
-                                <div class="bgcolor">
-                                    <label>上级业务组织</label>
-                                    <el-select clearable filterable 
-                                    v-model="test"
-                                    @change="isUpdate"
-                                    placeholder=""
-                                    >
-                                        <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>结算账务组织</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>启用状态</label>
-                                    <el-select clearable filterable  
-                                    @change="isUpdate"
-                                    v-model="test"
-                                    placeholder=""
-                                    class="status">
-                                        <el-option 
-                                        v-for="item in selectData.Status001" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue" 
-                                        ></el-option>
                                     </el-select>
                                 </div>
                             </el-col>
@@ -947,7 +947,7 @@ export default({
                 id:'id'
             },
             selectPropsCompany:{
-                children: 'children',
+                 children: 'children',
                 label: 'ouFullname',
                 id:'id'
             },
@@ -1314,7 +1314,6 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 上级业务单元(所属组织)
                 _this.selectData.ouParentid=res.result;
-                // console.log(res)
             })
             // _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
             // // 会计期间方案
@@ -1325,7 +1324,6 @@ export default({
                 _this.selectData.baseCurrencyId=res.result.items;
             })
              _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){ 
-                   console.log(res)
             // 公司
                 _this.selectData.companys=res.result;
             })
