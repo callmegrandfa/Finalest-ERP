@@ -101,7 +101,7 @@
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.createBy" 
+                                            v-model="scope.row.createdBy" 
                                             disabled
                                             type="text"/>
                                 </template>
