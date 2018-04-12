@@ -47,6 +47,7 @@
                         <label>行政地区</label>
                         <el-select class="queryAd"
                                    placeholder=""
+                                   clearable
                                    v-model="queryAd">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -75,6 +76,7 @@
                         <label>业务地区</label>
                         <el-select class="queryOp"
                                    placeholder=""
+                                   clearable
                                    v-model="queryOp">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -115,7 +117,7 @@
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
                         <label>店铺性质</label>
-                        <el-select v-model="queryProperty" placeholder="">
+                        <el-select v-model="queryProperty" placeholder="" clearable>
                             <el-option v-for="item in propertyAr"
                                         :key="item.itemValue"
                                         :label="item.itemName"
@@ -142,7 +144,7 @@
                         
                     </el-col>
 
-                    <el-col :span='22' class="pt5">
+                    <el-col :span='24' class="pt5">
                         <button class="erp_bt bt_add" @click="goDetail">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
@@ -170,6 +172,21 @@
                             </div>
                             <span class="btDetail">打印</span>
                         </button>
+
+                        <div class="search_input_group">
+                            <div class="search_input_wapper" @keyup.enter="submitSearch">
+                                <el-input v-model="searchKey"
+                                          placeholder="搜索..."
+                                          class="search_input">
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
+                            <div class="search_button_wrapper">
+                                <button class="userDefined">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                </button>
+                            </div>
+                        </div>
                     </el-col>
                     
                     
@@ -311,7 +328,7 @@
                 //---行政地区树形下拉-----
                 adSearch:'',//树形搜索框的
                 selectAdProps:{
-                    children: 'items',
+                    children: 'childItems',
                     label: 'areaName',
                     id:'id'
                 },
@@ -335,7 +352,7 @@
                 opAr:[],//业务地区下拉框
                 //-----------------------
 
-                adAr:[],//行政地区下拉框
+                // adAr:[],//行政地区下拉框
                 propertyAr:'',//客户性质下拉框
 
                 pageIndex:-1,//分页的当前页码
@@ -379,6 +396,8 @@
                 who:'',//删除的是谁以及是否是多项删除
                 whoId:'',//单项删除的id
                 whoIndex:'',//单项删除的index
+                //----------------------------
+                searchKey:'',
             }
         },
         created:function(){
@@ -432,9 +451,9 @@
                     console.log('err'+res)
                 });
                 //行政地区
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetTree').then(function(res){
                     // console.log(res);
-                    self.opAr = res.result;
+                    self.adAr = res.result;
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
@@ -486,14 +505,14 @@
             let self = this;
             self.$axios.gets('/api/services/app/ShopManagement/GetAll',{OuId:self.queryOu,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ShopCode:self.queryCode,ShopName:self.queryName,ShopWorkPropertyid:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
                 console.log(res);
-                if(res.result.totalCount>0){
-                    self.allList = res.result.items;
-                    console.log(self.allList)
-                    self.total = res.result.totalCount;
-                    self.totalPage = Math.ceil(self.total/self.eachPage)
-                }else{
-                    self.loadAllList();
-                }
+                // if(res.result.totalCount>0){
+                self.allList = res.result.items;
+                console.log(self.allList)
+                self.total = res.result.totalCount;
+                self.totalPage = Math.ceil(self.total/self.eachPage)
+                // }else{
+                //     self.loadAllList();
+                // }
                 
             },function(res){
                 console.log('err'+res)
@@ -571,73 +590,6 @@
         //-------------------------------------------------
 
         //---控制修改及分页--------------------------------------------------
-        // confirmDel(row) {
-        //     let self = this;
-        //     this.$confirm('确定删除?', '提示', {
-        //     confirmButtonText: '确定',
-        //     cancelButtonText: '取消',
-        //     type: 'warning',
-        //     center: true
-        //     }).then(() => {
-        //         self.delThis(row);
-        //     }).catch(() => {
-        //         this.$message({
-        //             type: 'info',
-        //             message: '已取消删除'
-        //         });
-        //     });
-        // },
-        // delThis:function(row){//删除选中的项
-        //     let self=this;
-        //     self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:row.id}).then(function(res){
-        //         self.open('删除成功','el-icon-circle-check','successERP');
-        //         self.loadAllList();
-        //     },function(res){
-        //         self.errorMessage=true;
-        //         self.open('删除失败','el-icon-error','faildERP')
-        //         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-        //     })
-        // },
-        // delRow(){//批量删除
-        //     let self=this;
-        //     for(let i in self.multipleSelection){
-        //         self.idArray.ids.push(self.multipleSelection[i].id)
-        //     }
-        //     if(self.idArray.ids.indexOf(undefined)!=-1){
-        //         self.$message({
-        //             type: 'warning',
-        //             message: '新增数据请在行内删除'
-        //         });
-        //         return;
-        //     }
-        //     if(self.idArray.ids.length>0){
-        //         self.$confirm('确定删除?', '提示', {
-        //             confirmButtonText: '确定',
-        //             cancelButtonText: '取消',
-        //             type: 'warning',
-        //             center: true
-        //             }).then(() => {
-        //                 self.$axios.posts('/api/services/app/ContactManagement/BatchDelete',self.idArray).then(function(res){
-        //                     self.loadAllList();
-        //                     self.open('删除成功','el-icon-circle-check','successERP');    
-        //                 },function(res){
-        //                     self.errorMessage=true;
-        //                     self.open('删除失败','el-icon-error','faildERP')
-        //                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-        //                 })
-        //             }).catch(() => {
-        //                 self.$message({
-        //                     type: 'info',
-        //                     message: '已取消删除'
-        //                 });
-        //         });
-        //     }else{
-        //         self.$message({
-        //             type: 'info',
-        //             message: '请勾选需要删除的数据！'
-        //         });
-        //     }
-        // },
         handleSelectionChange:function(val){//点击复选框选中的数据
             this.multipleSelection = val;
         },
@@ -734,6 +686,29 @@
             }
         },
         //-----------------------------------------------------
+
+        //---表格查询------------------------------------------
+        submitSearch(){
+            let self=this;
+            if(self.searchKey!=''){
+                self.searchTable();
+            }else{
+                self.loadAllList();
+            }
+        },
+        searchTable:function(){
+            let self = this;
+            self.$axios.gets('/api/services/app/ShopManagement/GetAll',{ShopCode:self.searchKey,SkipCount:'0',MaxResultCount:'10'}).then(function(res){
+                console.log(res);
+
+                self.allList = res.result.items;
+                self.total = res.result.items.length;
+                self.totalPage = Math.ceil(self.total/self.eachPage)
+            },function(res){
+                console.log('err'+res)
+            })
+        },
+        //----------------------------------------------------
     }
 }
 </script>
