@@ -59,6 +59,7 @@
 
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                      :data="selectParentTree"
+                                     :highlight-current="true"
                                      :props="selectParentProps"
                                      node-key="id"
                                      default-expand-all
@@ -407,11 +408,11 @@ export default {
           .then(function(res) {
             console.log(res);
             self.customerClassData = res.result;
-            // self.ouItem.id = self.customerClassData.classParentId;
-            // self.ouItem.ouName = self.customerClassData.ouFullname;
-            self.parentItem.id = self.customerClassData.classParentId;
+            self.parentItem.id = res.result.classParentId;
             // console.log(self.parentItem.id);
-            self.parentItem.className = self.customerClassData.classParentId_ClassName;
+            self.parentItem.className =  res.result.classParentId_ClassName;
+            self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ');
+            self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
           });
       }
     },
