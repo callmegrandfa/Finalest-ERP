@@ -150,7 +150,7 @@
                             <span class="btDetail">新增</span>
                         </button>
 
-                        <button class="erp_bt bt_del" @click="delRow">
+                        <button class="erp_bt bt_del" @click="delMore(2)">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -199,7 +199,7 @@
                             <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button v-on:click="confirmDel(scope.row)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="delRow(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -226,6 +226,24 @@
 
             </el-col>
         </el-row>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -330,7 +348,9 @@
                     ids:[]
                 },//复选框选中数据id
                 ifWidth:true,//控制左侧搜索展开
-
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //-------------------- 
                 //---错误提示框----------------
                 option: {
                     vRail: {
@@ -355,6 +375,10 @@
                     validationErrors:[],
                 },
                 //-----------------------------
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
             }
         },
         created:function(){
@@ -475,69 +499,68 @@
                 console.log('err'+res)
             })
         },
-        //-------------------------------------------------------------------
+        //-------------------------------------------------
 
-        //---控制修改及分页--------------------------------------------------
-        confirmDel(row) {
+        //---确认删除----------------------------------------
+        sureDel:function(){
             let self = this;
-            this.$confirm('确定删除?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-            center: true
-            }).then(() => {
-                self.delThis(row);
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
+            if(self.who == 1){
+                self.$axios.deletes('/api/services/app/ShopManagement/Delete',{id:self.whoId}).then(function(res){
+                    
+                    self.allList.splice(self.whoIndex,1);
+                    self.dialogDelConfirm = false;
+                    self.open('删除成功','el-icon-circle-check','successERP');
+                },function(res){
+                    self.dialogDelConfirm = false;
+                    self.errorMessage=true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })
+            };
+
+            if(self.who == 2){
+                // console.log(self.idArray)
+                self.$axios.posts('/api/services/app/ShopManagement/BatchDelete',self.idArray).then(function(res){
+                    self.loadAllList();
+                    self.dialogDelConfirm = false;
+                    self.open('删除成功','el-icon-circle-check','successERP');    
+                },function(res){
+                    self.dialogDelConfirm = false;
+                    self.errorMessage=true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })
+            }
         },
-        delThis:function(row){//删除选中的项
-            let self=this;
-            self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:row.id}).then(function(res){
-                self.open('删除成功','el-icon-circle-check','successERP');
-                self.loadAllList();
-            },function(res){
-                self.errorMessage=true;
-                self.open('删除失败','el-icon-error','faildERP')
-                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-            })
+        //--------------------------------------------------
+
+        //---行内删除---------------------------------------
+        delRow:function(index,row,who){
+            let self = this;
+            // console.log(row)
+            self.who = who;
+            self.whoIndex = index;
+            self.whoId = row.id;
+            self.dialogDelConfirm = true;
         },
-        delRow(){//批量删除
-            let self=this;
+        //-------------------------------------------------
+
+        //---批量删除--------------------------------------
+        delMore:function(num){
+            let self = this;
+            self.idArray.ids = [];
             for(let i in self.multipleSelection){
                 self.idArray.ids.push(self.multipleSelection[i].id)
             }
-            if(self.idArray.ids.indexOf(undefined)!=-1){
-                self.$message({
-                    type: 'warning',
-                    message: '新增数据请在行内删除'
-                });
-                return;
-            }
+
             if(self.idArray.ids.length>0){
-                self.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        self.$axios.posts('/api/services/app/ContactManagement/BatchDelete',self.idArray).then(function(res){
-                            self.loadAllList();
-                            self.open('删除成功','el-icon-circle-check','successERP');    
-                        },function(res){
-                            self.errorMessage=true;
-                            self.open('删除失败','el-icon-error','faildERP')
-                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        })
-                    }).catch(() => {
-                        self.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                });
+                if(self.idArray.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                self.dialogDelConfirm = true;   
+                self.who = num;
             }else{
                 self.$message({
                     type: 'info',
@@ -545,6 +568,76 @@
                 });
             }
         },
+        //-------------------------------------------------
+
+        //---控制修改及分页--------------------------------------------------
+        // confirmDel(row) {
+        //     let self = this;
+        //     this.$confirm('确定删除?', '提示', {
+        //     confirmButtonText: '确定',
+        //     cancelButtonText: '取消',
+        //     type: 'warning',
+        //     center: true
+        //     }).then(() => {
+        //         self.delThis(row);
+        //     }).catch(() => {
+        //         this.$message({
+        //             type: 'info',
+        //             message: '已取消删除'
+        //         });
+        //     });
+        // },
+        // delThis:function(row){//删除选中的项
+        //     let self=this;
+        //     self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:row.id}).then(function(res){
+        //         self.open('删除成功','el-icon-circle-check','successERP');
+        //         self.loadAllList();
+        //     },function(res){
+        //         self.errorMessage=true;
+        //         self.open('删除失败','el-icon-error','faildERP')
+        //         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+        //     })
+        // },
+        // delRow(){//批量删除
+        //     let self=this;
+        //     for(let i in self.multipleSelection){
+        //         self.idArray.ids.push(self.multipleSelection[i].id)
+        //     }
+        //     if(self.idArray.ids.indexOf(undefined)!=-1){
+        //         self.$message({
+        //             type: 'warning',
+        //             message: '新增数据请在行内删除'
+        //         });
+        //         return;
+        //     }
+        //     if(self.idArray.ids.length>0){
+        //         self.$confirm('确定删除?', '提示', {
+        //             confirmButtonText: '确定',
+        //             cancelButtonText: '取消',
+        //             type: 'warning',
+        //             center: true
+        //             }).then(() => {
+        //                 self.$axios.posts('/api/services/app/ContactManagement/BatchDelete',self.idArray).then(function(res){
+        //                     self.loadAllList();
+        //                     self.open('删除成功','el-icon-circle-check','successERP');    
+        //                 },function(res){
+        //                     self.errorMessage=true;
+        //                     self.open('删除失败','el-icon-error','faildERP')
+        //                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+        //                 })
+        //             }).catch(() => {
+        //                 self.$message({
+        //                     type: 'info',
+        //                     message: '已取消删除'
+        //                 });
+        //         });
+        //     }else{
+        //         self.$message({
+        //             type: 'info',
+        //             message: '请勾选需要删除的数据！'
+        //         });
+        //     }
+        // },
         handleSelectionChange:function(val){//点击复选框选中的数据
             this.multipleSelection = val;
         },

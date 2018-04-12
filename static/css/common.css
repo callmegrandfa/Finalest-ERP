@@ -154,7 +154,7 @@
     text-align: center;
     font-size: 12px;
     display: inline-block;
-    width: 87px;
+    width: 28%;
     height: 28px;
     line-height: 28px;
     border-radius: 3px;
@@ -189,6 +189,7 @@
 .smallBgcolor{
   height: 28px;
   width: 75%;
+  margin-bottom: 10px;
   float: none;
   margin-left: auto;
   margin-right: auto;
@@ -282,6 +283,10 @@ table .el-input__icon{
 .bgcolor .el-date-editor .el-input__prefix{
     right: 5px;
     left: auto;
+}
+.smallBgcolor .el-date-editor .el-input__prefix{
+  height: 28px;
+  line-height: 28px;
 }
 .bgcolor .el-input__prefix i{
     line-height: 35px;

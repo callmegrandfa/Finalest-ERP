@@ -30,12 +30,11 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             :highlight-current="true"
                             node-key="id"
-                            default-expand-all
                             ref="tree"
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
@@ -69,12 +68,11 @@
                             v-model="search_area">
                         </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_area"
                             :highlight-current="true"
                             :props="selectProps_area"
                             node-key="id"
-                            default-expand-all
                             ref="area_tree"
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
@@ -192,8 +190,8 @@
                         <el-date-picker
                         type="date"
                         disabled
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd">
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                         </el-date-picker>
                     </div>
                 </div>    
@@ -360,7 +358,7 @@
     created () {
         let _this=this;
         _this.getSelectData();
-        // _this.loadTree();  
+        _this.loadTree();  
         _this.getDefault();
     },
      watch: {
@@ -411,7 +409,7 @@
                     "remark": ""
                     },
                 _this.validation.reset();
-                _this.loadTree('ouId',res.result.id)
+                // _this.loadTree('ouId',res.result.id)
                 })
             }else{
                 
@@ -526,34 +524,32 @@
                     _this.selectTree_area=[]
                 }else{
                     _this.selectTree_area=res.result;
-                    _this.loadIcon('areaParentId',_this.addData.areaParentId);
                 }
                 
             },function(res){
             })
         },
-      loadTree(selectName,key){
+      loadTree(){
             let _this=this;
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon(selectName,key);
             },function(res){
             })
         },
-        loadIcon(selectName,key){
+        loadIcon(){
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
-                $('.'+selectName+' .el-tree-node__label').each(function(){
+                $('.el-tree-node__label').each(function(){
                     if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
                         $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                     }
-                    if($(this).attr('data-id')==key){ 
-                        $(this).click()
-                    }
+                    // if($(this).attr('data-id')==key){ 
+                    //     $(this).click()
+                    // }
                 })
             })
         },
@@ -685,18 +681,38 @@
             });
         },
         renderContent_ouId(h, { node, data, store }){
-            return (
-                <span class="el-tree-node__label" data-id={data.id}>
-                    {data.ouName}
-                </span>
-            );
+             if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
         },
         renderContent_areaParentId(h, { node, data, store }){
-            return (
-                <span class="el-tree-node__label" data-id={data.id}>
-                    {data.areaName}
-                </span>
-            );
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }
         },
 }
 

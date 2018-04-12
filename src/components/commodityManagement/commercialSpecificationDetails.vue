@@ -2,7 +2,9 @@
     <div class="commercialSpecificationDetails commodity">
         <el-row class="bg-white">
             <el-col :span='24' class="border-left">
-                <btm :date="bottonbox" v-on:listbtm="btmlog"></btm>
+                <el-row class="fixed bg-white" >
+                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                </el-row>
                     <el-row class="pl10 pr10">
                         <el-col :span="24" style="margin-top:20px">
                             <el-col :span="9">
@@ -82,7 +84,7 @@
                             <el-col :span="5" >
                                 <div class="smallBgcolor bgcolor" >
                                 <!-- <el-input placeholder=""  v-model="addData.status" ></el-input> -->
-                                    <el-select v-model="addData.status" @change="isUpdate" >
+                                    <el-select v-model="addData.status" @change="isUpdate" :disabled="isDisabled">
                                         <el-option  v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
 
@@ -362,6 +364,11 @@ import Textbox from '../../base/textbox/textbox'
                         _this.addData.isSystem = res.result.isSystem;
                         _this.addData.seq = res.result.seq;
                         _this.addData.status = res.result.status;
+                        _this.addData.specgroupEnable = res.result.specgroupEnable;
+                        _this.addData.createdBy = res.result.createdBy;//创建人
+                        _this.addData.createdTime = res.result.createdTime.substring(0,19);//创建时间
+                        _this.addData.modifiedBy = res.result.modifiedBy;//修改人
+                        _this.addData.modifiedTime = res.result.modifiedTime.substring(0,19);//修改时间
                     })
                 }
                  
@@ -514,9 +521,7 @@ import Textbox from '../../base/textbox/textbox'
                 if (strDate >= 0 && strDate <= 9) {
                     strDate = "0" + strDate;
                 }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                    + " " + date.getHours() + seperator2 + date.getMinutes()
-                    + seperator2 + date.getSeconds();
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
                 return currentdate;
             },
             isUpdate(){

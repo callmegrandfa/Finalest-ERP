@@ -3,7 +3,9 @@
         <el-row class="bg-white">
 
             <el-col :span='24' class="border-left">
-                <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                <el-row class="fixed bg-white" >
+                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                </el-row>
                 <el-row class="pl10 pr10">
                     <el-col :span="24" style="margin-top:20px">
                         <el-row>
@@ -211,7 +213,7 @@
                         </el-col>
                         <el-col :span="5" id="state">
                             <div class="bgcolor smallBgcolor" >
-                                <el-select  v-model="addData.status" @change="isUpdate">
+                                <el-select  v-model="addData.status" @change="isUpdate" :disabled="isDisabled">
                                 <el-option  v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value">
                                 </el-option>
 
@@ -380,7 +382,7 @@ import Textbox from '../../base/textbox/textbox'
                       isSystem: false,
                       seq:'',
                       dataSource: 0,
-                      status: '',
+                      status: 1,
                     createdTime:this.GetDateTime(),//创建时间
                     createdBy:this.$store.state.name,//创建人
                     modifiedTime:this.GetDateTime(),//修改人
@@ -554,9 +556,9 @@ import Textbox from '../../base/textbox/textbox'
                           _this.addData.dataSource= res.result.dataSource,
                           _this.addData.status= res.result.status
                           _this.addData.id= res.result.id
-                          _this.addData.createdTime=res.result.createdTime,//创建时间
-                          _this.addData.createdBy=res.result.createdBy,//创建人
-                          _this.addData.modifiedTime=res.result.modifiedTime//修改人
+                          _this.addData.createdTime=res.result.createdTime.substring(0,19);//创建时间
+                          _this.addData.createdBy=res.result.createdBy;//创建人
+                          _this.addData.modifiedTime=res.result.modifiedTime.substring(0,19)//修改人
                           _this.addData.modifiedBy=res.result.modifiedBy//修改时间
                     })
                 }

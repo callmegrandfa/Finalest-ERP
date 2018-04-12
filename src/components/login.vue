@@ -99,6 +99,7 @@ export default {
           _this.$axios.posts('/api/TokenAuth/Authenticate',_this.login)
           .then(function (res) {
                 //成功之后处理逻辑
+                _this.getOuId();
                 let flag=false;
                 if(_this.$store.state.username){
                   _this.$store.state.temporaryLogin=_this.$store.state.username;
@@ -120,6 +121,7 @@ export default {
                     let pushItem={'name':_this.login.userNameOrEmailAddress,'accessToken':'Bearer '+res.result.accessToken};
                     temporaryLogin.push(pushItem);
                 }
+                
                 // _this.$store.state.accessToken='Bearer '+res.result.accessToken;
                 // console.log('Bearer '+res.result.accessToken)
                 window.sessionStorage.setItem('_ERP',JSON.stringify(temporaryLogin));
@@ -136,6 +138,19 @@ export default {
                 console.log(res);
             }) 
       },
+      getOuId:function(){//获取组织单元id
+                let _this = this;
+                //获取当前默认ouid
+                _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
+                    _this.$store.commit('Init_OuId',res.result.id);//设置删除参数为真
+                    console.log(_this.$store.state.OuId);
+                },function(err){
+                    _this.$message({
+                        type: 'warning',
+                        message: err.error.message
+                    });
+                });
+            },
       goRegister:function(){
           this.$router.push('/register');//点击切换路由
       }

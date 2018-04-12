@@ -32,7 +32,7 @@
                                         :expand-on-click-node="false" @node-click="nodeClick_ou"
                                         class="filter-tree">
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
@@ -48,7 +48,7 @@
                                         :expand-on-click-node="false" @node-click="nodeClick_depart"
                                         class="filter-tree">
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.deptName" :value="item.id" :date="item.id">
+                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
@@ -251,14 +251,14 @@
                 selectTree_ou:[],
                 selectProps_ou: {
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
                 // filterDepart:'',
                 selectTree_depart:[],
                 selectProps_depart: {
                     children: 'children',
-                    label: 'deptName',
+                    label: 'name',
                     id:'id'
                 },
                 allList: [], //所有数据
@@ -383,8 +383,10 @@
             //---------------------------获取下拉框选项数据
             getSelectData(){//获取下拉选项数据
                 let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){  // 所属组织
+                _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){  // 所属组织--获取组织单元为公司类型的列表
+                    // console.log(res);
                     _this.selectData.ou=res.result;
+                    // console.log( _this.selectData.ou);
                 });
                 _this.$axios.gets('/api/services/app/ShopManagement/GetAll').then
                 (function(res){  // 店铺
@@ -406,7 +408,7 @@
             //---------------------------获取树形控件数据
             loadTree(){// 加载所属组织树形控件
                 let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList')
                 .then(function(res){//组织
                     _this.selectTree_ou=res.result;
                     _this.loadIcon();
@@ -470,8 +472,8 @@
                         $(this).click()
                     }
                 });
-                _this.getSelectDepart();
-                _this.loadDepartTree();
+                // _this.getSelectDepart();
+                // _this.loadDepartTree();
             },
             // 左侧搜索展开--------------------------------
             closeLeft: function() {
