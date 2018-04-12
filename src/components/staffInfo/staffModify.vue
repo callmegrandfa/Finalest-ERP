@@ -131,7 +131,7 @@
                                         :expand-on-click-node="false" @node-click="nodeClick_ou"
                                         class="filter-tree">
                                 </el-tree>
-                                <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                                <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                                 </el-option>
                             </el-select>
                         </div>
@@ -164,7 +164,7 @@
                                         :expand-on-click-node="false" @node-click="nodeClick_depart"
                                         class="filter-tree">
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.deptName" :value="item.id" :date="item.id">
+                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
                                         </el-option>
                             </el-select>
                         </div>
@@ -310,13 +310,13 @@ export default {
             selectTree_ou:[],
             selectProps_ou: {
                 children: 'children',
-                label: 'ouFullname',
+                label: 'ouName',
                 id:'id'
             },
             selectTree_depart:[],
             selectProps_depart: {
                 children: 'children',
-                label: 'deptName',
+                label: 'name',
                 id:'id'
             },
             // ------------------提示框数据
@@ -326,56 +326,56 @@ export default {
             btnValue:'',//存储点击返回还是修改按钮判断信息
             update:false, // -------------------按钮状态控制
 
-        update: false, //判断是否更改
-        form: {//表单信息的初始值
-            groupId: 0,
-            id: 0,
-            ouId: 0,
-            ouFullname: "",
-            deptId: 0,
-            deptName: "",
-            shopId: 0,
-            shopName: "",
-            employeeCode: "",
-            employeeName: "",
-            mobile: "",
-            sex: 0,
-            sexTValue: "",
-            birthday: "",
-            remark: "",
-            status: 1,
-            employeeTypes: [
-            {
+            update: false, //判断是否更改
+            form: {//表单信息的初始值
                 groupId: 0,
-                employeeId: 0,
-                employeeTypeid: 0,
-                employeeTypeidTValue: ""
-            }
-            ]
-        },
-        employeeIdoptions: [//------职员类型--------
-            { label: 1, text: "采购" },
-            { label: 2, text: "业务" },
-            { label: 3, text: "仓库" },
-            { label: 4, text: "店员" }
-        ],
-        updateList: { //保存数据需要的参数
-            ouId: 0,
-            employeeCode: "",
-            employeeName: "",
-            mobile: "",
-            deptId: 0,
-            sex: 1,
-            birthday: "",
-            discountStart: 0,
-            discountEnd: 0,
-            shopId: 0,
-            remark: "",
-            status: 1,
+                id: 0,
+                ouId: 0,
+                ouFullname: "",
+                deptId: 0,
+                deptName: "",
+                shopId: 0,
+                shopName: "",
+                employeeCode: "",
+                employeeName: "",
+                mobile: "",
+                sex: null,
+                sexTValue: "",
+                birthday: "",
+                remark: "",
+                status: 1,
+                employeeTypes: [
+                {
+                    groupId: 0,
+                    employeeId: 0,
+                    employeeTypeid: 0,
+                    employeeTypeidTValue: ""
+                }
+                ]
+            },
+            employeeIdoptions: [//------职员类型--------
+                { label: 1, text: "采购" },
+                { label: 2, text: "业务" },
+                { label: 3, text: "仓库" },
+                { label: 4, text: "店员" }
+            ],
+            updateList: { //保存数据需要的参数
+                ouId: 0,
+                employeeCode: "",
+                employeeName: "",
+                mobile: "",
+                deptId: 0,
+                sex: 1,
+                birthday: "",
+                discountStart: 0,
+                discountEnd: 0,
+                shopId: 0,
+                remark: "",
+                status: 1,
+                employeeTypeIds: [],
+                id: 0
+            },
             employeeTypeIds: [],
-            id: 0
-        },
-        employeeTypeIds: [],
         };
     },
     validators: {// 验证器
@@ -413,7 +413,7 @@ export default {
         //---------------------------获取下拉框选项数据
                 getSelectData(){//获取下拉选项数据
                     let _this=this;
-                    _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){  // 所属组织
+                    _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){  // 所属组织
                         _this.selectData.ou=res.result;
                     });
                     _this.$axios.gets('/api/services/app/ShopManagement/GetAll').then
@@ -439,7 +439,7 @@ export default {
                 //---------------------------获取树形控件数据
                 loadTree(){// 加载所属组织树形控件
                     let _this=this;
-                    _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                    _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList')
                     .then(function(res){//组织
                         _this.selectTree_ou=res.result;
                         _this.loadIcon();

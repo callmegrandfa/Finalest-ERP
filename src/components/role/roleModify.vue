@@ -66,6 +66,7 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
+                            :render-content="renderContent_ou"
                             :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
@@ -179,6 +180,7 @@
             <el-col :span="24" class="transfer_table">
                 <vue-scroll :ops="$store.state.option">
                     <el-tree
+                    :render-content="renderContent_ouTreeDataRight"
                     :data="ouTreeDataRight"
                     show-checkbox
                     default-expand-all
@@ -308,7 +310,7 @@
             </el-col>
             <el-col :span="24" class="transfer_footer">
                 <el-col :span="18">
-                    <span>总共有{{totalItemLeftUser}}条数据</span>
+                    <span>共{{totalPageLeftUser}}页</span>
                 </el-col>
                 <el-col :span="6">
                     <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
@@ -358,7 +360,7 @@
             </el-col>
             <el-col :span="24" class="transfer_footer">
                 <el-col :span="18">
-                    <span>总共有{{totalItemRightUser}}条数据</span>
+                    <span>共{{totalPageRightUser}}页</span>
                 </el-col>
                 <el-col :span="6">
                     <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button>
@@ -418,6 +420,7 @@
                             <el-col :span="24" class="fnTreeWrapper">
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
+                                        :render-content="renderContent_Fn"
                                         v-loading="fnTreeLoading" 
                                         :highlight-current="true"
                                         :data="fnTreeData"
@@ -491,9 +494,27 @@
         <h4 class="h4">审计信息</h4>
         <div>
             <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createdTime" type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor">
+                <label>创建时间</label>
+                <el-date-picker 
+                v-model="auditInformation.createdTime" 
+                type="date" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
+                disabled>
+                </el-date-picker>
+            </div>
             <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
-            <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifiedTime" type="date" disabled="disabled"></el-date-picker></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker 
+                v-model="auditInformation.modifiedTime" 
+                type="date" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
+                disabled>
+                </el-date-picker>
+            </div>
         </div>                                  
     </el-col>
 </el-row>       
@@ -1918,7 +1939,58 @@ export default({
     //   },
     //   resetChecked() {
     //     this.$refs.tree.setCheckedKeys([]);
-    //   }
+    //   },
+    renderContent_Fn(h, { node, data, store }){
+             if(typeof(data.childre)!='undefined' && data.childre!=null && data.childre.length>0){
+                    return (
+                        <span class="el-tree-node__label">
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.displayName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label">
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.displayName}
+                        </span>
+                    );
+                }
+        },
+        renderContent_ou(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+        },
+        renderContent_ouTreeDataRight(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.ouId}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.ouId}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+        },
         
     }
        

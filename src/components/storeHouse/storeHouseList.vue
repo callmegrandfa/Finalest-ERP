@@ -11,41 +11,38 @@
                         <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
-
                 <el-row class="mt10"> 
                     <div class="bgcolor smallBgcolor">
-                        <label>编号</label>
-                        <el-input placeholder="" ></el-input>
+                        <label>仓库编码</label>
+                        <el-input placeholder="" v-model="queryParams.StockCode"></el-input>
                     </div> 
                 </el-row>
-
                 <el-row>
                     <div class="bgcolor smallBgcolor">
-                        <label>名称</label>
-                        <el-input placeholder=""></el-input>
+                        <label>仓库名称</label>
+                        <el-input placeholder="" v-model="queryParams.StockName"></el-input>
                     </div> 
                 </el-row>
-
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
+                        <el-select v-model="queryParams.AreaCode"></el-select>
                     </div>
                 </el-row>
-
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>仓库类型</label>
-                        
+                        <el-select v-model="queryParams.StockTypeId">
+                            <el-option v-for="item in stockType" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                        </el-select>
                     </div>
                 </el-row>
-
                 <el-row style="text-align:center;">
                     <div class="bgcolor smallBgcolor">
-                        <span class="search-btn" >查询</span>
+                        <span class="search-btn" @click="query()">查询</span>
                     </div>
                 </el-row>
             </el-col>
-
             <el-col :span="ifWidth?19:24" class="border-left">
                 <el-row class="h48">
                     <el-col :span='2' class="search-block"  v-show="!ifWidth">
@@ -58,7 +55,7 @@
                     </el-col>
 
                     <el-col :span="22" class="pt5">
-                        <button class="erp_bt bt_add" >
+                        <button class="erp_bt bt_add" @click="add();">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
@@ -102,54 +99,15 @@
                     </el-col>
                     
                 </el-row>
-
                 <el-row class="pb10">
                     <el-col :span="24">
-                        <Table  :methodsUrl="httpUrl" :cols="column" :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :command="command"></Table>
-                        <!-- <el-table  border  style="width: 100%" stripe>
-                            <el-table-column type="selection" fixed></el-table-column>
-                            <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
-                            <el-table-column prop="stockCode" label="仓库编码" fixed>
-                                <template slot-scope="scope">
-                                    <el-button type="text" size="small" ></el-button>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="stockName" label="仓库名称">
-                                <template slot-scope="scope">
-                                    <el-button type="text" size="small" ></el-button>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="stockFullName" label="仓库全称"></el-table-column>
-                            <el-table-column prop="stockTypeId" label="仓库类型">
-                                <template slot-scope="scope">
-                                    <el-input disabled=""></el-input>
-                                    <el-input  disabled=""></el-input>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="opAreaId_AreaName" label="业务地区"></el-table-column>
-                            <el-table-column prop="stockAddress" label="地址"></el-table-column>
-                            <el-table-column prop="manager" label="负责人"></el-table-column>
-                            <el-table-column prop="status" label="状态">
-                                <template slot-scope="scope">
-                                    <el-input  disabled=""></el-input>
-                                    <el-input  disabled=""></el-input>
-                                    <el-input disabled=""></el-input>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="操作" fixed='right'>
-                                <template slot-scope="scope">
-                                    <el-button  type="text" size="small">查看</el-button>
-                                    <el-button  type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>  -->
+                        <Table :methodsUrl="httpUrl" :hasPagination="hasPagination" :cols="column" :HttpParams="HttpParams" :queryParams="queryParams" :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :command="command"></Table>
                     </el-col>
                 </el-row>
             </el-col>   
         </el-row>
   </div>
 </template>
-
 <script>
 import Table from '../../base/Table/Table'
     export default{
@@ -157,13 +115,136 @@ import Table from '../../base/Table/Table'
         data(){
             return{
                 ifWidth:true,
-                httpUrl:{
-                    Initial:'',
-                    delete:''
-                }
+                tableModel:'storeHouse',//数据模型名称标志
+                isDisable:true,//表格是否可编辑
+                mutiSelect:true,//表格是否可多选
+                command:[{//操作栏按钮配置
+                    text:'查看',
+                    class:'green'
+                },{
+                    text:'删除',
+                    class:'blue'
+                }],
+                httpUrl:{//请求接口地址
+                    Initial:'/api/services/app/StockManagement/GetRepositoryList',
+                    view:'/storeHouse/storeHouseModify/',
+                    delete:'/api/services/app/StockManagement/Delete'
+                },
+                HttpParams:{//初始化参数
+                    OuId:this.$store.state.OuId,
+                    SkipCount:(this.$store.state.storeHouseCurrentPage-1)*this.$store.state.storeHouseEachPage,
+                    MaxResultCount:this.$store.state.storeHouseEachPage
+                },
+                column:[{//表格列配置
+                        prop: 'ouId_OuName',
+                        label: '所属组织',
+                        controls:'text',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                    },{
+                        prop: 'stockCode',
+                        label: '仓库编码',
+                        controls:'text',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                    },{
+                        prop: 'stockName',
+                        label: '仓库名称',
+                        controls:'text',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                    },{
+                        prop: 'stockFullName',
+                        label: '仓库全称',
+                        controls:'text',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                    },{
+                        prop: 'stockTypeId',
+                        label: '仓库类型',
+                        controls:'text',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                    },{
+                        prop: 'opAreaId_AreaName',
+                        label: '业务地区',
+                        controls:'text',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                    },{
+                        prop: 'stockAddress',
+                        label: '地址',
+                        controls:'text',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                    },{
+                        prop: 'manager',
+                        label: '负责人',
+                        controls:'text',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                    },{
+                        prop: 'status',
+                        label: '状态',
+                        controls:'select',
+                        required:true,
+                        isFix:"",
+                        width:"auto",
+                        isDisable:false,
+                        sortable:false,
+                        dataSource:[{
+                            value: 1,
+                            label: '启用'
+                        },{
+                            value: 0,
+                            label: '禁用'
+                        }]
+                }],
+                hasPagination:true,
+                queryParams:{
+                    OuId:this.$store.state.OuId,//组织单元ID
+                    StockCode:'',//仓库编码
+                    StockName:'',//仓库名称
+                    AreaCode:'',//业务地区
+                    StockTypeId:'',//仓库类型
+                    Sorting:'',//排序方式
+                    SkipCount:(this.$store.state.storeHouseCurrentPage-1)*this.$store.state.storeHouseEachPage,
+                    MaxResultCount:this.$store.state.storeHouseEachPage
+                },
+                stockType:[{//仓库类型
+                    value:0,
+                    label: '仓库'
+                    }, {
+                    value:1,
+                    label: '店铺'
+                }],
             }
         },
-        created:function(){
+        created(){
             
         },
         computed:{
@@ -173,6 +254,21 @@ import Table from '../../base/Table/Table'
           
         },
         methods:{
+            add(){//新增页面跳转
+                this.$store.state.url='/storeHouse/storeHouseModify/default'
+           		this.$router.push({path:this.$store.state.url})//点击切换路由
+            },
+            query(){//根据条件查询数据
+                let _this=this;
+                _this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',_this.queryParams).then(function(res){;
+                        _this.$store.commit('Init_Table',res.result.items);//传递table数据
+                        let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.storeHouseEachPage);
+                        _this.$store.commit('Init_pagination',totalPage);//设置总分页
+                        _this.$store.commit('Init_TotalCount',res.result.totalCount);//设置总条数
+                        _this.$store.commit('setCurrentPage',1)//设置当前页码为初始值1  
+                })
+            },
+            
             //-------------------------------------------------------
             open(tittle,iconClass,className) {
                 this.$notify({

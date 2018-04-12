@@ -51,7 +51,7 @@
                         :class="{redBorder : validation.hasError('addData.systemId')}" 
                         placeholder=""
                         v-model="addData.systemId">
-                            <el-option v-for="item in contain" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in selectData.systemId" :key="item.id" :label="item.systemName" :value="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -75,7 +75,7 @@
                             v-model="search">
                         </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree"
                             :highlight-current="true"
                             :props="selectProps"
@@ -206,6 +206,7 @@
                                     node-key="id"
                                     default-expand-all
                                     @node-click="nodeClick"
+                                    :render-content="renderContent_componyTree"
                                     :expand-on-click-node="false">
                                 </el-tree>
                             </vue-scroll>
@@ -391,6 +392,7 @@
             selectData:{//select数据
                 Status001:[],//启用状态
                 menu:[],//菜单
+                systemId:[],//子系统
             },
             response:{
                 details:'',
@@ -526,57 +528,26 @@
             // 菜单
             _this.selectData.menu=res.result.items;
             })
+            _this.$axios.gets('/api/services/app/SysSystemManagement/GetAllList').then(function(res){ 
+            // 子系统
+            _this.selectData.systemId=res.result;
+            })
         },
          filterNode(value, data) {
             if (!value) return true;
             return data.moduleName.indexOf(value) !== -1;
         },
-    //     showErrprTips(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //     showErrprTipsSelect(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //     showErrprTipsRangedate(e){
-    //         $('.tipsWrapper').each(function(){
-    //             if($(e.$el).hasClass($(this).attr('name'))){
-    //                 $(this).addClass('display_block')
-    //             }else{
-    //                 $(this).removeClass('display_block')
-    //             }
-    //         })
-    //     },
-    //   showErrprTipsTextArea(e){
-    //         $('.tipsWrapper').each(function(){
-    //           if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-    //               $(this).addClass('display_block')
-    //           }else{
-    //               $(this).removeClass('display_block')
-    //           }
-    //         })
-    //   },
       loadTree(){
             let _this=this;
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
             .then(function(res){
                 _this.selectTree=res;
-                _this.loadIcon(_this.addData.moduleParentId);
+                // _this.loadIcon();
+                _this.loadCheckSelect('moduleParentId',_this.addData.moduleParentId);
             },function(res){
             })
         },
-        loadIcon(key){
+        loadIcon(){
             let _this=this;
             _this.$nextTick(function () {
                 $('.preNode').remove();   
@@ -586,7 +557,14 @@
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                     }
-                    if($(this).attr('data-id')==key){
+                })
+            })
+        },
+        loadCheckSelect(selectName,key){
+            let _this=this;
+            _this.$nextTick(function () { 
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                     if($(this).attr('data-id')==key){
                         $(this).click()
                     }
                 })
@@ -862,7 +840,7 @@
         showDialog(){
             let _this=this;
             _this.dialogTableVisible = true;
-            _this.loadIcon();
+            // _this.loadIcon();
         },
         rightFn_change(val){
             let _this=this;
@@ -981,11 +959,38 @@
             }
         },
         renderContent_moduleParentId(h, { node, data, store }){
-            return (
-                <span class="el-tree-node__label" data-id={data.id}>
-                    {data.moduleName}
-                </span>
-            );
+            if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.moduleName}
+                    </span>
+                );
+            }else{
+                 return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.moduleName}
+                    </span>
+                );
+            }
+        },
+        renderContent_componyTree(h, { node, data, store }){
+            if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.permissionName}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.displayName}
+                    </span>
+                );
+            }else{
+                 return (
+                    <span class="el-tree-node__label" data-id={data.permissionName}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.displayName}
+                    </span>
+                );
+            }
         }
     }
 

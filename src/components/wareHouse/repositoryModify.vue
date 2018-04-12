@@ -254,7 +254,6 @@
                                     <el-option v-show="false" label="无" :value="areaValue">
                                     </el-option>
                                 </el-select>
-                                <!-- <el-input class="areaEntry" placeholder="街道办地址"></el-input> -->
                             </div>
                         </div>
 
@@ -849,7 +848,7 @@
                         self.getOuId = self.repositoryData.ouId;
 
                         //行政地区所有省
-                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
                             // console.log(res);
                             self.areaProArray = res.result;
                             // self.loadIcon();
@@ -882,10 +881,10 @@
                             },function(res){
                                 console.log('err'+res)
                             });
-                            // self.opAr = res.result;
                         },function(res){
                             self.proId = 0;
                             self.cityId = 0;
+                            self.repositoryData.adAreaId = 0;
                             // self.repositoryData.adAreaId = 0;
                             self.ifModify = false;
                             console.log('err'+res)
@@ -1187,58 +1186,41 @@
                 }
 
                 if(self.who == 2){
-                    // if(self.allDelArray == self.idArray){
-                    
-                        // self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
-                        //     self.open('删除地址成功','el-icon-circle-check','successERP');
-                        //     self.loadAddData();
-                        //     self.dialogDelConfirm = false;
-                        // },function(res){
-                        //     self.dialogDelConfirm = false;
-                        //     self.errorMessage = true;
-                        //     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        // })
-                    // }else{
-                        // console.log(self.addList)/
-                        // console.log(self.multipleSelection)
-                        let x = []; 
-                        $.each(self.repositoryAddressData,function(index,value){
-                            let flag = false;
-                            $.each(self.multipleSelection,function(i,val){
-                                if(value==val){
-                                    flag = true;
-                                }
-                            })
-                            if(!flag){
-                                x.push(value)
+                    let x = []; 
+                    $.each(self.repositoryAddressData,function(index,value){
+                        let flag = false;
+                        $.each(self.multipleSelection,function(i,val){
+                            if(value==val){
+                                flag = true;
                             }
                         })
-                        // console.log(x)
-                        self.repositoryAddressData = x;
-                        self.addList = [];
-                        for(let i in x){
-                            if(x[i].id==''||x[i].id==undefined){
-                                // console.log(x[i])
-                                self.addList.push(x[i])
-                                console.log(self.addList)
-                            }
+                        if(!flag){
+                            x.push(value)
                         }
-                        // if(self.idArray.ids.length>0){
-
-                        // }
-                        self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
-                            self.open('删除地址成功','el-icon-circle-check','successERP');
-                            // self.loadAddData();
-                            self.dialogDelConfirm = false;
-                        },function(res){
-                            self.dialogDelConfirm = false;
-                            self.errorMessage = true;
-                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        })
-                        // console.log()
-                        // console.log(self.addList)
+                    })
+                        
+                    self.repositoryAddressData = x;
+                    self.addList = [];
+                    for(let i in x){
+                        if(x[i].id==''||x[i].id==undefined){
+                            // console.log(x[i])
+                            self.addList.push(x[i])
+                            console.log(self.addList)
+                        }
+                    }
+                        
+                    self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
+                        self.open('删除地址成功','el-icon-circle-check','successERP');
+                        // self.loadAddData();
                         self.dialogDelConfirm = false;
-                    // }
+                    },function(res){
+                        self.dialogDelConfirm = false;
+                        self.errorMessage = true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })
+                    
+                    self.dialogDelConfirm = false;
+                    
                     
                 }
 

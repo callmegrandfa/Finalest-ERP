@@ -3,7 +3,9 @@
         <el-row class="bg-white">
 
             <el-col :span='24' class="border-left">
-                <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                <el-row class="fixed bg-white" >
+                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                </el-row>
                 <el-row class="pl10 pr10">
                     <el-col :span="24" style="margin-top:20px">
                         <el-row>
@@ -150,7 +152,7 @@
                                     class="propertyParentid"
                                     @change="isUpdate" 
                                     v-model="addData.relPropertyId"
-                                    placeholder="" :class="{redBorder : validation.hasError('addData.propertyParentid')}">
+                                    placeholder="" >
                                     <el-input
                                         placeholder="搜索..."
                                         class="selectSearch"
@@ -185,7 +187,7 @@
                         </el-col>
                         <el-col :span="5" id="state">
                             <div class="bgcolor smallBgcolor" >
-                                <el-select  v-model="addData.status" @change="isUpdate">
+                                <el-select  v-model="addData.status" @change="isUpdate" :disabled="isDisabled">
                                 <el-option  v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value">
                                 </el-option>
 
@@ -355,7 +357,7 @@ import Textbox from '../../base/textbox/textbox'
                       isSystem: false,
                       seq:'',
                       dataSource: 0,
-                      status: '',
+                      status: 1,
                     createdTime:this.GetDateTime(),//创建时间
                     createdBy:this.$store.state.name,//创建人
                     modifiedTime:this.GetDateTime(),//修改人
@@ -546,9 +548,7 @@ import Textbox from '../../base/textbox/textbox'
                 if (strDate >= 0 && strDate <= 9) {
                     strDate = "0" + strDate;
                 }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                    + " " + date.getHours() + seperator2 + date.getMinutes()
-                    + seperator2 + date.getSeconds();
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
                 return currentdate;
             },
             filterNode(value, data) {

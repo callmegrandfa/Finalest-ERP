@@ -1,7 +1,7 @@
 <template>
     <div class="bAreaListForm">
         <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :span="5"  class="search-container">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-autocomplete
                     v-model="searchLeft"
@@ -12,24 +12,26 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-autocomplete>
                 </el-col>
-                <el-col :span='24' class="tree-container" id="areaTree">
-                    <el-tree
-                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                    v-loading="treeLoading" 
-                    :highlight-current="true"
-                    :data="componyTree"
-                    :props="defaultProps"
-                    node-key="id"
-                    default-expand-all
-                    ref="tree"
-                    :expand-on-click-node="false"
-                    :filter-node-method="filterNode"
-                    @node-click="nodeClick"
-                    >
-                    </el-tree>
+                <el-col :span='24' class="tree-container">
+                    <vue-scroll :ops="$store.state.option">
+                        <el-tree
+                        :render-content="renderContent_componyTree"
+                        v-loading="treeLoading" 
+                        :highlight-current="true"
+                        :data="componyTree"
+                        :props="defaultProps"
+                        :default-expanded-keys="expandId"
+                        node-key="id"
+                        ref="tree"
+                        :expand-on-click-node="false"
+                        :filter-node-method="filterNode"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                    </vue-scroll>
                 </el-col>   
             </el-col>
-            <el-col :span='19' class="border-left" id="areaTable">
+            <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -224,6 +226,7 @@
                 componyTree:  [
                     // {areaName:'根目录',id:'0',items:[]},
                 ],
+                expandId:[],//默认展开
                 defaultProps: {
                     children: 'childItems',
                     label: 'name',
@@ -312,6 +315,15 @@
                     _this.tableLoading=false;
                 })
             },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
@@ -319,10 +331,10 @@
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
-                    _this.loadIcon();
                     _this.$nextTick(function(){
                         _this.getHeight()
                     })
+                    _this.expandId=_this.defauleExpandTree(res.result,'id')
                },function(res){
                    _this.treeLoading=false;
                    _this.$nextTick(function(){
@@ -355,11 +367,11 @@
                  }
             },
             getHeight(){
-                $("#area").css({
-                    minHeight:$('.bAreaListForm .bg-white').css('height')
+                $(".tree-container").css({
+                    height:parseInt($('.bg-white').css('height'))-48+'px'
                 })
-                $("#areaTable").css({
-                    minHeight:$('.bAreaListForm .bg-white').css('height')
+                $(".border-left").css({
+                    height:$('.bg-white').css('height')
                 })
             },
             goDetail(){
@@ -499,7 +511,24 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            renderContent_componyTree(h, { node, data, store }){
+                if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }
+            },
         },
     }
 </script>

@@ -180,12 +180,12 @@
                 // statusC:[],//状态
                 tableData:[],
                 componyTree:  [{
-                    deptName:'部门管理',
+                    name:'部门管理',
                     children:[],
                 }],
                 defaultProps: {
                     children: 'children',
-                    label: 'deptName',
+                    label: 'name',
                     id:'id'
                 },
                 // TreeContextMenu:[//点击鼠标右键生成菜单
@@ -304,7 +304,7 @@
                 self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
                     console.log(res)
                     for(let i in res.result){
-                        self.componyTree[0].children.push(res.result[i].children[0])
+                        self.componyTree[0].children=res.result
                     }
                     console.log(self.componyTree)
                     self.treeLoading=false;
@@ -542,6 +542,8 @@
             //---树形操作-----------------------------------------------
             nodeClick:function(data){
                 let self = this;
+                self.tableData = [];
+                console.log(data)
 
                 if(data.id){
 

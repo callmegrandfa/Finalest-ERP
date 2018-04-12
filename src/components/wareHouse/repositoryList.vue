@@ -297,9 +297,9 @@
 
                 this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
                     console.log(res);
-                    self.allList = res.items;
-                    self.total = res.totalCount;
-                    self.totalPage = Math.ceil(res.total/self.eachPage)
+                    self.allList = res.result.items;
+                    self.total = res.result.totalCount;
+                    self.totalPage = Math.ceil(res.result.totalCount/self.eachPage)
                 },function(res){
                     console.log(res)
                 })

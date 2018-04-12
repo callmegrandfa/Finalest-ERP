@@ -1,7 +1,7 @@
 <template>
     <div class="menuListForm">
         <el-row class="bg-white">
-            <el-col :span="5" class="tree-container">
+            <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <!-- <el-input
                         placeholder="搜索..."
@@ -17,21 +17,23 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-autocomplete>
                 </el-col>
-                <el-col :span='24'>
-                    <el-tree
-                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                    v-loading="treeLoading" 
-                    :highlight-current="true"
-                    :data="componyTree"
-                    :props="defaultProps"
-                    node-key="id"
-                    default-expand-all
-                    ref="tree"
-                    :expand-on-click-node="false"
-                    :filter-node-method="filterNode"
-                    @node-click="nodeClick"
-                    >
-                    </el-tree>
+                <el-col :span='24' class="tree-container">
+                    <vue-scroll :ops="$store.state.option">
+                        <el-tree
+                        :render-content="renderContent_componyTree"
+                        v-loading="treeLoading" 
+                        :highlight-current="true"
+                        :data="componyTree"
+                        :props="defaultProps"
+                        node-key="id"
+                        :default-expanded-keys="expandId"
+                        ref="tree"
+                        :expand-on-click-node="false"
+                        :filter-node-method="filterNode"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                    </vue-scroll>
                 </el-col>   
             </el-col>
             <el-col :span='19' class="border-left">
@@ -98,7 +100,7 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" border stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="systemId" label="系统"></el-table-column>
+                            <el-table-column prop="systemId_SystemName" label="系统"></el-table-column>
                             <el-table-column prop="moduleCode" label="模块编码">
                                 <template slot-scope="scope">
                                     <el-button type="text"  @click="modify(scope.row)">{{scope.row.moduleCode}}</el-button>
@@ -212,6 +214,7 @@
                 tableData:[],
                 dialogData:{},    
                 componyTree:  [],
+                 expandId:[],//默认展开
                 defaultProps: {
                     children: 'childNodes',
                     label: 'moduleName',
@@ -288,9 +291,24 @@
                         let item={'value':value.areaName,'id':value.id};
                         _this.restaurants.push(item)
                     })
+                     _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     },function(res){
                     _this.tableLoading=false;
+                     _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                 })
+            },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
             },
             loadTree(){
                 let _this=this;
@@ -299,15 +317,9 @@
                 .then(function(res){
                     _this.componyTree=res
                     _this.treeLoading=false;
-                    _this.loadIcon()
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
+                    _this.expandId=_this.defauleExpandTree(res,'id')
                },function(res){
                     _this.treeLoading=false;
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
                })
             },
             loadIcon(){
@@ -324,11 +336,11 @@
                 })
             },
              getHeight(){
-                $(".tree-container").css({
-                    minHeight:$('.bg-white').css('height')
+                 $(".tree-container").css({
+                    height:parseInt($('.bg-white').css('height'))-48+'px'
                 })
                 $(".border-left").css({
-                    minHeight:$('.bg-white').css('height')
+                    height:$('.bg-white').css('height')
                 })
             },
             handleCurrentChange(val) {//页码改变
@@ -421,7 +433,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             delRow(){
@@ -441,7 +452,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.errorMessage=true;
                     _this.dialogUserConfirm=false;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
                 
             },
@@ -494,7 +504,24 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            renderContent_componyTree(h, { node, data, store }){
+                if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.moduleName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.moduleName}
+                        </span>
+                    );
+                }
+            },
         },
     }
 </script>
