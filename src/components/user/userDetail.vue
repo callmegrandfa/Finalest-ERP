@@ -722,7 +722,7 @@
                     "ouId": res.result.id,
                     "status": 1,
                     "userType": "",
-                    "languageId": "",
+                    "languageId":9,
                     "isReg": false,
                     "remark": "",
                     "roleCodes": []
@@ -733,7 +733,7 @@
                 _this.validation.reset();
             })
              _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
-                //  console.log(res)
+                 console.log(res)
             // 语种
                 _this.selectData.languageId=res.result.items;
             })
