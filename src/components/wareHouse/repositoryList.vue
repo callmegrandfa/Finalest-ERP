@@ -114,20 +114,20 @@
                             <span class="btDetail">辅助功能</span>
                         </button>
                         <div class="search_input_group">
-                        <div class="search_input_wapper" @keyup.enter="submitSearch">
-                            <el-input
-                                v-model="SearchKey"
-                                placeholder="搜索..."
-                                class="search_input">
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-input>
+                            <div class="search_input_wapper" @keyup.enter="submitSearch">
+                                <el-input
+                                    v-model="SearchKey"
+                                    placeholder="搜索..."
+                                    class="search_input">
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
+                            <div class="search_button_wrapper">
+                                <button class="userDefined">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                </button>
+                            </div>
                         </div>
-                        <div class="search_button_wrapper">
-                            <button class="userDefined">
-                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
-                            </button>
-                        </div>
-                    </div>
                     </el-col>
                     
                 </el-row>

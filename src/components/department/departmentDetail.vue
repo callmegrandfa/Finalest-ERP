@@ -250,7 +250,7 @@
             return{
                 ifModify:false,//判断是否修改过
                 defaultOuId:'',
-                //---组织单元树--------
+                //---所属组织--------
                 ouSearch:'',
                 selectOuProps:{
                     children: 'children',
@@ -358,6 +358,7 @@
         //---加载数据-------------------------------------------
         loadOuTree:function(){
             let self=this;
+            console.log(123)
             self.treeLoading=true;
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 console.log(res)

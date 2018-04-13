@@ -665,7 +665,7 @@
     border-bottom: 1px solid #E4E4E4;
 }
 .mt20{
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .pl15{
     padding-left: 15px;

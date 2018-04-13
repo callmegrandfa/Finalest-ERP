@@ -113,7 +113,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                         
+                         :render-content="renderContent_"
                         :data="selectTree"
                         :props="selectProps"
                         :highlight-current="true"
@@ -485,7 +485,7 @@
           "status": "",
           "userType": "",
           "languageId": "",
-          "isReg": true,
+          "isReg": false,
           "remark": "",
           "roleCodes": [],
         },
@@ -647,7 +647,7 @@
                     "userType": res.result.userType,
                     "languageId": res.result.languageId,
                     "userGroupId": res.result.userGroupId,
-                    "isReg": true,
+                    "isReg": res.result.isReg,
                     "remark": res.result.remark,
                     "roleCodes": res.result.roleCodes,
                     "email":res.result.email,
@@ -708,7 +708,6 @@
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -1193,6 +1192,23 @@
             _this.totalItemRight=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).TotalItem
             _this.totalPageRight=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).TotalPage
            
+        },
+         renderContent_(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
         },
     }
 

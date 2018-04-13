@@ -48,29 +48,32 @@
                     <div class="bgcolor longWidth">
                         <label>上级客户分类</label>
                         <el-select class="classParentId" 
-                                   clearable filterable
+                                   clearable
                                    :class="{redBorder : validation.hasError('customerClassData.classParentId')}" 
                                    placeholder=""            
                                    @change='Modify'
                                    v-model="customerClassData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
-                                      v-model="parentSearch"></el-input>
+                                      v-model="parentSearch">
+                             </el-input>
 
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                      :data="selectParentTree"
+                                     :highlight-current="true"
                                      :props="selectParentProps"
                                      node-key="id"
                                      default-expand-all
                                      ref="tree"
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
+                                     :render-content="renderContent_moduleParentId"
                                      @node-click="nodeClick"></el-tree>
                             <el-option v-show="false"
                                        :key="parentItem.id" 
                                        :label="parentItem.className" 
                                        :value="parentItem.id"
-                                       id="businessDetail_confirmSelect">
+                                       :id="parentItem.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -183,6 +186,8 @@
                     <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
                     <div class="bgcolor">
                         <label>创建时间</label>
+                      
+
                         <el-input v-model="customerClassData.createdTime" disabled></el-input>
                       
                     </div>
@@ -243,7 +248,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -407,11 +412,14 @@ export default {
           .then(function(res) {
             console.log(res);
             self.customerClassData = res.result;
-            // self.ouItem.id = self.customerClassData.classParentId;
-            // self.ouItem.ouName = self.customerClassData.ouFullname;
-            self.parentItem.id = self.customerClassData.classParentId;
+            self.parentItem.id = res.result.classParentId;
             // console.log(self.parentItem.id);
-            self.parentItem.className = self.customerClassData.classParentId_ClassName;
+            self.parentItem.className =  res.result.classParentId_ClassName;
+            // console.log(res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''))
+            self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ')
+        
+            self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
+            // self.customerClassData.modifiedTime= res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
           });
       }
     },
@@ -424,34 +432,12 @@ export default {
           function(res) {
             // console.log(res);
             self.selectParentTree = res;
-            self.loadIcon();
+            self.loadCheckSelect('classParentId',self.customerClassData.classParentId);
           },
           function(res) {
             self.treeLoading = false;
           }
         );
-    },
-    loadIcon() {
-      let _this = this;
-      _this.$nextTick(function() {
-        $(".preNode").remove();
-        $(".el-tree-node__label").each(function() {
-          if (
-            $(this)
-              .parent(".el-tree-node__content")
-              .next(".el-tree-node__children")
-              .text() == ""
-          ) {
-            $(this).prepend(
-              '<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>'
-            );
-          } else {
-            $(this).prepend(
-              '<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>'
-            );
-          }
-        });
-      });
     },
     loadStatus: function() {
       //加载状态下拉框
@@ -468,6 +454,16 @@ export default {
           function(res) {}
         );
     },
+      loadCheckSelect(selectName,key){
+          let _this=this;
+          _this.$nextTick(function () { 
+              $('.'+selectName+' .el-tree-node__label').each(function(){
+                    if($(this).attr('data-id')==key){
+                      $(this).click()
+                  }
+              })
+          })
+      },
     //-------------------------------------------------------
      GetDateTime: function () {
                 var date = new Date();
@@ -492,13 +488,17 @@ export default {
       if (!value) return true;
       return data.className.indexOf(value) !== -1;
     },
-    nodeClick: function(data) {
-      let self = this;
-      self.parentItem.id = data.id;
-      self.parentItem.className = data.className;
+    nodeClick(data,node,self) {
+      let _this = this;
+      _this.parentItem.id = data.id;
+      _this.parentItem.className = data.className;
       self.$nextTick(function() {
-        $("#businessDetail_confirmSelect").click();
+        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
       });
+        // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,})
+        
+
+
     },
     //-------------------------------------------------------
 
@@ -553,7 +553,7 @@ export default {
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
-                  console.log(res);
+                  // console.log(res);
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                     // 修改成功，点返回不弹出对话框
                    self.ifModify = false;
@@ -712,7 +712,24 @@ export default {
             if(message!=null && message){
                 self.response.validationErrors=validationErrors;
             }
-        }
+        },
+          renderContent_moduleParentId(h, { node, data, store }){
+            if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }else{
+                  return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }
+    },
     //------------------------------------------------------
   }
 };

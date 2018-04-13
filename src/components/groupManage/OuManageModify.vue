@@ -30,8 +30,8 @@
                             名称{{ validation.firstError('addData.ouName') }},
                             </span>
                            <span 
-                            :class="{block : !validation.hasError('addData.ouFullname')}">
-                            全称{{ validation.firstError('addData.ouFullname') }},
+                            :class="{block : !validation.hasError('addData.ouName')}">
+                            全称{{ validation.firstError('addData.ouName') }},
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.ouParentid')}">
@@ -165,9 +165,9 @@
                         <p class="msgDetail">错误提示：名称{{ validation.firstError('addData.ouName') }}</p>
                     </div>
                 </div>
-                <div class="tipsWrapper" name="ouFullname">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouFullname')}">
-                        <p class="msgDetail">错误提示：全称{{ validation.firstError('addData.ouFullname') }}</p>
+                <div class="tipsWrapper" name="ouName">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouName')}">
+                        <p class="msgDetail">错误提示：全称{{ validation.firstError('addData.ouName') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="ouParentid">
@@ -351,12 +351,12 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>全称</label>
-                    <el-input class="ouFullname"  
+                    <el-input class="ouName"  
                      
                     @change="isUpdate"
                     @focus="showErrprTips"
-                    :class="{redBorder : validation.hasError('addData.ouFullname')}"
-                    v-model="addData.ouFullname" 
+                    :class="{redBorder : validation.hasError('addData.ouName')}"
+                    v-model="addData.ouName" 
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
@@ -374,7 +374,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                         
+                         :render-content="renderContent_ouParentid"
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
@@ -386,7 +386,7 @@
                         @node-click="nodeClick_ou"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
@@ -444,22 +444,6 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
-                    <!-- <el-select filterable              
-                    @change="isUpdate"
-                    placeholder=""
-                    @focus="showErrprTipsSelect"
-                    :class="{redBorder : validation.hasError('addData.companyOuId')}"
-                    class="companyOuId" 
-                    v-model="addData.companyOuId">
-                        <el-option 
-                        v-for="item in selectData.companys" 
-                        :key="item.id" 
-                        :label="item.ouName" 
-                        :value="item.id" 
-                        >
-                        </el-option>
-                    </el-select> -->
-
                     <el-select class="companyOuId"
                         clearable filterable
                         @change="isUpdate"
@@ -470,22 +454,22 @@
                             <el-input
                             placeholder="搜索..."
                             class="selectSearch"
-                            v-model="search">
+                            v-model="search_companyOuId">
                             </el-input>
                             <el-tree
-                             
+                             :render-content="renderContent_companyOuId"
                             :data="selectTreeCompany"
                             :highlight-current="true"
                             :props="selectPropsCompany"
                             node-key="id"
                             default-expand-all
-                            ref="tree"
-                            :filter-node-method="filterNode"
+                            ref="trees"
+                            :filter-node-method="filterNode1"
                             :expand-on-click-node="false"
                             @node-click="nodeClick"
                             >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
@@ -1127,12 +1111,13 @@ export default({
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
             search:'',
+            search_companyOuId:'',
              selectTree:[
             ],
             selectTreeCompany:[],
             item_ou:{
                 id:'',
-                ouFullname:''
+                ouName:''
             },
             selectProps: {
                 children: 'children',
@@ -1159,7 +1144,7 @@ export default({
             addData:{
                 "ouCode": "",
                 "ouName": "",
-                "ouFullname": "",
+                "ouName": "",
                 "ouParentid": "",//整数
                 "accCchemeId": "",//整数
                 "accStartMonth": "",
@@ -1231,7 +1216,7 @@ export default({
       'addData.ouName': function (value) {//名称
          return this.Validator.value(value).required().maxLength(50);
       },
-      'addData.ouFullname': function (value) {//全称
+      'addData.ouName': function (value) {//全称
          return this.Validator.value(value).required().maxLength(50);
       },
       'addData.ouParentid': function (value) {//上级业务单元
@@ -1470,6 +1455,9 @@ export default({
       search(val) {
         this.$refs.tree.filter(val);
       },
+      search_companyOuId(val) {
+        this.$refs.trees.filter(val);
+      },
       addData:{
             handler:function(val,oldVal){
                 let _this=this;
@@ -1524,7 +1512,7 @@ export default({
                 _this.addData={
                     "ouCode": res.result.ouCode,
                     "ouName": res.result.ouName,
-                    "ouFullname": res.result.ouFullname,
+                    "ouName": res.result.ouName,
                     "ouParentid": res.result.ouParentid,//整数
                     "accCchemeId": res.result.accCchemeId,//整数
                     "accStartMonth": res.result.accStartMonth,
@@ -1653,7 +1641,11 @@ export default({
         },
         filterNode(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
+        },
+         filterNode1(value, data) {
+            if (!value) return true;
+            return data.ouName.indexOf(value) !== -1;
         },
         loadTree(){
             let _this=this;
@@ -1661,14 +1653,12 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
             },function(res){
             })
              _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
             .then(function(res){
                 // console.log(res);
                 _this.selectTreeCompany=res.result;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -1688,7 +1678,7 @@ export default({
         nodeClick_ou(data,node,self){
             let _this=this;
             // _this.item_ou.id=data.id;
-            // _this.item_ou.ouFullname=data.ouFullname;
+            // _this.item_ou.ouName=data.ouName;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
@@ -1702,7 +1692,7 @@ export default({
         nodeClick(data,node,self){
         let _this=this;
         // _this.item_ou.id=data.id;
-        // _this.item_ou.ouFullname=data.ouFullname;
+        // _this.item_ou.ouName=data.ouName;
         // _this.$nextTick(function(){
         //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
         // })
@@ -1733,7 +1723,7 @@ export default({
         isUpdateOuName(){
             let _this=this
             _this.showErrprTips();
-            if(_this.addData.ouName==_this.addData.ouFullname){
+            if(_this.addData.ouName==_this.addData.ouName){
                 _this.isUpdateFlag=true;
             }else{
                 _this.isUpdateFlag=false;
@@ -1742,7 +1732,7 @@ export default({
         updateOuName(){
             let _this=this;
             if(_this.isUpdateFlag){
-                _this.addData.ouFullname=_this.addData.ouName
+                _this.addData.ouName=_this.addData.ouName
             }
         },
         isDeleteThis(){
@@ -1982,7 +1972,42 @@ export default({
                 _this.addData.accStartMonth=res.result.checkDate
             },function(res){
             })
-        }
+        },
+        renderContent_companyOuId(h, { node, data, store }){
+                
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
+        renderContent_ouParentid(h, { node, data, store }){
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
     }
 
 })        

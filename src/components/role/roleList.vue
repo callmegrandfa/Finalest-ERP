@@ -488,22 +488,22 @@
             },
             delRow(){
                 let _this=this;
-                for(let i=0;i<_this.multipleSelection.length;i++){
-                    _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.multipleSelection[i].id})
-                    .then(function(res){
-                        if(_this.load){
-                            _this.loadTableData();
-                        }else{
-                            _this.SimpleSearch();
-                        }
-                        _this.dialogUserConfirm=false;
-                        _this.open('删除成功','el-icon-circle-check','successERP');
-                    },function(res){
-                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                        _this.dialogUserConfirm=false;
-                         _this.errorMessage=true;
-                    })
+                let data={
+                    "createList": [],
+                    "updateList": [],
+                    "deleteList": _this.multipleSelection
                 }
+                _this.$axios.deletes('/api/services/app/OuManagement/Delete',data)
+                .then(function(res){
+                    _this.open('删除成功','el-icon-circle-check','successERP');
+                        _this.loadTableData();
+                        _this.loadTree();
+                        _this.dialogUserConfirm=false;
+                },function(res){
+                    if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                    _this.errorMessage=true;
+                    _this.dialogUserConfirm=false;
+                })
             },
             see(row){
                 this.$store.state.url='/role/roleModify/'+row.id
@@ -555,7 +555,7 @@
     border-bottom: 1px solid #E4E4E4;
 }
 .mt20{
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .pl15{
     padding-left: 15px;

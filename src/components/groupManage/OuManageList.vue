@@ -41,17 +41,16 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                         
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTreeCompany"
                         :props="selectPropsCompany"
                         :highlight-current="true"
                         node-key="id"
+                        default-expand-all
                         ref="tree"
                         :filter-node-method="filterNode_company"
                         :expand-on-click-node="false"
-                        :default-expanded-keys="expand_companyOuId"
                         @node-click="nodeClick_company"
-                        :render-content="renderContent_selectTreeCompany">
                         >
                         </el-tree>
                         <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
@@ -69,17 +68,16 @@
                             v-model="search_area">
                         </el-input>
                             <el-tree
-                             
+                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :data="selectTree_area"
                             :props="selectProps_area"
                             :highlight-current="true"
                             node-key="id"
+                            default-expand-all
                             ref="tree"
                             :filter-node-method="filterNode_area"
-                            :default-expanded-keys="expand_area"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_area"
-                            :render-content="renderContent_selectTree_area"
                             >
                             </el-tree>
                             <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id"></el-option>
@@ -99,19 +97,17 @@
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
                 </div>
             </el-col>
-            <el-col :span='4' class="border-left" v-loading="treeLoading" id="ouListTree">
+            <el-col :span='4' class="border-left transfer_fixed" v-loading="treeLoading" id="ouListTree">
                 <vue-scroll :ops="$store.state.option">
-                    <el-tree 
-                    :data="componyTree"
-                    :props="defaultProps"
-                    :highlight-current="true"
-                    node-key="id"
-                    :expand-on-click-node="false"
-                    :default-expanded-keys="expandId"
-                    :render-content="renderContent_componyTree"
-                    @node-click="nodeClick">
-                    
-                    </el-tree>
+                <el-tree 
+                :data="componyTree"
+                :props="defaultProps"
+                :highlight-current="true"
+                node-key="treeId"
+                default-expand-all
+                :expand-on-click-node="false"
+                @node-click="nodeClick">
+                </el-tree>
                 </vue-scroll>
             </el-col>
              <el-col :span="ifWidth ? 15:20" class="border-left" id="ouListTable">
@@ -340,22 +336,18 @@
                     id:"",
                     areaName:"",
                 },
-                expandId:[],//默认展开公司树节点
-
-
                 selectProps_area: {
                     children: 'childItems',
                     label: 'name',
                     id:'id'
                 },
-                expand_area:[],//默认展行政地区树节点
-
-                selectPropsCompany:{
+                 selectPropsCompany:{
                     children: 'children',
-                    label: 'ouName',
+                    label: 'ouFullname',
                     id:'id'
-                },
-                expand_companyOuId:[],//默认展开所属公司树节点
+                   },
+                AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
+
                 tableLoading:false,
                 treeLoading:false,
                 searchData:{
@@ -383,6 +375,7 @@
                 defaultProps: {
                     children: 'children',
                     label: 'ouName',
+                    id:'id'
                 },
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
@@ -510,31 +503,23 @@
                     _this.tableLoading=false;
                 })
             },
-            defauleExpandTree(data,key){
-                if(typeof(data[0])!='undefined'
-                && data[0]!=null 
-                && typeof(data[0][key])!='undefined'
-                && data[0][key]!=null
-                && data[0][key]!=''){
-                    return [data[0][key]]
-                }
-            },
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
                 .then(function(res){
+                    // console.log(res);
                     _this.componyTree=res.result;
-                    _this.expandId=_this.defauleExpandTree(res.result,'id')
                     _this.treeLoading=false;
+                    _this.loadIcon()
                },function(res){
                    _this.treeLoading=false;
                })
                //地区
-                _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
+                _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
                 .then(function(res){
                     _this.selectTree_area=res.result;
-                    _this.expand_area=_this.defauleExpandTree(res.result,'id')
+                    _this.loadIcon();
                 },function(res){
                 })
                 // //公司
@@ -542,6 +527,7 @@
                 //     .then(function(res){
                 //         console.log(res);
                 //         _this.selectTreeCompany=res.result;
+                //         _this.loadIcon();
                 //     },function(res){
                 //     })
             },
@@ -552,7 +538,8 @@
                 .then(function(res){
                  
                     _this.selectTreeCompany=res.result;
-                    _this.expand_companyOuId=_this.defauleExpandTree(res.result,'id')
+                    //    console.log( _this.selectTreeCompany);
+                    _this.loadIcon();
                 },function(res){
                 })
             },
@@ -693,10 +680,10 @@
             },
             getHeight(){
                 $("#ouListTree").css({
-                    height:$('.bg-white').css('height')
+                    minHeight:$('.OuListForm .bg-white').css('height')
                 })
                 $("#ouListTable").css({
-                    height:$('.bg-white').css('height')
+                    minHeight:$('.OuListForm .bg-white').css('height')
                 })
             },
             nodeClick(data){
@@ -734,60 +721,7 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({Name:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            },
-            renderContent_selectTreeCompany(h, { node, data, store }){
-                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
-                    return (
-                        <span class="el-tree-node__label" data-id={data.id}>
-                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.ouName}
-                        </span>
-                    );
-                }else{
-                    return (
-                        <span class="el-tree-node__label" data-id={data.id}>
-                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.ouName}
-                        </span>
-                    );
-                }
-            },
-            renderContent_selectTree_area(h, { node, data, store }){
-                // console.log(data)
-                if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
-                    return (
-                        <span class="el-tree-node__label" data-id={data.id}>
-                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.areaName}
-                        </span>
-                    );
-                }else{
-                    return (
-                        <span class="el-tree-node__label" data-id={data.id}>
-                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.areaName}
-                        </span>
-                    );
-                }
-            },
-            renderContent_componyTree(h, { node, data, store }){
-
-                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
-                    return (
-                        <span class="el-tree-node__label" data-id={data.id}>
-                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.ouName}
-                        </span>
-                    );
-                }else{
-                    return (
-                        <span class="el-tree-node__label" data-id={data.id}>
-                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.ouName}
-                        </span>
-                    );
-                }
-            },
+            }
             
         },
     }

@@ -10,20 +10,25 @@
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-col>
-
-                <el-col :span='24' class="tree-container" >
-                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                             v-loading="treeLoading" 
-                             :data="customerClassTree"
-                             :props="defaultProps"
-                             node-key="id"
-                             default-expand-all
-                             ref="tree"
-                             :expand-on-click-node="false"
-                             :filter-node-method="filterNode"
-                             @node-click="nodeClick">
-                    </el-tree>
+                <el-col :span='24' class="tree-container transfer_fixed">
+                    <vue-scroll :ops="$store.state.option">
+                        <el-tree
+                        :render-content="renderContent_componyTree"
+                        v-loading="treeLoading" 
+                        :highlight-current="true"
+                        :data="customerClassTree"
+                        :props="defaultProps"
+                        node-key="id"
+                        :default-expanded-keys="expandId"
+                        ref="tree"
+                        :expand-on-click-node="false"
+                        :filter-node-method="filterNode"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                    </vue-scroll>
                 </el-col>   
+            </el-col>   
             </el-col>
             
             <el-col :span='19' class="border-left">
@@ -108,7 +113,7 @@
                                 <template slot-scope="scope">
                                     <el-date-picker 
                                     format="yyyy-MM-dd"
-                                    value-format="yyyy-MM-dd" 
+                                    value-format="yyyy-MM-dd " 
                                     v-model="tableData[scope.$index].createdTime" 
                                     type="datetime" 
                                     readonly
@@ -120,13 +125,6 @@
                             <el-table-column label="操作" fixed='right'>
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="goModify(scope.row.id)" >查看</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <!-- <el-button type="text" size="small"  @click="confirmDel(scope.row)" >删除</el-button> -->
-
-
-
-                                    <!-- <el-button type="text"  @click="modify(scope.row)">修改</el-button> -->
-                                    <!-- <el-button type="text"  @click="see(scope.row)" >查看</el-button> -->
                                     <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
                                 </template>
                             </el-table-column>
@@ -174,7 +172,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -225,8 +223,6 @@ export default {
         label: "className",
         id: "id"
       },
-      // TreeContextMenu:[//点击鼠标右键生成菜单
-      // ],
       InputName: "",
       pageIndex: 0, //分页的当前页码
       totalPage: 0, //当前分页总数
@@ -247,6 +243,7 @@ export default {
       isAdd: true, //判断是增加还是修改
       tittle: "", //模态框tittle
       showParent: true, //上级组织单元是否可选
+      expandId:[],//默认展开kehu树节点
       // 错误信息提示开始
       option: {
         vRail: {
@@ -312,36 +309,15 @@ export default {
     }
   },
   methods: {
-    //---数据表格加载---------------------------------------------------
-   loadTableData(data) {
-      //表格
-      let self = this;
-      self.tableLoading = true;
-      self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList",{Id:0,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
-            console.log(res);
-            self.tableData = res.result.items;
-            // console.log(self.tableData)
-            self.totalItem = res.result.totalCount;
-            self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
-              if(self.tableData==[]){
-                   self.pageIndex=0
-                    }
-                    self.tableLoading=false;
-                    },function(res){
-                    // self.errorMessage=true;
-                    self.tableLoading=false;
-                    })
-                },
-    // ---------------------------------------获取所有列表数据-----------------
-    getDataList() {
-      let self = this;
-      self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList", {SearchKey:self.SearchKey,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
-           console.log(res);
-          self.tableData = res.result.items;
-          self.totalItem = res.result.totalCount;
-         
-        });
-    },
+      defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
     //------------------------------------------------加载树形结构-------------------------
      loadTree() {
       let self = this;
@@ -349,40 +325,17 @@ export default {
       self.$axios.gets("api/services/app/ContactClassManagement/GetTreeList", {Ower:1}).then(
           function(res) {
             // console.log(1)
-            // console.log(res);
+            console.log(res);
             self.treeLoading = false;
             self.customerClassTree=res;
-            self.loadIcon();
+            self.expandId=self.defauleExpandTree(res,'id')
           },
           function(res) {
             self.treeLoading = false;
           }
         );
     },
-    // -------------------------加载图标-----------------------------------------------
-    loadIcon() {
-      let self = this;
-      self.$nextTick(function() {
-        $(".preNode").remove();
-        $(".el-tree-node__label").each(function() {
-          if (
-            $(this)
-              .parent(".el-tree-node__content")
-              .next(".el-tree-node__children")
-              .text() == ""
-          ) {
-            $(this).prepend(
-              '<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>'
-            );
-          } else {
-            $(this).prepend(
-              '<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>'
-            );
-          }
-        });
-      });
-    },
-    // -------------------------------------------加载状态框---------------------------------
+        // -------------------------------------------加载状态框---------------------------------
     loadStatus: function() {
       //加载状态下拉框
       let self = this;
@@ -396,48 +349,40 @@ export default {
           },
         );
     },
-  
-    //---保存--------------------------------------------------------
-    save: function() {
+    //---数据表格加载---------------------------------------------------
+   loadTableData(data) {
+      //表格
       let self = this;
-      self.$validate().then(function(success) {
-        if (success) {
-          if (self.dialogData.id != "" && self.dialogData.id != 0) {
-            //判断参数id值，为''是新增，其他为创建
-            self.$axios
-              .puts( "/api/services/app/ContactClassManagement/Update",self.dialogData)
-              .then(
-                function(res) {
-                  self.dialogFormVisible = false;
-                  self.loadTableData();
-                },
-                function(res) {
-                  console.log("error");
-                }
-              );
-          } else {
-            self.$axios.posts("/api/services/app/ContactClassManagement/Create",self.dialogData)
-              .then(
-                function(res) {
-                  self.dialogFormVisible = false;
-                  self.loadTableData();
-                  self.clearAddDate();
-                },
-                function(res) {
-                  console.log("error");
-                }
-              );
-          }
-        }
-      });
+      self.tableLoading = true;
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList",{Id:0,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
+            // console.log(res);
+          self.tableData = res.result.items;
+          // console.log(self.tableData)
+          self.totalItem = res.result.totalCount;
+          self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
+            if(self.tableData==[]){
+                  self.pageIndex=0
+                  }
+                  self.tableLoading=false;
+                  },function(res){
+                  // self.errorMessage=true;
+                  self.tableLoading=false;
+                  })
+              },
+    // ---------------------------------------获取所有列表数据-----------------
+    getDataList() {
+      let self = this;
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList", {SearchKey:self.SearchKey,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
+          //  console.log(res);
+          self.tableData = res.result.items;
+          self.totalItem = res.result.totalCount;
+         
+        });
     },
-    //----------------------------------------------------------------
 
     // ---跳转--------open----------------------------------------------
     goDetail() {
       //点击新增跳转
-      // this.$store.state.url = "/customerClass/customerClassDetail/default";
-      // this.$router.push({ path: this.$store.state.url }); //点击切换路由
       let self=this;
       if(typeof(self.detailParentId)=='number'){
           self.$store.state.url='/customerClass/customerClassDetail/'+self.detailParentId
@@ -465,12 +410,11 @@ export default {
         customClass: className
       });
     },
-      //---------------------------------------------------------------
+
     //右边搜索框
     searchRight() {
       this.getDataList();
     },
-    //------------------------------------------------------------------
     //---清除数据--------------------------------------------------
     clearAddDate: function() {
       //清除新增数据
@@ -488,7 +432,6 @@ export default {
         status: "" //启用状态
       };
     },
-    //----------------------------------------------------------------
 
     //---控制编辑------分页--------------------------------------------
     handleCurrentChange(val) {
@@ -553,7 +496,7 @@ export default {
         self.$axios .posts( "/api/services/app/ContactClassManagement/BatchDelete",self.idArray )
               .then(
                 function(res) {
-                  console.log(res);
+                  // console.log(res);
                   // self.loadTree() ;//删除成功加载树形节点
                    self.open("删除成功", "el-icon-circle-check", "successERP");
                    self.loadTableData();
@@ -613,7 +556,7 @@ export default {
             // console.log(self.dateabc)
             self.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:self.dateabc,ContactOwner:1,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
                 res=>{
-                  console.log(res);
+                  // console.log(res);
                   // self.totalCount=res.result.totalCount;
                   self.totalItem = res.result.totalCount;
                   self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
@@ -625,7 +568,25 @@ export default {
         filterNode(value, data) {//过滤节点
             if (!value) return true;
             return data.className.indexOf(value) !== -1;
-            }
+            },
+        
+        renderContent_componyTree(h, { node, data, store }){
+              if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }else{
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }
+          },       
   }
 };
 </script>

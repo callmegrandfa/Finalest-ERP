@@ -13,18 +13,61 @@
      </el-row>
      <el-row>
          <el-col :span="24" class="getPadding">
+             <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span 
+                            :class="{block : !validation.hasError('addData.categoryId')}">
+                            类目{{ validation.firstError('addData.categoryId') }},
+                            </span>
+
+                            <span 
+                            :class="{block : !validation.hasError('addData.productCode')}">
+                            商品编码{{ validation.firstError('addData.productCode') }},
+                            </span>
+                           <span 
+                            :class="{block : !validation.hasError('addData.productName')}">
+                            商品名称{{ validation.firstError('addData.productName') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('addData.brandId')}">
+                            品牌{{ validation.firstError('addData.brandId') }}
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('addData.unitId')}">
+                            单位{{ validation.firstError('addData.unitId') }}
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('addData.barcode')}">
+                            商品条码{{ validation.firstError('addData.barcode') }},
+                            </span>
+                            <span 
+                            :class="{block : !validation.hasError('addData.mnemonic')}">
+                            助记码{{ validation.firstError('addData.mnemonic') }},
+                            </span> 
+                             <span 
+                            :class="{block : !validation.hasError('addData.saleDate')}">
+                            上市时间{{ validation.firstError('addData.saleDate') }},
+                            </span> 
+                            <span 
+                            :class="{block : !validation.hasError('addData.remark')}">
+                            备注{{ validation.firstError('addData.remark') }},
+                            </span> 
+                        
+                        </p>
+                    </div>
+                </div>
             <div class="bgcolor" style="margin-bottom:0">
                 <label><small>*</small>类目</label>
-                <el-select clearable filterable  class="accCchemeId"
+                <el-select clearable filterable  class="categoryId"
                 @focus="showErrprTipsSelect"
-                :class="{redBorder : validation.hasError('addData.accCchemeId')}"
+                :class="{redBorder : validation.hasError('addData.categoryId')}"
                 placeholder=""
-                @change="getStartMonth"
-                v-model="addData.accCchemeId">
+                v-model="addData.categoryId">
                     <el-option 
-                    v-for="item in selectData.accCchemeId" 
+                    v-for="item in test1" 
                     :key="item.id" 
-                    :label="item.accperiodSchemeName" 
+                    :label="item.name" 
                     :value="item.id">
                     </el-option>
                 </el-select>
@@ -33,251 +76,88 @@
      </el-row>
  <!-- <el-collapse-transition>
      <div v-show="ifShow"> -->
-        <el-row>
+        <el-row v-show="isCategoryIdEmpty">
             <el-col :span="24" class="getPadding">
-                <div class="tipsWrapper">
-                    <div class="errorTips">
-                        <p class="msgDetail">错误提示：
-                            <span 
-                            :class="{block : !validation.hasError('addData.ouCode')}">
-                            编码{{ validation.firstError('addData.ouCode') }},
-                            </span>
-
-                            <span 
-                            :class="{block : !validation.hasError('addData.ouName')}">
-                            名称{{ validation.firstError('addData.ouName') }},
-                            </span>
-                           <span 
-                            :class="{block : !validation.hasError('addData.ouFullname')}">
-                            全称{{ validation.firstError('addData.ouFullname') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('addData.ouParentid')}">
-                            上级业务单元{{ validation.firstError('addData.ouParentid') }}
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('addData.accCchemeId')}">
-                            会计方案{{ validation.firstError('addData.accCchemeId') }}
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('addData.accStartMonth')}">
-                            启用年月{{ validation.firstError('addData.accStartMonth') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('addData.baseCurrencyId')}">
-                            本位币种{{ validation.firstError('addData.baseCurrencyId') }},
-                            </span> 
-                             <span 
-                            :class="{block : !validation.hasError('addData.companyOuId')}">
-                            所属公司{{ validation.firstError('addData.companyOuId') }},
-                            </span> 
-                            <span 
-                            :class="{block : !validation.hasError('addData.contactPerson')}">
-                            联系人{{ validation.firstError('addData.contactPerson') }},
-                            </span> 
-                            <span 
-                            :class="{block : !validation.hasError('addData.phone')}">
-                            电话{{ validation.firstError('addData.phone') }},
-                            </span>                
-                            <span 
-                            :class="{block : !validation.hasError('addData.address')}">
-                            地址{{ validation.firstError('addData.address') }},
-                            </span> 
-                            <span 
-                            :class="{block : !validation.hasError('addData.status')}">
-                            启用状态{{ validation.firstError('addData.status') }},
-                            </span> 
-                            <span 
-                            :class="{block : !validation.hasError('addData.remark')}">
-                            备注{{ validation.firstError('addData.remark') }},
-                            </span> 
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.ouParentid')}">
-                            公司：上级公司{{ validation.firstError('basCompany.ouParentid') }},
-                            </span> 
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.status')}">
-                            公司：启用状态{{ validation.firstError('basCompany.status') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.regCapital')}">
-                            公司：注册资本{{ validation.firstError('basCompany.regCapital') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.legalPerson')}">
-                            公司：法人代表{{ validation.firstError('basCompany.legalPerson') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.vatRegno')}">
-                            公司：纳税人登记号{{ validation.firstError('basCompany.vatRegno') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.regtime')}">
-                            公司：成立日期{{ validation.firstError('basCompany.regtime') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.legalPersonIdnr')}">
-                            公司：法人身份证号码{{ validation.firstError('basCompany.legalPersonIdnr') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.mgtDeptCode')}">
-                            公司：主管部门代码{{ validation.firstError('basCompany.mgtDeptCode') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.mgtDeptName')}">
-                            公司：主管部门名称{{ validation.firstError('basCompany.mgtDeptName') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.legalPersonType')}">
-                            公司：纳税人类别{{ validation.firstError('basCompany.legalPersonType') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.businessAddress')}">
-                            公司：营业地址{{ validation.firstError('basCompany.businessAddress') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('dateRange')}">
-                            公司：营业或有效期限{{ validation.firstError('dateRange') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.introduction')}">
-                            公司：公司简介{{ validation.firstError('basCompany.introduction') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.contactAddress')}">
-                            公司：通讯地址{{ validation.firstError('basCompany.contactAddress') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.zipCode')}">
-                            公司：邮政编码{{ validation.firstError('basCompany.zipCode') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.contact')}">
-                            公司：联系人{{ validation.firstError('basCompany.contact') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.fax')}">
-                            公司：传真{{ validation.firstError('basCompany.fax') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.phone')}">
-                            公司：电话{{ validation.firstError('basCompany.phone') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.email')}">
-                            公司：email{{ validation.firstError('basCompany.email') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.webUrl')}">
-                            公司：web网址{{ validation.firstError('basCompany.webUrl') }},
-                            </span>
-                            <span 
-                            :class="{block : !validation.hasError('basCompany.remark')}">
-                            公司：备注{{ validation.firstError('basCompany.remark') }},
-                            </span>
-                        </p>
-                    </div>
-                </div>
-                
-
-            
-
-
                 <div class="bgcolor" >
                     <label><small>*</small>商品编码</label>
-                    <el-input class="ouCode" 
+                    <el-input class="productCode" 
                      @focus="showErrprTips"
                      @change="isUpdate"
-                    :class="{redBorder : validation.hasError('addData.ouCode')}"
-                    v-model="addData.ouCode">
+                    :class="{redBorder : validation.hasError('addData.productCode')}"
+                    v-model="addData.productCode">
                     </el-input>
                 </div>
-                <div class="bgcolor" @keyup="updateOuName">
+                <div class="bgcolor">
                     <label><small>*</small>商品名称</label>
-                    <el-input class="ouName"
+                    <el-input class="productName"
                     @change="isUpdate"
-                    @focus="isUpdateOuName"
-                    :class="{redBorder : validation.hasError('addData.ouName')}"
-                     v-model="addData.ouName" >
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.productName')}"
+                     v-model="addData.productName" >
                      </el-input>
                 </div>
                 <div class="bgcolor">
                     <label>品牌</label>
-                    <el-input class="ouFullname"  
-                    
-                    @change="isUpdate"
-                    @focus="showErrprTips"
-                    :class="{redBorder : validation.hasError('addData.ouFullname')}"
-                    v-model="addData.ouFullname" 
-                    placeholder=""></el-input>
-                </div>
-                <div class="bgcolor">
-                    <label><small>*</small>单位</label>
-                    <el-select clearable class="ouParentid"
+                    <el-select clearable class="brandId"
                     
                     @change="isUpdate"
                     @focus="showErrprTipsSelect"
-                    :class="{redBorder : validation.hasError('addData.ouParentid')}"
+                    :class="{redBorder : validation.hasError('addData.brandId')}"
                     placeholder=""
-                    v-model="addData.ouParentid">
-                        <!-- <el-option 
-                        v-for="item in selectData.ouParentid" 
+                    v-model="addData.brandId">
+                        <el-option 
+                        v-for="item in selectData.categoryId" 
                         :key="item.id" 
-                        :label="item.ouName" 
+                        :label="item.accperiodSchemeName" 
                         :value="item.id">
-                        </el-option> -->
-                        <el-input
-                        placeholder="搜索..."
-                        class="selectSearch"
-                        v-model="search">
-                        </el-input>
-                        <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                        :data="selectTree"
-                        :highlight-current="true"
-                        :props="selectProps"
-                        node-key="id"
-                        default-expand-all
-                        ref="tree"
-                        :filter-node-method="filterNode"
-                        :expand-on-click-node="false"
-                        @node-click="nodeClick_ou"
-                        >
-                        </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
-                        </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                            </el-option>
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="bgcolor">
+                    <label><small>*</small>单位</label>
+                    <el-select clearable class="unitId"
+                    
+                    @change="isUpdate"
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.unitId')}"
+                    placeholder=""
+                    v-model="addData.unitId">
+                        <el-option 
+                        v-for="item in selectData.categoryId" 
+                        :key="item.id" 
+                        :label="item.accperiodSchemeName" 
+                        :value="item.id">
+                        </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
                     <label>商品条码</label>
-                     <el-input class="ouCode" 
+                     <el-input class="barcode" 
                      @focus="showErrprTips"
                      @change="isUpdate"
-                    :class="{redBorder : validation.hasError('addData.ouCode')}"
-                    v-model="addData.ouCode">
+                    :class="{redBorder : validation.hasError('addData.barcode')}"
+                    v-model="addData.barcode">
                     </el-input>
                 </div>
                 <div class="bgcolor">
-                    <label><small>*</small>助记码</label>
-                     <el-input class="ouCode" 
+                    <label>助记码</label>
+                     <el-input class="mnemonic" 
                     @focus="showErrprTips"
                     @change="isUpdate"
-                    :class="{redBorder : validation.hasError('addData.ouCode')}"
-                    v-model="addData.ouCode">
+                    :class="{redBorder : validation.hasError('addData.mnemonic')}"
+                    v-model="addData.mnemonic">
                     </el-input>
                 </div>
                 <div class="bgcolor">
                     <label>上市时间</label>
                     <el-date-picker 
                     @focus="showErrprTipsRangedate"
-                    :class="{redBorder : validation.hasError('addData.accStartMonth')}"
-                    class="accStartMonth datepicker" 
-                    format="yyyy-MM"
-                    value-format="yyyy-MM" 
-                    v-model="addData.accStartMonth" 
-                    type="month" 
+                    :class="{redBorder : validation.hasError('addData.saleDate')}"
+                    class="saleDate datepicker" 
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd" 
+                    v-model="addData.saleDate" 
+                    type="date" 
                     ></el-date-picker>
                 </div>
                 <el-col :span="24">
@@ -299,29 +179,16 @@
                 <el-col :span="24">
                     <div class="bgcolor longWidth">
                         <label></label>
-                        <el-checkbox v-model="addData.status">启用多单位</el-checkbox>
-                        <el-checkbox v-model="addData.status">唯一码管理</el-checkbox>
-                        <el-checkbox v-model="addData.status">批次管理</el-checkbox>
-                        <el-checkbox v-model="addData.status">是否套件</el-checkbox>
+                        <el-checkbox v-model="addData.uniqueMgt">唯一码管理</el-checkbox>
+                        <el-checkbox v-model="addData.lotMgt">批次管理</el-checkbox>
+                        <el-checkbox v-model="addData.isSuite">是否套件</el-checkbox>
                     </div>
                 </el-col>
                 <el-col :span="24">
                     <div class="bgcolor">
                         <label></label>
-                        <el-checkbox v-model="addData.status">保持期管理</el-checkbox>
-                    </div>
-                </el-col>
-                <el-col :span="24">
-                    <div class="bgcolor ">
-                        <label>体质期</label>
-                        <el-input 
-                        
-                        @change="isUpdate"
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('basCompany.regCapital')}"
-                        class="regCapital"
-                        v-model="basCompany.regCapital"
-                        ></el-input>
+                        <el-checkbox v-model="addData.validityMgt">有效期管理</el-checkbox>
+                        <el-checkbox v-model="addData.multiUnitEnabled">启用多单位</el-checkbox>
                     </div>
                 </el-col>
             </el-col> 
@@ -329,7 +196,7 @@
      <!-- </div>    
  </el-collapse-transition>   -->
 
-<el-row class="nopadding">  
+<el-row class="nopadding" v-show="isCategoryIdEmpty">  
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName_one">
@@ -340,9 +207,9 @@
                         
                         @change="isUpdate"
                         @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('basCompany.regCapital')}"
-                        class="regCapital"
-                        v-model="basCompany.regCapital"
+                        :class="{redBorder : validation.hasError('addData.purchasePrice')}"
+                        class="purchasePrice"
+                        v-model="addData.purchasePrice"
                         ></el-input>
                     </div>
                     <div class="bgcolor ">
@@ -351,9 +218,9 @@
                         
                         @change="isUpdate"
                         @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('basCompany.regCapital')}"
-                        class="regCapital"
-                        v-model="basCompany.regCapital"
+                        :class="{redBorder : validation.hasError('addData.wholePrice')}"
+                        class="wholePrice"
+                        v-model="addData.wholePrice"
                         ></el-input>
                     </div>
                     <div class="bgcolor ">
@@ -362,9 +229,9 @@
                         
                         @change="isUpdate"
                         @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('basCompany.regCapital')}"
-                        class="regCapital"
-                        v-model="basCompany.regCapital"
+                        :class="{redBorder : validation.hasError('addData.vipPrice')}"
+                        class="vipPrice"
+                        v-model="addData.vipPrice"
                         ></el-input>
                     </div>
                     <div class="bgcolor ">
@@ -373,9 +240,9 @@
                         
                         @change="isUpdate"
                         @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('basCompany.regCapital')}"
-                        class="regCapital"
-                        v-model="basCompany.regCapital"
+                        :class="{redBorder : validation.hasError('addData.retailPrice')}"
+                        class="retailPrice"
+                        v-model="addData.retailPrice"
                         ></el-input>
                     </div>
                     <div class="bgcolor ">
@@ -384,9 +251,9 @@
                         
                         @change="isUpdate"
                         @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('basCompany.regCapital')}"
-                        class="regCapital"
-                        v-model="basCompany.regCapital"
+                        :class="{redBorder : validation.hasError('addData.discount')}"
+                        class="discount"
+                        v-model="addData.discount"
                         ></el-input>
                     </div>
                 </el-tab-pane>
@@ -395,29 +262,307 @@
     </div>
  </el-row>
 
- <el-row class="nopadding">  
+ <el-row class="nopadding" v-show="isCategoryIdEmpty">  
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName_two">
                 <el-tab-pane label="商品规格" name="goodsSize">
+                    <button class="erp_bt bt_add" @click="addColSize">
+                        <div class="btImg">
+                            <img src="../../../../static/image/common/bt_add.png">
+                        </div>
+                        <span class="btDetail">新增</span>
+                    </button>
+                     <button class="erp_bt bt_excel mb10">
+                        <div class="btImg">
+                            <img src="../../../../static/image/common/bt_excel.png">
+                        </div>
+                        <span class="btDetail">Excel</span>
+                    </button>
+
+                    <button class="erp_bt bt_del">
+                        <div class="btImg">
+                            <img src="../../../../static/image/common/bt_del.png">
+                        </div>
+                        <span class="btDetail">删除</span>
+                    </button>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 商品规格表格 - - - - - - - - - - - - - - - - - - - - -  -->
+                        <el-table :data="goodsSize_data" border style="width: 100%" stripe @selection-change="selectionChange_size">
+                            <el-table-column type="selection"></el-table-column>
+
+                            <el-table-column prop="groupId" label="规格编码" >
+                                <template slot-scope="scope">
+                                    <img class="abimg" src="../../../../static/image/content/redremind.png"/>
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.groupId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="specId" label="规格" >
+                                <template slot-scope="scope">
+                                    <el-select  
+                                    v-model="scope.row.transportMethodId" 
+                                    :class="[scope.$index%2==0?'bgw':'bgp']"
+                                    placeholder=""
+                                    >
+                                        <!-- <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                        </el-option> -->
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+
+                            
+                            <el-table-column prop="basSpecgroupId" label="规格组">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.basSpecgroupId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="productId" label="规格名称">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button v-on:click="delCol(goodsSize_data,scope.$index)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table> 
+                        
                 </el-tab-pane>
             </el-tabs>
         </el-col>
     </div>
  </el-row>
- <el-row class="nopadding">  
+ <el-row class="nopadding" v-show="isCategoryIdEmpty">  
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName_three">
                 <el-tab-pane label="SKU" name="SKU">
-                   
+                   <button class="erp_bt bt_add" @click="addColSKU">
+                        <div class="btImg">
+                            <img src="../../../../static/image/common/bt_add.png">
+                        </div>
+                        <span class="btDetail">新增</span>
+                    </button>
+                     <button class="erp_bt bt_excel mb10">
+                        <div class="btImg">
+                            <img src="../../../../static/image/common/bt_excel.png">
+                        </div>
+                        <span class="btDetail">Excel</span>
+                    </button>
+
+                    <button class="erp_bt bt_del">
+                        <div class="btImg">
+                            <img src="../../../../static/image/common/bt_del.png">
+                        </div>
+                        <span class="btDetail">删除</span>
+                    </button>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - SKU表格 - - - - - - - - - - - - - - - - - - - - -  -->
+                        <el-table :data="SKU_data" border style="width: 100%" stripe @selection-change="selectionChange_SKU">
+                            <el-table-column type="selection"></el-table-column>
+
+                            <el-table-column prop="skuCode" label="SKU编码" >
+                                <template slot-scope="scope">
+                                    <img class="abimg" src="../../../../static/image/content/redremind.png"/>
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.skuCode" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="skuName" label="SKU名称" >
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.skuName" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
+                            
+                            <el-table-column prop="barcode" label="条码">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.barcode" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="specId1" label="颜色">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.specId1" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="specId2" label="尺码">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.specId2" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="specId3" label="单位">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.specId3" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="purchasePrice" label="进货价">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.purchasePrice" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="retailPrice" label="零售价">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.retailPrice" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="wholePrice" label="批发价">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.wholePrice" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="vipPrice" label="会员价">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.vipPrice" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="productId" label="折扣率">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="status" label="允许使用">
+                                <template slot-scope="scope">
+                                    <el-checkbox v-model="scope.row.status"></el-checkbox>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="remark" label="备注">
+                                <template slot-scope="scope">
+                                     <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.remark" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button v-on:click="delCol(SKU_data,scope.$index)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table> 
                 </el-tab-pane>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 商品属性 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="商品属性" name="property">
-                   
+                    <div class="bgcolor">
+                        <label>品类</label>
+                        <el-input class="productId"
+                        @change="isUpdate"
+                        @focus="showErrprTipsSelect"
+                        :class="{redBorder : validation.hasError('goodsProperty.productId')}"
+                        v-model="goodsProperty.productId" >
+                        </el-input>
+                    </div>
+                    <div class="bgcolor">
+                        <label>系列</label>
+                        <el-input class="propertyId"
+                        @change="isUpdate"
+                        @focus="showErrprTipsSelect"
+                        :class="{redBorder : validation.hasError('goodsProperty.propertyId')}"
+                        v-model="goodsProperty.propertyId" >
+                        </el-input>
+                    </div>
+                    <div class="bgcolor">
+                        <label>性别</label>
+                        <el-select clearable class="brandId"
+                        
+                        @change="isUpdate"
+                        @focus="showErrprTipsSelect"
+                        :class="{redBorder : validation.hasError('goodsProperty.brandId')}"
+                        placeholder=""
+                        v-model="goodsProperty.brandId">
+                            <el-option 
+                            v-for="item in selectData.categoryId" 
+                            :key="item.id" 
+                            :label="item.accperiodSchemeName" 
+                            :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="bgcolor">
+                        <label>季节</label>
+                        <el-select clearable class="brandId"
+                        
+                        @change="isUpdate"
+                        @focus="showErrprTipsSelect"
+                        :class="{redBorder : validation.hasError('goodsProperty.brandId')}"
+                        placeholder=""
+                        v-model="goodsProperty.brandId">
+                            <el-option 
+                            v-for="item in selectData.categoryId" 
+                            :key="item.id" 
+                            :label="item.accperiodSchemeName" 
+                            :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="bgcolor">
+                        <label>年份</label>
+                        <el-date-picker 
+                        @focus="showErrprTipsRangedate"
+                        :class="{redBorder : validation.hasError('goodsProperty.propertyValueCode')}"
+                        class="saleDate datepicker" 
+                        format="yyyy"
+                        value-format="yyyy" 
+                        v-model="goodsProperty.propertyValueCode" 
+                        type="year" 
+                        ></el-date-picker>
+                    </div>
+                    <div class="bgcolor">
+                        <label>其他属性</label>
+                        <el-input class="propertyValueName"
+                        @change="isUpdate"
+                        @focus="showErrprTipsSelect"
+                        :class="{redBorder : validation.hasError('goodsProperty.propertyValueName')}"
+                        v-model="goodsProperty.propertyValueName" >
+                        </el-input>
+                    </div>
                 </el-tab-pane>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="图片" name="picture">
                    
                 </el-tab-pane>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 规格组 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="规格组" name="specTeam">
                    
                 </el-tab-pane>
@@ -509,7 +654,15 @@
 export default({
     data() {
         return{
+            test1:[{
+                id:1,
+                name:'nihao'
+            },{
+                id:2,
+                name:'你好'
+            }],
             groupId:1,
+            isCategoryIdEmpty:false,//类目是否选择
             // 错误信息提示开始
             detail_message_ifShow:false,
             errorMessage:false,
@@ -542,46 +695,33 @@ export default({
             activeName_three: "SKU",
             auditInfo:{},//审计信息
             addData:{
-                "ouCode": "",
-                "ouName": "",
-                "ouFullname": "",
-                "ouParentid": "",//整数
-                "accCchemeId": "",//整数
-                "accStartMonth": "",
-                "baseCurrencyId": "",//整数
-                "companyOuId": "",//整数
-                "contactPerson": "",
-                "phone": "",
-                "address": "",
-                "status": 1,//整数
-                "remark": "",
-                "ouTypes":[1,3],//组织职能
-            },
-            basCompany:{//其他信息
-                "ouParentid": "",//整数
-                "legalPerson": "",
-                "status": 1,//整数
-                "isGroupCompany": false,
-                "regCapital": "",//整数
-                "vatRegno": "",
-                "regtime": "",
-                "legalPersonIdnr": "",
-                "mgtDeptCode": "",
-                "mgtDeptName": "",
-                "businessStart": "",
-                "businessEnd": "",
-                "legalPersonType": "",
-                "introduction": "",
-                "contact": "",
-                "businessAddress": "",
-                "contactAddress": "",
-                "zipCode": "",
-                "phone": "",
-                "fax": "",
-                "email": "",
-                "webUrl": "",
-                "remark": ""
-            },
+                "groupId": 1,
+                "categoryId": '',//类目ID 
+                "brandId": '',//品牌
+                "productCode": "",//商品编码
+                "productName": "",//商品名称
+                "mnemonic": "",//助记码
+                "barcode": "",//条码(产品级，囯码) 
+                "saleDate": "",//上市日期
+                "unitId": "",//基本单位
+                "uniqueMgt": false,//唯一码管理 
+                "lotMgt": false,//批次管理 
+                "validityMgt": false,//有效期管理 
+                "validDays": 0,//保质天数 
+                "multiUnitEnabled": false,//启用多单位 ,
+                "isSuite": false,//是否套件
+                "purchasePrice": 0,//进货价 
+                "purchaseUnit": '',//进货默认单位 
+                "wholePrice": 0,//批发价
+                "wholeUnit": '',//批发默认单位
+                "discount": 1,//折扣
+                "vipPrice": '',//会员价 
+                "retailPrice": 0,//零售价
+                "retailUnit": 0,//零售默认单位
+                "remark": "",//备注
+                "status": 0,//状态
+                },
+           
             Company:true,//公司 
             Business:false,//业务   
             Finance:true,//财务
@@ -609,245 +749,118 @@ export default({
         dialogUserConfirm:false,//信息更改提示控制
         update:false,
 //----------名称全称联动----------
-        isUpdateFlag:false,     
+        isUpdateFlag:false,   
+//---------------商品规格------------------
+        multipleSelection_size:[],//从表商品规格选中数据
+        goodsSize_data:[],//从表商品规格数据
+        goodsSize_newCol:[],//所有新行
+        goodsSize_col:{
+                "groupId": 1,
+                "productId": 0,
+                "basSpecgroupId": 0,
+                "specId": 0
+            },
+        goodsSize_newCol_len:0,//新行数目
+//---------------SKU------------------
+        multipleSelection_SKU:[],//从表商品规格选中数据
+        SKU_data:[],//从表商品规格数据
+        SKU_newCol:[],//所有新行
+        SKU_col:{
+            "groupId": 1,
+            "productId": 0,
+            "skuCode": "",
+            "skuName": "",
+            "barcode": "",
+            "specId1": 0,
+            "specId2": 0,
+            "specId3": 0,
+            "specId4": 0,
+            "unitId": 0,
+            "purchasePrice": 0,
+            "wholePrice": 0,
+            "discount": 0,
+            "vipPrice": 0,
+            "retailPrice": 0,
+            "status": 0
+            },
+        SKU_newCol_len:0,//新行数目
+//---------------属性------------------
+        goodsProperty:{
+            "groupId": 1,
+            "productId": 0,
+            "propertyId": 0,
+            "propertyValueCode": "",
+            "propertyValueName": ""
         }
-    },
+    }
+},
     validators: {
-     'addData.ouCode': function (value) {//编码
-         return this.Validator.value(value).required().maxLength(50)
+     'addData.categoryId': function (value) {//类目
+         return this.Validator.value(value).required().integer()
       },
-      'addData.ouName': function (value) {//名称
-         return this.Validator.value(value).required().maxLength(50);
+      'addData.productCode': function (value) {//商品编码
+        if(this.isCategoryIdEmpty){
+            return this.Validator.value(value).required().maxLength(50);
+        }else{
+            return this.Validator.value(value)
+        }
+         
       },
-      'addData.ouFullname': function (value) {//全称
-         return this.Validator.value(value).required().maxLength(50);
+      'addData.productName': function (value) {//商品名称
+        if(this.isCategoryIdEmpty){
+            return this.Validator.value(value).required().maxLength(100);
+         }else{
+            return this.Validator.value(value)
+        }
       },
-      'addData.ouParentid': function (value) {//上级业务单元
-         return this.Validator.value(value).integer();
+      'addData.brandId': function (value) {//品牌
+        if(this.isCategoryIdEmpty){
+            return this.Validator.value(value).integer();
+         }else{
+            return this.Validator.value(value)
+        }
       },
-      'addData.accCchemeId': function (value) {//会计方案
-         return this.Validator.value(value).required().integer();
+      'addData.unitId': function (value) {//单位
+        if(this.isCategoryIdEmpty){
+            return this.Validator.value(value).required().integer();
+         }else{
+            return this.Validator.value(value)
+        }
       },
-      'addData.accStartMonth': function (value) {//启用年月
-         return this.Validator.value(value).required();
+      'addData.barcode': function (value) {//商品条码
+        if(this.isCategoryIdEmpty){
+            return this.Validator.value(value).maxLength(50);
+         }else{
+            return this.Validator.value(value)
+        }
       },
-      'addData.baseCurrencyId': function (value) {//本位币种id
-         return this.Validator.value(value).required().integer();
+      'addData.mnemonic': function (value) {//助记码
+        if(this.isCategoryIdEmpty){
+            return this.Validator.value(value).maxLength(50);
+         }else{
+            return this.Validator.value(value)
+        }
       },
-      'addData.companyOuId': function (value) {//所属公司
-          return this.Validator.value(value).integer();
-      },
-      'addData.contactPerson': function (value) {//联系人
-         return this.Validator.value(value).maxLength(50);
-      },
-      'addData.phone': function (value) {//电话
-          return this.Validator.value(value).maxLength(50);
-      },
-      'addData.address': function (value) {//地址
-          return this.Validator.value(value).maxLength(200);
-      },
-      'addData.status': function (value) {//用户状态
-         return this.Validator.value(value).integer();
+      'addData.saleDate': function (value) {//上市时间
+          return this.Validator.value(value);
       },
       'addData.remark': function (value) {//备注
-         return this.Validator.value(value).maxLength(200);
+         return this.Validator.value(value)
       },
 
-
-       'basCompany.ouParentid': function (value) {//上级公司
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-                return this.Validator.value(value).integer();
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.status': function (value) {//启用状态
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-                return this.Validator.value(value).integer();
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.regCapital': function (value) {//注册资本
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-                return this.Validator.value(value).integer();
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.legalPerson': function (value) {//法人代表
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-                return this.Validator.value(value).maxLength(50);
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.vatRegno': function (value) {//纳税人登记号
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-            return this.Validator.value(value).maxLength(200);
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.regtime': function (value) {//成立日期
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-            return this.Validator.value(value);
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.legalPersonIdnr': function (value) {//法人身份证号码
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).maxLength(50);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.mgtDeptCode': function (value) {//主管部门代码
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).maxLength(50);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.mgtDeptName': function (value) {//主管部门名称
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).maxLength(50);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.legalPersonType': function (value) {//纳税人类别
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).maxLength(50);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.businessAddress': function (value) {//营业地址
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).maxLength(200);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'dateRange': function (value) {//营业或有效期限
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-                return this.Validator.value(value);
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.introduction': function (value) {//公司简介
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-                return this.Validator.value(value).maxLength(200);
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.contactAddress': function (value) {//通讯地址
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-                return this.Validator.value(value).maxLength(200);
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.zipCode': function (value) {//邮政编码
-        if(typeof(value)!='undefined'){
-            if(this.Company){
-                return this.Validator.value(value).maxLength(20);
-            }else{
-                return this.Validator.value(value)
-            }
-        }
-      },
-      'basCompany.contact': function (value) {//联系人
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-           return this.Validator.value(value).maxLength(50);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.fax': function (value) {//传真
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-           return this.Validator.value(value).maxLength(50);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.phone': function (value) {//电话
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).integer();
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.email': function (value) {//email
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).maxLength(50);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.webUrl': function (value) {//web网址
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).maxLength(200);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
-      'basCompany.remark': function (value) {//备注
-      if(typeof(value)!='undefined'){
-        if(this.Company){
-            return this.Validator.value(value).maxLength(200);
-        }else{
-            return this.Validator.value(value)
-        }
-      }
-      },
     },
     computed:{
         count () {
             return this.ischeck;
             }  
+    },
+    mounted () {
+        // let _this=this;
+        // if(_this.addData.categoryId=''){
+        //     _this.isCategoryIdEmpty=true
+        // }else{
+        //     _this.isCategoryIdEmpty=false
+        // }  
     },
     created:function(){
         let _this=this;
@@ -859,34 +872,45 @@ export default({
      watch: {
       search(val) {
         this.$refs.tree.filter(val);
+      },
+      'addData.categoryId'(val){
+          if(val!=''){
+              this.isCategoryIdEmpty=true
+          }else{
+              this.isCategoryIdEmpty=false
+          }
       }
     },
     methods:{
         getDefault(){
             let _this=this;
-            _this.$axios.gets('/api/services/app/GroupManagement/Get').then(function(res){ 
-            // 会计期间方案值,启用年月
-                // _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
-                // _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
-                _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
-                    // 会计期间方案下拉
-                    _this.selectData.accCchemeId=res.result.items;
-                    let flag=false;
-                    $.each(_this.selectData.accCchemeId,function(index,value){
-                        if(value.id==res.result.accSchemeId){
-                            flag=true;
-                        }
-                    })
-                    if(flag){
-                        _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
-                        _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
-                    }
-                })
-                // _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
-            })
-            if(_this.$route.params.id!="default"){
-                _this.addData.ouParentid=parseInt(_this.$route.params.id);
-            }
+           _this.addData={
+                "groupId": 1,
+                "categoryId": '',//类目ID 
+                "brandId": 1,//品牌
+                "productCode": "",//商品编码
+                "productName": "",//商品名称
+                "mnemonic": "",//助记码
+                "barcode": "",//条码(产品级，囯码) 
+                "saleDate": "",//上市日期
+                "unitId": 1,//基本单位
+                "uniqueMgt": false,//唯一码管理 
+                "lotMgt": false,//批次管理 
+                "validityMgt": false,//有效期管理 
+                "validDays": 0,//保质天数 
+                "multiUnitEnabled": false,//启用多单位 ,
+                "isSuite": false,//是否套件
+                "purchasePrice": 0,//进货价 
+                "purchaseUnit": '',//进货默认单位 
+                "wholePrice": 0,//批发价
+                "wholeUnit": '',//批发默认单位
+                "discount": 1,//折扣
+                "vipPrice": '',//会员价 
+                "retailPrice": 0,//零售价
+                "retailUnit": 0,//零售默认单位
+                "remark": "",//备注
+                "status": 0,//状态
+                }
         },
         getSelectData(){
             let _this=this;
@@ -962,6 +986,59 @@ export default({
         filterNode(value, data) {
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
+        },
+        addCol(data,col,length,newCols){//增行
+            length++
+            let newCol='newCol'+length
+            newCols[newCol]=col;
+            data.unshift(newCols[newCol]);
+        },
+        delCol(data,index){//删行
+            data.splice(index,1);
+        },
+ //---------------------------商品规格------------------------------
+        selectionChange_size:function(val){//点击复选框选中的数据
+            this.multipleSelection_size = val;
+        },
+        addColSize(){//增行
+            let _this=this;
+            _this.goodsSize_newCol_len++
+            let newCol = 'newCol'+_this.goodsSize_newCol_len;
+            _this.goodsSize_newCol[newCol]={
+                "groupId": 1,
+                "productId": 0,
+                "basSpecgroupId": 0,
+                "specId": 0
+            }
+            _this.goodsSize_data.unshift(_this.goodsSize_newCol[newCol]);
+        },
+//---------------------------SKU------------------------------
+        selectionChange_SKU:function(val){//点击复选框选中的数据
+            this.multipleSelection_SKU = val;
+        },
+        addColSKU(){//增行
+            let _this=this;
+            _this.SKU_newCol_len++
+            let newCol = 'newCol'+_this.SKU_newCol_len;
+            _this.SKU_newCol[newCol]={
+                    "groupId": 1,
+                    "productId": 0,
+                    "skuCode": "string",
+                    "skuName": "string",
+                    "barcode": "string",
+                    "specId1": 0,
+                    "specId2": 0,
+                    "specId3": 0,
+                    "specId4": 0,
+                    "unitId": 0,
+                    "purchasePrice": 0,
+                    "wholePrice": 0,
+                    "discount": 0,
+                    "vipPrice": 0,
+                    "retailPrice": 0,
+                    "status": 0
+                    }
+            _this.SKU_data.unshift(_this.SKU_newCol[newCol]);
         },
         getStartMonth(){//根据会计期间生成启用年月
             let _this=this;
@@ -1087,11 +1164,6 @@ export default({
                 }
             }
         },
-        isGroupCompany(){
-            let _this=this;
-            _this.isUpdate()
-            _this.basCompany.ouParentid='';
-        },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
             _this.response.message='';
@@ -1114,20 +1186,9 @@ export default({
             .then(function (success) {
                 if (success) {
                     $('.tipsWrapper').css({display:'none'})
-                    
-                   if(_this.Company){
-                        _this.basCompany.businessStart=_this.dateRange[0];
-                        _this.basCompany.businessEnd=_this.dateRange[1];
-                        _this.addData.basCompany=_this.basCompany;
-                    }else{
-                        _this.basCompany={}
-                        delete _this.addData.basCompany
-                        // _this.addData.basCompany={}
-                    }
-                    // console.log(_this.addData)
-                    _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-                        _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
-                        _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                    _this.$axios.posts('/api/services/app/ProductManagement/Create',_this.addData).then(function(res){
+                        // _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
+                        // _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -1207,31 +1268,7 @@ export default({
                 "remark": "",
                 "ouTypes":[1,3],//组织职能
             };
-            _this.basCompany={//其他信息
-                "ouParentid": "",//整数
-                "legalPerson": "",
-                "status": 1,//整数
-                "isGroupCompany": false,
-                "regCapital": "",//整数
-                "vatRegno": "",
-                "regtime": "",
-                "legalPersonIdnr": "",
-                "mgtDeptCode": "",
-                "mgtDeptName": "",
-                "businessStart": "",
-                "businessEnd": "",
-                "legalPersonType": "",
-                "introduction": "",
-                "contact": "",
-                "businessAddress": "",
-                "contactAddress": "",
-                "zipCode": "",
-                "phone": "",
-                "fax": "",
-                "email": "",
-                "webUrl": "",
-                "remark": ""
-            };
+           
             _this.Company=true;//公司 
             _this.Business=false;//业务   
             _this.Finance=true;//财务
@@ -1240,30 +1277,7 @@ export default({
             _this.validation.reset();
         },
         saveAdd(){
-            let _this=this;
-            $('.tipsWrapper').css({display:'block'})
-            _this.$validate()
-            .then(function (success) {
-                if (success) {
-                    $('.tipsWrapper').css({display:'none'})
-                   if(_this.Company){
-                        _this.basCompany.businessStart=_this.dateRange[0];
-                        _this.basCompany.businessEnd=_this.dateRange[1];
-                        _this.addData.basCompany=_this.basCompany;
-                    }else{
-                        _this.basCompany={}
-                    }
-                    
-                    _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
-                        _this.$store.state.url='/OuManage/OuManageDetail/default'
-                        _this.$router.push({path:_this.$store.state.url})//点击切换路由
-                        _this.open('保存成功','el-icon-circle-check','successERP');
-                    },function(res){
-                        if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                        _this.errorMessage=true;
-                    })
-                }
-            });    
+            
         },
     }
 

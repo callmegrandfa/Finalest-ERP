@@ -15,7 +15,7 @@
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
-                <button @click="isBack"class="erp_bt bt_cancel">
+                <button @click="isCancel"class="erp_bt bt_cancel">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -57,28 +57,25 @@
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="parentSearch">
-                                      </el-input>
-
+                            </el-input>
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                      :data="selectParentTree"
+                                     v-loading="treeLoading" 
+                                     :highlight-current="true"
+                                     :render-content="renderContent_moduleParentId"
                                      :props="selectParentProps"
                                      node-key="id"
                                      default-expand-all
                                      ref="tree"
                                      :filter-node-method="filterNode"
+                                     :default-expanded-keys="expandId"
                                      :expand-on-click-node="false"
                                      @node-click="nodeClick"
                                      
-                                     ></el-tree> 
-
-                            <!-- <el-option v-show="false"
-                                       :key="count.id" 
-                                       :label="count.className" 
-                                       :value="count.id"
-                                       id="customerClass_confirmSelect"></el-option> -->
-                                       <el-option  v-show="false" v-for="item in selectData.customerClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
-                            </el-option>
-                        </el-select>
+                                     >
+                            </el-tree> 
+                            <el-option  v-show="false" v-for="item in selectData.customerClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id"></el-option>
+                        </el-select>                    
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.classParentId') }}</div>
                 </div>
@@ -102,7 +99,8 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>客户分类名称</label>
-                        <el-input  class="className" 
+                        <el-input  class="className"
+                                    
                                     @change="isUpdate"
                                    :class="{redBorder : validation.hasError('addData.className')}" 
                                    v-model="addData.className"></el-input>
@@ -148,35 +146,6 @@
                     <div class="error_tips">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
-            <!-- <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label>创建人</label>
-                       <el-input class="createdBy" 
-                                  v-model="addData.createdBy"
-                                  disabled="" 
-                                  >
-                        </el-input>
-                    </div>
-                   
-                </div>    
-            </el-col>
-             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label>创建时间</label>
-                         <el-date-picker
-                            v-model="addData.createdTime"
-                            type="date"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd" 
-                            disabled
-                            placeholder="">
-                        </el-date-picker>
-                    </div>
-                  
-                </div>    
-            </el-col> -->
       </el-row>
       <el-row>
     <el-col :span="24" class="getPadding">
@@ -224,7 +193,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -241,7 +210,6 @@
             
             <span slot="footer">
                 <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
-                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -264,7 +232,7 @@
                     id:'',
                     className:'1111',
                 },
-                
+                expandId:[],//默认展开kehu树节点
                 status: [],//状态
                 //------------------ 新增客户-------------
                 addData:{
@@ -294,12 +262,14 @@
                 choseDoing:'',//存储点击按钮判断信息
                 dialogUserConfirm:false,//信息更改提示控制
                 update:false,
+                treeLoading: false,
                 errorMessage:false,//错误信息提示
                 detail_message_ifShow:false,
                 response:{
                     details:'',
                     message:'',
                 },
+
             }
         },
      validators: {
@@ -335,7 +305,7 @@
     watch: {
         parentSearch(val) {
            this.$refs.tree.filter(val);
-        }
+        },
     },
     methods: {
         getSelectData(){
@@ -350,6 +320,25 @@
            
             })
         },
+           loadCheckSelect(selectName,key){
+            let _this=this;
+            _this.$nextTick(function () { 
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                     if($(this).attr('data-id')==key){
+                        $(this).click()
+                    }
+                })
+            })
+        },
+          defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
         //---加载数据上级商品树-------------------------------------------  
         loadParentTree(){
             let self=this;
@@ -357,20 +346,20 @@
             self.$axios.gets('api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
                 // console.log(res)
                 self.selectParentTree=res;
-                self.loadIcon();
+                self.treeLoading = false;
+                self.expandId=self.defauleExpandTree(res,'id')
+                self.loadCheckSelect('classParentId',self.addData.classParentId)
             },function(res){
                 self.treeLoading=false;
                 
             })
         },
         getDefault(){
-            let _this=this;
-            if(_this.$route.params.id!="default"){
-                _this.addData.classParentId=parseInt(_this.$route.params.id);
-                _this.parentItem.className = '111111';
-                _this.parentItem.id=_this.$route.params.id;
-                // console.log(_this.$route.params.name)
-                // alert(1)
+            let self=this;
+            if(self.$route.params.id!="default"){
+                self.addData.classParentId=parseInt(self.$route.params.id);
+                self.parentItem.className = '111111';
+                self.parentItem.id=self.$route.params.id;
             }
         },
         //加载状态下拉框
@@ -381,19 +370,6 @@
             self.status = res.result;            
             },function(res){
                 
-            })
-        },
-        loadIcon(){
-            let self=this;
-            self.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                    }
-                })
             })
         },
             GetDateTime: function () {
@@ -427,6 +403,7 @@
                         self.$router.push({path:self.$store.state.url})
                         self.open('保存成功','el-icon-circle-check','successERP');
                         self.dialogUserConfirm=false;
+                        console.log(res.result.createdTime)
                         // _this.addData.id=res.result.id;
                         // console.log(res.result);
                         // self.open('保存成功','el-icon-circle-check','successERP');
@@ -502,7 +479,6 @@
         goModify:function(id){
             // console.log(id)
             this.$store.state.url='/customerClass/customerClassModify/'+id
-            // this.$store.state.url='/repository/default/repositoryModify/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         goDetail(){//点击新增跳转
@@ -525,11 +501,10 @@
                 "status": 1,
                 "remark": "",
                 "mnemonic": "1",
-                "createdBy" :'',
-                "createdTime"  :''
+                // "createdBy" :'',
+                // "createdTime"  :''
             }
-            // self.getDefault()
-            
+            self.validation.reset(); 
         },
         //---------------------------------------------------------
         //---下拉树------------------------------------------------.
@@ -551,7 +526,9 @@
                     $(this).click()
                 }
             })
+             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,})
         },
+
         //-------------按钮操作-----------
         isBack(){
             let self=this;
@@ -616,6 +593,23 @@
             }
             if(message!=null && message){
                 _this.response.validationErrors=validationErrors;
+            }
+        },
+         renderContent_moduleParentId(h, { node, data, store }){
+            if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }else{
+                 return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
             }
         },
     }
