@@ -207,7 +207,6 @@
 </template>
 
 <script>
-import normalTable from '../../base/Table/normalTable'
 import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'currencyList',
@@ -770,9 +769,7 @@ import dialogBox from '../../base/dialog/dialog'
         }
     },
     components:{
-        normalTable,
-        dialogBox
-     
+        dialogBox    
     }
 }
 </script>
