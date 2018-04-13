@@ -438,7 +438,7 @@
                             <div class="bgcolor">
                                 <label>上级公司</label>
                                 <el-select clearable filterable  
-                                
+                                :disabled="basCompany.isGroupCompany"
                                 @change="isUpdate"
                                 @focus="showErrprTipsSelect"
                                 :class="{redBorder : validation.hasError('basCompany.ouParentid')}"
@@ -454,12 +454,12 @@
                                     >
                                     </el-option>
 
-                                    <el-option 
+                                    <!-- <el-option 
                                     v-if="basCompany.isGroupCompany"
                                     label="无上级公司" 
                                     value=0 
                                     >
-                                    </el-option>
+                                    </el-option> -->
                                 </el-select>
                             </div>
                             <div class="bgcolor">
@@ -1075,7 +1075,11 @@ export default({
        'basCompany.ouParentid': function (value) {//上级公司
         if(typeof(value)!='undefined'){
             if(this.Company){
-                return this.Validator.value(value).integer();
+                if(!this.basCompany.isGroupCompany){
+                     return this.Validator.value(value).required().integer();
+                }else{
+                    return this.Validator.value(value)
+                }
             }else{
                 return this.Validator.value(value)
             }
@@ -1516,6 +1520,7 @@ export default({
             let _this=this;
             _this.isUpdate()
             _this.basCompany.ouParentid='';
+            _this.validation.reset(0)
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;

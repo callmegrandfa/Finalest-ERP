@@ -560,7 +560,31 @@
                 </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="图片" name="picture">
-                   
+                   <ul>
+                       <li>
+                           <div>主图</div>
+                           <el-upload
+                            class="avatar-uploader"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :on-preview="handlePreview"
+                            :on-remove="handleRemove"
+                            :before-remove="beforeRemove"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList"
+                            :auto-upload="false"
+                            :limit="1"
+                            :show-file-list="false"
+                            :on-change="changePicture"
+                            :on-success="handleAvatarSuccess"
+                            ref="upload">
+                            <!-- <el-button size="small" type="primary">选择</el-button> -->
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
+                            
+                       </li>
+                   </ul>
                 </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 规格组 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="规格组" name="specTeam">
@@ -654,6 +678,9 @@
 export default({
     data() {
         return{
+            imageUrl:'',
+             fileList: [
+                ],
             test1:[{
                 id:1,
                 name:'nihao'
@@ -1279,6 +1306,28 @@ export default({
         saveAdd(){
             
         },
+        submitUpload() {//手动上传
+            this.$refs.upload.submit();
+        },
+        handleRemove(file, fileList) {//文件列表移除文件时的钩子
+            console.log(file, fileList);
+        },
+        handlePreview(file) {//点击已上传的文件链接时的钩子, 可以通过 file.response 拿到服务端返回数据
+            console.log(file);
+        },
+        beforeRemove(file, fileList) {//删除前
+            return this.$confirm(`确定移除 ${ file.name }？`);
+        },
+        handleExceed(files, fileList) {//超出上传限制回调
+            this.$message.warning(`一次选择一张`);
+        },
+         handleAvatarSuccess(res, file) {//文件上传成功时的钩子
+            this.imageUrl = URL.createObjectURL(file.raw);
+        },
+        changePicture(file, fileList){
+            this.imageUrl = URL.createObjectURL(file.raw);
+            console.log(fileList)
+        }
     }
 
 })        
