@@ -57,13 +57,13 @@
                                       class="selectSearch"
                                       v-model="parentSearch">
                              </el-input>
-
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
+                            <el-tree 
                                      :data="selectParentTree"
                                      :highlight-current="true"
                                      :props="selectParentProps"
                                      node-key="id"
-                                     default-expand-all
+                                     
                                      ref="tree"
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
@@ -749,6 +749,14 @@ export default {
     padding: 15px 0;
     border-bottom: 1px solid #e4e4e4;
     background-color: #fff;
+}
+/* .selectSearch{
+  position: fixed;
+  width: 328px;
+  z-index: 10002;
+} */
+.el-select-dropdown__list{
+  background-color: #fff;
 }
 .dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
     width: 100%;
