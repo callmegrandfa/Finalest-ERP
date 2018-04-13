@@ -730,7 +730,7 @@ router.beforeEach((to, from, next) => {
     //         }
     //     }
     // })
-    if (store.state.accessToken != '') {
+    if (store.state.accessToken != ''&& typeof(store.state.accessToken)!='undefined') {
         // store.state[to.name].url=to.fullPath;
         // store.state[store.state[to.name].parent].url=to.fullPath
         if(typeof(store.state[to.name])!='undefined'){
