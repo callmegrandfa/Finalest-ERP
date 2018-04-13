@@ -19,7 +19,7 @@
 </template>
 <script type="text/javascript">
 	export default{
-		props: ['message','dialogVisible'], 
+		props: ['message','dialogVisible','dialogModel'], 
 		data(){
 			return{
 			}
@@ -29,10 +29,10 @@
 	    },
 	    methods:{
 	    	dialogConfirm(){
-                this.$emit('confirm');
+                this.$emit('confirm',this.dialogModel);
             },
             dialogCancel(){
-                this.$emit('cancel');
+                this.$emit('cancel',this.dialogModel);
             }
 	    }
 	}

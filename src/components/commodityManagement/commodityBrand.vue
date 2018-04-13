@@ -100,7 +100,7 @@
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
-                            <Table  :methodsUrl="httpUrl" :hasPagination="hasPagination" :cols="column" :queryParams="queryParams" :HttpParams="HttpParams" :isDisable='isDisable' :mutiSelect="mutiSelect" :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
+                            <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams" :HttpParams="HttpParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                              <!-- <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
                                 <el-table-column
                                     type="selection"
@@ -260,6 +260,11 @@ import dialogBox from '../../base/dialog/dialog'
                 cancelClick:false,//是否点击取消按钮
                 turnPage:-1,//是否允许翻页
                 pageFlag:true,
+                pluginSetting:{
+                    hasPagination:true,
+                    mutiSelect:true,//多选栏
+                    isDisable:false,
+                },
                 httpUrl:{
                     Initial:'/api/services/app/BrandManagement/GetAll',//数据初始化
                     delete:'/api/services/app/BrandManagement/Delete',//行内删除
@@ -270,7 +275,6 @@ import dialogBox from '../../base/dialog/dialog'
                     SkipCount:(this.$store.state.commodityBrandCurrentPage-1)*this.$store.state.commodityBrandEachPage,
                     MaxResultCount:this.$store.state.commodityBrandEachPage
                 },
-                isDisable:false,
                 column: [{
                     prop: 'brandCode',
                     label: '品牌编码',
@@ -311,13 +315,7 @@ import dialogBox from '../../base/dialog/dialog'
                     width:"auto",
                     isDisable:false,
                     sortable:false,
-                    dataSource:[{
-                            value: 1,
-                            label: '启用'
-                        },{
-                            value: 0,
-                            label: '禁用'
-                        }]
+                    dataSource:[]
                     },{
                     prop: 'createdBy',
                     label: '创建人',
@@ -336,7 +334,6 @@ import dialogBox from '../../base/dialog/dialog'
                 isSave:false,
                 enableEdit:false,
                 tableModel:'commodityBrand',
-                hasPagination:true,
                 command:[{
                     text:'删除',
                     class:'blue'
@@ -346,7 +343,6 @@ import dialogBox from '../../base/dialog/dialog'
                 //     modify:false,//查看按钮是否显示
                 //     del:true,//删除按钮是否显示
                 // },
-                mutiSelect:true,//多选栏
                 commodityBrandNewCol:{
                     groupId:0,
                     brandCode:"" ,
@@ -363,8 +359,7 @@ import dialogBox from '../../base/dialog/dialog'
             }
         },
         created:function(){
-            //this.datashop();
-           // this.loadTableData();
+            this.InitStatus();//初始化状态枚举表
             $(document).on("click",".pageActive .el-pager>li",function(){
                 if(_this.turnPage==false){
                    //$(this).html("12");
@@ -466,6 +461,12 @@ import dialogBox from '../../base/dialog/dialog'
                 this.updateArray=[];
                 this.addArray=[];
                 this.updateId="";
+            },
+            InitStatus(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
+                    _this.column[4].dataSource=res.result;
+                })
             },
             loadTableData(){
                 let _this=this;
@@ -652,10 +653,11 @@ import dialogBox from '../../base/dialog/dialog'
                         }
                     }
                 }
-                if(newArrayLength>0){
-                    if(newArrayLength==1){//单条新增
-                        _this.$axios.posts('/api/services/app/BrandManagement/Create',newArray[0]).then(function(res){
+                if(newArrayLength>0||updateArrayLength>0){
+                      _this.$axios.posts('http://192.168.100.107:8082/api/services/app/BrandManagement/CUDAggregate',{createList:newArray,updateList:updateArray,}).then(function(res){
                             _this.$store.commit('setAddColArray',[])//置空新增集合
+                            _this.$store.commit('get_RowId',"")//置空修改行id
+                            _this.$store.commit('setUpdateColArray',[])//置空修改集合
                             _this.$store.dispatch('InitTable');
                             _this.$store.commit('setIfDel',true)
                             _this.isSave=false;
@@ -667,43 +669,59 @@ import dialogBox from '../../base/dialog/dialog'
                             });
                             _this.isSave=false;
                         })   
-                    }else{//批量新增                      
-                        _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',newArray).then(function(res){
-                            _this.$store.commit('setAddColArray',[])//置空新增集合
-                            _this.$store.dispatch('InitTable');
-                            _this.$store.commit('setIfDel',true)
-                            _this.isSave=false;
-                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
-                        }); 
-                    }    
                 }
-                if(updateArrayLength>0){
-                    if(updateArrayLength==1){//单条修改
-                        let updataIndex=-1;
-                        for(let i in tableData){
-                            if(updateArray[0]==tableData[i].id){
-                                updataIndex=i;
-                            }
-                        }
-                        _this.$axios.puts('/api/services/app/BrandManagement/Update',tableData[updataIndex]).then(function(res){
-                            _this.$store.commit('get_RowId',"")//置空修改行id
-                            _this.$store.commit('setUpdateColArray',[])//置空修改集合
-                            _this.$store.commit('setIfDel',true)
-                            _this.$store.dispatch('InitTable');
-                            _this.isSave=false;
-                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
-                        });
-                    }else{//批量修改
-                        _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',tableData).then(function(res){
-                            _this.$store.commit('get_RowId',"")//置空修改行id
-                            _this.$store.commit('setUpdateColArray',[])//置空修改集合
-                            _this.$store.commit('setIfDel',true)
-                            _this.$store.dispatch('InitTable');
-                            _this.isSave=false;
-                            _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
-                        }); 
-                    }
-                }                                           
+                // if(newArrayLength>0){
+                //     if(newArrayLength==1){//单条新增
+                //         _this.$axios.posts('/api/services/app/BrandManagement/Create',newArray[0]).then(function(res){
+                //             _this.$store.commit('setAddColArray',[])//置空新增集合
+                //             _this.$store.dispatch('InitTable');
+                //             _this.$store.commit('setIfDel',true)
+                //             _this.isSave=false;
+                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
+                //         }).catch(function(err){
+                //             _this.$message({
+                //                 type: 'warning',
+                //                 message: err.error.message
+                //             });
+                //             _this.isSave=false;
+                //         })   
+                //     }else{//批量新增                      
+                //         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',newArray).then(function(res){
+                //             _this.$store.commit('setAddColArray',[])//置空新增集合
+                //             _this.$store.dispatch('InitTable');
+                //             _this.$store.commit('setIfDel',true)
+                //             _this.isSave=false;
+                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
+                //         }); 
+                //     }    
+                // }
+                // if(updateArrayLength>0){
+                //     if(updateArrayLength==1){//单条修改
+                //         let updataIndex=-1;
+                //         for(let i in tableData){
+                //             if(updateArray[0]==tableData[i].id){
+                //                 updataIndex=i;
+                //             }
+                //         }
+                //         _this.$axios.puts('/api/services/app/BrandManagement/Update',tableData[updataIndex]).then(function(res){
+                //             _this.$store.commit('get_RowId',"")//置空修改行id
+                //             _this.$store.commit('setUpdateColArray',[])//置空修改集合
+                //             _this.$store.commit('setIfDel',true)
+                //             _this.$store.dispatch('InitTable');
+                //             _this.isSave=false;
+                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
+                //         });
+                //     }else{//批量修改
+                //         _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',tableData).then(function(res){
+                //             _this.$store.commit('get_RowId',"")//置空修改行id
+                //             _this.$store.commit('setUpdateColArray',[])//置空修改集合
+                //             _this.$store.commit('setIfDel',true)
+                //             _this.$store.dispatch('InitTable');
+                //             _this.isSave=false;
+                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
+                //         }); 
+                //     }
+                // }                                           
             },                          
             packUp(){
                 let oleftBox=document.getElementById('left-box');

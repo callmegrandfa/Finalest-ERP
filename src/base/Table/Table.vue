@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table class="normalTable" @row-click="rowClick" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
-            <el-table-column type="selection" label="" width="50" v-if="mutiSelect">
+            <el-table-column type="selection" label="" width="50" v-if="pluginSetting.mutiSelect">
             </el-table-column>
             <el-table-column v-for="item in cols" :key="item.prop" :label="item.label" :prop="item.prop" :width="item.width" :fixed="item.isFix" :sortable="item.sortable">
                 <template slot-scope="scope" >
@@ -10,12 +10,12 @@
                     <!-- 复选框 -->
                     <el-checkbox v-if="item.controls=='checkbox'" :disabled="item.isDisable" v-model='scope.row[item.prop]'></el-checkbox>
                     <!-- 文本框 -->
-                    <el-input :disabled="item.isDisable" :class="[{errorclass:item.required&&scope.row[item.prop]==''&&ifSave==true},classMap[scope.row[item.prop]]]"   class="noEdit" v-if="item.controls=='text'" v-model="scope.row[item.prop]"></el-input>
+                    <el-input :disabled="item.isDisable" :class="[{errorclass:item.required&&scope.row[item.prop]==''&&ifSave==true}]"   class="noEdit" v-if="item.controls=='text'" v-model="scope.row[item.prop]"></el-input>
                     <!-- 时间显示 -->
                     <el-date-picker :disabled="item.isDisable"  v-if="item.controls=='datetime'"  v-model="scope.row[item.prop]" type="date"></el-date-picker>
                     <!-- 下拉 -->
-                    <el-select :disabled="item.isDisable" v-if="item.controls=='select'"  v-model="scope.row[item.prop]" >
-                        <el-option  v-for="options in item.dataSource" :key="options.value" :label="options.label" :value="options.value">
+                    <el-select :disabled="item.isDisable" v-if="item.controls=='select'"  v-model="scope.row[item.prop]" class="1233" :class='classMap[scope.row[item.prop]]'  >
+                        <el-option  v-for="options in item.dataSource" :key="options.itemValue" :label="options.itemName" :value="options.itemValue">
                         </el-option>
                     </el-select>
                 </template>
@@ -27,20 +27,17 @@
             </el-table-column>
         </el-table>
         <el-row>
-            <!-- <el-col :span='12'>
-                共{{}}
-            </el-col> -->
-            <el-col :span='24' v-if="hasPagination">
+            <el-col :span='24' v-if="pluginSetting.hasPagination">
                 <el-pagination style="margin-top:20px;" class="text-right" :page-size="eachPage" :page-sizes="[5, 10, 15]" :total="totalCount"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, sizes, prev, pager, next, jumper"  :page-count="totalPagination" ></el-pagination>
             </el-col>
         </el-row>
-        <dialogBox :message="dialogMessage" :dialogVisible="delDialog"  @confirm="delConfirm" @cancel="delCancel"></dialogBox>   
+        <dialogBox :message="dialogMessage" :dialogVisible="dialogVisible" :dialogModel="dialogModel"  @confirm="dialogConfirm" @cancel="dialogCancel"></dialogBox>   
     </div>
 </template>
 <script type="text/javascript">
     import dialogBox from '../dialog/dialog'
 	export	default{
-		props:['methodsUrl','cols','isDisable','tableName','mutiSelect',"ifSave",'command','HttpParams',"queryParams",'hasPagination'],
+		props:['methodsUrl','cols','tableName',"ifSave",'command','HttpParams',"queryParams",'pluginSetting'],
 		data(){
 			return{
                 // currentPage:1,//当前页码
@@ -61,15 +58,17 @@
                 }],
                 delIndex:'',
                 delRow:'',
+                dialogModel:'',
                 dialogMessage:'',
-                delDialog:false,
+                dialogVisible:false,
                 pageFlag:true,
                 turnPage:-1,
+                targetPage:-1,//目标跳转页
                 ParamsArray:[],
 			}
         },
         created:function(){
-            this.classMap=[];
+            this.classMap=['Disabled','Enabled','Frozen'];
             this.$store.commit('setTableName',this.tableName)//传递具体数据模型名称
             this.$store.commit('setHttpApi', this.methodsUrl.Initial);//传递数据初始化api
             this.$store.commit('setQueryApi', this.methodsUrl.query);//传递查询数据初始化api
@@ -98,14 +97,14 @@
                 }
             },
             newColArray(){//新增数据集合
-                if(!this.isDisable){
+                if(!this.pluginSetting.isDisable){
                     return this.$store.state[this.tableName+'NewColArray'];
                 }else{
                     return [];
                 }  
             },
             updateColArray(){//修改row集合
-                if(!this.isDisable){
+                if(!this.pluginSetting.isDisable){
                     return this.$store.state[this.tableName+'UpdateColArray'];                     
                 }else{
                     return [];
@@ -121,6 +120,12 @@
         watch:{
             $route(to) {//页签切换,重置表格数据模型名称
                   this.$store.commit('setTableName',to.name)
+            },
+            cols:{//动态表头参数
+                handler:function(val,oldVal){
+                        this.cols=val;
+                },
+                deep:true
             },
             newColArray:{
                 handler:function(val,oldVal){
@@ -165,7 +170,8 @@
                 handler: function (val, oldVal) {
                     this.ParamsArray=[];
                     for(let x in val){
-                        if(val[x]!=""){
+                        if(val[x]!=""&&x!="MaxResultCount"&&x!=SkipCount){
+                            console.log(x);
                             this.ParamsArray.push(val[x]);
                         }
                     }
@@ -189,8 +195,9 @@
                 let _this=this;
                 _this.delIndex=index;
                 _this.delRow=row;
+                _this.dialogModel="delDialog"
                 _this.dialogMessage="确定删除？";
-                _this.delDialog=true;
+                _this.dialogVisible=true;
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -202,36 +209,57 @@
                 customClass:className
                 });
             },
-            delConfirm(){//确认删除
+            dialogConfirm(dialogType){//对话框确认
                 let _this=this;
-                if(_this.newColArray.length>0){
-                    _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
-                    _this.newColArray.splice(_this.delIndex,1);
-                    //_this.$store.commit('setUpdateColArray',[])//置空修改增集合 
-                    //_this.$store.commit('get_RowId',"")//置空修改行id
-                    if(_this.newColArray.length==0){
-                        _this.$store.commit('setIfDel',true);//设置删除参数为真
+                if(dialogType=="delDialog"){//删除确认
+                    if(_this.newColArray.length>0){
+                        _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
+                        _this.newColArray.splice(_this.delIndex,1);
+                        //_this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                        //_this.$store.commit('get_RowId',"")//置空修改行id
+                        if(_this.newColArray.length==0){
+                            _this.$store.commit('setIfDel',true);//设置删除参数为真
+                        }else{
+                            _this.$store.commit('setIfDel',false);//设置删除参数为假
+                        }
                     }else{
-                        _this.$store.commit('setIfDel',false);//设置删除参数为假
+                        _this.$axios.deletes(_this.methodsUrl.delete,{Id:_this.delRow.id}).then(function(res){
+                            _this.$store.dispatch('InitTable');//初始化表格数据
+                            _this.open('删除成功','el-icon-circle-check','successERP');  
+                            _this.$store.commit('setIfDel',true);//设置删除参数为真
+                        }).catch(function(err){
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                        })  
                     }
-                    _this.delDialog=false;
-                }else{
-                    _this.$axios.deletes(_this.methodsUrl.delete,{Id:_this.delRow.id}).then(function(res){
-                        _this.$store.dispatch('InitTable');//初始化表格数据
-                        _this.open('删除成功','el-icon-circle-check','successERP');  
-                        _this.$store.commit('setIfDel',true);//设置删除参数为真
-                        _this.delDialog=false;  
-                    }).catch(function(err){
-                        _this.$message({
-                            type: 'warning',
-                            message: err.error.message
-                        });
-                        _this.delDialog=false;  
-                    })  
-                }       
+                }else if(dialogType=="pageDialog"){//翻页对话框
+                    this.$store.commit('setCurrentPage',this.targetPage)//跳转至目标分页
+                    this.HttpParams.SkipCount=(this.targetPage-1)*this.$store.state[this.tableName+'EachPage'];
+                    this.HttpParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
+                    this.$store.commit('setHttpParams', this.HttpParams);
+                    if(this.$store.state[this.tableName+'Query']){//查询结果翻页
+                        this.$store.commit('setQueryParams', this.queryParams);
+                        this.$store.dispatch('QueryTable');//查询接口
+                    }else if(this.$store.state[this.tableName+'TreeQuery']){//树节点返回结果翻页
+
+                    }else{
+                        this.$store.dispatch('InitTable');//初始化表格数据
+                    }
+                    this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                    this.$store.commit('setAddColArray',[])//置空修改增集合 
+                    this.$store.commit('get_RowId',"")//置空修改行id
+                    this.$store.commit('setIfDel',true);//设置删除参数为真
+                }
+                this.dialogVisible=false;              
             },
-            delCancel(){//取消删除
-                this.delDialog=false;
+            dialogCancel(dialogType){//取消删除
+                if(dialogType=="pageDialog"){
+                    this.pageFlag=false;
+                    this.$store.commit('setCurrentPage',this.turnPage)   
+                }
+                this.dialogVisible=false;   
             },
             rowClick(row){//获取行id
                 //this.updateId=row.id
@@ -248,36 +276,12 @@
                 this.$store.commit('setTableSelection',val);
             },
             handleCurrentChange:function(val){//获取当前页码,分页
+                let _this=this;
                 if((this.newColArray.length>0||this.updateColArray.length>0)&&this.pageFlag){
-                    this.$confirm('当前存在未保存修改项，是否继续翻页?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            this.$store.commit('setCurrentPage',val)//跳转至目标分页
-                            this.HttpParams.SkipCount=(val-1)*this.$store.state[this.tableName+'EachPage'];
-                            this.HttpParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
-                            this.$store.commit('setHttpParams', this.HttpParams);
-                            if(this.$store.state[this.tableName+'Query']){//查询结果翻页
-                                this.$store.commit('setQueryParams', this.queryParams);
-                                this.$store.dispatch('QueryTable');//查询接口
-                            }else if(this.$store.state[this.tableName+'TreeQuery']){//树节点返回结果翻页
-
-                            }else{
-                                this.$store.dispatch('InitTable');//初始化表格数据
-                            }
-                            this.$store.commit('setUpdateColArray',[])//置空修改增集合 
-                            this.$store.commit('setAddColArray',[])//置空修改增集合 
-                            this.$store.commit('get_RowId',"")//置空修改行id
-                            this.$store.commit('setIfDel',true);//设置删除参数为真
-                        }).catch(() => {
-                            this.pageFlag=false;
-                            // this.$store.commit('setUpdateColArray',[])//置空修改增集合 
-                            // this.$store.commit('setAddColArray',[])//置空修改增集合 
-                            this.$store.commit('setCurrentPage',this.turnPage)
-                            return;     
-                    });
+                    _this.targetPage=val;
+                    _this.dialogModel="pageDialog"
+                    _this.dialogMessage="当前存在未保存修改项，是否继续翻页?";
+                    _this.dialogVisible=true;
                 }else if(this.newColArray.length==0&&this.updateColArray.length==0){
                     this.$store.commit('setCurrentPage',val)//跳转至目标分页
                     this.HttpParams.SkipCount=(val-1)*this.$store.state[this.tableName+'EachPage'];
@@ -295,8 +299,7 @@
                     this.$store.commit('setAddColArray',[])//置空修改增集合 
                     this.$store.commit('get_RowId',"")//置空修改行id
                 }
-                setTimeout(() => {this.pageFlag = true}, 1000)
-                
+                setTimeout(() => {this.pageFlag = true}, 1000)   
             },
             handleSizeChange(val){//每页显示条数变化
                 this.$store.commit('setEachPage',val)//重置分页显示条数
@@ -324,13 +327,6 @@
                 }
                 return targetObj;
             },
-            // InitUpdateRow(id){//根据id获取修改行数据
-            //     let _this=this;
-            //     _this.$axios.gets(_this.methodsUrl.getId,{Id:id}).then(function(res){
-            //         _this.updateRow=res.result;
-            //     })
-            // },
-            // 对比json对象的方法块
             isObj(object) {  
                 return object && typeof (object) == 'object' && Object.prototype.toString.call(object).toLowerCase() == "[object object]";  
             },        
@@ -391,12 +387,19 @@
     background: #fff;
     height: 28px;
     border: 0;
-    color: #606266;
     text-align: center;
 }
 .normalTable .el-input.is-disabled .el-input__inner{
     background-color: #fff;
     border-color: #e4e7ed;
-    color: #606266;
+}
+.Disabled .el-input--suffix .el-input__inner{
+    color: #33CC66
+}
+.Enabled .el-input--suffix .el-input__inner{
+    color: #FF6666
+}
+.Frozen .el-input--suffix .el-input__inner{
+    color: #FF6600
 }
 </style>
