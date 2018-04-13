@@ -92,36 +92,7 @@
                             </el-tree>
                         </el-col>
                         <el-col :span="19" class="pb10" style="background:#fff">
-                            <Table  :methodsUrl="httpUrl" :hasPagination="hasPagination" :queryParams="queryParams" :cols="column" :HttpParams='HttpParams' :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :command="command"></Table>
-                            <!-- <el-table v-loading="tableLoading" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
-                                <el-table-column type="selection" label="" width="50">
-                                </el-table-column>
-                                <el-table-column prop="categoryParentName" label="上级类目">
-                                </el-table-column>
-                                <el-table-column prop="categoryCode" label="类目编码">
-                                </el-table-column>
-                                <el-table-column prop="categoryName" label="类目名称" width="">
-                                </el-table-column>
-                                <el-table-column prop="status" label="状态">
-                                </el-table-column>
-                                <el-table-column prop="mnemonic" label="助记码">
-                                </el-table-column>
-                                <el-table-column prop="isService" label="服务类" width="80">
-                                    <template slot-scope="scope">
-                                        <el-checkbox disabled v-model='scope.row.isService'></el-checkbox>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="address7" label="备注" width="">
-                                </el-table-column>
-                                <el-table-column prop="address12" label="操作" width="">
-                                    <template slot-scope="scope">
-                                        <el-button @click="modify(scope.row)" type="text" size="small"  >查看</el-button>
-                                        <el-button @click="del(scope.row)" type="text" size="small"  >删除</el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                            <el-pagination style="margin-top:20px;"  class="text-right" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, prev, pager, next"  :page-count="totalPage" >
-                            </el-pagination>    -->
+                            <Table  :methodsUrl="httpUrl" :pluginSetting='pluginSetting' :queryParams="queryParams" :cols="column" :HttpParams='HttpParams' :tableName="tableModel"  :command="command"></Table>
                     </el-col>
                 </el-row>
                 </el-col>
@@ -191,7 +162,6 @@ import dialogBox from '../../base/dialog/dialog'
                    query:'/api/services/app/CategoryManagement/GetSearch',//条件查询
                    treeQuery:'/api/services/app/CategoryManagement/GetCategoryList',//树节点查询
                 },
-                isDisable:true,
                 queryParams:{//查询条件参数
                     CategoryName:'',
                     IsService:'',
@@ -223,13 +193,7 @@ import dialogBox from '../../base/dialog/dialog'
                     controls:'select',
                     isDisable:true,
                     sortable:false,
-                    dataSource:[{
-                        value: 1,
-                        label: '启用'
-                    },{
-                        value: 0,
-                        label: '未启用'
-                    }]
+                    dataSource:[]
                     }, {
                     prop: 'mnemonic',
                     label: '助记码',
@@ -243,7 +207,11 @@ import dialogBox from '../../base/dialog/dialog'
                     isDisable:true,
                     sortable:false,
                 }],
-                hasPagination:true,
+                pluginSetting:{
+                    hasPagination:true,
+                    mutiSelect:true,//多选栏
+                    isDisable:true,
+                },
                 command:[{
                     text:'查看',
                     class:'green'
@@ -259,7 +227,6 @@ import dialogBox from '../../base/dialog/dialog'
                         label: '未启用'
                     }],
                 enableEdit:true,
-                mutiSelect:true,//多选栏
                 tableModel:'commodityClassHeading',
                 HttpParams:{//数据初始化参数
                     SkipCount:(this.$store.state.commodityClassHeadingCurrentPage-1)*this.$store.state.commodityClassHeadingEachPage,
@@ -295,8 +262,9 @@ import dialogBox from '../../base/dialog/dialog'
             let height1=window.innerHeight-123;
             content1.style.minHeight=height1+'px';
         },
-        created:function(){       
-           this.loadTree();
+        created:function(){ 
+            this.InitStatus();      
+            this.loadTree();
            //this.loadTableData();
         },
         watch:{
@@ -343,6 +311,12 @@ import dialogBox from '../../base/dialog/dialog'
                     })
                 }
             },
+            InitStatus(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
+                    _this.column[3].dataSource=res.result;
+                })
+            },
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
@@ -360,6 +334,9 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.tableLoading=true;
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{Id:data.id,SkipCount:(_this.currentPage-1)*_this.$store.state.eachPage,MaxResultCount:_this.$store.state.eachPage}).then(function(res){                     
                         //_this.$store.state[_this.tableModel+'Table'] = res.result.items;
+                        _this.queryParams.CategoryName="";
+                        _this.queryParams.IsService="";
+                        _this.queryParams.Status="";
                         _this.$store.commit('Init_Table',res.result.items);
                         let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
                         _this.$store.commit('Init_pagination',totalPage);

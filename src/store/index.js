@@ -835,6 +835,13 @@ export default new vuex.Store({
         Init_Table(state,data){//表格数据模型
             state[state.tableName+'Table']=data;
         },
+        Init_dataSource(state,dictName){//表头配置下拉
+            axios.get('/api/services/app/DataDictionary/GetDictItem',{
+                params:{dictName:dictName}
+            }).then(function(res){
+                return res.result
+            })
+        },
         Init_TableClone(state,data){
             state[state.tableName+'TableClone']=data;
         },

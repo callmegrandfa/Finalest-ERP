@@ -26,7 +26,9 @@
                 <el-row>
                     <div class="bgcolor smallBgcolor">
                         <label>业务地区</label>
-                        <el-select v-model="queryParams.AreaCode"></el-select>
+                        <el-select v-model="queryParams.AreaCode">
+                            
+                        </el-select>
                     </div>
                 </el-row>
                 <el-row>
@@ -117,7 +119,7 @@ import Table from '../../base/Table/Table'
                 ifWidth:true,
                 tableModel:'storeHouse',//数据模型名称标志
                 isDisable:true,//表格是否可编辑
-                mutiSelect:true,//表格是否可多选
+                mutiSelect:false,//表格是否可多选
                 command:[{//操作栏按钮配置
                     text:'查看',
                     class:'green'
