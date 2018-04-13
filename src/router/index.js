@@ -223,6 +223,10 @@ const supplierClassifyList = () => import('../components/supplierClassify/suppli
 const supplierClassifyDetail = () => import('../components/supplierClassify/supplierClassifyDetail')
 const supplierClassifyModify = () => import('../components/supplierClassify/supplierClassifyModify')
     
+//会员管理
+const memberLevel = () => import('../components/memberManage/memberLevel')
+const memberLevelList = () => import('../components/memberManage/memberLevelList')
+const memberLevelDetails = () =>import('../components/memberManage/memberLevelDetails')
 
 let redirectRouter = function(routerName) { //重定向
     // let activeRouter = store.state.activeRouter;
@@ -649,6 +653,18 @@ const routes = [
                     { path: '/supplierClassify/supplierClassifyModify/:id', component: supplierClassifyModify, name: 'supplierClassifyModify' },
                 ],
 
+            },
+            {
+                path: '/memberLevel',
+                component: memberLevel,
+                name: 'memberLevel',
+                redirect: function() { //会员等级
+                    return redirectRouter('memberLevel')
+                },
+                children: [
+                    { path: '/memberLevel/memberLevelList/:id', component: memberLevelList, name: 'memberLevelList' },
+                    { path: '/memberLevel/memberLevelDetails/:id',component:memberLevelDetails,name: 'memberLevelDetails'} 
+                ]
             },
         ]
     },

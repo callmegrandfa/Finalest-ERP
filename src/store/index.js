@@ -63,6 +63,8 @@ export default new vuex.Store({
         currency:{ name: 'currency', url: '/currency/currencyList/:id', parent: '', default: '/customer/currencyList/:id' } , //币种管理
         currencyList:{ name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
 
+        commodityBrand:{name: 'commodityBrand', url: '/commodityBrand/:id', parent: 'commodityBrand', default: '/commodityBrand/:id' },//商品品牌
+
         bill:{ name: 'bill', url: '/bill/billList/:id', parent: '', default: '/bill/billList/:id' } , //模板2.0
         billDetails:{ name: 'billDetails', url: '/bill/billDetails/:id', parent: 'bill' } ,
         billList:{ name: 'billList', url: '/bill/billList/:id', parent: 'bill' } ,
@@ -150,6 +152,10 @@ export default new vuex.Store({
         supplierClassify:{ name: 'supplierClassify', url: '/supplierClassify/supplierClassifyList/:id', parent: '', default: '/supplierClassify/supplierClassifyList/:id' },
         supplierClassifyDetail:{ name: 'supplierClassifyDetail', url: '/supplierClassify/supplierClassifyDetail/:id', parent: 'supplierClassify', default: '/supplierClassify/supplierClassifyList/:id' },
         supplierClassifyModify:{ name: 'supplierClassifyModify', url: '/supplierClassify/supplierClassifyModify/:id', parent: '', default: '/supplierClassify/supplierClassifyModify/:id' },
+        //会员管理
+        memberLevel:{ name: 'memberLevel', url: '/memberLevel/memberLevelList/:id', parent: '', default: '/memberLevel/memberLevelList/:id' } , 
+        memberLevelList:{ name: 'memberLevelList', url: '/memberLevel/memberLevelList/:id', parent: 'memberLevel' } ,
+        memberLevelDetails:{ name: 'memberLevelDetails',url: '/memberLevel/memberLevelDetails/:id',parent: 'memberLevel'},
 //----------------------------------------------------------------------------路由数据-----------------------------------------------------------------------
 
         // activeRouter: [ //进入页面子路由，重定向路由。name,parent,defult不变,url将被重定向(name=parent)
@@ -736,6 +742,11 @@ export default new vuex.Store({
         commodityBrandUpdateRowId:'',//修改的表格行ID
         commodityBrandCurrentPage:1,
         commodityBrandTotalPagination:10,//总页数
+        accountListHttpApi:'',
+        accountListTable:[],//商品类目表格数据
+        accountListSelection:[],//选中数据集合
+        accountListCurrentPage:1,
+        accountListTotalPagination:10,//总页数
         queryparams:{},
         tableLoading:true,
         totalPage:10,//总页数
