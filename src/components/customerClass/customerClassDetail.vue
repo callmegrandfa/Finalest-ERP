@@ -1,6 +1,6 @@
 <template>
     <div class="customerClassDetail">
-        <el-row>
+        <el-row class="fixed">
             <el-col :span="24">
                 <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
@@ -65,16 +65,18 @@
                                      :render-content="renderContent_moduleParentId"
                                      :props="selectParentProps"
                                      node-key="id"
-                                     default-expand-all
                                      ref="tree"
                                      :filter-node-method="filterNode"
                                      :default-expanded-keys="expandId"
                                      :expand-on-click-node="false"
                                      @node-click="nodeClick"
-                                     
                                      >
-                            </el-tree> 
+                            </el-tree>
+                             
                             <el-option  v-show="false" v-for="item in selectData.customerClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id"></el-option>
+                        
+                        
+                        
                         </el-select>                    
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.classParentId') }}</div>
@@ -230,7 +232,7 @@
                 },
                 parentItem:{
                     id:'',
-                    className:'1111',
+                    className:'',
                 },
                 expandId:[],//默认展开kehu树节点
                 status: [],//状态
@@ -248,8 +250,6 @@
                     "status": 1,
                     "remark": "",
                     "mnemonic": "1",
-                    // "createdBy" :'',
-                    // "createdTime"  :''
                     createdTime:this.GetDateTime(),//创建时间
                     createdBy:this.$store.state.name,//创建人
                     modifiedTime:this.GetDateTime(),//修改人
@@ -294,14 +294,9 @@
             let self = this;
             self.loadParentTree();
             self.loadStatus();
-            self.getDefault();
+            // self.getDefault();
             self.getSelectData();
         },
-    computed:{
-        count () {
-            return this.parentItem;
-            },
-    },
     watch: {
         parentSearch(val) {
            this.$refs.tree.filter(val);
@@ -344,29 +339,30 @@
             let self=this;
             self.treeLoading=true;
             self.$axios.gets('api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
-                // console.log(res)
+                console.log(res)
                 self.selectParentTree=res;
                 self.treeLoading = false;
                 self.expandId=self.defauleExpandTree(res,'id')
+                // console.log(self.expandId);
                 self.loadCheckSelect('classParentId',self.addData.classParentId)
             },function(res){
                 self.treeLoading=false;
                 
             })
         },
-        getDefault(){
-            let self=this;
-            if(self.$route.params.id!="default"){
-                self.addData.classParentId=parseInt(self.$route.params.id);
-                self.parentItem.className = '111111';
-                self.parentItem.id=self.$route.params.id;
-            }
-        },
+        // getDefault(){
+        //     let self=this;
+        //     if(self.$route.params.id!="default"){
+        //         self.addData.classParentId=parseInt(self.$route.params.id);
+        //         self.parentItem.className = '111111';
+        //         self.parentItem.id=self.$route.params.id;
+        //     }
+        // },
         //加载状态下拉框
         loadStatus:function(){
             let self = this;
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                console.log(res)        
+                // console.log(res)        
             self.status = res.result;            
             },function(res){
                 
@@ -408,7 +404,6 @@
                         // console.log(res.result);
                         // self.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
-
                         // self.open('保存失败','el-icon-error','faildERP');
                          if(res && res!=''){ 
                             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -421,7 +416,7 @@
         saveAdd:function(){
             let self = this;
             self.$validate().then(function (success) {
-                console.log(success);
+                // console.log(success);
                 if (success) {
                     self.$axios.posts('/api/services/app/ContactClassManagement/Create',self.addData).then(function(res){
                         //  self.addData=res.result;
@@ -528,7 +523,6 @@
             })
              $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,})
         },
-
         //-------------按钮操作-----------
         isBack(){
             let self=this;
@@ -643,6 +637,15 @@
   }
  .customerClassDetail .el-row:last-child {
   padding-bottom: 15px;
+
+ }
+/* .selectSearch{
+  position: fixed;
+  width: 328px;
+  z-index: 10002;
+} */
+.el-tree-node__children{
+  background-color: #fff;
 }
   .customerClassDetail .bgcolor .isGive{
     display: block;
