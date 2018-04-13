@@ -202,13 +202,19 @@
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
                     placeholder=""
                     v-model="addData.ouParentid">
+                        <!-- <el-option 
+                        v-for="item in selectData.ouParentid" 
+                        :key="item.id" 
+                        :label="item.ouName" 
+                        :value="item.id">
+                        </el-option> -->
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
                         v-model="search">
                         </el-input>
                         <el-tree
-                         
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
@@ -218,7 +224,6 @@
                         :filter-node-method="filterNode"
                         :expand-on-click-node="false"
                         @node-click="nodeClick_ou"
-                        :render-content="renderContent_ouParentid"
                         >
                         </el-tree>
                         <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
@@ -280,6 +285,22 @@
                 </div>
                 <div class="bgcolor">
                     <label>所属公司</label>
+                    <!-- <el-select filterable                 
+                    @change="isUpdate"
+                    placeholder=""
+                    @focus="showErrprTipsSelect"
+                    :class="{redBorder : validation.hasError('addData.companyOuId')}"
+                    class="companyOuId" 
+                    v-model="addData.companyOuId">
+                        <el-option 
+                        v-for="item in selectData.companys" 
+                        :key="item.id" 
+                        :label="item.ouName" 
+                        :value="item.id" 
+                        >
+                        </el-option>
+                    </el-select> -->
+                    
                     <el-select class="companyOuId"
                      clearable filterable
                     @change="isUpdate"
@@ -293,7 +314,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                         :render-content="renderContent_companyOuId"
+                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :data="selectTreeCompany"
                         :highlight-current="true"
                         :props="selectPropsCompany"
@@ -696,83 +717,7 @@
                     </el-col>
                 </el-tab-pane>
                 <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==2 && Business">
-                    <!-- <el-col :span="24">
-                          <div class="financeInfo">
-                            <el-col :span="24"  class="getPadding">
-                                <div class="bgcolor">
-                                    <label>国税登记号</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>发税登记号</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>纳税人识别号</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>纳税人编码</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>纳税税种</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>委托税种</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>纳税组织</label>
-                                    <el-checkbox 
-                                    @change="isUpdate"
-                                    ></el-checkbox>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>启用状态</label>
-                                    <el-select clearable filterable  
-                                    @change="isUpdate"
-                                    v-model="test"
-                                    placeholder=""
-                                    class="status" >
-                                        <el-option 
-                                        v-for="item in selectData.Status001" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue" 
-                                        >
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                            </el-col>
-                         </div>
-                     </el-col>    -->
-                     <el-col :span="24">
+                 <el-col :span="24">
                           <div class="companyInfo">
                             <el-col :span="24"  class="getPadding">
                                 <div class="bgcolor">
@@ -815,53 +760,9 @@
                                 </div>
                             </el-col>
                          </div>
-                     </el-col>
+                     </el-col>  
                 </el-tab-pane>
                 <el-tab-pane v-for="item in selectData.OUType" :key="item.itemValue" :label="item.itemName" :name="item.itemCode" v-if="item.itemValue==3 && Finance">
-                    <!-- <el-col :span="24">
-                          <div class="companyInfo">
-                            <el-col :span="24"  class="getPadding">
-                                <div class="bgcolor">
-                                    <label>上级业务组织</label>
-                                    <el-select clearable filterable 
-                                    v-model="test"
-                                    @change="isUpdate"
-                                    placeholder=""
-                                    >
-                                        <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>结算账务组织</label>
-                                    <el-input 
-                                    @change="isUpdate"
-                                    class="legalPerson" 
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="bgcolor">
-                                    <label>启用状态</label>
-                                    <el-select clearable filterable  
-                                    @change="isUpdate"
-                                    v-model="test"
-                                    placeholder=""
-                                    class="status">
-                                        <el-option 
-                                        v-for="item in selectData.Status001" 
-                                        :key="item.itemValue" 
-                                        :label="item.itemName" 
-                                        :value="item.itemValue" 
-                                        ></el-option>
-                                    </el-select>
-                                </div>
-                            </el-col>
-                         </div>
-                     </el-col>    -->
                       <el-col :span="24">
                           <div class="financeInfo">
                             <el-col :span="24"  class="getPadding">
@@ -953,8 +854,8 @@
                 <el-date-picker
                 v-model="auditInfo.createdTime"
                 type="date"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss" 
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
                 disabled
                 placeholder="">
                 </el-date-picker>
@@ -964,8 +865,8 @@
                 <label>修改时间</label>
                 <el-date-picker
                 v-model="auditInfo.modifiedTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" 
                 type="date"
                 disabled
                 placeholder="">
@@ -1046,7 +947,7 @@ export default({
                 id:'id'
             },
             selectPropsCompany:{
-                children: 'children',
+                 children: 'children',
                 label: 'ouFullname',
                 id:'id'
             },
@@ -1413,7 +1314,6 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 上级业务单元(所属组织)
                 _this.selectData.ouParentid=res.result;
-                // console.log(res)
             })
             // _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
             // // 会计期间方案
@@ -1424,7 +1324,6 @@ export default({
                 _this.selectData.baseCurrencyId=res.result.items;
             })
              _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){ 
-                   console.log(res)
             // 公司
                 _this.selectData.companys=res.result;
             })
@@ -1495,6 +1394,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
+                _this.loadIcon();
             },function(res){
             })
         },
@@ -1505,6 +1405,7 @@ export default({
         .then(function(res){
             // console.log(res);
             _this.selectTreeCompany=res.result;
+            _this.loadIcon();
         },function(res){
         })
     },
@@ -1780,41 +1681,6 @@ export default({
                     })
                 }
             });    
-        },
-        renderContent_companyOuId(h, { node, data, store }){
-                
-            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
-                return (
-                    <span class="el-tree-node__label" data-id={data.id}>
-                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                        {data.ouName}
-                    </span>
-                );
-            }else{
-                return (
-                    <span class="el-tree-node__label" data-id={data.id}>
-                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                        {data.ouName}
-                    </span>
-                );
-            }
-        },
-        renderContent_ouParentid(h, { node, data, store }){
-            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
-                return (
-                    <span class="el-tree-node__label" data-id={data.id}>
-                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                        {data.ouName}
-                    </span>
-                );
-            }else{
-                return (
-                    <span class="el-tree-node__label" data-id={data.id}>
-                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                        {data.ouName}
-                    </span>
-                );
-            }
         },
     }
 

@@ -13,7 +13,7 @@
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
-                    <span class="btDetail">保存</span>
+                    <span class="btDetail">保存{{ifModify}}</span>
                 </button>
 
                 <button @click="Cancel(2)" class="erp_bt bt_cancel" :class="{erp_fb_bt:!ifModify}">
@@ -670,6 +670,7 @@ export default({
             radio:'',
             firstModify:false,//
             ifModify:false,//判断主表是否修改过
+            // ifDoModify:false,//判断从表是否修改过
             backCancel:'',
             c:false,//判断从表是否修改过
             ifUp:false,//判断从表是否为修改
@@ -863,9 +864,13 @@ export default({
                 if(!self.firstModify){
                     self.firstModify = !self.firstModify;
                 }else{
-                    self.ifModify = true;
+                    // console.log(self.addList.length)
+                    // if(self.addList.length>0){
+                        self.ifModify = true;
+                    // }
+                    
                 } 
-                console.log('123')
+                // console.log('123')
                 self.redAr = [];
                 for(let i in val){
                     let flag= true;
@@ -1187,8 +1192,7 @@ export default({
                         $('.tipsWrapper').css({display:'none'});
                         self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
                             self.open('修改店铺信息成功','el-icon-circle-check','successERP');
-                            self.redAr = [];
-                            self.ifModify = false;
+                            self.loadData()
                         },function(res){
                             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                             self.errorMessage=true;
@@ -1197,47 +1201,12 @@ export default({
                 });
             }
 
-            // if(self.ifUp){
-            //     self.saveContactModify();
-            // }
             
-            self.createContact();
             
         },
         saveAdd:function(){
 
         },
-        // saveContactModify:function(){//修改联系人
-        //     let self = this;
-        //     self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
-        //         console.log(res);
-        //         self.open('修改联系人成功','el-icon-circle-check','successERP');
-        //         self.ifDoModify = false;
-        //         self.ifUp = false;
-        //     },function(res){
-        //         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-        //         self.errorMessage=true;
-        //         self.open('修改联系人失败','el-icon-error','faildERP');
-        //     })
-            
-        // },
-        
-        // createContact:function(){//创建联系人
-        //     let self = this;
-        //     console.log(self.shopData.shopContacts)
-        //     if(self.addList.length>0){
-                
-        //         self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){         
-        //             self.open('创建联系人成功','el-icon-circle-check','successERP');
-        //             self.loadData();
-        //             self.addList = [];
-        //         },function(res){
-        //             self.open('创建联系人失败','el-icon-error','faildERP');
-        //             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-        //             self.errorMessage=true;
-        //         })
-        //     }
-        // },
         
         //-------------------------------------------------------
 
@@ -1302,7 +1271,8 @@ export default({
         //---确认删除-----------------------------------------
         sureDel:function(){
             let self = this;
-            console.log(self.who)
+            // console.log(self.who)
+            console.log(9999999)
             if(self.who == 1){//单项删除
                 self.idArray.ids = [];
                 if(self.whoId>0){
@@ -1311,16 +1281,20 @@ export default({
                     self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
                         self.open('删除联系人成功','el-icon-circle-check','successERP');
                         self.dialogDelConfirm = false;
+                        self.ifModify = false;
                     },function(res){
                         self.dialogDelConfirm = false;
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }else{
+                    
                     self.contactData.splice(self.whoIndex,1);
                     self.addList.splice(self.whoIndex,1);
+                    // self.addList = [];
                     self.dialogDelConfirm = false;
                     self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    self.ifModify = false;
                 }
             }
 
@@ -1364,7 +1338,7 @@ export default({
                 }) 
             }
 
-
+            console.log(self.ifModify)
         },
         //---------------------------------------------------
 
