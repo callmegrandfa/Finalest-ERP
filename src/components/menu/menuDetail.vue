@@ -510,6 +510,7 @@
                 _this.item.moduleName=_this.$route.params.name;
                 _this.item.id=_this.$route.params.id;
             }
+            // _this.loadTree()
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -552,13 +553,14 @@
                 })
             }
             if(!flag){
-                if(typeof(response[0])!='undefined'
-                && response[0]!=null 
-                && typeof(response[0][responseKey])!='undefined'
-                && response[0][responseKey]!=null
-                && response[0][responseKey]!=''){
-                    _this.expand[expandName]=[response[0][responseKey]]
-                }
+                $.each(response,function(index,value){
+                    if(index==0){
+                        if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                            _this.expand[expandName]=[value[responseKey]]
+                        }
+                        
+                    }
+                })
             }
         },
         loadIcon(){
@@ -574,12 +576,14 @@
             //     })
             // })
         },
-        loadCheckSelect(selectName,key,expandID){
+        loadCheckSelect(selectName,key){
             let _this=this;
             _this.$nextTick(function () { 
+                // console.log($('.'+selectName+' .el-tree-node__label'))
                 $('.'+selectName+' .el-tree-node__label').each(function(){
+                    $(this).parents('.el-tree-node').removeClass('is-current')
                      if($(this).attr('data-id')==key){
-                        $(this).click()
+                        $(this).parents('.el-tree-node').addClass('is-current')
                     }
                 })
             })
@@ -588,6 +592,7 @@
             let _this=this;
             _this.item.id=data.id;
             _this.item.moduleName=data.moduleName;
+            $('.el-tree-node').removeClass('is-current')
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })

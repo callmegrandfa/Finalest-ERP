@@ -66,12 +66,12 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
+                             :default-expanded-keys="expand.expandId_addDataOu"
                             :render-content="renderContent_ou"
                             :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
-                            default-expand-all
                             ref="tree_ou"
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
@@ -180,10 +180,10 @@
             <el-col :span="24" class="transfer_table">
                 <vue-scroll :ops="$store.state.option">
                     <el-tree
+                    :default-expanded-keys="expand.expandId_dialogOu"
                     :render-content="renderContent_ouTreeDataRight"
                     :data="ouTreeDataRight"
                     show-checkbox
-                    default-expand-all
                     node-key="ouId"
                     ref="tree"
                     :filter-node-method="filterNode"
@@ -420,6 +420,7 @@
                             <el-col :span="24" class="fnTreeWrapper">
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
+                                        :default-expanded-keys="expand.expandId_mmenu"
                                         :render-content="renderContent_Fn"
                                         v-loading="fnTreeLoading" 
                                         :highlight-current="true"
@@ -428,7 +429,6 @@
                                         node-key="id"
                                         ref="tree_fn"
                                         :filter-node-method="filterNodeFn"
-                                        default-expand-all
                                         @node-click="fnNodeClick"
                                         :expand-on-click-node="false">
                                     </el-tree>
@@ -586,30 +586,6 @@ export default({
             },
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
-            option: {//滚动条样式
-                vRail: {
-                    width: 0,
-                    height:0,
-                    background: "#9093994d",
-                },
-                vBar:{
-                     width: 0,
-                     height:0,
-                    background: '#9093994d',
-                },
-                hRail: {
-                    width: 0,
-                    height:0,
-                    pos: 'bottom',
-                    background: "#9093994d",
-                },
-                hBar:{
-                     width:0,
-                     height:0,
-                    pos: 'bottom',
-                    background: '#9093994d',
-                }
-            },
             search_ou:'',
             selectTree_ou:[
             ],
@@ -648,11 +624,11 @@ export default({
             activeName: 'ou',//tabs标签页默认激活name
 
             addData:{
-                "ouId": "",
-                "roleCode": "",
-                "displayName": "",
-                "status": 1,
-                "remark": "",
+                // "ouId": "",
+                // "roleCode": "",
+                // "displayName": "",
+                // "status": 1,
+                // "remark": "",
             },
 
 // -------------分配组织-------------------
@@ -780,6 +756,13 @@ export default({
             totalPageFn:0,//当前分页总数
             oneItemFn:10,//每页有多少条信息
             pageFn:1,//当前页   
+
+            expand:{
+                expandId_addDataOu:[],//默认下拉树形展开id
+                isHere_addDataOu:false,//是否存在id于树形
+                expandId_dialogOu:[],//默认dialog组织树形展开id
+                expandId_mmenu:[],//默认分配功能树形展开id
+            }
         }
     },
      validators: {
@@ -802,7 +785,8 @@ export default({
     },
     created () {
         let _this=this;
-        _this.loadTree_ou();//下拉列表
+        _this.getModifyData();//根据id获取数据
+       
         _this.GetUsers();
         _this.getSelectData();//下拉列表
 
@@ -815,7 +799,7 @@ export default({
         // _this.getAllFn();//获取所有权限
         _this.fnLoadTree();//分配权限树形
 
-        _this.getModifyData();//根据id获取数据
+        //  _this.loadTree_ou();//下拉列表
     },
     
     watch: {
@@ -906,6 +890,7 @@ export default({
                 }
                 _this.item_ou.ouName=res.result.ouName
                 _this.item_ou.id=res.result.ouId
+                _this.loadTree_ou()
                 },function(res){
             })
         },
@@ -1100,6 +1085,49 @@ export default({
             let _this=this;
            $(tab.$el).find('table').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
             $(tab.$el).find('.el-table__empty-block').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
+        },
+        defauleExpandTree(model,expandName,response,responseKey,children){
+            //model数据模型
+            //expandName需要设置的默认展开树形建值_this.expand[expandName]
+            //response,树形数据
+            //responseKey需要与model匹配的唯一key
+            //children，response[children]
+            let _this=this;
+            if(model!=''){//model为树形下拉默认值，即渲染数据。如果存在，递归tree
+                $.each(response,function(index,val){
+                    if(val[responseKey]==_this.addData[model]){
+                        _this.expand[expandName]=[_this.addData[model]]
+                    }else{
+                        $.each(val[children],function(index1,val1){
+                            if(val1[responseKey]==_this.addData[model]){
+                                _this.expand[expandName]=[_this.addData[model]]
+                            }else{
+                                _this.defauleExpandTree(model,expandName,val1[children],responseKey,children)
+                            }
+                        })
+                    }
+                })
+            }else{
+                 $.each(response,function(index,value){
+                    if(index==0){
+                        if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                            _this.expand[expandName]=[value[responseKey]]
+                        }
+                        
+                    }
+                })
+   
+            }
+        },
+        loadCheckSelect(selectName,key){
+            let _this=this;
+            _this.$nextTick(function () { 
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                     if($(this).attr('data-id')==key){
+                        $(this).click()
+                    }
+                })
+            })
         },
 //-------------关联组织-----------
         getAllOulength(){
@@ -1662,7 +1690,12 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                // _this.loadIcon();
+               
+                _this.defauleExpandTree('ouId','expandId_addDataOu',res.result,'id','children')
+                if(_this.expand.expandId_addDataOu<1){
+                    _this.expand.expandId_addDataOu=[_this.selectTree_ou[0].id]
+                }
+                _this.loadCheckSelect('ouId',_this.addData.ouId);
             },function(res){
             })
         },

@@ -72,12 +72,12 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
+                             :default-expanded-keys="expand.expandId_addDataOu"
                             :render-content="renderContent_ou"
                             :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
-                            default-expand-all
                             ref="tree_ou"
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
@@ -740,6 +740,13 @@ export default({
             totalPageFn:0,//当前分页总数
             oneItemFn:10,//每页有多少条信息
             pageFn:1,//当前页   
+
+            expand:{
+                expandId_addDataOu:[],//默认下拉树形展开id
+                isHere_addDataOu:false,//是否存在id于树形
+                expandId_dialogOu:[],//默认dialog组织树形展开id
+                expandId_mmenu:[],//默认分配功能树形展开id
+            }
         }
     },
      validators: {
@@ -762,7 +769,7 @@ export default({
     },
     created () {
         let _this=this;
-        _this.loadTree_ou();//下拉列表
+        
         // _this.GetUsers();
         _this.getSelectData();//下拉列表
 
@@ -777,6 +784,7 @@ export default({
         _this.getAllUserData()//获取所有用户数据
         _this.getDefault()
         // _this.getModifyData();//根据id获取数据
+        // _this.loadTree_ou();//下拉列表
     },
     
     watch: {
@@ -859,6 +867,7 @@ export default({
             },
             _this.item_ou.id=res.result.id;
             _this.item_ou.ouName=res.result.ouName;
+            _this.loadTree_ou()
             })
         },
         // getModifyData(){
@@ -1626,6 +1635,12 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
+                 _this.defauleExpandTree('ouId','expandId_addDataOu',res.result,'id','children')
+                //  console.log(_this.expand.expandId_addDataOu)
+                if(_this.expand.expandId_addDataOu.length<1){
+                    _this.expand.expandId_addDataOu=[_this.selectTree_ou[0].id]
+                }
+                _this.loadCheckSelect('ouId',_this.addData.ouId);
             },function(res){
             })
         },
@@ -1641,6 +1656,49 @@ export default({
             //         $(this).click()
             //     }
             // })
+        },
+        defauleExpandTree(model,expandName,response,responseKey,children){
+            //model数据模型
+            //expandName需要设置的默认展开树形建值_this.expand[expandName]
+            //response,树形数据
+            //responseKey需要与model匹配的唯一key
+            //children，response[children]
+            let _this=this;
+            if(model!=''){//model为树形下拉默认值，即渲染数据。如果存在，递归tree
+                $.each(response,function(index,val){
+                    if(val[responseKey]==_this.addData[model]){
+                        _this.expand[expandName]=[_this.addData[model]]
+                    }else{
+                        $.each(val[children],function(index1,val1){
+                            if(val1[responseKey]==_this.addData[model]){
+                                _this.expand[expandName]=[_this.addData[model]]
+                            }else{
+                                _this.defauleExpandTree(model,expandName,val1[children],responseKey,children)
+                            }
+                        })
+                    }
+                })
+            }else{
+                 $.each(response,function(index,value){
+                    if(index==0){
+                        if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                            _this.expand[expandName]=[value[responseKey]]
+                        }
+                        
+                    }
+                })
+   
+            }
+        },
+        loadCheckSelect(selectName,key){
+            let _this=this;
+            _this.$nextTick(function () { 
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                     if($(this).attr('data-id')==key){
+                        $(this).click()
+                    }
+                })
+            })
         },
 // ----------关联用户--------------
         searchLeftUserTable(){//左侧数据搜索
