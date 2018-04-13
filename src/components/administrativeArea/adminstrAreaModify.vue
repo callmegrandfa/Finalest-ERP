@@ -10,47 +10,67 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button @click="goAdd"  class="erp_bt bt_add" :disabled="!isDisable">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
-
-                <button @click="save" class="erp_bt bt_save"  :disabled="isDisable">
+                <button @click="save" :class="{erp_fb_bt:!update}" class="erp_bt bt_save"  :disabled="!update">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button @click="saveAdd" class="erp_bt bt_saveAdd" :disabled="isDisable">
+                <button @click="cancel" class="erp_bt bt_cancel" :class="{erp_fb_bt:!update}"  :disabled="!update">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
+               
+                <button @click="saveAdd" class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!update}" :disabled="!update">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
 
-                <button @click="cancel" class="erp_bt bt_cancel"  :disabled="isDisable">
+               <button @click="goAdd" class="erp_bt bt_add" 
+               :class="{erp_fb_bt:update}" :disabled="update">
                     <div class="btImg">
-                        <img src="../../../static/image/common/bt_cancel.png">
+                        <img src="../../../static/image/common/bt_add.png">
                     </div>
-                    <span class="btDetail">取消</span>
+                    <span class="btDetail">新增</span>
                 </button>
 
-                <button @click="confirmDelThis" class="erp_bt bt_del" :disabled="!isDisable">
+                <button @click="confirmDelThis" :class="{erp_fb_bt:update}" class="erp_bt bt_del" :disabled="update">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                          </div>
                         <span class="btDetail">删除</span>
                 </button>
-               
-                
-
             </el-col>
         </el-row>
         <!-- 表单验证的错误提示信息 -->
-	        <el-row>
+        <el-row>
+            <el-col :span="24">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span :class="{block : !validation.hasError('addData.areaParentId')}">
+                                上级地区{{ validation.firstError('addData.areaParentId') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.areaCode')}">
+                                地区编码{{ validation.firstError('addData.areaCode') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.areaName')}">
+                                地区名称{{ validation.firstError('addData.areaName') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.status')}">
+                                状态{{ validation.firstError('addData.status') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+	        <!-- <el-row>
                 <el-col>
                     <div class="errTipsWrapper" name="areaParentId">
                         <div class="errorTips" :class="{block : !validation.hasError('addData.areaParentId')}">
@@ -73,7 +93,7 @@
                       </div>
                     </div>
                 </el-col>
-            </el-row>
+            </el-row> -->
         <!-- dialog数据变动提示(是否忽略更改) -->
             <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
                 <template slot="title">
@@ -119,7 +139,7 @@
                             :class="{redBorder : validation.hasError('addData.areaParentId')}"
                             class="areaParentId" 
                             placeholder=""
-                            v-model="addData.areaParentId">
+                            v-model="addData.areaParentId"  @focus="showErrTips">
                                 <!-- <el-input
                                     placeholder="搜索..."
                                     class="selectSearch"
@@ -150,7 +170,7 @@
                             <el-input @change="isUpdate" 
                             class="areaCode" 
                             :class="{redBorder : validation.hasError('addData.areaCode')}"
-                            v-model="addData.areaCode"></el-input>
+                            v-model="addData.areaCode"  @focus="showErrTips"></el-input>
                         </div>
                     </div>
                 </el-col>
@@ -162,7 +182,7 @@
                             class="areaName"
                             @change="isUpdate" 
                             :class="{redBorder : validation.hasError('addData.areaName')}"
-                            v-model="addData.areaName"></el-input>
+                            v-model="addData.areaName"  @focus="showErrTips"></el-input>
                         </div>
                     </div>
                 </el-col>
@@ -190,7 +210,7 @@
                             class="status" 
                             placeholder=""
                             :class="{redBorder : validation.hasError('addData.status')}"
-                            v-model="addData.status">
+                            v-model="addData.status"  @focus="showErrTips">
                                 <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                                 </el-option>
                             </el-select>
@@ -232,7 +252,7 @@
         name:'adminstrAreaModify',
         data() {
             return {
-                isDisable:true,
+                // isDisable:false,
                 update:false,
                 
                 addData:{// 修改数据列表
@@ -295,6 +315,18 @@
                 return this.treeNode;
                 },
         },
+        // watch:{
+        //     addData:{
+        //         handler: function (val, oldVal) {
+        //             let _this = this;
+        //             console.log("数据改变了");
+        //             if(!_this.update){
+        //                 _this.update = true;
+        //             }
+        //         },
+        //         deep: true,
+        //     }
+        // },
         methods: {
             // 获取数据渲染
             getDataList(){
@@ -315,8 +347,8 @@
                         )
                     });
             },
-            // 成功的提示框
-            open(tittle,iconClass,className) {//提示框
+            //------------- 提示框
+            open(tittle,iconClass,className) {//成功的提示框
                 this.$notify({
                     position: 'bottom-right',
                     iconClass:iconClass,
@@ -325,6 +357,9 @@
                     duration: 3000,
                     customClass:className
                 });
+            },
+            showErrTips(e){// 表单错误提示信息
+                $('.tipsWrapper').css({display:'none'});
             },
             // ----------------------------按钮组功能
             // ------------返回----------- 
@@ -355,7 +390,7 @@
             },
             isUpdate() {//判断是否修改过信息
                 this.update = true;
-                this.isDisable=false;
+                // this.isDisable=true;
                 // console.log(this.isDisable);
             },
             cancel(){// 取消
@@ -390,14 +425,8 @@
                     _this.goback();
                 });
             },
-            // --------------删除-----------
-            cancel(){// 取消
-                let _this=this;
-                _this.btnValue='isCancel';
-                if(_this.update){
-                    _this.dialogUserConfirm=true;
-                }
-            },
+            // --------------删除完-----------
+           
             goAdd(){// 去新增
                 //点击切换路由去添加
                 this.$store.state.url = "/adminstrArea/adminstrAreaDetail/default";
@@ -405,9 +434,11 @@
             },
             save() {// 保存
                 let _this=this;
+                $('.tipsWrapper').css({display:'block'})
                 _this.$validate().then(
                     function (success) { 
                         if (success){
+                            $('.tipsWrapper').css({display:'none'});
                             if(_this.update){
                                 _this.$axios.puts('/api/services/app/AdAreaManagement/Update',_this.addData)
                                 .then(
@@ -520,5 +551,10 @@
     }
     .admstr-modify-wrapper .el-row:last-child{
         padding-bottom: 15px;
+    }
+</style>
+ <style>
+    .admstr-modify-wrapperr .admstr-form-wrapper .bgcolor.bgLongWidth .el-textarea{
+        width: calc(100% - 90px);
     }
 </style>

@@ -83,9 +83,7 @@
   background-color: #fff;
   overflow: hidden;
 }
-.el-dialog__header{
-  border-bottom: 1px solid #F9F9F9;
-}
+
 /* textarea */
 .el-textarea__inner{
   border: 1px solid rgb(194, 202, 216);
@@ -118,6 +116,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.el-table tbody .cell,
+.el-table tbody .cell span,
+.el-table tbody .cell input,
+.el-table .el-table__empty-block .el-table__empty-text
+{
+  font-size: 12px;
+}
 /* elementUI分页 */
 /* <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage"></el-pagination> */
 .el-pagination .btn-next, 
@@ -149,7 +154,7 @@
     text-align: center;
     font-size: 12px;
     display: inline-block;
-    width: 87px;
+    width: 28%;
     height: 28px;
     line-height: 28px;
     border-radius: 3px;
@@ -184,6 +189,7 @@
 .smallBgcolor{
   height: 28px;
   width: 75%;
+  margin-bottom: 10px;
   float: none;
   margin-left: auto;
   margin-right: auto;
@@ -278,6 +284,10 @@ table .el-input__icon{
     right: 5px;
     left: auto;
 }
+.smallBgcolor .el-date-editor .el-input__prefix{
+  height: 28px;
+  line-height: 28px;
+}
 .bgcolor .el-input__prefix i{
     line-height: 35px;
 }
@@ -335,20 +345,61 @@ table .el-input__icon{
 
 /* checkbox */
 /* <el-checkbox v-model="">集团公司</el-checkbox> */
+.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+  background-color: #39ca7757;
+}
+/* .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content .el-tree-node__label{
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+}
+.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content .el-tree-node__label:hover{
+  background-color: #39ca7757;
+} */
+.el-tree-node__label,
+.el-tree__empty-text{
+  font-size: 12px;
+}
 .bgcolor .el-checkbox{
-      width: auto;
-    }
-    .el-checkbox__inner {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-    }   
-    .el-tree .el-checkbox__inner{
-      width: 14px;
-      height: 14px;
-      border-radius: 0;
-    }
-    .el-tree .el-checkbox__inner::after {
+    width: auto;
+}
+.el-checkbox .el-checkbox__label,.el-checkbox+span{
+  font-size: 12px;
+}
+  .el-checkbox__inner {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+  }   
+
+  .el-tree .el-checkbox__inner,.square_el .el-checkbox__inner{
+    width: 14px;
+    height: 14px;
+    border-radius: 0;
+  }
+  .el-checkbox__inner::after{
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    content: "";
+    border: 3px solid #fff;
+    border-left: 0;
+    border-top: 0;
+    height: 11px;
+    left: 6px;
+    position: absolute;
+    top: 1px;
+    -webkit-transform: rotate(45deg) scaleY(0);
+    transform: rotate(45deg) scaleY(0);
+    width: 6px;
+    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+}
+    .el-tree .el-checkbox__inner::after,.square_el .el-checkbox__inner::after{
       -webkit-box-sizing: content-box;
       box-sizing: content-box;
       content: "";
@@ -370,28 +421,7 @@ table .el-input__icon{
       -webkit-transform-origin: center;
       transform-origin: center;
   }
-    .el-checkbox__inner::after{
-        -webkit-box-sizing: content-box;
-        box-sizing: content-box;
-        content: "";
-        border: 3px solid #fff;
-        border-left: 0;
-        border-top: 0;
-        height: 11px;
-        left: 6px;
-        position: absolute;
-        top: 1px;
-        -webkit-transform: rotate(45deg) scaleY(0);
-        transform: rotate(45deg) scaleY(0);
-        width: 6px;
-        -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms, -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
-        -webkit-transform-origin: center;
-        transform-origin: center;
-    }
+
  
     /* 按钮 应用请更改图片相对路径 详情参考register.vue*/
     /* <button class="erp_bt bt_add"><div class="btImg"><img src="../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
@@ -1096,7 +1126,12 @@ end-placeholder="结束日期">
 .selectSearch input{
   height: 35px;
 }
-
+.select_tree_option{
+  opacity: 0;
+  position: absolute;
+  top:0;
+  height:0;
+}
  
  .bgcolor.bgLongWidth{
   margin-right: 0;
@@ -1326,9 +1361,14 @@ color:#f66;
 }
 .dialog_confirm_message .dialog_body_icon{
   text-align: center;
-  color: #f90;
   font-size: 50px;
   margin-bottom: 20px;
+}
+.dialog_confirm_message .dialog_body_icon .el-icon-question{
+  color: #f90;
+}
+.dialog_confirm_message .dialog_body_icon .el-icon-warning{
+  color: #F16C2B;
 }
 .el-dialog__footer{
   border-bottom-left-radius: 10px;
@@ -1348,11 +1388,13 @@ color:#f66;
  border-top: 1px solid #e4e4e4;
  color: #c0c4cc;
 }
-
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+  width: 100%;
+}
 .dialog_confirm_message .el-dialog__footer .dialog_footer_bt:first-child{
   border-right: 1px solid #e4e4e4;
 }
-.dialog_confirm_message .el-dialog__footer .dialog_footer_bt:last-child{
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt:nth-child(2){
   color:#32D3E3;
 }
 .dialog_confirm_message .el-dialog__footer .dialog_footer_bt:focus{
@@ -1397,12 +1439,24 @@ color:#f66;
 }
 /* 自定义穿梭框 */
 .transfer_btns .el_transfer.el-button.is-round{
-  /* padding: 10px; */
   margin: auto;
   display: block;
 }
 .el_transfer.el-button.is-round{
-  padding: 10px;
+    padding: 7px;
+    color: #fff;
+    border-color: #a0cfff;
+}
+.transfer_footer {
+  text-align: right;
+}
+.transfer_footer .el_transfer.el-button.is-round{
+  border-radius: 10%;
+}
+.el_transfer.el-button.is-round.is-disabled{
+  background-color: transparent;
+  color: #a0a0a0;
+  border-color: #c9d1d1;
 }
  .transfer_btns .el_transfer.el-button.is-round:first-child{
   margin-bottom: 10px;
@@ -1474,6 +1528,7 @@ color:#f66;
   color: #fff;
   margin-right: 20px;
 }
+
 .isConfirm_wrapper{
   text-align: right;
 }
@@ -1497,11 +1552,4 @@ color:#f66;
 }
 .header_ops{
   text-align: right;
-}
-.checkbox_group{
-  background-color: #f2f2f2;
-  padding:10px 10px 0 10px;
-}
-.checkbox_group .el-checkbox{
-  margin-bottom: 10px;
 }

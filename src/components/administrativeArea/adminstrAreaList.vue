@@ -221,8 +221,14 @@
                 multipleSelection: {},//复选框选中数据
                 //--------------确认删除开始-----------------  
                 // selectedIds: {}, //复选框选中数据
-                restaurants:[],
+                // restaurants:[],
                 // isTrue:true,//批量删除键能否点击
+                //--------------新增默认参数-----------------
+                upAreaName:'default',
+                upParentId:'default',
+               
+
+                
             }
             
         },
@@ -289,6 +295,8 @@
                 nodeClick(data){// 节点被点击时的回调
                     // console.log(data);
                     let _this=this;
+                    _this.upAreaName=data.areaName;
+                    _this.upParentId=data.id;
                     _this.tableLoading=true;
                     _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{nodeId:data.id,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize})
                     .then(function(res){
@@ -319,11 +327,11 @@
                         })
                     })
                 },
-            createStateFilter(queryString) {
-                return (state) => {
-                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-                };
-            },
+            // createStateFilter(queryString) {
+            //     return (state) => {
+            //     return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            //     };
+            // },
             leftSearch(){// 左边搜索框
             },
             // ----------分页器的处理函数结束----------------------------
@@ -337,8 +345,9 @@
             // 按钮增加----去新增详情页(detail)
             goAdd(){
                 //点击切换路由去添加
-                this.$store.state.url = "/adminstrArea/adminstrAreaDetail/default";
-                this.$router.push({ path: this.$store.state.url });
+                // this.$store.state.url = `/adminstrArea/adminstrAreaDetail/default`;
+                // this.$router.push({ path: this.$store.state.url});
+                this.$router.push({  name:'adminstrAreaDetail',params: {upParentId:this.upParentId,upAreaName:this.upAreaName}});
             },
             
             // （行内按钮查看）查看详情

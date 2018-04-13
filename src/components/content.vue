@@ -103,7 +103,7 @@ export default {
          this.$store.commit('slidbarData');
 
 
-        // let activeRouter=this.$store.state.activeRouter;//关闭时取消路由重定向
+        this.$store.state[e.target.getAttribute('menuurl')].url=this.$store.state[e.target.getAttribute('menuurl')].default;//关闭时取消路由重定向
         // for(let i=0;i<activeRouter.length;i++){
         //     if(activeRouter[i].name==e.target.getAttribute('menuurl')){
         //         activeRouter[i].url=activeRouter[i].default

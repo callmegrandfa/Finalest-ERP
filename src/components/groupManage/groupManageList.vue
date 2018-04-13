@@ -1,7 +1,6 @@
 <template>
     <div class="groupList">
         <el-row class="h48 pt5 bg-white">
-            <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
             <!-- <button v-on:click="Update()" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>            -->
             <button v-on:click="Save()"  class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button v-on:click="Cancel()" :disabled="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
@@ -9,7 +8,7 @@
         </el-row>
         <el-row class="bg-white pt20">
                 <div class="bgcolor reset">
-                    <label>集团编码</label><el-input v-model="entryItem.groupCode" ></el-input>
+                    <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
                 </div>
                 <div class="bgcolor reset">
                     <label>集团名称</label><el-input v-model="entryItem.groupName" ></el-input>

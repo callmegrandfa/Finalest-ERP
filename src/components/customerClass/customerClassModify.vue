@@ -8,66 +8,50 @@
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
-
-                <!-- <button @click="Update()" class="erp_bt bt_modify">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_modify.png">
-                    </div>
-                    <span class="btDetail">修改</span>
-                </button>  -->
                 
-                  <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify'>
+              <button @click="save" plain class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+                    <div class="btImg">
+                      <img src="../../../static/image/common/bt_save.png">
+                    </div>
+                    <span class="btDetail">保存</span>
+                  </button>
+              <button class="erp_bt bt_cancel" @click="Cancel(2)" :class="{erp_fb_bt:!ifModify}">
+                  <div class="btImg"><img src="../../../static/image/common/bt_cancel.png">
+                  </div>
+                  <span class="btDetail">取消</span>
+              </button>
+              <button @click="saveAdd" plain class="erp_bt bt_saveAdd":disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+                <div class="btImg">
+                    <img src="../../../static/image/common/bt_saveAdd.png">
+                </div>
+                <span class="btDetail">保存并新增</span>
+              </button>
+                  <button class="erp_bt bt_add" @click="goDetail" :disabled="ifModify" :class="{erp_fb_bt : ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">新增</span>
                 </button>
 
-                <button class="erp_bt bt_del" @click="delModify" v-show='!ifModify'>
+                <button class="erp_bt bt_del" @click="delModify" :disabled="ifModify" :class="{erp_fb_bt : ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
                     <span class="btDetail">删除</span>
                 </button>
-                <button @click="save" class="erp_bt bt_save" v-show='!!ifModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_save.png">
-                    </div>
-                    <span class="btDetail">保存</span>
-                </button>
-
-                <button @click='saveAdd' class="erp_bt bt_saveAdd" v-show='!!ifModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_saveAdd.png">
-                    </div>
-                    <span class="btDetail">保存并新增</span>
-                </button>
-
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='!!ifModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_cancel.png">
-                    </div>
-                    <span class="btDetail">取消</span>
-                </button>
-
-
-                <button class="erp_bt bt_auxiliary bt_width">
-                    <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                    <span class="btDetail">辅助功能</span>
-                    <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                </button>
             </el-col>
         </el-row>
 
         <el-row>
-            <el-col :span="24">
+            <el-col :span="24" style="margin-top:30px;">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级客户分类</label>
+                        <label>上级客户分类</label>
                         <el-select class="classParentId" 
+                                   clearable
                                    :class="{redBorder : validation.hasError('customerClassData.classParentId')}" 
                                    placeholder=""            
-                                   @change='Modify()'
+                                   @change='Modify'
                                    v-model="customerClassData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -75,18 +59,21 @@
 
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                      :data="selectParentTree"
+                                     :highlight-current="true"
                                      :props="selectParentProps"
                                      node-key="id"
                                      default-expand-all
                                      ref="tree"
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
+                                     :render-content="renderContent_moduleParentId"
                                      @node-click="nodeClick"></el-tree>
                             <el-option v-show="false"
-                                       :key="count.id" 
-                                       :label="count.className" 
-                                       :value="count.id"
-                                       id="businessDetail_confirmSelect"></el-option>
+                                       :key="parentItem.id" 
+                                       :label="parentItem.className" 
+                                       :value="parentItem.id"
+                                       :id="parentItem.id">
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('customerClassData.classParentId') }}</div>
@@ -99,7 +86,7 @@
                         <label><small>*</small>客户分类编码</label>
                         <el-input class="classCode" 
                                   placeholder=""
-                                  @change='Modify()'
+                                  @change='Modify'
                                   :class="{redBorder : validation.hasError('customerClassData.classCode')}" 
                                   v-model="customerClassData.classCode"></el-input>
                     </div>
@@ -115,7 +102,8 @@
                                    :class="{redBorder : validation.hasError('customerClassData.className')}" 
                                    v-model="customerClassData.className"
                                    placeholder=""
-                                   @change='Modify()'></el-input>
+                                   @change='Modify'>
+                         </el-input>
                     </div>
                     <div class="error_tips">{{ validation.firstError('customerClassData.className') }}</div>
                 </div>    
@@ -131,7 +119,7 @@
                                   v-model="customerClassData.remark"
                                   type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 4}"
-                                  @change='Modify()'></el-input>
+                                  @change='Modify'></el-input>
                     </div>
                     <div class="error_tips">{{ validation.firstError('customerClassData.remark') }}</div>
                 </div>       
@@ -142,19 +130,22 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>状态</label>
                         <el-select  class="status"
+                                     clearable filterable
                                     :class="{redBorder : validation.hasError('customerClassData.status')}" 
                                     placeholder=""
                                     v-model="customerClassData.status">
                             <el-option v-for="item in status" 
                                        :key="item.itemValue" 
                                        :label="item.itemName" 
-                                       :value="item.itemValue"></el-option>
+                                       :value="item.itemValue"
+                                       @change='Modify'>
+                            </el-option>
                         </el-select>
                     </div>
                     <div class="error_tips">{{ validation.firstError('customerClassData.status') }}</div>
                 </div>    
             </el-col>
-            <el-col :span="24">
+            <!-- <el-col :span="24">
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建人</label>
@@ -163,7 +154,7 @@
                                   :class="{redBorder : validation.hasError('customerClassData.createdTime')}" 
                                   v-model="customerClassData.createdBy"
                                   :autosize="{ minRows: 4, maxRows: 4}"
-                                   @change='Modify()'></el-input>
+                                   @change='Modify'></el-input>
                         </el-input>
                     </div>
                    
@@ -173,18 +164,38 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label>创建时间</label>
-                        <el-input class="createdTime" 
-                                  :class="{redBorder : validation.hasError('customerClassData.createdTime')}" 
-                                   :disabled="isEdit" 
+                        <el-date-picker
                                   v-model="customerClassData.createdTime"
-                                  :autosize="{ minRows: 4, maxRows: 4}">
-                                   @change='Modify()'></el-input>
-                        </el-input>
+                                  type="date"
+                                  format="yyyy-MM-dd"
+                                  value-format="yyyy-MM-dd" 
+                                  :disabled="isEdit" 
+                                   @change='Modify'></el-input>
+                                  placeholder="">
+                         </el-date-picker>
                     </div>
                   
                 </div>    
-            </el-col>
+            </el-col>-->
       </el-row>
+          <el-row>
+            <el-col :span="24" class="getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-input v-model="customerClassData.createdTime" disabled></el-input>
+                      
+                    </div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label> 
+                      <el-input v-model="customerClassData.modifiedTime" disabled></el-input>
+                    </div>
+                </div>                                  
+            </el-col>
+        </el-row>  
       <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -234,7 +245,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -250,8 +261,8 @@
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->  
@@ -271,17 +282,36 @@ export default {
     // countOu () {
     //     return this.ouItem;
     //     },
-    count() {
-      return this.parentItem;
+    // count() {
+    //   return this.parentItem;
+    // }
+  },
+  watch: {
+    parentSearch(val) {
+      this.$refs.tree.filter(val);
+    },
+    customerClassData:{
+        handler: function (val, oldVal) {
+            let self = this;
+            if(!self.firstModify){
+                self.firstModify = !self.firstModify;
+            }else{
+                self.ifModify = true;
+            }
+        },
+        deep: true,
     }
+
   },
   data() {
     return {
       ifModify: false, //判断是否修改过
+      firstModify:false,//进入页面数据改变一次
       isEdit: true, //判断是否要修改
       //---上级客户树--------
       selectParentTree: [], //选择上级客户分类
       parentSearch: "", //搜索上级客户分类
+      backCancel:'',//判断信息提示确定的点击事件  返回、取消
       selectParentProps: {
         children: "childNodes",
         label: "className",
@@ -293,17 +323,20 @@ export default {
       },
       //--------------------
       status: [],
-      customerClassData: {
+       customerClassData: {
         id: "",
         groupId: 1,
         // "cuId": '',
         classCode: "",
         className: "",
         classParentId: "",
+        classParentId_ClassName:"",
         remark: "",
         status: "",
-        createdBy: "",
-        createdTime: ""
+        createdTime:this.GetDateTime(),//创建时间
+        createdBy:this.$store.state.name,//创建人
+        modifiedTime:this.GetDateTime(),//修改人
+        modifiedBy:this.$store.state.name//修改时间
       },
       //---确认删除-----------------
       dialogDelConfirm: false, //用户删除保存提示信息
@@ -342,9 +375,7 @@ export default {
     //   },
     "customerClassData.classParentId": function(value) {
       //上级客户分类
-      return this.Validator.value(value)
-        .required()
-        .integer();
+      return this.Validator.value(value) .integer();
     },
     "customerClassData.classCode": function(value) {
       //客户分类编码
@@ -358,12 +389,6 @@ export default {
         .required()
         .maxLength(20);
     },
-    //   'customerClassData.manager': function (value) {//负责人
-    //       return this.Validator.value(value).maxLength(20);
-    //   },
-    //   'customerClassData.remark': function (value) {//备注
-    //       return this.Validator.value(value).maxLength(200);
-    //   },
     "customerClassData.status": function(value) {
       //状态
       return this.Validator.value(value)
@@ -384,24 +409,14 @@ export default {
           .then(function(res) {
             // console.log(res);
             self.customerClassData = res.result;
-            // self.ouItem.id = self.customerClassData.classParentId;
-            // self.ouItem.ouName = self.customerClassData.ouFullname;
-            self.parentItem.id = self.customerClassData.classParentId;
-            self.parentItem.className = self.customerClassData.deptParentName;
+            self.parentItem.id = res.result.classParentId;
+            // console.log(self.parentItem.id);
+            self.parentItem.className =  res.result.classParentId_ClassName;
+            self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ');
+            self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
           });
       }
     },
-    // loadOuTree:function(){
-    //     let self=this;
-    //     self.treeLoading=true;
-    //     self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
-    //         console.log(res)
-    //         self.ouTree=res.result;
-    //         self.loadIcon();
-    //     },function(res){
-    //         self.treeLoading=false;
-    //     })
-    // },
     loadParentTree() {
       let self = this;
       self.treeLoading = true;
@@ -409,36 +424,13 @@ export default {
         .gets("api/services/app/ContactClassManagement/GetTreeList",{Ower:1})
         .then(
           function(res) {
-            console.log(res);
+            // console.log(res);
             self.selectParentTree = res;
-            self.loadIcon();
           },
           function(res) {
             self.treeLoading = false;
           }
         );
-    },
-    loadIcon() {
-      let _this = this;
-      _this.$nextTick(function() {
-        $(".preNode").remove();
-        $(".el-tree-node__label").each(function() {
-          if (
-            $(this)
-              .parent(".el-tree-node__content")
-              .next(".el-tree-node__children")
-              .text() == ""
-          ) {
-            $(this).prepend(
-              '<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>'
-            );
-          } else {
-            $(this).prepend(
-              '<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>'
-            );
-          }
-        });
-      });
     },
     loadStatus: function() {
       //加载状态下拉框
@@ -450,35 +442,46 @@ export default {
         .then(
           function(res) {
             // console.log(res)
-
             self.status = res.result;
           },
           function(res) {}
         );
     },
     //-------------------------------------------------------
-
+     GetDateTime: function () {
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            },
     //---树--------------------------------------------------
     filterNode(value, data) {
       // console.log(data)
       if (!value) return true;
       return data.className.indexOf(value) !== -1;
     },
-    // ouNodeClick:function(data){
-    //     let self = this;
-    //     self.ouItem.id = data.id;
-    //     self.ouItem.ouName = data.ouFullname;
-    //     self.$nextTick(function(){
-    //         $('#ou_confirmSelect').click()
-    //     })
-    // },
-    nodeClick: function(data) {
-      let self = this;
-      self.parentItem.id = data.id;
-      self.parentItem.className = data.className;
+    nodeClick(data,node,self) {
+      let _this = this;
+      _this.parentItem.id = data.id;
+      _this.parentItem.className = data.className;
       self.$nextTick(function() {
-        $("#businessDetail_confirmSelect").click();
+        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
       });
+        // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,})
+        
+
+
     },
     //-------------------------------------------------------
 
@@ -499,6 +502,7 @@ export default {
       let self = this;
       if (self.ifModify) {
         self.dialogUserConfirm = true;
+        self.backCancel = 1;
         // self.choseDoing='back'
       } else {
         self.back();
@@ -506,36 +510,52 @@ export default {
     },
     sureDoing: function() {
       let self = this;
-      self.back();
+      if(self.backCancel ==1){
+          self.back();
+      }else if(self.backCancel == 2){
+          self.loadData();
+          self.ifModify = false;
+          self.dialogUserConfirm=false;
+      }
     },
-    save() {
-      //保存修改
+    Cancel(){
       let self = this;
-      if (self.ifModify == true) {
+      if(self.ifModify){
+          self.dialogUserConfirm=true;
+          self.backCancel = 2;
+          $('.tipsWrapper').css({display:'none'})
+      }
+  },
+    //------------------保存修改---------------------------
+    save() {                                                                                                                                                                                                                                                                                                                                                                                                                               
+      let self = this;
         self.customerClassData.id = self.$route.params.id;
         self.$validate().then(function(success) {
           if (success) {
             self.$axios
               .puts(
-                "/api/services/app/ContactClassManagement/Update",
-                self.customerClassData
-              )
-              .then(
+                "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
                   // console.log(res);
-                  self.ifModify == false;
                   self.open("修改成功", "el-icon-circle-check", "successERP");
+                    // 修改成功，点返回不弹出对话框
+                   self.ifModify = false;
+                  // console.log(self.ifModify);
                 },
                 function(res) {
-                  self.open("修改失败", "el-icon-error", "faildERP");
+                  // self.open("修改失败", "el-icon-error", "faildERP");
+                   if(res && res!=''){ 
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }
+                    self.dialogUserConfirm=false;
+                    self.errorMessage=true;
                 }
               );
           }
         });
-      }
     },
+    //----------------保存修改并新增---------------------
     saveAdd: function() {
-      //保存修改并新增
       let self = this;
       if ((self.ifModify = true)) {
         self.customerClassData.id = self.$route.params.id;
@@ -554,7 +574,12 @@ export default {
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                 },
                 function(res) {
-                  self.open("修改失败", "el-icon-error", "faildERP");
+                  // self.open("修改失败", "el-icon-error", "faildERP");
+                  if(res && res!=''){ 
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    }
+                    self.dialogUserConfirm=false;
+                    self.errorMessage=true;
                 }
               );
           }
@@ -576,7 +601,7 @@ export default {
             self.dialogDelConfirm = false;
           },
           function(res) {
-            self.open("删除客户失败", "el-icon-error", "faildERP");
+            // self.open("删除客户失败", "el-icon-error", "faildERP");
             self.dialogDelConfirm = false;
             self.errorMessage = true;
             self.getErrorMessage(
@@ -584,25 +609,14 @@ export default {
               res.error.details,
               res.error.validationErrors
             );
+            // if(res && res!=''){ 
+            //     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+            //     self.dialogUserConfirm=false;
+            //     _this.errorMessage=true;
           }
         );
     },
-    //---控制是否可编辑---------------------------------------
-    // Update() {
-    //   //修改
-    //   if (this.isEdit == true) {
-    //     this.isEdit = !this.isEdit;
-    //   }
-    // },
-    Cancel() {
-      let self = this;
-      if (self.isEdit == false) {
-        self.isEdit = !self.isEdit;
-        self.loadData();
-      }
-    },
-    //-------------------------------------------------------
-
+   
     //---open---路由切换--------------------------------------
     open(tittle, iconClass, className) {
       this.$notify({
@@ -666,7 +680,39 @@ export default {
           $(this).removeClass("display_block");
         }
       });
-    }
+    },
+      getErrorMessage(message,details,validationErrors){
+            let self=this;
+            self.response.message='';
+            self.response.details='';
+            self.response.validationErrors=[];
+            if(details!=null && details){
+                self.response.details=details;
+            }
+            if(message!=null && message){
+                self.response.message=message;
+            }
+            if(message!=null && message){
+                self.response.validationErrors=validationErrors;
+            }
+        },
+          renderContent_moduleParentId(h, { node, data, store }){
+            if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }else{
+                  return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }
+    },
     //------------------------------------------------------
   }
 };
@@ -683,7 +729,18 @@ export default {
   margin-top: -10px;
 }
 .customerClassModify .el-row {
-  background-color: #fff;
+    padding: 15px 0;
+    border-bottom: 1px solid #e4e4e4;
+    background-color: #fff;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
+    width: 100%;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+    color: #ccc;
+}
+.customerClassModify .getPadding {
+    padding: 0 10px;
 }
 .customerClassModify .el-row:first-child {
   padding: 7px 0;

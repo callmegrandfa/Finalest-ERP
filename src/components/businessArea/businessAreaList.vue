@@ -1,7 +1,7 @@
 <template>
     <div class="bAreaListForm">
         <el-row class="bg-white">
-            <el-col :span="5">
+            <el-col :span="5"  class="search-container">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-autocomplete
                     v-model="searchLeft"
@@ -12,24 +12,26 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-autocomplete>
                 </el-col>
-                <el-col :span='24' class="tree-container" id="areaTree">
-                    <el-tree
-                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                    v-loading="treeLoading" 
-                    :highlight-current="true"
-                    :data="componyTree"
-                    :props="defaultProps"
-                    node-key="id"
-                    default-expand-all
-                    ref="tree"
-                    :expand-on-click-node="false"
-                    :filter-node-method="filterNode"
-                    @node-click="nodeClick"
-                    >
-                    </el-tree>
+                <el-col :span='24' class="tree-container">
+                    <vue-scroll :ops="$store.state.option">
+                        <el-tree
+                        :render-content="renderContent_componyTree"
+                        v-loading="treeLoading" 
+                        :highlight-current="true"
+                        :data="componyTree"
+                        :props="defaultProps"
+                        :default-expanded-keys="expandId"
+                        node-key="id"
+                        ref="tree"
+                        :expand-on-click-node="false"
+                        :filter-node-method="filterNode"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                    </vue-scroll>
                 </el-col>   
             </el-col>
-            <el-col :span='19' class="border-left" id="areaTable">
+            <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
                     <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                     <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -105,10 +107,10 @@
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="areaParentId_AreaName" label="上级业务地区"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="status" label="状态">
+                            <el-table-column prop="statusTValue" label="状态">
                                 <template slot-scope="scope">
-                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
-                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">{{scope.row.statusTValue}}</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">{{scope.row.statusTValue}}</span>
                                     <span v-else >冻结</span>
                                 </template>
                             </el-table-column>
@@ -152,7 +154,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">确认删除？</p>
                 </el-col>
             </el-col>
@@ -174,24 +176,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -228,6 +226,7 @@
                 componyTree:  [
                     // {areaName:'根目录',id:'0',items:[]},
                 ],
+                expandId:[],//默认展开
                 defaultProps: {
                     children: 'childItems',
                     label: 'name',
@@ -299,6 +298,7 @@
                 _this.tableLoading=true;
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetListByCondition',data).then(function(res){ 
                     _this.restaurants=[]
+                    // console.log(res)
                     _this.load=event;
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount;
@@ -315,6 +315,15 @@
                     _this.tableLoading=false;
                 })
             },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
             loadTree(){
                 let _this=this;
                 _this.treeLoading=true;
@@ -322,10 +331,10 @@
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
-                    _this.loadIcon();
                     _this.$nextTick(function(){
                         _this.getHeight()
                     })
+                    _this.expandId=_this.defauleExpandTree(res.result,'id')
                },function(res){
                    _this.treeLoading=false;
                    _this.$nextTick(function(){
@@ -358,11 +367,11 @@
                  }
             },
             getHeight(){
-                $("#area").css({
-                    minHeight:$('.bAreaListForm .bg-white').css('height')
+                $(".tree-container").css({
+                    height:parseInt($('.bg-white').css('height'))-48+'px'
                 })
-                $("#areaTable").css({
-                    minHeight:$('.bAreaListForm .bg-white').css('height')
+                $(".border-left").css({
+                    height:$('.bg-white').css('height')
                 })
             },
             goDetail(){
@@ -459,16 +468,19 @@
                 _this.page=1
                 if(data.areaName!=undefined){
                     _this.nodeClickId=data.id;
-                    _this.detailParentId=0;
+                    // _this.detailParentId=0;
                     _this.detailParentId=data.id;
+                    _this.detailParentName=data.name;
+                    // _this.detailOuName=data.ouName;
                 }else{  
                      _this.nodeClickId=data.ouId;
                     _this.detailParentId=0;
+                    _this.detailParentName="无";
                     
                 }
                 _this.tableLoading=true;
                 // _this.detailParentId=data.id;
-                _this.detailParentName=data.name;
+                // _this.detailParentName=data.name;
                 _this.ouId=data.ouId;
                 _this.ajaxTable({ParentId:_this.nodeClickId,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"nodeClick");
             },
@@ -499,7 +511,24 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            renderContent_componyTree(h, { node, data, store }){
+                if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }
+            },
         },
     }
 </script>

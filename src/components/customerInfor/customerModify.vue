@@ -9,42 +9,41 @@
                     <span class="btDetail">返回</span>
                 </button>
 
-                <button class="erp_bt bt_add" @click="goDetail" v-show='!ifModify&&!ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
-
-                <button class="erp_bt bt_del" @click="delCustomer(7)" v-show='!ifModify&&!ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_del.png">
-                    </div>
-                    <span class="btDetail">删除</span>
-                </button>
-
-                <button class="erp_bt bt_save" @click="saveModify" v-show='ifModify||ifDoModify'>
+                <button class="erp_bt bt_save" @click="saveModify" :class="{erp_fb_bt:!ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button class="erp_bt bt_saveAdd" v-show='ifModify||ifDoModify'>
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_saveAdd.png">
-                    </div>
-                    <span class="btDetail">保存并新增</span>
-                </button>
-
-                <button @click="Cancel()" class="erp_bt bt_cancel" v-show='ifModify'>
+                <button @click="Cancel()" class="erp_bt bt_cancel" :class="{erp_fb_bt:!ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
                     <span class="btDetail">取消</span>
                 </button>
 
-                
+                <button class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_saveAdd.png">
+                    </div>
+                    <span class="btDetail">保存并新增</span>
+                </button>
+
+                <button class="erp_bt bt_add" @click="goDetail" :class="{erp_fb_bt:ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+
+                <button class="erp_bt bt_del" @click="delCustomer(7)" :class="{erp_fb_bt:ifModify}">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+ 
                 
                 <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
             </el-col>
@@ -175,7 +174,6 @@
                                     placeholder=""
                                     class="ouId"
                                     @focus="showErrprTipsSelect"
-                                    @change='Modify()'
                                     :class="{redBorder : validation.hasError('customerData.ouId')}">
 
                                 <el-input placeholder="搜索..."
@@ -207,8 +205,7 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactCode')}"
-                                    class="contactCode"
-                                    @change='Modify()'></el-input>
+                                    class="contactCode"></el-input>
                         </div>
 
 
@@ -218,8 +215,7 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactName')}"
-                                    class="contactName"
-                                    @change='Modify()'></el-input>
+                                    class="contactName"></el-input>
                         </div>
 
 
@@ -229,8 +225,7 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.contactFullName')}"
-                                    class="contactFullName" 
-                                    @change='Modify()'></el-input>
+                                    class="contactFullName"></el-input>
                         </div>
 
                         <div class="bgcolor">
@@ -239,17 +234,15 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     :class="{redBorder : validation.hasError('customerData.mnemonic')}"
-                                    class="mnemonic"
-                                    @change='Modify()'></el-input>
+                                    class="mnemonic"></el-input>
                         </div>
                             
 
 
                         <div class="bgcolor">
-                            <label>客户分类</label>
+                            <label><small>*</small>客户分类</label>
                             <el-select v-model="customerData.contactClassId"
                                     placeholder=""
-                                    @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactClassId"
                                     :class="{redBorder : validation.hasError('customerData.contactClassId')}">
@@ -269,7 +262,7 @@
 
                                 <el-option v-show="false"
                                             :key="countCu.id" 
-                                            :label="countCu.cuFullname" 
+                                            :label="countCu.cuName" 
                                             :value="countCu.id"
                                             id="cu_confirmSelect"></el-option>
                             </el-select>
@@ -281,11 +274,10 @@
                             <label>客户性质</label>
                             <el-select v-model="customerData.contactWorkPropertyId"
                                     placeholder=""
-                                    @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactWorkPropertyId"
                                     :class="{redBorder : validation.hasError('customerData.contactWorkPropertyId')}">
-                                <el-option v-for="item in propertyAr" 
+                                <el-option v-for="item in typeAr" 
                                         :key="item.itemValue" 
                                         :label="item.itemName" 
                                         :value="item.itemValue"></el-option>
@@ -296,7 +288,6 @@
                             <label>客户等级</label>
                             <el-select v-model="customerData.contactGradeId"
                                     placeholder=""
-                                    @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactGradeId"
                                     :class="{redBorder : validation.hasError('customerData.contactGradeId')}">
@@ -308,14 +299,13 @@
                         </div>
 
                         <div class="bgcolor">
-                            <label>客户类型</label>
+                            <label><small>*</small>客户类型</label>
                             <el-select v-model="customerData.contactTypeId"
                                     placeholder=""
-                                    @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="contactTypeId"
                                     :class="{redBorder : validation.hasError('customerData.contactTypeId')}">
-                                <el-option v-for="item in typeAr" 
+                                <el-option v-for="item in propertyAr" 
                                         :key="item.itemValue" 
                                         :label="item.itemName" 
                                         :value="item.itemValue"></el-option>
@@ -323,12 +313,12 @@
                         </div>   
 
                         <div class="bgcolor">
-                            <label>对应财务组织</label>
+                            <label><small v-show='customerData.contactTypeId != 0'>*</small>对应财务组织</label>
                             <el-select v-model="customerData.ficaOuId"
                                     placeholder=""
                                     class="ficaOuId"
+                                    :disabled="customerData.contactTypeId === 0"
                                     @focus="showErrprTipsSelect"
-                                    @change='Modify()'
                                     :class="{redBorder : validation.hasError('customerData.ficaOuId')}">
                                 <el-input placeholder="搜索..."
                                             class="selectSearch"
@@ -356,8 +346,7 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     class="taxCode"
-                                    :class="{redBorder : validation.hasError('customerData.taxCode')}"
-                                    @change='Modify()'></el-input>
+                                    :class="{redBorder : validation.hasError('customerData.taxCode')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
@@ -366,7 +355,6 @@
                                     class="opAreaId"
                                     @focus="showErrprTipsSelect"
                                     placeholder=""
-                                    @change='Modify()'
                                     :class="{redBorder : validation.hasError('customerData.opAreaId')}">
                                 <el-input placeholder="搜索..."
                                         class="selectSearch"
@@ -391,19 +379,24 @@
                         <div class="bgcolor area">
                             <label>行政地区</label>
                             <div class="areaBox">
-                                <el-select v-model="customerData.adAreaId" class="areaDrop" placeholder="选择省">
+                                <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
                                     <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
-                                </el-select>
-                                <el-select v-model="customerData.adAreaId" class="areaDrop" placeholder="选择市">
-                                    <el-option v-for="item in areaCityArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                    <el-option v-show='false' label='无' :value="provinceValue">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="customerData.adAreaId" class="areaDrop" placeholder="选择区">
-                                    <el-option v-for="item in areaDisArray" :key="item.basOuTypes" :label="item.label" :value="item.basOuTypes">
+                                <el-select v-model="cityId" class="areaDrop" placeholder="选择市"  @change='chooseCity(cityId)'>
+                                    <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" label="无" :value="cityValue">
                                     </el-option>
                                 </el-select>
-                                <el-input class="areaEntry" placeholder="街道办地址"></el-input>
+                                <el-select v-model="customerData.adAreaId" class="areaDrop" placeholder="选择区" @change='chooseDis()'>
+                                    <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" label="无" :value="areaValue">
+                                    </el-option>
+                                </el-select>
                             </div>
                         </div>
 
@@ -413,8 +406,7 @@
                                     placeholder=""
                                     class="legalPerson"
                                     @focus="showErrprTips"
-                                    :class="{redBorder : validation.hasError('customerData.legalPerson')}"
-                                    @change='Modify()'></el-input>
+                                    :class="{redBorder : validation.hasError('customerData.legalPerson')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
@@ -423,8 +415,7 @@
                                     placeholder=""
                                     class="regAddress"
                                     @focus="showErrprTips"
-                                    :class="{redBorder : validation.hasError('customerData.regAddress')}"
-                                    @change='Modify()'></el-input>
+                                    :class="{redBorder : validation.hasError('customerData.regAddress')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
@@ -433,8 +424,7 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     class="manager"
-                                    :class="{redBorder : validation.hasError('customerData.manager')}"
-                                    @change='Modify()'></el-input>
+                                    :class="{redBorder : validation.hasError('customerData.manager')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
@@ -443,8 +433,7 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     class="phone"
-                                    :class="{redBorder : validation.hasError('customerData.phone')}"
-                                    @change='Modify()'></el-input>
+                                    :class="{redBorder : validation.hasError('customerData.phone')}"></el-input>
                         </div>
                         
                         <div class="bgcolor">
@@ -453,8 +442,7 @@
                                     placeholder=""
                                     @focus="showErrprTips"
                                     class="remark"
-                                    :class="{redBorder : validation.hasError('customerData.remark')}"
-                                    @change='Modify()'></el-input>
+                                    :class="{redBorder : validation.hasError('customerData.remark')}"></el-input>
                         </div>
 
                         <div class="bgcolor">
@@ -462,7 +450,6 @@
                             <el-select v-model="customerData.status"
                                     class="status"
                                     placeholder=""
-                                    @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     :class="{redBorder : validation.hasError('customerData.status')}">
                                 <el-option v-for="item in statusAr"  
@@ -513,6 +500,7 @@
                                 <el-table-column type="selection"></el-table-column>
                                 <el-table-column prop="settlementCurrencyId" label="结算币种" width="180">
                                     <template slot-scope="scope">
+                                        <img v-show='redBankAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                         <el-select  v-model="scope.row.settlementCurrencyId" :class="[scope.$index%2==0?'bgw':'bgp']">
                                             <el-option  v-for="item in curencyAr" :key="item.id" :label="item.currencyName" :value="item.id" >
                                             </el-option>
@@ -610,10 +598,11 @@
                             </button>
                             
                     
-                            <el-table :data="addressData" stripe border style="width: 100%;" election-change="handleSelectionChange2" class="all-table">
-
+                            <el-table :data="addressData" stripe border style="width: 100%;" @selection-change="handleSelectionChange2" class="all-table">
+                                <el-table-column type="selection"></el-table-column>
                                 <el-table-column prop="completeAddress" label="供货地址" width="180">
                                     <template slot-scope="scope">
+                                        <img v-show='redAddAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
                                         <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
                                             v-model="scope.row.completeAddress" 
@@ -692,7 +681,7 @@
                                 <span class="btDetail">增行</span>
                             </button>
 
-                            <button class="erp_bt bt_del" @click="delMoreAdd(6)">
+                            <button class="erp_bt bt_del" @click="delMoreOu(6)">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_del.png">
                                 </div>
@@ -707,16 +696,33 @@
                             </button>
                             
                     
-                            <el-table :data="ouData" stripe border style="width: 100%" election-change="handleSelectionChange3" class="all-table">
+                            <el-table :data="ouData" stripe border style="width: 100%" @selection-change="handleSelectionChange3" class="all-table">
                                 <el-table-column type="selection"></el-table-column>
 
                                 <el-table-column prop="ouId" label="业务组织" width="540">
                                     <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.ouId" 
-                                            type="text"    
-                                            @change="handleOuChange(scope.$index,scope.row)" /> 
+                                        <img v-show='redOuAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
+                                        <el-select v-model="scope.row.ouId" 
+                                                placeholder="">
+
+                                            <el-input placeholder="搜索..."
+                                                    class="selectSearch"
+                                                    v-model="ouSearch"></el-input> 
+                                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                                    :data="ywAr"
+                                                    :props="selectYwProps"
+                                                    node-key="id"
+                                                    default-expand-all
+                                                    ref="tree"
+                                                    :filter-node-method="filterNode"
+                                                    :expand-on-click-node="false"
+                                                    @node-click="ywNodeClick"></el-tree> 
+                                            <el-option v-show="false"
+                                                    :key="countYw.id" 
+                                                    :label="countYw.ouName" 
+                                                    :value="countYw.id"
+                                                    id="yw_confirmSelect"></el-option>
+                                        </el-select>
                                     </template>
                                 </el-table-column>
 
@@ -852,13 +858,139 @@ export default({
         self.loadData();
         self.loadSelect();
     },
+    watch:{
+        customerData:{
+            handler: function (val, oldVal) {
+                let self = this;
+                if(!self.firstModify){
+                    self.firstModify = !self.firstModify;
+                }else{
+                    self.ifModify = true;
+                }
+            },
+            deep: true,
+        },
+        bankData:{
+            handler: function (val, oldVal) {
+                let self = this;
+                if(!self.firstModify){
+                    self.firstModify = !self.firstModify;
+                }else{
+                    self.ifModify = true;
+                }
+                self.redBankAr = [];
+                for(let i in val){
+                    let flag = true;
+                    for(let j in self.InitBankData){
+                        if(val[i].groupId == self.InitBankData[j].groupId&&
+                           val[i].contactId == self.InitBankData[j].contactId&&
+                           val[i].settlementCurrencyId == self.InitBankData[j].settlementCurrencyId&&
+                           val[i].accountNo == self.InitBankData[j].accountNo&&
+                           val[i].openingBank == self.InitBankData[j].openingBank&&
+                           val[i].contactPerson == self.InitBankData[j].contactPerson&&
+                           val[i].phone == self.InitBankData[j].phone&&
+                           val[i].isDefault == self.InitBankData[j].isDefault&&
+                           val[i].isDeleted == self.InitBankData[j].isDeleted&&
+                           val[i].deletedBy == self.InitBankData[j].deletedBy&&
+                           val[i].deletedTime == self.InitBankData[j].deletedTime&&
+                           val[i].modifiedBy == self.InitBankData[j].modifiedBy&&
+                           val[i].modifiedTime == self.InitBankData[j].modifiedTime&&
+                           val[i].createdBy == self.InitBankData[j].createdBy&&
+                           val[i].createdTime == self.InitBankData[j].createdTime&&
+                           val[i].id == self.InitBankData[j].id){
+                               flag = false;
+                           }
+                    }
+                    if(flag){
+                        self.redBankAr.push(val[i])
+                    }
+                }
+            },
+            deep: true,
+        },
+        addressData:{
+            handler: function (val, oldVal) {
+                let self = this;
+                if(!self.firstModify){
+                    self.firstModify = !self.firstModify;
+                }else{
+                    self.ifModify = true;
+                }
+                self.redAddAr = [];
+                for(let i in val){
+                    let flag = true;
+                    for(let j in self.InitAddData){
+                        if(val[i].groupId == self.InitAddData[j].groupId&&
+                           val[i].contactId == self.InitAddData[j].contactId&&
+                           val[i].addressType == self.InitAddData[j].addressType&&
+                           val[i].addressId == self.InitAddData[j].addressId&&
+                           val[i].completeAddress == self.InitAddData[j].completeAddress&&
+                           val[i].contactPerson == self.InitAddData[j].contactPerson&&
+                           val[i].phone == self.InitAddData[j].phone&&
+                           val[i].isDefault == self.InitAddData[j].isDefault&&
+                           val[i].isDeleted == self.InitAddData[j].isDeleted&&
+                           val[i].deletedBy == self.InitAddData[j].deletedBy&&
+                           val[i].deletedTime == self.InitAddData[j].deletedTime&&
+                           val[i].modifiedBy == self.InitAddData[j].modifiedBy&&
+                           val[i].modifiedTime == self.InitAddData[j].modifiedTime&&
+                           val[i].createdBy == self.InitAddData[j].createdBy&&
+                           val[i].createdTime == self.InitAddData[j].createdTime&&
+                           val[i].id == self.InitAddData[j].id){
+                               flag = false;
+                           }
+                    }
+                    if(flag){
+                        self.redAddAr.push(val[i])
+                    }
+                }
+            },
+            deep: true,
+        },
+        ouData:{
+            handler: function (val, oldVal) {
+                let self = this;
+                if(!self.firstModify){
+                    self.firstModify = !self.firstModify;
+                }else{
+                    self.ifModify = true;
+                }
+                self.redOuAr = [];
+                for(let i in val){
+                    let flag = true;
+                    for(let j in self.InitOuData){
+                        if(val[i].groupId == self.InitOuData[j].groupId&&
+                           val[i].contactId == self.InitOuData[j].contactId&&
+                           val[i].ouId == self.InitOuData[j].ouId&&
+                           val[i].transportMethodId == self.InitOuData[j].transportMethodId&&
+                           val[i].isDefault == self.InitOuData[j].isDefault&&
+                           val[i].isDeleted == self.InitOuData[j].isDeleted&&
+                           val[i].deletedBy == self.InitOuData[j].deletedBy&&
+                           val[i].deletedTime == self.InitOuData[j].deletedTime&&
+                           val[i].modifiedBy == self.InitOuData[j].modifiedBy&&
+                           val[i].modifiedTime == self.InitOuData[j].modifiedTime&&
+                           val[i].createdBy == self.InitOuData[j].createdBy&&
+                           val[i].createdTime == self.InitOuData[j].createdTime&&
+                           val[i].id == self.InitOuData[j].id){
+                               flag = false;
+                           }
+                    }
+                    if(flag){
+                        self.redAddAr.push(val[i])
+                    }
+                }
+            },
+            deep: true,
+        },
+    },
     data() {
         return{
             getOuId:'',//保存获取的ouid
             ifShow:true,
             radio:'',
+            firstModify:false,//进入页面数据改变一次
             ifModify:false,//判断主表是否修改过
             ifDoModify:false,//判断从表是否修改过
+            backCancel:'',//判断信息提示确定的点击事件
             //---所属组织树形下拉-----
                 ouSearch:'',
                 selectOuProps:{
@@ -877,12 +1009,12 @@ export default({
                 cuSearch:'',
                 selectCuProps:{
                     children: 'childNodes',
-                    label: 'classFullname',
+                    label: 'className',
                     id:'id'
                 },
                 cuItem:{
                     id:'',
-                    cuFullname:'',
+                    cuName:'',
                 },
                 cuAr:[],//客户分类下拉框
             //-----------------------
@@ -905,17 +1037,6 @@ export default({
                 areaProArray:[],//行政地区(省)
                 areaCityArray:[],//行政地区(市)
                 areaDisArray:[],//行政地区(区)
-                adSearch:'',//树形搜索框的
-                selectAdProps:{
-                    children: 'items',
-                    label: 'areaName',
-                    id:'id'
-                },
-                adItem:{
-                    id:'',
-                    areaName:'',
-                },
-                adAr:[],//行政地区下拉框
             //-----------------------
             //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
@@ -929,6 +1050,18 @@ export default({
                     areaName:'',
                 },
                 opAr:[],//业务地区下拉框
+            //-----------------------
+            //---业务组织-------------
+            selectYwProps:{
+                children: 'children',
+                label: 'ouName',
+                id:'id'
+            },
+            ywItem:{
+                id:'',
+                ouName:'',
+            },
+            ywAr:[],//业务组织
             //-----------------------
             //---普通下拉------------
             propertyAr:[],//客户性质下拉框
@@ -966,6 +1099,15 @@ export default({
             multipleSelection:[],//需要删除的银行数组
             multipleSelectionAdd:[],//需要删除的地址数组
             multipleSelectionOu:[],//需要删除的组织数组
+            allBankDel:{
+                ids:[]
+            },
+            allAddDel:{
+                ids:[]
+            },
+            allOuDel:{
+                ids:[]
+            },
 
             idArrayBank:{//银行多项删除的id
                 ids:[]
@@ -1006,6 +1148,7 @@ export default({
                 "is_default": true
             },
             checkedAr:[],//进来时数据选中的默认框
+            checkedAdd:[],//地址的默认选项
             //---确认删除-----------------               
             dialogDelConfirm:false,//用户删除保存提示信息
             //--------------------  
@@ -1040,6 +1183,20 @@ export default({
             who:'',//删除的是谁以及是否是多项删除
             whoId:'',//单项删除的id
             whoIndex:'',//单项删除的index
+            provinceValue:0,
+            cityValue:0,
+            areaValue:0,
+            proId:'',
+            cityId:'',
+            disId:'',
+            //-----------------------------
+            redBankAr:[],
+            redAddAr:[],
+            redOuAr:[],
+
+            InitBankData:[],
+            InitAddData:[],
+            InitOuData:[],
         }
     },
     validators: {
@@ -1059,19 +1216,22 @@ export default({
             return this.Validator.value(value).maxLength(50);
         },
         'customerData.contactClassId': function (value) {//客户分类
-            return this.Validator.value(value).integer();
+            return this.Validator.value(value).required().integer();
         },
         'customerData.contactWorkPropertyId': function (value) {//客户性质
-            return this.Validator.value(value).integer();
+            return this.Validator.value(value).required().integer();
         },
         'customerData.contactGradeId': function (value) {//客户等级
             return this.Validator.value(value).integer();
         },
         'customerData.contactTypeId': function (value) {//客户类型
-            return this.Validator.value(value).integer();
+            return this.Validator.value(value).required().integer();
         },
         'customerData.ficaOuId': function (value) {//对应财务组织
-            return this.Validator.value(value).integer();
+            let self = this;
+            if(self.customerData.contactTypeId == 1){
+                return this.Validator.value(value).required().integer();
+            }
         },
         'customerData.taxCode': function (value) {//纳税登记号 
             return this.Validator.value(value).maxLength(50);
@@ -1111,27 +1271,76 @@ export default({
             countOu () {
                 return this.ouItem;
             },
-            countAd () {
-                return this.adItem;
-            },
+            // countAd () {
+            //     return this.adItem;
+            // },
             countOp () {
                 return this.opItem;
             },
+            countYw (){
+                return this.ywItem;
+            }
         }, 
     methods:{
         //---获取数据--------------------------------------------
         loadData:function(){
             let self = this;
             if(self.$route.params.id!='default'){
+                self.firstModify = false;
+                // self.firstAddModify = false;
                 //根据id获得的客户信息
                 this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
-                    
+                    console.log(res)
                     self.customerData = res.result;
                     console.log(self.customerData)
                     self.getOuId = res.result.ouId;
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
+
+                    //行政地区获取省
+                    self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+                        console.log(res);
+                        self.areaProArray = res.result;
+                        // self.loadIcon();
+                    },function(res){
+                        console.log('err'+res)
+                    });
+                    //根据区id反向获得行政地区所有资料
+                    self.$axios.gets('/api/services/app/AdAreaManagement/Get',{Id:res.result.adAreaId}).then(function(res){
+                        console.log(res);
+                        let ids = res.result.areaFullPathId;
+                        let newid = ids.split('>')
+                        
+                        self.proId = parseInt(newid[0]);
+                        self.cityId = parseInt(newid[1]);
+                        self.disId = parseInt(newid[2]);
+
+                        //根据省获得市
+                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.proId}).then(function(res){
+                            // console.log(res);
+                            self.areaCityArray = res.result;
+                        },function(res){
+                            console.log('err'+res)
+                        });
+
+                        //根据市获得区
+                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.cityId}).then(function(res){
+                            console.log(res);
+                            self.areaDisArray = res.result;
+                        },function(res){
+                            console.log('err'+res)
+                        });
+                        // self.opAr = res.result;
+                    },function(res){
+                        self.proId = 0;
+                        self.cityId = 0;
+                        // self.repositoryData.adAreaId = 0;
+                        self.ifModify = false;
+                        console.log('err'+res)
+                    });
+                    
+                    
 
                     //业务地区
                     self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.getOuId}).then(function(res){
@@ -1149,10 +1358,10 @@ export default({
                     self.ouItem.id =  self.customerData.ouId;
 
                     self.cuItem.id = self.customerData.contactClassId;
-                    self.cuItem.cuFullname = self.customerData.contactClassId_ClassName;
+                    self.cuItem.cuName = self.customerData.contactClassId_ClassName;
 
-                    self.adItem.areaName = self.customerData.adAreaId_AreaName;
-                    self.adItem.id = self.customerData.adAreaId;
+                    // self.adItem.areaName = self.customerData.adAreaId_AreaName;
+                    // self.adItem.id = self.customerData.adAreaId;
 
                     self.opItem.areaName = self.customerData.opAreaId_AreaName;
                     self.opItem.id = self.customerData.opAreaId;
@@ -1170,10 +1379,10 @@ export default({
         },
         loadBankData:function(){//银行数据
             let self = this;
-            //获取所有的银行信息，也可以用groupid获取，
-            this.$axios.gets('/api/services/app/ContactBankManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
+            self.$axios.gets('/api/services/app/ContactBankManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
                 console.log(res);
-                self.bankData = res.result.items;
+                self.bankData = res.result;
+                self.InitBankData = self.deepCopy(res.result);
                 for(let i in self.bankData){
                     if(self.bankData[i].isDefault == true){
                         self.checkedAr = self.bankData[i]
@@ -1184,21 +1393,39 @@ export default({
         loadAddData:function(){//地址数据
             let self = this;
             //获取所有的地址信息，也可以用contactId获取
-            self.$axios.gets('/api/services/app/ContactAddressManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                // console.log(res);
-                self.addressData = res.result.items;
+            self.$axios.gets('/api/services/app/ContactAddressManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
+                console.log(res);
+                self.addressData = res.result;
+                self.InitAddData = self.deepCopy(res.result);
+                for(let i in self.addressData){
+                    if(self.addressData[i].isDefault == true){
+                        self.checkedAdd = self.addressData[i]
+                    }
+                }
             })
         },
         loadOuData:function(){//使用组织数据
             let self = this;
             //获取所有的组织信息，也可以用contactId获取
             self.$axios.gets('/api/services/app/ContactOuManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                // console.log(res);
+                console.log(res);
                 self.ouData = res.result.items;
+                self.InitOuData = self.deepCopy(res.result.items);
+                self.ywItem.id = res.result.items.ouId;
+                self.ywItem.ouName = res.result.items.ouId_OuName;
+                //业务组织、2是业务组织
+                self.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:'2'}).then(function(res){
+                    console.log(res);
+                    self.ywAr = res.result;
+                },function(res){
+                    console.log('err'+res)
+                });
             })
         },
         //------------------------------------------------------
-        //---下拉的数据------------------------------------------------------
+
+
+        //---下拉的数据------------------------------------------
         loadSelect:function(){
             let self = this;
             //客户分类
@@ -1225,6 +1452,7 @@ export default({
             },function(res){
                 console.log('err'+res)
             });
+            
             //客户性质
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'CustomerWorkProperty'}).then(function(res){
                 // console.log(res);
@@ -1246,14 +1474,6 @@ export default({
             },function(res){
                 console.log('err'+res)
             });
-            //行政地区*2
-            // self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
-            //     // console.log(res);
-            //     self.adAr = res.result;
-            //     self.loadIcon();
-            // },function(res){
-            //     console.log('err'+res)
-            // });
             
             //状态
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
@@ -1283,9 +1503,42 @@ export default({
             },function(res){
                 console.log('err'+res)
             });
+            
 
         },
         //------------------------------------------------------------------
+
+        //---选择省市区-----------------------------------------------
+        chooseProvince:function(id){
+            let self = this;
+            // console.log(id)
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                // console.log(res);
+                self.areaCityArray = res.result;
+                // self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+
+        },
+        chooseCity:function(id){
+            let self = this;
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                // console.log(res);
+                self.customerData.adAreaId = '';
+                self.areaDisArray = res.result;
+                
+
+                // self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            })
+        },
+        chooseDis:function(){
+            let self = this;
+            // console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
+        },
+        //-----------------------------------------------------------
 
         //---树-------------------------------------------------------------
         loadIcon(){
@@ -1309,7 +1562,7 @@ export default({
         cuNodeClick:function(data){
             let self = this;
             self.cuItem.id = data.id;
-            self.cuItem.cuFullname = data.classFullname;
+            self.cuItem.cuName = data.className;
             self.$nextTick(function(){
                 $('#cu_confirmSelect').click()
             })
@@ -1348,20 +1601,29 @@ export default({
                 $('#fi_confirmSelect').click()
             })
         },
-        adNodeClick:function(data){
-            let self = this;
-            self.adItem.id = data.id;
-            self.adItem.areaName = data.areaName;
-            self.$nextTick(function(){
-                $('#ad_confirmSelect').click()
-            })
-        },
+        // adNodeClick:function(data){
+        //     let self = this;
+        //     self.adItem.id = data.id;
+        //     self.adItem.areaName = data.areaName;
+        //     self.$nextTick(function(){
+        //         $('#ad_confirmSelect').click()
+        //     })
+        // },
         opNodeClick:function(data){
             let self = this;
             self.opItem.id = data.id;
             self.opItem.areaName = data.areaName;
             self.$nextTick(function(){
                 $('#op_confirmSelect').click()
+            })
+        },
+        ywNodeClick:function(data){//从表业务组织
+            console.log(data)
+            let self = this;
+            self.ywItem.id = data.id;
+            self.ywItem.ouName = data.ouName;
+            self.$nextTick(function(){
+                $('#yw_confirmSelect').click()
             })
         },
         //-----------------------------------------------------
@@ -1372,151 +1634,35 @@ export default({
             if(self.ifModify){
                 self.saveCustomerModify();
             }
-            
-            self.saveBankModify();
-            self.saveAddressModify();
-            self.saveOuModify();
-
-            if(self.addBankList.length>0){
-                self.createBank();
-            };
-            if(self.addAddressList.length>0){
-                self.createAddress();
-            };
-            if(self.addOuList.length>0){
-                self.createOu();
-            }
-            
         },
-        saveCustomerModify:function(){//修改客户信息
+        saveCustomerModify:function(){//修改所有
             let self = this;
             $('.tipsWrapper').css({display:'block'});
             // console.log(self.customerData)
             self.$validate().then(function(success){
                 if(success){
                     $('.tipsWrapper').css({display:'none'});
+                    let submitData = {};
+                    submitData = {
+                        contact_MainTable:self.customerData,
+                        contactBanks_ChildTable:self.bankData,
+                        contactAddress_ChildTable:self.addressData,
+                        contactOu_ChildTable:self.ouData,
+                    }
                     
-                    self.$axios.posts('/api/services/app/ContactManagement/CUDAggregate',{createList:[],updateList:self.customerData,deleteList:[]}).then(function(res){
-                        self.open('修改客户信息成功','el-icon-circle-check','successERP');
+                    self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
+                        self.open('修改成功','el-icon-circle-check','successERP');
                         self.ifModify = false;
                     },function(res){
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         self.errorMessage=true;
-                        self.open('修改失败','el-icon-error','faildERP');
                     })
                 }
             });
             
         },
-        saveBankModify:function(){//修改银行资料
-            let self = this;
-            if(self.updataBankList.length>0){
-                self.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:[],updateList:self.updataBankList,deleteList:[]}).then(function(res){
-                        console.log(res);
-                        self.open('修改银行资料成功','el-icon-circle-check','successERP');
-                        self.updataBankList = [];
-                    },function(res){
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                        self.open('修改银行资料失败','el-icon-error','faildERP');
-                    })
-            }
-        },
-        saveAddressModify:function(){//修改地址
-            let self = this;
-            if(self.updataAddressList.length>0){
-                for(let i in self.updataAddressList){
-                    self.$axios.posts('/api/services/app/ContactAddressManagement/CUDAggregate',{createList:[],updateList:self.updataAddressList,deleteList:[]}).then(function(res){
-                        // console.log(res);
-                        self.open('修改地址信息成功','el-icon-circle-check','successERP');
-                        self.updataAddressList = [];
-                    },function(res){
-                        self.open('修改地址信息失败','el-icon-error','faildERP');
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                    })
-                }
-            }
-        },
-        saveOuModify:function(){//修改组织
-            let self = this;
-            if(self.updataOuList.length>0){
-                for(let i in self.updataOuList){
-                    self.$axios.posts('/api/services/app/CurrencyManagement/CUDAggregate',{createList:[],updateList:self.updataOuList,deleteList:[]}).then(function(res){
-                        // console.log(res);
-                        self.open('修改组织信息成功','el-icon-circle-check','successERP');
-                        self.updataOuList = [];
-                    },function(res){
-                        self.open('修改组织信息失败','el-icon-error','faildERP');
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                    })
-                }
-            }
-        },
-        createBank:function(){//创建银行资料
-            let self = this;
-
-            if(self.addBankList.length>0){
-                    self.$axios.posts('/api/services/app/ContactBankManagement/CUDAggregate',{createList:self.addBankList,updateList:[],deleteList:[]}).then(function(res){         
-                        self.open('创建银行资料成功','el-icon-circle-check','successERP');
-                        self.addBankList = [];
-                    },function(res){
-                        self.open('创建银行资料失败','el-icon-error','faildERP');
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                    })
-            }
-        },
-        createAddress:function(){//创建地址资料
-            let self = this;
-
-            if(self.addAddressList.length>0){
-                self.$axios.posts('/api/services/app/ContactAddressManagement/CUDAggregate',{createList:self.addAddressList,updateList:[],deleteList:[]}).then(function(res){         
-                    self.open('创建地址信息成功','el-icon-circle-check','successERP');
-                    self.addAddressList = [];
-                },function(res){
-                    self.open('创建地址信息失败','el-icon-error','faildERP');
-                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                    self.errorMessage=true;
-                })
-            }
-        },
-        createOu:function(){//创建组织资料
-            let self = this;
-
-            if(self.addOuList.length>0){
-                self.$axios.posts('/api/services/app/ContactOuManagement/CUDAggregate',{createList:self.addOuList,updateList:[],deleteList:[]}).then(function(res){         
-                    self.open('创建组织信息成功','el-icon-circle-check','successERP');
-                    self.addOuList = [];
-                },function(res){
-                    self.open('创建组织信息失败','el-icon-error','faildERP');
-                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                    self.errorMessage=true;
-                })
-               
-            }
-        },
         //-------------------------------------------------------
 
-        //---控制按钮显示及隐藏-----------------------------------     
-        Cancel(){
-            let self = this;
-            // if(self.isEdit==false){
-                // self.isEdit=!self.isEdit;
-                self.loadData();
-                self.ifModify = false;
-                $('.tipsWrapper').css({display:'none'})
-            // }
-        },
-        //-------------------------------------------------------
-
-        // ---控制编辑----------------------------------------
-        Modify:function(){//判断主表是否修改过
-            let self = this;
-            self.ifModify = true;
-        },
-        //---------------------------------------------------
         //---从表增行--------------------------------------------
         addColbank:function(){//银行增行
             let self = this;
@@ -1564,7 +1710,7 @@ export default({
                 "contactId": self.createOuParams.contactId,
                 "ouId": '',
                 "transport_method_id": '',
-                "is_default": true
+                "is_default": false
             };
             self.ouData.unshift(self.zrows.newCol)
             self.addOuList.unshift(self.zrows.newCol)
@@ -1664,9 +1810,11 @@ export default({
         },
         handleSelectionChange2:function(val){//点击复选框选中的数据
                 this.multipleSelectionAdd = val;
+                console.log(this.multipleSelectionAdd)
         },
         handleSelectionChange3:function(val){//点击复选框选中的数据
                 this.multipleSelectionOu = val;
+                console.log(this.multipleSelectionOu)
         },
         //---------------------------------------------------
 
@@ -1749,9 +1897,30 @@ export default({
             }
 
             if(self.who == 4){//银行多项删除  
+                let x = [];
+                $.each(self.bankData,function(index,value){
+                    let flag = false;
+                    $.each(self.multipleSelection,function(i,val){
+                        if(value==val){
+                            flag = true;
+                        }
+                    })
+                    if(!flag){
+                        x.push(value)
+                    }
+                })
+                self.bankData = x;
+                self.addBankList = [];
+                for(let i in x){
+                    if(x[i].id==''||x[i].id==undefined){
+                        // console.log(x[i])
+                        self.addBankList.push(x[i])
+                        console.log(self.addBankList)
+                    }
+                }
                 self.$axios.posts('/api/services/app/ContactBankManagement/BatchDelete',self.idArrayBank).then(function(res){
                     self.open('删除银行资料成功','el-icon-circle-check','successERP');
-                    self.loadBankData();
+                    // self.loadBankData();
                     self.dialogDelConfirm = false;
                 },function(res){
                     self.dialogDelConfirm = false;
@@ -1760,10 +1929,31 @@ export default({
                 })    
             }
 
-            if(self.who == 5){//地址多项删除  
+            if(self.who == 5){//地址多项删除
+                let x = [];
+                $.each(self.addressData,function(index,value){
+                    let flag = false;
+                    $.each(self.multipleSelectionAdd,function(i,val){
+                        if(value==val){
+                            flag = true;
+                        }
+                    })
+                    if(!flag){
+                        x.push(value)
+                    }
+                })
+                self.addressData = x;
+                self.addAddressList = [];
+                for(let i in x){
+                    if(x[i].id==''||x[i].id==undefined){
+                        // console.log(x[i])
+                        self.addAddressList.push(x[i])
+                        console.log(self.addAddressList)
+                    }
+                }  
                 self.$axios.posts('/api/services/app/ContactAddressManagement/BatchDelete',self.idArrayAdd).then(function(res){
                     self.open('删除地址成功','el-icon-circle-check','successERP');
-                    self.loadAddData();
+                    // self.loadAddData();
                     self.dialogDelConfirm = false;
                 },function(res){
                     self.dialogDelConfirm = false;
@@ -1772,10 +1962,31 @@ export default({
                 })    
             }
 
-            if(self.who == 6){//使用组织多项删除  
+            if(self.who == 6){//使用组织多项删除 
+                let x = [];
+                $.each(self.ouData,function(index,value){
+                    let flag = false;
+                    $.each(self.multipleSelectionOu,function(i,val){
+                        if(value==val){
+                            flag = true;
+                        }
+                    })
+                    if(!flag){
+                        x.push(value)
+                    }
+                })
+                self.ouData = x;
+                self.addOuList = [];
+                for(let i in x){
+                    if(x[i].id==''||x[i].id==undefined){
+                        // console.log(x[i])
+                        self.addOuList.push(x[i])
+                        console.log(self.addOuList)
+                    }
+                }  
                 self.$axios.posts('/api/services/app/ContactOuManagement/BatchDelete',self.idArrayOu).then(function(res){
                     self.open('删除使用组织成功','el-icon-circle-check','successERP');
-                    self.loadOuData();
+                    // self.loadOuData();
                     self.dialogDelConfirm = false;
                 },function(res){
                     self.dialogDelConfirm = false;
@@ -1806,17 +2017,15 @@ export default({
             let self = this;
 
             for(let i in self.multipleSelection){
-                self.idArrayBank.ids.push(self.multipleSelection[i].id)
+                self.allBankDel.ids.push(self.multipleSelection[i].id)
+            }
+            for(let i in self.multipleSelection){
+                if(self.multipleSelection[i].id>0){
+                    self.idArrayBank.ids.push(self.multipleSelection[i].id)
+                }
             }
 
-            if(self.idArrayBank.ids.length>0){
-                if(self.idArrayBank.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
-                }
+            if(self.allBankDel.ids.length>0){
                 self.dialogDelConfirm = true;   
                 self.who = num;
             }else{
@@ -1832,17 +2041,15 @@ export default({
             let self = this;
 
             for(let i in self.multipleSelectionAdd){
-                self.idArrayAdd.ids.push(self.multipleSelectionAdd[i].id)
+                self.allAddDel.ids.push(self.multipleSelectionAdd[i].id)
+            }
+            for(let i in self.multipleSelectionAdd){
+                if(self.multipleSelectionAdd[i].id>0){
+                    self.idArrayAdd.ids.push(self.multipleSelectionAdd[i].id)
+                }
             }
 
-            if(self.idArrayAdd.ids.length>0){
-                if(self.idArrayAdd.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
-                }
+            if(self.allAddDel.ids.length>0){
                 self.dialogDelConfirm = true;   
                 self.who = num;
             }else{
@@ -1857,17 +2064,18 @@ export default({
             let self = this;
 
             for(let i in self.multipleSelectionOu){
-                self.idArrayOu.ids.push(self.multipleSelectionOu[i].id)
+                self.allOuDel.ids.push(self.multipleSelectionOu[i].id)
             }
-
-            if(self.idArrayOu.ids.length>0){
-                if(self.idArrayOu.ids.indexOf(undefined)!=-1){
-                    self.$message({
-                        type: 'warning',
-                        message: '新增数据请在行内删除'
-                    });
-                    return;
+            for(let i in self.multipleSelectionOu){
+                if(self.multipleSelectionOu[i].id>0){
+                    self.idArrayOu.ids.push(self.multipleSelectionOu[i].id)
                 }
+            }
+            console.log(self.multipleSelectionOu)
+            console.log(self.allOuDel.ids)
+            console.log(self.idArrayOu.ids)
+
+            if(self.allOuDel.ids.length>0){
                 self.dialogDelConfirm = true;   
                 self.who = num;
             }else{
@@ -1917,14 +2125,28 @@ export default({
             let self=this;
             if(self.ifModify){
                 self.dialogUserConfirm=true;
-                // self.choseDoing='back'
+                self.backCancel = 1;
             }else{
                 self.back()
             }
         },
+        Cancel(){
+            let self = this;
+            if(self.ifModify){
+                self.dialogUserConfirm=true;
+                self.backCancel = 2;
+                $('.tipsWrapper').css({display:'none'})
+            }
+        },
         sureDoing:function(){
             let self = this;
-            self.back();
+            if(self.backCancel ==1){
+                self.back();
+            }else if(self.backCancel == 2){
+                self.loadData();
+                self.ifModify = false;
+                self.dialogUserConfirm=false;
+            }
         },
         //-------------------------------------------------------
         //---提示错误----------------------------------------------
@@ -1983,7 +2205,52 @@ export default({
                 _this.response.validationErrors=validationErrors;
             }
         },
-        //-------------------------------------------------------------
+        //----------------------------------------------------
+        //----------------------------------------------------
+        getType(obj){
+            //tostring会返回对应不同的标签的构造函数
+            var toString = Object.prototype.toString;
+            var map = {
+                '[object Boolean]'  : 'boolean', 
+                '[object Number]'   : 'number', 
+                '[object String]'   : 'string', 
+                '[object Function]' : 'function', 
+                '[object Array]'    : 'array', 
+                '[object Date]'     : 'date', 
+                '[object RegExp]'   : 'regExp', 
+                '[object Undefined]': 'undefined',
+                '[object Null]'     : 'null', 
+                '[object Object]'   : 'object'
+            };
+            if(obj instanceof Element) {
+                return 'element';
+            }
+            return map[toString.call(obj)];
+        },
+        deepCopy(data){
+            let self = this;
+            var type = self.getType(data);
+            var obj;
+            if(type === 'array'){
+                obj = [];
+            } else if(type === 'object'){
+                obj = {};
+            } else {
+                //不再具有下一层次
+                return data;
+            }
+            if(type === 'array'){
+                for(var i = 0, len = data.length; i < len; i++){
+                    obj.push(self.deepCopy(data[i]));
+                }
+            } else if(type === 'object'){
+                for(var key in data){
+                    obj[key] = self.deepCopy(data[key]);
+                }
+            }
+            return obj;
+        },
+        //----------------------------------------------------
         test:function(){
             let self = this;
             console.log(self.checkedAr)

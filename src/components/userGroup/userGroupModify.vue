@@ -17,7 +17,7 @@
                         <small>*</small>用户组编码</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="userGroupCode" 
                         :class="{redBorder : validation.hasError('addData.userGroupCode')}" 
                         v-model="addData.userGroupCode"></el-input>
@@ -31,7 +31,7 @@
                         <label><small>*</small>用户组名称</label>
                         <el-input 
                          
-                        @change="isUpdate"
+                        
                         class="userGroupName" 
                         :class="{redBorder : validation.hasError('addData.userGroupName')}" 
                         v-model="addData.userGroupName"></el-input>
@@ -44,9 +44,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                          
-                        @change="isUpdate"
+                        
                         placeholder=""
                         class="ouId" 
                         :class="{redBorder : validation.hasError('addData.ouId')}" 
@@ -58,9 +58,10 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             :render-content="renderContent_"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
+                            :highlight-current="true"
                             node-key="id"
                             default-expand-all
                             ref="tree"
@@ -83,10 +84,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         class="status" 
                          
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
                         v-model="addData.status">
@@ -104,7 +105,7 @@
                         <label>备注</label>
                         <el-input
                          
-                        @change="isUpdate"
+                        
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
                         v-model="addData.remark"
@@ -122,9 +123,27 @@
                 <h4 class="h4">审计信息</h4>
                 <div>
                     <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
-                    <div class="bgcolor"><label>创建时间</label><el-date-picker v-model="auditInformation.createdTime" type="date" disabled="disabled"></el-date-picker></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-date-picker 
+                        v-model="auditInformation.createdTime" 
+                        type="date" 
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        disabled>
+                        </el-date-picker>
+                    </div>
                     <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
-                    <div class="bgcolor"><label>修改时间</label><el-date-picker v-model="auditInformation.modifiedTime" type="date" disabled="disabled"></el-date-picker></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-date-picker 
+                        v-model="auditInformation.modifiedTime" 
+                        type="date" 
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        disabled>
+                        </el-date-picker>
+                    </div>
                 </div>                                  
             </el-col>
         </el-row>     
@@ -135,7 +154,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -157,25 +176,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}</span>
-                       
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -196,13 +210,13 @@
         search_ou:'',
         item_ou:{
             id:"",
-            ouFullname:""
+            ouName:""
         },
         selectTree_ou:[
         ],
         selectProps_ou: {
             children: 'children',
-            label: 'ouFullname',
+            label: 'ouName',
             id:'id'
         },
         addData:{
@@ -224,7 +238,6 @@
             details:'',
             message:'',
         },
-        update:false,
         dialogUserConfirm:false,//信息更改提示控制
         choseDoing:'',//存储点击按钮判断信息
       }
@@ -344,7 +357,6 @@
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -363,7 +375,7 @@
         },
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
@@ -372,7 +384,7 @@
         },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -401,12 +413,8 @@
         Cancel(){
                 this.validation.reset();
                 this.getData();
-                this.update=false;
                 this.firstModify=false;
                 this.ifModify=false;
-        },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
         },
         back(row){
             this.$store.state.url='/userGroup/userGroupList/default'
@@ -428,7 +436,6 @@
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.firstModify=false;
                         _this.ifModify=false;
-                        _this.update=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true; 
@@ -444,9 +451,6 @@
                     _this.$axios.puts('/api/services/app/UserGroup/Update',_this.addData)
                     .then(function(res){
                         _this.open('保存成功','el-icon-circle-check','successERP');
-                        _this.update=false;
-                        _this.firstModify=false;
-                        _this.ifModify=false;
                         _this.add();
                     },function(res){   
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -485,7 +489,24 @@
                     $(this).click()
                 }
             })
-    },
+        },
+         renderContent_(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+        },
 }
 
 })

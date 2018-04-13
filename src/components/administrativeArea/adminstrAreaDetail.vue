@@ -3,23 +3,24 @@
         <!-- 按钮组 -->
         <el-row>
             <el-col :span="24">
-                <button @click="goback" class="erp_bt bt_back">
+                <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
-                <button  class="erp_bt bt_add">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
+                
                 <button @click="save" class="erp_bt bt_save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
+                </button>
+                <button class="erp_bt bt_cancel" @click="cancel">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
                 </button>
                 <button @click="saveAdd" class="erp_bt bt_saveAdd">
                     <div class="btImg">
@@ -27,7 +28,7 @@
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
-                <button class="erp_bt bt_auxiliary bt_width">
+                <!-- <button class="erp_bt bt_auxiliary bt_width">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_auxiliary.png">
                     </div>
@@ -35,12 +36,62 @@
                     <div class="btRightImg">
                         <img src="../../../static/image/common/bt_down_right.png">
                     </div>
+                </button> -->
+                <button  class="erp_fb_bt bt_add">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+                <button class="erp_fb_bt bt_del">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
                 </button>
             </el-col>
         </el-row>
-
+        <!-- dialog数据变动提示(是否忽略更改) -->
+        <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    </el-col>
+                </el-col>
+                <!--  -->
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUpdateConfirm = false">取 消</button>
+                </span>
+        </el-dialog>
         <!-- 表单验证的错误提示信息 -->
-	        <el-row>
+        <el-row>
+            <el-col :span="24">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span :class="{block : !validation.hasError('addData.areaParentId')}">
+                                上级地区{{ validation.firstError('addData.areaParentId') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.areaCode')}">
+                                地区编码{{ validation.firstError('addData.areaCode') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.areaName')}">
+                                地区名称{{ validation.firstError('addData.areaName') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.status')}">
+                                状态{{ validation.firstError('addData.status') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+	        <!-- <el-row>
                 <el-col>
                     <div class="errTipsWrapper" name="areaParentId">
                         <div class="errorTips" :class="{block : !validation.hasError('addData.areaParentId')}">
@@ -63,7 +114,7 @@
                       </div>
                     </div>
                 </el-col>
-            </el-row>
+            </el-row> -->
         <!-- 表单 -->
         <el-row>
             <div class="admstr-form-wrapper pt15">
@@ -75,7 +126,8 @@
                             :class="{redBorder : validation.hasError('addData.areaParentId')}"
                             class="areaParentId" 
                             placeholder=""
-                            v-model="addData.areaParentId">
+                            v-model="addData.areaParentId"
+                            @focus="showErrTips">
                                 <!-- <el-input
                                     placeholder="搜索..."
                                     class="selectSearch"
@@ -108,7 +160,7 @@
                             <el-input 
                             class="areaCode" 
                             :class="{redBorder : validation.hasError('addData.areaCode')}"
-                            v-model="addData.areaCode"></el-input>
+                            v-model="addData.areaCode"  @focus="showErrTips"></el-input>
                         </div>
                     </div>
                 </el-col>
@@ -119,7 +171,7 @@
                             <el-input 
                             class="areaName" 
                             :class="{redBorder : validation.hasError('addData.areaName')}"
-                            v-model="addData.areaName"></el-input>
+                            v-model="addData.areaName"  @focus="showErrTips"></el-input>
                         </div>
                     </div>
                 </el-col>
@@ -155,7 +207,7 @@
                             class="status" 
                             placeholder=""
                             :class="{redBorder : validation.hasError('addData.status')}"
-                            v-model="addData.status">
+                            v-model="addData.status"  @focus="showErrTips">
                                 <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                                 </el-option>
                             </el-select>
@@ -225,14 +277,18 @@
             },
             treeNode:{
                     Id:'',
-                    areaName:'',
+                    areaName:'15155',
             },
+            // ----------提示框信息
+            dialogUpdateConfirm:false,
+            isUpdate:false,
+            
         };
     },
     created() {
         this.getSelectData();
         this.loadTree();
-        this.GetDateTime();
+        this.getDefault();
     },
     validators: {
         'addData.areaParentId': function (value) {//上级地区
@@ -253,16 +309,19 @@
                 return this.treeNode;
                 },
         },
-    methods: {
-        GetDateTime() {//获取当前时间
-            let date=new Date();
-            return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
-        }, 
-        // 返回
-        goback() {
-            this.$store.state.url = "/adminstrArea/adminstrAreaList/default";
-            this.$router.push({ path: this.$store.state.url });
-        },
+    watch:{
+        addData:{
+            handler: function (val, oldVal) {
+                let _this = this;
+                // console.log("数据改变了");
+                if(!_this.isUpdate){
+                    _this.isUpdate = !_this.isUpdate;
+                }
+            },
+             deep: true,
+        }
+    },
+    methods: { 
         // 成功的提示框
         open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -274,51 +333,72 @@
                 customClass:className
                 });
         },
-        // 保存
-        save() {
+        showErrTips(e){// 错误提示信息
+            $('.tipsWrapper').css({display:'none'});
+        },
+        GetDateTime() {//获取当前时间
+            let date=new Date();
+            return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
+        }, 
+        // -----------------按钮组功能
+        // -----------------取消与返回功能
+        cancel(){// 取消
+            this.isBack();
+        },
+        goBack() { // 返回
+            this.$store.state.url = "/adminstrArea/adminstrAreaList/default";
+            this.$router.push({ path: this.$store.state.url });
+        },
+        isBack(){//是否返回
             let _this=this;
+            if(_this.isUpdate){
+                console.log(_this.isUpdate);
+                _this.dialogUpdateConfirm=true;
+            }else{
+                _this.goBack();
+            }
+        },
+        sureDoing(){
+            this.goBack();
+        },
+        // -----------------取消与返回功能完
+        save() {// 保存
+            let _this=this;
+            $('.tipsWrapper').css({display:'block'})
             _this.$validate().then(
                 function (success) { 
                     if (success){
+                        $('.tipsWrapper').css({display:'none'});
                         _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData)
                             .then(
                                 rsp=>{
                                     // console.log(rsp.result);
-                                            _this.open('保存成功','el-icon-circle-check','successERP'); 
-                                             _this.$axios.gets("/api/services/app/AdAreaManagement/Get", {
-                                                id: rsp.result.id
-                                            }).then(
-                                                rsp=>{
-                                                    // console.log(rsp.result);
-                                                    _this.addData=rsp.result;
-                                                    _this.isDisabled=false;
-                                                }
-                                            )  
-
-                                        },
+                                    _this.open('保存成功','el-icon-circle-check','successERP');
+                                    _this.isUpdate=false;
+                                },
                                 rsp=>{   
-                                            _this.open('保存失败','el-icon-error','faildERP');
-                                    }
+                                    _this.open('保存失败','el-icon-error','faildERP');
+                                }
                             )
                     }
                 }
             )
         
         },
-        // 保存并新增
-        saveAdd() {
+        saveAdd() {// 保存并新增
             let _this=this;
                     _this.$validate().then(
                         function (success) {
                             if (success) {
                                 _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData).then(
-                                                rsp=>{
-                                                    _this.reset();
-                                                    _this.open('保存成功','el-icon-circle-check','successERP');
-                                                },
-                                                rsp=>{
-                                                    _this.open('保存失败','el-icon-error','faildERP');
-                                                }
+                                    rsp=>{
+                                        _this.reset();
+                                        _this.open('保存成功','el-icon-circle-check','successERP');
+                                        _this.isUpdate=false;
+                                    },
+                                    rsp=>{
+                                        _this.open('保存失败','el-icon-error','faildERP');
+                                    }
                                 )
                             }
                         }
@@ -359,28 +439,37 @@
                 _this.$nextTick(function(){
                     $('#adminStrDetail_confirmSelect').click()
                 })
-            
-         },
-            // 获取下拉框数据
-            getSelectData(){
-                let _this=this;
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
-                // 启用状态
-                _this.selectData.Status001=res.result;
-                })
-            },
-            // 重新验证并设置值
-            reset(){
-                this.addData.areaParentId='';
-                this.addData.areaCode='';
-                this.addData.areaName='';
-                this.addData.status='';
-                this.addData.remark=''; 
-                this.validation.reset();               
-            },
         },
+        getDefault(){// 获取上级地区
+            let _this=this;
+            if (this.$route.params.upAreaName=='default') {
+                 _this.treeNode.areaName='';
+            }else{
+                 _this.treeNode.areaName=this.$route.params.upAreaName;
+
+            }
+            this.GetDateTime();//获取当前时间
+        },
+        getSelectData(){ // 获取下拉框数据
+            let _this=this;
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+            // 启用状态
+            // console.log(res.result);
+            
+             _this.selectData.Status001=res.result;
+            });
+        },
+        reset(){ // 重新验证并设置值
+            this.addData.areaParentId='';
+            this.addData.areaCode='';
+            this.addData.areaName='';
+            this.addData.status='';
+            this.addData.remark=''; 
+            this.validation.reset();               
+        },
+    },
         
-    };
+};
 </script>
 
  <style scoped>
@@ -396,5 +485,10 @@
     }
     .admstr-wrapper .el-row:last-child{
         padding-bottom: 15px;
+    }
+</style>
+ <style>
+    .admstr-wrapper .admstr-form-wrapper .bgcolor.bgLongWidth .el-textarea{
+        width: calc(100% - 90px);
     }
 </style>

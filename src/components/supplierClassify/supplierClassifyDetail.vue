@@ -3,23 +3,23 @@
          <!-- 按钮组 -->
         <el-row>
             <el-col :span="24">
-                <button @click="goback" class="erp_bt bt_back">
+                <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
                     <span class="btDetail">返回</span>
-                </button>
-                <button  @click="add" class="erp_bt bt_add" :disabled="isAdd">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
+                </button>                
                 <button @click="save" class="erp_bt bt_save">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
+                </button>
+                <button class="erp_bt bt_cancel" @click="cancel">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
                 </button>
                 <button @click="saveAdd" class="erp_bt bt_saveAdd">
                     <div class="btImg">
@@ -27,7 +27,19 @@
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
-                <button class="erp_bt bt_auxiliary bt_width">
+                <button class="erp_fb_bt bt_add">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+                <button class="erp_fb_bt bt_del">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_del.png">
+                    </div>
+                    <span class="btDetail">删除</span>
+                </button>
+                <!-- <button class="erp_bt bt_auxiliary bt_width">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_auxiliary.png">
                     </div>
@@ -35,12 +47,34 @@
                     <div class="btRightImg">
                         <img src="../../../static/image/common/bt_down_right.png">
                     </div>
-                </button>
+                </button> -->
             </el-col>
         </el-row>
 
         <!-- 表单验证的错误提示信息 -->
-	    <el-row>
+        <el-row>
+            <el-col :span="24">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span :class="{block : !validation.hasError('addData.classParentId')}">
+                                上级供应商分类{{ validation.firstError('addData.classParentId') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.classCode')}">
+                                供应商分类编码{{ validation.firstError('addData.classCode') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.className')}">
+                                供应商分类名称{{ validation.firstError('addData.className') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.status')}">
+                                状态{{ validation.firstError('addData.status') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+	    <!-- <el-row>
             <el-col>
                 <div class="errTipsWrapper" name="classParentId">
                         <div class="errorTips" :class="{block : !validation.hasError('addData.classParentId')}">
@@ -63,7 +97,24 @@
                       </div>
                     </div>
                 </el-col>
-        </el-row>
+        </el-row> -->
+        <!-- dialog数据变动提示(是否忽略更改) -->
+        <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    </el-col>
+                </el-col>
+                <!--  -->
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUpdateConfirm = false">取 消</button>
+                </span>
+        </el-dialog>
 
         <!-- 表单 -->
         <el-row>
@@ -74,6 +125,7 @@
                             <label><small>*</small>上级供应商分类</label>
                             <el-select filterable  
                             class="classParentId"
+                            @focus="showErrTips"
                             placeholder=""
                             v-model="addData.classParentId"
                             :class="{redBorder : validation.hasError('addData.classParentId')}">
@@ -105,6 +157,7 @@
                             <el-input 
                             class="classCode" 
                             v-model="addData.classCode"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.classCode')}"></el-input>
                         </div>
                     </div>
@@ -116,6 +169,7 @@
                             <el-input 
                             class="className" 
                             v-model="addData.className"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.className')}"></el-input>
                         </div>
                     </div>
@@ -141,6 +195,7 @@
                             <el-select filterable  
                             class="status" 
                             placeholder=""
+                            @focus="showErrTips"
                             v-model="addData.status"
                             :class="{redBorder : validation.hasError('addData.status')}"
                             >
@@ -150,7 +205,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="24">
+                <!-- <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                             <label>创建人</label>
@@ -174,22 +229,24 @@
                             </el-date-picker>
                         </div>
                     </div>
-                </el-col>
+                </el-col> -->
                
             </div>
         </el-row>
+        <auditInfo :auditData='timeData'></auditInfo>   
+
     </div>
 </template>
 
  <script>
+ import auditInfo from '../Common/auditInfo';
     export default {
         name: "supplierClassifyDetail",
         data(){
              return{
-                 isDisabled:true,//是否禁用创建人与创建时间               
-                 isAdd:true,//是否禁用增加键               
-                // 表单增加参数
-                 addData:{
+                isDisabled:true,//是否禁用创建人与创建时间               
+                isAdd:true,//是否禁用增加键                              
+                addData:{ // 表单增加参数
                     "groupId": 0,
                     "contactOwner": 2,
                     "levelNo": 0,
@@ -203,15 +260,18 @@
                     "seq": 0,
                     "status": 1,
                     "remark": "",
+                },  
+                timeData:{
                     "createdBy" :this.$store.state.name,
                     "createdTime"  : this.GetDateTime(),
-                },
-                //  下拉框的选项数据
-                selectData:{
+                    "modifiedBy"  : this.$store.state.name,
+                    "modifiedTime"  : this.GetDateTime(),
+                },         
+                selectData:{ //  下拉框的选项数据
                     Status001:[],//启用状态
                     upSupplierClass:[],// 上级供应商分类
                 },
-                 // -------树形控件数据
+                 // --------------------树形控件数据
                  supplierClasTree:[],
                  defaultProps: {
                     children: 'childNodes',
@@ -222,13 +282,15 @@
                     Id:'',
                     className:'',
                 },
-
+                // ----------提示框信息
+                dialogUpdateConfirm:false,
+                isUpdate:false,
              }
         },
         created(){
             this.getSelectData();
             this.loadTree();
-            this.GetDateTime();
+            this.getDefault();
         },
         validators: {
             'addData.classParentId': function (value) {//上级供应商分类
@@ -249,13 +311,46 @@
                 return this.treeNode;
                 },
         },
+        watch:{
+            addData:{
+                handler: function (val, oldVal) {
+                    let _this = this;
+                    // console.log("数据改变了");
+                    if(!_this.isUpdate){
+                        _this.isUpdate = !_this.isUpdate;
+                        // console.log(_this.isUpdate);
+                        
+                    }
+                },
+                deep: true,
+            }
+        },
         methods:{
+            getDefault(){// 获取默认值
+                let _this=this;
+                // console.log(this.$route.params);
+                _this.$axios.gets('/api/services/app/ContactClassManagement/Get',{Id:_this.$route.params.upParentId}).then(
+                    rsp=>{
+                        // console.log("数据呢");
+                        _this.treeNode.className=rsp.result.className;
+                        _this.treeNode.Id=rsp.result.id;
+                        console.log(_this.treeNode.Id);
+                        console.log(_this.treeNode.className);
+                    }
+                )
+                // _this.addData.classParentId=_this.$route.params.upParentId;
+               
+                // _this.treeNode.Id=_this.$route.params.upParentId;
+                // console.log(_this.treeNode.className);
+                // console.log(_this.treeNode.Id);
+                _this.GetDateTime();//获取当前时间
+            },
             GetDateTime() {//获取当前时间
                 let date=new Date();
-                return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
+                return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
             },          
-            // 成功的提示框
-            open(tittle,iconClass,className) {//提示框
+            // 提示框
+            open(tittle,iconClass,className) {//成功的提示框
                 this.$notify({
                 position: 'bottom-right',
                 iconClass:iconClass,
@@ -265,29 +360,32 @@
                 customClass:className
                     });
             },
-            //---------------获取下拉框选项数据 
-            getSelectData(){
+            showErrTips(e){// 表单错误提示信息
+                $('.tipsWrapper').css({display:'none'});
+            },
+            getSelectData(){ //---------------获取下拉框选项数据 
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
                     // 启用状态
                     _this.selectData.Status001=res.result;
                 })
             },
-             //---------------按钮组功能 
+            //---------------按钮组功能 
             goback() {//返回
                 this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
                 this.$router.push({ path: this.$store.state.url });
             },
-            add(){ //新增
-                this.reset();
-                // _this.isDisabled=true;
-
-            },
+            // add(){ //新增
+            //     this.reset();
+            //     // _this.isDisabled=true;
+            // },
             save() {// 保存
                 let _this=this;
+                $('.tipsWrapper').css({display:'block'})
                 _this.$validate().then(
                     function (success) { 
                         if (success){
+                        $('.tipsWrapper').css({display:'none'});
                             _this.$axios.posts('/api/services/app/ContactClassManagement/Create',_this.addData).then(
                                 rsp=>{
                                     _this.open('保存成功','el-icon-circle-check','successERP'); 
@@ -327,6 +425,26 @@
                         }
                     );
             },
+            // -----------------取消与返回功能
+            cancel(){// 取消
+                this.isBack();
+            },
+            goBack() { // 返回
+                this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
+                this.$router.push({ path: this.$store.state.url });
+            },
+            isBack(){//是否返回
+                let _this=this;
+                if(_this.isUpdate){
+                    _this.dialogUpdateConfirm=true;
+                }else{
+                    _this.goBack();
+                }
+            },
+            sureDoing(){
+                this.goBack();
+            },
+            // -----------------取消与返回功能完
             // ----------树形控件相关----------
             loadIcon(){//添加文件夹图标
                 let _this=this;
@@ -370,7 +488,11 @@
                 this.validation.reset();               
             },
             
-        }
+        },
+        components:{
+            auditInfo,
+
+        },
     }
 </script>
 
@@ -408,7 +530,8 @@
     /* .supClasDetail-wrapper .bgcolor.bgLongWidth .el-select{
         width: 100%;
         } */
-.supClasDetail-wrapper .bgcolor.bgLongWidth .el-select .el-input{
-        width:100%;
-}
+    .supClasDetail-wrapper .bgcolor.bgLongWidth .el-select .el-input{
+            width:100%;
+    }
+
 </style>

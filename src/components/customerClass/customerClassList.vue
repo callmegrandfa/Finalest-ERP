@@ -4,25 +4,31 @@
             <el-col :span="5">
                 <el-col class="h48 pl15 pr15" :span="24">
                     <el-input placeholder="搜索..."
+                              clearable filterable
                               v-model="searchLeft" 
                               class="bCustSearch">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-col>
-
-                <el-col :span='24' class="tree-container" >
-                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                             v-loading="treeLoading" 
-                             :data="customerClassTree"
-                             :props="defaultProps"
-                             node-key="id"
-                             default-expand-all
-                             ref="tree"
-                             :expand-on-click-node="false"
-                             :filter-node-method="filterNode"
-                             @node-click="nodeClick">
-                    </el-tree>
+                <el-col :span='24' class="tree-container">
+                    <vue-scroll :ops="$store.state.option">
+                        <el-tree
+                        :render-content="renderContent_componyTree"
+                        v-loading="treeLoading" 
+                        :highlight-current="true"
+                        :data="customerClassTree"
+                        :props="defaultProps"
+                        node-key="id"
+                        :default-expanded-keys="expandId"
+                        ref="tree"
+                        :expand-on-click-node="false"
+                        :filter-node-method="filterNode"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                    </vue-scroll>
                 </el-col>   
+            </el-col>   
             </el-col>
             
             <el-col :span='19' class="border-left">
@@ -35,7 +41,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button @click="delRow" class="erp_bt bt_del">
+                    <button @click="confirm" class="erp_bt bt_del">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -58,9 +64,10 @@
                      <div class="search_input_group">
                             <div class="search_input_wapper">
                                 <el-input
-                                    v-model="InputName" 
-                                    @change="searchRight"
+                                   v-model="SearchKey"
+                                    clearable filterable
                                     placeholder="搜索..."
+                                   @change="searchRight"
                                     class="search_input">
                                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                                 </el-input>
@@ -89,9 +96,9 @@
                                 </template>
                             </el-table-column>
                             <!-- <el-table-column prop="manager" label="负责人"></el-table-column> -->
-                            <el-table-column prop="classParentName" label="上级客户分类">
+                            <el-table-column prop="classParentId_ClassName" label="上级客户分类">
                               <template slot-scope="scope">
-                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].classParentName}}</el-button>
+                                    <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{tableData[scope.$index].classParentId_ClassName}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
@@ -118,8 +125,7 @@
                             <el-table-column label="操作" fixed='right'>
                                  <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="goModify(scope.row.id)" >查看</el-button>
-                                    <!-- <el-button type="text" size="small"  @click="see(scope.row)" >查看</el-button> -->
-                                    <el-button type="text" size="small"  @click="confirmDel(scope.row)" >删除</el-button>
+                                    <el-button type="text"  @click="confirmDelThis(scope.row)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -130,41 +136,60 @@
                                         @current-change="handleCurrentChange"
                                         :current-page="pageIndex"
                                         :page-size="oneItem"
-                                        :total="totalItem"></el-pagination>   
+                                        :total="totalItem">
+                        </el-pagination>   
                     </el-col>
                 </el-row>
 
             </el-col>
         </el-row>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
-            <el-col :span="24">
+            <el-col :span="24" class="detail_message_btnWapper">
                 <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
             </el-col>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
-                <el-collapse-transition>     
+                <el-collapse-transition>
+                    
                         <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
-                                <span class="dialog_font">无法为此请求检索数据</span>
+                            <vue-scroll :ops="$store.state.option">
+                                <span class="dialog_font">{{response.message}}</span>
                                 <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常,执行sql语句或批处理时产生异常</span>
-                       
-                            </vue-scroll> 
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll>  
                         </el-col>
                       
                 </el-collapse-transition>   
             </el-col>
             
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                 <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -198,8 +223,6 @@ export default {
         label: "className",
         id: "id"
       },
-      // TreeContextMenu:[//点击鼠标右键生成菜单
-      // ],
       InputName: "",
       pageIndex: 0, //分页的当前页码
       totalPage: 0, //当前分页总数
@@ -220,6 +243,7 @@ export default {
       isAdd: true, //判断是增加还是修改
       tittle: "", //模态框tittle
       showParent: true, //上级组织单元是否可选
+      expandId:[],//默认展开kehu树节点
       // 错误信息提示开始
       option: {
         vRail: {
@@ -236,12 +260,22 @@ export default {
           height: "0"
         }
       },
+      dialogUserConfirm:false,//删除提示
+      detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
+      detailParentName:'',//tree节点点击获取前往detail新增页上级菜单name
       detail_message_ifShow: false,
       errorMessage: false,
+      dateabc:'',
       // 错误信息提示结束
-
-      selfAr: [] //根据id获得树形节点本身
+       response:{
+                details:'',
+                message:'',
+                validationErrors:[],
+            },
+      selfAr: [] ,//根据id获得树形节点本身
+      SearchKey:'',//右上搜索
     };
+     
   },
   //----------------创建------------------------------
   created: function() {
@@ -262,7 +296,7 @@ export default {
     },
     "dialogData.classParentId": function(value) {
       //上级客户分类
-      return this.Validator.value(value).required().integer();
+      return this.Validator.value(value).integer();
     },
     "dialogData.remark": function(value) {
       //备注
@@ -275,49 +309,26 @@ export default {
     }
   },
   methods: {
-    //---数据表格加载---------------------------------------------------
-    loadTableData() {
-      //表格
-      let self = this;
-      self.tableLoading = true;
-      self.$axios.gets("/api/services/app/ContactClassManagement/GetAllList", {ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
-            // console.log(res);
-            self.tableData = res.result.items;
-            // console.log(self.tableData)
-            self.totalItem = res.result.totalCount;
-            self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
-            self.tableLoading = false;
-          },
-          function(res) {
-            self.tableLoading = false;
-          }
-        );
-    },
-    // ---------------------------------------获取所有列表数据
-    getDataList() {
-      let self = this;
-      self.$axios.gets("/api/services/app/ContactClassManagement/GetSearch", {ContactOwner:1,InputName: self.InputName,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
-           console.log(res);
-          self.tableData = res.result.items;
-          self.totalItem = res.result.totalCount;
-         
-        });
-    },
-    //------------------------------------------------加载树形结构
-    loadTree() {
+      defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
+    //------------------------------------------------加载树形结构-------------------------
+     loadTree() {
       let self = this;
       self.treeLoading = true;
       self.$axios.gets("api/services/app/ContactClassManagement/GetTreeList", {Ower:1}).then(
           function(res) {
             // console.log(1)
-            // console.log(res);
-            // self.customerClassTree[0].childrenNodes=res;
-            // console.log(self.customerClassTree)
-            // self.treeLoading = false;
-            // self.customerClassTree=res;
-            // self.loadIcon();
+            console.log(res);
             self.treeLoading = false;
             self.customerClassTree=res;
+            self.expandId=self.defauleExpandTree(res,'id')
             self.loadIcon();
           },
           function(res) {
@@ -325,6 +336,7 @@ export default {
           }
         );
     },
+    // -------------------------加载图标-----------------------------------------------
     loadIcon() {
       let self = this;
       self.$nextTick(function() {
@@ -347,6 +359,7 @@ export default {
         });
       });
     },
+        // -------------------------------------------加载状态框---------------------------------
     loadStatus: function() {
       //加载状态下拉框
       let self = this;
@@ -360,50 +373,51 @@ export default {
           },
         );
     },
-  
-    //---保存--------------------------------------------------------
-    save: function() {
+    //---数据表格加载---------------------------------------------------
+   loadTableData(data) {
+      //表格
       let self = this;
-      self.$validate().then(function(success) {
-        if (success) {
-          if (self.dialogData.id != "" && self.dialogData.id != 0) {
-            //判断参数id值，为''是新增，其他为创建
-            self.$axios
-              .puts( "/api/services/app/ContactClassManagement/Update",self.dialogData)
-              .then(
-                function(res) {
-                  self.dialogFormVisible = false;
-                  self.loadTableData();
-                },
-                function(res) {
-                  console.log("error");
-                }
-              );
-          } else {
-            self.$axios.posts("/api/services/app/ContactClassManagement/Create",self.dialogData)
-              .then(
-                function(res) {
-                  self.dialogFormVisible = false;
-                  self.loadTableData();
-                  self.clearAddDate();
-                },
-                function(res) {
-                  console.log("error");
-                }
-              );
-          }
-        }
-      });
+      self.tableLoading = true;
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList",{Id:0,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem,Sorting: self.Sorting }).then(function(res) {
+            // console.log(res);
+          self.tableData = res.result.items;
+          // console.log(self.tableData)
+          self.totalItem = res.result.totalCount;
+          self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
+            if(self.tableData==[]){
+                  self.pageIndex=0
+                  }
+                  self.tableLoading=false;
+                  },function(res){
+                  // self.errorMessage=true;
+                  self.tableLoading=false;
+                  })
+              },
+    // ---------------------------------------获取所有列表数据-----------------
+    getDataList() {
+      let self = this;
+      self.$axios.gets("/api/services/app/ContactClassManagement/GetNoteList", {SearchKey:self.SearchKey,ContactOwner:self.ContactOwner,SkipCount: (self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(res => {
+          //  console.log(res);
+          self.tableData = res.result.items;
+          self.totalItem = res.result.totalCount;
+         
+        });
     },
-    //----------------------------------------------------------------
 
     // ---跳转--------open----------------------------------------------
     goDetail() {
       //点击新增跳转
-      this.$store.state.url = "/customerClass/customerClassDetail/default";
-      this.$router.push({ path: this.$store.state.url }); //点击切换路由
+      let self=this;
+      if(typeof(self.detailParentId)=='number'){
+          self.$store.state.url='/customerClass/customerClassDetail/'+self.detailParentId
+          self.$router.push({path:this.$store.state.url})//点击切换路由
+          
+      }else{
+          self.$store.state.url='/customerClass/customerClassDetail/default'
+          self.$router.push({path:this.$store.state.url})//点击切换路由
+      }
     },
-
+// -------------------------------修改--------------------
     goModify: function(id) {
       //点击跳转修改页modify
       this.$store.state.url = "/customerClass/customerClassModify/" + id;
@@ -420,12 +434,11 @@ export default {
         customClass: className
       });
     },
-      //---------------------------------------------------------------
+
     //右边搜索框
     searchRight() {
       this.getDataList();
     },
-    //------------------------------------------------------------------
     //---清除数据--------------------------------------------------
     clearAddDate: function() {
       //清除新增数据
@@ -433,87 +446,70 @@ export default {
       self.dialogData = {
         //dialog数据
         id: "",
-        Ower: "1",
+        Ower: 1,
         groupId: "1", //集团ID
         ouId: "1", //组织单元ID
         classCode: "", //部门代码
         className: "", //部门名称
-        // director: "", //负责人
-        // phone: "", //电话
         classParentId: "", //父客户id
         remark: "", //备注
         status: "" //启用状态
       };
     },
-    //----------------------------------------------------------------
-
-    //---修改---------------------------------------------------------
-    modify: function(row) {
-      // console.log(row)
-      let self = this;
-      self.tittle = "修改";
-      self.dialogFormVisible = true;
-      self.dialogData.id = row.id;
-      self.dialogData.groupId = row.groupId;
-      // self.dialogData.ouId = row.ouId;
-      self.dialogData.classCode = row.classCode;
-      self.dialogData.className = row.className;
-      // self.dialogData.director = row.director;
-      // self.dialogData.phone = row.phone;
-      self.dialogData.classParentId = row.classParentId;
-      self.dialogData.status = row.status;
-      // console.log(self.dialogData);
-    },
-    //----------------------------------------------------------------
 
     //---控制编辑------分页--------------------------------------------
     handleCurrentChange(val) {
       //页码改变
       let self = this;
       self.page = val;
-      if (self.load) {
+      if(self.load){
         self.loadTableData();
+      }else{
+        self.nodeClick(self.dateabc);
       }
+      
     },
+    
     handleSelectionChange(val) {
       //点击复选框选中的数据
       this.multipleSelection = val;
     },
-    confirmDel(row) {
-      let self = this;
-      this.$confirm("确定删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        center: true
-      })
-        .then(() => {
-          self.delThis(row);
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    delThis(row) {
+    // --------多项删除--------------
+     confirm(){
+                let _this=this;
+                _this.choseAjax='rows'
+                if(_this.multipleSelection.length>0){
+                _this.dialogUserConfirm=true;
+                }
+            },
+    //-------------删除行------------------------------
+  confirmDelThis(row){//单项删除
+            let _this=this;
+            _this.choseAjax='row'
+            _this.row=row;
+            _this.dialogUserConfirm=true;
+        },
+    delThis(){
       //删除行
       let self = this;
-      self.$axios
-        .deletes("/api/services/app/ContactClassManagement/Delete", {
-          id: row.id
-        })
+      self.$axios.deletes("/api/services/app/ContactClassManagement/Delete", { id: self.row.id})
         .then(
           function(res) {
+            self.dialogUserConfirm=false;
             self.open("删除成功", "el-icon-circle-check", "successERP");
             self.loadTableData();
+            self.loadTree();
           },
           function(res) {
-            self.errorMessage = true;
+           if(res && res!=''){
+            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+            self.dialogUserConfirm=false;
+            self.errorMessage=true;
+            // self.open('删除失败','el-icon-error','faildERP');
           }
         );
     },
+     
     // -------------------------------删除行----------------------
     delRow() {
       let self = this;
@@ -521,99 +517,140 @@ export default {
         self.idArray.ids.push(self.multipleSelection[i].id);
       }
       if (self.idArray.ids.length > 0) {
-        self
-          .$confirm("确定删除?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-            center: true
-          })
-          .then(() => {
-            self.$axios
-              .posts(
-                "/api/services/app/ContactClassManagement/BatchDelete",
-                self.idArray
-              )
+        self.$axios .posts( "/api/services/app/ContactClassManagement/BatchDelete",self.idArray )
               .then(
                 function(res) {
-                  self.loadTableData();
-                  self.open("删除成功", "el-icon-circle-check", "successERP");
-                  self.idArray = {
-                    ids: []
+                  // console.log(res);
+                  // self.loadTree() ;//删除成功加载树形节点
+                   self.open("删除成功", "el-icon-circle-check", "successERP");
+                   self.loadTableData();
+                   self.loadTree();
+                   self.idArray = {
+                    ids: [],
                   };
+                  self.dialogUserConfirm=false;
                 },
                 function(res) {
-                  self.errorMessage = true;
+                    if(res && res!=''){ 
+                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                     self.errorMessage=true;
+                     self.dialogUserConfirm=false;
+                     self.idArray = {
+                    ids: [],
+                  };
+                    //  _this.open('删除失败','el-icon-error','faildERP');
                 }
               );
-          })
-          .catch(() => {
-            self.$message({
-              type: "info",
-              message: "已取消删除"
-            });
-          });
-      } else {
-        self.$message({
-          type: "info",
-          message: "请勾选需要删除的数据！"
-        });
       }
     },
-            nodeClick(data){//点击树形控件节点时的回调
-                  let self=this;
-                  // console.log(data);
-                  self.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{Id:data.id,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
-                      res=>{
-                       console.log(res);
-                        // self.totalCount=res.result.totalCount;
-                        self.totalItem = res.result.totalCount;
-                        self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
-                        self.tableData=res.result.items;
-                        
-                  })
-              },
-            filterNode(value, data) {//过滤节点
-                // console.log(value);
-                // console.log(data);
-                if (!value) return true;
-                return data.className.indexOf(value) !== -1;
-                // this.nodeClick(data);
+    getErrorMessage(message,details,validationErrors){
+              let self=this;
+              self.response.message='';
+              self.response.details='';
+              self.response.validationErrors=[];
+              if(details!=null && details){
+                  self.response.details=details;
+              }
+              if(message!=null && message){
+                  self.response.message=message;
+              }
+              if(message!=null && message){
+                  self.response.validationErrors=validationErrors;
+              }
+          },
+    sureAjax(){
+            let self=this;
+            if(self.choseAjax=='row'){
+                self.delThis()
+            }else if(self.choseAjax=='rows'){
+                self.delRow()
             }
+        },
+      nodeClick(data){//点击树形控件节点时的回调
+            let self=this;
+            // console.log(data);
+            if(data.id){
+              self.dateabc=data.id;
+            }else{
+              self.dateabc=data;
+            }
+            self.detailParentId=data.id;//
+             self.detailParentName=data.moduleName;
+            // self.dateabc=data.id;
+            // console.log(self.dateabc)
+            self.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:self.dateabc,ContactOwner:1,SkipCount:(self.page - 1) * self.oneItem,MaxResultCount: self.oneItem}).then(
+                res=>{
+                  // console.log(res);
+                  // self.totalCount=res.result.totalCount;
+                  self.totalItem = res.result.totalCount;
+                  self.totalPage = Math.ceil(res.result.totalCount / self.oneItem);
+                  self.tableData=res.result.items;
+                  self.load=false;
+                  
+            })
+        },
+        filterNode(value, data) {//过滤节点
+            if (!value) return true;
+            return data.className.indexOf(value) !== -1;
+            },
+        
+        renderContent_componyTree(h, { node, data, store }){
+              if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }else{
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }
+          },       
   }
 };
 </script>
 
 <style scoped>
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
+    width: 100%;
+}
+.dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long{
+    color: #ccc;
+}
 .error_tips {
   height: 15px;
   line-height: 15px;
   color: #f66;
 }
-.dialogBtn {
-  display: block;
-  float: left;
-  width: 50%;
-  height: 100%;
-  background-color: #fff;
-  color: #c9c9c9;
-  border: none;
-  border-top: 1px solid #c9c9c9;
-  outline: none;
-  cursor: pointer;
+.dialogBtn{
+    display: block;
+    float: left;
+    width: 50%;
+    height: 100%;
+    background-color: #fff;
+    color: #c9c9c9;
+    border: none;
+    border-top: 1px solid #c9c9c9;
+    outline: none;
+    cursor: pointer;
 }
-.dialogBtn:focus {
-  outline: none;
+.dialogBtn:focus{
+    outline: none;
 }
-.dialog-footer .dialogBtn:first-child {
-  border-right: 1px solid #c9c9c9;
+.dialog-footer .dialogBtn:first-child{
+   border-right: 1px solid #c9c9c9;
 }
-.dialog-footer {
-  padding: 0;
-  height: 50px;
+.dialog-footer{
+    padding:0;
+    height: 50px;
 }
-.dialogBtn:hover {
-  color: #6699ff;
+.dialogBtn:hover{
+     color: #6699FF;
 }
 .TreeMenu {
   position: absolute;

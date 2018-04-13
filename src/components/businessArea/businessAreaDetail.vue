@@ -17,7 +17,7 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>所属组织</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         placeholder=""
                         class="ouId" 
                         @change="changeOuId"
@@ -30,20 +30,21 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_ou"
                             :props="selectProps_ou"
+                            :highlight-current="true"
                             node-key="id"
-                            default-expand-all
                             ref="tree"
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_ou"
+                            :render-content="renderContent_ouId"
                             >
                             </el-tree>
-                            <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullName" :value="item_ou.id">
+                            <!-- <el-option class="select_tree_option" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id" :date="item_ou.id">
                             </el-option> -->
-                            <el-option v-show="false"  v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                            <el-option class="select_tree_option"  v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                         </el-select>
                     </div>
@@ -54,10 +55,10 @@
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>上级业务地区</label>
-                        <el-select filterable  
+                        <label>上级业务地区</label>
+                        <el-select clearable filterable  
                         class="areaParentId" 
-                        @change="isUpdate"
+                       
                         :class="{redBorder : validation.hasError('addData.areaParentId')}" 
                         placeholder=""
                         v-model="addData.areaParentId">
@@ -67,19 +68,22 @@
                             v-model="search_area">
                         </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                             
                             :data="selectTree_area"
+                            :highlight-current="true"
                             :props="selectProps_area"
                             node-key="id"
-                            default-expand-all
-                            ref="tree"
+                            ref="area_tree"
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
                             @node-click="nodeClick_area"
+                            :render-content="renderContent_areaParentId"
                             >
                             </el-tree>
-                            <el-option v-show="false" :key="item_area.id" :label="item_area.areaName" :value="item_area.id">
+                            <el-option class="select_tree_option" :key="item_area.id" :label="item_area.areaName" :value="item_area.id" :date="item_area.id">
                             </el-option>
+                            <!-- <el-option v-show="false" :label="item_area_no.areaName" :value="item_area_no.id">
+                            </el-option> -->
                             <!-- <el-option v-show="false" v-for="item in selectData.area" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
                             </el-option> -->
                         </el-select>
@@ -93,7 +97,7 @@
                    <div class="bgcolor bgLongWidth"><label>
                         <small>*</small>业务地区编码</label>
                         <el-input 
-                        @change="isUpdate"
+                       
                         class="areaCode" 
                         :class="{redBorder : validation.hasError('addData.areaCode')}" 
                         v-model="addData.areaCode"></el-input>
@@ -108,7 +112,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>业务地区名称</label>
                         <el-input 
-                        @change="isUpdate"
+                       
                         class="areaName" 
                         :class="{redBorder : validation.hasError('addData.areaName')}" 
                         v-model="addData.areaName"></el-input>
@@ -122,7 +126,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>负责人</label>
                         <el-input 
-                        @change="isUpdate"
+                       
                         class="manager" 
                         :class="{redBorder : validation.hasError('addData.manager')}" 
                         v-model="addData.manager"  
@@ -137,7 +141,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
-                        @change="isUpdate"
+                       
                         class="remark" 
                         :class="{redBorder : validation.hasError('addData.remark')}" 
                         v-model="addData.remark"
@@ -154,8 +158,8 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
-                        <el-select filterable 
-                        @change="isUpdate" 
+                        <el-select clearable filterable 
+                        
                         class="status" 
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         placeholder=""
@@ -186,8 +190,8 @@
                         <el-date-picker
                         type="date"
                         disabled
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd">
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                         </el-date-picker>
                     </div>
                 </div>    
@@ -200,7 +204,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -211,7 +215,7 @@
             </span>
         </el-dialog>
         <!-- dialog -->
-      <!-- dialog错误信息提示 -->
+     <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
@@ -222,25 +226,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}</span>
-                       
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -251,6 +250,8 @@
   export default({
     data(){
       return{
+        firstModify:false,
+        ifModify:false,
          // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -259,13 +260,13 @@
         search_ou:'',
         item_ou:{
             id:"",
-            ouFullname:""
+            ouName:""
         },
         selectTree_ou:[
         ],
         selectProps_ou: {
             children: 'children',
-            label: 'ouFullname',
+            label: 'ouName',
             id:'id'
         },
 
@@ -274,6 +275,10 @@
             id:"",
             areaName:""
         },
+        // item_area_no:{
+        //     id:0,
+        //     areaName:"无"
+        // },
         selectTree_area:[
         ],
         selectProps_area: {
@@ -313,7 +318,6 @@
 //----------按钮操作--------------
         choseDoing:'',//存储点击按钮判断信息
         dialogUserConfirm:false,//信息更改提示控制
-        update:false,
       }
     },
      validators: {
@@ -342,7 +346,7 @@
           return this.Validator.value(value).required().integer();
       },
       'addData.areaParentId': function (value) {//上级业务地区
-          return this.Validator.value(value).required().integer();
+          return this.Validator.value(value).integer();
       },
       'addData.status': function (value) {//启用状态
          return this.Validator.value(value).required().integer();
@@ -359,16 +363,27 @@
     },
      watch: {
       search_area(val) {
-        this.$refs.tree.filter(val);
+        this.$refs.area_tree.filter(val);
       },
       search_ou(val) {
         this.$refs.tree.filter(val);
-      }
+      },
+      addData:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.firstModify){
+                    _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
     },
     methods: {
         filterNode_ou(value, data) {
             if (!value) return true;
-            return data.ouFullName.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         filterNode_area(value, data) {
             if (!value) return true;
@@ -376,10 +391,47 @@
         },
         getDefault(){
             let _this=this;
-            _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
-             // 默认用户业务组织
-            _this.addData.ouId=res.result.id;
-            })
+            if(_this.$route.params.id=="default"){
+                _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+                // 默认用户业务组织
+                    _this.addData={
+                    "groupId": 1,
+                    "areaType": 1,
+                    'ouId':res.result.id,
+                    "areaParentId": '',
+                    "areaCode": "",
+                    "areaName": "",
+                    "areaFullName": "string",
+                    "areaFullPathId": "string",
+                    "areaFullPathName": "string",
+                    "manager": "",
+                    "status":1,
+                    "remark": ""
+                    },
+                _this.validation.reset();
+                // _this.loadTree('ouId',res.result.id)
+                })
+            }else{
+                
+                _this.addData={
+                    "groupId": 1,
+                    "areaType": 1,
+                    'ouId':parseInt(_this.$route.params.id.split(',')[1]),
+                    "areaParentId":parseInt(_this.$route.params.id.split(',')[0]),
+                    "areaCode": "",
+                    "areaName": "",
+                    "areaFullName": "string",
+                    "areaFullPathId": "string",
+                    "areaFullPathName": "string",
+                    "manager": "",
+                    "status":1,
+                    "remark": ""
+                    },
+                _this.item_area.id=parseInt(_this.$route.params.id.split(',')[0]);
+                _this.item_area.areaName=_this.$route.params.id.split(',')[2]
+                _this.getAreaTree(parseInt(_this.$route.params.id.split(',')[1]))
+                _this.validation.reset();
+            }
         },
         getSelectData(){
             let _this=this;
@@ -401,13 +453,13 @@
             _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
             // 所属组织
                 _this.selectData.ou=res.result;
-                if(_this.$route.params.id!="default"){
-                    _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
-                    _this.addData.ouId=parseInt(_this.$route.params.id.split(',')[1]);
-                    _this.item_area.id=parseInt(_this.$route.params.id.split(',')[0]);
-                    _this.item_area.areaName=_this.$route.params.id.split(',')[2]
-                    _this.getAreaTree(_this.addData.ouId)
-                }
+                // if(_this.$route.params.id!="default"){
+                //     _this.addData.areaParentId=parseInt(_this.$route.params.id.split(',')[0]);
+                //     _this.addData.ouId=parseInt(_this.$route.params.id.split(',')[1]);
+                //     _this.item_area.id=parseInt(_this.$route.params.id.split(',')[0]);
+                //     _this.item_area.areaName=_this.$route.params.id.split(',')[2]
+                //     _this.getAreaTree(_this.addData.ouId)
+                // }
             })
             // _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:_this.SkipCount,MaxResultCount:_this.MaxResultCount}).then(function(res){ 
             // // 所属用户组
@@ -459,32 +511,29 @@
         },
         changeOuId(){
             let _this=this;
-            _this.isUpdate();
             _this.getAreaTree(_this.addData.ouId)
+             _this.addData.areaParentId='';
+            //  _this.item_area.id=0;
+            //  _this.item_area.areaName="无"
         },
         getAreaTree(OuId){
             let _this=this;
-                _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:OuId})
-                .then(function(res){
+            _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:OuId})
+            .then(function(res){
+                if(res.result==null || res.result==[]){
+                    _this.selectTree_area=[]
+                }else{
                     _this.selectTree_area=res.result;
-                    _this.loadIcon();
-                },function(res){
-                })
+                }
+                
+            },function(res){
+            })
         },
       loadTree(){
             let _this=this;
-            //地区
-            // _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
-            // .then(function(res){
-            //     _this.selectTree_area=res.result;
-            //     _this.loadIcon();
-            // },function(res){
-            // })
-            //组织
              _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -498,6 +547,9 @@
                     }else{
                         $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                     }
+                    // if($(this).attr('data-id')==key){ 
+                    //     $(this).click()
+                    // }
                 })
             })
         },
@@ -523,16 +575,35 @@
             }
         });
       },
+      getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
+        },
     nodeClick_ou(data,node,self){
         let _this=this;
         _this.item_ou.id=data.id;
-        _this.item_ou.ouFullName=data.ouFullName;
+        _this.item_ou.ouName=data.ouName;
         // _this.$nextTick(function(){
-        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+        //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({
+            //     top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+            // }).click();
         // })
         $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
             if($(this).attr('date')==data.id){
-                $(this).click()
+                $(this).css({
+                    top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+                }).click()
             }
         })
     },
@@ -541,30 +612,31 @@
         _this.item_area.id=data.id;
         _this.item_area.areaName=data.areaName;
         _this.$nextTick(function(){
-            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({
+                top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top + 26,
+            }).click();
         })
         //  $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
         //     if($(this).attr('date')==data.id){
-        //         $(this).click()
+        //         $(this).css({
+                    //     top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,
+                    // }).click()
         //     }
         // })
     },
     //-------------按钮操作-----------
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
                 _this.back()
             }
         },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
-        },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -584,26 +656,12 @@
         Cancel(){
             let _this=this;
             _this.clearData();
-            _this.update=false;
+            _this.firstModify=false;
+            _this.ifModify=false;
         },
         clearData(){
             let _this=this;
-            _this.addData={
-                "groupId": 1,
-                "areaType": 1,
-                'ouId':'',
-                "areaParentId": '',
-                "areaCode": "",
-                "areaName": "",
-                "areaFullName": "string",
-                "areaFullPathId": "string",
-                "areaFullPathName": "string",
-                "manager": "",
-                "status":1,
-                "remark": ""
-                },
             _this.getDefault()
-            _this.validation.reset();
         },
         saveAdd(){
             let _this=this;
@@ -621,6 +679,40 @@
                     })
                 }
             });
+        },
+        renderContent_ouId(h, { node, data, store }){
+             if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+        },
+        renderContent_areaParentId(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }
         },
 }
 

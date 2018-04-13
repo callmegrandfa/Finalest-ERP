@@ -1,7 +1,7 @@
 <template>
     <div class="userGroupList">
         <el-row class="bg-white">
-             <el-col :span="ifWidth?5:0" v-show="ifWidth">
+             <el-col :span="ifWidth?5:0" v-show="ifWidth" class="search-container">
                 <el-row class="h48 pl15">
                     <el-col :span="18" class="btn-for-search">
                         <img src="../../../static/image/common/search_btn.png">
@@ -15,27 +15,28 @@
                 <div class="bgcolor smallBgcolor"><label>用户组名称</label><el-input v-model="searchData.UserGroupName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>所属组织</label>
-                    <el-select v-model="searchData.OuId" placeholder="">
+                    <el-select clearable v-model="searchData.OuId" placeholder="">
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
                         v-model="search">
                         </el-input>
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                         :render-content="renderContent_selectTree"
+                         :default-expanded-keys="expandId"
                         :data="selectTree"
+                        :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
-                        default-expand-all
                         ref="tree"
                         :filter-node-method="filterNode"
                         :expand-on-click-node="false"
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -187,7 +188,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">确认删除？</p>
                 </el-col>
             </el-col>
@@ -209,24 +210,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -267,11 +264,12 @@
                 ],
                 item:{
                     id:'',
-                    ouFullname:'',
+                    ouName:'',
                 },
+                expandId:[],
                 selectProps: {
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
 
@@ -385,8 +383,14 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     },function(res){
                     _this.tableLoading=false;
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                 })
             },
             handleCurrentChange(val) {//页码改变
@@ -500,14 +504,23 @@
             },
             filterNode(value, data) {
                 if (!value) return true;
-                return data.ouFullname.indexOf(value) !== -1;
+                return data.ouName.indexOf(value) !== -1;
+            },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
             },
             loadTree(){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
                 .then(function(res){
                     _this.selectTree=res.result;
-                    _this.loadIcon();
+                    _this.expandId=_this.defauleExpandTree(res.result,'id')
                 },function(res){
                 })
             },
@@ -527,7 +540,7 @@
             nodeClick(data,node,self){
                 let _this=this;
                 _this.item.id=data.id;
-                _this.item.ouFullname=data.ouFullname;
+                _this.item.ouName=data.ouName;
                 // _this.$nextTick(function(){
                 //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
                 // })
@@ -546,7 +559,32 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({UserGroupName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            getHeight(){
+                $(".search-container").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+                $(".border-left").css({
+                    minHeight:$('.bg-white').css('height')
+                })
+            },
+            renderContent_selectTree(h, { node, data, store }){
+                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+            },
         },
     }
 </script>
@@ -566,7 +604,7 @@
     border-bottom: 1px solid #E4E4E4;
 }
 .mt20{
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .pl15{
     padding-left: 15px;
@@ -579,7 +617,6 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 498px;
 }
 .btn{
     display: inline-block;

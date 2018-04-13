@@ -1,5 +1,5 @@
 <template>
-    <div class="commercialSpecificationDetails commodity">
+    <div class="group-management-wrapper commodity">
         <el-row class="bg-white">
             <el-col :span='24' class="border-left">
                 <el-row class="fixed bg-white" >
@@ -364,8 +364,6 @@ import Textbox from '../../base/textbox/textbox'
                         _this.addData.isSystem = res.result.isSystem;
                         _this.addData.seq = res.result.seq;
                         _this.addData.status = res.result.status;
-                        _this.addData.specgroupEnable = res.result.specgroupEnable;
-                        _this.addData.createdBy = res.result.createdBy;//创建人
                         _this.addData.createdTime = res.result.createdTime.substring(0,19);//创建时间
                         _this.addData.modifiedBy = res.result.modifiedBy;//修改人
                         _this.addData.modifiedTime = res.result.modifiedTime.substring(0,19);//修改时间
@@ -401,7 +399,7 @@ import Textbox from '../../base/textbox/textbox'
                             }
                         })
                     }
-
+               
                     if(_this.preserve1){//修改保存
                        _this.$validate().then(function(success){
                             if(success){
@@ -428,7 +426,7 @@ import Textbox from '../../base/textbox/textbox'
                             }
                         }) 
                     }
-                }
+                     }
                     if(data == '保存并新增'){
                         if(_this.preserveAdd && _this.preserve1 == false){
                             _this.$validate().then(function(success){
@@ -442,7 +440,7 @@ import Textbox from '../../base/textbox/textbox'
                                         _this.statusBotton(false,false,false,true,true);
                                         _this.statusBottontwo(false,false,false,false,true,true);
                                         _this.bottonbox.botton[0].update = false;
-                                        _this.$store.state.url='/commercial/commercialSpecificationModify/default'
+                                        _this.$store.state.url='/commercial/commercialSpecificationDetails/default'
                                         _this.$router.push({path:_this.$store.state.url})//点击切换路由OuManage
                                         _this.open('创建商品类目成功','el-icon-circle-check','successERP');    
                                     },function(res){
@@ -468,7 +466,7 @@ import Textbox from '../../base/textbox/textbox'
                                         _this.statusBotton(false,false,false,true,true);
                                         _this.statusBottontwo(false,false,false,false,true,true);
                                         _this.bottonbox.botton[0].update = false;
-                                        _this.$store.state.url='/commercial/commercialSpecificationModify/default'
+                                        _this.$store.state.url='/commercial/commercialSpecificationDetails/default'
                                         _this.$router.push({path:_this.$store.state.url})//点击切换路由OuManage
                                         _this.open('保存商品类目成功','el-icon-circle-check','successERP');    
                                     },function(res){
@@ -486,7 +484,7 @@ import Textbox from '../../base/textbox/textbox'
                 if(data == '新增'){
                     if(_this.Add){
                         _this.bottonbox.botton[0].update=false;
-                        _this.$store.state.url='/commercial/commercialSpecificationModify/default'
+                        _this.$store.state.url='/commercial/commercialSpecificationDetails/default'
                         _this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
                     }  
                 }
@@ -521,7 +519,9 @@ import Textbox from '../../base/textbox/textbox'
                 if (strDate >= 0 && strDate <= 9) {
                     strDate = "0" + strDate;
                 }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
                 return currentdate;
             },
             isUpdate(){
@@ -569,22 +569,7 @@ import Textbox from '../../base/textbox/textbox'
                 this.abolish = d,//取消状态控制
                 this.Add = f,//新增状态控制
                 this.del = g//删除状态控制
-            },
-            getErrorMessage(message,details,validationErrors){
-                let _this=this;
-                _this.response.message='';
-                _this.response.details='';
-                _this.response.validationErrors=[];
-                if(details!=null && details){
-                    _this.response.details=details;
-                }
-                if(message!=null && message){
-                    _this.response.message=message;
-                }
-                if(message!=null && message){
-                    _this.response.validationErrors=validationErrors;
-                }
-            },
+            }
         },
         components:{
             Btm,
@@ -647,7 +632,7 @@ h4{
 </style>
 
 <style>
-.commercialSpecificationDetails .smallBgcolor .el-input input{
+.commodity .smallBgcolor .el-input input{
     height: 33px!important;
 }
 .el-checkbox__inner{

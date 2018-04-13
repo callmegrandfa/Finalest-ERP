@@ -47,6 +47,7 @@
                         <label>行政地区</label>
                         <el-select class="queryAd"
                                    placeholder=""
+                                   clearable
                                    v-model="queryAd">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -75,6 +76,7 @@
                         <label>业务地区</label>
                         <el-select class="queryOp"
                                    placeholder=""
+                                   clearable
                                    v-model="queryOp">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -115,7 +117,7 @@
                 <el-row class="fs12">
                     <div class="bgcolor smallBgcolor">
                         <label>店铺性质</label>
-                        <el-select v-model="queryProperty" placeholder="">
+                        <el-select v-model="queryProperty" placeholder="" clearable>
                             <el-option v-for="item in propertyAr"
                                         :key="item.itemValue"
                                         :label="item.itemName"
@@ -142,7 +144,7 @@
                         
                     </el-col>
 
-                    <el-col :span='22' class="pt5">
+                    <el-col :span='24' class="pt5">
                         <button class="erp_bt bt_add" @click="goDetail">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
@@ -150,7 +152,7 @@
                             <span class="btDetail">新增</span>
                         </button>
 
-                        <button class="erp_bt bt_del" @click="delRow">
+                        <button class="erp_bt bt_del" @click="delMore(2)">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_del.png">
                             </div>
@@ -170,6 +172,21 @@
                             </div>
                             <span class="btDetail">打印</span>
                         </button>
+
+                        <div class="search_input_group">
+                            <div class="search_input_wapper" @keyup.enter="submitSearch">
+                                <el-input v-model="searchKey"
+                                          placeholder="搜索..."
+                                          class="search_input">
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
+                            <div class="search_button_wrapper">
+                                <button class="userDefined">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                </button>
+                            </div>
+                        </div>
                     </el-col>
                     
                     
@@ -179,7 +196,7 @@
                     <el-col :span="24">
                         <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                             <el-table-column type="selection" fixed></el-table-column>
-                            <el-table-column prop="ouId_OuName" label="所属组织" fixed></el-table-column>
+                            <el-table-column prop="ouName" label="所属组织" fixed></el-table-column>
                             <el-table-column prop="shopCode" label="店铺编码" fixed>
                                 <template slot-scope="scope">
                                     <el-button type="text" size="small"  @click="goModify(scope.row.id)">{{scope.row.shopCode}}</el-button>
@@ -199,7 +216,7 @@
                             <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button v-on:click="confirmDel(scope.row)" type="text" size="small">删除</el-button>
+                                    <el-button v-on:click="delRow(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -226,6 +243,24 @@
 
             </el-col>
         </el-row>
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
         <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -293,7 +328,7 @@
                 //---行政地区树形下拉-----
                 adSearch:'',//树形搜索框的
                 selectAdProps:{
-                    children: 'items',
+                    children: 'childItems',
                     label: 'areaName',
                     id:'id'
                 },
@@ -317,7 +352,7 @@
                 opAr:[],//业务地区下拉框
                 //-----------------------
 
-                adAr:[],//行政地区下拉框
+                // adAr:[],//行政地区下拉框
                 propertyAr:'',//客户性质下拉框
 
                 pageIndex:-1,//分页的当前页码
@@ -330,7 +365,9 @@
                     ids:[]
                 },//复选框选中数据id
                 ifWidth:true,//控制左侧搜索展开
-
+                //---确认删除-----------------               
+                dialogDelConfirm:false,//用户删除保存提示信息
+                //-------------------- 
                 //---错误提示框----------------
                 option: {
                     vRail: {
@@ -355,6 +392,12 @@
                     validationErrors:[],
                 },
                 //-----------------------------
+                //-----------------------------
+                who:'',//删除的是谁以及是否是多项删除
+                whoId:'',//单项删除的id
+                whoIndex:'',//单项删除的index
+                //----------------------------
+                searchKey:'',
             }
         },
         created:function(){
@@ -408,9 +451,9 @@
                     console.log('err'+res)
                 });
                 //行政地区
-                self.$axios.gets('/api/services/app/AreaManagement/GetAllDataTree',{AreaType:2}).then(function(res){
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetTree').then(function(res){
                     // console.log(res);
-                    self.opAr = res.result;
+                    self.adAr = res.result;
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
@@ -462,82 +505,81 @@
             let self = this;
             self.$axios.gets('/api/services/app/ShopManagement/GetAll',{OuId:self.queryOu,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ShopCode:self.queryCode,ShopName:self.queryName,ShopWorkPropertyid:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
                 console.log(res);
-                if(res.result.totalCount>0){
-                    self.allList = res.result.items;
-                    console.log(self.allList)
-                    self.total = res.result.totalCount;
-                    self.totalPage = Math.ceil(self.total/self.eachPage)
-                }else{
-                    self.loadAllList();
-                }
+                // if(res.result.totalCount>0){
+                self.allList = res.result.items;
+                console.log(self.allList)
+                self.total = res.result.totalCount;
+                self.totalPage = Math.ceil(self.total/self.eachPage)
+                // }else{
+                //     self.loadAllList();
+                // }
                 
             },function(res){
                 console.log('err'+res)
             })
         },
-        //-------------------------------------------------------------------
+        //-------------------------------------------------
 
-        //---控制修改及分页--------------------------------------------------
-        confirmDel(row) {
+        //---确认删除----------------------------------------
+        sureDel:function(){
             let self = this;
-            this.$confirm('确定删除?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-            center: true
-            }).then(() => {
-                self.delThis(row);
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
+            if(self.who == 1){
+                self.$axios.deletes('/api/services/app/ShopManagement/Delete',{id:self.whoId}).then(function(res){
+                    
+                    self.allList.splice(self.whoIndex,1);
+                    self.dialogDelConfirm = false;
+                    self.open('删除成功','el-icon-circle-check','successERP');
+                },function(res){
+                    self.dialogDelConfirm = false;
+                    self.errorMessage=true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })
+            };
+
+            if(self.who == 2){
+                // console.log(self.idArray)
+                self.$axios.posts('/api/services/app/ShopManagement/BatchDelete',self.idArray).then(function(res){
+                    self.loadAllList();
+                    self.dialogDelConfirm = false;
+                    self.open('删除成功','el-icon-circle-check','successERP');    
+                },function(res){
+                    self.dialogDelConfirm = false;
+                    self.errorMessage=true;
+                    self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                })
+            }
         },
-        delThis:function(row){//删除选中的项
-            let self=this;
-            self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:row.id}).then(function(res){
-                self.open('删除成功','el-icon-circle-check','successERP');
-                self.loadAllList();
-            },function(res){
-                self.errorMessage=true;
-                self.open('删除失败','el-icon-error','faildERP')
-                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-            })
+        //--------------------------------------------------
+
+        //---行内删除---------------------------------------
+        delRow:function(index,row,who){
+            let self = this;
+            // console.log(row)
+            self.who = who;
+            self.whoIndex = index;
+            self.whoId = row.id;
+            self.dialogDelConfirm = true;
         },
-        delRow(){//批量删除
-            let self=this;
+        //-------------------------------------------------
+
+        //---批量删除--------------------------------------
+        delMore:function(num){
+            let self = this;
+            self.idArray.ids = [];
             for(let i in self.multipleSelection){
                 self.idArray.ids.push(self.multipleSelection[i].id)
             }
-            if(self.idArray.ids.indexOf(undefined)!=-1){
-                self.$message({
-                    type: 'warning',
-                    message: '新增数据请在行内删除'
-                });
-                return;
-            }
+
             if(self.idArray.ids.length>0){
-                self.$confirm('确定删除?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                    }).then(() => {
-                        self.$axios.posts('/api/services/app/ContactManagement/BatchDelete',self.idArray).then(function(res){
-                            self.loadAllList();
-                            self.open('删除成功','el-icon-circle-check','successERP');    
-                        },function(res){
-                            self.errorMessage=true;
-                            self.open('删除失败','el-icon-error','faildERP')
-                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        })
-                    }).catch(() => {
-                        self.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                });
+                if(self.idArray.ids.indexOf(undefined)!=-1){
+                    self.$message({
+                        type: 'warning',
+                        message: '新增数据请在行内删除'
+                    });
+                    return;
+                }
+                self.dialogDelConfirm = true;   
+                self.who = num;
             }else{
                 self.$message({
                     type: 'info',
@@ -545,6 +587,9 @@
                 });
             }
         },
+        //-------------------------------------------------
+
+        //---控制修改及分页--------------------------------------------------
         handleSelectionChange:function(val){//点击复选框选中的数据
             this.multipleSelection = val;
         },
@@ -641,6 +686,29 @@
             }
         },
         //-----------------------------------------------------
+
+        //---表格查询------------------------------------------
+        submitSearch(){
+            let self=this;
+            if(self.searchKey!=''){
+                self.searchTable();
+            }else{
+                self.loadAllList();
+            }
+        },
+        searchTable:function(){
+            let self = this;
+            self.$axios.gets('/api/services/app/ShopManagement/GetAll',{ShopCode:self.searchKey,SkipCount:'0',MaxResultCount:'10'}).then(function(res){
+                console.log(res);
+
+                self.allList = res.result.items;
+                self.total = res.result.items.length;
+                self.totalPage = Math.ceil(self.total/self.eachPage)
+            },function(res){
+                console.log('err'+res)
+            })
+        },
+        //----------------------------------------------------
     }
 }
 </script>

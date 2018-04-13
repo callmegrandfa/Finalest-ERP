@@ -114,7 +114,7 @@
                                     <el-button type="text"  @click="modify(scope.row)">{{tableData[scope.$index].className }}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="classParentName" label="上级供应商分类">
+                            <el-table-column prop="classParentId_ClassName" label="上级供应商分类">
                             </el-table-column>
                             <el-table-column prop="remark" label="备注">
                             </el-table-column>
@@ -166,6 +166,7 @@
          data(){
              return{
                  ContactOwner:2,//  供应商分类参数(获取所有数据时)
+                 inputId:0,
                   // -------树形控件数据
                 filterText:'',
                 supplierClasTree:[],
@@ -189,6 +190,9 @@
                 // ------------
                 rightKeyword:'',
                 tableLoading:false,
+                // -----------上级供应商分类的传递参数
+                upClassName:'',
+                upClassId:'',
                 
              }
          },
@@ -214,9 +218,9 @@
                 });
             },
            //-----------数据渲染---------------
-           getDataList(){
+            getDataList(){
                 let _this=this;
-                _this.$axios.gets('/api/services/app/ContactClassManagement/GetAllList',{ContactOwner:_this.ContactOwner,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize}).then(
+                _this.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:_this.inputId,ContactOwner:_this.ContactOwner,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize}).then(
                     rsp=>{
                         _this.tableData=rsp.result.items;
                         // console.log(rsp.result);
@@ -229,8 +233,10 @@
             },
            //-----------按钮组功能---------------
             goAdd(){ //增加去详情页(detail)
-                this.$store.state.url = "/supplierClassify/supplierClassifyDetail/default";
-                this.$router.push({ path: this.$store.state.url });
+                // this.$store.state.url = "/supplierClassify/supplierClassifyDetail/default";
+                // this.$router.push({ path: this.$store.state.url });
+
+                 this.$router.push({  name:'supplierClassifyDetail',params: {upParentId:this.upClassId,upClassName:this.upClassName}});
             },
             //------------分页器函数
             handleCurrentChange(val){
@@ -264,13 +270,17 @@
             nodeClick(data){//点击树形控件节点时的回调
                 let _this=this;
                 // console.log(data);
-                _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
-                    rsp=>{
-                    //  console.log(rsp.result);
-                     _this.tableData=rsp.result.items;
-                     _this.totalCount=rsp.result.totalCount;
-                     _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
-               })
+                _this.inputId=data.id;
+                _this.upClassName=data.className;
+                _this.upClassId=data.id;
+                // //     _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
+                //         rsp=>{
+                //         //  console.log(rsp.result);
+                //          _this.tableData=rsp.result.items;
+                //          _this.totalCount=rsp.result.totalCount;
+                //          _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
+                //    })
+                _this.getDataList();
             },
             getSonNode(data) {//获取树形节点子节点
                 let _this=this;

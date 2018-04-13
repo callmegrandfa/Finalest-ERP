@@ -17,21 +17,23 @@
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-autocomplete>
                 </el-col>
-                <el-col :span='24' class="tree-container" >
-                    <el-tree
-                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                    v-loading="treeLoading" 
-                    :highlight-current="true"
-                    :data="componyTree"
-                    :props="defaultProps"
-                    node-key="id"
-                    default-expand-all
-                    ref="tree"
-                    :expand-on-click-node="false"
-                    :filter-node-method="filterNode"
-                    @node-click="nodeClick"
-                    >
-                    </el-tree>
+                <el-col :span='24' class="tree-container">
+                    <vue-scroll :ops="$store.state.option">
+                        <el-tree
+                        :render-content="renderContent_componyTree"
+                        v-loading="treeLoading" 
+                        :highlight-current="true"
+                        :data="componyTree"
+                        :props="defaultProps"
+                        node-key="id"
+                        :default-expanded-keys="expandId"
+                        ref="tree"
+                        :expand-on-click-node="false"
+                        :filter-node-method="filterNode"
+                        @node-click="nodeClick"
+                        >
+                        </el-tree>
+                    </vue-scroll>
                 </el-col>   
             </el-col>
             <el-col :span='19' class="border-left">
@@ -47,8 +49,9 @@
                         <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
                     </button>
                     <div class="search_input_group">
-                        <div class="search_input_wapper">
+                        <div class="search_input_wapper" @keyup.enter="submitSearch">
                             <el-input
+                                v-model="SearchKey"
                                 placeholder="搜索..."
                                 class="search_input">
                                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -97,7 +100,7 @@
                     <el-col :span='24'>
                         <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" border stripe @selection-change="handleSelectionChange" ref="multipleTable">
                             <el-table-column type="selection"></el-table-column>
-                            <el-table-column prop="systemId" label="系统"></el-table-column>
+                            <el-table-column prop="systemId_SystemName" label="系统"></el-table-column>
                             <el-table-column prop="moduleCode" label="模块编码">
                                 <template slot-scope="scope">
                                     <el-button type="text"  @click="modify(scope.row)">{{scope.row.moduleCode}}</el-button>
@@ -108,7 +111,7 @@
                                     <el-button type="text"  @click="modify(scope.row)">{{scope.row.moduleName}}</el-button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="url" label="web地址"></el-table-column>
+                            <el-table-column prop="url" label="路由地址"></el-table-column>
                             <el-table-column prop="moduleParentId_ModuleName" label="上级菜单"></el-table-column>
                             <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
@@ -139,25 +142,7 @@
 
             </el-col>
         </el-row>
-        <!-- dialog -->
-        <el-dialog :title="tittle" :visible.sync="dialogFormVisible" width="505px" class="areaDialog">
-            <div class="bgcolor smallBgcolor"><label>功能模块代码</label><el-input v-model="dialogData.moduleCode" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>功能模块名称</label><el-input v-model="dialogData.moduleName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>Web地址</label><el-input v-model="dialogData.url" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>图标</label><el-input v-model="dialogData.ico" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>系统 ID</label><el-input v-model="dialogData.systemId" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor">
-                <label>是否在最底层</label>
-                <el-checkbox v-model="dialogData.moduleIsBottom"></el-checkbox>
-            </div>
-            <div class="bgcolor smallBgcolor"><label>功能模块ID全路径</label><el-input v-model="dialogData.moduleFullPathId" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>功能模块名称全路径</label><el-input v-model="dialogData.moduleFullPathName" placeholder=""></el-input></div>
-            <div class="bgcolor smallBgcolor"><label>排序</label><el-input v-model="dialogData.seq" placeholder=""></el-input></div>
-            <div slot="footer" class="dialog-footer">
-                <button class="dialogBtn" @click="sendAjax">确 认</button>
-                <button class="dialogBtn" type="primary" @click="dialogFormVisible = false">取消</button>
-            </div>
-        </el-dialog>
+       
         <!-- dialog是否删除提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -165,7 +150,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">确认删除？</p>
                 </el-col>
             </el-col>
@@ -187,24 +172,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll>  
-                        </el-col>
-                      
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -233,6 +214,7 @@
                 tableData:[],
                 dialogData:{},    
                 componyTree:  [],
+                 expandId:[],//默认展开
                 defaultProps: {
                     children: 'childNodes',
                     label: 'moduleName',
@@ -244,7 +226,7 @@
                 page:1,//当前页
                 treeCheck:[],
                 isClick:[],
-                load:true,
+                load:'loadTableData',
                 totalItem:0,//总共有多少条消息
                 tableLoading:true,
                 treeLoading:true,
@@ -253,14 +235,15 @@
                 tittle:'',
                 dialogUserDefined:false,//dialog
 
-                detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
-                detailParentName:'',//tree节点点击获取前往detail新增页上级菜单name
+                detailParentId:'default',//tree节点点击获取前往detail新增页上级菜单ID
+                detailParentName:'default',//tree节点点击获取前往detail新增页上级菜单name
 
                 response:{
                 details:'',
                 message:'',
                 validationErrors:[],
-            },
+                },
+                SearchKey:'',//右上搜索
             }
         },
         created:function(){       
@@ -289,25 +272,43 @@
             },
             loadTableData(){//表格
                  let _this=this;
-                 _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/ModuleManagement/GetAll',
-                {SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting})
-                .then(function(res){ 
-                    _this.restaurants=[],
-                    _this.tableData=res.result.items;
-                    _this.totalItem=res.result.totalCount
-                    _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                 _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,Sorting:_this.Sorting},'loadTableData')
+            },
+            ajaxTable(data,event){
+                let _this=this;
+                _this.tableLoading=true;
+                _this.$axios.gets('/api/services/app/ModuleManagement/GetListByCondition',data).then(function(res){ 
+                    _this.restaurants=[]
+                    _this.load=event;
+                    _this.tableData=res.items;
+                    _this.totalItem=res.totalCount;
+                    _this.totalPage=Math.ceil(res.totalCount/_this.oneItem);
                     _this.tableLoading=false;
                     if(_this.tableData==[]){
                         _this.pageIndex=0
                     }
-                    $.each(res.result.items,function(index,value){
-                        let item={'value':value.moduleName,'id':value.id};
+                    $.each(res.items,function(index,value){
+                        let item={'value':value.areaName,'id':value.id};
                         _this.restaurants.push(item)
+                    })
+                     _this.$nextTick(function(){
+                        _this.getHeight()
                     })
                     },function(res){
                     _this.tableLoading=false;
+                     _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                 })
+            },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
             },
             loadTree(){
                 let _this=this;
@@ -316,15 +317,9 @@
                 .then(function(res){
                     _this.componyTree=res
                     _this.treeLoading=false;
-                    _this.loadIcon()
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
+                    _this.expandId=_this.defauleExpandTree(res,'id')
                },function(res){
                     _this.treeLoading=false;
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
                })
             },
             loadIcon(){
@@ -341,18 +336,22 @@
                 })
             },
              getHeight(){
-                $(".tree-container").css({
-                    minHeight:$('.bg-white').css('height')
+                 $(".tree-container").css({
+                    height:parseInt($('.bg-white').css('height'))-48+'px'
                 })
                 $(".border-left").css({
-                    minHeight:$('.bg-white').css('height')
+                    height:$('.bg-white').css('height')
                 })
             },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
                  _this.page=val;
-                 if(_this.load){
-                     _this.loadTableData();
+                 if(_this.load=="loadTableData"){
+                      _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},'loadTableData');
+                 }else if(_this.load=="nodeClick"){
+                    _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,ModuleParentId:_this.detailParentId},'nodeClick')
+                 }else if(_this.load=="submitSearch"){
+                   _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
                  }
             },
             SimpleSearch(){//简单搜索
@@ -434,7 +433,6 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
             delRow(){
@@ -454,150 +452,35 @@
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.errorMessage=true;
                     _this.dialogUserConfirm=false;
-                    _this.open('删除失败','el-icon-error','faildERP');
                 })
                 
             },
             nodeClick(data){
                 let _this=this;
+                _this.page=1
                  _this.detailParentId=data.id;//
                  _this.detailParentName=data.moduleName;
-                _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesChildData',{ModuleParentId:data.id})
-                .then(function(res){ 
-                    _this.tableData=res;
-                    _this.totalItem=res.length;
-                    // _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    _this.tableLoading=false;
-                    },function(res){
-                    _this.errorMessage=true;
-                    _this.tableLoading=false;
-                })
+                 _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem,ModuleParentId:_this.detailParentId},'nodeClick')
+                // _this.$axios.gets('/api/services/app/ModuleManagement/GetListByCondition',{ModuleParentId:data.id})
+                // .then(function(res){ 
+                //     console.log(res)
+                //     _this.tableData=res.item;
+                //     _this.totalItem=res.totalCount;
+                //     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                //     _this.tableLoading=false;
+                //     },function(res){
+                //     _this.errorMessage=true;
+                //     _this.tableLoading=false;
+                // })
 
             },
             modify(row){
                 this.$store.state.url='/menu/menuModify/'+row.id
                 this.$router.push({path:this.$store.state.url})
             },
-            see(row){
-                this.$store.state.url='/menu/menuSee/'+row.id
-                this.$router.push({path:this.$store.state.url})//点击切换路由
-            },
-             whichButton(event,node, data){
-                let e = event || window.event;
-                let btnNum = e.button;
-                if(e.target.className!='TreeMenuBtn'){
-                    $('.TreeMenu').css({
-                        display:'none'
-                    })
-                }else{
-                    return false;
-                }
-                if (btnNum==2){
-                e.target.id= data.id
-                let clickDom=$('#'+e.target.id);
-                let x = e.clientX
-                let y = e.clientY
-                let left=clickDom.offset().left;
-                clickDom.children('.TreeMenu').css({
-                    display:'block',
-                    left:x-left+'px',
-                    top:'0px'
-                })
-                $('.el-tree-node>.el-tree-node__children').css({
-                    overflow:'visible'
-                })
-                }
-            },
-            TreeAdd(event,node,data){
-                // $('.TreeMenu').css({
-                //         display:'none'
-                //     })
-                let _this=this;
-                // _this.tittle='新增';
-                // _this.clearTreeData();
-                // _this.isAdd=true;
-                // _this.dialogFormVisible=true;
-                _this.dialogData.moduleParentId=data.id;//父级id
-                _this.$store.state.url='/menu/menuDetail/'+_this.dialogData.moduleParentId
-                _this.$router.push({path:this.$store.state.url})
-                
-            },
-            TreeDel(event,node,data){
-                $('.TreeMenu').css({
-                        display:'none'
-                    })
-                let _this=this;
-                _this.$axios.deletes('/api/services/app/ModuleManagement/Delete',{id:data.id})
-                .then(function(res){
-                    _this.loadTree();
-                    _this.loadTableData();
-                },function(res){    
-
-                })
-            },
-            TreeModify(event,node,data){
-                // $('.TreeMenu').css({
-                //         display:'none'
-                //     })
-                let _this=this;
-                // _this.clearTreeData();
-                // _this.tittle='修改';
-                // _this.isAdd=false;
-                // _this.dialogFormVisible=true;
-                //  _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:data.id})
-                //     .then(function(res){
-                //         _this.dialogData=res.result;
-                //     },function(res){    
-
-                //     })
-                 _this.$store.state.url='/menu/menuModify/'+data.id
-                _this.$router.push({path:this.$store.state.url})
-            },
-            sendAjax(){
-                let _this=this;
-                if(_this.isAdd){
-                    _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.dialogData)
-                    .then(function(res){
-                        _this.dialogFormVisible=false;
-                        _this.loadTree();
-                        _this.loadTableData();
-                    },function(res){    
-                        _this.errorMessage=true;
-                    })
-                }else{
-                     _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.dialogData)
-                    .then(function(res){
-                        _this.dialogFormVisible=false;
-                        _this.loadTree();
-                        _this.loadTableData();
-                    },function(res){    
-                        _this.errorMessage=true;
-                    })
-                }
-                
-            },
-            showTable(event,node,data){
-                let _this=this;
-                _this.tableData=[];
-                _this.tableData.push(data)
-                _this.totalItem=_this.tableData.length;
-            },
             filterNode(value, data) {
                 if (!value) return true;
                  return data.moduleName.indexOf(value) !== -1;
-            },
-            renderContent(h, { node, data, store }) {
-                return (
-                <span class="TreeNode el-tree-node__label" on-mousedown ={ (event) => this.whichButton(event,node, data) }
-                on-click={ (event) => this.showTable(event,node, data) }
-                style="flex: 1; display: flex; align-items: center; justify-content: flex-start; font-size: 14px; padding-right: 8px;position: relative;">
-                    {node.label}
-                   <div class="TreeMenu" style="box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);display:none;position: absolute;top: 0;right: 0;width: 60px;z-index:990">
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeAdd(event,node, data) }>新增</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeDel(event,node, data) }>删除</button>
-                        <button class="TreeMenuBtn" style="font-size: 12px;display: block;width: 100%;height: 25px;border: none;background-color: #fff; cursor: pointer;" on-click={ (event) => this.TreeModify(event,node, data) }>修改</button>
-                    </div>
-                </span>);
             },
             clearTreeData(){
                 let _this=this;
@@ -616,6 +499,28 @@
                 return (state) => {
                 return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
                 };
+            },
+            submitSearch(){
+                let _this=this;
+                _this.page=1
+                 _this.ajaxTable({SearchKey:_this.SearchKey,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+            },
+            renderContent_componyTree(h, { node, data, store }){
+                if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.moduleName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.moduleName}
+                        </span>
+                    );
+                }
             },
         },
     }
@@ -670,7 +575,6 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 380px;
 }
 </style>
 

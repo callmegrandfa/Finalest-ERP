@@ -72,7 +72,7 @@
                         <small>*</small>用户编码</label>
                         <el-input 
                         class="userCode" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.userCode')}" 
                         v-model="addData.userCode" 
                         placeholder=""></el-input>
@@ -86,7 +86,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>用户名称</label>
                     <el-input 
-                    @change="isUpdate"
+                    
                     class="displayName" 
                     :class="{redBorder : validation.hasError('addData.displayName')}" 
                     v-model="addData.displayName"  
@@ -101,7 +101,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>手机号码</label>
                     <el-input 
-                    @change="isUpdate"
+                    
                     class="phoneNumber" 
                     :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
                     v-model="addData.phoneNumber"  
@@ -116,7 +116,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>邮箱</label>
                     <el-input 
-                    @change="isUpdate"
+                    
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
                     v-model="addData.email"  
@@ -130,10 +130,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属用户组</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     class="userGroupId" 
                     placeholder=""
-                    @change="isUpdate"
+                    
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
                     v-model="addData.userGroupId">
                         <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
@@ -148,10 +148,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>所属组织</label>
-                    <el-select 
+                    <el-select clearable 
                     class="ouId" 
                     placeholder=""
-                    @change="isUpdate"
+                    
                     :class="{redBorder : validation.hasError('addData.ouId')}"
                     v-model="addData.ouId">
                         <!-- <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
@@ -162,8 +162,9 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                         :render-content="renderContent_"
                         :data="selectTree"
+                        :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
                         default-expand-all
@@ -173,9 +174,9 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouFullname" :value="item.id">
+                        <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                     </el-select>
                     </div>
@@ -187,10 +188,10 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>身份类型</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     class="userType" 
                     placeholder=""
-                    @change="isUpdate"
+                    
                     :class="{redBorder : validation.hasError('addData.userType')}"
                     v-model="addData.userType">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
@@ -205,9 +206,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>语种</label>
-                    <el-select filterable  
+                    <el-select clearable filterable  
                     class="languageId" 
-                    @change="isUpdate"
+                    
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
                     v-model="addData.languageId">
@@ -225,13 +226,13 @@
                         <label>有效时间</label>
                         <div class="rangeDate">
                             <el-date-picker
-                            @change="isUpdate"
+                            
                             v-model="dateRange"
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
                             type="daterange"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd" 
+                            format="yyyy-MM-dd HH:mm:ss"
+                            value-format="yyyy-MM-dd HH:mm:ss" 
                             range-separator="to"
                             align="center"
                             unlink-panels
@@ -248,9 +249,9 @@
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label>状态</label>
-                        <el-select filterable  
+                        <el-select clearable filterable  
                         class="status" 
-                        @change="isUpdate"
+                        
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"
                         v-model="addData.status">
@@ -278,7 +279,7 @@
                         <label>备注</label>
                         <el-input
                         class="remark" 
-                        @change="isUpdate"
+                        
                         :class="{redBorder : validation.hasError('addData.remark')}"
                         v-model="addData.remark"
                         type="textarea"
@@ -389,14 +390,15 @@
                 <el-col :span="11" class="transfer_warapper">
                         <el-col :span="24" class="transfer_header">
                             <span>已选</span>
-                            <div class="transfer_search">
-                                <el-autocomplete
-                                class="search_input"
-                                placeholder="搜索..."
-                                >
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                </el-autocomplete>
-                            </div>    
+                            <div class="transfer_search" @keyup.enter="searchLeftTable">
+                               <el-input
+                                    placeholder="搜索..."
+                                    v-model="searchTableLeft"
+                                    class="search_input"
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>       
                         </el-col>    
                         <el-col :span="24" class="transfer_table">
                             <el-table 
@@ -414,7 +416,7 @@
                         </el-col>
                         <el-col :span="24" class="transfer_footer">
                             <el-col :span="18">
-                                <span>总共有{{totalItemLeft}}条数据</span>
+                                <span>共{{totalPageLeft}}页</span>
                             </el-col>
                             <el-col :span="6">
                                 <el-button class="el_transfer" :disabled="leftDownBtn" @click="pageDownLeft" type="primary" icon="el-icon-arrow-left" round></el-button>
@@ -431,13 +433,14 @@
                 <el-col :span="11" class="transfer_warapper">
                     <el-col :span="24" class="transfer_header">
                         <span>可选</span>
-                        <div class="transfer_search">
-                            <el-autocomplete
-                            class="search_input"
-                            placeholder="搜索..."
-                            >
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-autocomplete>
+                        <div class="transfer_search" @keyup.enter="searchRightTable">
+                            <el-input
+                                placeholder="搜索..."
+                                v-model="searchTableRight"
+                                class="search_input"
+                                >
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
                         </div>
                     </el-col>    
                     <el-col :span="24" class="transfer_table">
@@ -457,7 +460,7 @@
                     </el-col>
                     <el-col :span="24" class="transfer_footer">
                         <el-col :span="18">
-                            <span>总共有{{totalItemRight}}条数据</span>
+                            <span>共{{totalPageRight}}页</span>
                         </el-col>
                         <el-col :span="6">
                             <el-button class="el_transfer" :disabled="rightDownBtn" @click="pageDownRight" type="primary" icon="el-icon-arrow-left" round></el-button>
@@ -478,7 +481,7 @@
             </template>
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
                     <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
                 </el-col>
             </el-col>
@@ -489,7 +492,7 @@
             </span>
         </el-dialog>
         <!-- dialog -->
-      <!-- dialog错误信息提示 -->
+     <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
@@ -500,22 +503,20 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
                 </el-col>
                 <el-collapse-transition>
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
+                    <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                        <vue-scroll :ops="$store.state.option">
+                            <span class="dialog_font">{{response.message}}</span>
+                            <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                            <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                        </vue-scroll> 
+                    </el-col>
                 </el-collapse-transition>   
             </el-col>
-            
             <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -526,7 +527,11 @@
   export default({
     data(){
       return{
-        timeout:null,
+        firstModify:false,
+        secondModify:false,
+        ifModify:false,
+        searchTableLeft:'',//搜索
+        searchTableRight:'',//搜索
          // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -536,11 +541,11 @@
         ],
         item:{
             id:'',
-            ouFullname:''
+            ouName:''
         },
         selectProps: {
             children: 'children',
-            label: 'ouFullname',
+            label: 'ouName',
             id:'id'
         },
 
@@ -558,7 +563,7 @@
           "ouId": "",
           "status": 1,
           "userType": "",
-          "languageId": "",
+          "languageId": 9,
           "isReg": false,
           "remark": "",
           "roleCodes": []
@@ -586,7 +591,8 @@
         totalCount:0,
 
         
-        // ------------关联角色dialog-------------
+// ------------关联角色dialog-------------
+        dialogTableVisible:false,//控制对话框
         checkedTable:[],//已选所有数据
         showChecked:[],//右侧表格展示的数据
         // roleCodesCancel:[],//表格数据，用于取消操作
@@ -597,10 +603,13 @@
         selection_nochecked: [],//复选框选中数据
         is_nocheked:true,//可选
         is_cheked:true,//已选
+        LeftWitchPage:"pagination",//分页判断条用函数
+        RightWitchPage:"pagination",//分页判断条用函数
 //---------left表格-------------
         pageIndexLeft:1,//分页的当前页码
         totalPageLeft:0,//当前分页总数
         oneItemLeft:10,//每页有多少条信息
+        searchLeftDatas:[],//左侧搜索之后所有数据，未分页
         pageLeft:1,//当前页 
         totalItemLeft:0,//总共有多少条消息  
         leftDownBtn:true,//分页按钮是否显示
@@ -608,6 +617,7 @@
  //---------right表格-------------         
         totalItemRight:0,//总共有多少条消息 
         pageIndexRight:1,//分页的当前页码
+        searchRightDatas:[],//右侧搜索之后所有数据，未分页
         totalPageRight:0,//当前分页总数
         oneItemRight:10,//每页有多少条信息
         pageRight:1,//当前页 
@@ -623,7 +633,6 @@
 //----------按钮操作--------------
         choseDoing:'',//存储点击按钮判断信息
         dialogUserConfirm:false,//信息更改提示控制
-        update:false,
       }
     },
      validators: {
@@ -672,14 +681,61 @@
     watch: {
       search(val) {
         this.$refs.tree.filter(val);
-      }
+      },
+       addData:{
+            handler:function(val,oldVal){
+                let _this=this;
+                if(!_this.firstModify){
+                    _this.firstModify=!_this.firstModify;
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
+        checkedTable:{
+            handler:function(val,oldVal){
+                
+                let _this=this;
+                if(!_this.secondModify){ 
+                    _this.secondModify=!_this.secondModify;
+                    // _this.ifModify=true
+                }else{
+                    _this.ifModify=true
+                }
+            },
+            deep:true,
+        },
     },
     methods: {
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
+                // console.log(res);
             // 默认用户业务组织
-            _this.addData.ouId=res.result.id;
+                _this.addData={
+                    "userCode": "",
+                    "displayName": "",
+                    "phoneNumber": "",
+                    "email": "",
+                    "userGroupId": "",
+                    "ouId": res.result.id,
+                    "status": 1,
+                    "userType": "",
+                    "languageId":9,
+                    "isReg": false,
+                    "remark": "",
+                    "roleCodes": []
+                };
+                _this.addData.effectiveStart='';
+                _this.addData.effectiveEnd='';
+                _this.dateRange=[];
+                _this.validation.reset();
+            })
+             _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
+                 console.log(res)
+            // 语种
+                _this.selectData.languageId=res.result.items;
             })
         },
         getSelectData(){
@@ -744,14 +800,13 @@
     //   },
         filterNode(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         loadTree(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
             },function(res){
             })
         },
@@ -771,7 +826,7 @@
         nodeClick(data,node,self){
             let _this=this;
             _this.item.id=data.id;
-            _this.item.ouFullname=data.ouFullname;
+            _this.item.ouName=data.ouName;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
@@ -950,6 +1005,8 @@
         getAllRoleData(){
             let _this=this;
             _this.checkedTable=[]
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.$axios.gets('/api/services/app/Role/GetAll',{SkipCount:0,MaxResultCount:1})//获取所有角色
             .then(function(re){ 
                 let totalAll=re.result.totalCount;//获取总共当前关联角色条数
@@ -994,29 +1051,28 @@
         },
         noCheck_push_check(){//从右往左添加数据
             let _this=this;
-            _this.update=true;
-            
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.showChecked=_this.pagination(_this.selection_nochecked,[],_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination([],_this.selection_nochecked,_this.oneItemRight,_this.pageRight,'right')
         },
         check_push_noCheck(){//从左往右添加数据
             let _this=this;
-            _this.update=true;
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
             _this.showChecked=_this.pagination([],_this.selection_checked,_this.oneItemLeft,_this.pageLeft,'left')
             _this.showNoChecked=_this.pagination(_this.selection_checked,[],_this.oneItemRight,_this.pageRight,'right')
            
         },
         check_push_noCheckThis(val){//删除一个关联角色
             let _this=this;
-            if(!_this.isEdit){
-                let json=[val]
-                _this.update=true;
-                _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
-                _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
-                _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
-            }else{
-                return false
-            }
+            let json=[val]
+            _this.LeftWitchPage="pagination";
+            _this.RightWitchPage="pagination";
+            _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
+            _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
+            _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
+
         },
         cancelPush(){//取消
             let _this=this;
@@ -1025,76 +1081,70 @@
         },
         pageDownLeft(){//左侧表格向左翻页
             let _this=this;
-            if(_this.pageLeft>1){
+             if(_this.pageLeft>1){
                 _this.pageLeft--
+                if(_this.LeftWitchPage=="pagination"){
+                    _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
+                }else if(_this.LeftWitchPage=="searchLeftTable"){
+                    _this.showChecked=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).nowData
+                    _this.totalItemLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalItem
+                    _this.totalPageLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalPage
+                }
                 
-                _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
             }
         },
         pageAddLeft(){//左侧表格向右翻页
             let _this=this;
             if(_this.pageLeft<=_this.totalPageLeft){
                 _this.pageLeft++
-                _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left')
+                if(_this.LeftWitchPage=="pagination"){//穿梭分页
+                    _this.showChecked=_this.pagination([],[],_this.oneItemLeft,_this.pageLeft,'left');
+                }else if(_this.LeftWitchPage=="searchLeftTable"){//搜索分页
+                    _this.showChecked=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).nowData
+                    _this.totalItemLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalItem
+                    _this.totalPageLeft=_this.paginationUserSearch(_this.searchLeftDatas,_this.oneItemLeft,_this.pageLeft).TotalPage
+                }
             }
         },
         pageDownRight(){//右侧表格向左翻页
             let _this=this;
             if(_this.pageRight>1){
                 _this.pageRight--
-                _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
-            }    
+                if(_this.RightWitchPage=="pagination"){
+                    _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right');
+                }else if(_this.RightWitchPage=="searchRightTable"){//搜索分页
+                    _this.showNoChecked=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).nowData
+                    _this.totalItemRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalItem
+                    _this.totalPageRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalPage
+                }
+            }      
         },
         pageAddRight(){//右侧表格向右翻页
             let _this=this;
             if(_this.pageRight<_this.totalPageRight){
                 _this.pageRight++
-                _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right')
+                if(_this.RightWitchPage=="pagination"){
+                    _this.showNoChecked=_this.pagination([],[],_this.oneItemRight,_this.pageRight,'right');
+                }else if(_this.RightWitchPage=="searchRightTable"){//搜索分页
+                    _this.showNoChecked=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).nowData
+                    _this.totalItemRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalItem
+                    _this.totalPageRight=_this.paginationUserSearch(_this.searchRightDatas,_this.oneItemRight,_this.pageRight).TotalPage
+                }
             }
         },
-        // queryLeft(queryString, cb) {
-        //     var restaurants=[]
-        //     $.each(this.showChecked,function(index,value){
-        //         let item={'value':value.displayName,'id':value.id};
-        //         restaurants.push(item)
-        //     })
-        //     var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-        //     clearTimeout(this.timeout);
-        //     this.timeout = setTimeout(() => {
-        //     cb(results);
-        //     }, 100 * Math.random());
-        // },
-        // queryRight(queryString, cb) {
-        //     var restaurants=[]
-        //     $.each(this.showNoChecked,function(index,value){
-        //         let item={'value':value.displayName,'id':value.id};
-        //         restaurants.push(item)
-        //     })
-        //     console.log(restaurants)
-        //     var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-        //     clearTimeout(this.timeout);
-        //     this.timeout = setTimeout(() => {
-        //     cb(results);
-        //     }, 100 * Math.random());
-        // },
 //-------------按钮操作-----------
         isBack(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='back'
             }else{
                 _this.back()
             }
         },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
-        },
         isCancel(){
             let _this=this;
-            if(_this.update){
+            if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
             }else{
@@ -1114,29 +1164,14 @@
         Cancel(){
             let _this=this;
             _this.clearData();
-            _this.update=false;
+            _this.getAllRoleData();
+            _this.firstModify=false;
+            _this.secondModify=false;
+            _this.ifModify=false;
         },
         clearData(){
             let _this=this;
-            _this.addData={
-                "userCode": "",
-                "displayName": "",
-                "phoneNumber": "",
-                "email": "",
-                "userGroupId": "",
-                "ouId": "",
-                "status": 1,
-                "userType": "",
-                "languageId": "",
-                "isReg": false,
-                "remark": "",
-                "roleCodes": []
-            }
-            _this.addData.effectiveStart='';
-            _this.addData.effectiveEnd='';
-            _this.dateRange=[];
             _this.getDefault()
-            _this.validation.reset();
         },
         saveAdd(){
             let _this=this;
@@ -1162,6 +1197,85 @@
                     })
                 }
             });
+        },
+        paginationUserSearch(data,oneItem,thisPage){//数据分页
+        //checkAllata分页数据
+        //oneItem每页有多少条信息
+        //thisPage当前页
+            let _this=this;
+            let x={}
+            let nowData=[];
+            // console.log(checkAllata)
+            let startIndex=(thisPage-1)*oneItem;//起始数据所在位置
+            let endIndex=startIndex + oneItem;
+                if(data.length>0){
+                    if(endIndex>data.length){
+                        endIndex=data.length
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        // console.log(data[startIndex])
+                        nowData.push(data[startIndex])
+                    }
+                }
+            // _this.ouTotalItem=data.length;//总共多少条数据
+            // _this.ouTotalPage=Math.ceil(data.length/oneItem);//有多少页
+            x={TotalItem:data.length,TotalPage:Math.ceil(data.length/oneItem),nowData:nowData};
+            return x
+        },
+        searchLeftTable(){
+            let _this=this;
+            // checkTable
+            let newJson=[];
+            let patt1 = new RegExp(_this.searchTableLeft);
+            $.each(_this.checkedTable,function(index,val){
+                let str=val.displayName;
+                let result = patt1.test(str);
+                if(result){
+                    newJson.push(val)
+                }
+            })
+            _this.LeftWitchPage="searchLeftTable";
+            _this.searchLeftDatas=newJson;
+            _this.showChecked=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).nowData
+            _this.totalItemLeft=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).TotalItem
+            _this.totalPageLeft=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).TotalPage
+           
+        },
+        searchRightTable(){
+            let _this=this;
+            // nocheckTable
+            let newJson=[];
+            let patt1 = new RegExp(_this.searchTableRight);
+            $.each(_this.nocheckedTable,function(index,val){
+                let str=val.displayName;
+                let result = patt1.test(str);
+                if(result){
+                    newJson.push(val)
+                }
+            })
+            _this.RightWitchPage="searchRightTable"
+            _this.searchRightDatas=newJson;
+            _this.showNoChecked=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).nowData
+            _this.totalItemRight=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).TotalItem
+            _this.totalPageRight=_this.paginationUserSearch(newJson,_this.oneItemRight,_this.pageRight).TotalPage
+           
+        },
+         renderContent_(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
         },
     }
 

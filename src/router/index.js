@@ -185,6 +185,14 @@ const CommodityCategories = () =>
     import ('../components/commodityManagement/CommodityCategories')
 const CommodityCategoriesDetails = () =>
     import ('../components/commodityManagement/CommodityCategoriesDetails')
+
+const storeHouse = () =>//仓库演示
+    import ('../components/storeHouse/storeHouse')
+const storeHouseList = () =>
+    import ('../components/storeHouse/storeHouseList')
+const storeHouseModify = () =>
+    import ('../components/storeHouse/storeHouseModify')
+
 const commodityBrand = () =>
     import ('../components/commodityManagement/commodityBrand')
 const commodityClassHeading = () =>
@@ -195,8 +203,16 @@ const commodityPropertyList = () =>//商品属性列表
     import ('../components/commodityManagement/commodityPropertyList')
 const commodityPropertyDetails = () =>//商品属性详情
     import ('../components/commodityManagement/commodityPropertyDetails') 
-
-   
+const commodityPropertyModify = () =>//商品属性详情
+    import ('../components/commodityManagement/commodityPropertyModify') 
+const commercial= ()=>//商品规格平台
+    import ('../components/commodityManagement/commercial')
+const commercialSpecification= ()=>//商品规格平台列表
+    import ('../components/commodityManagement/commercialSpecification')
+const commercialSpecificationDetails= ()=>//商品规格平台详情
+    import ('../components/commodityManagement/commercialSpecificationDetails')
+const commercialSpecificationModify= ()=>//商品规格平台详情
+    import ('../components/commodityManagement/commercialSpecificationModify')   
 
 const specificationOfGoods= ()=>//商品规格
     import ('../components/commodityManagement/specificationOfGoods')  
@@ -210,8 +226,8 @@ const staffDetail = () =>
 const staffModify = () =>
     import ('../components/staffInfo/staffModify')
     // 计量单位
-const count=()=>import('../components/count/count')
-const countList=()=>import('../components/count/countList')
+const unitOfMeasurement = () => import('../components/count/unitOfMeasurement')
+const unitOfMeasurementList = () => import('../components/count/unitOfMeasurementList')
     // 行政地区
 const adminstrArea = () => import('../components/administrativeArea/adminstrArea')
 const adminstrAreaList = () => import('../components/administrativeArea/adminstrAreaList')
@@ -222,22 +238,20 @@ const supplierClassify = () => import('../components/supplierClassify/supplierCl
 const supplierClassifyList = () => import('../components/supplierClassify/supplierClassifyList')
 const supplierClassifyDetail = () => import('../components/supplierClassify/supplierClassifyDetail')
 const supplierClassifyModify = () => import('../components/supplierClassify/supplierClassifyModify')
-    
-//会员管理
-const memberLevel = () => import('../components/memberManage/memberLevel')
-const memberLevelList = () => import('../components/memberManage/memberLevelList')
-const memberLevelDetails = () =>import('../components/memberManage/memberLevelDetails')
+  
+// 商品档案1
+const goodsFiles = () => import('../components/commodityManagement/goodsFiles/goodsFiles')
+const goodsFilesDetail = () => import('../components/commodityManagement/goodsFiles/goodsFilesDetail')
+const goodsFilesList = () => import('../components/commodityManagement/goodsFiles/goodsFilesList')
+const goodsFilesModify = () => import('../components/commodityManagement/goodsFiles/goodsFilesModify')
+// 商品档案2
+const Record = () => import('../components/commodityManagement/Record')
+const commodityRecord = () => import('../components/commodityManagement/commodityRecord')
+const commodityRecordDetails = () => import('../components/commodityManagement/commodityRecordDetails')
 
 let redirectRouter = function(routerName) { //重定向
     // let activeRouter = store.state.activeRouter;
     return store.state[routerName].url
-    // for (let i = 0; i < activeRouter.length; i++) {
-    //     if (activeRouter[i].name == routerName) {
-    //         return activeRouter[i].url;
-    //         break;
-    //     }
-    // }
-    
 }
 Vue.use(Router)
 const routes = [
@@ -306,9 +320,9 @@ const routes = [
         },
         children: [
             { path: '/home', component: home, name: 'home' },
-            { path: '/shortData', component: shortData, name: 'shortData' },
-            { path: '/longData', component: longData, name: 'longData' },
-            { path: '/midData', component: midData, name: 'midData' },
+            // { path: '/shortData', component: shortData, name: 'shortData' },
+            // { path: '/longData', component: longData, name: 'longData' },
+            // { path: '/midData', component: midData, name: 'midData' },
             {
                 path: '/repository',
                 component: repository,
@@ -502,16 +516,7 @@ const routes = [
             { path: '/specificationOfGoods/:id', component: specificationOfGoods, name: 'specificationOfGoods' },
 
             { path: '/tenant', component: tenant,name:'tenant',redirect: function(){//租户管理
-              let name='tenant';
-              let activeRouter=store.state.activeRouter;
-              for(let i=0;i<activeRouter.length;i++){
-                  if(activeRouter[i].name==name){
-
-                    return activeRouter[i].url;
-
-                    break;
-                  }
-              }
+                return redirectRouter('tenant')
             },children:[
                 { path: '/tenant/tenantManagement/:id', component: tenantManagement,name:'tenantManagement' },
                 { path: '/tenant/tenantManagementAdd/:id', component: tenantManagementAdd,name:'tenantManagementAdd' },
@@ -520,17 +525,8 @@ const routes = [
                 path: '/staff',
                 component: staff,
                 name: 'staff',
-                redirect: function() { //职员资料组
-                    let name = 'staff';
-                    let activeRouter = store.state.activeRouter;
-                    for (let i = 0; i < activeRouter.length; i++) {
-                        if (activeRouter[i].name == name) {
-
-                            return activeRouter[i].url;
-
-                            break;
-                        }
-                    }
+                redirect: function () { //职员资料组
+                    return redirectRouter('staff')
                 },
                 children: [
                     { path: '/staff/staffList/:id', component: staffList, name: 'staffList' },
@@ -550,6 +546,31 @@ const routes = [
                     // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
                     { path: '/commodityleimu/CommodityCategoriesDetails/:id', component: CommodityCategoriesDetails, name: 'CommodityCategoriesDetails' },
                 ]
+            },{
+                path: '/storeHouse',
+                component: storeHouse,
+                name: 'storeHouse',
+                redirect: function() { //仓库演示
+                    return redirectRouter('storeHouse')
+                },
+                children: [
+                    { path: '/storeHouse/storeHouseList/:id', component: storeHouseList, name: 'storeHouseList' }, //商品类目
+                    // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/storeHouse/storeHouseModify/:id', component: storeHouseModify, name: 'storeHouseModify' },
+                ]
+            },
+            {
+                path: '/commercial',
+                component: commercial,
+                name: 'commercial',
+                redirect: function() { //采购管理
+                    return redirectRouter('commercial')
+                },
+                children: [
+                    { path: '/commercial/commercialSpecification/:id', component: commercialSpecification, name: 'commercialSpecification' },
+                    { path: '/commercial/commercialSpecificationDetails/:id', component: commercialSpecificationDetails, name: 'commercialSpecificationDetails' },
+                    { path: '/commercial/commercialSpecificationModify/:id', component: commercialSpecificationModify, name: 'commercialSpecificationModify' },
+                ]
             },
             {
                 path: '/commodityProperty',
@@ -561,6 +582,7 @@ const routes = [
                 children: [
                     { path: '/commodityProperty/commodityPropertyList/:id', component: commodityPropertyList, name: 'commodityPropertyList' }, //商品属性
                     // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
+                    { path: '/commodityProperty/commodityPropertyModify/:id', component: commodityPropertyModify, name: 'commodityPropertyModify' },
                     { path: '/commodityProperty/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
                 ]
             },
@@ -615,14 +637,14 @@ const routes = [
                 ]
             },
             {
-                path: '/count',
-                component: count,
-                name: 'count',
+                path: '/unitOfMeasurement',
+                component: unitOfMeasurement,
+                name: 'unitOfMeasurement',
                 redirect: function () { //计量单位
-                    return redirectRouter('count')
+                    return redirectRouter('unitOfMeasurement')
                 },
                 children:[
-                    { path: '/count/countList/:id', component: countList, name:'countList'}
+                    { path: '/unitOfMeasurement/unitOfMeasurementList/:id', component: unitOfMeasurementList, name:'unitOfMeasurementList'}
                 ],
 
             },
@@ -655,16 +677,32 @@ const routes = [
 
             },
             {
-                path: '/memberLevel',
-                component: memberLevel,
-                name: 'memberLevel',
-                redirect: function() { //会员等级
-                    return redirectRouter('memberLevel')
+                path: '/goodsFiles',
+                component: goodsFiles,
+                name: 'goodsFiles',
+                redirect: function () { //商品档案
+                    return redirectRouter('goodsFiles')
                 },
-                children: [
-                    { path: '/memberLevel/memberLevelList/:id', component: memberLevelList, name: 'memberLevelList' },
-                    { path: '/memberLevel/memberLevelDetails/:id',component:memberLevelDetails,name: 'memberLevelDetails'} 
-                ]
+                children:[
+                    { path: '/goodsFiles/goodsFilesList/:id', component: goodsFilesList, name:'goodsFilesList'},
+                    { path: '/goodsFiles/goodsFilesDetail/:id', component: goodsFilesDetail, name:'goodsFilesDetail'},
+                    { path: '/goodsFiles/goodsFilesModify/:id', component: goodsFilesModify, name:'goodsFilesModify'},
+                ],
+
+            },
+            {
+                path: '/Record',
+                component: Record,
+                name: 'Record',
+                redirect: function () { //商品档案
+                    return redirectRouter('Record')
+                },
+                children:[
+                    { path: '/Record/commodityRecord/:id', component: commodityRecord, name:'commodityRecord'},
+                    { path: '/Record/goodsFilesDetail/:id', component: goodsFilesDetail, name:'goodsFilesDetail'},
+                    { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails, name:'commodityRecordDetails'},
+                ],
+
             },
         ]
     },
@@ -692,28 +730,29 @@ router.beforeEach((to, from, next) => {
     //         }
     //     }
     // })
+    if (store.state.accessToken != ''&& typeof(store.state.accessToken)!='undefined') {
+        // store.state[to.name].url=to.fullPath;
+        // store.state[store.state[to.name].parent].url=to.fullPath
+        if(typeof(store.state[to.name])!='undefined'){
+            document.title = to.name
+            // console.log(to.name);
+            
+            if(typeof(store.state[to.name].url)!='undefined' && typeof(store.state[store.state[to.name].parent].url)!='undefined'){
 
-    if (store.state.accessToken != '' && typeof(store.state.accessToken)!='undefined') {
-        document.title = to.name
-        // let activeRouter = store.state.activeRouter;
-        store.state[to.name].url=to.fullPath;
-        store.state[store.state[to.name].parent].url=to.fullPath
-        // let parent = '';
-        // let url = '';
-        // for (let i = 0; i < activeRouter.length; i++) {
-        //     if (activeRouter[i].name == to.name) {
-        //         parent = activeRouter[i].parent;
-        //         url = activeRouter[i].url;
-        //         break
-        //     }
-        // }
-        // for (let i = 0; i < activeRouter.length; i++) {
-        //     if (activeRouter[i].name == parent) {
-        //         activeRouter[i].url = url
-        //         break
-        //     }
-        // }
+                store.state[to.name].url=to.fullPath;
+                store.state[store.state[to.name].parent].url=to.fullPath
+                // console.log(to.fullPath);
+                next()
+            }else{
+                alert('路由web地址或父级名称未定义')
+            }
+        }else{
+            alert('路由定向不存在')
+        }
+        
+    }else{
+        next()
     }
-    next()
+    
 })
 export default router

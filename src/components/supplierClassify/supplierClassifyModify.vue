@@ -9,25 +9,43 @@
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
-                <button  @click="add" class="erp_bt bt_add">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_add.png">
-                    </div>
-                    <span class="btDetail">新增</span>
-                </button>
-                <button @click="save" class="erp_bt bt_save" :disabled="isTrue">
+
+                <button @click="save" class="erp_bt bt_save" :class="{erp_fb_bt:!update}"  :disabled="!update">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
-                <button @click="saveAdd" class="erp_bt bt_saveAdd" :disabled="isTrue">
+
+                <button @click="cancel" class="erp_bt bt_cancel" :class="{erp_fb_bt:!update}"  :disabled="!update">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_cancel.png">
+                    </div>
+                    <span class="btDetail">取消</span>
+                </button>
+
+                <button @click="saveAdd" class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!update}"  :disabled="!update">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
                     <span class="btDetail">保存并新增</span>
                 </button>
-                <button class="erp_bt bt_auxiliary bt_width">
+
+                <button  @click="add" class="erp_bt bt_add" :class="{erp_fb_bt:update}" :disabled="update">
+                    <div class="btImg">
+                        <img src="../../../static/image/common/bt_add.png">
+                    </div>
+                    <span class="btDetail">新增</span>
+                </button>
+               
+               <button @click="confirmDelThis" :class="{erp_fb_bt:update}" class="erp_bt bt_del" :disabled="update">
+                        <div class="btImg">
+                            <img src="../../../static/image/common/bt_del.png">
+                         </div>
+                        <span class="btDetail">删除</span>
+                </button>
+
+                <!-- <button class="erp_bt bt_auxiliary bt_width">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_auxiliary.png">
                     </div>
@@ -35,12 +53,34 @@
                     <div class="btRightImg">
                         <img src="../../../static/image/common/bt_down_right.png">
                     </div>
-                </button>
+                </button> -->
             </el-col>
         </el-row>
 
         <!-- 表单验证的错误提示信息 -->
-	    <el-row>
+        <el-row>
+            <el-col :span="24">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <span :class="{block : !validation.hasError('addData.classParentId')}">
+                                上级供应商分类{{ validation.firstError('addData.classParentId') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.classCode')}">
+                                供应商分类编码{{ validation.firstError('addData.classCode') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.className')}">
+                                供应商分类名称{{ validation.firstError('addData.className') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.status')}">
+                                状态{{ validation.firstError('addData.status') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+	    <!-- <el-row>
             <el-col>
                 <div class="errTipsWrapper" name="classParentId">
                         <div class="errorTips" :class="{block : !validation.hasError('addData.classParentId')}">
@@ -63,7 +103,7 @@
                       </div>
                     </div>
                 </el-col>
-        </el-row>
+        </el-row> -->
         <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -94,6 +134,7 @@
                             placeholder=""
                             v-model="addData.classParentId"
                             @change="isUpdate"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.classParentId')}">
                                 <!-- 树形控件 -->
                                 <el-tree
@@ -122,6 +163,7 @@
                             @change="isUpdate" 
                             class="classCode" 
                             v-model="addData.classCode"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.classCode')}"></el-input>
                         </div>
                     </div>
@@ -134,6 +176,7 @@
                             class="className" 
                             @change="isUpdate"
                             v-model="addData.className"
+                            @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.className')}"></el-input>
                         </div>
                     </div>
@@ -159,6 +202,7 @@
                             <label><small>*</small>状态</label>
                             <el-select filterable  
                             class="status" 
+                            @focus="showErrTips"
                             @change="isUpdate"
                             placeholder=""
                             v-model="addData.status"
@@ -207,7 +251,7 @@
          data(){
              return{
                  isDisabled:true,//是否禁用创建人与创建时间               
-                 isTrue:true,//禁用保存键  
+                //  isTrue:true,//禁用保存键  
                  update:false,            
                 // 表单增加参数
                  addData:{
@@ -305,6 +349,9 @@
                 customClass:className
                     });
             },
+            showErrTips(e){// 表单错误提示信息
+                $('.tipsWrapper').css({display:'none'});
+            },
             //---------------获取下拉框选项数据 
             getSelectData(){
                 let _this=this;
@@ -316,11 +363,12 @@
             //--------------------------------------按钮组功能 
             //---------------返回 ------------
             goback() {//返回
-                this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
+                 this.$store.state.url = "/supplierClassify/supplierClassifyList/default";
                 this.$router.push({ path: this.$store.state.url });
             },
             isBack(){
                 let _this=this;
+                _this.btnValue='toBack';
                 if(_this.update){
                     _this.dialogUserConfirm=true;
                     // _this.choseDoing='back'
@@ -329,28 +377,74 @@
                 }
             },
             sureDoing:function(){
-                let _this = this;
-                _this.goback();
+                let _this=this;
+                if (_this.btnValue=='toBack') {
+                    _this.goback();
+                }else{
+                    _this.dialogUserConfirm=false;
+                    _this.getDataList();
+                    _this.btnValue='';
+                    _this.update=false;
+                }
             },
+            isUpdate() {//判断是否修改过信息
+                this.update = true;
+                // this.isTrue=false;
+                // console.log(this.isDisable);
+            },
+            cancel(){// 取消
+                let _this=this;
+                _this.btnValue='isCancel';
+                if(_this.update){
+                    _this.dialogUserConfirm=true;
+                }
+            },
+            // --------------删除-----------
+            confirmDelThis(){//确认单项删除
+                let _this=this;
+                _this.choseAjax='row';
+                _this.dialogDeleteConfirm=true;
+            },
+            sureAjax(){
+                let _this=this;
+                if(_this.choseAjax=='row'){
+                    _this.delThis()
+                }else if(_this.choseAjax=='rows'){
+                    _this.delSelected()
+                }
+            },
+            delThis(){// 删除删除
+                let _this=this;
+                _this.$axios
+                .deletes("/api/services/app/AdAreaManagement/Delete",
+                { id:_this.$route.params.id })
+                .then(rsp => {
+                    _this.dialogDeleteConfirm=false;
+                    _this.open("删除成功", "el-icon-circle-check", "successERP");
+                    _this.goback();
+                });
+            },
+            // --------------删除完-----------
+
+
+
             // ---------------------------------------------------------
             add(){ //新增
                 this.$store.state.url = "/supplierClassify/supplierClassifyDetail/default";
                 this.$router.push({ path: this.$store.state.url });
             },
-            isUpdate() {//判断是否修改过信息
-                this.update = true;
-                this.isTrue=false;
-                // console.log(this.isDisable);
-            },
+           
             save() {// 保存
                 let _this=this;
+                $('.tipsWrapper').css({display:'block'})
                 _this.$validate().then(
                     function (success) { 
                         if (success){
+                            $('.tipsWrapper').css({display:'none'});
                             _this.$axios.puts('/api/services/app/ContactClassManagement/Update',_this.addData).then(
                                 rsp=>{
                                     _this.open('保存成功','el-icon-circle-check','successERP'); 
-                                    _this.isTrue=true;
+                                    // _this.isTrue=true;
                                     _this.update=false;
                                 },
                                 rsp=>{   
