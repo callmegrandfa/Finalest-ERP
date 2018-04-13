@@ -58,18 +58,20 @@
                                       class="selectSearch"
                                       v-model="parentSearch">
                             </el-input>
-
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                      :data="selectParentTree"
+                                     v-loading="treeLoading" 
                                      :highlight-current="true"
+                                     :render-content="renderContent_moduleParentId"
                                      :props="selectParentProps"
                                      node-key="id"
                                      default-expand-all
                                      ref="tree"
                                      :filter-node-method="filterNode"
+                                     :default-expanded-keys="expandId"
                                      :expand-on-click-node="false"
                                      @node-click="nodeClick"
-                                     :render-content="renderContent_moduleParentId"
+                                     
                                      >
                             </el-tree> 
                             <el-option  v-show="false" v-for="item in selectData.customerClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id"></el-option>
@@ -97,7 +99,8 @@
                 <div class="marginAuto">
                     <div class="bgcolor longWidth">
                         <label><small>*</small>客户分类名称</label>
-                        <el-input  class="className" 
+                        <el-input  class="className"
+                                    
                                     @change="isUpdate"
                                    :class="{redBorder : validation.hasError('addData.className')}" 
                                    v-model="addData.className"></el-input>
@@ -229,7 +232,7 @@
                     id:'',
                     className:'1111',
                 },
-                
+                expandId:[],//默认展开kehu树节点
                 status: [],//状态
                 //------------------ 新增客户-------------
                 addData:{
@@ -259,6 +262,7 @@
                 choseDoing:'',//存储点击按钮判断信息
                 dialogUserConfirm:false,//信息更改提示控制
                 update:false,
+                treeLoading: false,
                 errorMessage:false,//错误信息提示
                 detail_message_ifShow:false,
                 response:{
@@ -326,6 +330,15 @@
                 })
             })
         },
+          defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
         //---加载数据上级商品树-------------------------------------------  
         loadParentTree(){
             let self=this;
@@ -333,8 +346,9 @@
             self.$axios.gets('api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
                 // console.log(res)
                 self.selectParentTree=res;
+                self.treeLoading = false;
+                self.expandId=self.defauleExpandTree(res,'id')
                 self.loadCheckSelect('classParentId',self.addData.classParentId)
-                self.loadIcon();
             },function(res){
                 self.treeLoading=false;
                 
@@ -356,19 +370,6 @@
             self.status = res.result;            
             },function(res){
                 
-            })
-        },
-        loadIcon(){
-            let self=this;
-            self.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                    }
-                })
             })
         },
             GetDateTime: function () {

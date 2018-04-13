@@ -10,7 +10,7 @@
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                 </el-col>
-                <el-col :span='24' class="tree-container">
+                <el-col :span='24' class="tree-container transfer_fixed">
                     <vue-scroll :ops="$store.state.option">
                         <el-tree
                         :render-content="renderContent_componyTree"
@@ -113,7 +113,7 @@
                                 <template slot-scope="scope">
                                     <el-date-picker 
                                     format="yyyy-MM-dd"
-                                    value-format="yyyy-MM-dd" 
+                                    value-format="yyyy-MM-dd " 
                                     v-model="tableData[scope.$index].createdTime" 
                                     type="datetime" 
                                     readonly
@@ -329,35 +329,11 @@ export default {
             self.treeLoading = false;
             self.customerClassTree=res;
             self.expandId=self.defauleExpandTree(res,'id')
-            self.loadIcon();
           },
           function(res) {
             self.treeLoading = false;
           }
         );
-    },
-    // -------------------------加载图标-----------------------------------------------
-    loadIcon() {
-      let self = this;
-      self.$nextTick(function() {
-        $(".preNode").remove();
-        $(".el-tree-node__label").each(function() {
-          if (
-            $(this)
-              .parent(".el-tree-node__content")
-              .next(".el-tree-node__children")
-              .text() == ""
-          ) {
-            $(this).prepend(
-              '<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>'
-            );
-          } else {
-            $(this).prepend(
-              '<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>'
-            );
-          }
-        });
-      });
     },
         // -------------------------------------------加载状态框---------------------------------
     loadStatus: function() {
