@@ -29,7 +29,44 @@
                         @node-click="TreeNodeClick">
                     </el-tree>
                 </el-col> 
-            </el-col>
+            </el-col>        
+             <!-- dialog是否删除提示 -->
+            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">确认删除？</p>
+                    </el-col>
+                </el-col>
+                
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="del">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
+            <!-- dialog -->       
+            <!-- dialog修改结束时间大于开始时间提示 -->
+            <el-dialog :visible.sync="dialogResetBeginDate" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">开始日期不能大于结束日期</p>
+                    </el-col>
+                </el-col>
+                
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="dialogResetBeginDate = false">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogResetBeginDate = false">取 消</button>
+                </span>
+            </el-dialog>
+            <!-- dialog -->  
+
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
@@ -40,7 +77,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button class="erp_bt bt_del" @click="del">
+                    <button class="erp_bt bt_del" @click="dialogUserConfirm = true">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -104,7 +141,6 @@
                                                 range-separator="至"
                                                 start-placeholder="开始日期"
                                                 end-placeholder="结束日期"
-                                                @change="dateChange"
                                                 :class="{redBorder : validation.hasError('chooseDate')}"
                                                 ></el-date-picker>
                             </div>
@@ -161,7 +197,7 @@
                                 </el-table-column>
                                 <el-table-column prop="effectiveEnd" label="结束时间">
                                     <template slot-scope="scope" >
-                                        <el-input  class="noEdit" v-model="scope.row.effectiveEnd"  @change="resetBeginDate"></el-input>
+                                        <el-input  class="noEdit" v-model="scope.row.effectiveEnd"  @change="resetBeginDate(scope.row)"></el-input>
                                     </template>                                    
                                 </el-table-column>
                                 <el-table-column prop="remark" label="备注">
@@ -171,12 +207,12 @@
                                 </el-table-column>
                                 <el-table-column prop="KjModifiedBy" label="修改人">
                                     <template slot-scope="scope" >
-                                        <el-input  class="noEdit" v-model="scope.row.KjModifiedBy"></el-input>
+                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.KjModifiedBy"></el-input>
                                     </template>                                        
                                 </el-table-column>
                                 <el-table-column prop="KjModifiedTime" label="修改时间">
                                     <template slot-scope="scope" >
-                                        <el-input  class="noEdit" v-model="scope.row.KjModifiedTime"></el-input>
+                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.KjModifiedTime"></el-input>
                                     </template>                                    
                                 </el-table-column>
                             </el-table>
@@ -265,7 +301,6 @@ import dialogBox from '../../base/dialog/dialog'
                         children:[]
                     }
                 ],
-                //tableData: [],
                 treeLoading:false,
                 defaultProps: {
                     children: 'children',
@@ -278,10 +313,10 @@ import dialogBox from '../../base/dialog/dialog'
                 treeFlag:true,
                 id:'',//需要删除的ID
                 saveflag:true,//判断年份是否重复
-                addSaveflag:false,
                 dialogMessage:'',
-                dialogShow:false,//弹框
-                modifyflag:true,                    
+                dialogUserConfirm:false,//是否删除弹框提示
+                modifyflag:true,          
+                dialogResetBeginDate:false          
             }
         },
         validators: {
@@ -298,7 +333,6 @@ import dialogBox from '../../base/dialog/dialog'
         created:function(){
             this.loadList();
             this.loadOuId();
-            //this.loadSelect();
             this.loadIcon();
         },
         methods:{
@@ -336,7 +370,7 @@ import dialogBox from '../../base/dialog/dialog'
                     //console.log(_this.list)
                     //调取默认数据
                     _this.seletChange();
-                    console.log(_this.treeData)
+                    //console.log(_this.treeData)
                     let l=_this.treeData.length;
                     var y=_this.treeData[l-1];
                     var x={'label':y}
@@ -407,7 +441,7 @@ import dialogBox from '../../base/dialog/dialog'
                 $.each(_this.componyTreeData,function(index,value){
                     if(value.periodYear==data.label){
                         console.log(value)
-                        _this.id=value.id;                        
+                        _this.id=value.id;  
                         _this.periodYear=value.periodYear;
                         _this.periodNum=value.periodNum;
                         _this.remark=value.remark;
@@ -423,7 +457,6 @@ import dialogBox from '../../base/dialog/dialog'
                         _this.createMonth();
                     }
                 })
-                //console.log(_this.componyTreeData);
             },
         open(tittle,iconClass,className) {
             this.$notify({
@@ -442,7 +475,7 @@ import dialogBox from '../../base/dialog/dialog'
             _this.periodYear='';
             _this.periodNum='';
             _this.chooseDate=[];
-            //_this.tableData=[];
+            _this.addData.accperiodContents=[];
             _this.remark='';
             let nowTime=new Date();
             _this.creatTime=_this.resdatetime(nowTime)
@@ -455,66 +488,53 @@ import dialogBox from '../../base/dialog/dialog'
             return _this.resdatetime(nowTime)
         },
         //---保存-----------------------------------------------------------
+
         save(){
             let _this=this;    
             if(_this.modifyflag){
                 _this.modify();
             }else{
-            _this.$validate().then(function (success) {
-                $.each(_this.componyTreeData,function(index,value){
-                    if(_this.periodYear==value.periodYear){
-                        _this.saveflag=false
-                        _this.$alert('已有该年份', {
-                                confirmButtonText: '确定'
-                            }
-                        );                  
+                _this.$validate().then(function (success) {
+                    $.each(_this.componyTreeData,function(index,value){
+                        if(_this.periodYear==value.periodYear){
+                            _this.$alert('已有该年份', {
+                                    confirmButtonText: '确定'
+                                }
+                            );                  
+                        }
+                    })
+                    _this.createMonth();                   
+                    if (success&&_this.saveflag) {
+                        _this.addData.periodYear=_this.periodYear;
+                        _this.addData.periodNum=_this.periodNum;
+                        _this.addData.beginDate=_this.chooseDate[0];
+                        _this.addData.endDate=_this.chooseDate[1];
+                        _this.addData.remark=_this.remark;
+                        _this.addData.accperiodSchemeID=_this.accperiodSchemeID;
+                        let nowtime=_this.nowTime()
+                        _this.addData.createdTime=nowtime;
+                        _this.addData.modifiedTime=nowtime;
+
+                        _this.$axios.posts('/api/services/app/Accperiod/Create',_this.addData).then(function(res){
+                            console.log(res)
+                            _this.seletChange();
+                            _this.open('保存成功','el-icon-circle-check','successERP');
+                        }).catch(function(err){
+                                _this.$message({
+                                    type: 'warning',
+                                    message: err.error.message
+                                });
+                        })      
                     }
-                    else{
-                        _this.saveflag=true;
-                    }
-                })
-                _this.createMonth();                   
-                if (success&&_this.saveflag) {
-                    _this.addData.periodYear=_this.periodYear;
-                    _this.addData.periodNum=_this.periodNum;
-                    _this.addData.beginDate=_this.chooseDate[0];
-                    _this.addData.endDate=_this.chooseDate[1];
-                    _this.addData.remark=_this.remark;
-                    _this.addData.accperiodSchemeID=_this.accperiodSchemeID;
-                    let nowtime=_this.nowTime()
-                    _this.addData.createdTime=nowtime;
-                    _this.addData.modifiedTime=nowtime;
-                    // for(var i=0;i<_this.tableData.length;i++){
-                    //     alert("124")
-                    //     _this.addData.accperiodContents.length=i;
-                    //     _this.addData.accperiodContents[i].effectiveStart=_this.tableData[i].KjBeginDate;
-                    //     _this.addData.accperiodContents[i].effectiveEnd=_this.tableData[i].KjEngDate;
-                    //     _this.addData.accperiodContents[i].remark=_this.tableData[i].Kjbz;
-                    //     _this.addData.accperiodContents[i].periodMonth=_this.tableData[i].KjMonth;
-                    //     console.log(_this.addData.accperiodContents)
-                    // }
-                    console.log(_this.addData)
-                    // _this.$axios.posts('/api/services/app/Accperiod/Create',_this.addData).then(function(res){
-                    //     console.log(res)
-                    //     _this.addSaveflag=true;
-                    //     _this.seletChange();
-                    //     _this.open('保存成功','el-icon-circle-check','successERP');
-                    // }).catch(function(err){
-                    //         _this.$message({
-                    //             type: 'warning',
-                    //             message: err.error.message
-                    //         });
-                    // })   
-                }
-            });            
-        } 
+                });            
+            }             
+            
 
         },
         modify(){//修改保存
             let _this=this;
             _this.$validate().then(function (success) {                  
                 if (success&&_this.saveflag) {
-                    
                     _this.addData.periodYear=_this.periodYear;
                     _this.addData.periodNum=_this.periodNum;
                     _this.addData.beginDate=_this.chooseDate[0];
@@ -524,55 +544,88 @@ import dialogBox from '../../base/dialog/dialog'
                     let nowtime=_this.nowTime()
                     _this.addData.createdTime=nowtime;
                     _this.addData.modifiedTime=nowtime;
-
                     console.log(_this.addData)
-                    // _this.$axios.posts('/api/services/app/Accperiod/Update',_this.addData).then(function(res){
-                    //     _this.addSaveflag=true;
-                    //     _this.seletChange();
-                    //     _this.open('保存成功','el-icon-circle-check','successERP');
-                    // }).catch(function(err){
-                    //         _this.$message({
-                    //             type: 'warning',
-                    //             message: err.error.message
-                    //         });
-                    // })   
+                    _this.$axios.puts('/api/services/app/Accperiod/Update',_this.addData).then(function(res){
+                        _this.seletChange();
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                    }).catch(function(err){
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                    })   
                 }
             });        
         },
         del(){
             let _this=this;
-            console.log(_this.id)
+            //console.log(_this.id)
             _this.$axios.deletes('/api/services/app/Accperiod/Delete',{id:_this.id})
             .then(function(res){
+                _this.dialogUserConfirm=false;
                 _this.loadTree();
                 _this.open('删除成功','el-icon-circle-check','successERP');               
             }).catch(function(err){
+                _this.dialogUserConfirm=false;
                 _this.$message({
                     type: 'warning',
                     message: err.error.message
                 });
             })        
         },
-        delCancel(){
-            this.dialogShow=false;
-        },
         addSave(){
             let _this=this;
-            _this.save();
-            console.log(_this.addSaveflag)
-            if(_this.addSaveflag){
-                _this.add();
-            }
+            if(_this.modifyflag){
+                _this.modify();
+            }else{
+                _this.$validate().then(function (success) {
+                    $.each(_this.componyTreeData,function(index,value){
+                        if(_this.periodYear==value.periodYear){
+                            _this.$alert('已有该年份', {
+                                    confirmButtonText: '确定'
+                                }
+                            );                  
+                        }
+                    })
+                    _this.createMonth();                   
+                    if (success&&_this.saveflag) {
+                        _this.addData.periodYear=_this.periodYear;
+                        _this.addData.periodNum=_this.periodNum;
+                        _this.addData.beginDate=_this.chooseDate[0];
+                        _this.addData.endDate=_this.chooseDate[1];
+                        _this.addData.remark=_this.remark;
+                        _this.addData.accperiodSchemeID=_this.accperiodSchemeID;
+                        let nowtime=_this.nowTime()
+                        _this.addData.createdTime=nowtime;
+                        _this.addData.modifiedTime=nowtime;
+                        _this.$axios.posts('/api/services/app/Accperiod/Create',_this.addData).then(function(res){
+                            _this.add();
+                            _this.seletChange();
+                            _this.open('保存成功','el-icon-circle-check','successERP');
+                        }).catch(function(err){
+                                _this.$message({
+                                    type: 'warning',
+                                    message: err.error.message
+                                });
+                        })      
+                    }
+                });            
+            }             
+            
+
         },
         setDate(){//输入会计年份时让日期范围默认设置
             let _this=this;
             _this.chooseDate=[_this.periodYear+"-01-01",_this.periodYear+"-12-31"];
             //console.log(_this.chooseDate)
         },
-        resetBeginDate(){
+        resetBeginDate(data){
             let _this=this;
-            _this.tableData.KjBeginDate=_this.tableData.KjEngDate;
-            console.log(_this.tableData)
+            if(new Date(_this.addData.accperiodContents[data.periodMonth].effectiveEnd.replace(/\-/g, "\/"))<=new Date(data.effectiveEnd.replace(/\-/g, "\/"))){
+                _this.dialogResetBeginDate=true;
+            }else{
+                _this.addData.accperiodContents[data.periodMonth].effectiveStart=data.effectiveEnd;
+            }
         },
         resday:function(resday){
             return resday.getDate() 
@@ -588,12 +641,6 @@ import dialogBox from '../../base/dialog/dialog'
         },
         resdatetime:function(resdatetime){
             return resdatetime.getFullYear()+'-'+(resdatetime.getMonth()+1)+'-'+resdatetime.getDate()+' '+resdatetime.getHours()+':'+resdatetime.getMinutes()+':'+resdatetime.getSeconds()
-        },
-        dateChange(){
-            var _this=this;
-            var startdate = new Date(_this.chooseDate[0]);  
-            var startyear=_this.resyear(startdate);
-            _this.periodYear=startyear;
         },
         switchStartTime:function(m){
             if(m==1){
@@ -660,8 +707,9 @@ import dialogBox from '../../base/dialog/dialog'
         createMonth(){
             let _this=this;
             _this.$validate().then(function (success) {
-            //console.log(_this.chooseDate[0])
+            console.log(_this.chooseDate[0])
             var startdate = new Date(_this.chooseDate[0]);  
+            console.log(startdate)
             var enddate = new Date(_this.chooseDate[1]);
             var startmonth =_this.resmonth(startdate);
             var endmonth =_this.resmonth(enddate);
@@ -676,61 +724,66 @@ import dialogBox from '../../base/dialog/dialog'
                         confirmButtonText: '确定'
                     }
                 );              
-            }
-            //日期范围相差月份
-            var diffMonth=(endmonth-startmonth)+1;
-            //判断期间个数与日期范围
-            if(diffMonth<_this.periodNum){
-                    for(let j=0;j<diffMonth;j++){
-                    var monthData={
-                        periodMonth:'',
-                        effectiveStart: '',
-                        effectiveEnd: '',
-                        remark:'',
-                        // KjModifiedBy:'',
-                        // KjModifiedTime:''
-                        groupID: 0,
-                        ouID: 0,
-                        accperiodId: 0,
-                        id: 0
-                    }              
-                    _this.addData.accperiodContents.length=j;                     
-                    _this.addData.accperiodContents.push(monthData);
-                    _this.addData.accperiodContents[j].periodMonth=j+1;
-                    _this.addData.accperiodContents[j].effectiveStart=startyear+'-'+_this.switchStartTime(startmonth+j);
-                    _this.addData.accperiodContents[0].effectiveStart=_this.resdate(startdate);
-                    _this.addData.accperiodContents[j].effectiveEnd=startyear+'-'+_this.switchEndTime(startyear,startmonth+j);
-                    //_this.addData.accperiodContents[j].remark=_this.remark;
-                }
-                 _this.addData.accperiodContents[diffMonth-1].effectiveEnd=_this.resdate(enddate);
-                 _this.periodNum=diffMonth
-                 console.log(_this.addData.accperiodContents)
-
             }else{
-                for(let i=0;i<_this.periodNum;i++){
-                    var monthData={
-                        periodMonth:'',
-                        effectiveStart: '',
-                        effectiveEnd: '',
-                        remark:'',
-                        KjModifiedBy:'',
-                        KjModifiedTime:'',
-                        groupID: 0,
-                        ouID: 0,
-                        accperiodId: 0,
-                        id: 0
+                //日期范围相差月份
+                var diffMonth=(endmonth-startmonth)+1;
+                //判断期间个数与日期范围
+                if(diffMonth<_this.periodNum){
+                        for(let j=0;j<diffMonth;j++){
+                        var monthData={
+                            periodMonth:'',
+                            effectiveStart: '',
+                            effectiveEnd: '',
+                            remark:'',
+                            KjModifiedBy:'',
+                            KjModifiedTime:'',
+                            groupID: 0,
+                            ouID: 0,
+                            accperiodId: 0,
+                            id: 0
+                        }              
+                        _this.addData.accperiodContents.length=j;                     
+                        _this.addData.accperiodContents.push(monthData);
+                        _this.addData.accperiodContents[j].periodMonth=j+1;
+                        _this.addData.accperiodContents[j].effectiveStart=startyear+'-'+_this.switchStartTime(startmonth+j);
+                        _this.addData.accperiodContents[0].effectiveStart=_this.resdate(startdate);
+                        _this.addData.accperiodContents[j].effectiveEnd=startyear+'-'+_this.switchEndTime(startyear,startmonth+j);
+                        _this.addData.accperiodContents[j].KjModifiedBy=_this.modifyBy;
+                        _this.addData.accperiodContents[j].KjModifiedTime=_this.nowTime();
                     }
-                    _this.addData.accperiodContents.length=i;                     
-                    _this.addData.accperiodContents.push(monthData);
-                    _this.addData.accperiodContents[i].periodMonth=i+1;
-                    _this.addData.accperiodContents[i].effectiveStart=startyear+'-'+_this.switchStartTime(startmonth+i);
-                    _this.addData.accperiodContents[0].effectiveStart=_this.resdate(startdate);
-                    _this.addData.accperiodContents[i].effectiveEnd=startyear+'-'+_this.switchEndTime(startyear,startmonth+i);
+                    _this.addData.accperiodContents[diffMonth-1].effectiveEnd=_this.resdate(enddate);
+                    _this.periodNum=diffMonth
+                    console.log(_this.addData.accperiodContents)
+
+                }else{
+                    for(let i=0;i<_this.periodNum;i++){
+                        var monthData={
+                            periodMonth:'',
+                            effectiveStart: '',
+                            effectiveEnd: '',
+                            remark:'',
+                            KjModifiedBy:'',
+                            KjModifiedTime:'',
+                            groupID: 0,
+                            ouID: 0,
+                            accperiodId: 0,
+                            id: 0
+                        }
+                        _this.addData.accperiodContents.length=i;                     
+                        _this.addData.accperiodContents.push(monthData);
+                        _this.addData.accperiodContents[i].periodMonth=i+1;
+                        _this.addData.accperiodContents[i].effectiveStart=startyear+'-'+_this.switchStartTime(startmonth+i);
+                        _this.addData.accperiodContents[0].effectiveStart=_this.resdate(startdate);
+                        _this.addData.accperiodContents[i].effectiveEnd=startyear+'-'+_this.switchEndTime(startyear,startmonth+i);
+                        _this.addData.accperiodContents[i].KjModifiedBy=_this.modifyBy;
+                        _this.addData.accperiodContents[i].KjModifiedTime=_this.nowTime();
+                    }
+                    _this.addData.accperiodContents[_this.periodNum-1].effectiveEnd=_this.resdate(enddate);
+                    diffMonth=_this.periodNum;
+                    //console.log(_this.addData.accperiodContents)
                 }
-                 _this.addData.accperiodContents[_this.periodNum-1].effectiveEnd=_this.resdate(enddate);
-                 diffMonth=_this.periodNum;
-                 console.log(_this.addData.accperiodContents)
             }
+
 
             })
 
