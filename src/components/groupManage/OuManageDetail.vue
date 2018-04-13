@@ -303,6 +303,7 @@
                     
                     <el-select class="companyOuId"
                      clearable filterable
+                     :disabled="Company"
                     @change="isUpdate"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -1284,6 +1285,11 @@ export default({
       },
       search_companyOuId(val) {
         this.$refs.trees.filter(val);
+      },
+      Company(val){
+          if(val){
+              this.addData.companyOuId=''
+          }
       },
     },
     methods:{
