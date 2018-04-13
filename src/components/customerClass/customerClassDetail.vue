@@ -294,7 +294,7 @@
             let self = this;
             self.loadParentTree();
             self.loadStatus();
-            // self.getDefault();
+            self.getDefault();
             self.getSelectData();
         },
     watch: {
@@ -350,14 +350,14 @@
                 
             })
         },
-        // getDefault(){
-        //     let self=this;
-        //     if(self.$route.params.id!="default"){
-        //         self.addData.classParentId=parseInt(self.$route.params.id);
-        //         self.parentItem.className = '111111';
-        //         self.parentItem.id=self.$route.params.id;
-        //     }
-        // },
+        getDefault(){
+            let self=this;
+            if(self.$route.params.id!="default"){
+                self.addData.classParentId=parseInt(self.$route.params.id);
+                self.parentItem.className = '111111';
+                self.parentItem.id=self.$route.params.id;
+            }
+        },
         //加载状态下拉框
         loadStatus:function(){
             let self = this;
