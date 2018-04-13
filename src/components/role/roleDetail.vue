@@ -989,7 +989,6 @@ export default({
                         })
                     });
                     _this.addData.permissions=permissions;
-                    console.log(permissions)
                     let userCodes=[];//关联用户
                     $.each(_this.showCheckedUserTable,function(index,val){
                         userCodes.push(val.userCode)
