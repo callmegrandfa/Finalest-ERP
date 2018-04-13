@@ -169,7 +169,7 @@
                                         <el-input  class="noEdit" v-model="scope.row.remark"></el-input>
                                     </template>                                    
                                 </el-table-column>
-                                <!-- <el-table-column prop="KjModifiedBy" label="修改人">
+                                <el-table-column prop="KjModifiedBy" label="修改人">
                                     <template slot-scope="scope" >
                                         <el-input  class="noEdit" v-model="scope.row.KjModifiedBy"></el-input>
                                     </template>                                        
@@ -178,7 +178,7 @@
                                     <template slot-scope="scope" >
                                         <el-input  class="noEdit" v-model="scope.row.KjModifiedTime"></el-input>
                                     </template>                                    
-                                </el-table-column> -->
+                                </el-table-column>
                             </el-table>
                         </el-col>
                     </el-row>
@@ -714,8 +714,8 @@ import dialogBox from '../../base/dialog/dialog'
                         effectiveStart: '',
                         effectiveEnd: '',
                         remark:'',
-                        // KjModifiedBy:'',
-                        // KjModifiedTime:''
+                        KjModifiedBy:'',
+                        KjModifiedTime:'',
                         groupID: 0,
                         ouID: 0,
                         accperiodId: 0,
