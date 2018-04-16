@@ -147,20 +147,22 @@
                             <el-input placeholder="搜索..."
                                     class="selectSearch"
                                     v-model="ouSearch"></el-input> 
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                    :data="ouAr"
-                                    :props="selectOuProps"
-                                    node-key="id"
-                                    default-expand-all
-                                    ref="tree"
-                                    :filter-node-method="filterNode"
-                                    :expand-on-click-node="false"
-                                    @node-click="ouNodeClick"></el-tree> 
-                            <el-option v-show="false"
-                                    :key="countOu.id" 
-                                    :label="countOu.ouName" 
-                                    :value="countOu.id"
-                                    id="ou_confirmSelect"></el-option>
+                            <el-tree :data="ouAr"
+                                     :default-expanded-keys="expandId"
+                                     :props="selectOuProps"
+                                     :highlight-current="true"
+                                     node-key="id"
+                                     :render-content="renderContentOu"
+                                     ref="ouTree"
+                                     :filter-node-method="ouFilterNode"
+                                     :expand-on-click-node="false"
+                                     @node-click="ouNodeClick"></el-tree> 
+                            <el-option v-show="false" 
+                                       v-for="item in ouSelectAr" 
+                                       :key="item.id" 
+                                       :label="item.ouName" 
+                                       :value="item.id" 
+                                       :date="item.id"></el-option>
                         </el-select>
                     </div>
 
@@ -219,7 +221,7 @@
                                     @change='Modify()'
                                     @focus="showErrprTipsSelect"
                                     class="stockId"
-                                    :disabled="createShopParams.shopWorkPropertyid === 0||createShopParams.shopWorkPropertyid === 2"
+                                    :disabled="createShopParams.shopWorkPropertyid === 1"
                                     :class="{redBorder : validation.hasError('createShopParams.stockId')}">
                             <el-option v-for="item in stockAr" 
                                     :key="item.id" 
@@ -265,19 +267,21 @@
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="opSearch"></el-input>
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="opAr"
+                            <el-tree :data="opAr"
+                                     :default-expanded-keys="expandOpId"
                                      :props="selectOpProps"
+                                     :highlight-current="true"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
+                                     :render-content='renderContentOp'
+                                     ref="opTree"
+                                     :filter-node-method="opFilterNode"
                                      :expand-on-click-node="false"
                                      @node-click="opNodeClick"></el-tree>
                             <el-option v-show="false"
-                                       :key="countOp.id" 
-                                       :label="countOp.areaName" 
-                                       :value="countOp.id"
+                                       v-for="item in opItem"
+                                       :key="item.id" 
+                                       :label="item.areaName" 
+                                       :value="item.id"
                                        id="op_confirmSelect"></el-option>
                         </el-select>
                     </div>
@@ -654,52 +658,47 @@ export default({
             return this.Validator.value(value).maxLength(200);
         },
     },
-    computed:{
-        countOu () {
-            return this.ouItem;
-        },
-        countAd () {
-            return this.adItem;
-        },
-        countOp () {
-            return this.opItem;
-        },
-    }, 
     
-    // watch: {
-    //   search(val) {
-    //     this.$refs.tree.filter(val);
-    //   }
-    // },
+    watch: {
+      ouSearch(val) {
+        this.$refs.ouTree.filter(val);
+      }
+    },
     methods:{
         //---下拉的数据------------------------------------------------------
         loadSelect:function(){
             let self = this;
             //所属组织
+            self.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+                self.ouSelectAr = res.result;
+            })
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 // console.log(res);
                 self.ouAr = res.result;
-                self.loadIcon();
+                self.expandId=self.defauleExpandTree(res.result,'id')
+                // self.loadIcon();
             },function(res){
                 console.log('err'+res)
             });
             //获取当前默认ouid
             self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
-                // console.log(res);
+                console.log(res);
                 self.defaultOuId = res.result.id;
                 self.createShopParams.ouId = self.defaultOuId;
                 //加载完成拿回下拉的默认值
-                self.ouItem.ouName = res.result.ouName;
-                self.ouItem.id =  res.result.id;
-
+                // self.ouItem.ouName = res.result.ouName;
+                // self.ouItem.id =  res.result.id;
+                // console.log('222222222222')
                 //业务地区
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.defaultOuId}).then(function(res){
                     console.log(res);
                     if(res.result&&res.result.length>0){
                         self.opAr = res.result;
-                        self.loadIcon();
+                        self.expendOpId = self.defauleExpandTree(res.result,'id')
+                        // self.loadIcon();
                     }else{
-                        self.opItem.areaName = '暂无业务地区'
+                        self.opItem[0].areaName = '暂无业务地区'
+                        console.log(self.opItem)
                     };
                 },function(res){
                     console.log('err'+res)
@@ -790,21 +789,48 @@ export default({
             $('.tipsWrapper').css({display:'block'})
             self.$validate().then(function(success){
                 if(success){
-                    // console.log(2)
                     $('.tipsWrapper').css({display:'none'}) 
                     self.createShopParams.shopContacts = self.addList;
-                    console.log(self.addList)
-                    self.$axios.posts('/api/services/app/ShopManagement/Create',self.createShopParams).then(function(res){
-                        // console.log(res);
-                        self.open('创建成功','el-icon-circle-check','successERP');
-                        self.backId = res.result.id;
+                    let push = false;
+                    if(self.createShopParams.shopContacts.length>0){
+                        for(let i in self.createShopParams.shopContacts){
+                            if(self.createShopParams.shopContacts[i].contactPerson!=''){
+                                push = true;
+                            }
+                        }
+                        if(push){
+                            self.$axios.posts('/api/services/app/ShopManagement/Create',self.createShopParams).then(function(res){
+                                // console.log(res);
+                                self.open('创建成功','el-icon-circle-check','successERP');
+                                self.backId = res.result.id;
 
-                        self.goModify(self.backId);
-                    },function(res){
-                        console.log(res)
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                    });
+                                self.goModify(self.backId);
+                            },function(res){
+                                console.log(res)
+                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                                self.errorMessage=true;
+                            });
+                        }else{
+                            self.$message({
+                                type: 'info',
+                                message: '联系人必填'
+                            });
+                            $('.tipsWrapper').css({display:'none'})
+                        }
+                    }else{
+                        self.$axios.posts('/api/services/app/ShopManagement/Create',self.createShopParams).then(function(res){
+                            // console.log(res);
+                            self.open('创建成功','el-icon-circle-check','successERP');
+                            self.backId = res.result.id;
+
+                            self.goModify(self.backId);
+                        },function(res){
+                            console.log(res)
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            self.errorMessage=true;
+                        });
+                    };
+
                     
                     
                 }
@@ -996,87 +1022,116 @@ export default({
             customClass:className
             });
         },
-        //----------------------------------------------------------
+        //------------------------------------------------
 
-        //---树-------------------------------------------------------------
-        loadIcon(){
-            let self=this;
-            self.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                    }
-                })
-            })
+        //---树通用----------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
         },
-        filterNode(value, data) {
-            // console.log(data)
+        //-------------------------------------------------
+
+        //---树筛选----------------------------------------
+        ouFilterNode(value, data) {
+            console.log(data)
+            if (!value) return true;
+                return data.ouName.indexOf(value) !== -1;
+        },
+        opFilterNode(value, data) {
+            console.log(data)
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
-        cuNodeClick:function(data){
-            let self = this;
-            self.cuItem.id = data.id;
-            self.cuItem.cuFullname = data.classFullname;
-            self.$nextTick(function(){
-                $('#cu_confirmSelect').click()
-            })
-        },
+        //-------------------------------------------------
 
-        ouNodeClick:function(data){
-            let self = this;
-            self.createShopParams.stockId = '';
-            self.createShopParams.opAreaId = '';
-
-            self.opItem.areaName = '';
-            self.ouItem.id = data.id;
-            self.ouItem.ouName = data.ouName;
-            self.$nextTick(function(){
-                $('#ou_confirmSelect').click()
-            })
-            //点击所属组织，业务地区跟着变动
-            self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
+        //---树点击----------------------------------------
+        ouNodeClick:function(data,node,self){
+            let _this = this;
+            console.log(data)
+            _this.createShopParams.stockId = '';
+            _this.createShopParams.opAreaId = '';
+            _this.opItem[0].areaName = '';
+            // 点击所属组织，业务地区跟着变动
+            _this.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:data.id}).then(function(res){
+                console.log(res)
                 if(res.result&&res.result.length>0){
-                    self.opAr = res.result;
-                    self.loadIcon();
+                    _this.opAr = res.result;
                 }else{
-                    self.opItem.areaName = '暂无业务地区';
-                    self.opItem.id = '';
+                    _this.opItem[0].areaName = '暂无业务地区';
+                    _this.opItem[0].id = '';
                 }
             },function(res){
                 console.log('err'+res)
             });
-
-            //点击所属组织，对应仓库跟着变动
-            self.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:self.defaultOuId,Start:0,Length:100}).then(function(res){
+            // 点击所属组织，对应仓库跟着变动
+            _this.$axios.gets('/api/services/app/StockManagement/GetRepositoryList',{OuId:data.id,Start:0,Length:100}).then(function(res){
                 // console.log(res);
-                self.stockAr = res.data;
+                _this.stockAr = res.data;
             },function(res){
                 console.log('err'+res)
             });
-        },
-
-        adNodeClick:function(data){
-            let self = this;
-            self.adItem.id = data.id;
-            self.adItem.areaName = data.areaName;
-            self.$nextTick(function(){
-                $('#ad_confirmSelect').click()
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
             })
         },
+        
         opNodeClick:function(data){
+            console.log(data)
             let self = this;
-            // console.log(data)
-            self.opItem.id = data.id;
-            self.opItem.areaName = data.areaName;
+            console.log(data)
+            self.opItem[0].id = data.id;
+            self.opItem[0].areaName = data.areaName;
+            // self.queryOp = data.id;
             self.$nextTick(function(){
                 $('#op_confirmSelect').click()
             })
         },
-        //-----------------------------------------------------
+        //-------------------------------------------------
+
+        //---树render-content------------------------------
+        renderContentOu(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
+        renderContentOp(h, { node, data, store }){//业务地区
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.areaName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.areaName}
+                    </span>
+                );
+            }
+        },
+        //------------------------------------------------
+
 
         //---选择省市区-----------------------------------------
         chooseProvince:function(id){
@@ -1164,11 +1219,9 @@ export default({
                     label: 'ouName',
                     id:'id'
                 },
-                ouItem:{
-                    id:'',
-                    ouName:'',
-                },
                 ouAr:[],//所属组织下拉框
+                ouSelectAr:[],//选择下拉
+                expandId:[],
             //-----------------------
 
             //---行政地区树形下拉-----
@@ -1185,11 +1238,12 @@ export default({
                     label: 'areaName',
                     id:'id'
                 },
-                opItem:{
+                opItem:[{
                     id:'',
                     areaName:'',
-                },
+                }],
                 opAr:[],//业务地区下拉框
+                expandOpId:[],
             //-----------------------
             //---普通下拉------------
             propertyAr:[],//店铺性质下拉框

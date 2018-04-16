@@ -54,7 +54,24 @@
                     <el-col :span="24">
                         <div class="bgcolor">
                             <label><small>*</small>所属组织</label>
-                            <el-select v-model='dataItem.OuId'></el-select>
+                            <el-select v-model='dataItem.OuId'>
+                                <el-input placeholder="搜索..."
+                                          class="selectSearch"
+                                          ></el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                        :data="OuArray"
+                                        :props="selectOuProps"
+                                        node-key="id"
+                                        default-expand-all
+                                        ref="ouTree"
+                                        :expand-on-click-node="false"
+                                        @node-click="ouNodeClick"></el-tree> 
+                                <el-option v-show="false"
+                                           :key="countOu.id" 
+                                           :label="countOu.ouName" 
+                                           :value="countOu.id"
+                                           id="ou_confirmSelect"></el-option>
+                            </el-select>
                         </div>
 
                         <div class="bgcolor">
@@ -83,18 +100,18 @@
 
                         <div class="bgcolor">
                             <label>业务地区</label>
-                            <el-select class="opAreaId" v-model='dataItem.opAreaId'> </el-select>
+                            <el-input class="opAreaId" v-model='dataItem.opAreaId'> </el-input>
                         </div>
 
                         <div class="bgcolor area">
                             <label>行政地区</label>
                             <div class="areaBox">
-                                <el-select  class="areaDrop" placeholder="选择省">
-                                </el-select>
-                                <el-select  class="areaDrop" placeholder="选择市">
-                                </el-select>
-                                <el-select class="areaDrop" placeholder="选择区">
-                                </el-select>
+                                <el-input  class="areaDrop" placeholder="选择省">
+                                </el-input>
+                                <el-input  class="areaDrop" placeholder="选择市">
+                                </el-input>
+                                <el-input class="areaDrop" placeholder="选择区">
+                                </el-input>
                                 <!-- <el-input class="areaEntry" placeholder="街道办地址"></el-input> -->
                             </div>
                         </div>
@@ -128,6 +145,7 @@
                         <div class="bgcolor">
                             <label><small>*</small>状态</label>
                             <el-select class="status" v-model='dataItem.status'>
+                                <el-option v-for="item in statusArray" :key="item.itemValue" :value="item.itemValue" :label="item.itemName"></el-option>
                             </el-select>
                         </div>
                     </el-col>    
@@ -140,7 +158,7 @@
             </el-col>
 
             <el-col :span="24" class="bg-white pl10 mb10">
-                <button class="erp_bt bt_add">
+                <button class="erp_bt bt_add" @click="addRecord()">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
@@ -170,97 +188,6 @@
             </el-col>
             <el-col>
             <Table :methodsUrl="httpUrl" :cols="column" :HttpParams="HttpParams" :hasPagination="hasPagination" :isDisable='isDisable' :tableName="tableModel" :mutiSelect="mutiSelect"  :command="command"></Table>
-              <!-- <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
-                    <el-table-column type="selection"></el-table-column>
-
-                    <el-table-column prop="contactPerson" label="联系人" >
-                        <template slot-scope="scope">
-                            <img v-show='redAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.contactPerson"
-                                    @change='handleChange(scope.$index,scope.row)'
-                                    type="text"/>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column prop="moblie" label="手机">
-                        <template slot-scope="scope">
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.moblie"
-                                    @change='handleChange(scope.$index,scope.row)'
-                                    type="text"/>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column prop="phone" label="电话">
-                        <template slot-scope="scope">
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.phone"
-                                    @change='handleChange(scope.$index,scope.row)'
-                                    type="text"/>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column prop="completeAddress" label="送货地址">
-                        <template slot-scope="scope">
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.completeAddress"
-                                    @change='handleChange(scope.$index,scope.row)'
-                                    type="text" />
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column prop="transportMethodId" label="运输方式">
-                        <template slot-scope="scope">
-                            <el-select  v-model="scope.row.transportMethodId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
-                                <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
-                                </el-option>
-                                <el-option v-show="false" label="无" :value="TransValue">
-                                </el-option>
-                            </el-select>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column prop="transportMethodId" label="物流公司">
-                        <template slot-scope="scope">
-                            <el-select  v-model="scope.row.logisticsCompanyId" :class="[scope.$index%2==0?'bgw':'bgp']" @change='handleChange(scope.$index,scope.row)'>
-                                <el-option  v-for="item in logiAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
-                                </el-option>
-                                <el-option v-show="false" label="无" :value="LogiValue">
-                                </el-option>
-                            </el-select>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column prop="isDefault" label="默认">
-                        <template slot-scope="scope">
-                            <el-radio  :label="true" 
-                                        v-model="scope.row.isDefault" 
-                                        @change.native="getCurrentRow(scope.$index,scope.row)" 
-                                        @change="handleChange(scope.$index,scope.row)"></el-radio>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column prop="remark" label="备注">
-                        <template slot-scope="scope">
-                            <input class="input-need" 
-                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                    v-model="scope.row.remark"
-                                    @change='handleChange(scope.$index,scope.row)'
-                                    type="text"/>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column label="操作">
-                        <template slot-scope="scope">
-                            <el-button v-on:click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>  -->
             </el-col>
         </el-row>
 
@@ -338,6 +265,7 @@ import Table from '../../base/Table/Table'
                         width:"auto",
                         isDisable:false,
                         sortable:false,
+                        flag:true,//更改标识
                     },{
                         prop: 'moblie',
                         label: '手机',
@@ -383,6 +311,7 @@ import Table from '../../base/Table/Table'
                         width:"auto",
                         isDisable:false,
                         sortable:false,
+                        dataSource:[],
                     },{
                         prop: 'isDefault',
                         label: '默认',
@@ -412,22 +341,41 @@ import Table from '../../base/Table/Table'
                 hasPagination:false,
                 HttpParams:{
                     Id:this.$route.params.id
-                }
+                },
+                OuArray:[],//组织单元集合
+                statusArray:[],//状态集合
+                logisticsArray:[],//物流公司集合
+                selectOuProps:{//组织单元树形
+                    children: 'children',
+                    label: 'ouName',
+                    id:'id'
+                },
+                ouItem:{//组织单元select模拟选择数据
+                    id:'',
+                    ouName:'',
+                },
+                //logisticsCompanyDictName:'logisticsCompany'
+                
             }
         },
+        beforeMount(){
+            //this.logisticsArray=this.$store.commit('Init_dataSource',this.logisticsCompanyDictName);
+        },
         created(){
+            this.loadSelect();
             this.InitModify();
-            // this.InitSubData();
         },
         mounted:function(){
             
         },
         computed:{
-            
+            countOu () {
+                return this.ouItem;
+            },
         },
 
         watch:{
-
+           
         },  
         methods:{
             back(){
@@ -465,16 +413,70 @@ import Table from '../../base/Table/Table'
                 }
                  
             },
-            InitSubData(){
-                 let _this=this;
-                if(_this.$route.params.id=="default"){
-                    return;
-                }else{
-                    _this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',{Id:_this.$route.params.id}).then(function(res){
-                        _this.$store.commit('Init_Table',res.result);
-                    })
-                }
+            loadSelect:function(){
+                let _this = this;
+                //所属组织
+                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
+                    _this.OuArray = res.result;
+                    _this.loadIcon();
+                });              
+                //状态
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
+                    _this.statusArray = res.result;
+                });
+                 //物流公司
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'logisticsCompany'}).then(function(res){
+                    _this.column[5].dataSource=res.result;
+                })
             },
+            loadIcon(){//树节点图标
+                let _this=this;
+                _this.$nextTick(function (){
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
+                })
+            },
+            ouNodeClick:function(data){//组织单元树节点选择
+                let _this = this;
+                _this.dataItem.opAreaId = '';
+                _this.opItem.areaName = '';
+                _this.ouItem.id = data.id;
+                _this.ouItem.ouName = data.ouName;
+                _this.$nextTick(function(){
+                    $('#ou_confirmSelect').click()
+                })
+            },
+            addRecord(){//新增行
+                let newCol ={
+                    id:'',
+                    completeAddress: "",
+                    stockId: 0,
+                    addressId: 0,
+                    transportMethodId: '',
+                    contactPerson: "",
+                    phone: "",
+                    moblie: "",
+                    logisticsCompanyId: '',
+                    isDefault: false,
+                    remark: ''
+                };
+                let newArrayLength=this.$store.state[this.tableModel+'NewColArray'].length;
+                if(newArrayLength>2){
+                    this.$message({
+                        type: 'info',
+                        message: '请先编辑保存新增项'
+                    });
+                }else{
+                    this.$store.commit('setIfDel',false)//重置修改参数
+                    this.$store.dispatch('addCol',newCol);//表格行内新增
+                } 
+            }
             
         },
         components:{
@@ -591,9 +593,6 @@ import Table from '../../base/Table/Table'
 
 </style>
 <style>
-.res-modify .el-input__inner{
-    height:35px !important;
-}
 .res-modify .bgw .el-input__inner{
     text-align:center;
     border:none;

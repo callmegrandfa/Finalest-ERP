@@ -72,12 +72,12 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
+                             :default-expanded-keys="expand.expandId_addDataOu"
                             :render-content="renderContent_ou"
                             :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
-                            default-expand-all
                             ref="tree_ou"
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
@@ -727,9 +727,9 @@ export default({
             fnTreeData:[],
             result:[],
             defaultProps: {
-                children: 'no',
-                label: 'displayName',
-                value:'permissionName'
+                children: 'childNodes',
+                label: 'moduleName',
+                value:'id'
             },           
 //-------------分页----------------------
             checkAllFns:false,//全选
@@ -740,6 +740,13 @@ export default({
             totalPageFn:0,//当前分页总数
             oneItemFn:10,//每页有多少条信息
             pageFn:1,//当前页   
+
+            expand:{
+                expandId_addDataOu:[],//默认下拉树形展开id
+                isHere_addDataOu:false,//是否存在id于树形
+                expandId_dialogOu:[],//默认dialog组织树形展开id
+                expandId_mmenu:[],//默认分配功能树形展开id
+            }
         }
     },
      validators: {
@@ -762,7 +769,7 @@ export default({
     },
     created () {
         let _this=this;
-        _this.loadTree_ou();//下拉列表
+        
         // _this.GetUsers();
         _this.getSelectData();//下拉列表
 
@@ -777,6 +784,7 @@ export default({
         _this.getAllUserData()//获取所有用户数据
         _this.getDefault()
         // _this.getModifyData();//根据id获取数据
+        // _this.loadTree_ou();//下拉列表
     },
     
     watch: {
@@ -859,6 +867,7 @@ export default({
             },
             _this.item_ou.id=res.result.id;
             _this.item_ou.ouName=res.result.ouName;
+            _this.loadTree_ou()
             })
         },
         // getModifyData(){
@@ -989,7 +998,6 @@ export default({
                         })
                     });
                     _this.addData.permissions=permissions;
-                   
                     let userCodes=[];//关联用户
                     $.each(_this.showCheckedUserTable,function(index,val){
                         userCodes.push(val.userCode)
@@ -1433,28 +1441,81 @@ export default({
         fnLoadTree(){
             let _this=this;
             _this.fnTreeLoading=true;
-            _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
+            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
             .then(function(res){
                 // console.log(res)
-                _this.fnTreeData=res.items;
+                _this.fnTreeData=res;
                 _this.fnTreeLoading=false;
                 // _this.getCheckFn();
                  _this.clickFnTreeData=[];
-                $.each(_this.fnTreeData,function(inde,val){
-                    let item={moduleName:val.displayName,children:[]}
-                    let head=[];
-                    $.each(val.children,function(index,value){
-                        // console.log(value)
-                        head.push({displayName:value.displayName,permissionName:value.permissionName})  
-                        let x={check:false,permissionName:value.permissionName}
-                        x.check=false;
-                        x.displayName=value.displayName
-                            
-                        item.children.push(x)
-                    })
-                    item.head=head
-                    _this.clickFnTreeData.push(item)
+                 $.each(_this.fnTreeData,function(index1,value1){
+                    let item1={moduleName:value1.moduleName,children:[]}
+                    let head1=[];
+                    
+                    if(typeof(value1.permissionDtos)!='undefined' && value1.permissionDtos!=null && value1.permissionDtos.length>0){
+                        $.each(value1.permissionDtos,function(index2,value2){
+                            // console.log(value2)
+                            head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
+                            let x1={check:false,permissionName:value2.permissionName}
+                            x1.check=false;
+                            x1.displayName=value2.displayName
+                            item1.children.push(x1)
+                        })
+                    }
+                    if(typeof(value1.childNodes)!='undefined' && value1.childNodes!=null && value1.childNodes.length>0){
+                        $.each(value1.childNodes,function(index2,value2){
+                            let item2={moduleName:value2.moduleName,children:[]}
+                            let head2=[];
+                            if(typeof(value2.permissionDtos)!='undefined' && value2.permissionDtos!=null && value2.permissionDtos.length>0){
+                                $.each(value2.permissionDtos,function(index3,value3){
+                                    head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
+                                    let x2={check:false,permissionName:value3.permissionName}
+                                    x2.check=false;
+                                    x2.displayName=value3.displayName
+                                    item2.children.push(x2)
+                                })
+                            }
+                            if(typeof(value2.childNodes)!='undefined' && value2.childNodes!=null && value2.childNodes.length>0){
+                                $.each(value2.childNodes,function(index3,value3){
+                                    let item3={moduleName:value3.moduleName,children:[]}
+                                    let head3=[];
+                                    if(typeof(value3.permissionDtos)!='undefined' && value3.permissionDtos!=null && value3.permissionDtos.length>0){
+                                        $.each(value3.permissionDtos,function(index4,value4){
+                                            head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
+                                            let x3={check:false,permissionName:value4.permissionName}
+                                            x3.check=false;
+                                            x3.displayName=value4.displayName
+                                            item3.children.push(x3)
+                                        })
+                                    }
+                                    item3.head=head3
+                                    _this.clickFnTreeData.push(item3)
+                                })
+                            }
+                            item2.head=head2
+                            _this.clickFnTreeData.push(item2)
+                        })
+                    }
+                    // console.log(head1)
+                    item1.head=head1
+                    _this.clickFnTreeData.push(item1)
                 })
+                // console.log(_this.clickFnTreeData)
+                // $.each(_this.fnTreeData,function(inde,val){
+                //     let item={moduleName:val.displayName,children:[]}
+                //     let head=[];
+                //     $.each(val.children,function(index,value){
+                //         // console.log(value)
+                //         head.push({displayName:value.displayName,permissionName:value.permissionName})  
+                //         let x={check:false,permissionName:value.permissionName}
+                //         x.check=false;
+                //         x.displayName=value.displayName
+                            
+                //         item.children.push(x)
+                //     })
+                //     item.head=head
+                //     _this.clickFnTreeData.push(item)
+                // })
                 $('#FnPagination').css('display','block')
                 _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
                 _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
@@ -1535,11 +1596,30 @@ export default({
             // console.log(_this.clickFnTreeData)
             let flag=false
             let showCheckedFnTable=[]
-            $.each(_this.clickFnTreeData,function(index,val){
-                if(data.displayName==val.moduleName){
+            $.each(_this.clickFnTreeData,function(index1,value1){
+                if(data.moduleName==value1.moduleName){
                     flag=true
-                    showCheckedFnTable.push(val)
+                    showCheckedFnTable.push(value1)
+                    if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                        $.each(data.childNodes,function(index2,value2){
+                            $.each(_this.clickFnTreeData,function(x1,val1){
+                                if(value2.moduleName==val1.moduleName){
+                                    showCheckedFnTable.push(val1)
+                                }
+                                 if(typeof(value2.childNodes)!='undefined' && value2.childNodes!=null && value2.childNodes.length>0){
+                                    $.each(value1.childNodes,function(index3,value3){
+                                         $.each(_this.clickFnTreeData,function(x2,val2){
+                                            if(value3.moduleName==val2.moduleName){
+                                                showCheckedFnTable.push(val2)
+                                            }
+                                         })
+                                    })
+                                }
+                            })
+                        })
+                    }
                 }
+
             })
             if(flag){
                 _this.showCheckedFnTable=showCheckedFnTable
@@ -1555,6 +1635,12 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
+                 _this.defauleExpandTree('ouId','expandId_addDataOu',res.result,'id','children')
+                //  console.log(_this.expand.expandId_addDataOu)
+                if(_this.expand.expandId_addDataOu.length<1){
+                    _this.expand.expandId_addDataOu=[_this.selectTree_ou[0].id]
+                }
+                _this.loadCheckSelect('ouId',_this.addData.ouId);
             },function(res){
             })
         },
@@ -1570,6 +1656,49 @@ export default({
             //         $(this).click()
             //     }
             // })
+        },
+        defauleExpandTree(model,expandName,response,responseKey,children){
+            //model数据模型
+            //expandName需要设置的默认展开树形建值_this.expand[expandName]
+            //response,树形数据
+            //responseKey需要与model匹配的唯一key
+            //children，response[children]
+            let _this=this;
+            if(model!=''){//model为树形下拉默认值，即渲染数据。如果存在，递归tree
+                $.each(response,function(index,val){
+                    if(val[responseKey]==_this.addData[model]){
+                        _this.expand[expandName]=[_this.addData[model]]
+                    }else{
+                        $.each(val[children],function(index1,val1){
+                            if(val1[responseKey]==_this.addData[model]){
+                                _this.expand[expandName]=[_this.addData[model]]
+                            }else{
+                                _this.defauleExpandTree(model,expandName,val1[children],responseKey,children)
+                            }
+                        })
+                    }
+                })
+            }else{
+                 $.each(response,function(index,value){
+                    if(index==0){
+                        if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                            _this.expand[expandName]=[value[responseKey]]
+                        }
+                        
+                    }
+                })
+   
+            }
+        },
+        loadCheckSelect(selectName,key){
+            let _this=this;
+            _this.$nextTick(function () { 
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                     if($(this).attr('data-id')==key){
+                        $(this).click()
+                    }
+                })
+            })
         },
 // ----------关联用户--------------
         searchLeftUserTable(){//左侧数据搜索
@@ -1628,7 +1757,7 @@ export default({
                 _this.dialogUser=true;
             
         },
-        paginationUserSearch(data,oneItem,thisPage){//数据分页
+        paginationUserSearch(data,oneItem,thisPage,even){//数据分页
         //checkAllata分页数据
         //oneItem每页有多少条信息
         //thisPage当前页
@@ -1924,18 +2053,18 @@ export default({
     //     this.$refs.tree.setCheckedKeys([]);
     //   },
         renderContent_Fn(h, { node, data, store }){
-             if(typeof(data.childre)!='undefined' && data.childre!=null && data.childre.length>0){
+             if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
                     return (
                         <span class="el-tree-node__label">
                         <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.displayName}
+                            {data.moduleName}
                         </span>
                     );
                 }else{
                     return (
                         <span class="el-tree-node__label">
                         <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.displayName}
+                            {data.moduleName}
                         </span>
                     );
                 }

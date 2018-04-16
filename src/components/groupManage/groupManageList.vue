@@ -293,6 +293,7 @@
                 }
                 if(!_this.isCancel){
                     _this.$axios.puts('/api/services/app/GroupManagement/Update',updateItem).then(function(res){ 
+                        console.log(updateItem)
                         _this.open('修改成功','el-icon-circle-check','successERP');
                         _this.isEdit=!_this.isEdit;
                         },function(res){

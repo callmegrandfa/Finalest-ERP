@@ -66,12 +66,12 @@
                             v-model="search_ou">
                             </el-input>
                             <el-tree
+                             :default-expanded-keys="expand.expandId_addDataOu"
                             :render-content="renderContent_ou"
                             :highlight-current="true"
                             :data="selectTree_ou"
                             :props="selectProps_ou"
                             node-key="id"
-                            default-expand-all
                             ref="tree_ou"
                             :filter-node-method="filterNode_ou"
                             :expand-on-click-node="false"
@@ -180,10 +180,10 @@
             <el-col :span="24" class="transfer_table">
                 <vue-scroll :ops="$store.state.option">
                     <el-tree
+                    :default-expanded-keys="expand.expandId_dialogOu"
                     :render-content="renderContent_ouTreeDataRight"
                     :data="ouTreeDataRight"
                     show-checkbox
-                    default-expand-all
                     node-key="ouId"
                     ref="tree"
                     :filter-node-method="filterNode"
@@ -420,6 +420,7 @@
                             <el-col :span="24" class="fnTreeWrapper">
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
+                                        :default-expanded-keys="expand.expandId_mmenu"
                                         :render-content="renderContent_Fn"
                                         v-loading="fnTreeLoading" 
                                         :highlight-current="true"
@@ -428,7 +429,6 @@
                                         node-key="id"
                                         ref="tree_fn"
                                         :filter-node-method="filterNodeFn"
-                                        default-expand-all
                                         @node-click="fnNodeClick"
                                         :expand-on-click-node="false">
                                     </el-tree>
@@ -586,30 +586,6 @@ export default({
             },
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
-            option: {//滚动条样式
-                vRail: {
-                    width: 0,
-                    height:0,
-                    background: "#9093994d",
-                },
-                vBar:{
-                     width: 0,
-                     height:0,
-                    background: '#9093994d',
-                },
-                hRail: {
-                    width: 0,
-                    height:0,
-                    pos: 'bottom',
-                    background: "#9093994d",
-                },
-                hBar:{
-                     width:0,
-                     height:0,
-                    pos: 'bottom',
-                    background: '#9093994d',
-                }
-            },
             search_ou:'',
             selectTree_ou:[
             ],
@@ -648,11 +624,11 @@ export default({
             activeName: 'ou',//tabs标签页默认激活name
 
             addData:{
-                "ouId": "",
-                "roleCode": "",
-                "displayName": "",
-                "status": 1,
-                "remark": "",
+                // "ouId": "",
+                // "roleCode": "",
+                // "displayName": "",
+                // "status": 1,
+                // "remark": "",
             },
 
 // -------------分配组织-------------------
@@ -767,9 +743,9 @@ export default({
             fnTreeData:[],
             result:[],
             defaultProps: {
-                children: 'no',
-                label: 'displayName',
-                value:'permissionName'
+                children: 'childNodes',
+                label: 'moduleName',
+                value:'id'
             },           
 //-------------分页----------------------
             checkAllFns:false,//全选
@@ -780,6 +756,13 @@ export default({
             totalPageFn:0,//当前分页总数
             oneItemFn:10,//每页有多少条信息
             pageFn:1,//当前页   
+
+            expand:{
+                expandId_addDataOu:[],//默认下拉树形展开id
+                isHere_addDataOu:false,//是否存在id于树形
+                expandId_dialogOu:[],//默认dialog组织树形展开id
+                expandId_mmenu:[],//默认分配功能树形展开id
+            }
         }
     },
      validators: {
@@ -802,7 +785,8 @@ export default({
     },
     created () {
         let _this=this;
-        _this.loadTree_ou();//下拉列表
+        _this.getModifyData();//根据id获取数据
+       
         _this.GetUsers();
         _this.getSelectData();//下拉列表
 
@@ -815,7 +799,7 @@ export default({
         // _this.getAllFn();//获取所有权限
         _this.fnLoadTree();//分配权限树形
 
-        _this.getModifyData();//根据id获取数据
+        //  _this.loadTree_ou();//下拉列表
     },
     
     watch: {
@@ -906,6 +890,7 @@ export default({
                 }
                 _this.item_ou.ouName=res.result.ouName
                 _this.item_ou.id=res.result.ouId
+                _this.loadTree_ou()
                 },function(res){
             })
         },
@@ -1101,6 +1086,49 @@ export default({
            $(tab.$el).find('table').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
             $(tab.$el).find('.el-table__empty-block').css('width',$(tab.$el).find('.el-table__header-wrapper').css('width'))
         },
+        defauleExpandTree(model,expandName,response,responseKey,children){
+            //model数据模型
+            //expandName需要设置的默认展开树形建值_this.expand[expandName]
+            //response,树形数据
+            //responseKey需要与model匹配的唯一key
+            //children，response[children]
+            let _this=this;
+            if(model!=''){//model为树形下拉默认值，即渲染数据。如果存在，递归tree
+                $.each(response,function(index,val){
+                    if(val[responseKey]==_this.addData[model]){
+                        _this.expand[expandName]=[_this.addData[model]]
+                    }else{
+                        $.each(val[children],function(index1,val1){
+                            if(val1[responseKey]==_this.addData[model]){
+                                _this.expand[expandName]=[_this.addData[model]]
+                            }else{
+                                _this.defauleExpandTree(model,expandName,val1[children],responseKey,children)
+                            }
+                        })
+                    }
+                })
+            }else{
+                 $.each(response,function(index,value){
+                    if(index==0){
+                        if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                            _this.expand[expandName]=[value[responseKey]]
+                        }
+                        
+                    }
+                })
+   
+            }
+        },
+        loadCheckSelect(selectName,key){
+            let _this=this;
+            _this.$nextTick(function () { 
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                     if($(this).attr('data-id')==key){
+                        $(this).click()
+                    }
+                })
+            })
+        },
 //-------------关联组织-----------
         getAllOulength(){
             let _this=this;
@@ -1195,7 +1223,7 @@ export default({
         dialogOuIsShow(){
             let _this=this;
             _this.dialogOu=true;
-            _this.loadIcon();
+            // _this.loadIcon();
             setTimeout(function(){
                 // console.log(_this.storeCheckOu)
                _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
@@ -1429,23 +1457,89 @@ export default({
                 _this.checked=res.result.items;
                 _this.pageTable=res.result.items;
                 _this.clickFnTreeData=[];
-                $.each(_this.fnTreeData,function(inde,val){
-                    let item={moduleName:val.displayName,children:[]}
-                    let head=[];
-                    $.each(val.children,function(index,value){
-                        // console.log(value)
-                        head.push({displayName:value.displayName,permissionName:value.permissionName})  
-                        let x={check:false,permissionName:value.permissionName}
-                        x.displayName=value.displayName
-                        $.each(_this.checked,function(indexs,vals){
-                            if(value.permissionName==vals.displayName){
-                                x.check=true;
-                            }
+                // console.log(_this.fnTreeData)
+                $.each(_this.fnTreeData,function(index1,value1){
+                    let item1={moduleName:value1.moduleName,children:[]}
+                    let head1=[];
+                    
+                    if(typeof(value1.permissionDtos)!='undefined' && value1.permissionDtos!=null && value1.permissionDtos.length>0){
+                        $.each(value1.permissionDtos,function(index2,value2){
+                            // console.log(value2)
+                            head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
+                            let x1={check:false,permissionName:value2.permissionName}
+                            x1.check=false;
+                            x1.displayName=value2.displayName
+                            item1.children.push(x1)
+                            $.each(_this.checked,function(y1,val1){
+                                if(value2.permissionName==val1.displayName){
+                                    x1.check=true;
+                                }
+                            })
                         })
-                        item.children.push(x)
-                    })
-                    item.head=head
-                    _this.clickFnTreeData.push(item)
+                    }
+                    if(typeof(value1.childNodes)!='undefined' && value1.childNodes!=null && value1.childNodes.length>0){
+                        $.each(value1.childNodes,function(index2,value2){
+                            let item2={moduleName:value2.moduleName,children:[]}
+                            let head2=[];
+                            if(typeof(value2.permissionDtos)!='undefined' && value2.permissionDtos!=null && value2.permissionDtos.length>0){
+                                $.each(value2.permissionDtos,function(index3,value3){
+                                    head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
+                                    let x2={check:false,permissionName:value3.permissionName}
+                                    x2.check=false;
+                                    x2.displayName=value3.displayName
+                                    item2.children.push(x2)
+                                    $.each(_this.checked,function(y2,val2){
+                                        if(value3.permissionName==val2.displayName){
+                                            x2.check=true;
+                                        }
+                                    })
+                                })
+                            }
+                            if(typeof(value2.childNodes)!='undefined' && value2.childNodes!=null && value2.childNodes.length>0){
+                                $.each(value2.childNodes,function(index3,value3){
+                                    let item3={moduleName:value3.moduleName,children:[]}
+                                    let head3=[];
+                                    if(typeof(value3.permissionDtos)!='undefined' && value3.permissionDtos!=null && value3.permissionDtos.length>0){
+                                        $.each(value3.permissionDtos,function(index4,value4){
+                                            head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
+                                            let x3={check:false,permissionName:value4.permissionName}
+                                            x3.check=false;
+                                            x3.displayName=value4.displayName
+                                            item3.children.push(x3)
+                                             $.each(_this.checked,function(y3,val3){
+                                                if(value4.permissionName==val3.displayName){
+                                                    x3.check=true;
+                                                }
+                                            })
+                                        })
+                                    }
+                                    item3.head=head3
+                                    _this.clickFnTreeData.push(item3)
+                                })
+                            }
+                            item2.head=head2
+                            _this.clickFnTreeData.push(item2)
+                        })
+                    }
+                    // console.log(head1)
+                    item1.head=head1
+                    _this.clickFnTreeData.push(item1)
+                    // let item={moduleName:val.displayName,children:[]}
+                    // let head=[];
+                    // $.each(val.children,function(index,value){
+                    //     // console.log(value)
+                    //     head.push({displayName:value.displayName,permissionName:value.permissionName})  
+                    //     let x={check:false,permissionName:value.permissionName}
+                    //     x.displayName=value.displayName
+                    //     $.each(_this.checked,function(indexs,vals){
+                    //         if(value.permissionName==vals.displayName){
+                    //             x.check=true;
+                    //         }
+                    //     })
+                    //     item.children.push(x)
+                    // })
+                    // item.head=head
+                    // _this.clickFnTreeData.push(item)
                     
                 })
                 $('#FnPagination').css('display','block')
@@ -1468,12 +1562,12 @@ export default({
         fnLoadTree(){
             let _this=this;
             _this.fnTreeLoading=true;
-            _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
+            _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
             .then(function(res){
                 // console.log(res)
-                _this.fnTreeData=res.items;
+                _this.fnTreeData=res;
                 _this.fnTreeLoading=false;
-                _this.loadIcon();
+                // _this.loadIcon();
                 _this.getCheckFn();
             },function(res){
                 _this.fnTreeLoading=false;
@@ -1551,12 +1645,37 @@ export default({
             // console.log(_this.clickFnTreeData)
             let flag=false
             let showCheckedFnTable=[]
-            $.each(_this.clickFnTreeData,function(index,val){
-                if(data.displayName==val.moduleName){
+            $.each(_this.clickFnTreeData,function(index1,value1){
+                if(data.moduleName==value1.moduleName){
                     flag=true
-                    showCheckedFnTable.push(val)
+                    showCheckedFnTable.push(value1)
+                    if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                        $.each(data.childNodes,function(index2,value2){
+                            $.each(_this.clickFnTreeData,function(x1,val1){
+                                if(value2.moduleName==val1.moduleName){
+                                    showCheckedFnTable.push(val1)
+                                }
+                                 if(typeof(value2.childNodes)!='undefined' && value2.childNodes!=null && value2.childNodes.length>0){
+                                    $.each(value1.childNodes,function(index3,value3){
+                                         $.each(_this.clickFnTreeData,function(x2,val2){
+                                            if(value3.moduleName==val2.moduleName){
+                                                showCheckedFnTable.push(val2)
+                                            }
+                                         })
+                                    })
+                                }
+                            })
+                        })
+                    }
                 }
+
             })
+            // $.each(_this.clickFnTreeData,function(index,val){
+            //     if(data.displayName==val.moduleName){
+            //         flag=true
+            //         showCheckedFnTable.push(val)
+            //     }
+            // })
             if(flag){
                 _this.showCheckedFnTable=showCheckedFnTable
                 $('#FnPagination').css('display','none')
@@ -1571,7 +1690,12 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree_ou=res.result;
-                _this.loadIcon();
+               
+                _this.defauleExpandTree('ouId','expandId_addDataOu',res.result,'id','children')
+                if(_this.expand.expandId_addDataOu<1){
+                    _this.expand.expandId_addDataOu=[_this.selectTree_ou[0].id]
+                }
+                _this.loadCheckSelect('ouId',_this.addData.ouId);
             },function(res){
             })
         },
@@ -1941,18 +2065,18 @@ export default({
     //     this.$refs.tree.setCheckedKeys([]);
     //   },
     renderContent_Fn(h, { node, data, store }){
-             if(typeof(data.childre)!='undefined' && data.childre!=null && data.childre.length>0){
+             if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
                     return (
-                        <span class="el-tree-node__label">
+                        <span class="el-tree-node__label"  data-id={data.ouId}>
                         <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.displayName}
+                            {data.moduleName}
                         </span>
                     );
                 }else{
                     return (
-                        <span class="el-tree-node__label">
+                        <span class="el-tree-node__label"  data-id={data.ouId}>
                         <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.displayName}
+                            {data.moduleName}
                         </span>
                     );
                 }

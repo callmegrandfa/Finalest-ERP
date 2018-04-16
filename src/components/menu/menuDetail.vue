@@ -75,12 +75,11 @@
                             v-model="search">
                         </el-input>
                             <el-tree
-                             
+                            :default-expanded-keys="expand.expandId_moduleParentId"
                             :data="selectTree"
                             :highlight-current="true"
                             :props="selectProps"
                             node-key="id"
-                            default-expand-all
                             ref="tree"
                             :filter-node-method="filterNode"
                             :expand-on-click-node="false"
@@ -201,11 +200,11 @@
                         <el-col :span="24" class="transfer_fixed">
                             <vue-scroll :ops="$store.state.option">  
                                 <el-tree
+                                    :default-expanded-keys="expand.expandId_Fn"
                                     :data="componyTree"
                                     :highlight-current="true"
                                     :props="defaultProps"
                                     node-key="id"
-                                    default-expand-all
                                     @node-click="nodeClick"
                                     :expand-on-click-node="false"
                                     :render-content="renderContent_componyTree">
@@ -409,8 +408,14 @@
             left_selectFn:[],//checkbox选中数据
             right_selectFn:[],
 //----------按钮操作--------------
-        choseDoing:'',//存储点击按钮判断信息
-        dialogUserConfirm:false,//信息更改提示控制
+            choseDoing:'',//存储点击按钮判断信息
+            dialogUserConfirm:false,//信息更改提示控制
+            expand:{
+                expandId_moduleParentId:[],//默认上级菜单树形展开id
+                expandId_Fn:[],//默认分配功能树形展开id
+            }
+            
+            
       
         }
     },
@@ -505,6 +510,7 @@
                 _this.item.moduleName=_this.$route.params.name;
                 _this.item.id=_this.$route.params.id;
             }
+            // _this.loadTree()
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -516,10 +522,46 @@
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
             .then(function(res){
                 _this.selectTree=res;
-                // _this.loadIcon()
+                _this.defauleExpandTree('moduleParentId','expandId_moduleParentId',res,'id','childNodes')
                 _this.loadCheckSelect('moduleParentId',_this.addData.moduleParentId)
             },function(res){
             })
+        },
+        defauleExpandTree(model,expandName,response,responseKey,children){
+            //model数据模型
+            //expandName需要设置的默认展开树形建值_this.expand[expandName]
+            //response,树形数据
+            //responseKey需要与model匹配的唯一key
+            //children，response[children]
+            let _this=this;
+            let flag=false;
+            if(model!=''){//model为树形下拉默认值，即渲染数据。如果存在，递归tree
+                $.each(response,function(index,val){
+                    if(val[responseKey]==_this.addData[model]){
+                        _this.expand[expandName]=[_this.addData[model]]
+                        flag=true
+                    }else{
+                        $.each(val[children],function(index1,val1){
+                            if(val1[responseKey]==_this.addData[model]){
+                                _this.expand[expandName]=[_this.addData[model]]
+                                flag=true
+                            }else{
+                                _this.defauleExpandTree(model,expandName,val1[children],responseKey,children)
+                            }
+                        })
+                    }
+                })
+            }
+            if(!flag){
+                $.each(response,function(index,value){
+                    if(index==0){
+                        if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                            _this.expand[expandName]=[value[responseKey]]
+                        }
+                        
+                    }
+                })
+            }
         },
         loadIcon(){
             let _this=this;
@@ -537,9 +579,11 @@
         loadCheckSelect(selectName,key){
             let _this=this;
             _this.$nextTick(function () { 
+                // console.log($('.'+selectName+' .el-tree-node__label'))
                 $('.'+selectName+' .el-tree-node__label').each(function(){
+                    $(this).parents('.el-tree-node').removeClass('is-current')
                      if($(this).attr('data-id')==key){
-                        $(this).click()
+                        $(this).parents('.el-tree-node').addClass('is-current')
                     }
                 })
             })
@@ -548,6 +592,7 @@
             let _this=this;
             _this.item.id=data.id;
             _this.item.moduleName=data.moduleName;
+            $('.el-tree-node').removeClass('is-current')
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
@@ -563,6 +608,7 @@
             _this.$axios.gets('/api/services/app/PermissionManagement/GetPermissionTree')
             .then(function(res){
                 _this.componyTree=res.items
+                // _this.expandId_Fn=_this.defauleExpandTree(res.items,'id')
             },function(res){
 
             })

@@ -165,9 +165,9 @@
                         <p class="msgDetail">错误提示：名称{{ validation.firstError('addData.ouName') }}</p>
                     </div>
                 </div>
-                <div class="tipsWrapper" name="ouFullname">
-                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouFullname')}">
-                        <p class="msgDetail">错误提示：全称{{ validation.firstError('addData.ouFullname') }}</p>
+                <div class="tipsWrapper" name="ouName">
+                    <div class="errorTips" :class="{block : !validation.hasError('addData.ouName')}">
+                        <p class="msgDetail">错误提示：全称{{ validation.firstError('addData.ouName') }}</p>
                     </div>
                 </div>
                 <div class="tipsWrapper" name="ouParentid">
@@ -386,7 +386,7 @@
                         @node-click="nodeClick_ou"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
@@ -446,6 +446,7 @@
                     <label>所属公司</label>
                     <el-select class="companyOuId"
                         clearable filterable
+                        :disabled="Company"
                         @change="isUpdate"
                         @focus="showErrprTipsSelect"
                         :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -454,7 +455,7 @@
                             <el-input
                             placeholder="搜索..."
                             class="selectSearch"
-                            v-model="search">
+                            v-model="search_companyOuId">
                             </el-input>
                             <el-tree
                              :render-content="renderContent_companyOuId"
@@ -463,13 +464,13 @@
                             :props="selectPropsCompany"
                             node-key="id"
                             default-expand-all
-                            ref="tree"
-                            :filter-node-method="filterNode"
+                            ref="trees"
+                            :filter-node-method="filterNode1"
                             :expand-on-click-node="false"
                             @node-click="nodeClick"
                             >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
@@ -581,7 +582,7 @@
                         <div class="bgcolor">
                             <label>上级公司</label>
                             <el-select clearable filterable  
-                             
+                             :disabled="basCompany.isGroupCompany"
                             @change="isUpdate"
                             @focus="showErrprTipsSelect"
                             :class="{redBorder : validation.hasError('basCompany.ouParentid')}"
@@ -597,12 +598,12 @@
                                 >
                                 </el-option>
 
-                                <el-option 
+                                <!-- <el-option 
                                 v-if="basCompany.isGroupCompany"
                                 :label="groupCompany.label" 
                                 :value="groupCompany.value" 
                                 >
-                                </el-option>
+                                </el-option> -->
                             </el-select>
                         </div>
                         <div class="bgcolor">
@@ -1111,12 +1112,13 @@ export default({
             dialogUserConfirm:false,//信息更改提示控制
             choseDoing:'',//存储点击按钮判断信息
             search:'',
+            search_companyOuId:'',
              selectTree:[
             ],
             selectTreeCompany:[],
             item_ou:{
                 id:'',
-                ouFullname:''
+                ouName:''
             },
             selectProps: {
                 children: 'children',
@@ -1131,7 +1133,7 @@ export default({
             },
             groupCompany:{
                 value:0,
-                label:"无上级公司"
+                label:""
             },
             test:'', 
             dateRange:[],//有效时间
@@ -1156,6 +1158,7 @@ export default({
                 "remark": "",
                 "ouTypes":[],//组织职能
             },
+            companyOuId:0,
             basCompany:{//其他信息
                 "ouParentid": "",//整数
                 "legalPerson": "",
@@ -1180,6 +1183,21 @@ export default({
                 "email": "",
                 "webUrl": "",
                 "remark": ""
+            },
+             basBusiness: {
+                "ouParentid": 0,
+                "stmOuId": 0,
+                "status": 0
+            },
+            basFinance: {
+                "stateTaxNo": "string",
+                "localTaxNo": "string",
+                "taxpayerRegNo": "string",
+                "taxpayerCode": "string",
+                "taxType": "string",
+                "delegateTaxType": "string",
+                "isTaxOu": true,
+                "status": 0
             },
             Company:false,//公司 
             Business:false,//业务   
@@ -1250,9 +1268,15 @@ export default({
       },
 
     'basCompany.ouParentid': function (value) {//上级公司
+       
         if(typeof(value)!='undefined'){
             if(this.Company){
-                return this.Validator.value(value).integer();
+                if(!this.basCompany.isGroupCompany){
+                     return this.Validator.value(value).required().integer();
+                }else{
+                    return this.Validator.value(value)
+                }
+               
             }else{
                 return this.Validator.value(value)
             }
@@ -1454,6 +1478,14 @@ export default({
       search(val) {
         this.$refs.tree.filter(val);
       },
+      search_companyOuId(val) {
+        this.$refs.trees.filter(val);
+      },
+      Company(val){
+          if(val){
+              this.addData.companyOuId=this.companyOuId
+          }
+      },
       addData:{
             handler:function(val,oldVal){
                 let _this=this;
@@ -1522,7 +1554,7 @@ export default({
                     "id":res.result.id,
                     "ouTypes":res.result.ouTypes
                 };
-                   console.log(res);
+                _this.companyOuId=res.result.id;
                 // _this.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(resp){ 
                 // // 上级业务单元(所属组织)
                 //     let flag=false
@@ -1637,7 +1669,11 @@ export default({
         },
         filterNode(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
+        },
+         filterNode1(value, data) {
+            if (!value) return true;
+            return data.ouName.indexOf(value) !== -1;
         },
         loadTree(){
             let _this=this;
@@ -1670,7 +1706,7 @@ export default({
         nodeClick_ou(data,node,self){
             let _this=this;
             // _this.item_ou.id=data.id;
-            // _this.item_ou.ouFullname=data.ouFullname;
+            // _this.item_ou.ouName=data.ouName;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
@@ -1684,7 +1720,7 @@ export default({
         nodeClick(data,node,self){
         let _this=this;
         // _this.item_ou.id=data.id;
-        // _this.item_ou.ouFullname=data.ouFullname;
+        // _this.item_ou.ouName=data.ouName;
         // _this.$nextTick(function(){
         //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
         // })
@@ -1807,7 +1843,9 @@ export default({
         isGroupCompany(){
             let _this=this;
             _this.update=true;
+            
             _this.basCompany.ouParentid='';
+            _this.validation.reset(0)
         },
         isUpdate(){//判断是否修改过信息
             this.update=true;
@@ -1843,14 +1881,14 @@ export default({
                 .then(function (success) {
                     if (success) {
                         $('.tipsWrapper').css({display:'none'})
-                        if(_this.Company){
+                        // if(_this.Company){
                             _this.basCompany.businessStart=_this.dateRange[0];
                             _this.basCompany.businessEnd=_this.dateRange[1];
                             _this.addData.basCompany=_this.basCompany;
-                        }else{
-                            _this.basCompany={}
-                            delete _this.addData.basCompany
-                        }
+                        // }else{
+                        //     _this.basCompany={}
+                        //     delete _this.addData.basCompany
+                        // }
                         // console.log(_this.addData)
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                              _this.auditInfo={

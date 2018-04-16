@@ -413,7 +413,6 @@ import Btm from '../../base/btm/btm'
                 }else{
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
                         _this.changeTimes=0;
-                        console.log(res);
                         _this.updateId=res.result.id;
                         _this.treeNode.categoryParentid=res.result.categoryParentid;
                         _this.treeNode.categoryName=res.result.categoryParentid_CategoryName ;
