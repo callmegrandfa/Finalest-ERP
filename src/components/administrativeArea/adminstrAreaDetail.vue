@@ -1,7 +1,7 @@
 <template>
     <div class="admstr-wrapper">
         <!-- 按钮组 -->
-        <el-row>
+        <el-row class="fixed">
             <el-col :span="24">
                 <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
@@ -123,6 +123,7 @@
                         <div class="bgcolor bgLongWidth">
                         <label><small>*</small>上级地区</label>
                             <el-select filterable  
+                            @change="isChanged"
                             :class="{redBorder : validation.hasError('addData.areaParentId')}"
                             class="areaParentId" 
                             placeholder=""
@@ -147,8 +148,10 @@
                                 </el-tree>
                                 <!-- <el-option v-show="false" :key="item.id" :label="item.areaName" :value="item.id" >
                                 </el-option> -->
-                                 <el-option v-show="false" :key="count.Id" :label="count.areaName" :value="count.Id"   id="adminStrDetail_confirmSelect">
-                                </el-option>
+                                 <!-- <el-option v-show="false" :key="count.Id" :label="count.areaName" :value="count.Id"   id="adminStrDetail_confirmSelect">
+                                </el-option> -->
+                                 <el-option  v-show="false"  v-for="item in selectData.upAdminArea" :key="item.id" :label="item.areaName" :value="item.id" :date="item.id">
+                                 </el-option>
                             </el-select>
                         </div>
                     </div>
@@ -158,6 +161,7 @@
                         <div class="bgcolor bgLongWidth">
                         <label><small>*</small>地区编码</label>
                             <el-input 
+                            @change="isChanged"
                             class="areaCode" 
                             :class="{redBorder : validation.hasError('addData.areaCode')}"
                             v-model="addData.areaCode"  @focus="showErrTips"></el-input>
@@ -169,6 +173,7 @@
                         <div class="bgcolor bgLongWidth">
                         <label><small>*</small>地区名称</label>
                             <el-input 
+                            @change="isChanged"
                             class="areaName" 
                             :class="{redBorder : validation.hasError('addData.areaName')}"
                             v-model="addData.areaName"  @focus="showErrTips"></el-input>
@@ -190,6 +195,7 @@
                         <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                             <el-input
+                            @change="isChanged"
                             class="remark" 
                             v-model="addData.remark"
                             type="textarea"
@@ -204,6 +210,7 @@
                         <div class="bgcolor bgLongWidth">
                             <label><small>*</small>状态</label>
                             <el-select filterable  
+                            @change="isChanged"
                             class="status" 
                             placeholder=""
                             :class="{redBorder : validation.hasError('addData.status')}"
@@ -214,7 +221,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="24">
+                <!-- <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                             <label>创建人</label>
@@ -238,14 +245,21 @@
                             </el-date-picker>
                         </div>
                     </div>
-                </el-col>
+                </el-col> -->
                
             </div>
         </el-row>
+        <!-- ********************************************** -->
+        <!-- 审计信息 -->
+        <auditInfo :auditData='timeData'></auditInfo>
+        <!-- 数据提交有误的数据提示框 -->
+        <submitError :submitData="submitData"></submitError> 
     </div>
 </template>
 
-<script>
+ <script>
+    import auditInfo from '../Common/auditInfo';
+    import submitError from '../Common/submitError';
     export default {
     name: "adminstrAreaDetail",
     data() {
@@ -265,16 +279,35 @@
                 "createdBy" :this.$store.state.name,
                 "createdTime"  : this.GetDateTime(),
             },
+            timeData:{//审计信息
+                "createdBy":this.$store.state.name,
+                "createdTime": this.GetDateTime(),
+                "modifiedBy": this.$store.state.name,
+                "modifiedTime": this.GetDateTime(),
+            },
+            submitData:{//数据提交有误提示框参数
+                submitErrorMessage:false,
+                detail_message_ifShow: false,
+                response: {
+                    details: "",
+                    message: "",
+                    validationErrors: []
+                },
+            },
             selectData:{
                 Status001:[],//启用状态
+                upAdminArea:[],//上级行政地区
             },
             // -------------------------树形控件数据
-            adminAreaTree:[],
-            defaultProps: {
-                        children: 'childItems',
-                        label: 'areaName',
-                        id:'id'
-            },
+            adminAreaTree:[{
+                    areaName:'行政地区',
+                    childItems:[],
+                }],
+                defaultProps: {
+                    children: 'childItems',
+                    label: 'areaName',
+                    id:'id'
+                },
             treeNode:{
                     Id:'',
                     areaName:'15155',
@@ -304,23 +337,23 @@
             return this.Validator.value(value).required().integer();
         },
     },
-    computed:{
-            count () {
-                return this.treeNode;
-                },
-        },
-    watch:{
-        addData:{
-            handler: function (val, oldVal) {
-                let _this = this;
-                // console.log("数据改变了");
-                if(!_this.isUpdate){
-                    _this.isUpdate = !_this.isUpdate;
-                }
-            },
-             deep: true,
-        }
-    },
+    // computed:{
+    //         count () {
+    //             return this.treeNode;
+    //             },
+    // },
+    // watch:{
+    //     addData:{
+    //         handler: function (val, oldVal) {
+    //             let _this = this;
+    //             // console.log("数据改变了");
+    //             if(!_this.isUpdate){
+    //                 _this.isUpdate = !_this.isUpdate;
+    //             }
+    //         },
+    //          deep: true,
+    //     }
+    // },
     methods: { 
         // 成功的提示框
         open(tittle,iconClass,className) {//提示框
@@ -336,10 +369,28 @@
         showErrTips(e){// 错误提示信息
             $('.tipsWrapper').css({display:'none'});
         },
+        getErrorMessage(message,details,validationErrors){//将rsp的值赋值给response对象 
+                let _this=this;
+                _this.submitData.response.message='';
+                _this.submitData.response.details='';
+                _this.submitData.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.submitData.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.submitData.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.submitData.response.validationErrors=validationErrors;
+                }
+        },
         GetDateTime() {//获取当前时间
             let date=new Date();
-            return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
-        }, 
+            return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        },
+        isChanged (){//判断是否修改过信息
+            this.isUpdate=true;
+        },
         // -----------------按钮组功能
         // -----------------取消与返回功能
         cancel(){// 取消
@@ -352,7 +403,7 @@
         isBack(){//是否返回
             let _this=this;
             if(_this.isUpdate){
-                console.log(_this.isUpdate);
+                // console.log(_this.isUpdate);
                 _this.dialogUpdateConfirm=true;
             }else{
                 _this.goBack();
@@ -373,11 +424,18 @@
                             .then(
                                 rsp=>{
                                     // console.log(rsp.result);
+                                    _this.addData.id=rsp.result.id;
+                                    _this.$store.state.url='/adminstrArea/adminstrAreaModify/'+rsp.result.id
+                                    _this.$router.push({path:_this.$store.state.url})
                                     _this.open('保存成功','el-icon-circle-check','successERP');
-                                    _this.isUpdate=false;
+                                    // _this.isUpdate=false;
                                 },
                                 rsp=>{   
-                                    _this.open('保存失败','el-icon-error','faildERP');
+                                    // _this.open('保存失败','el-icon-error','faildERP');
+                                    if(rsp && rsp!=''){ 
+                                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                    }
+                                    _this.submitData.submitErrorMessage=true;
                                 }
                             )
                     }
@@ -387,18 +445,27 @@
         },
         saveAdd() {// 保存并新增
             let _this=this;
+            $('.tipsWrapper').css({display:'block'})
                     _this.$validate().then(
                         function (success) {
                             if (success) {
+                                $('.tipsWrapper').css({display:'none'});
                                 _this.$axios.posts('/api/services/app/AdAreaManagement/Create',_this.addData).then(
                                     rsp=>{
-                                        _this.reset();
+                                        _this.addData.id=rsp.result.id;
+                                        _this.$store.state.url='/adminstrArea/adminstrAreaDetail/default'
+                                        _this.$router.push({path:_this.$store.state.url})
                                         _this.open('保存成功','el-icon-circle-check','successERP');
+                                        _this.reset();
                                         _this.isUpdate=false;
                                     },
                                     rsp=>{
-                                        _this.open('保存失败','el-icon-error','faildERP');
-                                    }
+                                        // _this.open('保存失败','el-icon-error','faildERP');
+                                         if(rsp && rsp!=''){ 
+                                            _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                        }
+                                        _this.submitData.submitErrorMessage=true;
+                                        }
                                 )
                             }
                         }
@@ -410,14 +477,50 @@
             // _this.treeLoading=true;
             _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
                 .then(function(res){
-            // console.log(res.result);
-                    _this.adminAreaTree=res.result;
+                    // console.log(res.result);
+                    // _this.adminAreaTree=res.result;
+                    for(let i in res.result){
+                                _this.adminAreaTree[0].childItems=res.result;
+                            }
                     _this.loadIcon();
+                    _this.loadCheckSelect('areaParentId',_this.addData.areaParentId)
+                    // console.log(_this.addData.areaParentId);
+                    // console.log(_this.adminAreaTree);
                     //  _this.treeLoading=false;
-                        },function(res){
-                            // _this.treeLoading=false;
-                        })
+                },function(res){
+                    // _this.treeLoading=false;
+                })
         }, 
+        loadCheckSelect(selectName,key){//默认选中节点
+            let _this=this;
+            // console.log(selectName,key)
+            _this.$nextTick(function () { 
+                // console.log($('.'+selectName+' .el-tree-node__label'))
+            $('.'+selectName+' .el-tree-node__label').each(function(){
+                if($(this).attr('data-id') == key){
+                        $(this).click()
+                        // console.log(1)
+                    }
+                })
+            })
+        },
+        // renderContent_moduleParentId(h, { node, data, store }){
+        //     if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+        //         return (
+        //             <span class="el-tree-node__label" data-id={data.id}>
+        //             <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+        //                 {data.className}
+        //             </span>
+        //         );
+        //     }else{
+        //          return (
+        //             <span class="el-tree-node__label" data-id={data.id}>
+        //             <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+        //                 {data.className}
+        //             </span>
+        //         );
+        //     }
+        // },
         loadIcon(){// 文件夹图标加载
             let _this=this;
              _this.$nextTick(function () {
@@ -434,30 +537,54 @@
         nodeClick(data,node,self){// 节点被点击时的回调
              let _this=this;
                 //  console.log(data);
-                _this.treeNode.Id=data.id;
-                _this.treeNode.areaName=data.areaName;
-                _this.$nextTick(function(){
-                    $('#adminStrDetail_confirmSelect').click()
+                // _this.treeNode.Id=data.id;
+                // _this.treeNode.areaName=data.areaName;
+                // _this.$nextTick(function(){
+                //     $('#adminStrDetail_confirmSelect').click()
+                // })
+                
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
                 })
-        },
-        getDefault(){// 获取上级地区
-            let _this=this;
-            if (this.$route.params.upAreaName=='default') {
-                 _this.treeNode.areaName='';
-            }else{
-                 _this.treeNode.areaName=this.$route.params.upAreaName;
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,})
 
+        },
+        getDefault(){// 获取上级地区默认值
+            let _this=this;
+            // if (this.$route.params.upAreaName=='default') {
+            //      _this.treeNode.areaName='';
+            // }else{
+            //      _this.treeNode.areaName=this.$route.params.upAreaName;
+
+            // }
+            if(_this.$route.params.id!="default"){
+                _this.addData.areaParentId=parseInt(_this.$route.params.id);
+                // _this.treeNode.areaName = '15155';
+                // _this.treeNode.Id=_this.$route.params.id;
+                // console.log(_this.$route.params.name)
+                // alert(1)
             }
+           
+
+
+
             this.GetDateTime();//获取当前时间
         },
         getSelectData(){ // 获取下拉框数据
             let _this=this;
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
             // 启用状态
-            // console.log(res.result);
-            
+            // console.log(res.result);            
              _this.selectData.Status001=res.result;
             });
+            _this.$axios.gets('/api/services/app/AdAreaManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){ 
+            // 上级地区
+            // console.log(res.result.items);            
+             _this.selectData.upAdminArea=res.result.items;
+            });
+
         },
         reset(){ // 重新验证并设置值
             this.addData.areaParentId='';
@@ -467,8 +594,13 @@
             this.addData.remark=''; 
             this.validation.reset();               
         },
-    },
         
+    },
+    components:{
+        auditInfo,
+        submitError,
+
+    },
 };
 </script>
 
@@ -480,15 +612,19 @@
         background-color: #fff;
     }
     .admstr-wrapper .el-row:first-child{
-    padding: 7px 0;
-    border-bottom: 1px solid #e4e4e4;
+        padding: 7px 0;
+        border-bottom: 1px solid #e4e4e4;
+        background-color: #fff;
     }
     .admstr-wrapper .el-row:last-child{
         padding-bottom: 15px;
     }
 </style>
  <style>
-    .admstr-wrapper .admstr-form-wrapper .bgcolor.bgLongWidth .el-textarea{
+ .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+    background-color: #f0f7ff;
+ }
+.admstr-wrapper .admstr-form-wrapper .bgcolor.bgLongWidth .el-textarea{
         width: calc(100% - 90px);
-    }
+}
 </style>

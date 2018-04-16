@@ -37,23 +37,6 @@
                         </el-tree>
                     </el-col>  
             </el-col>
-            <!-- dialog是否删除提示(对话框控件) -->
-            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
-                <template slot="title">
-                    <span class="dialog_font">提示</span>
-                </template>
-                <el-col :span="24" style="position: relative;">
-                    <el-col :span="24">
-                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                        <p class="dialog_font dialog_body_message">确认删除？</p>
-                    </el-col>
-                </el-col>
-                
-                <span slot="footer">
-                    <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
-                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
-                </span>
-            </el-dialog>
             <!-- 右边数据列表 -->
             <el-col :span='19' class="border-left">
                 <!-- 按钮组 -->
@@ -156,18 +139,39 @@
                     </el-col>
                 </el-row>
             </el-col>
+            <!-- ********************************************** -->
+            <!-- dialog是否删除提示(对话框控件) -->
+            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">确认删除？</p>
+                    </el-col>
+                </el-col>
+                
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
+            <!-- 数据提交有误的数据提示框 -->
+            <submitError :submitData="submitData"></submitError>
         </el-row>
     </div>
 </template>
 
 <script>
+    import submitError from '../Common/submitError';
     export default {
          name: "supplierClassifyList",
          data(){
              return{
-                 ContactOwner:2,//  供应商分类参数(获取所有数据时)
-                 inputId:0,
-                  // -------树形控件数据
+                ContactOwner:2,//  供应商分类参数(获取所有数据时)
+                inputId:0,                
+                // -------树形控件数据
                 filterText:'',
                 supplierClasTree:[],
                 defaultProps:{
@@ -175,12 +179,21 @@
                     label: 'className',
                     id: 'id',
                 },
-                // --------------列表数据
+                // --------------列表数据提示框
                 tableData:[],
                 dialogUserConfirm:false,//确认提示框是否显示
                 multipleSelection: {},//复选框选中数据
                 choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
                 // row:{},//存储用户点击删除条目数据
+                submitData:{//数据提交有误的提示参数
+                    submitErrorMessage:false,
+                    detail_message_ifShow: false,
+                    response: {
+                        details: "",
+                        message: "",
+                        validationErrors: []
+                    },
+                },
                  
                 //------------分页器参数
                 pageSize:10, //每页有多少条数据
@@ -190,9 +203,9 @@
                 // ------------
                 rightKeyword:'',
                 tableLoading:false,
-                // -----------上级供应商分类的传递参数
-                upClassName:'',
-                upClassId:'',
+                //--------------新增页默认上级地区的参数-----------------
+                detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
+                detailParentName:'',//tree节点点击获取前往detail新增页上级菜单name
                 
              }
          },
@@ -205,9 +218,9 @@
                 this.$refs.tree2.filter(val);
             }
         },
-         methods:{
-            // 提示信息
-            open(tittle, iconClass, className) {
+        methods:{
+            // -----------------------提示信息
+            open(tittle, iconClass, className) {//成功提示框
                 this.$notify({
                     position: "bottom-right",
                     iconClass: iconClass,
@@ -217,8 +230,22 @@
                     customClass: className
                 });
             },
-           //-----------数据渲染---------------
-            getDataList(){
+            getErrorMessage(message,details,validationErrors){//将rsp的值赋值给response对象 
+                let _this=this;
+                _this.submitData.response.message='';
+                _this.submitData.response.details='';
+                _this.submitData.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.submitData.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.submitData.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.submitData.response.validationErrors=validationErrors;
+                }
+            },
+            getDataList(){//-----------数据渲染
                 let _this=this;
                 _this.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:_this.inputId,ContactOwner:_this.ContactOwner,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize}).then(
                     rsp=>{
@@ -236,7 +263,16 @@
                 // this.$store.state.url = "/supplierClassify/supplierClassifyDetail/default";
                 // this.$router.push({ path: this.$store.state.url });
 
-                 this.$router.push({  name:'supplierClassifyDetail',params: {upParentId:this.upClassId,upClassName:this.upClassName}});
+                //  this.$router.push({  name:'supplierClassifyDetail',params: {upParentId:this.upClassId,upClassName:this.upClassName}});
+                let _this=this;
+                if(typeof(_this.detailParentId)=='number'){
+                    _this.$store.state.url='/supplierClassify/supplierClassifyDetail/'+_this.detailParentId
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                    
+                }else{
+                    _this.$store.state.url='/supplierClassify/supplierClassifyDetail/default'
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                }
             },
             //------------分页器函数
             handleCurrentChange(val){
@@ -271,8 +307,8 @@
                 let _this=this;
                 // console.log(data);
                 _this.inputId=data.id;
-                _this.upClassName=data.className;
-                _this.upClassId=data.id;
+                _this.detailParentName=data.className;
+                _this.detailParentId=data.id;
                 // //     _this.$axios.gets('/api/services/app/ContactClassManagement/GetDataList',{inputId:data.id}).then(
                 //         rsp=>{
                 //         //  console.log(rsp.result);
@@ -310,21 +346,23 @@
                 if(_this.choseAjax=='row'){
                     _this.delThis()
                 }else if(_this.choseAjax=='rows'){
-                    _this.delSelected()
+                    _this.delRow()
                 }
             },
             delThis(row){//单项删除
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/ContactClassManagement/Delete',{id:_this.row.id})
-                .then(function(res){
+                .then(
+                    rsp=>{
                     _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.getDataList();
-                },function(res){
-                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                },rsp=>{                    
                     _this.dialogUserConfirm=false;
-                    _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
+                    if(rsp && rsp!=''){ 
+                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                    }
+                    _this.submitData.submitErrorMessage=true;
                 })
             },
             delSelected(){//确认多项删除
@@ -337,18 +375,20 @@
             delRow(){// 按钮删除(批量删除)
                 let _this = this;
                 // console.log(_this.multipleSelection);
-                this.$axios
-                    .posts(
+                this.$axios.posts(
                     "/api/services/app/ContactClassManagement/BatchDelete",
                     _this.multipleSelection
                     )
-                    .then(res => {
-                    if (!res.success) {
-                         _this.open("删除失败", "el-icon-error", "faildERP");
-                    }
-                    _this.dialogUserConfirm=false;
-                    _this.open('删除成功','el-icon-circle-check','successERP');
-                    _this.getDataList();
+                    .then(rsp => {
+                        _this.dialogUserConfirm=false;
+                        _this.open('删除成功','el-icon-circle-check','successERP');
+                        _this.getDataList();
+                    },rsp=>{
+                        _this.dialogUserConfirm=false;
+                        if(rsp && rsp!=''){ 
+                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                        }
+                        _this.submitData.submitErrorMessage=true;
                     });
             },
             handleSelectionChange(arr1){
@@ -383,7 +423,11 @@
             querySearchAsync(){},
            
             
-         },
+        },
+        components:{
+            submitError,
+        },
+
 
     }
 </script>

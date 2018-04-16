@@ -246,7 +246,7 @@
                             <el-select v-model="shopData.stockId"
                                         placeholder=""
                                         @change='Modify()'
-                                        :disabled="shopData.shopWorkPropertyid === 0||shopData.shopWorkPropertyid === 2"
+                                        :disabled="shopData.shopWorkPropertyid === 1"
                                         @focus="showErrprTipsSelect"
                                         class="stockId"
                                         :class="{redBorder : validation.hasError('shopData.stockId')}">
