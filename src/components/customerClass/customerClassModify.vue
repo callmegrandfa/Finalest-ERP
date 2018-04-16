@@ -58,7 +58,7 @@
                                       v-model="parentSearch">
                              </el-input>
                              
-                            <el-tree 
+                            <el-tree :default-expanded-keys="expand.expandId_addDataOu"
                                      :data="selectParentTree"
                                      :highlight-current="true"
                                      :props="selectParentProps"
@@ -67,12 +67,13 @@
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
                                      :render-content="renderContent_moduleParentId"
-                                     @node-click="nodeClick"></el-tree>
+                                     @node-click="nodeClick">
+                            </el-tree>
                             <el-option v-show="false"
                                        :key="parentItem.id" 
                                        :label="parentItem.className" 
                                        :value="parentItem.id"
-                                       :id="parentItem.id">
+                                       >
                             </el-option>
                         </el-select>
                     </div>
@@ -145,38 +146,7 @@
                     <div class="error_tips">{{ validation.firstError('customerClassData.status') }}</div>
                 </div>    
             </el-col>
-            <!-- <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label>创建人</label>
-                       <el-input class="createdBy" 
-                                  :disabled="isEdit" 
-                                  :class="{redBorder : validation.hasError('customerClassData.createdTime')}" 
-                                  v-model="customerClassData.createdBy"
-                                  :autosize="{ minRows: 4, maxRows: 4}"
-                                   @change='Modify'></el-input>
-                        </el-input>
-                    </div>
-                   
-                </div>    
-            </el-col>
-             <el-col :span="24">
-                <div class="marginAuto">
-                    <div class="bgcolor longWidth">
-                        <label>创建时间</label>
-                        <el-date-picker
-                                  v-model="customerClassData.createdTime"
-                                  type="date"
-                                  format="yyyy-MM-dd"
-                                  value-format="yyyy-MM-dd" 
-                                  :disabled="isEdit" 
-                                   @change='Modify'></el-input>
-                                  placeholder="">
-                         </el-date-picker>
-                    </div>
-                  
-                </div>    
-            </el-col>-->
+
       </el-row>
           <el-row>
             <el-col :span="24" class="getPadding">
@@ -368,6 +338,12 @@ export default {
         message: "",
         validationErrors: []
       }
+      , expand:{
+            expandId_addDataOu:[],//默认下拉树形展开id
+            isHere_addDataOu:false,//是否存在id于树形
+            expandId_dialogOu:[],//默认dialog组织树形展开id
+            expandId_mmenu:[],//默认分配功能树形展开id
+        }
       //-----------------------------
     };
   },
@@ -409,7 +385,8 @@ export default {
             id: self.$route.params.id
           })
           .then(function(res) {
-            console.log(res);
+      
+            // console.log(res);
             self.customerClassData = res.result;
             self.parentItem.id = res.result.classParentId;
             // console.log(self.parentItem.id);
@@ -419,9 +396,45 @@ export default {
         
             self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
             // self.customerClassData.modifiedTime= res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
+            // self.loadParentTree();
+          
           });
       }
     },
+    defauleExpandTree(model,expandName,response,responseKey,children){
+            //model数据模型
+            //expandName需要设置的默认展开树形建值_this.expand[expandName]
+            //response,树形数据
+            //responseKey需要与model匹配的唯一key
+            //children，response[children]
+            let _this=this;
+            // console.log(model!='');
+            if(model!=''){//model为树形下拉默认值，即渲染数据。如果存在，递归tree
+                $.each(response,function(index,val){
+                    if(val[responseKey]!==_this.customerClassData[model]){
+                        _this.expand[expandName]=[_this.customerClassData[model]]
+                    }else{
+                        $.each(val[children],function(index1,val1){
+                            if(val1[responseKey]==_this.customerClassData[model]){
+                                _this.expand[expandName]=[_this.customerClassData[model]]
+                            }else{
+                                _this.defauleExpandTree(model,expandName,val1[children],responseKey,children)
+                            }
+                        })
+                    }
+                })
+            }else{
+                 $.each(response,function(index,value){
+                    if(index==0){
+                        if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                            _this.expand[expandName]=[value[responseKey]]
+                        }
+                        
+                    }
+                })
+   
+            }
+        },
     loadParentTree() {
       let self = this;
       self.treeLoading = true;
@@ -430,11 +443,17 @@ export default {
         .then(
           function(res) {
             // console.log(res);
-            self.selectParentTree = res;
+             self.selectParentTree = res;
+             self.defauleExpandTree('classParentId','expandId_addDataOu',res,'id','children')
+                if(self.expand.expandId_addDataOu<1){
+                    self.expand.expandId_addDataOu=[self.selectParentTree[0].id]
+                   
+                }
+                //  console.log(self.expand.expandId_addDataOu<1);
             self.loadCheckSelect('classParentId',self.customerClassData.classParentId);
           },
           function(res) {
-            self.treeLoading = false;
+            // self.treeLoading = false;
           }
         );
     },
@@ -494,11 +513,8 @@ export default {
       self.$nextTick(function() {
         $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
       });
-        // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,})
-        
-
-
     },
+
     //-------------------------------------------------------
 
     //---顶部删除按钮-----------------------------------------
@@ -552,14 +568,10 @@ export default {
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
-                  console.log(res);
+                  // self.customerClassData.modifiedTime=res.result.modifiedTime.substring(0,19).replace('T',' ');
                   self.open("修改成功", "el-icon-circle-check", "successERP");
-                  self.customerClassData.modifiedTime=res.result.modifiedTime.substring(0,19).replace('T',' ');
-                 
-                  // self.modifiedTime
                     // 修改成功，点返回不弹出对话框
                    self.ifModify = false;
-                  // console.log(self.ifModify);
                 },
                 function(res) {
                   // self.open("修改失败", "el-icon-error", "faildERP");
@@ -628,10 +640,6 @@ export default {
               res.error.details,
               res.error.validationErrors
             );
-            // if(res && res!=''){ 
-            //     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-            //     self.dialogUserConfirm=false;
-            //     _this.errorMessage=true;
           }
         );
     },
@@ -752,11 +760,6 @@ export default {
     border-bottom: 1px solid #e4e4e4;
     background-color: #fff;
 }
-/* .selectSearch{
-  position: fixed;
-  width: 328px;
-  z-index: 10002;
-} */
 .el-select-dropdown__list{
   background-color: #fff;
 }
