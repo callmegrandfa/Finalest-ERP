@@ -3,7 +3,7 @@
         <div id="bgc">
             <!-- 按钮组 -->
             <div class="btnBd">
-                <el-row >
+                <el-row class="fixed">
                     <el-col :span="24">
                         <button class="erp_bt bt_back" @click="isBack">
                                 <div class="btImg">
@@ -45,7 +45,7 @@
                     </el-col>
                 </el-row>
             </div>
-            <!-- 表单验证错误提示信息 -->
+             <!-- 表单验证错误提示信息 -->
             <el-row>
                 <el-col :span="24">
                     <div class="tipsWrapper">
@@ -68,48 +68,125 @@
                     </div>
                 </el-col>
             </el-row>
-
-           
-
-	        <!-- <el-row>
-                <el-col>
-                    <div class=tipsWrapper" name="employeeCode">
-                      <div class="errorTips" :class="{block : !validation.hasError('addList.employeeCode')}">
-                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.employeeCode') }}</p>
-                      </div>
-                    </div>
-                    <div class=tipsWrapper" name="employeeName">
-                      <div class="errorTips" :class="{block : !validation.hasError('addList.employeeName')}">
-                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.employeeName') }}</p>
-                      </div>
-                    </div>
-                    <div class=tipsWrapper" name="ouId">
-                      <div class="errorTips" :class="{block : !validation.hasError('addList.ouId')}">
-                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.ouId') }}</p>
-                      </div>
-                    </div>
-                </el-col>
-            </el-row> -->
-             <!-- dialog数据变动提示(是否忽略更改) -->
-            <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
-                <template slot="title">
-                    <span class="dialog_font">提示</span>
-                </template>
-                <el-col :span="24" style="position: relative;">
-                    <el-col :span="24">
-                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
-                    </el-col>
-                </el-col>
-                <!--  -->
-                <span slot="footer">
-                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
-                    <button class="dialog_footer_bt dialog_font" @click="dialogUpdateConfirm = false">取 消</button>
-                </span>
-            </el-dialog>
-            <!-- dialog -->
             <!-- form表单 -->
             <div class="staff_detail_form">
+                <!-- <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth"><label>
+                            <small>*</small>职员编码</label>
+                            <el-input v-model="addList.employeeCode" class="employeeCode"  :class="{redBorder : validation.hasError('addList.employeeCode')}"  @focus="showErrTips"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth"><label>
+                            <small>*</small>职员名称</label>
+                            <el-input v-model="addList.employeeName" class="employeeName"  :class="{redBorder : validation.hasError('addList.employeeName')}"  @focus="showErrTips"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small>*</small>所属组织</label>
+                            <el-select class="ouId" :class="{redBorder :           validation.hasError('addList.ouId')}" v-model="addList.ouId" placeholder=""  @focus="showErrTips">
+                            <el-input placeholder="输入关键字进行过滤" v-model="filterOu" class="selectSearch">
+                                </el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_ou" :props="selectProps_ou"
+                                                node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_ou"
+                                                :expand-on-click-node="false" @node-click="nodeClick_ou"
+                                                class="filter-tree">
+                                </el-tree>
+                                <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>    
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                           <label><small></small>手机号码</label>
+                            <el-input v-model="addList.mobile"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                 <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>部门</label>
+                            <el-select v-model="addList.deptId">
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_depart" :props="selectProps_depart"
+                                        node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_Depart"
+                                        :expand-on-click-node="false" @node-click="nodeClick_depart"
+                                        class="filter-tree">
+                                        </el-tree>
+                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
+                                        </el-option>
+                            </el-select>
+                        </div>
+                    </div>    
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>性别</label>
+                            <el-select v-model="addList.sex">
+                                <el-option label="男" value="1"></el-option>
+                                <el-option label="女" value="2"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>生日</label>
+                            <el-input v-model="addList.birthday"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>所属店铺</label>
+                            <el-select v-model="addList.ShopId">
+                                <el-option v-for="item in selectData.shop" :label="item.shopName" :value="item.id" :key="item.id"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>职员类型</label>
+                            <el-checkbox-group v-model="addList.employeeTypeIds">
+                                <el-checkbox v-for="item in employeeIdoptions"  :label="item.label" :key="item.label">{{item.text}}</el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>状态</label>
+                            <el-select v-model="addList.status">
+                               <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>备注</label>
+                           <el-input type="textarea" :rows="5" resize="none" v-model="addList.remark"></el-input>
+                        </div>
+                    </div>
+                </el-col> -->
+
                 <el-row style="margin-top:20px">
                     <el-col :span="6">
                         <div class="bgcolor smallBgcolor">
@@ -274,15 +351,77 @@
                         </div>
                     </el-col>
                 </el-row>
+               
             </div>
+            <!-- 审计信息 -->
+            <auditInfo :auditData='timeData'></auditInfo>
+	        <!-- <el-row>
+                <el-col>
+                    <div class=tipsWrapper" name="employeeCode">
+                      <div class="errorTips" :class="{block : !validation.hasError('addList.employeeCode')}">
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.employeeCode') }}</p>
+                      </div>
+                    </div>
+                    <div class=tipsWrapper" name="employeeName">
+                      <div class="errorTips" :class="{block : !validation.hasError('addList.employeeName')}">
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.employeeName') }}</p>
+                      </div>
+                    </div>
+                    <div class=tipsWrapper" name="ouId">
+                      <div class="errorTips" :class="{block : !validation.hasError('addList.ouId')}">
+                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.ouId') }}</p>
+                      </div>
+                    </div>
+                </el-col>
+            </el-row> -->
+            <!-- ********************************************************** -->
+            <!-- dialog数据变动提示(是否忽略更改) -->
+            <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    </el-col>
+                </el-col>
+                <!--  -->
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUpdateConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
+            <!-- dialog -->
+          
+            
+            <!-- 数据提交有误的数据提示框 -->
+            <submitError :submitData="submitData"></submitError> 
         </div>
     </div>
 </template>
 <script>
+    import auditInfo from '../Common/auditInfo';
+    import submitError from '../Common/submitError';
     export default{
         name:'staffDetail',
         data(){
             return { 
+                timeData:{//审计信息
+                    "createdBy":this.$store.state.name,
+                    "createdTime": this.GetDateTime(),
+                    "modifiedBy": this.$store.state.name,
+                    "modifiedTime": this.GetDateTime(),
+                },
+                submitData:{//数据提交有误提示框参数
+                    submitErrorMessage:false,
+                    detail_message_ifShow: false,
+                    response: {
+                        details: "",
+                        message: "",
+                        validationErrors: []
+                    },
+                },
                 // --------------下拉框树形控件数据
                 ouId:null,
                 selectData:{//select下拉框数据
@@ -315,11 +454,11 @@
                         "birthday": "",
                         "discountStart": 0,
                         "discountEnd": 0,
-                        "shopId": 0,
+                        "shopId": null,
                         "remark": "",
                         "employeeTypeIds": [],
                         "status": 1,
-                        "id": 0
+                        "id": 0,
                 },
                 employeeIdoptions:[//------职员类型--------
                     { label: '1',text: '采购'},
@@ -374,8 +513,23 @@
             },
             GetDateTime() {//获取当前时间
                 let date=new Date();
-                return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
-            }, 
+                return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+            },
+            getErrorMessage(message,details,validationErrors){//将rsp的值赋值给response对象 
+                    let _this=this;
+                    _this.submitData.response.message='';
+                    _this.submitData.response.details='';
+                    _this.submitData.response.validationErrors=[];
+                    if(details!=null && details){
+                        _this.submitData.response.details=details;
+                    }
+                    if(message!=null && message){
+                        _this.submitData.response.message=message;
+                    }
+                    if(message!=null && message){
+                        _this.submitData.response.validationErrors=validationErrors;
+                    }
+            },
             //---------------------------获取下拉框选项数据
             getSelectData(){//获取下拉选项数据
                 let _this=this;
@@ -482,12 +636,20 @@
                                 rsp=>{
                                     // console.log(_this.addList);
                                     // console.log(rsp);
+                                    _this.addList.id=rsp.result.id;
+                                    _this.$store.state.url='/staff/staffModify/'+rsp.result.id
+                                    _this.$router.push({path:_this.$store.state.url})
                                     _this.open('保存成功','el-icon-circle-check','successERP');
                                     _this.isTrue=false;
                                     _this.isUpdate=false;
                                     },
-                                    res=>{
-                                         _this.open('保存失败','el-icon-error','faildERP');
+                                    rsp=>{
+                                        // _this.open('保存失败','el-icon-error','faildERP');
+                                        // console.log(rsp);
+                                        if(rsp && rsp!=''){ 
+                                            _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                        }
+                                        _this.submitData.submitErrorMessage=true;
                                     }
                             )
                         }
@@ -516,30 +678,42 @@
             },
             saveAdd(){// 保存并新增
                 let _this=this;
+                $('.tipsWrapper').css({display:'block'})
                 _this.$validate().then(
                     function (success) {
                         if (success) {
-                            _this.addList.employeeCode=_this.form.employeeCode;
-                            _this.addList.employeeName=_this.form.employeeName;
-                            _this.addList.ouId=_this.form.ouId;
-                            _this.addList.mobile=_this.form.mobile;
-                            _this.addList.deptId=_this.form.department;
-                            _this.addList.sex=_this.form.sex;
-                            _this.addList.birthday=_this.form.birthday;
-                            _this.addList.shopId=_this.form.shopName;
-                            _this.addList.employeeTypeIds=_this.form.employeeTypes;
-                            _this.addList.remark=_this.form.remark;
+                            $('.tipsWrapper').css({display:'none'})
+                            // console.log("11112jai");
+                            // _this.addList.employeeCode=_this.form.employeeCode;
+                            // _this.addList.employeeName=_this.form.employeeName;
+                            // _this.addList.ouId=_this.form.ouId;
+                            // _this.addList.mobile=_this.form.mobile;
+                            // _this.addList.deptId=_this.form.department;
+                            // _this.addList.sex=_this.form.sex;
+                            // _this.addList.birthday=_this.form.birthday;
+                            // _this.addList.shopId=_this.form.shopName;
+                            // _this.addList.employeeTypeIds=_this.form.employeeTypes;
+                            // _this.addList.remark=_this.form.remark;
                             _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
-                                            rsp=>{
-                                                // console.log(rsp);
-                                                _this.open('保存成功','el-icon-circle-check','successERP');
-                                                _this.reset();
-                                                _this.isUpdate=false;
+                                rsp=>{
+                                    // _this.addList.id=rsp.result.id;
+                                    // console.log(rsp);
+                                    // console.log(222222222222);
+                                    _this.$store.state.url='/staff/staffDetail/default'
+                                    _this.$router.push({path:_this.$store.state.url})
+                                    // console.log(rsp);
+                                    _this.open('保存成功','el-icon-circle-check','successERP');
+                                    _this.reset();
+                                    _this.isUpdate=false;
                                                 
-                                            },
-                                            res=>{
-                                                _this.open('保存失败','el-icon-error','faildERP');
-                                            }
+                                },
+                                rsp=>{
+                                    // _this.open('保存失败','el-icon-error','faildERP');
+                                    if(rsp && rsp!=''){ 
+                                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                    }
+                                    _this.submitData.submitErrorMessage=true;
+                                }
                             )
                         }
                       
@@ -580,16 +754,21 @@
                     this.validation.reset();               
             },
         },
-       
+        components:{
+            auditInfo,
+            submitError,
+
+        },
     }
 </script>
 
 
  <style scoped>
-    .btnBd{
+  .staff-infor-wrapper #bgc  .btnBd .el-row:first-child{
         /* height: 48px; */
         padding: 5px;
         border-bottom: 1px solid #e4e4e4 !important;
+        background-color: #fff;
     }
     .block{
         display: none;
@@ -601,6 +780,7 @@
         padding-left: 30%;
         width: 30%;
         margin-bottom: 20px;
+        margin-top: 20px;
     }
     .staff_detail_form .chePT{
         padding-top:5px;
@@ -609,8 +789,8 @@
         width: 100% !important ;
     }
     .staff-infor-wrapper .bgcolor label{
-        width: 100% !important ;
-        margin-right: 0; 
+        /* width: 100% !important ; */
+        margin-right: 10px;
     }
     .smallBgcolor .el-input--suffix{
         width: 100% !important ;
@@ -629,19 +809,29 @@
 
 
 
-<style>
-/*设置表单字体与高度*/
-.staff_detail_form .el-select{
-    display: block !important ;
-}
-.staff-infor-wrapper .staff_detail_form .redBorder .el-input__inner{
-  border-color: #f66;
-}
-.staff-infor-wrapper .staff_detail_form .el-input__inner{
-    height: 35px !important;
-    font-size:12px;
-    border: 1px solid #dcdfe6 ;
-}
+ <style>
+    /*设置表单字体与高度*/
+    .staff_detail_form .el-select{
+        display: block !important ;
+    }
+    .staff-infor-wrapper .staff_detail_form .redBorder .el-input__inner{
+    border-color: #f66;
+    }
+    .staff-infor-wrapper .staff_detail_form .el-input__inner{
+        height: 35px !important;
+        font-size:12px;
+        border: 1px solid #dcdfe6 ;
+    }
+    /* 重写表单样式 */
+    .staff-infor-wrapper .bgcolor.bgLongWidth label {
+        width: 70px;
+    }
+    .staff-infor-wrapper .bgcolor.bgLongWidth .el-checkbox+.el-checkbox {
+        margin-left: 5px;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+    }
 </style>
 
 

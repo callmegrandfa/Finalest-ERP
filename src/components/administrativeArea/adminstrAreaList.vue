@@ -29,24 +29,7 @@
                         </el-tree>
                     </el-col>   
             </el-col>
-             <!-- dialog是否删除提示 -->
-            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
-                <template slot="title">
-                    <span class="dialog_font">提示</span>
-                </template>
-                <el-col :span="24" style="position: relative;">
-                    <el-col :span="24">
-                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                        <p class="dialog_font dialog_body_message">确认删除？</p>
-                    </el-col>
-                </el-col>
-                
-                <span slot="footer">
-                    <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
-                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
-                </span>
-            </el-dialog>
-            <!-- dialog -->
+            
             <!-- 右边数据列表 -->
             <el-col :span='19' class="border-left">
                 <!-- 按钮组 -->
@@ -181,16 +164,47 @@
                 </el-row>
                 
             </el-col>
+            <!-- ************************************************** -->
+            <!-- dialog确认是否删除提示 -->
+            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">确认删除？</p>
+                    </el-col>
+                </el-col>
+                
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
+            <!-- dialog -->
+            <!-- 数据提交有误的数据提示框 -->
+            <submitError :submitData="submitData"></submitError>
         </el-row>
 
     </div>
 </template>
 
 <script>
+    import submitError from '../Common/submitError';
     export default {
         name:'adminstrAreaList',
         data(){
             return{
+                submitData:{//数据提交有误的提示参数
+                    submitErrorMessage:false,
+                    detail_message_ifShow: false,
+                    response: {
+                        details: "",
+                        message: "",
+                        validationErrors: []
+                    },
+                },
                 treeLoading:false,// 树形控件的动态加载效果
                 tableLoading:false,// 表格的动态加载效果
                 searchKey:'',
@@ -202,7 +216,10 @@
                 pageIndex:1,//分页的当前页码
                 tableData:[],
                 // --------------------------树形控件数据
-                adminAreaTree:[],
+                adminAreaTree:[{
+                    areaName:'行政地区',
+                    childItems:[],
+                }],
                 defaultProps: {
                     children: 'childItems',
                     label: 'areaName',
@@ -210,9 +227,10 @@
                 },
                 filterText:'',
                 nodeId:0,
+                expandId:[],//默认展开的树节点
                 // 错误信息提示开始
                 detail_message_ifShow:false,
-                errorMessage:false,
+                // errorMessage:false,
                 // 错误信息提示结束
                 //--------------确认删除开始-----------------               
                 dialogUserConfirm:false,//用户删除保存提示信息
@@ -223,9 +241,9 @@
                 // selectedIds: {}, //复选框选中数据
                 // restaurants:[],
                 // isTrue:true,//批量删除键能否点击
-                //--------------新增默认参数-----------------
-                upAreaName:'default',
-                upParentId:'default',
+                //--------------新增页默认上级地区的参数-----------------
+                detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
+                detailParentName:'',//tree节点点击获取前往detail新增页上级菜单name
                
 
                 
@@ -242,8 +260,8 @@
             }
         },
         methods:{
-            // 提示信息
-            open(tittle, iconClass, className) {
+            // -----------------------提示信息
+            open(tittle, iconClass, className) {//成功提示框
                     this.$notify({
                         position: "bottom-right",
                         iconClass: iconClass,
@@ -253,8 +271,22 @@
                         customClass: className
                     });
             },
-            // 获取所有列表数据
-            getDataList(){
+            getErrorMessage(message,details,validationErrors){//将rsp的值赋值给response对象 
+                let _this=this;
+                _this.submitData.response.message='';
+                _this.submitData.response.details='';
+                _this.submitData.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.submitData.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.submitData.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.submitData.response.validationErrors=validationErrors;
+                }
+            },
+            getDataList(){// 获取所有列表数据
                 let _this=this;
                 _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{nodeId:_this.nodeId,SearckKey:_this.searchKey,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize}).then(
                     rsp=>{
@@ -268,20 +300,23 @@
                 
             },
             // ----------树形控件的处理函数开始----------
-                // 获取树形节点
-                loadTree(){
+                
+                loadTree(){// 获取树形节点
                     let _this=this;
                     _this.treeLoading=true;
                     _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
                     .then(function(res){
                             // console.log(res.result);
-                            _this.adminAreaTree=res.result;
+                            for(let i in res.result){
+                                _this.adminAreaTree[0].childItems=res.result;
+                            }
+                            // console.log(_this.adminAreaTree);
                             _this.loadIcon();
                             _this.treeLoading=false;
                     },function(res){
                         _this.treeLoading=false;
                     })
-                },
+                },               
                 //复选框中选中的数据(用于做批量删除)
                 handleSelectionChange: function(arr1) {
                     let _this = this;
@@ -295,8 +330,8 @@
                 nodeClick(data){// 节点被点击时的回调
                     // console.log(data);
                     let _this=this;
-                    _this.upAreaName=data.areaName;
-                    _this.upParentId=data.id;
+                    _this.detailParentName=data.areaName;
+                    _this.detailParentId=data.id;
                     _this.tableLoading=true;
                     _this.$axios.gets('/api/services/app/AdAreaManagement/GetListByCondition',{nodeId:data.id,SkipCount:(_this.pageIndex-1)*_this.pageSize,MaxResultCount:_this.pageSize})
                     .then(function(res){
@@ -343,11 +378,19 @@
             // ----------分页器的处理函数结束----------
            
             // 按钮增加----去新增详情页(detail)
-            goAdd(){
-                //点击切换路由去添加
+            goAdd(){ //点击切换路由去添加
                 // this.$store.state.url = `/adminstrArea/adminstrAreaDetail/default`;
                 // this.$router.push({ path: this.$store.state.url});
-                this.$router.push({  name:'adminstrAreaDetail',params: {upParentId:this.upParentId,upAreaName:this.upAreaName}});
+                // this.$router.push({  name:'adminstrAreaDetail',params: {upParentId:this.upParentId,upAreaName:this.upAreaName}});
+                let _this=this;
+                if(typeof(_this.detailParentId)=='number'){
+                    _this.$store.state.url='/adminstrArea/adminstrAreaDetail/'+_this.detailParentId
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                    
+                }else{
+                    _this.$store.state.url='/adminstrArea/adminstrAreaDetail/default'
+                    _this.$router.push({path:this.$store.state.url})//点击切换路由
+                }
             },
             
             // （行内按钮查看）查看详情
@@ -370,16 +413,24 @@
                         "/api/services/app/AdAreaManagement/BatchDelete",
                         _this.multipleSelection
                         )
-                        .then(res => {
-                        if (!res.success) {
-                            _this.open("删除失败", "el-icon-error", "faildERP");
+                        .then(rsp => {
+                            // if (!res.success) {
+                            //     _this.open("删除失败", "el-icon-error", "faildERP");
+                            // }
+                            _this.dialogUserConfirm=false;
+                            _this.open('删除成功','el-icon-circle-check','successERP');
+                            _this.getDataList();
+                        },rsp=>{
+                            _this.dialogUserConfirm=false;
+                            // console.log(rsp);
+                            if(rsp && rsp!=''){ 
+                                _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                            }
+                            _this.submitData.submitErrorMessage=true;
                         }
-                         _this.dialogUserConfirm=false;
-                        _this.open('删除成功','el-icon-circle-check','successERP');
-                        _this.getDataList();
-                        });
+                        );
             },
-            confirm(){//去人是否多项删除
+            confirm(){//确认是否多项删除
                 let _this=this;
                 _this.choseAjax='rows'
                 if(_this.multipleSelection.ids.length>0){
@@ -403,19 +454,24 @@
             delThis(){//单项删除
                 let _this=this;
                 _this.$axios.deletes('/api/services/app/AdAreaManagement/Delete',{id:_this.row.id})
-                .then(function(res){
+                .then(rsp=>{
                     _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.getDataList();
-                },function(res){
-                    // _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                },rsp=>{
                     _this.dialogUserConfirm=false;
-                    _this.errorMessage=true;
-                    _this.open('删除失败','el-icon-error','faildERP');
+                    // console.log(rsp);
+                    if(rsp && rsp!=''){ 
+                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                    }
+                    _this.submitData.submitErrorMessage=true;
                 })
             },
             // -----------------------删除功能完
 
+        },
+        components:{
+            submitError,
         },
 
     }

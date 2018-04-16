@@ -180,7 +180,11 @@
                             </el-table-column>
                             <el-table-column prop="shopName" label="所属店铺">
                             </el-table-column>
-                            <el-table-column prop="statusTValue" label="状态">
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                </template>
                             </el-table-column>
                             <el-table-column label="操作"  fixed="right">
                                 <template slot-scope="scope">
@@ -364,6 +368,14 @@
                     .then(rsp => {
                         // console.log(rsp.result);
                         _this.allList = rsp.result.items;
+                        // _this.allList.employeeTypes = rsp.result.items;
+                        for (let val of rsp.result.items) {
+                            console.log(val);
+                        }
+
+                        // let staffTypes=[];//转换职员类型的数据类型
+
+
                         _this.totalCount = rsp.result.totalCount;
                         _this.totalPage=Math.ceil(rsp.result.totalCount/_this.page_size);
                         // console.log(_this.allList);
@@ -398,6 +410,7 @@
             getSelectDepart(){// 获取所属部门下拉框数据
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId}).then
+                // _this.$axios.gets('/api/services/app/DeptManagement/GetAll',{DeptParentid:_this.ouId,SkipCount:0,MaxResultCount:100}).then
                 (
                     rsp=>{  
                         // console.log(rsp.result);
@@ -584,9 +597,6 @@
                 this.$store.state.url = "/staff/staffModify/" + row.id
                 this.$router.push({ path: this.$store.state.url })
             },
-           
-            
-            
             // --------------------------------分页器处理函数
             handleSizeChange(val) {// 每页数据条数改变
                 // console.log(`每页 ${val} 条`);
