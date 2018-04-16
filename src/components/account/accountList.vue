@@ -3,57 +3,94 @@
         <el-row class="bg-white">
             <el-col :span="5">
                 <el-col class="pl15 pr15" :span="24">
-                    <el-input placeholder="请选择会计方案"
-                              v-model="searchLeft" 
-                              class="bAreaSearch">
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
+                      <el-select v-model="value" placeholder="请选择" class="width" @change="seletChange">
+                        <el-option 
+                        v-for="item in options" 
+                        :key="item.itemCode" 
+                        :label="item.itemName"
+                        :value="item.itemName">
+                        </el-option>
+                    </el-select>
                     <el-input placeholder="搜索..."
                               v-model="searchLeft" 
-                              class="bAreaSearch">
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                              
+                              class="search_input width">
+                        <i slot="prefix" class="el-input__icon el-icon-search" style="position:relative;top:-4px;"></i>
                     </el-input>
                 </el-col>
 
-                <el-col :span='24' class="tree-container" >
-                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                             v-loading="treeLoading" 
-                             :data="componyTree"
-                             :props="defaultProps"
-                             node-key="id"
-                             default-expand-all
-                             ref="tree"
-                             :expand-on-click-node="false"
-                             :filter-node-method="filterNode"
-                             @node-click="nodeClick">
+                <el-col :span='20' class="ml20 mt20">
+                    <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
+                        :data="componyTree"
+                        :props="defaultProps"
+                        default-expand-all
+                        ref="tree"
+                        :expand-on-click-node="false"
+                        @node-click="TreeNodeClick">
                     </el-tree>
                 </el-col> 
-            </el-col>
+            </el-col>        
+             <!-- dialog是否删除提示 -->
+            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">确认删除？</p>
+                    </el-col>
+                </el-col>
+                
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="del">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+                </span>
+            </el-dialog>
+            <!-- dialog -->       
+            <!-- dialog修改结束时间大于开始时间提示 -->
+            <el-dialog :visible.sync="dialogResetBeginDate" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">开始日期不能大于结束日期</p>
+                    </el-col>
+                </el-col>
+                
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="dialogResetBeginDate = false">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogResetBeginDate = false">取 消</button>
+                </span>
+            </el-dialog>
+            <!-- dialog -->  
+
 
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add" @click="goDetail">
+                    <button class="erp_bt bt_add" @click="add">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_add.png">
                         </div>
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button class="erp_bt bt_del" @click="delRow">
+                    <button class="erp_bt bt_del" @click="dialogUserConfirm = true">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
                         <span class="btDetail">删除</span>
                     </button>
-                    <!-- @click="save" -->
-                    <button class="erp_bt bt_save" >
+                    <button class="erp_bt bt_save" @click="save">
                         <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                         </div>
                         <span class="btDetail">保存</span>
                     </button>
                     
-                    <button class="erp_bt bt_saveAdd">
+                    <button class="erp_bt bt_saveAdd" @click="addSave">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_saveAdd.png">
                         </div>
@@ -74,52 +111,65 @@
                 </el-row>
 
                 <el-collapse-transition>
-                    <el-row v-show="ifShow" class="mt10 bb1">
-                        <div class="bgcolor">
-                            <label><small>*</small>会计年份</label>
-                            <el-input placeholder=""
-                                      class="periodYear" 
-                                      v-model="periodYear"></el-input>
-                                      <!-- :class="{redBorder : validation.hasError('createAccountParams.periodYear')}" -->
-                        </div>
-
-                        <div class="bgcolor">
-                            <label><small>*</small>期间个数</label>
-                            <el-input placeholder=""
-                                      class="periodNum"
-                                      v-model="periodNum"></el-input>
-                                      <!-- :class="{redBorder : validation.hasError('createAccountParams.periodNum')}" -->
-                        </div>
-                        
-                        <div class="time">
-                            <label><small style="color:#FF669B;margin-right:2px">*</small>日期</label>
-                            <el-date-picker v-model="chooseDate"
-                                            type="daterange"
-                                            unlink-panels
-                                            range-separator="至"
-                                            start-placeholder="开始日期"
-                                            end-placeholder="结束日期"></el-date-picker>
-                        </div>
-
-                        <div class="bgcolor">
-                            <label>备注</label>
-                            <el-input placeholder=""
-                                      class="remark"
-                                      v-model="remark"></el-input>
-                                      <!-- :class="{redBorder : validation.hasError('createAccountParams.periodNum')}" -->
-                        </div>
-
-                        <el-col :span="3" class="mt10 mb10 ml80">
-                            <div @click="createMonth">
-                                <span class="makeMonth">生成会计月份</span>
+                    <div v-show="ifShow" class="mt10 bb1">
+                        <el-row>
+                            <div class="bgcolor">
+                                <label><small>*</small>会计年份</label>
+                                <el-input placeholder=""
+                                        class="periodYear" 
+                                        v-model="periodYear"
+                                        :class="{redBorder : validation.hasError('periodYear')}"
+                                        @change="setDate"
+                                        ></el-input>
                             </div>
-                        </el-col>
+                            <div class="error_tips_info">{{ validation.firstError('periodYear') }}</div>
 
-                    </el-row>
+                            <div class="bgcolor">
+                                <label><small>*</small>期间个数</label>
+                                <el-input placeholder=""
+                                        class="periodNum"
+                                        v-model="periodNum"
+                                        :class="{redBorder : validation.hasError('periodNum')}"
+                                        ></el-input>
+                            </div>
+                            <div class="error_tips_info">{{ validation.firstError('periodNum') }}</div>
+                            <div class="time">
+                                <label><small style="color:#FF669B;margin-right:2px">*</small>日期</label>
+                                <el-date-picker v-model="chooseDate"
+                                                type="daterange"
+                                                unlink-panels
+                                                range-separator="至"
+                                                start-placeholder="开始日期"
+                                                end-placeholder="结束日期"
+                                                :class="{redBorder : validation.hasError('chooseDate')}"
+                                                ></el-date-picker>
+                            </div>
+                            <div class="error_tips_info">{{ validation.firstError('chooseDate') }}</div>
+
+                        </el-row>
+                        <el-row>
+                            <el-col :span="10">
+                                <div class="bgcolor" style="width:506px;">
+                                    <label>备注</label>
+                                    <el-input placeholder=""
+                                            class="remark"
+                                            v-model="remark"
+                                            ></el-input>
+                                </div>
+                            </el-col>                        
+                        </el-row>
+                        <el-row>
+                            <el-col :span="3" class="mt10 mb10 ml80">
+                                <div>
+                                    <span class="makeMonth" @click="createMonth">生成会计月份</span>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </div>
                 </el-collapse-transition> 
 
 
-                <el-row class="pb10">
+                <el-row class="pb10 bg">
                     <el-col :span='24'>
                         <div class="pe-month">
                             <span>会计月份</span>
@@ -130,277 +180,678 @@
                             <i class="el-icon-arrow-up"></i>
                         </div>
                     </el-col>
-                    <el-collapse-transition>
-                        <el-row v-show='!ifShowTable'>
-                            <el-col :span="24" >
-                                <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
+                </el-row>
+                <el-collapse-transition>
+                    <el-row v-show='!ifShowTable'>
+                        <el-col :span="24" >
+                            <el-table class="normalTable" border :data="addData.accperiodContents" style="width: 100%">
+                                <el-table-column prop="periodMonth" label="会计月份" width="180">
+                                    <template slot-scope="scope" >
+                                        <el-input class="noEdit" :disabled="true" v-model="scope.row.periodMonth"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="effectiveStart" label="开始时间" width="180">
+                                    <template slot-scope="scope" >
+                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.effectiveStart"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="effectiveEnd" label="结束时间">
+                                    <template slot-scope="scope" >
+                                        <el-input  class="noEdit" v-model="scope.row.effectiveEnd"  @change="resetBeginDate(scope.row)"></el-input>
+                                    </template>                                    
+                                </el-table-column>
+                                <el-table-column prop="remark" label="备注">
+                                    <template slot-scope="scope" >
+                                        <el-input  class="noEdit" v-model="scope.row.remark"></el-input>
+                                    </template>                                    
+                                </el-table-column>
+                                <el-table-column prop="KjModifiedBy" label="修改人">
+                                    <template slot-scope="scope" >
+                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.KjModifiedBy"></el-input>
+                                    </template>                                        
+                                </el-table-column>
+                                <el-table-column prop="KjModifiedTime" label="修改时间">
+                                    <template slot-scope="scope" >
+                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.KjModifiedTime"></el-input>
+                                    </template>                                    
+                                </el-table-column>
+                            </el-table>
+                        </el-col>
+                    </el-row>
+                </el-collapse-transition>                
+                <el-row class="ft12 pr10 pt10 br3 bg">
+                    <el-col :span='24' class="pl10 pt10 pb10">
+                        <span>审计信息</span>
+                    </el-col>
 
-                                    <!-- <el-table-column type="selection"></el-table-column> -->
-
-                                    <el-table-column prop="periodYear" label="会计月份"></el-table-column>
-
-                                    <el-table-column prop="periodNum" label="期间个数"></el-table-column>
-
-                                    <el-table-column prop="beginDate" label="开始日期"></el-table-column>
-
-                                    <el-table-column prop="endDate" label="结束日期"></el-table-column>
-
-                                    <el-table-column prop="contactClassId" label="备注">
-                                        <template slot-scope="scope">
-                                            <input class="input-need" 
-                                                    :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                                    v-model="scope.row.remark" 
-                                                    v-on:click="handleEdit(scope.$index,scope.row)"
-                                                    @change='handleChange(scope.$index,scope.row)'
-                                                    type="text"/>
-                                        </template>
-                                    </el-table-column>
-
-                                    <el-table-column prop="endDate" label="修改人"></el-table-column>
-
-                                    <el-table-column prop="endDate" label="修改时间"></el-table-column>
-                                    <el-table-column label="操作">
-                                        <template slot-scope="scope">
-                                            <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
-                                            <el-button v-on:click="handleDel(scope.row.id)" type="text" size="small">删除</el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-
-                                <el-row>
-                                    <el-col :span='6'>
-                                        <div style="margin-top:20px;" class="ml10">
-                                                记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
-                                        </div>
-                                        
-                                    </el-col>
-                                    <el-col :span="18">
-                                        <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage" v-on:current-change="handleCurrentChange"></el-pagination>
-                                    </el-col>
-                                </el-row>
-                                
-                            </el-col>
+                    <el-col :span="24" class="pb10">
+                        <el-row class="pl10">        
+                            <div>
+                                <div class="bgcolor"><label>创建人</label><el-input v-model="creatBy" :disabled="true"></el-input></div>
+                                <div class="bgcolor"><label>创建时间</label><el-input v-model="creatTime" :disabled="true"></el-input></div>
+                                <div class="bgcolor"><label>修改人</label><el-input v-model="modifyBy" :disabled="true"></el-input></div>
+                                <div class="bgcolor"><label>修改时间</label><el-input v-model="modifyTime" :disabled="true"></el-input></div>
+                            </div>
                         </el-row>
-                    </el-collapse-transition>
+                    </el-col>
                 </el-row>
 
             </el-col>
         </el-row>
-        
+        <!-- <dialogBox :message="dialogMessage" :dialogVisible="dialogShow"  @confirm="del" @cancel="delCancel"></dialogBox>    -->
     </div>
 </template>
 
 <script>
+import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'currencyList',
         data(){
             return {
-                allList:[],//所有数据列表
+                list:[],//系统字典值表
                 updateList:[],//修改的数据
                 addList:[],//新增的数据
-                multipleSelection: [],//复选框选中数据     
-                pageIndex:-1,//分页的当前页码
-                totalPage:0,//当前分页总数
-                total:'',//数据总条数
-                page:1,//当前页
-                eachPage:10,//一页显示的数量
-                x:0,//增行的下标
-                rows:[],//增行的数组
                 ifShow:true,//控制折叠页面
-                ifShowTable:true,//控制折叠页面
-                
+                ifShowTable:false,//控制折叠页面
                 periodYear:'',//会计年份
                 periodNum:'',//会计月份
-                chooseDate:'',//选择日期
+                chooseDate:[],//选择日期
                 remark:'',//备注
-
-                createParams:{
-                    "group_id": 1,
-                    "currency_code": "",
-                    "currency_name": "",
-                    "increment": '',
-                    "seq": '',
-                    "status": '',
-                    "remark": ""
+                creatBy:'',//创建人
+                creatTime:'',//创建时间
+                modifyBy:'',//修改人
+                modifyTime:'',//修改时间
+                addData:{
+                    "groupID": 0,
+                    "ouID": 10,
+                    "accperiodSchemeID": '',
+                    "periodYear":'' ,
+                    "periodNum": '',
+                    "beginDate":'',
+                    "endDate":'',
+                    "remark": '',
+                    "isDeleted": false,
+                    "deletedBy": '',
+                    "deletedTime": '',
+                    "modifiedBy": '',
+                    "modifiedTime": '',
+                    "createdBy": '',
+                    "createdTime": '',
+                    "id": 0 ,
+                    "accperiodContents": [
+                        // {
+                        // "groupID": 0,
+                        // "ouID": 0,
+                        // "accperiodId": 0,
+                        // "periodMonth": 0,
+                        // "effectiveStart": '',
+                        // "effectiveEnd": '',
+                        // "remark": '',
+                        // "id": 0
+                        // }
+                    ]
+                   },
+                options: [],
+                value:'',
+                searchLeft: "",
+                componyTreeData:[],
+                componyTree:[
+                    {
+                        label:'全部',
+                        children:[]
+                    }
+                ],
+                treeLoading:false,
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
                 },
-                options: [{
-                    value: '选项1',
-                    label: '仓库'
-                    }, {
-                    value: '选项2',
-                    label: '地址'
-                    }, {
-                    value: '选项3',
-                    label: '总部'
-                    }, {
-                    value: '选项4',
-                    label: '总部2'
-                    }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
+                ouid:'',
+                accperiodSchemeID:'',
+                treeData:[],
+                flag:true,//list的
+                treeFlag:true,
+                id:'',//需要删除的ID
+                saveflag:true,//判断年份是否重复
+                dialogMessage:'',
+                dialogUserConfirm:false,//是否删除弹框提示
+                modifyflag:true,          
+                dialogResetBeginDate:false          
             }
         },
+        validators: {
+          'periodYear': function (value) {//会计年份
+             return this.Validator.value(value).required().maxLength(4)
+          },
+          'periodNum': function (value) {//会计期间
+             return this.Validator.value(value).required().maxLength(2);
+          },
+          'chooseDate': function (value) {//日期
+             return this.Validator.value(value).required();
+          }
+        },
         created:function(){
-            this.loadAllList();
-            
+            this.loadList();
+            this.loadOuId();
+            this.loadIcon();
         },
         methods:{
         //---获取数据-------------------------------------------------------
-            loadAllList:function(){//获取所有列表数据
-                let self = this;
-                this.$axios.gets('/api/services/app/Accperiod/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
-                    console.log(res);
-                    self.allList = res.result.items;
-                    $.each(self.allList,function(index,value){
-                        let beginDate = value.beginDate.slice(0,value.beginDate.indexOf('.')).replace('T',' ');
-                        self.allList[index].beginDate = beginDate;
-                        let endDate = value.endDate.slice(0,value.endDate.indexOf('.')).replace('T',' ');
-                        self.allList[index].endDate = endDate;
-                    })
-                    self.total = res.result.totalCount;
-                    self.totalPage = Math.ceil(self.total/self.eachPage)
-                },function(res){
+            loadList(){//获取系统字典值表 
+                let _this = this;
+                this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(res){
+                    _this.list = res.result.items;
+                    //console.log(_this.list)
+                }).catch(function(err){
+                    _this.$message({
+                        type: 'warning',
+                        message: err.error.message
+                    });
+                })   
+            },
+            loadOuId(){//获取ouId
+                let _this=this;
+                _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
+                    _this.ouid=res.result.id;
+                    //console.log(res)
+                }).catch(function(err){
+                    _this.$message({
+                        type: 'warning',
+                        message: err.error.message
+                    });
+                });
+            },
+            loadSelect(){//获取select
+                let _this=this;
+                //_this.validation.reset();
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountSystem'}).then(function(res){
+                    _this.value=res.result[0].itemName;
+                    _this.options=res.result;
+                    //console.log(_this.list)
+                    //调取默认数据
+                    _this.seletChange();
+                    //console.log(_this.treeData)
+                    let l=_this.treeData.length;
+                    var y=_this.treeData[l-1];
+                    var x={'label':y}
+                    //console.log(_this.chooseDate)
+                    _this.TreeNodeClick(x);
+                }),function(res){
                     console.log('err'+res)
+                }
+            },
+            seletChange(){
+                let _this=this;
+                _this.loadList();
+                $.each(_this.list,function(index,value){
+                    if(_this.list[index].itemName==_this.value){
+                        _this.accperiodSchemeID=_this.list[index].id;
+                    }
+                });
+                _this.loadTree();
+                //console.log(_this.treeData)
+            },
+            loadTree(){
+                let _this=this;
+                _this.treeLoading=true;
+                //console.log(_this.ouid,_this.accperiodSchemeID)
+                _this.$axios.gets('/api/services/app/Accperiod/GetByAccoperiodSchemeID',{OuId:_this.ouid,AccperiodSchemeID:_this.accperiodSchemeID}).then(function(res){
+                    //console.log(res)
+                    _this.componyTreeData=res.result;
+                    _this.treeData=[];
+                    _this.componyTree[0].children=[];
+                    $.each(_this.componyTreeData,function(index,value){
+                        _this.treeData.push(value.periodYear);
+                        _this.treeData.sort(function (a, b) {
+                            return a > b ? 1 : -1;
+                        });
+                        //console.log(_this.treeData)
+                    })          
+                    $.each(_this.treeData,function(index,value){
+                        var childrenData={label:value};
+                        _this.componyTree[0].children.push(childrenData);
+                    })          
+                     //console.log(_this.componyTree[0].children)
+                    _this.treeLoading=false;
+                    _this.loadIcon()
+               }).catch(function(err){
+                    _this.$message({
+                        type: 'warning',
+                        message: err.error.message
+                    });
+                })   
+            },
+            loadIcon(){
+                let _this=this;
+                _this.$nextTick(function () {
+                    $('.preNode').remove();   
+                    $('.el-tree-node__label').each(function(){
+                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                        }else{
+                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                        }
+                    })
                 })
             },
-        //------------------------------------------------------------------
-
-        // ---创建数据，修改数据---------------------------------------------
-        // save:function(){//点击保存按钮
-        //     let self = this;
-        //     if(self.addList.length>0){
-        //         for(let i in self.addList){
-        //             this.$axios.posts('/api/services/app/CurrencyManagement/Create',self.addList[i]).then(function(res){         
-        //                 self.open('创建货币资料成功','el-icon-circle-check','successERP');
-        //                 console.log(res)
-        //             }),function(res){
-        //                 self.open('创建货币资料失败','el-icon-error','faildERP');
-        //             };
-        //         }
-        //        };
-            
-        //     if(self.updateList.length>0){
-        //         for(let i in self.updateList){
-        //             this.$axios.puts('/api/services/app/CurrencyManagement/Update',self.updateList[i]).then(function(res){
-        //                     console.log(res);
-        //                     self.open('修改货币资料成功','el-icon-circle-check','successERP');
-        //                     self.updateList = [];
-        //                 }),function(res){
-        //                 self.open('修改货币资料失败','el-icon-error','faildERP');
-        //             };
-        //         }
-        //     }
-        // },
-        // addCol:function(){//增行
-        //         let self = this;
-        //         self.x++;
-        //         let newCol = 'newCol'+self.x;
-        //         console.log(newCol)
-        //         console.log(self.rows)
-        //         self.rows.newCol ={
-        //             "group_id": 1,
-        //             "currency_code": "",
-        //             "currency_name": "",
-        //             "increment": '',
-        //             "seq": '',
-        //             "status": '',
-        //             "remark": ""
-        //         };
-        //         self.allList.unshift(self.rows.newCol);
-        //         self.addList.unshift(self.rows.newCol);
-        //     },
-        //-----------------------------------------------------------------
-
-        //---控制删除及分页--------------------------------------------------
-            delRow:function(){//删除选中的项
+            TreeNodeClick(data){
                 let _this=this;
-                if(_this.multipleSelection.length>0){//表格
-                    for(let i=0;i<_this.multipleSelection.length;i++){
-                        _this.$axios.deletes('/api/services/app/Accperiod/Delete',{id:_this.multipleSelection[i].id})
-                        .then(function(res){
-                            _this.loadAllList();
-                            _this.open('删除成功','el-icon-circle-check','successERP');
-                        },function(res){
-                            _this.open('删除失败','el-icon-error','faildERP');
-                        })
+                _this.modifyflag=true;
+                _this.chooseDate=[];
+                $.each(_this.componyTreeData,function(index,value){
+                    if(value.periodYear==data.label){
+                        console.log(value)
+                        _this.id=value.id;  
+                        _this.periodYear=value.periodYear;
+                        _this.periodNum=value.periodNum;
+                        _this.remark=value.remark;
+                        _this.chooseDate.push(value.beginDate+".000Z");
+                        _this.chooseDate.push(value.endDate+".000Z");
+                        let rescreatTime = new Date(value.createdTime)
+                        let resmodifyTime = new Date(value.modifiedTime);  
+                        _this.creatBy=value.createdBy;
+                        _this.creatTime=_this.resdatetime(rescreatTime);
+                        _this.modifyBy=value.modifiedBy;
+                        _this.modifyTime=_this.resdatetime(resmodifyTime);
+                        _this.addData.accperiodContents==value.accperiodContents;
+                        _this.createMonth();
                     }
-                };
+                })
             },
-            handleSelectionChange:function(val){//点击复选框选中的数据
-                this.multipleSelection = val;
-                console.log(this.multipleSelection)
-            },
-            handleCurrentChange:function(val){//获取当前页码
-                this.pageIndex=val;
-                console.log(val)
-                this.page = val;
-                this.loadAllList();
-            },
-            // handleEdit:function(index,row){//表格内编辑操作
-                
-            // },
-            // handleChange:function(index,row){
-            //     let self = this;
-            //     let flag = false;
-            //     if(self.updateList.length==0){
-            //         flag = true;
-            //     }else if(self.updateList.length>=1){
-            //         for(let i in self.updateList){
-            //             if(row.id != self.updateList[i].id){
-            //                 flag = true;
-            //                 console.log(flag) 
-            //             }else{
-            //                 flag= false;
-            //                 break;        
-            //             }
-            //         }
-            //     }
-
-            //     if(flag){
-            //         self.updateList.push(row);
-            //         console.log(self.updateList)
-            //     }
-                
-            // },
-            handleDel:function(id){//每行右边的删除
-                let self = this;
-                // self.addList.splice(index,1);
-                this.$axios.deletes('/api/services/app/Accperiod/Delete',{id:id}).then(function(res){
-                    console.log(res);
-                    self.open('删除成功','el-icon-circle-check','successERP');
-                    self.loadAllList();
-              })
-            },
-        //------------------------------------------------------------------
-        //---跳转-----------------------------------------------------------
-        goDetail(){
-            this.$store.state.url='/account/accountDetail/default'
-            this.$router.push({path:this.$store.state.url})//点击切换路由
+        open(tittle,iconClass,className) {
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
         },
-        goModify:function(id){//点击跳转修改页modify
-            // this.$store.state.url='/customer/customerModify/default'
-            this.$store.state.url='/account/accountModify/'+id;
-            this.$router.push({path:this.$store.state.url})//点击切换路由
+        //---增加-----------------------------------------------------------
+        add(){
+            let _this=this;
+            _this.modifyflag=false;
+            _this.periodYear='';
+            _this.periodNum='';
+            _this.chooseDate=[];
+            _this.addData.accperiodContents=[];
+            _this.remark='';
+            let nowTime=new Date();
+            _this.creatTime=_this.resdatetime(nowTime)
+            _this.modifyTime=_this.resdatetime(nowTime)
+            _this.validation.reset();
+        },
+        nowTime(){
+            let _this=this;
+            let nowTime=new Date();
+            return _this.resdatetime(nowTime)
+        },
+        //---保存-----------------------------------------------------------
+
+        save(){
+            let _this=this;    
+            if(_this.modifyflag){
+                _this.modify();
+            }else{
+                _this.$validate().then(function (success) {
+                    $.each(_this.componyTreeData,function(index,value){
+                        if(_this.periodYear==value.periodYear){
+                            _this.$alert('已有该年份', {
+                                    confirmButtonText: '确定'
+                                }
+                            );                  
+                        }
+                    })
+                    _this.createMonth();                   
+                    if (success&&_this.saveflag) {
+                        _this.addData.periodYear=_this.periodYear;
+                        _this.addData.periodNum=_this.periodNum;
+                        _this.addData.beginDate=_this.chooseDate[0];
+                        _this.addData.endDate=_this.chooseDate[1];
+                        _this.addData.remark=_this.remark;
+                        _this.addData.accperiodSchemeID=_this.accperiodSchemeID;
+                        let nowtime=_this.nowTime()
+                        _this.addData.createdTime=nowtime;
+                        _this.addData.modifiedTime=nowtime;
+
+                        _this.$axios.posts('/api/services/app/Accperiod/Create',_this.addData).then(function(res){
+                            console.log(res)
+                            _this.seletChange();
+                            _this.open('保存成功','el-icon-circle-check','successERP');
+                        }).catch(function(err){
+                                _this.$message({
+                                    type: 'warning',
+                                    message: err.error.message
+                                });
+                        })      
+                    }
+                });            
+            }             
+            
+
+        },
+        modify(){//修改保存
+            let _this=this;
+            _this.$validate().then(function (success) {                  
+                if (success&&_this.saveflag) {
+                    _this.addData.periodYear=_this.periodYear;
+                    _this.addData.periodNum=_this.periodNum;
+                    _this.addData.beginDate=_this.chooseDate[0];
+                    _this.addData.endDate=_this.chooseDate[1];
+                    _this.addData.remark=_this.remark;
+                    _this.addData.accperiodSchemeID=_this.accperiodSchemeID;
+                    let nowtime=_this.nowTime()
+                    _this.addData.createdTime=nowtime;
+                    _this.addData.modifiedTime=nowtime;
+                    console.log(_this.addData)
+                    _this.$axios.puts('/api/services/app/Accperiod/Update',_this.addData).then(function(res){
+                        _this.seletChange();
+                        _this.open('保存成功','el-icon-circle-check','successERP');
+                    }).catch(function(err){
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                    })   
+                }
+            });        
+        },
+        del(){
+            let _this=this;
+            //console.log(_this.id)
+            _this.$axios.deletes('/api/services/app/Accperiod/Delete',{id:_this.id})
+            .then(function(res){
+                _this.dialogUserConfirm=false;
+                _this.loadTree();
+                _this.open('删除成功','el-icon-circle-check','successERP');               
+            }).catch(function(err){
+                _this.dialogUserConfirm=false;
+                _this.$message({
+                    type: 'warning',
+                    message: err.error.message
+                });
+            })        
+        },
+        addSave(){
+            let _this=this;
+            if(_this.modifyflag){
+                _this.modify();
+            }else{
+                _this.$validate().then(function (success) {
+                    $.each(_this.componyTreeData,function(index,value){
+                        if(_this.periodYear==value.periodYear){
+                            _this.$alert('已有该年份', {
+                                    confirmButtonText: '确定'
+                                }
+                            );                  
+                        }
+                    })
+                    _this.createMonth();                   
+                    if (success&&_this.saveflag) {
+                        _this.addData.periodYear=_this.periodYear;
+                        _this.addData.periodNum=_this.periodNum;
+                        _this.addData.beginDate=_this.chooseDate[0];
+                        _this.addData.endDate=_this.chooseDate[1];
+                        _this.addData.remark=_this.remark;
+                        _this.addData.accperiodSchemeID=_this.accperiodSchemeID;
+                        let nowtime=_this.nowTime()
+                        _this.addData.createdTime=nowtime;
+                        _this.addData.modifiedTime=nowtime;
+                        _this.$axios.posts('/api/services/app/Accperiod/Create',_this.addData).then(function(res){
+                            _this.add();
+                            _this.seletChange();
+                            _this.open('保存成功','el-icon-circle-check','successERP');
+                        }).catch(function(err){
+                                _this.$message({
+                                    type: 'warning',
+                                    message: err.error.message
+                                });
+                        })      
+                    }
+                });            
+            }             
+            
+
+        },
+        setDate(){//输入会计年份时让日期范围默认设置
+            let _this=this;
+            _this.chooseDate=[_this.periodYear+"-01-01",_this.periodYear+"-12-31"];
+            //console.log(_this.chooseDate)
+        },
+        resetBeginDate(data){
+            let _this=this;
+            if(new Date(_this.addData.accperiodContents[data.periodMonth].effectiveEnd.replace(/\-/g, "\/"))<=new Date(data.effectiveEnd.replace(/\-/g, "\/"))){
+                _this.dialogResetBeginDate=true;
+            }else{
+                _this.addData.accperiodContents[data.periodMonth].effectiveStart=data.effectiveEnd;
+            }
+        },
+        resday:function(resday){
+            return resday.getDate() 
+        },
+        resmonth:function(resmonth){
+            return (resmonth.getMonth() + 1) 
+        },
+        resyear:function(resyear){
+            return resyear.getFullYear()
+        },
+        resdate:function(resdate){
+            return resdate.getFullYear()+'-'+(resdate.getMonth()+1)+'-'+resdate.getDate()
+        },
+        resdatetime:function(resdatetime){
+            return resdatetime.getFullYear()+'-'+(resdatetime.getMonth()+1)+'-'+resdatetime.getDate()+' '+resdatetime.getHours()+':'+resdatetime.getMinutes()+':'+resdatetime.getSeconds()
+        },
+        switchStartTime:function(m){
+            if(m==1){
+                return '1-1'
+            }else if(m==2){
+                return '2-1'
+            }else if(m==3){
+                return '3-1'
+            }else if(m==4){
+                return '4-1'
+            }else if(m==5){
+                return '5-1'
+            }else if(m==6){
+                return '6-1'
+            }else if(m==7){
+                return '7-1'
+            }else if(m==8){
+                return '8-1'
+            }else if(m==9){
+                return '9-1'
+            }else if(m==10){
+                return '10-1'
+            }else if(m==11){
+                return '11-1'
+            }else if(m==12){
+                return '12-1'
+            }
+        },
+        switchEndTime:function(y,m){
+            if(m==1){
+                return '1-31'
+            }else if(m==2){
+                if (y%4==0&&y%100!=0){  
+                     return '2-29'
+                }else if (y%400==0){  
+                     return '2-29'
+                }  
+                else{  
+                     return '2-28'
+                }              
+            }else if(m==3){
+                return '3-31'
+            }else if(m==4){
+                return '4-30'
+            }else if(m==5){
+                return '5-31'
+            }else if(m==6){
+                return '6-30'
+            }else if(m==7){
+                return '7-31'
+            }else if(m==8){
+                return '8-31'
+            }else if(m==9){
+                return '9-30'
+            }else if(m==10){
+                return '10-31'
+            }else if(m==11){
+                return '11-30'
+            }else if(m==12){
+                return '12-31'
+            }
+   
+        },
+        createMonth(){
+            let _this=this;
+            _this.$validate().then(function (success) {
+            console.log(_this.chooseDate[0])
+            var startdate = new Date(_this.chooseDate[0]);  
+            console.log(startdate)
+            var enddate = new Date(_this.chooseDate[1]);
+            var startmonth =_this.resmonth(startdate);
+            var endmonth =_this.resmonth(enddate);
+            var startyear=_this.resyear(startdate);
+            var endYear=_this.resyear(enddate);
+            var startday=_this.resday(startdate);
+            if(startyear!=endYear){
+                //console.log(_this.chooseDate[0],_this.chooseDate[1])
+                _this.chooseDate=["",""];
+                //_this.validation.reset();
+                _this.$alert('开始日期的年份需与结束日期年份相同', {
+                        confirmButtonText: '确定'
+                    }
+                );              
+            }else{
+                //日期范围相差月份
+                var diffMonth=(endmonth-startmonth)+1;
+                //判断期间个数与日期范围
+                if(diffMonth<_this.periodNum){
+                        for(let j=0;j<diffMonth;j++){
+                        var monthData={
+                            periodMonth:'',
+                            effectiveStart: '',
+                            effectiveEnd: '',
+                            remark:'',
+                            KjModifiedBy:'',
+                            KjModifiedTime:'',
+                            groupID: 0,
+                            ouID: 0,
+                            accperiodId: 0,
+                            id: 0
+                        }              
+                        _this.addData.accperiodContents.length=j;                     
+                        _this.addData.accperiodContents.push(monthData);
+                        _this.addData.accperiodContents[j].periodMonth=j+1;
+                        _this.addData.accperiodContents[j].effectiveStart=startyear+'-'+_this.switchStartTime(startmonth+j);
+                        _this.addData.accperiodContents[0].effectiveStart=_this.resdate(startdate);
+                        _this.addData.accperiodContents[j].effectiveEnd=startyear+'-'+_this.switchEndTime(startyear,startmonth+j);
+                        _this.addData.accperiodContents[j].KjModifiedBy=_this.modifyBy;
+                        _this.addData.accperiodContents[j].KjModifiedTime=_this.nowTime();
+                    }
+                    _this.addData.accperiodContents[diffMonth-1].effectiveEnd=_this.resdate(enddate);
+                    _this.periodNum=diffMonth
+                    console.log(_this.addData.accperiodContents)
+
+                }else{
+                    for(let i=0;i<_this.periodNum;i++){
+                        var monthData={
+                            periodMonth:'',
+                            effectiveStart: '',
+                            effectiveEnd: '',
+                            remark:'',
+                            KjModifiedBy:'',
+                            KjModifiedTime:'',
+                            groupID: 0,
+                            ouID: 0,
+                            accperiodId: 0,
+                            id: 0
+                        }
+                        _this.addData.accperiodContents.length=i;                     
+                        _this.addData.accperiodContents.push(monthData);
+                        _this.addData.accperiodContents[i].periodMonth=i+1;
+                        _this.addData.accperiodContents[i].effectiveStart=startyear+'-'+_this.switchStartTime(startmonth+i);
+                        _this.addData.accperiodContents[0].effectiveStart=_this.resdate(startdate);
+                        _this.addData.accperiodContents[i].effectiveEnd=startyear+'-'+_this.switchEndTime(startyear,startmonth+i);
+                        _this.addData.accperiodContents[i].KjModifiedBy=_this.modifyBy;
+                        _this.addData.accperiodContents[i].KjModifiedTime=_this.nowTime();
+                    }
+                    _this.addData.accperiodContents[_this.periodNum-1].effectiveEnd=_this.resdate(enddate);
+                    diffMonth=_this.periodNum;
+                    //console.log(_this.addData.accperiodContents)
+                }
+            }
+
+
+            })
+
+
         },
         //------------------------------------------------------------------
         // --------------open----------------------------------------------
-            open(tittle,iconClass,className) {
-                this.$notify({
-                position: 'bottom-right',
-                iconClass:iconClass,
-                title: tittle,
-                showClose: false,
-                duration: 3000,
-                customClass:className
-                });
-            },
+        open(tittle,iconClass,className) {
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
         //------------------------------------------------------------------
+    },
+    watch:{
+        list:function(val,oldVal){
+            if(this.flag){
+                 if(val!=''){
+                    this.loadSelect();
+                    this.flag=false;
+                }
+            }
+        },
+        treeData:function(val,oldVal){
+            if(this.treeFlag){
+                 if(val!=''){
+                    this.loadSelect();
+                    this.treeFlag=false;
+                }
+            }        
+        }
+    },
+    components:{
+        dialogBox    
     }
 }
 </script>
 
 <style scoped>
+	.noEdit .el-input__inner {
+        border: none;
+        height: 28px;
+        text-align: center;
+    }
+    .noEdit.is-disabled .el-input__inner{
+        color: #606266;
+        background: #fff;
+    }
+    .update-icon{
+        width:14px;
+        height: 14px;
+        position: absolute;
+        left: -55px;
+        top: 0px;
+    }
+   .normalTable .el-select input.el-input__inner[disabled] {
+    background: #fff;
+    height: 28px;
+    border: 0;
+    color: #606266;
+    text-align: center;
+}
+
 .bg-white{
     background: white;
     border-radius: 3px;
@@ -430,8 +881,8 @@
     margin-top: 20px;
 }
 
-.ml10{
-    margin-left: 10px;
+.ml20{
+    margin-left: 20px;
 }
 .pl10{
     padding-left: 10px;
@@ -559,8 +1010,21 @@
     cursor: pointer;
 }
 .ml80{
-    margin-left: 80px;
+    margin-left: 96px;
 }
+.search_input{
+    height: 25px;
+    border-radius: 30px;
+}
+.width{
+    margin:5px auto;
+    width:90%;
+}
+.bg{
+    background-color: #eef1f5
+}
+
+
 </style>
 
 <style>

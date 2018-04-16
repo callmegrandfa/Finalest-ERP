@@ -55,14 +55,14 @@
                                    v-model="customerClassData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
-                                      v-model="parentSearch"></el-input>
-
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                      v-model="parentSearch">
+                             </el-input>
+                             
+                            <el-tree 
                                      :data="selectParentTree"
                                      :highlight-current="true"
                                      :props="selectParentProps"
-                                     node-key="id"
-                                     default-expand-all
+                                     node-key="id"  
                                      ref="tree"
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
@@ -185,6 +185,8 @@
                     <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
                     <div class="bgcolor">
                         <label>创建时间</label>
+                      
+
                         <el-input v-model="customerClassData.createdTime" disabled></el-input>
                       
                     </div>
@@ -407,13 +409,16 @@ export default {
             id: self.$route.params.id
           })
           .then(function(res) {
-            // console.log(res);
+            console.log(res);
             self.customerClassData = res.result;
             self.parentItem.id = res.result.classParentId;
             // console.log(self.parentItem.id);
             self.parentItem.className =  res.result.classParentId_ClassName;
-            self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ');
+            // console.log(res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''))
+            self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ')
+        
             self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
+            // self.customerClassData.modifiedTime= res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
           });
       }
     },
@@ -426,6 +431,7 @@ export default {
           function(res) {
             // console.log(res);
             self.selectParentTree = res;
+            self.loadCheckSelect('classParentId',self.customerClassData.classParentId);
           },
           function(res) {
             self.treeLoading = false;
@@ -447,6 +453,16 @@ export default {
           function(res) {}
         );
     },
+      loadCheckSelect(selectName,key){
+          let _this=this;
+          _this.$nextTick(function () { 
+              $('.'+selectName+' .el-tree-node__label').each(function(){
+                    if($(this).attr('data-id')==key){
+                      $(this).click()
+                  }
+              })
+          })
+      },
     //-------------------------------------------------------
      GetDateTime: function () {
                 var date = new Date();
@@ -536,8 +552,11 @@ export default {
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
-                  // console.log(res);
+                  console.log(res);
                   self.open("修改成功", "el-icon-circle-check", "successERP");
+                  self.customerClassData.modifiedTime=res.result.modifiedTime.substring(0,19).replace('T',' ');
+                 
+                  // self.modifiedTime
                     // 修改成功，点返回不弹出对话框
                    self.ifModify = false;
                   // console.log(self.ifModify);
@@ -732,6 +751,14 @@ export default {
     padding: 15px 0;
     border-bottom: 1px solid #e4e4e4;
     background-color: #fff;
+}
+/* .selectSearch{
+  position: fixed;
+  width: 328px;
+  z-index: 10002;
+} */
+.el-select-dropdown__list{
+  background-color: #fff;
 }
 .dialog_confirm_message .el-dialog__footer .dialog_footer_bt_long {
     width: 100%;

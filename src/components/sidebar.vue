@@ -143,6 +143,11 @@ export default {
                      {name:'仓库资料演示',address:'storeHouse'}, 
                 ]
             },{
+                name:'仓库资料演示1',
+                thirdInfo:[
+                     {name:'仓库资料演示1',address:'storeHouse1'}, 
+                ]
+            },{
                 name:'系统字典',
                 thirdInfo:[
                      {name:'系统字典',address:'dictionaryList'}, 

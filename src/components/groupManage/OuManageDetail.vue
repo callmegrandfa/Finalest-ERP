@@ -30,8 +30,8 @@
                             名称{{ validation.firstError('addData.ouName') }},
                             </span>
                            <span 
-                            :class="{block : !validation.hasError('addData.ouFullname')}">
-                            全称{{ validation.firstError('addData.ouFullname') }},
+                            :class="{block : !validation.hasError('addData.ouName')}">
+                            全称{{ validation.firstError('addData.ouName') }},
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.ouParentid')}">
@@ -185,12 +185,12 @@
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>全称</label>
-                    <el-input class="ouFullname"  
+                    <el-input class="ouName"  
                     
                     @change="isUpdate"
                     @focus="showErrprTips"
-                    :class="{redBorder : validation.hasError('addData.ouFullname')}"
-                    v-model="addData.ouFullname" 
+                    :class="{redBorder : validation.hasError('addData.ouName')}"
+                    v-model="addData.ouName" 
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
@@ -214,7 +214,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                         
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
@@ -226,9 +226,9 @@
                         @node-click="nodeClick_ou"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                     </el-select>
                 </div>
@@ -303,6 +303,7 @@
                     
                     <el-select class="companyOuId"
                      clearable filterable
+                     :disabled="Company"
                     @change="isUpdate"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.ouParentid')}"
@@ -311,24 +312,24 @@
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
-                        v-model="search">
+                        v-model="search_companyOuId">
                         </el-input>
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                         
                         :data="selectTreeCompany"
                         :highlight-current="true"
                         :props="selectPropsCompany"
                         node-key="id"
                         default-expand-all
-                        ref="tree"
-                        :filter-node-method="filterNode"
+                        ref="trees"
+                        :filter-node-method="filterNode1"
                         :expand-on-click-node="false"
                         @node-click="nodeClick"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouFullname" :value="item_ou.id">
+                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
-                        <el-option v-show="false" v-for="item in selectData.companys" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                        <el-option v-show="false" v-for="item in selectData.companys" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
                     </el-select>
                 </div>
@@ -438,7 +439,7 @@
                             <div class="bgcolor">
                                 <label>上级公司</label>
                                 <el-select clearable filterable  
-                                
+                                :disabled="basCompany.isGroupCompany"
                                 @change="isUpdate"
                                 @focus="showErrprTipsSelect"
                                 :class="{redBorder : validation.hasError('basCompany.ouParentid')}"
@@ -454,12 +455,12 @@
                                     >
                                     </el-option>
 
-                                    <el-option 
+                                    <!-- <el-option 
                                     v-if="basCompany.isGroupCompany"
                                     label="无上级公司" 
                                     value=0 
                                     >
-                                    </el-option>
+                                    </el-option> -->
                                 </el-select>
                             </div>
                             <div class="bgcolor">
@@ -934,21 +935,22 @@ export default({
             errorMessage:false,
             // 错误信息提示结束
             search:'',
+            search_companyOuId:'',
              selectTree:[
             ],
             selectTreeCompany:[],
             item_ou:{
                 id:'',
-                ouFullname:''
+                ouName:''
             },
             selectProps: {
                 children: 'children',
-                label: 'ouFullname',
+                label: 'ouName',
                 id:'id'
             },
             selectPropsCompany:{
                  children: 'children',
-                label: 'ouFullname',
+                label: 'ouName',
                 id:'id'
             },
              test:'',   
@@ -961,7 +963,7 @@ export default({
             addData:{
                 "ouCode": "",
                 "ouName": "",
-                "ouFullname": "",
+                "ouName": "",
                 "ouParentid": "",//整数
                 "accCchemeId": "",//整数
                 "accStartMonth": "",
@@ -1036,7 +1038,7 @@ export default({
       'addData.ouName': function (value) {//名称
          return this.Validator.value(value).required().maxLength(50);
       },
-      'addData.ouFullname': function (value) {//全称
+      'addData.ouName': function (value) {//全称
          return this.Validator.value(value).required().maxLength(50);
       },
       'addData.ouParentid': function (value) {//上级业务单元
@@ -1074,7 +1076,11 @@ export default({
        'basCompany.ouParentid': function (value) {//上级公司
         if(typeof(value)!='undefined'){
             if(this.Company){
-                return this.Validator.value(value).integer();
+                if(!this.basCompany.isGroupCompany){
+                     return this.Validator.value(value).required().integer();
+                }else{
+                    return this.Validator.value(value)
+                }
             }else{
                 return this.Validator.value(value)
             }
@@ -1276,7 +1282,15 @@ export default({
      watch: {
       search(val) {
         this.$refs.tree.filter(val);
-      }
+      },
+      search_companyOuId(val) {
+        this.$refs.trees.filter(val);
+      },
+      Company(val){
+          if(val){
+              this.addData.companyOuId=''
+          }
+      },
     },
     methods:{
         getDefault(){
@@ -1378,7 +1392,11 @@ export default({
         },
         filterNode(value, data) {
             if (!value) return true;
-            return data.ouFullname.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
+        },
+        filterNode1(value, data) {
+            if (!value) return true;
+            return data.ouName.indexOf(value) !== -1;
         },
         getStartMonth(){//根据会计期间生成启用年月
             let _this=this;
@@ -1425,7 +1443,7 @@ export default({
          nodeClick_ou(data,node,self){
             let _this=this;
             _this.item_ou.id=data.id;
-            _this.item_ou.ouFullname=data.ouFullname;
+            _this.item_ou.ouName=data.ouName;
             // _this.$nextTick(function(){
             //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
             // })
@@ -1438,7 +1456,7 @@ export default({
        nodeClick(data,node,self){
         let _this=this;
         _this.item_ou.id=data.id;
-        _this.item_ou.ouFullname=data.ouFullname;
+        _this.item_ou.ouName=data.ouName;
         // _this.$nextTick(function(){
         //     $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
         // })
@@ -1508,6 +1526,7 @@ export default({
             let _this=this;
             _this.isUpdate()
             _this.basCompany.ouParentid='';
+            _this.validation.reset(0)
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -1569,7 +1588,7 @@ export default({
         isUpdateOuName(){
             let _this=this
             _this.showErrprTips();
-            if(_this.addData.ouName==_this.addData.ouFullname){
+            if(_this.addData.ouName==_this.addData.ouName){
                 _this.isUpdateFlag=true;
             }else{
                 _this.isUpdateFlag=false;
@@ -1578,7 +1597,7 @@ export default({
         updateOuName(){
             let _this=this;
             if(_this.isUpdateFlag){
-                _this.addData.ouFullname=_this.addData.ouName
+                _this.addData.ouName=_this.addData.ouName
             }
         },
         isCancel(){
@@ -1611,7 +1630,7 @@ export default({
              _this.addData={
                 "ouCode": "",
                 "ouName": "",
-                "ouFullname": "",
+                "ouName": "",
                 "ouParentid": "",//整数
                 "accCchemeId": "",//整数
                 "accStartMonth": "",
