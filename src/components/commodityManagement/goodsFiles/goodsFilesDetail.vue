@@ -1257,8 +1257,6 @@ export default({
             if(_this.update){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
-            }else{
-                _this.Cancel()
             }
         },
         sureDoing(){
