@@ -15,27 +15,27 @@
                 <el-row class="fs12 mt10">
                    <div class="bgcolor smallBgcolor">
                         <label>所属组织</label>
-                        <el-select class="queryOu"
-                                   placeholder=""
-                                   v-model="queryOu">
+                        <el-select class="queryOu" placeholder="" clearable v-model="queryOu">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="ouSearch"></el-input>
 
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="ouAr"
+                            <el-tree :data="ouAr"
+                                     :default-expanded-keys="expandId"
                                      :props="selectOuProps"
+                                     :highlight-current="true"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
+                                     :render-content="renderContentOu"
+                                     ref="ouTree"
+                                     :filter-node-method="ouFilterNode"
                                      :expand-on-click-node="false"
                                      @node-click="ouNodeClick"></el-tree>
-                            <el-option v-show="false"
-                                       :key="countOu.id" 
-                                       :label="countOu.ouFullname" 
-                                       :value="countOu.id"
-                                       id="ou_confirmSelect"></el-option>
+                            <el-option v-show="false" 
+                                       v-for="item in ouSelectAr" 
+                                       :key="item.id" 
+                                       :label="item.ouName" 
+                                       :value="item.id" 
+                                       :date="item.id"></el-option>
                         </el-select>
                     </div> 
                 </el-row>
@@ -53,19 +53,20 @@
                                       class="selectSearch"
                                       v-model="adSearch"></el-input>
 
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="adAr"
+                            <el-tree :data="adAr"
+                                     :default-expanded-keys="expandAdId"
                                      :props="selectAdProps"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
+                                     :render-content="renderContentAd"
+                                     ref="adTree"
+                                     :filter-node-method="adFilterNode"
                                      :expand-on-click-node="false"
                                      @node-click="adNodeClick"></el-tree>
                             <el-option v-show="false"
-                                       :key="countAd.id" 
-                                       :label="countAd.areaName" 
-                                       :value="countAd.id"
+                                       v-for="item in adItem"
+                                       :key="item.id" 
+                                       :label="item.areaName" 
+                                       :value="item.id"
                                        id="ad_confirmSelect"></el-option>
                         </el-select>
                     </div> 
@@ -82,19 +83,20 @@
                                       class="selectSearch"
                                       v-model="opSearch"></el-input>
 
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="opAr"
+                            <el-tree :data="opAr"
+                                     :default-expanded-keys="expandOpId"
                                      :props="selectOpProps"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
+                                     :render-content="renderContentOp"
+                                     ref="opTree"
+                                     :filter-node-method="opFilterNode"
                                      :expand-on-click-node="false"
                                      @node-click="opNodeClick"></el-tree>
                             <el-option v-show="false"
-                                       :key="countOp.id" 
-                                       :label="countOp.areaName" 
-                                       :value="countOp.id"
+                                       v-for="item in opItem"
+                                       :key="item.id" 
+                                       :label="item.ouName" 
+                                       :value="item.id"
                                        id="op_confirmSelect"></el-option>
                         </el-select>
                     </div> 
@@ -316,14 +318,12 @@
                 ouSearch:'',
                 selectOuProps:{
                     children: 'children',
-                    label: 'ouFullname',
+                    label: 'ouName',
                     id:'id'
                 },
-                ouItem:{
-                    id:'',
-                    ouFullname:'',
-                },
-                ouAr:[],//所属组织下拉框
+                ouAr:[],//所属组织树形下拉框
+                ouSelectAr:[],//选择下拉
+                expandId:[],
                 //-----------------------
                 //---行政地区树形下拉-----
                 adSearch:'',//树形搜索框的
@@ -332,27 +332,27 @@
                     label: 'areaName',
                     id:'id'
                 },
-                adItem:{
+                adItem:[{
                     id:'',
                     areaName:'',
-                },
+                }],
                 adAr:[],//行政地区下拉框
+                expandAdId:[],
                 //-----------------------
                 //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
                     children: 'childItems',
-                    label: 'name',
+                    label: 'ouName',
                     id:'id'
                 },
-                opItem:{
+                opItem:[{
                     id:'',
-                    areaName:'',
-                },
+                    ouName:'',
+                }],
                 opAr:[],//业务地区下拉框
+                expandOpId:[],
                 //-----------------------
-
-                // adAr:[],//行政地区下拉框
                 propertyAr:'',//客户性质下拉框
 
                 pageIndex:-1,//分页的当前页码
@@ -405,17 +405,11 @@
             this.loadSelect();
             
         },
-        computed:{
-            countOu () {
-                return this.ouItem;
-            },
-            countAd () {
-                return this.adItem;
-            },
-            countOp () {
-                return this.opItem;
-            },
-        }, 
+        watch:{
+            ouSearch(val){
+                this.$refs.ouTree.filter(val)
+            }
+        },
         methods:{
         //---获取数据-------------------------------------------------------
             loadAllList:function(){//获取所有列表数据
@@ -434,19 +428,14 @@
         //---下拉的数据------------------------------------------------------
             loadSelect:function(){
                 let self = this;
-                //客户分类
-                self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
-                    console.log(res);
-                    self.cuAr = res;
-                    self.loadIcon();
-                },function(res){
-                    console.log('err'+res)
-                })
                 //所属组织
+                self.$axios.gets('/api/services/app/OuManagement/GetOuParentList').then(function(res){ 
+                    self.ouSelectAr = res.result;
+                })
                 self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     self.ouAr = res.result;
-                    self.loadIcon();
+                    self.expandId=self.defauleExpandTree(res.result,'id')
                 },function(res){
                     console.log('err'+res)
                 });
@@ -454,7 +443,8 @@
                 self.$axios.gets('/api/services/app/AdAreaManagement/GetTree').then(function(res){
                     // console.log(res);
                     self.adAr = res.result;
-                    self.loadIcon();
+                    // console.log(self.adAr)
+                    self.expendAdId = self.defauleExpandTree(res.result,'id')
                 },function(res){
                     console.log('err'+res)
                 })
@@ -462,7 +452,8 @@
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTree').then(function(res){
                     console.log(res);
                     self.opAr = res.result;
-                    self.loadIcon();
+                    self.expendOpId = self.defauleExpandTree(res.result,'id')
+                    // self.loadIcon();
                 },function(res){
                     console.log('err'+res)
                 })
@@ -615,59 +606,122 @@
         },
         //------------------------------------------------------------------
 
-        //---树-------------------------------------------------------------
-        loadIcon(){
-            let _this=this;
-            _this.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                    }
-                })
-            })
+        //---树通用----------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
         },
-        filterNode(value, data) {
+        //-------------------------------------------------
+
+        //---树筛选----------------------------------------
+        ouFilterNode(value, data) {
+            console.log(data)
+            if (!value) return true;
+                return data.ouName.indexOf(value) !== -1;
+        },
+        adFilterNode(value, data) {
             console.log(data)
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
-        cuNodeClick:function(data){
-            let self = this;
-            self.cuItem.id = data.id;
-            self.cuItem.cuFullname = data.classFullname;
-            self.$nextTick(function(){
-                $('#cu_confirmSelect').click()
-            })
+        opFilterNode(value, data) {
+            console.log(data)
+            if (!value) return true;
+                return data.ouName.indexOf(value) !== -1;
         },
-        ouNodeClick:function(data){
-            let self = this;
-            self.ouItem.id = data.id;
-            self.ouItem.ouFullname = data.ouFullname;
-            self.$nextTick(function(){
-                $('#ou_confirmSelect').click()
+        //-------------------------------------------------
+
+        //---树点击----------------------------------------
+        ouNodeClick:function(data,node,self){
+            let _this = this;
+            // _this.ouItem.id = data.id;
+            // _this.ouItem.ouName = data.ouName;
+            $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                if($(this).attr('date')==data.id){
+                    $(this).click()
+                }
             })
         },
         adNodeClick:function(data){
+            console.log(data)
             let self = this;
-            self.adItem.id = data.id;
-            self.adItem.areaName = data.areaName;
+            self.adItem[0].id = data.id;
+            self.adItem[0].areaName = data.areaName;
+            // console.log(self.adItem)
             self.$nextTick(function(){
                 $('#ad_confirmSelect').click()
             })
         },
         opNodeClick:function(data){
             let self = this;
-            self.opItem.id = data.id;
-            self.opItem.areaName = data.name;
-            self.queryOp = data.id;
+            console.log(data)
+            self.opItem[0].id = data.id;
+            self.opItem[0].ouName = data.ouName;
+            // self.queryOp = data.id;
             self.$nextTick(function(){
                 $('#op_confirmSelect').click()
             })
         },
-        //-----------------------------------------------------
+        //-------------------------------------------------
+        
+        //---树render-content------------------------------
+        renderContentOu(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
+        renderContentAd(h, { node, data, store }){//行政地区
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.areaName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.areaName}
+                    </span>
+                );
+            }
+        },
+        renderContentOp(h, { node, data, store }){//业务地区
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
+        //------------------------------------------------
 
         //---获取错误信息---------------------------------------
         getErrorMessage(message,details,validationErrors){
@@ -822,6 +876,7 @@
     float: right;
     margin-right: 10px;
 } 
+
 </style>
 
 <style>
