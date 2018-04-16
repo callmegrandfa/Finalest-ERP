@@ -11,12 +11,12 @@
                         <span class="fs12 search_info_open" @click="closeLeft">-</span>
                     </el-col>
                 </el-row>
-                <div class="mt20 bgcolor smallBgcolor"><label>商品编码</label><el-input v-model="searchData.roleCode" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>商品名称</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
+                <div class="mt20 bgcolor smallBgcolor"><label>商品编码</label><el-input v-model="searchData.ProductCode" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>商品名称</label><el-input v-model="searchData.ProductName" placeholder=""></el-input></div><div class="bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>上市时间(起)</label>
                      <el-date-picker
+                     v-model="searchData.SaleDateStart"
                     format="yyyy.MM.dd"
                     type="date" 
                     align="center"></el-date-picker>
@@ -24,56 +24,33 @@
                 <div class="bgcolor smallBgcolor">
                     <label>上市时间(终)</label>
                     <el-date-picker
+                    v-model="searchData.SaleDateEnd"
                     format="yyyy.MM.dd"
                     type="date" 
                     align="center"></el-date-picker>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>类目</label>
-                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
+                    <el-select clearable filterable   v-model="searchData.CategoryId" placeholder="">
                         <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
                         </el-option> -->
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>品牌</label>
-                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
+                    <el-select clearable filterable   v-model="searchData.BrandId" placeholder="">
                         <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
                         </el-option> -->
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>状态</label>
-                    <el-select clearable filterable   v-model="searchData.UserGroupId" placeholder="">
-                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
-                        </el-option> -->
-                    </el-select>
-                </div>
-                <!-- <div class="bgcolor smallBgcolor">
-                    <label>所属组织</label>
-                    <el-select clearable  v-model="searchData.ouId" placeholder="">
-                        <el-input
-                        placeholder="搜索..."
-                        class="selectSearch"
-                        v-model="search">
-                        </el-input>
-                        <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                        :data="selectTree"
-                        :highlight-current="true"
-                        :props="selectProps"
-                        node-key="id"
-                        default-expand-all
-                        ref="tree"
-                        :filter-node-method="filterNode"
-                        :expand-on-click-node="false"
-                        @node-click="nodeClick"
-                        >
-                        </el-tree>
-                        <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
+                    <el-select clearable filterable   v-model="searchData.Status" placeholder="">
+                        <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
-                </div> -->
+                </div>
+                
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -179,13 +156,10 @@
                                     <span v-else>{{scope.row.statusTValue}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="uniqueMgt" label="商品条码">
-                                <template slot-scope="scope">
-                                    <el-checkbox disabled v-model="scope.row.uniqueMgt"></el-checkbox>
-                                </template>
+                            <el-table-column prop="barcode" label="商品条码">
                             </el-table-column>
-                            <el-table-column prop="brandId" label="品牌"></el-table-column>
-                            <el-table-column prop="categoryId" label="类目"></el-table-column>
+                            <el-table-column prop="brandId_BrandName" label="品牌"></el-table-column>
+                            <el-table-column prop="categoryId_CategoryName" label="类目"></el-table-column>
                             <el-table-column label="上市日期" width="160">
                                 <template slot-scope="scope">
                                     <el-date-picker
@@ -326,6 +300,9 @@
                 validationErrors:[],
                 },
                 Name:'',//右上角模糊查询
+                selectData:{//select数据
+                    Status001:[],//启用状态
+                },
             }
         },
         watch: {
@@ -337,6 +314,7 @@
                 let _this=this;
                 _this.loadTree();
                 _this.loadTableData();
+                _this.getSelectData()
              },
         methods:{
             closeLeft:function(){
@@ -357,6 +335,14 @@
                 customClass:className
                 });
             },
+            getSelectData(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+                // 启用状态
+                _this.selectData.Status001=res.result;
+            })
+           
+        },
             loadTableData(){//表格
                 let _this=this;
                 _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},'loadTableData')
@@ -364,7 +350,7 @@
             ajaxTable(data,event){
                  let _this=this;
                 _this.tableLoading=true
-                _this.$axios.gets('/api/services/app/ProductManagement/GetAll',data).then(function(res){ 
+                _this.$axios.gets('/api/services/app/ProductManagement/GetListByCondition',data).then(function(res){ 
                     _this.load=event;
                     _this.tableData=res.result.items;
                     _this.totalItem=res.result.totalCount
@@ -428,18 +414,20 @@
                  }else if(_this.load=="SimpleSearch"){
                      _this.SimpleSearch();
                  }else if(_this.load=="submitSearch"){
-                       _this.ajaxTable({DisplayName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+                       _this.ajaxTable({ProductName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
                  }
             },
             SimpleSearchClick(){
                 let _this=this;
                  
                  _this.searchDataClick={
-                    roleCode:_this.searchData.roleCode,//
-                    displayName: _this.searchData.displayName,//
-                    ouId: _this.searchData.ouId,//
-                    status: _this.searchData.status,
-                    sorting:'',
+                    ProductCode:_this.searchData.ProductCode,//
+                    ProductName: _this.searchData.ProductName,//
+                    SaleDateStart: _this.searchData.SaleDateStart,//
+                    SaleDateEnd: _this.searchData.SaleDateEnd,
+                    CategoryId:_this.searchData.CategoryId,
+                    BrandId:_this.searchData.BrandId,
+                    Status:_this.searchData.Status,
                 }
                 _this.page=1;
                 _this.SimpleSearch();
@@ -533,7 +521,7 @@
              submitSearch(){
                 let _this=this;
                 _this.page=1
-                _this.ajaxTable({displayName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
+                _this.ajaxTable({ProductName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
             },
              getHeight(){
                 $(".search-container").css({
