@@ -62,8 +62,7 @@
                                      :data="selectParentTree"
                                      :highlight-current="true"
                                      :props="selectParentProps"
-                                     node-key="id"
-                                     
+                                     node-key="id"  
                                      ref="tree"
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
@@ -553,8 +552,11 @@ export default {
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
-                  // console.log(res);
+                  console.log(res);
                   self.open("修改成功", "el-icon-circle-check", "successERP");
+                  self.customerClassData.modifiedTime=res.result.modifiedTime.substring(0,19).replace('T',' ');
+                 
+                  // self.modifiedTime
                     // 修改成功，点返回不弹出对话框
                    self.ifModify = false;
                   // console.log(self.ifModify);
