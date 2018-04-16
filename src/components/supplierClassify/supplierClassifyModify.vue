@@ -95,7 +95,7 @@
                             @focus="showErrTips"
                             :class="{redBorder : validation.hasError('addData.classParentId')}">
                                 <!-- 树形控件 -->
-                                <el-tree
+                                <!-- <el-tree
                                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                     :highlight-current="true"
                                     :data="supplierClasTree"
@@ -103,6 +103,24 @@
                                     node-key="id"
                                     default-expand-all
                                     ref="tree"
+                                    :expand-on-click-node="false"
+                                    @node-click="nodeClick"
+                                    > -->
+                                    <el-input
+                                    placeholder="输入关键字进行过滤"
+                                    v-model="filterText" 
+                                    class="selectSearch">
+                                    </el-input>
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    <el-tree
+                                    :render-content="renderContent_componyTree"
+                                    :highlight-current="true"
+                                    :data="supplierClasTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    :default-expanded-keys="expandId"
+                                    ref="tree"
+                                    :filter-node-method="filterNode"
                                     :expand-on-click-node="false"
                                     @node-click="nodeClick"
                                     >
@@ -330,6 +348,8 @@
                 //         className:'',
                 //     },
                 // -------树形控件数据
+                expandId:[],//默认展开树节点
+                filterText:'',//过滤节点的关键字
                 supplierClasTree:[],
                 defaultProps: {
                     children: 'childNodes',
@@ -354,7 +374,10 @@
                     }
                 },
                 deep: true,
-            }
+            },
+            filterText(val) {
+                this.$refs.tree.filter(val);
+            },
 
         },
         created(){
@@ -392,6 +415,9 @@
                         // console.log(rsp.result);
                         // _this.treeNode.Id=rsp.result.classParentId;
                         _this.addData=rsp.result;
+                        // if (rsp.result.classParentId==0) {
+                        //     _this.selectData.upSupplierClass.className='无'
+                        // }
                         _this.timeData.createdBy=rsp.result.createdBy;
                         _this.timeData.createdTime=rsp.result.createdTime;
                         _this.timeData.modifiedBy=rsp.result.modifiedBy;
@@ -598,19 +624,45 @@
                     );
             },
             // ----------树形控件相关----------
-            loadIcon(){//添加文件夹图标
-                let _this=this;
-                _this.$nextTick(function () {
-                    $('.preNode').remove();   
-                    $('.el-tree-node__label').each(function(){
-                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                        }else{
-                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                        }
-                    })
-                })
+            // loadIcon(){//添加文件夹图标
+                //     let _this=this;
+                //     _this.$nextTick(function () {
+                //         $('.preNode').remove();   
+                //         $('.el-tree-node__label').each(function(){
+                //             if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+                //                 $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+                //             }else{
+                //                 $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+                //             }
+                //         })
+                //     })
+            // },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
             },
+            renderContent_componyTree(h, { node, data, store }){
+              if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }else{
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }
+            },  
             loadCheckSelect(selectName,key){//默认选中节点
                 let _this=this;
                 // console.log(selectName,key)
@@ -632,7 +684,8 @@
                      _this.supplierClasTree=rsp;
                     //  _this.selectData.upSupplierClass=rsp;
                     // console.log(_this.supplierClasTree)
-                    _this.loadIcon();
+                    // _this.loadIcon();
+                    _this.expandId=_this.defauleExpandTree(rsp,'id')
                     _this.loadCheckSelect('classParentId',_this.addData.classParentId)
                })
             },
@@ -651,6 +704,13 @@
                 //     _this.$nextTick(function(){
                 //         $('#supClaDetail_confirmSelect').click()
                 //     })
+            },
+            filterNode(value, data) {//过滤节点
+                // console.log(value);
+                // console.log(data);
+                if (!value) return true;
+                return data.className.indexOf(value) !== -1;
+                // this.nodeClick(data);
             },
             // 重新验证并设置值
             reset(){

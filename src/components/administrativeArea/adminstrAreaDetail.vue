@@ -74,9 +74,9 @@
                 <div class="tipsWrapper">
                     <div class="errorTips">
                         <p class="msgDetail">错误提示：
-                            <span :class="{block : !validation.hasError('addData.areaParentId')}">
+                            <!-- <span :class="{block : !validation.hasError('addData.areaParentId')}">
                                 上级地区{{ validation.firstError('addData.areaParentId') }},
-                            </span>
+                            </span> -->
                             <span :class="{block : !validation.hasError('addData.areaCode')}">
                                 地区编码{{ validation.firstError('addData.areaCode') }},
                             </span>
@@ -121,20 +121,21 @@
                 <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>上级地区</label>
-                            <el-select filterable  
+                        <label><small></small>上级地区</label>
+                            <el-select filterable 
+                            clearable 
                             @change="isChanged"
                             :class="{redBorder : validation.hasError('addData.areaParentId')}"
                             class="areaParentId" 
                             placeholder=""
                             v-model="addData.areaParentId"
                             @focus="showErrTips">
-                                <!-- <el-input
+                                <el-input
                                     placeholder="搜索..."
                                     class="selectSearch"
-                                    v-model="search_area">
-                                </el-input> -->
-                                <el-tree
+                                    v-model="filterText">
+                                </el-input>
+                                <!-- <el-tree
                                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                     :highlight-current="true"
                                     :data="adminAreaTree"
@@ -143,6 +144,18 @@
                                     default-expand-all
                                     ref="tree"
                                     :expand-on-click-node="false"
+                                    @node-click="nodeClick"
+                                    > -->
+                                    <el-tree
+                                    :render-content="renderContent_componyTree"
+                                    :highlight-current="true"
+                                    :data="adminAreaTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    :default-expanded-keys="expandId"
+                                    ref="tree2"
+                                    :expand-on-click-node="false"
+                                    :filter-node-method="filterNode"
                                     @node-click="nodeClick"
                                     >
                                 </el-tree>
@@ -312,11 +325,18 @@
                     Id:'',
                     areaName:'15155',
             },
+            filterText:'',//节点过滤关键字
+            expandId:[],//默认展开的树节点
             // ----------提示框信息
             dialogUpdateConfirm:false,
             isUpdate:false,
             
         };
+    },
+    watch: {
+        filterText(val) {
+            this.$refs.tree2.filter(val);
+        }
     },
     created() {
         this.getSelectData();
@@ -324,9 +344,9 @@
         this.getDefault();
     },
     validators: {
-        'addData.areaParentId': function (value) {//上级地区
-            return this.Validator.value(value).required().maxLength(50)
-        },
+        // 'addData.areaParentId': function (value) {//上级地区
+        //     return this.Validator.value(value).required().maxLength(50)
+        // },
         'addData.areaCode': function (value) {//地区编码
             return this.Validator.value(value).required().maxLength(50)
         },
@@ -342,18 +362,7 @@
     //             return this.treeNode;
     //             },
     // },
-    // watch:{
-    //     addData:{
-    //         handler: function (val, oldVal) {
-    //             let _this = this;
-    //             // console.log("数据改变了");
-    //             if(!_this.isUpdate){
-    //                 _this.isUpdate = !_this.isUpdate;
-    //             }
-    //         },
-    //          deep: true,
-    //     }
-    // },
+    
     methods: { 
         // 成功的提示框
         open(tittle,iconClass,className) {//提示框
@@ -472,6 +481,32 @@
                     );
         },
         // ----------树形控件相关----------
+        defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+        },  
+        renderContent_componyTree(h, { node, data, store }){
+              if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.areaName}
+                      </span>
+                  );
+              }else{
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.areaName}
+                      </span>
+                  );
+              }
+        },
         loadTree(){// 获取树形节点
             let _this=this;
             // _this.treeLoading=true;
@@ -479,10 +514,12 @@
                 .then(function(res){
                     // console.log(res.result);
                     // _this.adminAreaTree=res.result;
-                    for(let i in res.result){
-                                _this.adminAreaTree[0].childItems=res.result;
-                            }
-                    _this.loadIcon();
+                    // for(let i in res.result){
+                    //             _this.adminAreaTree[0].childItems=res.result;
+                    //         }
+                    // _this.loadIcon();
+                    _this.adminAreaTree=res.result
+                    _this.expandId=_this.defauleExpandTree(res.result,'id')
                     _this.loadCheckSelect('areaParentId',_this.addData.areaParentId)
                     // console.log(_this.addData.areaParentId);
                     // console.log(_this.adminAreaTree);
@@ -503,6 +540,10 @@
                     }
                 })
             })
+        },
+        filterNode(value, data) {// 在搜索框输入关键字过滤节点
+            if (!value) return true;
+            return data.areaName.indexOf(value) !== -1;
         },
         // renderContent_moduleParentId(h, { node, data, store }){
         //     if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
