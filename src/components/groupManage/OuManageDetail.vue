@@ -982,6 +982,7 @@
 
 <script>
 export default({
+    
     data() {
         return{
             groupId:1,
