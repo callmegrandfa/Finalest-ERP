@@ -249,6 +249,10 @@ const Record = () => import('../components/commodityManagement/Record')
 const commodityRecord = () => import('../components/commodityManagement/commodityRecord')
 const commodityRecordDetails = () => import('../components/commodityManagement/commodityRecordDetails')
 
+//类目属性规格
+const attributeSpecification = () => import('../components/commodityManagement/attributeSpecification/attributeSpecification')
+const attributeSpecificationDetail = () => import('../components/commodityManagement/attributeSpecification/attributeSpecificationDetail')
+
 let redirectRouter = function(routerName) { //重定向
     // let activeRouter = store.state.activeRouter;
     return store.state[routerName].url
@@ -701,6 +705,18 @@ const routes = [
                     { path: '/Record/commodityRecord/:id', component: commodityRecord, name:'commodityRecord'},
                     { path: '/Record/goodsFilesDetail/:id', component: goodsFilesDetail, name:'goodsFilesDetail'},
                     { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails, name:'commodityRecordDetails'},
+                ],
+
+            },
+            {
+                path: '/attributeSpecification',
+                component: attributeSpecification,
+                name: 'attributeSpecification',
+                redirect: function () { //类目属性规格
+                    return redirectRouter('attributeSpecification')
+                },
+                children:[
+                    { path: '/attributeSpecification/attributeSpecificationDetail/:id', component: attributeSpecificationDetail, name:'attributeSpecificationDetail'},
                 ],
 
             },

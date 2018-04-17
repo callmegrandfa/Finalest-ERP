@@ -47,6 +47,9 @@ export default new vuex.Store({
         OuManageDetail:{ name: 'OuManageDetail', url: '/OuManage/OuManageDetail/:id', parent: 'OuManage' } ,
         OuManageModify:{ name: 'OuManageModify', url: '/OuManage/OuManageModify/:id', parent: 'OuManage' } ,
         OuManageList:{ name: 'OuManageList', url: '/OuManage/OuManageList/:id', parent: 'OuManage' } ,
+        
+        attributeSpecification:{ name: 'attributeSpecification', url: '/attributeSpecification/attributeSpecificationDetail/:id', parent: 'attributeSpecification', default: '/attributeSpecification/attributeSpecificationDetail/:id' } , //类目属性规格
+        attributeSpecificationDetail:{ name: 'attributeSpecificationDetail', url: '/attributeSpecification/attributeSpecificationDetail/:id', parent: 'attributeSpecification'} , 
 
         goodsFiles:{ name: 'goodsFiles', url: '/goodsFiles/goodsFilesList/:id', parent: 'goodsFiles', default: '/goodsFiles/goodsFilesList/:id' } , //商品档案
         goodsFilesDetail:{ name: 'goodsFilesDetail', url: '/goodsFiles/goodsFilesDetail/:id', parent: 'goodsFiles' } ,
