@@ -587,32 +587,47 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="phone" label="省" width="180">
+                            <el-table-column prop="proId" label="省" width="180">
+                                <!-- <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.completeAddress" 
+                                        type="text"    
+                                        @change="handleAddressChange(scope.$index,scope.row)"/> 
+                                </template> -->
                                 <template slot-scope="scope">
-                                    <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
+                                    <el-select v-model="scope.row.proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(scope.row)'>
                                         <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                        </el-option>
+                                        <el-option v-show="false" label="无" :value="provinceValue">
+                                        </el-option>
+                                    </el-select>   
+                                </template>
+                                
+                            </el-table-column>
+
+                            <el-table-column prop="cityId" label="市" width="180">
+                                <template slot-scope="scope">
+                                    <el-select v-model="scope.row.cityId" class="areaDrop" placeholder="选择市" @change='chooseCity(scope.row)'>
+                                        <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                        </el-option>
+                                        <el-option v-show="false" label="无" :value="cityValue">
                                         </el-option>
                                     </el-select>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="id" label="市" width="180">
+                            <el-table-column prop="quId" label="区" width="180">
                                 <template slot-scope="scope">
-                                    <el-select  class="areaDrop" placeholder="选择市" v-model="cityId" @change='chooseCity(cityId)'>
-                                        <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    <el-select v-model="scope.row.quId" class="areaDrop" placeholder="选择区" @change='chooseDis(scope.row)'>
+                                        <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
                                         </el-option>
-                                    </el-select> 
+                                        <el-option v-show="false" label="无" :value="areaValue">
+                                        </el-option>
+                                    </el-select>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="phone" label="区" width="180">
-                                <template slot-scope="scope">
-                                    <el-select  class="areaDrop" placeholder="选择区" v-model="createContactParams.adAreaId" @change='chooseDis()'>
-                                        <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
-                                        </el-option>
-                                    </el-select> 
-                                </template>
-                            </el-table-column>
 
                             <el-table-column prop="contactPerson" label="联系人" width="180">
                                 <template slot-scope="scope">
@@ -1227,8 +1242,8 @@ export default({
                 console.log('err'+res)
             });
             //行政地区获取省
-            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
-                console.log(res);
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
+                //console.log(res);
                 self.areaProArray = res.result;
                 // self.loadIcon();
             },function(res){
@@ -1401,8 +1416,11 @@ export default({
                     addressId: 0,
                     contactPerson: "",
                     phone: "",
-                    isDefault: false
-                };
+                    isDefault: false,
+                    proId:'',
+                    cityId:'',
+                    quId:''
+                };               
                 self.addressData.unshift(self.yrows.newCol);
                 self.addAddressList.unshift(self.yrows.newCol)
         },
@@ -1657,11 +1675,11 @@ export default({
         //----------------------------------------------------------
 
         //---选择省市区-----------------------------------------------
-            chooseProvince:function(id){
+            chooseProvince:function(res){
                 let self = this;
-                // console.log(id)
-                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
-                    console.log(res);
+                // console.log(res)
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res.proId}).then(function(res){
+                    //console.log(res);
                     self.areaCityArray = res.result;
                     // self.loadIcon();
                 },function(res){
@@ -1669,9 +1687,9 @@ export default({
                 });
 
             },
-            chooseCity:function(id){
+            chooseCity:function(res){
                 let self = this;
-                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res.cityId}).then(function(res){
                     // console.log(res);
                     self.areaDisArray = res.result;
                     // self.loadIcon();
