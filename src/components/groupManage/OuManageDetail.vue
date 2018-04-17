@@ -910,8 +910,8 @@
                 <el-date-picker
                 v-model="auditInfo.createdTime"
                 type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+                 format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"  
                 disabled
                 placeholder="">
                 </el-date-picker>
@@ -921,8 +921,8 @@
                 <label>修改时间</label>
                 <el-date-picker
                 v-model="auditInfo.modifiedTime"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+               format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
                 type="date"
                 disabled
                 placeholder="">
@@ -1016,7 +1016,12 @@ export default({
             show:true,
             ifShow:true,
             activeName: 'Company',
-            auditInfo:{},//审计信息
+            auditInfo:{
+                createdTime:this.GetDateTime(),//创建时间
+                createdBy:this.$store.state.name,//创建人
+                modifiedTime:this.GetDateTime(),//修改人
+                modifiedBy:this.$store.state.name//修改时间
+            },//审计信息
             addData:{
                 "ouCode": "",
                 "ouName": "",
@@ -1990,6 +1995,23 @@ export default({
                 );
             }
         },
+              GetDateTime: function () {
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            }
     }
 
 })        
