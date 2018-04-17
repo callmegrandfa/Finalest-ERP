@@ -152,18 +152,29 @@
             <el-col :span="24" class="getPadding">
                 <h4 class="h4">审计信息</h4>
                 <div>
-                    <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="auditInfo.createdBy" disabled></el-input></div>
                     <div class="bgcolor">
                         <label>创建时间</label>
-                      
-
-                        <el-input v-model="customerClassData.createdTime" disabled></el-input>
-                      
+                        <el-date-picker
+                          v-model="auditInfo.createdTime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date"
+                          disabled
+                          placeholder="">
+                        </el-date-picker>
                     </div>
-                    <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="auditInfo.modifiedBy" disabled></el-input></div>
                     <div class="bgcolor">
                         <label>修改时间</label> 
-                      <el-input v-model="customerClassData.modifiedTime" disabled></el-input>
+                        <el-date-picker
+                          v-model="auditInfo.modifiedTime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date"
+                          disabled
+                          placeholder="">
+                        </el-date-picker>
                     </div>
                 </div>                                  
             </el-col>
@@ -263,13 +274,18 @@ export default {
       this.$refs.tree.filter(val);
     },
     customerClassData:{
+      
         handler: function (val, oldVal) {
-            let self = this;
+           let self=this;
+           if(!self.saveSuccess){
             if(!self.firstModify){
                 self.firstModify = !self.firstModify;
             }else{
                 self.ifModify = true;
             }
+        }else{
+              self.ifModify=true;
+             }
         },
         deep: true,
     }
@@ -277,6 +293,7 @@ export default {
   },
   data() {
     return {
+      saveSuccess:false,
       ifModify: false, //判断是否修改过
       firstModify:false,//进入页面数据改变一次
       isEdit: true, //判断是否要修改
@@ -305,10 +322,6 @@ export default {
         classParentId_ClassName:"",
         remark: "",
         status: "",
-        createdTime:this.GetDateTime(),//创建时间
-        createdBy:this.$store.state.name,//创建人
-        modifiedTime:this.GetDateTime(),//修改人
-        modifiedBy:this.$store.state.name//修改时间
       },
       //---确认删除-----------------
       dialogDelConfirm: false, //用户删除保存提示信息
@@ -337,8 +350,9 @@ export default {
         details: "",
         message: "",
         validationErrors: []
-      }
-      , expand:{
+      },
+       auditInfo:{},//审计信息
+       expand:{
             expandId_addDataOu:[],//默认下拉树形展开id
             isHere_addDataOu:false,//是否存在id于树形
             expandId_dialogOu:[],//默认dialog组织树形展开id
@@ -392,11 +406,18 @@ export default {
             // console.log(self.parentItem.id);
             self.parentItem.className =  res.result.classParentId_ClassName;
             // console.log(res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''))
-            self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ')
+            // self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ')
         
-            self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
+            // self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
             // self.customerClassData.modifiedTime= res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
             // self.loadParentTree();
+
+             self.auditInfo={
+                    createdBy:res.result.createdBy,
+                    createdTime:res.result.createdTime,
+                    modifiedBy:res.result.modifiedBy,
+                    modifiedTime:res.result.modifiedTime,
+                }
           
           });
       }
@@ -483,23 +504,6 @@ export default {
           })
       },
     //-------------------------------------------------------
-     GetDateTime: function () {
-                var date = new Date();
-                var seperator1 = "-";
-                var seperator2 = ":";
-                var month = date.getMonth() + 1;
-                var strDate = date.getDate();
-                if (month >= 1 && month <= 9) {
-                    month = "0" + month;
-                }
-                if (strDate >= 0 && strDate <= 9) {
-                    strDate = "0" + strDate;
-                }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                    + " " + date.getHours() + seperator2 + date.getMinutes()
-                    + seperator2 + date.getSeconds();
-                return currentdate;
-            },
     //---树--------------------------------------------------
     filterNode(value, data) {
       // console.log(data)
@@ -568,10 +572,16 @@ export default {
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
-                  // self.customerClassData.modifiedTime=res.result.modifiedTime.substring(0,19).replace('T',' ');
+                  self.auditInfo={
+                      createdBy:res.result.createdBy,
+                      createdTime:res.result.createdTime,
+                      modifiedBy:res.result.modifiedBy,
+                      modifiedTime:res.result.modifiedTime,
+                        }
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                     // 修改成功，点返回不弹出对话框
                    self.ifModify = false;
+                   self.saveSuccess = false;
                 },
                 function(res) {
                   // self.open("修改失败", "el-icon-error", "faildERP");
