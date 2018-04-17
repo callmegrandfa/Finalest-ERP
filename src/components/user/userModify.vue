@@ -281,6 +281,7 @@
                 </el-col>
             </el-dialog> -->
         </el-col>
+        
         <!-- 关联角色 -->
         <el-dialog :visible.sync="dialogTableVisible" title="关联角色" class="transfer_dialog">
             <el-col :span="24">
@@ -384,6 +385,37 @@
                 </div>
             </div>
         </el-col>
+        <!-- 审计信息 -->
+ 
+            <el-col :span="24" class="getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="auditInfo.createdBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-date-picker
+                        v-model="auditInfo.createdTime"
+                        type="date"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        disabled
+                        placeholder="">
+                        </el-date-picker>
+                    </div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="auditInfo.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-date-picker
+                        v-model="auditInfo.modifiedTime"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        type="date"
+                        disabled
+                        placeholder="">
+                        </el-date-picker>
+                    </div>
+                </div>                                  
+            </el-col> 
     </el-row>
     <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
@@ -488,6 +520,7 @@
           "isReg": false,
           "remark": "",
           "roleCodes": [],
+          
         },
         dateRange:[],//有效时间
         selectData:{//select数据
@@ -497,6 +530,7 @@
             userGroupId:[],//所属用户组
             languageId:[],//语种
         },
+         auditInfo:{},//审计信息
 // ------------关联角色dialog-------------
         dialogTableVisible:false,//控制对话框
         checkedTable:[],//已选所有数据
@@ -638,6 +672,7 @@
            let _this=this;
            _this.$axios.gets('/api/services/app/User/Get',{id:_this.$route.params.id})
            .then(function(res){
+               console.log(res)
                 _this.addData= {
                     "userCode": res.result.userCode,
                     "displayName": res.result.displayName,
@@ -658,6 +693,12 @@
                 }
                 _this.item.id=res.result.ouId;
                 _this.item.ouName=res.result.ouName;
+                _this.auditInfo={
+                createdBy:res.result.createdBy,
+                createdTime:res.result.createdTime,
+                modifiedBy:res.result.modifiedBy,
+                modifiedTime:res.result.modifiedTime,
+            }
            },function(res){
 
            })
@@ -824,6 +865,12 @@
                     _this.addData.effectiveEnd=_this.dateRange[1];
                     _this.$axios.puts('/api/services/app/User/Update',_this.addData)
                     .then(function(res){
+                           _this.auditInfo={
+                            createdBy:res.result.createdBy,
+                            createdTime:res.result.createdTime,
+                            modifiedBy:res.result.modifiedBy,
+                            modifiedTime:res.result.modifiedTime,
+                        }
                         _this.firstModify=false;
                         _this.ifModify=false;
                         _this.secondModify=false;
@@ -1219,6 +1266,9 @@
 .userModify  .errorTips{
     margin-bottom: 10px;
     margin-top: -10px;
+}
+.userModify .getPadding {
+    padding: 0 10px;
 }
  .userModify .el-row{
     background-color: #fff;
