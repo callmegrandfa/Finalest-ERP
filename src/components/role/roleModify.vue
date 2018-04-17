@@ -571,6 +571,7 @@
 export default({
     data() {
         return{
+            saveSuccess:false,
             firstModify:false,
             secondModify:false,
             thirdModify:false,
@@ -813,13 +814,16 @@ export default({
             this.$refs.tree_fn.filter(val);
         },
         addData:{
-            handler:function(val,oldVal){
-                
+               handler:function(val,oldVal){
                 let _this=this;
-                if(!_this.firstModify){ 
-                    _this.firstModify=!_this.firstModify;
+                if(!_this.saveSuccess){
+                    if(!_this.firstModify){
+                        _this.firstModify=!_this.firstModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                     _this.ifModify=true;
                 }
             },
             deep:true,
@@ -1009,6 +1013,7 @@ export default({
                             modifiedTime:res.result.modifiedTime,
                         }
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
