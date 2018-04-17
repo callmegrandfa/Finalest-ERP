@@ -157,12 +157,14 @@
                         </el-col>
                     </el-col>
                 </el-col>
+
                 <el-col :span="2" class="transfer_btns">
                     <el-col :span="24" class="transfer_btn_wrapper">
                         <el-button class="el_transfer" :disabled="if_r_to_l_att" @click="goLeftAtt" type="primary" icon="el-icon-arrow-left" round></el-button>
                         <el-button class="el_transfer" :disabled="if_l_to_r_att" @click="goRightAtt" type="primary" icon="el-icon-arrow-right" round></el-button>
                     </el-col>
                 </el-col>
+
                 <el-col :span="11" class="transfer_warapper">
                     <el-col :span="24" class="transfer_header">
                         <span>可选</span>
@@ -175,7 +177,7 @@
                         </div>
                     </el-col>    
                     <el-col :span="24" class="transfer_table">
-                        <el-table :data="attributeAllData" border style="width: 100%" stripe @selection-change="rightChoose" ref="roleTabRight">
+                        <el-table :data="attRightOnePageData" border style="width: 100%" stripe @selection-change="rightChoose" ref="roleTabRight">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="propertyCode" label="属性编码"></el-table-column>
                             <el-table-column prop="propertyName" label="属性名称"></el-table-column>
@@ -188,8 +190,8 @@
                             <span>共{{totalPageRightAtt}}页</span>
                         </el-col>
                         <el-col :span="6">
-                            <!-- <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button> -->
-                            <!-- <el-button class="el_transfer" :disabled="rightAddBtnUser" @click="pageAddRightUser" type="primary" icon="el-icon-arrow-right" round></el-button> -->
+                            <el-button class="el_transfer" :disabled="rightDownBtnAttr" @click="pageDownRightAttr" type="primary" icon="el-icon-arrow-left" round></el-button>
+                            <el-button class="el_transfer" :disabled="rightBackBtnAttr" @click="pageBackRightAttr" type="primary" icon="el-icon-arrow-right" round></el-button>
                         </el-col>
                     </el-col>
                 </el-col>
@@ -212,7 +214,25 @@ export default({
         self.loadAttribute();
     },
     watch: {
-      
+        attributeAllData:{
+            handler:function(val,oldVal){
+                let self = this;
+                // if(val.length!=oldVal.length){
+                if(self.attributeAllData.length<=self.onePageShow){
+                    self.attRightOnePageData = self.attributeAllData;
+                }else{
+                    self.attRightOnePageData = [];
+                    for(let i = (self.rightPageIndex-1)*self.onePageShow;i<self.rightPageIndex*self.onePageShow;i++){
+                        // console.log(self.rightPageIndex-1)
+                        // self.attRightOnePageData = [];
+                        self.attRightOnePageData.push(self.attributeAllData[i])
+                        // console.log(self.attRightOnePageData)
+                    }
+                }
+                // }
+            },
+            deep: true,
+        }
     },
     data() {
         return{
@@ -232,17 +252,24 @@ export default({
             //-------------------
 
             //---商品属性弹框-----
+            onePageShow:10,
             dislogAttribute:false,
             attributeData:[],//生成的属性表格数据
 
-            attributeChooseData:[],//弹窗内左侧表格数据
-            attributeAllData:[],//弹窗内右侧表格数据
+            attributeChooseData:[],//弹窗内左侧表格总数据
+            attributeAllData:[],//弹窗内右侧表格总数据
+
+            attRightOnePageData:[],//弹窗内左侧表格一页数据
+            attLeftOnePageData:[],//弹窗内左侧表格一页数据
+
+            rightPageIndex:1,//右侧弹窗当前页下标
+            leftPageIndex:1,//左侧弹窗当前页下标
 
             searchLeftAtt:'',//左侧搜索框值
             searchRightAtt:'',//右侧搜索框值
 
-            totalPageLeftAtt:'',//左侧总页数
-            totalPageRightAtt:'',//右侧总页数
+            totalPageLeftAtt:1,//左侧总页数
+            totalPageRightAtt:1,//右侧总页数
 
             multipleSelection:[],//右侧选中数据
             multipleSelectionLeft:[],//左侧选中数据
@@ -275,7 +302,12 @@ export default({
             self.$axios.gets('/api/services/app/PropertyManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
                 console.log(res);
                 self.attributeAllData = res.result.items;
-                self.totalPageRightAtt = res.result.totalCount/10
+                self.totalPageRightAtt = Math.ceil(res.result.totalCount/self.onePageShow);
+                // for(let i =0;i<self.rightPageIndex*self.onePageShow;i++){
+                    // console.log(self.totalPageRightAtt)
+                    // self.attRightOnePageData.push(self.attributeAllData[i])
+                // }
+                
             },function(res){
                 console.log('err'+res)
             });
@@ -305,8 +337,14 @@ export default({
         //------------------------
 
         //---弹窗内多选------------
-        leftChoose:function(){
-
+        leftChoose:function(val){
+            let self = this;
+            self.multipleSelectionLeft = val;
+            if(self.multipleSelectionLeft.length>0){
+                self.if_l_to_r_att= false;
+            }else{
+                self.if_l_to_r_att= true;
+            }
         },
         rightChoose:function(val){
             let self = this;
@@ -316,7 +354,7 @@ export default({
             }else{
                 self.if_r_to_l_att = true;
             }
-            console.log(this.multipleSelection)
+            // console.log(this.multipleSelection)
         },
         //------------------------
 
@@ -324,16 +362,41 @@ export default({
         goLeftAtt:function(){
             
             let self = this;
+            // self.rightPageIndex++;
             for(let i in self.multipleSelection){
                 self.attributeChooseData.push(self.multipleSelection[i])
             }
+            
+            let x = [];
+            for(let i in self.attributeAllData){
+                let flag = true;
+                for(let j in self.multipleSelection){
+                    if(self.attributeAllData[i].id == self.multipleSelection[j].id){
+                        flag = false;
+                    }
+                }
+
+                if(flag){
+                    x.push(self.attributeAllData[i])
+                }
+            }
+            //  console.log(x)
+            self.attributeAllData = x;
             self.if_r_to_l_att = true;
-            self.if_l_to_r_att = false;
-            // self.multipleSelection = [];
-            // console.log(self.multipleSelection)
+            self.totalPageRightAtt = Math.ceil(self.attributeAllData.length/self.onePageShow);
+            
         },
         goRightAtt:function(){
 
+        },
+        //-----------------------
+
+        //---翻页----------------
+        pageDownRightAttr:function(){//属性的右侧向下翻页
+            let self = this;
+        },
+        pageBackRightAttr:function(){//属性的左侧向下翻页
+            let self = this;
         },
         //-----------------------
 
