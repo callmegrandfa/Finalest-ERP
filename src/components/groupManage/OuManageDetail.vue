@@ -1676,7 +1676,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
+                // _this.loadIcon();
             },function(res){
             })
         },
@@ -1687,7 +1687,7 @@ export default({
         .then(function(res){
             // console.log(res);
             _this.selectTreeCompany=res.result;
-            _this.loadIcon();
+            // _this.loadIcon();
         },function(res){
         })
     },
