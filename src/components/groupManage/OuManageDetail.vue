@@ -1032,46 +1032,46 @@ export default({
                 "status": 1,//整数
                 "remark": "",
                 "ouTypes":[1,3],//组织职能
-                basCompany:{//其他信息
-                    "ouParentid": "",//整数
-                    "legalPerson": "",
-                    "status": 1,//整数
-                    "isGroupCompany": false,
-                    "regCapital": "",//整数
-                    "vatRegno": "",
-                    "regtime": "",
-                    "legalPersonIdnr": "",
-                    "mgtDeptCode": "",
-                    "mgtDeptName": "",
-                    "businessStart": "",
-                    "businessEnd": "",
-                    "legalPersonType": "",
-                    "introduction": "",
-                    "contact": "",
-                    "businessAddress": "",
-                    "contactAddress": "",
-                    "zipCode": "",
-                    "phone": "",
-                    "fax": "",
-                    "email": "",
-                    "webUrl": "",
-                    "remark": ""
-                },
-                basBusiness: {
-                    "ouParentid": '',
-                    "stmOuId": '',
-                    "status": 1
-                },
-                basFinance: {
-                    "stateTaxNo": "",
-                    "localTaxNo": "",
-                    "taxpayerRegNo": "",
-                    "taxpayerCode": "",
-                    "taxType": "",
-                    "delegateTaxType": "",
-                    "isTaxOu": false,
-                    "status": 1
-                },
+                // basCompany:{//其他信息
+                //     "ouParentid": "",//整数
+                //     "legalPerson": "",
+                //     "status": 1,//整数
+                //     "isGroupCompany": false,
+                //     "regCapital": "",//整数
+                //     "vatRegno": "",
+                //     "regtime": "",
+                //     "legalPersonIdnr": "",
+                //     "mgtDeptCode": "",
+                //     "mgtDeptName": "",
+                //     "businessStart": "",
+                //     "businessEnd": "",
+                //     "legalPersonType": "",
+                //     "introduction": "",
+                //     "contact": "",
+                //     "businessAddress": "",
+                //     "contactAddress": "",
+                //     "zipCode": "",
+                //     "phone": "",
+                //     "fax": "",
+                //     "email": "",
+                //     "webUrl": "",
+                //     "remark": ""
+                // },
+                // basBusiness: {
+                //     "ouParentid": '',
+                //     "stmOuId": '',
+                //     "status": 1
+                // },
+                // basFinance: {
+                //     "stateTaxNo": "",
+                //     "localTaxNo": "",
+                //     "taxpayerRegNo": "",
+                //     "taxpayerCode": "",
+                //     "taxType": "",
+                //     "delegateTaxType": "",
+                //     "isTaxOu": false,
+                //     "status": 1
+                // },
             },
             dateRange:[],//有效时间
             basCompany:{//其他信息
@@ -1788,9 +1788,8 @@ export default({
         },
         isGroupCompany(){
             let _this=this;
-            _this.isUpdate()
             _this.basCompany.ouParentid='';
-            _this.validation.reset(0)
+            _this.validation.reset()
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -1821,11 +1820,12 @@ export default({
                         _this.addData.basCompany=_this.basCompany;
                     }
                     if(_this.Finance){
-                        _this.addData.Finance=_this.Finance;
+                        _this.addData.basBusiness=_this.basBusiness;
                     }
                     if(_this.Business){
-                        _this.addData.Business=_this.Business;
+                        _this.addData.basFinance=_this.basFinance;
                     }
+                    console.log(_this.addData)
                     // _this.addData.basBusiness=_this.basBusiness;
                     // _this.addData.basFinance=_this.basFinance;
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
@@ -1949,10 +1949,10 @@ export default({
                         _this.addData.basCompany=_this.basCompany;
                     }
                     if(_this.Finance){
-                        _this.addData.Finance=_this.Finance;
+                        _this.addData.basBusiness=_this.basBusiness;
                     }
                     if(_this.Business){
-                        _this.addData.Business=_this.Business;
+                        _this.addData.basFinance=_this.basFinance;
                     }
                     
                     

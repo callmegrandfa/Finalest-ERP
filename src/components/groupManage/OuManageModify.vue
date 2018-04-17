@@ -1956,10 +1956,10 @@ export default({
                         _this.addData.basCompany=_this.basCompany;
                         }
                         if(_this.Finance){
-                            _this.addData.Finance=_this.Finance;
+                            _this.addData.basBusiness=_this.basBusiness;
                         }
                         if(_this.Business){
-                            _this.addData.Business=_this.Business;
+                            _this.addData.basFinance=_this.basFinance;
                         }
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                              _this.auditInfo={
@@ -1996,10 +1996,10 @@ export default({
                         _this.addData.basCompany=_this.basCompany;
                         }
                         if(_this.Finance){
-                            _this.addData.Finance=_this.Finance;
+                            _this.addData.basBusiness=_this.basBusiness;
                         }
                         if(_this.Business){
-                            _this.addData.Business=_this.Business;
+                            _this.addData.basFinance=_this.basFinance;
                         }
                              _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                             _this.open('保存成功','el-icon-circle-check','successERP');
