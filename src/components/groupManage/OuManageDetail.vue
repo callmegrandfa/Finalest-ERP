@@ -232,7 +232,7 @@
                     
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.ouName')}"
-                    v-model="addData.ouName" 
+                    v-model="addData.ouFullname" 
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
@@ -1559,6 +1559,7 @@ export default({
             // 会计期间方案值,启用年月
                 // _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
                 // _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
+                 _this.addData.baseCurrencyId=resp.result.localCurrencyId;//本位币种id
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
                     // 会计期间方案下拉
                     _this.selectData.accCchemeId=res.result;
@@ -1575,7 +1576,7 @@ export default({
                          _this.ifModify=false;
                     // }
                 })
-                // _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
+               
             })
             if(_this.$route.params.id!="default"){
                 _this.addData.ouParentid=parseInt(_this.$route.params.id);
@@ -1825,7 +1826,6 @@ export default({
                     if(_this.Business){
                         _this.addData.basFinance=_this.basFinance;
                     }
-                    console.log(_this.addData)
                     // _this.addData.basBusiness=_this.basBusiness;
                     // _this.addData.basFinance=_this.basFinance;
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){

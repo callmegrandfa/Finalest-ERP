@@ -713,6 +713,12 @@
 </el-row>       
 <!-- dialog尺码选择 -->
         <el-dialog :visible.sync="chooseSize" class="choose_size">
+            <el-dialog
+                width="30%"
+                title="内层 Dialog"
+                :visible.sync="innerVisible"
+                append-to-body>
+            </el-dialog>
             <template slot="title">
                 <span>尺码选择</span>
                 <div class="search_input_group">
@@ -743,7 +749,7 @@
                         <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
                         <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
                         <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
-                        <span class="show_size addSize">
+                        <span class="show_size addSize" @click="innerVisible = true">
                             <span class="x"></span>
                             <span class="y"></span>
                         </span>
@@ -757,8 +763,8 @@
                             <span>1</span>
                             <span>/</span>
                             <span>3</span>
-                            <el-button class="_page_left" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left"></el-button>
-                            <el-button class="_page_right" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right"></el-button>
+                            <el-button class="_page_left" type="primary" icon="el-icon-arrow-left"></el-button>
+                            <el-button class="_page_right" type="primary" icon="el-icon-arrow-right"></el-button>
                         </el-col>
                     </el-col>
                 </el-col>
@@ -922,6 +928,7 @@ export default {
 //----------名称全称联动----------
         isUpdateFlag:false,   
 //---------------商品规格------------------
+        innerVisible:false,//内层表格
         multipleSelection_size:[],//从表商品规格选中数据
         goodsSize_data:[],//从表商品规格数据
         goodsSize_newCol:[],//所有新行
