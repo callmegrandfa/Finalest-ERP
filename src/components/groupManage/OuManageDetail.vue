@@ -250,7 +250,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                         
+                         :render-content="renderContent_ouParentid"
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
@@ -336,7 +336,7 @@
                         v-model="search_companyOuId">
                         </el-input>
                         <el-tree
-                         
+                         :render-content="renderContent_companyOuId"
                         :data="selectTreeCompany"
                         :highlight-current="true"
                         :props="selectPropsCompany"
@@ -1954,6 +1954,41 @@ export default({
                     })
                 }
             });    
+        },
+        renderContent_companyOuId(h, { node, data, store }){
+                
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
+        renderContent_ouParentid(h, { node, data, store }){
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
         },
     }
 
