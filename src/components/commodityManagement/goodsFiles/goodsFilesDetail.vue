@@ -267,27 +267,8 @@
         <el-col :span="24">
             <el-tabs v-model="activeName_two">
                 <el-tab-pane label="商品规格" name="goodsSize">
-                    <button class="erp_bt bt_add" @click="addColSize">
-                        <div class="btImg">
-                            <img src="../../../../static/image/common/bt_add.png">
-                        </div>
-                        <span class="btDetail">新增</span>
-                    </button>
-                     <button class="erp_bt bt_excel mb10">
-                        <div class="btImg">
-                            <img src="../../../../static/image/common/bt_excel.png">
-                        </div>
-                        <span class="btDetail">Excel</span>
-                    </button>
-
-                    <button class="erp_bt bt_del">
-                        <div class="btImg">
-                            <img src="../../../../static/image/common/bt_del.png">
-                        </div>
-                        <span class="btDetail">删除</span>
-                    </button>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 商品规格表格 - - - - - - - - - - - - - - - - - - - - -  -->
-                        <el-table :data="goodsSize_data" border style="width: 100%" stripe @selection-change="selectionChange_size">
+                        <el-table :data="goodsSize_data" border style="width: 100%" stripe>
                             <el-table-column type="selection"></el-table-column>
 
                             <el-table-column prop="groupId" label="规格编码" >
@@ -330,11 +311,6 @@
                                             type="text"/>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作">
-                                <template slot-scope="scope">
-                                    <el-button v-on:click="delCol(goodsSize_data,scope.$index)" type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
                         </el-table> 
                         
                 </el-tab-pane>
@@ -347,27 +323,8 @@
         <el-col :span="24">
             <el-tabs v-model="activeName_three">
                 <el-tab-pane label="SKU" name="SKU">
-                   <button class="erp_bt bt_add" @click="addColSKU">
-                        <div class="btImg">
-                            <img src="../../../../static/image/common/bt_add.png">
-                        </div>
-                        <span class="btDetail">新增</span>
-                    </button>
-                     <button class="erp_bt bt_excel mb10">
-                        <div class="btImg">
-                            <img src="../../../../static/image/common/bt_excel.png">
-                        </div>
-                        <span class="btDetail">Excel</span>
-                    </button>
-
-                    <button class="erp_bt bt_del">
-                        <div class="btImg">
-                            <img src="../../../../static/image/common/bt_del.png">
-                        </div>
-                        <span class="btDetail">删除</span>
-                    </button>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - SKU表格 - - - - - - - - - - - - - - - - - - - - -  -->
-                        <el-table :data="SKU_data" border style="width: 100%" stripe @selection-change="selectionChange_SKU">
+                        <el-table :data="SKU_data" border style="width: 100%" stripe>
                             <el-table-column type="selection"></el-table-column>
 
                             <el-table-column prop="skuCode" label="SKU编码" >
@@ -475,11 +432,6 @@
                                             type="text"/>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作">
-                                <template slot-scope="scope">
-                                    <el-button v-on:click="delCol(SKU_data,scope.$index)" type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
                         </el-table> 
                 </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 商品属性 - - - - - - - - - - - - - - - - - - - - -  -->
@@ -561,7 +513,7 @@
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="图片" name="picture">
                    <ul>
-                       <li>
+                       <!-- <li>
                            <div>主图</div>
                            <el-upload
                             class="avatar-uploader"
@@ -577,18 +529,33 @@
                             :on-change="changePicture"
                             :on-success="handleAvatarSuccess"
                             ref="upload">
-                            <!-- <el-button size="small" type="primary">选择</el-button> -->
                                     <img v-if="imageUrl" :src="imageUrl" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
                             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
                             
+                       </li> -->
+                       <li>
+                            <app-loadImg></app-loadImg>
                        </li>
                    </ul>
                 </el-tab-pane>
-<!-- - - - - - - - - - - - - - - - - - - - - - - - 规格组 - - - - - - - - - - - - - - - - - - - - -  -->
-                <el-tab-pane label="规格组" name="specTeam">
-                   
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 使用组织 - - - - - - - - - - - - - - - - - - - - -  -->
+                <el-tab-pane label="使用组织" name="specTeam">
+                    <el-table :data="SKU_data" border style="width: 100%" stripe>
+                            <el-table-column prop="skuCode" label="业务组织">
+                            </el-table-column>
+
+                            <el-table-column prop="skuName" label="上市日期" ></el-table-column>
+
+                            
+                            <el-table-column prop="barcode" label="备注"></el-table-column>
+                            <el-table-column prop="specId1" label="状态">
+                                <template slot-scope="scope">
+                                    <el-checkbox></el-checkbox>
+                                </template>
+                            </el-table-column>
+                        </el-table> 
                 </el-tab-pane>
             </el-tabs>
         </el-col>
@@ -675,7 +642,11 @@
 </template>
 
 <script>
-export default({
+import loadImg from './loadImg'
+export default {
+    components: {
+        'app-loadImg':loadImg,
+    },
     data() {
         return{
             imageUrl:'',
@@ -1014,59 +985,10 @@ export default({
             if (!value) return true;
             return data.ouFullname.indexOf(value) !== -1;
         },
-        addCol(data,col,length,newCols){//增行
-            length++
-            let newCol='newCol'+length
-            newCols[newCol]=col;
-            data.unshift(newCols[newCol]);
-        },
-        delCol(data,index){//删行
-            data.splice(index,1);
-        },
  //---------------------------商品规格------------------------------
-        selectionChange_size:function(val){//点击复选框选中的数据
-            this.multipleSelection_size = val;
-        },
-        addColSize(){//增行
-            let _this=this;
-            _this.goodsSize_newCol_len++
-            let newCol = 'newCol'+_this.goodsSize_newCol_len;
-            _this.goodsSize_newCol[newCol]={
-                "groupId": 1,
-                "productId": 0,
-                "basSpecgroupId": 0,
-                "specId": 0
-            }
-            _this.goodsSize_data.unshift(_this.goodsSize_newCol[newCol]);
-        },
+
 //---------------------------SKU------------------------------
-        selectionChange_SKU:function(val){//点击复选框选中的数据
-            this.multipleSelection_SKU = val;
-        },
-        addColSKU(){//增行
-            let _this=this;
-            _this.SKU_newCol_len++
-            let newCol = 'newCol'+_this.SKU_newCol_len;
-            _this.SKU_newCol[newCol]={
-                    "groupId": 1,
-                    "productId": 0,
-                    "skuCode": "string",
-                    "skuName": "string",
-                    "barcode": "string",
-                    "specId1": 0,
-                    "specId2": 0,
-                    "specId3": 0,
-                    "specId4": 0,
-                    "unitId": 0,
-                    "purchasePrice": 0,
-                    "wholePrice": 0,
-                    "discount": 0,
-                    "vipPrice": 0,
-                    "retailPrice": 0,
-                    "status": 0
-                    }
-            _this.SKU_data.unshift(_this.SKU_newCol[newCol]);
-        },
+
         getStartMonth(){//根据会计期间生成启用年月
             let _this=this;
             _this.$axios.gets('/api/services/app/AccperiodSheme/Get',{id:_this.addData.accCchemeId})
@@ -1257,8 +1179,6 @@ export default({
             if(_this.update){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
-            }else{
-                _this.Cancel()
             }
         },
         sureDoing(){
@@ -1330,7 +1250,7 @@ export default({
         }
     }
 
-})        
+}   
     
   </script>
 

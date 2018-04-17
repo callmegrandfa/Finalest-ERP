@@ -20,33 +20,53 @@
                                 <el-form-item label="职员名称">
                                     <el-input v-model="formList.EmployeeName"></el-input>
                                 </el-form-item>
-                                <el-form-item label="所属组织">
-                                    <el-select v-model="formList.OuId">
-                                        <el-input
+                                <!-- <el-form-item label="所属组织"> -->
+                                    <!-- <el-select v-model="formList.OuId"> -->
+                                        <!-- <el-input
                                         placeholder="输入关键字进行过滤"
                                         v-model="filterOu" 
                                         class="selectSearch">
-                                        </el-input>
-                                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_ou" :props="selectProps_ou"
+                                        </el-input> -->
+                                        <!-- <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_ou" :props="selectProps_ou"
                                         node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_ou"
                                         :expand-on-click-node="false" @node-click="nodeClick_ou"
-                                        class="filter-tree">
+                                        class="filter-tree"> -->
+                                        <!-- <el-tree
+                                        :highlight-current="true"
+                                        :data="selectTree_ou"
+                                        :props="selectProps_ou"
+                                        node-key="id"
+                                        ref="tree"
+                                        :expand-on-click-node="false"
+                                        :filter-node-method="filterNode_ou"
+                                        @node-click="nodeClick_ou"
+                                        >
                                         </el-tree>
                                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                                         </el-option>
                                     </el-select>
-                                </el-form-item>
+                                </el-form-item> -->
                                 <el-form-item label="部门">
                                     <el-select v-model="formList.DeptId">
-                                        <!-- <el-input
+                                        <el-input
                                         placeholder="输入关键字进行过滤"
                                         v-model="filterDepart" 
                                         class="selectSearch">
-                                        </el-input> -->
-                                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_depart" :props="selectProps_depart"
+                                        </el-input>
+                                        <!-- <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_depart" :props="selectProps_depart"
                                         node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_Depart"
                                         :expand-on-click-node="false" @node-click="nodeClick_depart"
-                                        class="filter-tree">
+                                        class="filter-tree"> -->
+                                        <el-tree
+                                        :highlight-current="true"
+                                        :data="selectTree_depart" :props="selectProps_depart"
+                                        node-key="id"
+                                        ref="tree"
+                                        default-expand-all
+                                        :expand-on-click-node="false"
+                                        :filter-node-method="filterNode_Depart"
+                                        @node-click="nodeClick_depart"
+                                        >
                                         </el-tree>
                                         <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
                                         </el-option>
@@ -174,13 +194,16 @@
                             </el-table-column>
                             <el-table-column prop="employeeTypes" label="职员类型" >
                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small">仓库</el-button>
-                                      <!-- <el-button type="text" size="small" v-for="item in allList[scope.$index]" :key="item.employeeId">{{item.employeeTypeidTValue}}</el-button> -->
+                                      <el-button type="text" size="small" v-for="item in scope.row.employeeTypes" :key="item.employeeTypeid">{{item.employeeTypeidTValue}}</el-button>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="shopName" label="所属店铺">
                             </el-table-column>
-                            <el-table-column prop="statusTValue" label="状态">
+                            <el-table-column prop="status" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                </template>
                             </el-table-column>
                             <el-table-column label="操作"  fixed="right">
                                 <template slot-scope="scope">
@@ -241,20 +264,22 @@
             return {
                 // -------------左边查询数据
                 ouId:null,
+                // expandId_depart:[],//默认展开的树节点
                 selectData:{//select下拉框数据
                     ou:[],//组织
                     depart:[],//部门
                     shop:[],//部门
                 },
                 //------------------------- 组织树形控件
-                filterOu:'',
+                filterOu:'',//节点过滤关键字---组织
+                // expandId_ou:[],//默认展开的树节点
                 selectTree_ou:[],
                 selectProps_ou: {
                     children: 'children',
                     label: 'ouName',
                     id:'id'
                 },
-                // filterDepart:'',
+                filterDepart:'',
                 selectTree_depart:[],
                 selectProps_depart: {
                     children: 'children',
@@ -348,12 +373,12 @@
             this.loadDepartTree();// 部门树形控件
         },
         watch: {
-            filterOu(val) {
-                this.$refs.tree2.filter(val);
-            },
-            // filterDepart(val) {
-            //     this.$refs.tree2.filter(val);
+            // filterOu(val) {
+            //     this.$refs.tree.filter(val);
             // },
+            filterDepart(val) {
+                this.$refs.tree.filter(val);
+            },
         },
         methods: {
             getAllList() {// 获取所有数据
@@ -362,8 +387,16 @@
                 {SkipCount: (_this.pageIndex - 1) * _this.page_size,
                     MaxResultCount: _this.page_size})
                     .then(rsp => {
-                        // console.log(rsp.result);
+                        console.log(rsp.result.items);
                         _this.allList = rsp.result.items;
+                        // _this.allList.employeeTypes = rsp.result.items;
+                        // for (let val of rsp.result.items) {
+                        //     console.log(val);
+                        // }
+
+                        // let staffTypes=[];//转换职员类型的数据类型
+
+
                         _this.totalCount = rsp.result.totalCount;
                         _this.totalPage=Math.ceil(rsp.result.totalCount/_this.page_size);
                         // console.log(_this.allList);
@@ -398,6 +431,7 @@
             getSelectDepart(){// 获取所属部门下拉框数据
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId}).then
+                // _this.$axios.gets('/api/services/app/DeptManagement/GetAll',{DeptParentid:_this.ouId,SkipCount:0,MaxResultCount:100}).then
                 (
                     rsp=>{  
                         // console.log(rsp.result);
@@ -406,11 +440,39 @@
                 );
             },
             //---------------------------获取树形控件数据
+            // defauleExpandTree(data,key){
+            //     if(typeof(data[0])!='undefined'
+            //     && data[0]!=null 
+            //     && typeof(data[0][key])!='undefined'
+            //     && data[0][key]!=null
+            //     && data[0][key]!=''){
+            //         return [data[0][key]]
+            //     }
+            // },  
+            // renderContent_componyTreeOU(h, { node, data, store }){
+            //   if(typeof(data.childNode)!='undefined' && data.childNode!=null && data.childNode.length>0){
+            //       return (
+            //           <span class="el-tree-node__label" data-id={data.id}>
+            //           <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+            //               {data.ouName}
+            //           </span>
+            //       );
+            //   }else{
+            //       return (
+            //           <span class="el-tree-node__label" data-id={data.id}>
+            //           <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+            //               {data.ouName}
+            //           </span>
+            //       );
+            //   }
+            // },
             loadTree(){// 加载所属组织树形控件
                 let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList')
                 .then(function(res){//组织
+                // console.log(res.result);
                     _this.selectTree_ou=res.result;
+                    // _this.expandId_ou=_this.renderContent_componyTreeOU(res.result,'id')
                     _this.loadIcon();
                 },function(res){
                 })
@@ -430,7 +492,7 @@
             },
             filterNode_ou(value, data) {//根据关键字过滤节点
                 if (!value) return true;
-                return data.ouFullname.indexOf(value) !== -1;
+                return data.ouName.indexOf(value) !== -1;
             },
             nodeClick_ou(data,node,self){//所属组织树形控件的回调
                 let _this=this;
@@ -451,7 +513,7 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId})
                 .then(function(res){//部门
-                    // console.log(res);
+                    // console.log(res.result);
                     _this.selectTree_depart=res.result;
                     _this.loadIcon();
                 },function(res){
@@ -459,7 +521,7 @@
             },
             filterNode_Depart(value, data) {//根据关键字过滤节点
                 if (!value) return true;
-                return data.deptName.indexOf(value) !== -1;
+                return data.name.indexOf(value) !== -1;
             },
             nodeClick_depart(data,node,self){//所属部门树形控件的回调
                 let _this=this;
@@ -584,9 +646,6 @@
                 this.$store.state.url = "/staff/staffModify/" + row.id
                 this.$router.push({ path: this.$store.state.url })
             },
-           
-            
-            
             // --------------------------------分页器处理函数
             handleSizeChange(val) {// 每页数据条数改变
                 // console.log(`每页 ${val} 条`);

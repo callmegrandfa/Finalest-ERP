@@ -918,8 +918,6 @@ export default({
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
-            }else{
-                _this.Cancel()
             }
         },
         isDeleteThis(){
