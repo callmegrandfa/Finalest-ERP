@@ -67,7 +67,7 @@
                                      node-key="id"
                                      ref="tree"
                                      :filter-node-method="filterNode"
-                                     :default-expanded-keys="expandId"
+                                     :default-expanded-keys="expand.expandId_addDataOu"
                                      :expand-on-click-node="false"
                                      @node-click="nodeClick"
                                      >
@@ -269,6 +269,12 @@
                     details:'',
                     message:'',
                 },
+                expand:{
+                    expandId_addDataOu:[],//默认下拉树形展开id
+                    isHere_addDataOu:false,//是否存在id于树形
+                    expandId_dialogOu:[],//默认dialog组织树形展开id
+                    expandId_mmenu:[],//默认分配功能树形展开id
+        }
 
             }
         },
@@ -325,15 +331,35 @@
                 })
             })
         },
-          defauleExpandTree(data,key){
-                if(typeof(data[0])!='undefined'
-                && data[0]!=null 
-                && typeof(data[0][key])!='undefined'
-                && data[0][key]!=null
-                && data[0][key]!=''){
-                    return [data[0][key]]
-                }
-            },
+          defauleExpandTree(model,expandName,response,responseKey,children){
+               let _this=this;
+            // console.log(model!='');
+            if(model!=''){//model为树形下拉默认值，即渲染数据。如果存在，递归tree
+                $.each(response,function(index,val){
+                    if(val[responseKey]!==_this.addData[model]){
+                        _this.expand[expandName]=[_this.addData[model]]
+                    }else{
+                        $.each(val[children],function(index1,val1){
+                            if(val1[responseKey]==_this.addData[model]){
+                                _this.expand[expandName]=[_this.addData[model]]
+                            }else{
+                                _this.defauleExpandTree(model,expandName,val1[children],responseKey,children)
+                            }
+                        })
+                    }
+                })
+            }else{
+                 $.each(response,function(index,value){
+                    if(index==0){
+                        if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                            _this.expand[expandName]=[value[responseKey]]
+                        }
+                        
+                    }
+                })
+   
+            }
+        },
         //---加载数据上级商品树-------------------------------------------  
         loadParentTree(){
             let self=this;
@@ -342,8 +368,13 @@
                 console.log(res)
                 self.selectParentTree=res;
                 self.treeLoading = false;
-                self.expandId=self.defauleExpandTree(res,'id')
+                // self.expandId=self.defauleExpandTree(res,'id')
                 // console.log(self.expandId);
+                  self.defauleExpandTree('classParentId','expandId_addDataOu',res,'id','children')
+                    if(self.expand.expandId_addDataOu<1){
+                        self.expand.expandId_addDataOu=[self.selectParentTree[0].id]
+                    
+                    }
                 self.loadCheckSelect('classParentId',self.addData.classParentId)
             },function(res){
                 self.treeLoading=false;
@@ -399,10 +430,6 @@
                         self.$router.push({path:self.$store.state.url})
                         self.open('保存成功','el-icon-circle-check','successERP');
                         self.dialogUserConfirm=false;
-                        console.log(res.result.createdTime)
-                        // _this.addData.id=res.result.id;
-                        // console.log(res.result);
-                        // self.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         // self.open('保存失败','el-icon-error','faildERP');
                          if(res && res!=''){ 
@@ -513,9 +540,6 @@
             let _this = this;
             _this.parentItem.id = data.id;
             _this.parentItem.className = data.className;
-            // self.$nextTick(function(){
-            //     $('#customerClass_confirmSelect').click()
-            // })
             $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                 if($(this).attr('date')==data.id){
                     $(this).click()

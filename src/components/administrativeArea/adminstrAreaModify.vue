@@ -77,9 +77,9 @@
                 <div class="tipsWrapper">
                     <div class="errorTips">
                         <p class="msgDetail">错误提示：
-                            <span :class="{block : !validation.hasError('addData.areaParentId')}">
+                            <!-- <span :class="{block : !validation.hasError('addData.areaParentId')}">
                                 上级地区{{ validation.firstError('addData.areaParentId') }},
-                            </span>
+                            </span> -->
                             <span :class="{block : !validation.hasError('addData.areaCode')}">
                                 地区编码{{ validation.firstError('addData.areaCode') }},
                             </span>
@@ -107,12 +107,12 @@
                             class="areaParentId" 
                             placeholder=""
                             v-model="addData.areaParentId"  @focus="showErrTips">
-                                <!-- <el-input
+                                <el-input
                                     placeholder="搜索..."
                                     class="selectSearch"
-                                    v-model="search_area">
-                                </el-input> -->
-                                <el-tree
+                                    v-model="filterText">
+                                </el-input>
+                                <!-- <el-tree
                                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                     :highlight-current="true"
                                     :data="adminAreaTree"
@@ -122,9 +122,23 @@
                                     ref="tree"
                                     :expand-on-click-node="false"
                                     @node-click="nodeClick"
+                                    > -->
+                                <el-tree
+                                    :render-content="renderContent_componyTree"
+                                    :highlight-current="true"
+                                    :data="adminAreaTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    :default-expanded-keys="expandId"
+                                    ref="tree2"
+                                    :expand-on-click-node="false"
+                                    :filter-node-method="filterNode"
+                                    @node-click="nodeClick"
                                     >
                                 </el-tree>
-                                <el-option v-show="false" :key="count.Id" :label="count.areaName" :value="count.Id"   id="adminStrModify_confirmSelect">
+                                <!-- <el-option v-show="false" :key="count.Id" :label="count.areaName" :value="count.Id"   id="adminStrModify_confirmSelect">
+                                </el-option> -->
+                                <el-option v-show="false" :key="treeNode.Id" :label="treeNode.areaName" :value="treeNode.Id"   id="adminStrModify_confirmSelect">
                                 </el-option>
                             </el-select>
                         </div>
@@ -327,6 +341,9 @@
                     Id:'',
                     areaName:'',
                 },
+                expandId:[],//默认展开的树节点
+                filterText:'',//节点过滤关键字
+                // -----------------------------------
                 choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
                 btnValue:'',//存储点击返回还是修改按钮判断信息
                 // ------------------提示框数据
@@ -372,13 +389,16 @@
                     }
                 },
                 deep: true,
-            }
+            },
+            filterText(val) {
+                this.$refs.tree2.filter(val);
+            },
 
         },
         validators: {
-            'addData.areaParentId': function (value) {//上级地区
-                return this.Validator.value(value).required().maxLength(50)
-                            },
+            // 'addData.areaParentId': function (value) {//上级地区
+            //     return this.Validator.value(value).required().maxLength(50)
+            //                 },
             'addData.areaCode': function (value) {//地区编码
                 return this.Validator.value(value).required().maxLength(50)
                             },
@@ -389,32 +409,45 @@
                 return this.Validator.value(value).required().integer();
                             },
         },
-        computed:{
-            count () {
-                return this.treeNode;
-                },
-        },
+        // computed:{
+        //     count () {
+        //         return this.treeNode;
+        //         },
+        // },
         methods: {
             getDataList(){// 获取数据渲染
                 let _this = this;
                 _this.$axios
                     .gets("/api/services/app/AdAreaManagement/Get", {id:this.$route.params.id})
                     .then(rsp => {
-                        // console.log(rsp.result);
+                        console.log(rsp.result);
                         _this.addData=rsp.result;
+                        // _this.addData.areaParentId = rsp.result.areaParentId;
                         _this.timeData.createdBy=rsp.result.createdBy;
                         _this.timeData.createdTime=rsp.result.createdTime;
                         _this.timeData.modifiedBy=rsp.result.modifiedBy;
                         _this.timeData.modifiedTime=rsp.result.modifiedTime;
-                        _this.$axios.gets("/api/services/app/AdAreaManagement/Get",
-                        {id: rsp.result.areaParentId})
-                        .then(
-                            rsp=>{
-                                // console.log(rsp.result);
-                                _this.treeNode.Id=rsp.result.id;
-                                _this.treeNode.areaName=rsp.result.areaName;
-                            }
-                        )
+
+                            _this.treeNode.Id=rsp.result.id;
+                            _this.treeNode.areaName=rsp.result.areaParentId_AreaName;
+                            // console.log(_this.treeNode);
+                            
+                        // if (rsp.result.areaParentId==0) {
+                        //     _this.treeNode.Id=rsp.result.id;
+                        //     _this.treeNode.areaName=rsp.result.areaParentId_AreaName;
+                        // }else{
+                        //     _this.$axios.gets("/api/services/app/AdAreaManagement/Get",
+                        //     {id: rsp.result.areaParentId})
+                        //     .then(
+                        //         rsp=>{
+                        //             // console.log(rsp.result);
+                        //             _this.treeNode.Id=rsp.result.id;
+                        //             _this.treeNode.areaName=rsp.result.areaName;
+                        //         }
+                        //     )
+                        // }
+
+                       
                     });
             },
             //------------- 提示框
@@ -602,6 +635,49 @@
                 )
             },
             // ----------树形控件相关----------
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },  
+            renderContent_componyTree(h, { node, data, store }){
+                if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }
+            },
+            loadCheckSelect(selectName,key){//默认选中节点
+                let _this=this;
+                // console.log(selectName,key)
+                _this.$nextTick(function () { 
+                    // console.log($('.'+selectName+' .el-tree-node__label'))
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                    if($(this).attr('data-id') == key){
+                            $(this).click()
+                            // console.log(1)
+                        }
+                    })
+                })
+            },
+            filterNode(value, data) {// 在搜索框输入关键字过滤节点
+                if (!value) return true;
+                return data.areaName.indexOf(value) !== -1;
+            },
             loadTree(){// 获取树形节点
                 let _this=this;
                 // _this.treeLoading=true;
@@ -609,7 +685,9 @@
                     .then(function(res){
                 // console.log(res.result);
                         _this.adminAreaTree=res.result;
-                        _this.loadIcon();
+                        _this.expandId=_this.defauleExpandTree(res.result,'id')
+                        _this.loadCheckSelect('areaParentId',_this.addData.areaParentId)
+                        // _this.loadIcon();
                         //  _this.treeLoading=false;
                             },function(res){
                                 // _this.treeLoading=false;
@@ -633,9 +711,12 @@
                     //  console.log(data);
                 _this.treeNode.Id=data.id;
                 _this.treeNode.areaName=data.areaName;
-                _this.$nextTick(function(){
-                        $('#adminStrModify_confirmSelect').click()
-                })
+                // _this.$nextTick(function(){
+                //         $('#adminStrModify_confirmSelect').click()
+                // })
+                self.$nextTick(function() {
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                });
             },
             getSelectData(){// 获取下拉框数据
                 let _this=this;

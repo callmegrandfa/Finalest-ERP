@@ -13,18 +13,30 @@
                     </el-col>
                     <!-- 树形控件 -->
                     <el-col :span='24' class="tree-container" >
-                        <el-tree
+                        <!-- <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :highlight-current="true"
                         :data="adminAreaTree"
                         :props="defaultProps"
+                        :default-expanded-keys="expandId"
                         node-key="id"
-                        default-expand-all
                         ref="tree2"
                         :expand-on-click-node="false"
                         :filter-node-method="filterNode"
                         @node-click="nodeClick"
                         class="filter-tree"
+                        > -->
+                        <el-tree
+                        :render-content="renderContent_componyTree"
+                        :highlight-current="true"
+                        :data="adminAreaTree"
+                        :props="defaultProps"
+                        node-key="id"
+                        :default-expanded-keys="expandId"
+                        ref="tree2"
+                        :expand-on-click-node="false"
+                        :filter-node-method="filterNode"
+                        @node-click="nodeClick"
                         >
                         </el-tree>
                     </el-col>   
@@ -216,10 +228,7 @@
                 pageIndex:1,//分页的当前页码
                 tableData:[],
                 // --------------------------树形控件数据
-                adminAreaTree:[{
-                    areaName:'行政地区',
-                    childItems:[],
-                }],
+                adminAreaTree:[],
                 defaultProps: {
                     children: 'childItems',
                     label: 'areaName',
@@ -300,23 +309,50 @@
                 
             },
             // ----------树形控件的处理函数开始----------
-                
-                loadTree(){// 获取树形节点
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },  
+            renderContent_componyTree(h, { node, data, store }){
+              if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.areaName}
+                      </span>
+                  );
+              }else{
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.areaName}
+                      </span>
+                  );
+              }
+            },
+            loadTree(){// 获取树形节点
                     let _this=this;
                     _this.treeLoading=true;
                     _this.$axios.gets('/api/services/app/AdAreaManagement/GetTree')
                     .then(function(res){
                             // console.log(res.result);
-                            for(let i in res.result){
-                                _this.adminAreaTree[0].childItems=res.result;
-                            }
+                            // for(let i in res.result){
+                            //     _this.adminAreaTree[0].childItems=res.result;
+                            // }
                             // console.log(_this.adminAreaTree);
-                            _this.loadIcon();
+                           _this.adminAreaTree=res.result
+                           _this.expandId=_this.defauleExpandTree(res.result,'id')
+                            // _this.loadIcon();
                             _this.treeLoading=false;
                     },function(res){
                         _this.treeLoading=false;
                     })
-                },               
+            },               
                 //复选框中选中的数据(用于做批量删除)
                 handleSelectionChange: function(arr1) {
                     let _this = this;

@@ -21,18 +21,30 @@
                     </el-col>
                     <el-col :span='24' class="tree-container" >
                         <!-- 树形控件 -->
-                         <el-tree
+                         <!-- <el-tree
                             oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                             :highlight-current="true"
                             :data="supplierClasTree"
                             :props="defaultProps"
                             node-key="id"
-                            default-expand-all
+                            :default-expanded-keys="expandId"
                             ref="tree2"
                             :expand-on-click-node="false"
                             :filter-node-method="filterNode"
                             @node-click="nodeClick"
                             class="filter-tree"
+                            > -->
+                            <el-tree
+                            :render-content="renderContent_componyTree"
+                            :highlight-current="true"
+                            :data="supplierClasTree"
+                            :props="defaultProps"
+                            node-key="id"
+                            :default-expanded-keys="expandId"
+                            ref="tree"
+                            :expand-on-click-node="false"
+                            :filter-node-method="filterNode"
+                            @node-click="nodeClick"
                             >
                         </el-tree>
                     </el-col>  
@@ -179,6 +191,7 @@
                     label: 'className',
                     id: 'id',
                 },
+                expandId:[],//默认展开树节点
                 // --------------列表数据提示框
                 tableData:[],
                 dialogUserConfirm:false,//确认提示框是否显示
@@ -215,7 +228,7 @@
          },
         watch: {
             filterText(val) {
-                this.$refs.tree2.filter(val);
+                this.$refs.tree.filter(val);
             }
         },
         methods:{
@@ -280,19 +293,45 @@
                 this.getDataList();
             },
             // -------------树形控件
-            loadIcon(){//添加文件夹图标
-                let _this=this;
-                _this.$nextTick(function () {
-                    $('.preNode').remove();   
-                    $('.el-tree-node__label').each(function(){
-                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                        }else{
-                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                        }
-                    })
-                })
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
             },
+            renderContent_componyTree(h, { node, data, store }){
+              if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }else{
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }
+            },   
+            // loadIcon(){//添加文件夹图标
+            //     let _this=this;
+            //     _this.$nextTick(function () {
+            //         $('.preNode').remove();   
+            //         $('.el-tree-node__label').each(function(){
+            //             if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+            //                 $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+            //             }else{
+            //                 $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+            //             }
+            //         })
+            //     })
+            // },
             loadTree(){//获取树形控件数据
                 let _this=this;
                 _this.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:2}).then(
@@ -300,7 +339,8 @@
                     // console.log(rsp);
                      _this.supplierClasTree=rsp;
                     // console.log(_this.supplierClasTree)
-                    _this.loadIcon();
+                    _this.expandId=_this.defauleExpandTree(rsp,'id')
+                    // _this.loadIcon();
                })
             },
             nodeClick(data){//点击树形控件节点时的回调
@@ -357,6 +397,7 @@
                     _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.getDataList();
+                    _this.loadTree();
                 },rsp=>{                    
                     _this.dialogUserConfirm=false;
                     if(rsp && rsp!=''){ 
@@ -383,6 +424,7 @@
                         _this.dialogUserConfirm=false;
                         _this.open('删除成功','el-icon-circle-check','successERP');
                         _this.getDataList();
+                        _this.loadTree();
                     },rsp=>{
                         _this.dialogUserConfirm=false;
                         if(rsp && rsp!=''){ 
