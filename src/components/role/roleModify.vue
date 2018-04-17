@@ -216,7 +216,7 @@
                             <el-table-column prop="ouCode" label="组织编码"></el-table-column>
 
                             <el-table-column prop="ouTypes" label="组织类型"></el-table-column>
-
+                            <el-table-column prop="ouName" label="组织名称"></el-table-column>
                             <el-table-column prop="assignPerson" label="授权人"></el-table-column>
 
                             <el-table-column label="授权时间">
