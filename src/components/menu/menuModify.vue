@@ -192,6 +192,22 @@
                     </div>
                  </div>
             </el-col>
+            <el-col :span="24" class="getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-input v-model="auditInformation.createdTime" disabled></el-input>
+                    
+                    </div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="auditInformation.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label> 
+                    <el-input v-model="auditInformation.modifiedTime" disabled></el-input>
+                    </div>
+                </div>                                  
+            </el-col>
         </el-row>
         <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
                 <el-col :span="24">
@@ -416,7 +432,13 @@
             expand:{
                 expandId_moduleParentId:[],//默认上级菜单树形展开id
                 expandId_Fn:[],//默认分配功能树形展开id
-            }
+            },
+             auditInformation:{//审计信息
+                createdBy:"",
+                createdTime:"",
+                modifiedBy:"",
+                modifiedTime:"",
+            },
         }
     },
     validators: {
@@ -493,6 +515,7 @@
             let _this=this;
              _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
+                console.log(res);
                 if(res.result.permissionDtos!=null&&res.result.permissionDtos.length>0){
                     _this.checked=res.result.permissionDtos;
                     _this.CancelChecked=res.result.permissionDtos;
@@ -514,6 +537,12 @@
                     "seq": res.result.seq,
                     "remark":res.result.remark,
                     'status':res.result.status
+                }
+                  _this.auditInformation={//审计信息
+                    createdBy:res.result.createdBy,
+                    createdTime:res.result.createdTime,
+                    modifiedBy:res.result.modifiedBy,
+                    modifiedTime:res.result.modifiedTime,
                 }
                 _this.item.id=res.result.moduleParentId;
                 _this.item.moduleName=res.result.moduleParentId_ModuleName;
@@ -777,6 +806,13 @@
                     // _this.addData.permissionDtos=_this.checked;//权限
                     _this.$axios.puts('/api/services/app/ModuleManagement/Update',_this.addData)
                     .then(function(res){
+                        // console.log(res);
+                          _this.auditInformation={//审计信息
+                            createdBy:res.result.createdBy,
+                            createdTime:res.result.createdTime,
+                            modifiedBy:res.result.modifiedBy,
+                            modifiedTime:res.result.modifiedTime,
+                        }
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.firstModify=false;
                         _this.secondModify=false;
