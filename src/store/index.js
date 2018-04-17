@@ -53,9 +53,9 @@ export default new vuex.Store({
         goodsFilesModify:{ name: 'goodsFilesModify', url: '/goodsFiles/goodsFilesModify/:id', parent: 'goodsFiles' } ,
         goodsFilesList:{ name: 'goodsFilesList', url: '/goodsFiles/goodsFilesList/:id', parent: 'goodsFiles' } ,
 
-        Record:{ name: 'Record', url: '/Record/commodityRecord/:id', parent: 'Record', default: '/Record/commodityRecord/:id' } , //商品档案
-        commodityRecord:{ name: 'commodityRecord', url: '/Record/commodityRecord/:id', parent: 'Record' } ,
-        commodityRecordDetails:{ name: 'commodityRecordDetails', url: '/Record/commodityRecordDetails/:id', parent: 'Record' } ,
+        // Record:{ name: 'Record', url: '/Record/commodityRecord/:id', parent: 'Record', default: '/Record/commodityRecord/:id' } , //商品档案
+        // commodityRecord:{ name: 'commodityRecord', url: '/Record/commodityRecord/:id', parent: 'Record' } ,
+        // commodityRecordDetails:{ name: 'commodityRecordDetails', url: '/Record/commodityRecordDetails/:id', parent: 'Record' } ,
 
         repository:{ name: 'repository', url: '/repository/repositoryList/:id', parent: 'repository', default: '/repository/repositoryList/:id' } , //仓库管理
         repositoryList:{ name: 'repositoryList', url: '/repository/repositoryList/:id', parent: 'repository' } ,

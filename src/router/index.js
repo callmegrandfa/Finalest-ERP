@@ -245,9 +245,9 @@ const goodsFilesDetail = () => import('../components/commodityManagement/goodsFi
 const goodsFilesList = () => import('../components/commodityManagement/goodsFiles/goodsFilesList')
 const goodsFilesModify = () => import('../components/commodityManagement/goodsFiles/goodsFilesModify')
 // 商品档案2
-const Record = () => import('../components/commodityManagement/Record')
-const commodityRecord = () => import('../components/commodityManagement/commodityRecord')
-const commodityRecordDetails = () => import('../components/commodityManagement/commodityRecordDetails')
+// const Record = () => import('../components/commodityManagement/Record')
+// const commodityRecord = () => import('../components/commodityManagement/commodityRecord')
+// const commodityRecordDetails = () => import('../components/commodityManagement/commodityRecordDetails')
 
 let redirectRouter = function(routerName) { //重定向
     // let activeRouter = store.state.activeRouter;
@@ -690,20 +690,20 @@ const routes = [
                 ],
 
             },
-            {
-                path: '/Record',
-                component: Record,
-                name: 'Record',
-                redirect: function () { //商品档案
-                    return redirectRouter('Record')
-                },
-                children:[
-                    { path: '/Record/commodityRecord/:id', component: commodityRecord, name:'commodityRecord'},
-                    { path: '/Record/goodsFilesDetail/:id', component: goodsFilesDetail, name:'goodsFilesDetail'},
-                    { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails, name:'commodityRecordDetails'},
-                ],
+            // {
+            //     path: '/Record',
+            //     component: Record,
+            //     name: 'Record',
+            //     redirect: function () { //商品档案
+            //         return redirectRouter('Record')
+            //     },
+            //     children:[
+            //         { path: '/Record/commodityRecord/:id', component: commodityRecord, name:'commodityRecord'},
+            //         { path: '/Record/goodsFilesDetail/:id', component: goodsFilesDetail, name:'goodsFilesDetail'},
+            //         { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails, name:'commodityRecordDetails'},
+            //     ],
 
-            },
+            // },
         ]
     },
 

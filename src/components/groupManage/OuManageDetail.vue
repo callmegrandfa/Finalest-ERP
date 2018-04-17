@@ -1818,9 +1818,14 @@ export default({
                    if(_this.Company){
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
-                        // _this.addData.basCompany=_this.basCompany;
+                        _this.addData.basCompany=_this.basCompany;
                     }
-                    // console.log(_this.addData)
+                    if(_this.Finance){
+                        _this.addData.Finance=_this.Finance;
+                    }
+                    if(_this.Business){
+                        _this.addData.Business=_this.Business;
+                    }
                     // _this.addData.basBusiness=_this.basBusiness;
                     // _this.addData.basFinance=_this.basFinance;
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
@@ -1941,8 +1946,15 @@ export default({
                    if(_this.Company){
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
-                        // _this.addData.basCompany=_this.basCompany;
+                        _this.addData.basCompany=_this.basCompany;
                     }
+                    if(_this.Finance){
+                        _this.addData.Finance=_this.Finance;
+                    }
+                    if(_this.Business){
+                        _this.addData.Business=_this.Business;
+                    }
+                    
                     
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                         _this.$store.state.url='/OuManage/OuManageDetail/default'
