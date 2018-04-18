@@ -41,12 +41,12 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                        :render-content="renderContent_companyOuId"
+                        :default-expanded-keys="expand_companyOuId"
                         :data="selectTreeCompany"
                         :props="selectPropsCompany"
                         :highlight-current="true"
                         node-key="id"
-                        default-expand-all
                         ref="tree"
                         :filter-node-method="filterNode_company"
                         :expand-on-click-node="false"
@@ -68,12 +68,12 @@
                             v-model="search_area">
                         </el-input>
                             <el-tree
-                            oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                            :render-content="renderContent_AreaId"
+                            :default-expanded-keys="expand_AreaId"
                             :data="selectTree_area"
                             :props="selectProps_area"
                             :highlight-current="true"
                             node-key="id"
-                            default-expand-all
                             ref="tree"
                             :filter-node-method="filterNode_area"
                             :expand-on-click-node="false"
@@ -100,11 +100,12 @@
             <el-col :span='4' class="border-left transfer_fixed" v-loading="treeLoading" id="ouListTree">
                 <vue-scroll :ops="$store.state.option">
                 <el-tree 
+                :render-content="renderContent_Ou"
+                :default-expanded-keys="expand_Ou"
                 :data="componyTree"
                 :props="defaultProps"
                 :highlight-current="true"
-                node-key="treeId"
-                default-expand-all
+                node-key="id"
                 :expand-on-click-node="false"
                 @node-click="nodeClick">
                 </el-tree>
@@ -327,7 +328,8 @@
                 row:{},//存储用户点击删除条目数据
                 choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
                 multipleSelection: [],//复选框选中数据
-//--------------确认删除开始-----------------             
+//--------------确认删除开始-----------------     
+                expand_AreaId:[],        
                 search_area:'',
                 selectTree_area:[
                 ],
@@ -341,12 +343,12 @@
                     label: 'name',
                     id:'id'
                 },
+                expand_companyOuId:[],      
                  selectPropsCompany:{
                     children: 'children',
                     label: 'ouFullname',
                     id:'id'
                    },
-                AreaType:1,//树形图的地区分类(1.业务地区.2行政地区)
 
                 tableLoading:false,
                 treeLoading:false,
@@ -368,7 +370,7 @@
                 tableSearchData:{},
                
                 tableData:[],
-
+                expand_Ou:[],
                 componyTree:  [
 
                 ],
@@ -511,7 +513,7 @@
                     // console.log(res);
                     _this.componyTree=res.result;
                     _this.treeLoading=false;
-                    _this.loadIcon()
+                    _this.expand_Ou=_this.defauleExpandTree(res.result,'id')
                },function(res){
                    _this.treeLoading=false;
                })
@@ -519,7 +521,7 @@
                 _this.$axios.gets('/api/services/app/OpAreaManagement/GetTree')
                 .then(function(res){
                     _this.selectTree_area=res.result;
-                    _this.loadIcon();
+                    _this.expand_AreaId=_this.defauleExpandTree(res.result,'id')
                 },function(res){
                 })
                 // //公司
@@ -527,7 +529,6 @@
                 //     .then(function(res){
                 //         console.log(res);
                 //         _this.selectTreeCompany=res.result;
-                //         _this.loadIcon();
                 //     },function(res){
                 //     })
             },
@@ -538,8 +539,7 @@
                 .then(function(res){
                  
                     _this.selectTreeCompany=res.result;
-                    //    console.log( _this.selectTreeCompany);
-                    _this.loadIcon();
+                    _this.expand_companyOuId=_this.defauleExpandTree(res.result,'id')
                 },function(res){
                 })
             },
@@ -721,7 +721,67 @@
                 let _this=this;
                 _this.page=1
                  _this.ajaxTable({Name:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
-            }
+            },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
+            renderContent_companyOuId(h, { node, data, store }){
+                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+            },
+            renderContent_AreaId(h, { node, data, store }){
+                if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }
+            },
+            renderContent_Ou(h, { node, data, store }){
+                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+            },
             
         },
     }

@@ -1,9 +1,9 @@
-<template>
+ <template>
      <div class="staff-infor-wrapper" style="float:left;background:#fff;width:100%;">
         <div id="bgc">
             <!-- 按钮组 -->
             <div class="btnBd">
-                <el-row >
+                <el-row class="fixed">
                     <el-col :span="24">
                         <button class="erp_bt bt_back" @click="isBack">
                                 <div class="btImg">
@@ -45,52 +45,158 @@
                     </el-col>
                 </el-row>
             </div>
-            <!-- 表单验证错误提示信息 -->
+             <!-- 表单验证错误提示信息 -->
             <el-row>
                 <el-col :span="24">
                     <div class="tipsWrapper">
                         <div class="errorTips">
                             <p class="msgDetail">错误提示：
                                 <span 
-                                :class="{block : !validation.hasError('addList.employeeCode')}">
-                                职员编码{{ validation.firstError('addList.employeeCode') }},
+                                :class="{block : !validation.hasError('addData.employeeCode')}">
+                                职员编码{{ validation.firstError('addData.employeeCode') }},
                                 </span>
                                 <span 
-                                :class="{block : !validation.hasError('addList.employeeName')}">
-                                职员名称{{ validation.firstError('addList.employeeName') }},
+                                :class="{block : !validation.hasError('addData.employeeName')}">
+                                职员名称{{ validation.firstError('addData.employeeName') }},
                                 </span>
                                 <span 
-                                :class="{block : !validation.hasError('addList.ouId')}">
-                                所属组织{{ validation.firstError('addList.ouId') }},
+                                :class="{block : !validation.hasError('addData.ouId')}">
+                                所属组织{{ validation.firstError('addData.ouId') }},
                                 </span>
                             </p>
                         </div>
                     </div>
                 </el-col>
             </el-row>
-
-           
-
-	        <!-- <el-row>
-                <el-col>
-                    <div class=tipsWrapper" name="employeeCode">
-                      <div class="errorTips" :class="{block : !validation.hasError('addList.employeeCode')}">
-                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.employeeCode') }}</p>
-                      </div>
-                    </div>
-                    <div class=tipsWrapper" name="employeeName">
-                      <div class="errorTips" :class="{block : !validation.hasError('addList.employeeName')}">
-                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.employeeName') }}</p>
-                      </div>
-                    </div>
-                    <div class=tipsWrapper" name="ouId">
-                      <div class="errorTips" :class="{block : !validation.hasError('addList.ouId')}">
-                          <p class="msgDetail">错误提示：{{ validation.firstError('addList.ouId') }}</p>
-                      </div>
+            <!-- form表单 -->
+            <el-row class="staff_detail_form">
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth"><label>
+                            <small>*</small>职员编码</label>
+                            <el-input @change="isChanged" v-model="addData.employeeCode" class="employeeCode"  :class="{redBorder : validation.hasError('addData.employeeCode')}"  @focus="showErrTips"></el-input>
+                        </div>
                     </div>
                 </el-col>
-            </el-row> -->
-             <!-- dialog数据变动提示(是否忽略更改) -->
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth"><label>
+                            <small>*</small>职员名称</label>
+                            <el-input @change="isChanged" v-model="addData.employeeName" class="employeeName"  :class="{redBorder : validation.hasError('addData.employeeName')}"  @focus="showErrTips"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small>*</small>所属组织</label>
+                            <el-select @change="isChanged" class="ouId" :class="{redBorder :           validation.hasError('addData.ouId')}" v-model="addData.ouId" placeholder=""  @focus="showErrTips">
+                            <el-input placeholder="输入关键字进行过滤" v-model="filterOu" class="selectSearch">
+                                </el-input>
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_ou" :props="selectProps_ou"
+                                                node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_ou"
+                                                :expand-on-click-node="false" @node-click="nodeClick_ou"
+                                                class="filter-tree">
+                                </el-tree>
+                                <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>    
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                           <label><small></small>手机号码</label>
+                            <el-input @change="isChanged" v-model="addData.mobile"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+                 <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>部门</label>
+                            <el-select @change="isChanged" v-model="addData.deptId">
+                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_depart" :props="selectProps_depart"
+                                        node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_Depart"
+                                        :expand-on-click-node="false" @node-click="nodeClick_depart"
+                                        class="filter-tree">
+                                        </el-tree>
+                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
+                                        </el-option>
+                            </el-select>
+                        </div>
+                    </div>    
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>性别</label>
+                            <el-select @change="isChanged" v-model="addData.sex">
+                                <el-option label="男" value="1"></el-option>
+                                <el-option label="女" value="2"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>生日</label>
+                            <!-- <el-input @change="isChanged" v-model="addData.birthday"></el-input> -->
+                            <el-date-picker
+                            @change="isChanged" 
+                            v-model="addData.birthday"
+                            type="date"
+                            placeholder="选择日期">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>所属店铺</label>
+                            <el-select @change="isChanged" v-model="addData.ShopId">
+                                <el-option v-for="item in selectData.shop" :label="item.shopName" :value="item.id" :key="item.id"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>职员类型</label>
+                            <el-checkbox-group @change="isChanged"   v-model="addData.employeeTypeIds">
+                                <el-checkbox v-for="item in selectData.staffType"  :label="item.itemValue" :key="item.itemValue">{{item.itemName}}</el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>状态</label>
+                            <el-select @change="isChanged" v-model="addData.status">
+                               <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="24">
+                    <div class="bgMarginAuto">
+                        <div class="bgcolor bgLongWidth">
+                            <label><small></small>备注</label>
+                           <el-input @change="isChanged" type="textarea" :rows="5" resize="none" v-model="addData.remark"></el-input>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+            <!-- 审计信息 -->
+            <auditInfo :auditData='timeData'></auditInfo>
+            <!-- ********************************************************** -->
+            <!-- dialog数据变动提示(是否忽略更改) -->
             <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
                 <template slot="title">
                     <span class="dialog_font">提示</span>
@@ -108,189 +214,63 @@
                 </span>
             </el-dialog>
             <!-- dialog -->
-            <!-- form表单 -->
-            <div class="staff_detail_form">
-                <el-row style="margin-top:20px">
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small>*</small>职员编码</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div>
-                            <el-input v-model="addList.employeeCode" class="employeeCode"  :class="{redBorder : validation.hasError('addList.employeeCode')}"  @focus="showErrTips"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small>*</small>职员名称</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div>
-                            <el-input v-model="addList.employeeName" class="employeeName"  :class="{redBorder : validation.hasError('addList.employeeName')}"  @focus="showErrTips"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small>*</small>所属组织</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div>
-                            <el-select class="ouId" :class="{redBorder :           validation.hasError('addList.ouId')}" v-model="addList.ouId" placeholder=""  @focus="showErrTips">
-                                <el-input
-                                    placeholder="输入关键字进行过滤"
-                                    v-model="filterOu" 
-                                    class="selectSearch">
-                                </el-input>
-                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_ou" :props="selectProps_ou"
-                                        node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_ou"
-                                        :expand-on-click-node="false" @node-click="nodeClick_ou"
-                                        class="filter-tree">
-                                </el-tree>
-                                <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouFullname" :value="item.id" :date="item.id">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small></small>手机号码</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div>
-                            <el-input v-model="addList.mobile"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small></small>部门</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div>
-                            <el-select v-model="addList.deptId">
-                                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_depart" :props="selectProps_depart"
-                                        node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_Depart"
-                                        :expand-on-click-node="false" @node-click="nodeClick_depart"
-                                        class="filter-tree">
-                                        </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
-                                        </el-option>
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small></small>性别</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div>
-                            <el-select v-model="addList.sex">
-                                <el-option label="男" value="1"></el-option>
-                                <el-option label="女" value="2"></el-option>
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small></small>生日</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div>
-                            <el-input v-model="addList.birthday"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small></small>所属店铺</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div >
-                            <el-select v-model="addList.ShopId">
-                                <el-option v-for="item in selectData.shop" :label="item.shopName" :value="item.id" :key="item.id"></el-option>
-                            </el-select>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small></small>职员类型</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div class="chePT">
-                            <el-checkbox-group v-model="addList.employeeTypeIds">
-                                <el-checkbox v-for="item in employeeIdoptions"  :label="item.label" :key="item.label">{{item.text}}</el-checkbox>
-                            </el-checkbox-group>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small></small>状态</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div >
-                            <el-select v-model="addList.status">
-                               <el-option v-for="item in selectData.Status001" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
-                                </el-option>
-                            </el-select>
-                           
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
-                        <div class="bgcolor smallBgcolor">
-                            <label><small></small>备注</label>
-                        </div>
-                    </el-col>
-                    <el-col :span="18">
-                        <div>
-                            <el-input type="textarea" :rows="5" resize="none" v-model="addList.remark"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
-            </div>
+          
+            
+            <!-- 数据提交有误的数据提示框 -->
+            <submitError :submitData="submitData"></submitError> 
         </div>
     </div>
 </template>
-<script>
+ <script>
+    import auditInfo from '../Common/auditInfo';
+    import submitError from '../Common/submitError';
     export default{
         name:'staffDetail',
         data(){
             return { 
+                // ----------------提示信息
+                timeData:{//审计信息
+                    "createdBy":this.$store.state.name,
+                    "createdTime": this.GetDateTime(),
+                    "modifiedBy": this.$store.state.name,
+                    "modifiedTime": this.GetDateTime(),
+                },
+                submitData:{//数据提交有误提示框参数
+                    submitErrorMessage:false,
+                    detail_message_ifShow: false,
+                    response: {
+                        details: "",
+                        message: "",
+                        validationErrors: []
+                    },
+                },
+                // -------------增加的数据参数
+                addData:{// --------------增加数据
+                    "ouId": null,
+                    "employeeCode": "",
+                    "employeeName": "",
+                    "mobile": "",
+                    "deptId": null,
+                    "sex": null,
+                    "birthday": "",
+                    "discountStart": 0,
+                    "discountEnd": 0,
+                    "shopId": null,
+                    "remark": "",
+                    "employeeTypeIds": [],
+                    "status": 1,
+                    "id": 0,
+                },
+                isTrue:false,//是否禁用按钮
                 // --------------下拉框树形控件数据
-                ouId:null,
                 selectData:{//select下拉框数据
                     ou:[],//组织
                     depart:[],//部门
                     shop:[],//部门
                     Status001:[],//启用状态
+                    staffType:[],//启用状态
                 },
+                ouId:null,
                 filterOu:'',
                 selectTree_ou:[],
                 selectProps_ou: {
@@ -305,42 +285,27 @@
                     id:'id'
                 },
                 // -----------------------------
-                addList:{// --------------增加数据
-                        "ouId": null,
-                        "employeeCode": "",
-                        "employeeName": "",
-                        "mobile": "",
-                        "deptId": null,
-                        "sex": null,
-                        "birthday": "",
-                        "discountStart": 0,
-                        "discountEnd": 0,
-                        "shopId": 0,
-                        "remark": "",
-                        "employeeTypeIds": [],
-                        "status": 1,
-                        "id": 0
-                },
+               
                 employeeIdoptions:[//------职员类型--------
                     { label: '1',text: '采购'},
                     { label: '2',text: '业务'}, 
                     { label: '3',text: '仓库'}, 
                     { label: '4',text: '店员'}, 
                 ],
-                isTrue:false,
                 isUpdate:false,
+                
                 dialogUpdateConfirm:false,
                 id:'',
             }                                                        
         },
         validators: {
-            'addList.employeeCode': function (value) {//职员编码
+            'addData.employeeCode': function (value) {//职员编码
                  return this.Validator.value(value).required().maxLength(50)
                     },
-            'addList.employeeName': function (value) {//职员名称
+            'addData.employeeName': function (value) {//职员名称
                  return this.Validator.value(value).required().maxLength(50)
                     },
-            'addList.ouId': function (value) {//所属组织
+            'addData.ouId': function (value) {//所属组织
                 return this.Validator.value(value).required().integer();
                     },
         },
@@ -353,29 +318,52 @@
             this.getDefault();
         },
         // watch:{
-        //     addList:{
-        //         handler: function (val, oldVal) {
-        //             let _this = this;
-        //             if(!_this.isUpdate){
-        //                 _this.isUpdate = true;
-        //             }
-        //         },
-        //         deep: true,
-        //     }
+        //    filterOu(val) {
+        //         this.$refs.tree.filter(val);
+        //     },
         // },
         methods: {
-            getDefault(){// 默认用户所属组织
+            // -------------------默认值
+            getDefault(){// ------默认用户所属组织
                 let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(rsp=>{ 
-                    _this.addList.ouId=rsp.result.id;
+                    _this.addData.ouId=rsp.result.id;
                 });
-
                 this.GetDateTime();//获取当前时间
             },
             GetDateTime() {//获取当前时间
                 let date=new Date();
-                return `${date.getFullYear()}+'-'+${date.getMonth()+1}+'-'+${date.getDate()}`;
-            }, 
+                return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+            },
+            // -----------------提示框
+            getErrorMessage(message,details,validationErrors){//（数据提交有误详细参数）将rsp的值赋值给response对象 
+                    let _this=this;
+                    _this.submitData.response.message='';
+                    _this.submitData.response.details='';
+                    _this.submitData.response.validationErrors=[];
+                    if(details!=null && details){
+                        _this.submitData.response.details=details;
+                    }
+                    if(message!=null && message){
+                        _this.submitData.response.message=message;
+                    }
+                    if(message!=null && message){
+                        _this.submitData.response.validationErrors=validationErrors;
+                    }
+            },
+            showErrTips(e){// 表单错误提示信息
+                $('.tipsWrapper').css({display:'none'});
+            },
+            open(tittle,iconClass,className) {// 成功的提示框提示框
+                this.$notify({
+                position: 'bottom-right',
+                iconClass:iconClass,
+                title: tittle,
+                showClose: false,
+                duration: 3000,
+                customClass:className
+                });
+            },
             //---------------------------获取下拉框选项数据
             getSelectData(){//获取下拉选项数据
                 let _this=this;
@@ -390,7 +378,10 @@
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
                 _this.selectData.Status001=res.result;// 启用状态
                 });
-                _this.getSelectDepart();
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'employeeType'}).then(function(res){ 
+                _this.selectData.staffType=res.result;// 职员类型
+                });
+                _this.getSelectDepart();//所属部门
             },
             getSelectDepart(){// 获取所属部门下拉框数据
                 let _this=this;
@@ -403,6 +394,7 @@
                 );
             },
             //---------------------------获取树形控件数据
+            // 所属组织
             loadTree(){// 加载所属组织树形控件
                 let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList')
@@ -412,7 +404,7 @@
                 },function(res){
                 })
             },
-            loadIcon(){
+            loadIcon(){//加载文件夹图标
                 let _this=this;
                 _this.$nextTick(function () {
                     $('.preNode').remove();   
@@ -427,14 +419,11 @@
             },
             filterNode_ou(value, data) {//根据关键字过滤节点
                 if (!value) return true;
-                return data.ouFullname.indexOf(value) !== -1;
+                return data.ouName.indexOf(value) !== -1;
             },
             nodeClick_ou(data,node,self){//所属组织树形控件的回调
                 let _this=this;
                 // console.log(data);
-                // console.log(data.id);
-                _this.ouId=data.id;
-                // console.log(_this.ouId);
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
                         $(this).click()
@@ -443,16 +432,19 @@
                 _this.getSelectDepart();
                 _this.loadDepartTree();
             },
-            // --------------------------------------
+            // 所属部门
             loadDepartTree(){// 加载所属部门树形控件
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId})
-                .then(function(res){//部门
-                    // console.log(res);
-                    _this.selectTree_depart=res.result;
-                    _this.loadIcon();
-                },function(res){
-                })
+                .then(
+                    function(res){//部门
+                        // console.log(res);
+                        _this.selectTree_depart=res.result;
+                        _this.loadIcon();
+                    },
+                    function(res){
+                    }
+                )
             },
             filterNode_Depart(value, data) {//根据关键字过滤节点
                 if (!value) return true;
@@ -471,6 +463,9 @@
                 _this.loadDepartTree();
             },
             // -----------------按钮组功能
+            isChanged (){//判断是否修改过信息
+                this.isUpdate=true;
+            },
             save(){// 保存
                 let _this=this;
                 $('.tipsWrapper').css({display:'block'})
@@ -478,16 +473,20 @@
                     function (success) {
                         if (success) {
                             $('.tipsWrapper').css({display:'none'})
-                            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
+                            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addData).then(
                                 rsp=>{
-                                    // console.log(_this.addList);
-                                    // console.log(rsp);
+                                    _this.addData.id=rsp.result.id;
+                                    _this.$store.state.url='/staff/staffModify/'+rsp.result.id
+                                    _this.$router.push({path:_this.$store.state.url})
                                     _this.open('保存成功','el-icon-circle-check','successERP');
                                     _this.isTrue=false;
                                     _this.isUpdate=false;
                                     },
-                                    res=>{
-                                         _this.open('保存失败','el-icon-error','faildERP');
+                                    rsp=>{
+                                        if(rsp && rsp!=''){ 
+                                            _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                        }
+                                        _this.submitData.submitErrorMessage=true;
                                     }
                             )
                         }
@@ -516,30 +515,25 @@
             },
             saveAdd(){// 保存并新增
                 let _this=this;
+                $('.tipsWrapper').css({display:'block'})
                 _this.$validate().then(
                     function (success) {
                         if (success) {
-                            _this.addList.employeeCode=_this.form.employeeCode;
-                            _this.addList.employeeName=_this.form.employeeName;
-                            _this.addList.ouId=_this.form.ouId;
-                            _this.addList.mobile=_this.form.mobile;
-                            _this.addList.deptId=_this.form.department;
-                            _this.addList.sex=_this.form.sex;
-                            _this.addList.birthday=_this.form.birthday;
-                            _this.addList.shopId=_this.form.shopName;
-                            _this.addList.employeeTypeIds=_this.form.employeeTypes;
-                            _this.addList.remark=_this.form.remark;
-                            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addList).then(
-                                            rsp=>{
-                                                // console.log(rsp);
-                                                _this.open('保存成功','el-icon-circle-check','successERP');
-                                                _this.reset();
-                                                _this.isUpdate=false;
-                                                
-                                            },
-                                            res=>{
-                                                _this.open('保存失败','el-icon-error','faildERP');
-                                            }
+                            $('.tipsWrapper').css({display:'none'})
+                            _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addData).then(
+                                rsp=>{
+                                    _this.$store.state.url='/staff/staffDetail/default'
+                                    _this.$router.push({path:_this.$store.state.url})
+                                    _this.open('保存成功','el-icon-circle-check','successERP');
+                                    _this.reset();
+                                    _this.isUpdate=false;
+                                },
+                                rsp=>{
+                                    if(rsp && rsp!=''){ 
+                                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                    }
+                                    _this.submitData.submitErrorMessage=true;
+                                }
                             )
                         }
                       
@@ -547,27 +541,8 @@
                 );
                
             },
-           
-            // --------------------------------------------
-            // 错误提示信息
-            showErrTips(e){
-                $('.tipsWrapper').css({display:'none'});
-            },
-           
-            // 成功的提示框
-            open(tittle,iconClass,className) {//提示框
-                this.$notify({
-                position: 'bottom-right',
-                iconClass:iconClass,
-                title: tittle,
-                showClose: false,
-                duration: 3000,
-                customClass:className
-                });
-            },
             // -----------------按钮组功能
-            
-            reset(){// 重新验证并设置值
+            reset(){// 重置表单值与表单验证
                     this.form.employeeCode='';
                     this.form.employeeName='';
                     this.form.ouId='';
@@ -580,16 +555,21 @@
                     this.validation.reset();               
             },
         },
-       
+        components:{
+            auditInfo,
+            submitError,
+
+        },
     }
 </script>
 
 
  <style scoped>
-    .btnBd{
+  .staff-infor-wrapper #bgc  .btnBd .el-row:first-child{
         /* height: 48px; */
         padding: 5px;
         border-bottom: 1px solid #e4e4e4 !important;
+        background-color: #fff;
     }
     .block{
         display: none;
@@ -598,19 +578,16 @@
         position: relative;
     }
     .staff_detail_form{
-        padding-left: 30%;
-        width: 30%;
+        /* padding-left: 30%;
+        width: 30%; */
         margin-bottom: 20px;
-    }
-    .staff_detail_form .chePT{
-        padding-top:5px;
+        margin-top: 20px;
     }
     .staff-infor-wrapper .smallBgcolor .el-input{
         width: 100% !important ;
     }
     .staff-infor-wrapper .bgcolor label{
-        width: 100% !important ;
-        margin-right: 0; 
+        margin-right: 10px;
     }
     .smallBgcolor .el-input--suffix{
         width: 100% !important ;
@@ -629,19 +606,29 @@
 
 
 
-<style>
-/*设置表单字体与高度*/
-.staff_detail_form .el-select{
-    display: block !important ;
-}
-.staff-infor-wrapper .staff_detail_form .redBorder .el-input__inner{
-  border-color: #f66;
-}
-.staff-infor-wrapper .staff_detail_form .el-input__inner{
-    height: 35px !important;
-    font-size:12px;
-    border: 1px solid #dcdfe6 ;
-}
+ <style>
+    /*设置表单字体与高度*/
+    .staff_detail_form .el-select{
+        display: block !important ;
+    }
+    .staff-infor-wrapper .staff_detail_form .redBorder .el-input__inner{
+    border-color: #f66;
+    }
+    .staff-infor-wrapper .staff_detail_form .el-input__inner{
+        height: 35px !important;
+        font-size:12px;
+        border: 1px solid #dcdfe6 ;
+    }
+    /* 重写表单样式 */
+    .staff-infor-wrapper .bgcolor.bgLongWidth label {
+        width: 70px;
+    }
+    .staff-infor-wrapper .bgcolor.bgLongWidth .el-checkbox+.el-checkbox {
+        margin-left: 5px;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+    }
 </style>
 
 

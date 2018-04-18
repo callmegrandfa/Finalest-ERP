@@ -223,7 +223,10 @@
             "status": 1
         },
         auditInformation:{
-
+            createdTime:this.GetDateTime(),//创建时间
+            createdBy:this.$store.state.name,//创建人
+            modifiedTime:this.GetDateTime(),//修改人
+            modifiedBy:this.$store.state.name//修改时间
         },
         selectData:{//select数据
             Status001:[],//启用状态
@@ -431,8 +434,6 @@
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
-            }else{
-                _this.Cancel()
             }
         },
         sureDoing(){
@@ -489,6 +490,23 @@
                     );
                 }
         },
+          GetDateTime: function () {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+        }
 }
 
 })

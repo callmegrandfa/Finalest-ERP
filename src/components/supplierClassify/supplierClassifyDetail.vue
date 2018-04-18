@@ -1,7 +1,7 @@
  <template>
     <div class="supClasDetail-wrapper">
          <!-- 按钮组 -->
-        <el-row>
+        <el-row class="fixed">
             <el-col :span="24">
                 <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
@@ -57,9 +57,9 @@
                 <div class="tipsWrapper">
                     <div class="errorTips">
                         <p class="msgDetail">错误提示：
-                            <span :class="{block : !validation.hasError('addData.classParentId')}">
+                            <!-- <span :class="{block : !validation.hasError('addData.classParentId')}">
                                 上级供应商分类{{ validation.firstError('addData.classParentId') }},
-                            </span>
+                            </span> -->
                             <span :class="{block : !validation.hasError('addData.classCode')}">
                                 供应商分类编码{{ validation.firstError('addData.classCode') }},
                             </span>
@@ -98,39 +98,23 @@
                     </div>
                 </el-col>
         </el-row> -->
-        <!-- dialog数据变动提示(是否忽略更改) -->
-        <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
-                <template slot="title">
-                    <span class="dialog_font">提示</span>
-                </template>
-                <el-col :span="24" style="position: relative;">
-                    <el-col :span="24">
-                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
-                    </el-col>
-                </el-col>
-                <!--  -->
-                <span slot="footer">
-                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
-                    <button class="dialog_footer_bt dialog_font" @click="dialogUpdateConfirm = false">取 消</button>
-                </span>
-        </el-dialog>
-
         <!-- 表单 -->
         <el-row>
             <div class="supClasDetail-form-wrapper pt15">
                 <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
-                            <label><small>*</small>上级供应商分类</label>
-                            <el-select filterable  
+                            <!-- <label><small>*</small>上级供应商分类</label> -->
+                            <label><small></small>上级供应商分类</label>
+                            <el-select clearable filterable  
                             class="classParentId"
+                            @change="isChanged"
                             @focus="showErrTips"
                             placeholder=""
                             v-model="addData.classParentId"
-                            :class="{redBorder : validation.hasError('addData.classParentId')}">
+                            >
                                 <!-- 树形控件 -->
-                                <el-tree
+                                <!-- <el-tree
                                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                     :highlight-current="true"
                                     :data="supplierClasTree"
@@ -140,11 +124,31 @@
                                     ref="tree"
                                     :expand-on-click-node="false"
                                     @node-click="nodeClick"
+                                    > -->
+                                    <el-input
+                                    placeholder="输入关键字进行过滤"
+                                    v-model="filterText" 
+                                    class="selectSearch">
+                                    </el-input>
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    <el-tree
+                                    :render-content="renderContent_componyTree"
+                                    :highlight-current="true"
+                                    :data="supplierClasTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    :default-expanded-keys="expandId"
+                                    ref="tree"
+                                    :filter-node-method="filterNode"
+                                    :expand-on-click-node="false"
+                                    @node-click="nodeClick"
                                     >
                                 </el-tree>
                                 <!-- <el-option v-for="item in selectData.upSupplierClass" :key="item.id" :label="item.className" :value="item.id">
                                 </el-option> -->
-                                <el-option v-show="false" :key="count.Id" :label="count.className" :value="count.Id"   id="supClaDetail_confirmSelect">
+                                <!-- <el-option v-show="false" :key="count.Id" :label="count.className" :value="count.Id"   id="supClaDetail_confirmSelect">
+                                </el-option> -->
+                                <el-option v-show="false"  v-for="item in selectData.upSupplierClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
                                 </el-option>
                             </el-select>
                         </div>
@@ -155,6 +159,7 @@
                         <div class="bgcolor bgLongWidth">
                         <label><small>*</small>供应商分类编码</label>
                             <el-input 
+                            @change="isChanged"
                             class="classCode" 
                             v-model="addData.classCode"
                             @focus="showErrTips"
@@ -167,6 +172,7 @@
                         <div class="bgcolor bgLongWidth">
                         <label><small>*</small>供应商分类名称</label>
                             <el-input 
+                            @change="isChanged"
                             class="className" 
                             v-model="addData.className"
                             @focus="showErrTips"
@@ -180,6 +186,7 @@
                         <label>备注</label>
                             <el-input
                             class="remark" 
+                            @change="isChanged"
                             v-model="addData.remark"
                             type="textarea"
                             :autosize="{ minRows: 4, maxRows: 4}"
@@ -196,6 +203,7 @@
                             class="status" 
                             placeholder=""
                             @focus="showErrTips"
+                            @change="isChanged"
                             v-model="addData.status"
                             :class="{redBorder : validation.hasError('addData.status')}"
                             >
@@ -233,13 +241,35 @@
                
             </div>
         </el-row>
-        <auditInfo :auditData='timeData'></auditInfo>   
+        <!-- ********************************************** -->
+        <!-- dialog数据变动提示(是否忽略更改) -->
+        <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
+                <template slot="title">
+                    <span class="dialog_font">提示</span>
+                </template>
+                <el-col :span="24" style="position: relative;">
+                    <el-col :span="24">
+                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    </el-col>
+                </el-col>
+                <!--  -->
+                <span slot="footer">
+                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                    <button class="dialog_footer_bt dialog_font" @click="dialogUpdateConfirm = false">取 消</button>
+                </span>
+        </el-dialog>
+        <!-- 审计信息 -->
+        <auditInfo :auditData='timeData'></auditInfo>  
+        <!-- 数据提交有误的数据提示框 -->
+        <submitError :submitData="submitData"></submitError>  
 
     </div>
 </template>
 
  <script>
- import auditInfo from '../Common/auditInfo';
+    import auditInfo from '../Common/auditInfo';
+    import submitError from '../Common/submitError';
     export default {
         name: "supplierClassifyDetail",
         data(){
@@ -261,17 +291,28 @@
                     "status": 1,
                     "remark": "",
                 },  
-                timeData:{
+                timeData:{//审计信息参数
                     "createdBy" :this.$store.state.name,
                     "createdTime"  : this.GetDateTime(),
                     "modifiedBy"  : this.$store.state.name,
                     "modifiedTime"  : this.GetDateTime(),
-                },         
+                },  
+                submitData:{//数据提交有误提示框参数
+                    submitErrorMessage:false,
+                    detail_message_ifShow: false,
+                    response: {
+                        details: "",
+                        message: "",
+                        validationErrors: []
+                    },
+                },       
                 selectData:{ //  下拉框的选项数据
                     Status001:[],//启用状态
                     upSupplierClass:[],// 上级供应商分类
                 },
                  // --------------------树形控件数据
+                 expandId:[],//默认展开树节点
+                 filterText:'',//过滤节点的关键字
                  supplierClasTree:[],
                  defaultProps: {
                     children: 'childNodes',
@@ -280,7 +321,7 @@
                 },
                 treeNode:{
                     Id:'',
-                    className:'',
+                    className:'999999',
                 },
                 // ----------提示框信息
                 dialogUpdateConfirm:false,
@@ -293,9 +334,9 @@
             this.getDefault();
         },
         validators: {
-            'addData.classParentId': function (value) {//上级供应商分类
-                return this.Validator.value(value).required().maxLength(50)
-            },
+            // 'addData.classParentId': function (value) {//上级供应商分类
+            //     return this.Validator.value(value).required().maxLength(50)
+            // },
             'addData.classCode': function (value) {//供应商分类编码
                 return this.Validator.value(value).required().maxLength(50)
             },
@@ -306,50 +347,50 @@
                 return this.Validator.value(value).required().integer();
             },
         },
-        computed:{
-            count () {
-                return this.treeNode;
-                },
-        },
-        watch:{
-            addData:{
-                handler: function (val, oldVal) {
-                    let _this = this;
-                    // console.log("数据改变了");
-                    if(!_this.isUpdate){
-                        _this.isUpdate = !_this.isUpdate;
-                        // console.log(_this.isUpdate);
-                        
-                    }
-                },
-                deep: true,
+        // computed:{
+        //     count () {
+        //         return this.treeNode;
+        //         },
+        // },
+        watch: {
+            filterText(val) {
+                this.$refs.tree.filter(val);
             }
         },
         methods:{
             getDefault(){// 获取默认值
                 let _this=this;
+                if(_this.$route.params.id!="default"){
+                    _this.addData.classParentId=parseInt(_this.$route.params.id);
+                    // _this.treeNode.className = '999999';
+                    // _this.treeNode.Id=_this.$route.params.id;
+                    // console.log(_this.$route.params.name)
+                    // alert(1)
+                }
                 // console.log(this.$route.params);
-                _this.$axios.gets('/api/services/app/ContactClassManagement/Get',{Id:_this.$route.params.upParentId}).then(
-                    rsp=>{
-                        // console.log("数据呢");
-                        _this.treeNode.className=rsp.result.className;
-                        _this.treeNode.Id=rsp.result.id;
-                        console.log(_this.treeNode.Id);
-                        console.log(_this.treeNode.className);
-                    }
-                )
+                // _this.$axios.gets('/api/services/app/ContactClassManagement/Get',{Id:_this.$route.params.upParentId}).then(
+                //     rsp=>{
+                //         // console.log("数据呢");
+                //         _this.treeNode.className=rsp.result.className;
+                //         _this.treeNode.Id=rsp.result.id;
+                //         console.log(_this.treeNode.Id);
+                //         console.log(_this.treeNode.className);
+                //     }
+
+                // )
                 // _this.addData.classParentId=_this.$route.params.upParentId;
                
                 // _this.treeNode.Id=_this.$route.params.upParentId;
                 // console.log(_this.treeNode.className);
                 // console.log(_this.treeNode.Id);
+
                 _this.GetDateTime();//获取当前时间
             },
             GetDateTime() {//获取当前时间
                 let date=new Date();
                 return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
             },          
-            // 提示框
+            // ------------------------提示框
             open(tittle,iconClass,className) {//成功的提示框
                 this.$notify({
                 position: 'bottom-right',
@@ -360,6 +401,21 @@
                 customClass:className
                     });
             },
+            getErrorMessage(message,details,validationErrors){//将rsp的值赋值给response对象 
+                let _this=this;
+                _this.submitData.response.message='';
+                _this.submitData.response.details='';
+                _this.submitData.response.validationErrors=[];
+                if(details!=null && details){
+                    _this.submitData.response.details=details;
+                }
+                if(message!=null && message){
+                    _this.submitData.response.message=message;
+                }
+                if(message!=null && message){
+                    _this.submitData.response.validationErrors=validationErrors;
+                }
+            },
             showErrTips(e){// 表单错误提示信息
                 $('.tipsWrapper').css({display:'none'});
             },
@@ -368,7 +424,13 @@
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
                     // 启用状态
                     _this.selectData.Status001=res.result;
-                })
+                });
+                _this.$axios.gets('/api/services/app/ContactClassManagement/GetNoteList',{Id:0,ContactOwner:2,SkipCount:0,MaxResultCount:100}).then(function(res){ 
+                    // 上级供应商分类
+                    _this.selectData.upSupplierClass=res.result.items;
+                    // console.log(res.result.items);
+                    
+                });
             },
             //---------------按钮组功能 
             goback() {//返回
@@ -388,19 +450,18 @@
                         $('.tipsWrapper').css({display:'none'});
                             _this.$axios.posts('/api/services/app/ContactClassManagement/Create',_this.addData).then(
                                 rsp=>{
-                                    _this.open('保存成功','el-icon-circle-check','successERP'); 
-                                    // console.log(rsp.result);
-                                    _this.$axios.gets("/api/services/app/ContactClassManagement/Get", {
-                                        id: rsp.result.id}).then(
-                                            rsp=>{
-                                            console.log(rsp.result);
-                                            _this.addData=rsp.result;
-                                            // _this.isDisabled=false;
-                                            _this.isAdd=false;
-                                            })
+                                    _this.addData.id=rsp.result.id;
+                                    _this.$store.state.url='/supplierClassify/supplierClassifyModify/'+rsp.result.id
+                                    _this.$router.push({path:_this.$store.state.url})
+                                    _this.open('保存成功','el-icon-circle-check','successERP');
+                                    
                                     },
                                 rsp=>{   
-                                    _this.open('保存失败','el-icon-error','faildERP');
+                                    // _this.open('保存失败','el-icon-error','faildERP');
+                                    if(rsp && rsp!=''){ 
+                                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                    }
+                                    _this.submitData.submitErrorMessage=true;
                                 }
                             )
                         }
@@ -409,16 +470,22 @@
             },
             saveAdd(){ // 保存并新增
                 let _this=this;
+                    $('.tipsWrapper').css({display:'block'})
                     _this.$validate().then(
                         function (success) {
                             if (success) {
+                                $('.tipsWrapper').css({display:'none'});
                                 _this.$axios.posts('/api/services/app/ContactClassManagement/Create',_this.addData).then(
                                                 rsp=>{
                                                     _this.reset();
                                                     _this.open('保存成功','el-icon-circle-check','successERP');
+                                                    _this.isUpdate=false;
                                                 },
                                                 rsp=>{
-                                                    _this.open('保存失败','el-icon-error','faildERP');
+                                                   if(rsp && rsp!=''){ 
+                                                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                                    }
+                                                    _this.submitData.submitErrorMessage=true;
                                                 }
                                 )
                             }
@@ -426,6 +493,9 @@
                     );
             },
             // -----------------取消与返回功能
+            isChanged (){//判断是否修改过信息
+                this.isUpdate=true;
+            },
             cancel(){// 取消
                 this.isBack();
             },
@@ -446,38 +516,92 @@
             },
             // -----------------取消与返回功能完
             // ----------树形控件相关----------
-            loadIcon(){//添加文件夹图标
-                let _this=this;
-                _this.$nextTick(function () {
-                    $('.preNode').remove();   
-                    $('.el-tree-node__label').each(function(){
-                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                        }else{
-                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                        }
-                    })
-                })
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
             },
+            renderContent_componyTree(h, { node, data, store }){
+              if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }else{
+                  return (
+                      <span class="el-tree-node__label" data-id={data.id}>
+                      <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                          {data.className}
+                      </span>
+                  );
+              }
+            },  
+            // loadIcon(){//添加文件夹图标
+            //     let _this=this;
+            //     _this.$nextTick(function () {
+            //         $('.preNode').remove();   
+            //         $('.el-tree-node__label').each(function(){
+            //             if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+            //                 $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+            //             }else{
+            //                 $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+            //             }
+            //         })
+            //     })
+            // },
             loadTree(){//获取树形控件数据
                 let _this=this;
                 _this.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:2}).then(
                     rsp=>{
                     // console.log(rsp);
                      _this.supplierClasTree=rsp;
-                     _this.selectData.upSupplierClass=rsp;
                     // console.log(_this.supplierClasTree)
-                    _this.loadIcon();
+                    // _this.loadIcon();
+                    _this.expandId=_this.defauleExpandTree(rsp,'id')
+                    _this.loadCheckSelect('classParentId',_this.addData.classParentId)
                })
             },
-            nodeClick(data) {//点击树形控件节点时的回调
+            filterNode(value, data) {//过滤节点
+                // console.log(value);
+                // console.log(data);
+                if (!value) return true;
+                return data.className.indexOf(value) !== -1;
+                // this.nodeClick(data);
+            },
+            loadCheckSelect(selectName,key){//默认选中节点
+                let _this=this;
+                // console.log(selectName,key)
+                _this.$nextTick(function () { 
+                    // console.log($('.'+selectName+' .el-tree-node__label'))
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                    if($(this).attr('data-id') == key){
+                            $(this).click()
+                            // console.log(1)
+                        }
+                    })
+                })
+            },
+            nodeClick(data,node,self) {//点击树形控件节点时的回调
                  let _this=this;
                 //  console.log(data);
-                _this.treeNode.Id=data.id;
-                _this.treeNode.className=data.className;
-                _this.$nextTick(function(){
-                    $('#supClaDetail_confirmSelect').click()
+                // console.log(self.$el);
+                  $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
                 })
+                //  console.log(data);
+                // _this.treeNode.Id=data.id;
+                // _this.treeNode.className=data.className;
+                // _this.$nextTick(function(){
+                //     $('#supClaDetail_confirmSelect').click()
+                // });
             },
             // 重新验证并设置值
             reset(){
@@ -491,6 +615,7 @@
         },
         components:{
             auditInfo,
+            submitError,
 
         },
     }
@@ -509,6 +634,7 @@
     .supClasDetail-wrapper .el-row:first-child{
         padding: 7px 0;
         border-bottom: 1px solid #e4e4e4;
+        background-color: #fff;
     }
     .supClasDetail-wrapper .el-row:last-child{
         padding-bottom: 15px;

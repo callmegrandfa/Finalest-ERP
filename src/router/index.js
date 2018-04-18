@@ -245,9 +245,13 @@ const goodsFilesDetail = () => import('../components/commodityManagement/goodsFi
 const goodsFilesList = () => import('../components/commodityManagement/goodsFiles/goodsFilesList')
 const goodsFilesModify = () => import('../components/commodityManagement/goodsFiles/goodsFilesModify')
 // 商品档案2
-const Record = () => import('../components/commodityManagement/Record')
-const commodityRecord = () => import('../components/commodityManagement/commodityRecord')
-const commodityRecordDetails = () => import('../components/commodityManagement/commodityRecordDetails')
+// const Record = () => import('../components/commodityManagement/Record')
+// const commodityRecord = () => import('../components/commodityManagement/commodityRecord')
+// const commodityRecordDetails = () => import('../components/commodityManagement/commodityRecordDetails')
+
+//类目属性规格
+const attributeSpecification = () => import('../components/commodityManagement/attributeSpecification/attributeSpecification')
+const attributeSpecificationDetail = () => import('../components/commodityManagement/attributeSpecification/attributeSpecificationDetail')
 
 let redirectRouter = function(routerName) { //重定向
     // let activeRouter = store.state.activeRouter;
@@ -690,17 +694,29 @@ const routes = [
                 ],
 
             },
+            // {
+            //     path: '/Record',
+            //     component: Record,
+            //     name: 'Record',
+            //     redirect: function () { //商品档案
+            //         return redirectRouter('Record')
+            //     },
+            //     children:[
+            //         { path: '/Record/commodityRecord/:id', component: commodityRecord, name:'commodityRecord'},
+            //         { path: '/Record/goodsFilesDetail/:id', component: goodsFilesDetail, name:'goodsFilesDetail'},
+            //         { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails, name:'commodityRecordDetails'},
+            //     ],
+
+            // },
             {
-                path: '/Record',
-                component: Record,
-                name: 'Record',
-                redirect: function () { //商品档案
-                    return redirectRouter('Record')
+                path: '/attributeSpecification',
+                component: attributeSpecification,
+                name: 'attributeSpecification',
+                redirect: function () { //类目属性规格
+                    return redirectRouter('attributeSpecification')
                 },
                 children:[
-                    { path: '/Record/commodityRecord/:id', component: commodityRecord, name:'commodityRecord'},
-                    { path: '/Record/goodsFilesDetail/:id', component: goodsFilesDetail, name:'goodsFilesDetail'},
-                    { path: '/Record/commodityRecordDetails/:id', component: commodityRecordDetails, name:'commodityRecordDetails'},
+                    { path: '/attributeSpecification/attributeSpecificationDetail/:id', component: attributeSpecificationDetail, name:'attributeSpecificationDetail'},
                 ],
 
             },

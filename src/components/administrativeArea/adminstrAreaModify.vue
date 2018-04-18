@@ -1,7 +1,7 @@
-<template>
+ <template>
     <div class="admstr-modify-wrapper">
        <!-- 按钮组 -->
-        <el-row>
+        <el-row class="fixed">
             <el-col :span="24">
                 <button @click="isBack" class="erp_bt bt_back">
                     <div class="btImg">
@@ -17,7 +17,7 @@
                     <span class="btDetail">保存</span>
                 </button>
 
-                <button @click="cancel" class="erp_bt bt_cancel" :class="{erp_fb_bt:!update}"  :disabled="!update">
+                <button @click="isCancel" class="erp_bt bt_cancel" :class="{erp_fb_bt:!update}"  :disabled="!update">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -47,29 +47,6 @@
                 </button>
             </el-col>
         </el-row>
-        <!-- 表单验证的错误提示信息 -->
-        <el-row>
-            <el-col :span="24">
-                <div class="tipsWrapper">
-                    <div class="errorTips">
-                        <p class="msgDetail">错误提示：
-                            <span :class="{block : !validation.hasError('addData.areaParentId')}">
-                                上级地区{{ validation.firstError('addData.areaParentId') }},
-                            </span>
-                            <span :class="{block : !validation.hasError('addData.areaCode')}">
-                                地区编码{{ validation.firstError('addData.areaCode') }},
-                            </span>
-                            <span :class="{block : !validation.hasError('addData.areaName')}">
-                                地区名称{{ validation.firstError('addData.areaName') }},
-                            </span>
-                            <span :class="{block : !validation.hasError('addData.status')}">
-                                状态{{ validation.firstError('addData.status') }},
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </el-col>
-        </el-row>
 	        <!-- <el-row>
                 <el-col>
                     <div class="errTipsWrapper" name="areaParentId">
@@ -94,40 +71,30 @@
                     </div>
                 </el-col>
             </el-row> -->
-        <!-- dialog数据变动提示(是否忽略更改) -->
-            <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
-                <template slot="title">
-                    <span class="dialog_font">提示</span>
-                </template>
-                <el-col :span="24" style="position: relative;">
-                    <el-col :span="24">
-                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                        <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
-                    </el-col>
-                </el-col>
-                <!--  -->
-                <span slot="footer">
-                    <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
-                    <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
-                </span>
-            </el-dialog>
-        <!-- dialog是否删除提示(对话框控件) -->
-            <el-dialog :visible.sync="dialogDeleteConfirm" class="dialog_confirm_message" width="25%">
-                <template slot="title">
-                    <span class="dialog_font">提示</span>
-                </template>
-                <el-col :span="24" style="position: relative;">
-                    <el-col :span="24">
-                        <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                        <p class="dialog_font dialog_body_message">确认删除？</p>
-                    </el-col>
-                </el-col>
-                
-                <span slot="footer">
-                    <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
-                    <button class="dialog_footer_bt dialog_font" @click="dialogDeleteConfirm = false">取 消</button>
-                </span>
-            </el-dialog>
+        <!-- 表单验证的错误提示信息 -->
+        <el-row>
+            <el-col :span="24">
+                <div class="tipsWrapper">
+                    <div class="errorTips">
+                        <p class="msgDetail">错误提示：
+                            <!-- <span :class="{block : !validation.hasError('addData.areaParentId')}">
+                                上级地区{{ validation.firstError('addData.areaParentId') }},
+                            </span> -->
+                            <span :class="{block : !validation.hasError('addData.areaCode')}">
+                                地区编码{{ validation.firstError('addData.areaCode') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.areaName')}">
+                                地区名称{{ validation.firstError('addData.areaName') }},
+                            </span>
+                            <span :class="{block : !validation.hasError('addData.status')}">
+                                状态{{ validation.firstError('addData.status') }},
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </el-col>
+        </el-row> 
+            
         <!-- 表单 -->
         <el-row>
             <div class="admstr-form-wrapper pt15">
@@ -140,12 +107,12 @@
                             class="areaParentId" 
                             placeholder=""
                             v-model="addData.areaParentId"  @focus="showErrTips">
-                                <!-- <el-input
+                                <el-input
                                     placeholder="搜索..."
                                     class="selectSearch"
-                                    v-model="search_area">
-                                </el-input> -->
-                                <el-tree
+                                    v-model="filterText">
+                                </el-input>
+                                <!-- <el-tree
                                     oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                     :highlight-current="true"
                                     :data="adminAreaTree"
@@ -155,9 +122,23 @@
                                     ref="tree"
                                     :expand-on-click-node="false"
                                     @node-click="nodeClick"
+                                    > -->
+                                <el-tree
+                                    :render-content="renderContent_componyTree"
+                                    :highlight-current="true"
+                                    :data="adminAreaTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    :default-expanded-keys="expandId"
+                                    ref="tree2"
+                                    :expand-on-click-node="false"
+                                    :filter-node-method="filterNode"
+                                    @node-click="nodeClick"
                                     >
                                 </el-tree>
-                                <el-option v-show="false" :key="count.Id" :label="count.areaName" :value="count.Id"   id="adminStrModify_confirmSelect">
+                                <!-- <el-option v-show="false" :key="count.Id" :label="count.areaName" :value="count.Id"   id="adminStrModify_confirmSelect">
+                                </el-option> -->
+                                <el-option v-show="false" :key="treeNode.Id" :label="treeNode.areaName" :value="treeNode.Id"   id="adminStrModify_confirmSelect">
                                 </el-option>
                             </el-select>
                         </div>
@@ -217,7 +198,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="24">
+                <!-- <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
                             <label>创建人</label>
@@ -241,20 +222,96 @@
                             </el-date-picker>
                         </div>
                     </div>
-                </el-col>
+                </el-col> -->
             </div>
         </el-row>
+        <!-- 审计信息 -->
+        <auditInfo :auditData='timeData'></auditInfo>
+        <!-- ********************************************************** -->
+        
+        <!-- dialog数据变动提示(是否忽略更改) -->
+        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog是否删除提示(对话框控件) -->
+        <el-dialog :visible.sync="dialogDeleteConfirm" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">确认删除？</p>
+                </el-col>
+            </el-col>
+                
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="dialogDeleteConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog错误信息提示(数据提交错误) -->
+        <el-dialog :visible.sync="submitErrorMessage" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" class="detail_message_btnWapper">
+                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
+            </el-col>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                </el-col>
+                <el-collapse-transition>
+                    
+                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
+                            <vue-scroll :ops="option">
+                                <span class="dialog_font">{{response.message}}</span>
+                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
+                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
+                            </vue-scroll> 
+                        </el-col>
+                      
+                </el-collapse-transition>   
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="submitErrorMessage = false" style="width:100%">确 认</button>
+                <!-- <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">取 消</button> -->
+            </span>
+        </el-dialog>
+        <!-- dialog --> 
     </div>
 </template>
 
 <script>
+    import auditInfo from '../Common/auditInfo';
     export default {
         name:'adminstrAreaModify',
         data() {
             return {
+                timeData:{//审计信息
+                    "createdBy" :'',
+                    "createdTime"  : '',
+                    "modifiedBy"  : '',
+                    "modifiedTime"  : '',
+                },
                 // isDisable:false,
-                update:false,
-                
+                update:false, //判断是否修改过
+                firstModify:false,//进入页面数据改变一次
                 addData:{// 修改数据列表
                     "groupId": 0,
                     "levelNo": 0,
@@ -284,22 +341,64 @@
                     Id:'',
                     areaName:'',
                 },
+                expandId:[],//默认展开的树节点
+                filterText:'',//节点过滤关键字
+                // -----------------------------------
+                choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
+                btnValue:'',//存储点击返回还是修改按钮判断信息
                 // ------------------提示框数据
                 dialogUserConfirm:false,//信息更改提示控制
                 dialogDeleteConfirm:false,//删除信息提示控制
-                choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
-                btnValue:'',//存储点击返回还是修改按钮判断信息
-            };
+                submitErrorMessage:false,//数据提交有误提示框控制
+                detail_message_ifShow: false,
+                response: {
+                    details: "",
+                    message: "",
+                    validationErrors: []
+                },
+                option: {
+                    vRail: {
+                    width: "5px",
+                    pos: "right",
+                    background: "#9093994d"
+                    },
+                    vBar: {
+                    width: "5px",
+                    pos: "right",
+                    background: "#9093994d"
+                    },
+                    hRail: {
+                    height: "0"
+                    }
+                },
+            }
         },
         created() {
             this.getSelectData();
             this.getDataList();
             this.loadTree();
         },
+        watch: {
+            addData:{
+                handler: function (val, oldVal) {
+                    let _this = this;
+                    if(!_this.firstModify){
+                        _this.firstModify = !_this.firstModify;
+                    }else{
+                        _this.update = true;
+                    }
+                },
+                deep: true,
+            },
+            filterText(val) {
+                this.$refs.tree2.filter(val);
+            },
+
+        },
         validators: {
-            'addData.areaParentId': function (value) {//上级地区
-                return this.Validator.value(value).required().maxLength(50)
-                            },
+            // 'addData.areaParentId': function (value) {//上级地区
+            //     return this.Validator.value(value).required().maxLength(50)
+            //                 },
             'addData.areaCode': function (value) {//地区编码
                 return this.Validator.value(value).required().maxLength(50)
                             },
@@ -310,41 +409,45 @@
                 return this.Validator.value(value).required().integer();
                             },
         },
-        computed:{
-            count () {
-                return this.treeNode;
-                },
-        },
-        // watch:{
-        //     addData:{
-        //         handler: function (val, oldVal) {
-        //             let _this = this;
-        //             console.log("数据改变了");
-        //             if(!_this.update){
-        //                 _this.update = true;
-        //             }
+        // computed:{
+        //     count () {
+        //         return this.treeNode;
         //         },
-        //         deep: true,
-        //     }
         // },
         methods: {
-            // 获取数据渲染
-            getDataList(){
+            getDataList(){// 获取数据渲染
                 let _this = this;
                 _this.$axios
                     .gets("/api/services/app/AdAreaManagement/Get", {id:this.$route.params.id})
                     .then(rsp => {
-                        // console.log(rsp.result);
+                        console.log(rsp.result);
                         _this.addData=rsp.result;
-                        _this.$axios.gets("/api/services/app/AdAreaManagement/Get",
-                        {id: rsp.result.areaParentId})
-                        .then(
-                            rsp=>{
-                                // console.log(rsp.result);
-                                _this.treeNode.Id=rsp.result.id;
-                                _this.treeNode.areaName=rsp.result.areaName;
-                            }
-                        )
+                        // _this.addData.areaParentId = rsp.result.areaParentId;
+                        _this.timeData.createdBy=rsp.result.createdBy;
+                        _this.timeData.createdTime=rsp.result.createdTime;
+                        _this.timeData.modifiedBy=rsp.result.modifiedBy;
+                        _this.timeData.modifiedTime=rsp.result.modifiedTime;
+
+                            _this.treeNode.Id=rsp.result.id;
+                            _this.treeNode.areaName=rsp.result.areaParentId_AreaName;
+                            // console.log(_this.treeNode);
+                            
+                        // if (rsp.result.areaParentId==0) {
+                        //     _this.treeNode.Id=rsp.result.id;
+                        //     _this.treeNode.areaName=rsp.result.areaParentId_AreaName;
+                        // }else{
+                        //     _this.$axios.gets("/api/services/app/AdAreaManagement/Get",
+                        //     {id: rsp.result.areaParentId})
+                        //     .then(
+                        //         rsp=>{
+                        //             // console.log(rsp.result);
+                        //             _this.treeNode.Id=rsp.result.id;
+                        //             _this.treeNode.areaName=rsp.result.areaName;
+                        //         }
+                        //     )
+                        // }
+
+                       
                     });
             },
             //------------- 提示框
@@ -360,6 +463,21 @@
             },
             showErrTips(e){// 表单错误提示信息
                 $('.tipsWrapper').css({display:'none'});
+            },
+            getErrorMessage(message,details,validationErrors){//将rsp的值赋值给response对象 
+                let self=this;
+                self.response.message='';
+                self.response.details='';
+                self.response.validationErrors=[];
+                if(details!=null && details){
+                    self.response.details=details;
+                }
+                if(message!=null && message){
+                    self.response.message=message;
+                }
+                if(message!=null && message){
+                    self.response.validationErrors=validationErrors;
+                }
             },
             // ----------------------------按钮组功能
             // ------------返回----------- 
@@ -377,27 +495,48 @@
                 }
             },
             sureDoing:function(){
-                let _this=this;
+                 let _this=this;
                 if (_this.btnValue=='toBack') {
                     _this.goback();
-                }else{
                     _this.dialogUserConfirm=false;
-                    _this.getDataList();
-                    _this.btnValue='';
-                    _this.update=false;
+                }else if (_this.btnValue=='Cancel'){
+                    _this.dialogUserConfirm=false;
+                    _this.Cancel();
                 }
-                
+                // let _this=this;
+                // if (_this.btnValue=='toBack') {
+                //     _this.goback();
+                // }else{
+                //     _this.dialogUserConfirm=false;
+                //     _this.getDataList();
+                //     _this.btnValue='';
+                //     _this.update=false;
+                // }
             },
             isUpdate() {//判断是否修改过信息
                 this.update = true;
                 // this.isDisable=true;
                 // console.log(this.isDisable);
             },
-            cancel(){// 取消
+            Cancel(){// 取消
+                this.validation.reset();
+                this.getDataList();
+                this.firstModify=false;
+                this.update=false;
+                // let _this=this;
+                // _this.btnValue='isCancel';
+                // if(_this.update){
+                //     _this.dialogUserConfirm=true;
+                // }
+            },
+            isCancel(){// 确认是否取消
                 let _this=this;
-                _this.btnValue='isCancel';
                 if(_this.update){
+                    // console.log(_this.update);
                     _this.dialogUserConfirm=true;
+                    _this.btnValue='Cancel';
+                }else{
+                    _this.Cancel();
                 }
             },
             // --------------删除-----------
@@ -423,7 +562,14 @@
                     _this.dialogDeleteConfirm=false;
                     _this.open("删除成功", "el-icon-circle-check", "successERP");
                     _this.goback();
-                });
+                },rsp => {
+                    _this.dialogDeleteConfirm=false;
+                    if(rsp && rsp!=''){ 
+                        _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                    }
+                    _this.submitErrorMessage=true;
+                },
+                );
             },
             // --------------删除完-----------
            
@@ -443,11 +589,17 @@
                                 _this.$axios.puts('/api/services/app/AdAreaManagement/Update',_this.addData)
                                 .then(
                                     rsp=>{
-                                                _this.open('修改成功','el-icon-circle-check','successERP');
-                                                _this.update = false;
-                                            },
+                                            _this.open('修改成功','el-icon-circle-check','successERP');
+                                             _this.update = false;
+                                    },
                                     rsp=>{   
-                                                _this.open('修改失败','el-icon-error','faildERP');
+                                            // _this.open('修改失败','el-icon-error','faildERP');
+                                            // console.log(rsp);
+                                            if(rsp && rsp!=''){ 
+                                                _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
+                                                }
+                                                // _this.dialogUserConfirm=false;
+                                                _this.submitErrorMessage=true;
                                         }
                                 )
                             }
@@ -483,6 +635,49 @@
                 )
             },
             // ----------树形控件相关----------
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },  
+            renderContent_componyTree(h, { node, data, store }){
+                if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.areaName}
+                        </span>
+                    );
+                }
+            },
+            loadCheckSelect(selectName,key){//默认选中节点
+                let _this=this;
+                // console.log(selectName,key)
+                _this.$nextTick(function () { 
+                    // console.log($('.'+selectName+' .el-tree-node__label'))
+                $('.'+selectName+' .el-tree-node__label').each(function(){
+                    if($(this).attr('data-id') == key){
+                            $(this).click()
+                            // console.log(1)
+                        }
+                    })
+                })
+            },
+            filterNode(value, data) {// 在搜索框输入关键字过滤节点
+                if (!value) return true;
+                return data.areaName.indexOf(value) !== -1;
+            },
             loadTree(){// 获取树形节点
                 let _this=this;
                 // _this.treeLoading=true;
@@ -490,7 +685,9 @@
                     .then(function(res){
                 // console.log(res.result);
                         _this.adminAreaTree=res.result;
-                        _this.loadIcon();
+                        _this.expandId=_this.defauleExpandTree(res.result,'id')
+                        _this.loadCheckSelect('areaParentId',_this.addData.areaParentId)
+                        // _this.loadIcon();
                         //  _this.treeLoading=false;
                             },function(res){
                                 // _this.treeLoading=false;
@@ -514,9 +711,12 @@
                     //  console.log(data);
                 _this.treeNode.Id=data.id;
                 _this.treeNode.areaName=data.areaName;
-                _this.$nextTick(function(){
-                        $('#adminStrModify_confirmSelect').click()
-                })
+                // _this.$nextTick(function(){
+                //         $('#adminStrModify_confirmSelect').click()
+                // })
+                self.$nextTick(function() {
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                });
             },
             getSelectData(){// 获取下拉框数据
                 let _this=this;
@@ -535,6 +735,9 @@
             },
 
         },
+        components:{
+            auditInfo,
+        },
     };
 </script>
 
@@ -546,8 +749,9 @@
         background-color: #fff;
     }
     .admstr-modify-wrapper .el-row:first-child{
-    padding: 7px 0;
-    border-bottom: 1px solid #e4e4e4;
+        padding: 7px 0;
+        border-bottom: 1px solid #e4e4e4;
+        background-color: #fff;
     }
     .admstr-modify-wrapper .el-row:last-child{
         padding-bottom: 15px;

@@ -1,7 +1,8 @@
  <template>
+    <!-- 我是审计信息 -->
     <div id="auditInfo-wrapper">
-       <el-row class="pl10 pr10 pt10" style="border-top:1px solid #e4e4e4;">
-                    <el-col :span="24">
+       <el-row >
+                    <el-col :span="24" style="border-top:1px solid #e4e4e4;">
                         <h4>审计信息</h4>
                     </el-col>
                     <el-col :span="6">
@@ -9,7 +10,7 @@
                             <div class="bgcolor bgLongWidth">
                                 <label>创建人</label>
                                 <el-input 
-                                :disabled="isDisabled"
+                                disabled
                                 v-model="auditData.createdBy">
                                 </el-input>
                             </div>
@@ -19,15 +20,15 @@
                         <div class="bgMarginAuto">
                             <div class="bgcolor bgLongWidth">
                                 <label>创建时间</label>
-                                <el-input  :disabled="isDisabled" v-model="auditData.createdTime">
-                                </el-input>
-                                <!-- <el-date-picker
+                                <!-- <el-input  :disabled="isDisabled" v-model="auditData.createdTime">
+                                </el-input> -->
+                                <el-date-picker
                                 type="date"
-                                :disabled="isDisabled"
+                                disabled
                                 v-model="auditData.createdTime"
-                                format="yyyy-MM-dd"
-                                value-format="yyyy-MM-dd">
-                                </el-date-picker> -->
+                                format="yyyy-MM-dd HH:mm:ss" 
+                                value-format="yyyy-MM-dd HH:mm:ss">
+                                </el-date-picker>
                             </div>
                         </div>
                     </el-col>
@@ -36,7 +37,7 @@
                             <div class="bgcolor bgLongWidth">
                                 <label>修改人</label>
                                 <el-input 
-                                :disabled="isDisabled"
+                                disabled
                                 v-model="auditData.modifiedBy">
                                 </el-input>
                             </div>
@@ -46,20 +47,20 @@
                         <div class="bgMarginAuto">
                             <div class="bgcolor bgLongWidth">
                                 <label>修改时间</label>
-                                <!-- <el-date-picker
+                                <el-date-picker
                                 type="date"
-                                :disabled="isDisabled"
+                                disabled
                                 v-model="auditData.modifiedTime"
-                                format="yyyy-MM-dd"
-                                value-format="yyyy-MM-dd">
-                                </el-date-picker> -->
-                                <el-input  :disabled="isDisabled" v-model="auditData.modifiedTime">
-                                </el-input>
+                                format="yyyy-MM-dd HH:mm:ss"
+                                value-format="yyyy-MM-dd HH:mm:ss">
+                                </el-date-picker>
+                                <!-- <el-input  :disabled="isDisabled" v-model="auditData.modifiedTime">
+                                </el-input> -->
 
                             </div>
                         </div>
                     </el-col>
-                </el-row>
+        </el-row>
     </div>
 </template>
 
@@ -68,7 +69,7 @@
         props:['auditData',],
         data(){
             return{
-                isDisabled:true,
+                // isDisabled:true,
             }
         },
         methods:{
@@ -98,6 +99,6 @@
         text-align: center;
     }
     #auditInfo-wrapper .el-input.is-disabled .el-input__inner {
-    text-align: center;
+        text-align: left;
     }
 </style>

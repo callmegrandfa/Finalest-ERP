@@ -184,9 +184,11 @@
                                             :data="ouAr"
                                             :props="selectOuProps"
                                             node-key="id"
-                                            default-expand-all
-                                            ref="tree"
-                                            :filter-node-method="filterNode"
+                                            ref="outree"
+                                            :default-expanded-keys="ouExpandId"
+                                            :filter-node-method="ouFilterNode"
+                                            :render-content="renderContentOu"
+                                            highlight-current
                                             :expand-on-click-node="false"
                                             @node-click="ouNodeClick"></el-tree> 
 
@@ -254,10 +256,12 @@
                                             :data="cuAr"
                                             :props="selectCuProps"
                                             node-key="id"
-                                            default-expand-all
-                                            ref="tree"
-                                            :filter-node-method="filterNode"
+                                            ref="cutree"
+                                            :filter-node-method="cuFilterNode"
+                                            :default-expanded-keys="cuExpandId"
+                                            :render-content="renderContentCu"
                                             :expand-on-click-node="false"
+                                            highlight-current
                                             @node-click="cuNodeClick"></el-tree>
 
                                 <el-option v-show="false"
@@ -611,33 +615,36 @@
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="completeAddress" label="省" width="180">
+                                <el-table-column prop="proId" label="省" width="180">
                                     <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.completeAddress" 
-                                            type="text"    
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
+                                        <el-select v-model="scope.row.proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(scope.row)'>
+                                            <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                            </el-option>
+                                            <el-option v-show="false" label="无" :value="provinceValue">
+                                            </el-option>
+                                        </el-select>   
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="id" label="市" width="180">
+                                <el-table-column prop="cityId" label="市" width="180">
                                     <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.id" 
-                                            type="text"    
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
+                                        <el-select v-model="scope.row.cityId" class="areaDrop" placeholder="选择市" @change='chooseCity(scope.row)'>
+                                            <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                            </el-option>
+                                            <el-option v-show="false" label="无" :value="cityValue">
+                                            </el-option>
+                                        </el-select>
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="phone" label="区" width="180">
+                                <el-table-column prop="quId" label="区" width="180">
                                     <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.phone" 
-                                            type="text"   
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
+                                        <el-select v-model="scope.row.quId" class="areaDrop" placeholder="选择区" @change='chooseDis(scope.row)'>
+                                            <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                            </el-option>
+                                            <el-option v-show="false" label="无" :value="areaValue">
+                                            </el-option>
+                                        </el-select>
                                     </template>
                                 </el-table-column>
 
@@ -707,7 +714,7 @@
 
                                             <el-input placeholder="搜索..."
                                                     class="selectSearch"
-                                                    v-model="ouSearch"></el-input> 
+                                                    v-model="ywSearch"></el-input> 
                                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                                     :data="ywAr"
                                                     :props="selectYwProps"
@@ -981,6 +988,12 @@ export default({
             },
             deep: true,
         },
+        cuSearch(val){
+            this.$refs.cutree.filter(val)
+        },
+        ouSearch(val){
+            this.$refs.outree.filter(val)
+        }
     },
     data() {
         return{
@@ -1003,6 +1016,7 @@ export default({
                     ouFullname:'',
                 },
                 ouAr:[],//所属组织下拉框
+                ouExpandId:[],//默认打开第一个树节点
             //-----------------------
 
             //---客户分类树形下拉-----
@@ -1017,6 +1031,7 @@ export default({
                     cuName:'',
                 },
                 cuAr:[],//客户分类下拉框
+                cuExpandId:[],//默认打开第一个树节点
             //-----------------------
 
             //---财务组织树形下拉-----
@@ -1133,7 +1148,7 @@ export default({
             createAddressParams:{//创建地址的参数
                 "groupId": 1,
                 "contactId": '',
-                "addressType": '',
+                "addressType": '2',
                 "addressId": '3',
                 "completeAddress": "",
                 "contactPerson": "",
@@ -1197,6 +1212,8 @@ export default({
             InitBankData:[],
             InitAddData:[],
             InitOuData:[],
+            //使用组织里业务组织树形搜索框-------
+            ywSearch:'',
         }
     },
     validators: {
@@ -1299,47 +1316,14 @@ export default({
                     self.createOuParams.contactId = self.$route.params.id;
 
                     //行政地区获取省
-                    self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+                    self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
                         console.log(res);
                         self.areaProArray = res.result;
+                        console.log(self.areaProArray)
                         // self.loadIcon();
                     },function(res){
                         console.log('err'+res)
-                    });
-                    //根据区id反向获得行政地区所有资料
-                    self.$axios.gets('/api/services/app/AdAreaManagement/Get',{Id:res.result.adAreaId}).then(function(res){
-                        console.log(res);
-                        let ids = res.result.areaFullPathId;
-                        let newid = ids.split('>')
-                        
-                        self.proId = parseInt(newid[0]);
-                        self.cityId = parseInt(newid[1]);
-                        self.disId = parseInt(newid[2]);
-
-                        //根据省获得市
-                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.proId}).then(function(res){
-                            // console.log(res);
-                            self.areaCityArray = res.result;
-                        },function(res){
-                            console.log('err'+res)
-                        });
-
-                        //根据市获得区
-                        self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:self.cityId}).then(function(res){
-                            console.log(res);
-                            self.areaDisArray = res.result;
-                        },function(res){
-                            console.log('err'+res)
-                        });
-                        // self.opAr = res.result;
-                    },function(res){
-                        self.proId = 0;
-                        self.cityId = 0;
-                        // self.repositoryData.adAreaId = 0;
-                        self.ifModify = false;
-                        console.log('err'+res)
-                    });
-                    
+                    });                  
                     
 
                     //业务地区
@@ -1432,6 +1416,7 @@ export default({
             self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
                 // console.log(res);
                 self.cuAr = res;
+                self.cuExpandId=self.defauleExpandTree(res,'id')
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1440,6 +1425,7 @@ export default({
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 // console.log(res);
                 self.ouAr = res.result;
+                self.ouExpandId=self.defauleExpandTree(res.result,'id')
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1509,10 +1495,10 @@ export default({
         //------------------------------------------------------------------
 
         //---选择省市区-----------------------------------------------
-        chooseProvince:function(id){
+        chooseProvince:function(res){
             let self = this;
-            // console.log(id)
-            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+            console.log(res)
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res.proId}).then(function(res){
                 // console.log(res);
                 self.areaCityArray = res.result;
                 // self.loadIcon();
@@ -1521,14 +1507,13 @@ export default({
             });
 
         },
-        chooseCity:function(id){
+        chooseCity:function(res){
             let self = this;
-            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+            console.log(res)
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res.cityId}).then(function(res){
                 // console.log(res);
                 self.customerData.adAreaId = '';
                 self.areaDisArray = res.result;
-                
-
                 // self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1559,6 +1544,60 @@ export default({
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
+        cuFilterNode(value,data){
+            if (!value) return true;
+                return data.className.indexOf(value) !== -1;
+        },
+        ouFilterNode(value,data){
+            if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
+        },
+        //---树render-content----------------------------------
+        renderContentOu(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }
+        },
+        renderContentCu(h, { node, data, store }){//客户分类
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }
+        },    
+        //---树通用----------------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
+        },
+        //-----------------------------------------------------                    
         cuNodeClick:function(data){
             let self = this;
             self.cuItem.id = data.id;
@@ -1690,12 +1729,15 @@ export default({
             self.yrows.newCol ={
                 "groupId": 1,
                 "contactId": self.createAddressParams.contactId,
-                "addressType": '',
+                "addressType": '2',
                 "addressId": '3',
                 "completeAddress": "",
                 "contactPerson": "",
                 "phone": "",
-                "isDefault": false
+                "isDefault": false,
+                "proId":'',
+                "cityId":'',
+                "quId":''
             };
             self.addressData.unshift(self.yrows.newCol)
             self.addAddressList.unshift(self.yrows.newCol)

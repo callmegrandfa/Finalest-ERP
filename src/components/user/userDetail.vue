@@ -312,6 +312,22 @@
                 </div>
             </div>
         </el-col>
+        <el-col :span="24" class="getPadding">
+            <h4 class="h4">审计信息</h4>
+            <div>
+                <div class="bgcolor"><label>创建人</label><el-input v-model="addData.createdBy" disabled></el-input></div>
+                <div class="bgcolor">
+                    <label>创建时间</label>
+                    <el-input v-model="addData.createdTime" disabled></el-input>
+                
+                </div>
+                <div class="bgcolor"><label>修改人</label><el-input  v-model="addData.modifiedBy" disabled></el-input></div>
+                <div class="bgcolor">
+                    <label>修改时间</label> 
+                <el-input v-model="addData.modifiedTime" disabled></el-input>
+                </div>
+            </div>                                  
+       </el-col>
       </el-row>
       <!-- 关联角色 -->
       <!-- <el-dialog :visible.sync="dialogTableVisible" title="关联角色">
@@ -566,7 +582,11 @@
           "languageId": 9,
           "isReg": false,
           "remark": "",
-          "roleCodes": []
+          "roleCodes": [],
+            createdTime:this.GetDateTime(),//创建时间
+            createdBy:this.$store.state.name,//创建人
+            modifiedTime:this.GetDateTime(),//修改人
+            modifiedBy:this.$store.state.name//修改时间
         },
         dateRange:[],//有效时间
         tableLoading:false,
@@ -708,25 +728,46 @@
         },
     },
     methods: {
+        GetDateTime: function () {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+    },
         getDefault(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){ 
                 // console.log(res);
             // 默认用户业务组织
-                _this.addData={
-                    "userCode": "",
-                    "displayName": "",
-                    "phoneNumber": "",
-                    "email": "",
-                    "userGroupId": "",
-                    "ouId": res.result.id,
-                    "status": 1,
-                    "userType": "",
-                    "languageId":9,
-                    "isReg": false,
-                    "remark": "",
-                    "roleCodes": []
-                };
+                // _this.addData={
+                //     "userCode": "",
+                //     "displayName": "",
+                //     "phoneNumber": "",
+                //     "email": "",
+                //     "userGroupId": "",
+                //     "ouId": res.result.id,
+                //     "status": 1,
+                //     "userType": "",
+                //     "languageId":9,
+                //     "isReg": false,
+                //     "remark": "",
+                //     "roleCodes": [],
+                //     'createdTime':this.GetDateTime(),//创建时间
+                //     'createdBy':this.$store.state.name,//创建人
+                //     'modifiedTime':this.GetDateTime(),//修改时间
+                //     'modifiedBy':this.$store.state.name//修改人
+                // };
                 _this.addData.effectiveStart='';
                 _this.addData.effectiveEnd='';
                 _this.dateRange=[];
@@ -851,6 +892,7 @@
           this.$store.state.url='/user/userList/default'
           this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
       },
+
         getErrorMessage(message,details,validationErrors){
             let _this=this;
             _this.response.message='';
@@ -880,6 +922,7 @@
                     _this.addData.effectiveEnd=_this.dateRange[1];
                     _this.$axios.posts('/api/services/app/User/Create',_this.addData)
                     .then(function(res){
+                        console.log(res)
                         _this.addData.id=res.result.id;
                         _this.$store.state.url='/user/userModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})
@@ -1147,8 +1190,6 @@
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
                 _this.choseDoing='Cancel'
-            }else{
-                _this.Cancel()
             }
         },
         sureDoing(){
