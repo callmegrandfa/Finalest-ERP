@@ -200,6 +200,7 @@
   export default({
     data(){
       return{
+        saveSuccess:false,
         firstModify:false,
         ifModify:false,
          // 错误信息提示开始
@@ -275,15 +276,19 @@
         addData:{
             handler:function(val,oldVal){
                 let _this=this;
-                if(!_this.firstModify){
-                    _this.firstModify=!_this.firstModify;
+                if(!_this.saveSuccess){
+                    if(!_this.firstModify){
+                        _this.firstModify=!_this.firstModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                     _this.ifModify=true;
                 }
             },
             deep:true,
+          }
         },
-    },
     methods: {
         filterNode_ou(value, data) {
             if (!value) return true;
@@ -339,6 +344,9 @@
                     modifiedBy:res.result.modifiedBy,
                     modifiedTime:res.result.modifiedTime,
                 }
+                 _this.saveSuccess=false;
+                _this.firstModify=false;
+                _this.ifModify=false;
             })
         },
         open(tittle,iconClass,className) {
@@ -432,6 +440,7 @@
                             modifiedTime:res.result.modifiedTime,
                         }
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                         _this.saveSuccess=true;
                         _this.firstModify=false;
                         _this.ifModify=false;
                     },function(res){
