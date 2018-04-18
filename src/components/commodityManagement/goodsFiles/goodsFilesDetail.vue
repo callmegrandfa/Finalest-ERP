@@ -53,14 +53,17 @@
                             :class="{block : !validation.hasError('addData.remark')}">
                             备注{{ validation.firstError('addData.remark') }},
                             </span> 
-                        
+                            <span 
+                            :class="{block : !validation.hasError('addData.validDays')}">
+                            保质天数{{ validation.firstError('addData.validDays') }},
+                            </span>      
                         </p>
                     </div>
                 </div>
             <div class="bgcolor" style="margin-bottom:0">
                 <label><small>*</small>类目</label>
                 <el-select clearable filterable  class="categoryId"
-                @focus="showErrprTipsSelect"
+                @focus="showErrprTips"
                 :class="{redBorder : validation.hasError('addData.categoryId')}"
                 placeholder=""
                 v-model="addData.categoryId">
@@ -82,7 +85,7 @@
                     <label><small>*</small>商品编码</label>
                     <el-input class="productCode" 
                      @focus="showErrprTips"
-                     @change="isUpdate"
+                     
                     :class="{redBorder : validation.hasError('addData.productCode')}"
                     v-model="addData.productCode">
                     </el-input>
@@ -90,8 +93,8 @@
                 <div class="bgcolor">
                     <label><small>*</small>商品名称</label>
                     <el-input class="productName"
-                    @change="isUpdate"
-                    @focus="showErrprTipsSelect"
+                    
+                    @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.productName')}"
                      v-model="addData.productName" >
                      </el-input>
@@ -100,8 +103,8 @@
                     <label>品牌</label>
                     <el-select clearable class="brandId"
                     
-                    @change="isUpdate"
-                    @focus="showErrprTipsSelect"
+                    
+                    @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.brandId')}"
                     placeholder=""
                     v-model="addData.brandId">
@@ -117,8 +120,8 @@
                     <label><small>*</small>单位</label>
                     <el-select clearable class="unitId"
                     
-                    @change="isUpdate"
-                    @focus="showErrprTipsSelect"
+                    
+                    @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.unitId')}"
                     placeholder=""
                     v-model="addData.unitId">
@@ -134,7 +137,7 @@
                     <label>商品条码</label>
                      <el-input class="barcode" 
                      @focus="showErrprTips"
-                     @change="isUpdate"
+                     
                     :class="{redBorder : validation.hasError('addData.barcode')}"
                     v-model="addData.barcode">
                     </el-input>
@@ -143,7 +146,7 @@
                     <label>助记码</label>
                      <el-input class="mnemonic" 
                     @focus="showErrprTips"
-                    @change="isUpdate"
+                    
                     :class="{redBorder : validation.hasError('addData.mnemonic')}"
                     v-model="addData.mnemonic">
                     </el-input>
@@ -151,7 +154,7 @@
                 <div class="bgcolor">
                     <label>上市时间</label>
                     <el-date-picker 
-                    @focus="showErrprTipsRangedate"
+                    @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.saleDate')}"
                     class="saleDate datepicker" 
                     format="yyyy-MM-dd"
@@ -165,8 +168,8 @@
                         <label>备注</label>
                         <el-input
                         
-                        @change="isUpdate"
-                        @focus="showErrprTipsTextArea"
+                        
+                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('addData.remark')}"
                         class="remark1" 
                         v-model="addData.remark"
@@ -179,16 +182,27 @@
                 <el-col :span="24">
                     <div class="bgcolor longWidth">
                         <label></label>
-                        <el-checkbox v-model="addData.uniqueMgt">唯一码管理</el-checkbox>
-                        <el-checkbox v-model="addData.lotMgt">批次管理</el-checkbox>
-                        <el-checkbox v-model="addData.isSuite">是否套件</el-checkbox>
+                        <el-checkbox @change="showErrprTips" v-model="addData.uniqueMgt">唯一码管理</el-checkbox>
+                        <el-checkbox @change="showErrprTips" v-model="addData.lotMgt">批次管理</el-checkbox>
+                        <el-checkbox @change="showErrprTips" v-model="addData.validityMgt">有效期管理</el-checkbox>
                     </div>
                 </el-col>
                 <el-col :span="24">
-                    <div class="bgcolor">
+                    <div class="bgcolor longWidth">
                         <label></label>
-                        <el-checkbox v-model="addData.validityMgt">有效期管理</el-checkbox>
-                        <el-checkbox v-model="addData.multiUnitEnabled">启用多单位</el-checkbox>
+                        <el-checkbox @change="showErrprTips" v-model="addData.multiUnitEnabled">启用多单位</el-checkbox>
+                        <el-checkbox @change="showErrprTips" v-model="addData.isSuite">是否套件</el-checkbox>
+                    </div>
+                </el-col>
+                <el-col :span="24" v-if="addData.validityMgt">
+                    <div class="bgcolor">
+                        <label>保质天数</label>
+                        <el-input class="validDays" 
+                        @focus="showErrprTips"
+
+                        :class="{redBorder : validation.hasError('addData.validDays')}"
+                        v-model="addData.validDays">
+                        </el-input>
                     </div>
                 </el-col>
             </el-col> 
@@ -200,62 +214,169 @@
     <div class="tabZoo">
         <el-col :span="24">
             <el-tabs v-model="activeName_one">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 商品价格 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="商品价格" name="goodsPrice">
-                    <div class="bgcolor ">
-                        <label>进货价</label>
-                        <el-input 
-                        
-                        @change="isUpdate"
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('addData.purchasePrice')}"
-                        class="purchasePrice"
-                        v-model="addData.purchasePrice"
-                        ></el-input>
-                    </div>
-                    <div class="bgcolor ">
-                        <label>批发价</label>
-                        <el-input 
-                        
-                        @change="isUpdate"
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('addData.wholePrice')}"
-                        class="wholePrice"
-                        v-model="addData.wholePrice"
-                        ></el-input>
-                    </div>
-                    <div class="bgcolor ">
-                        <label>会员价</label>
-                        <el-input 
-                        
-                        @change="isUpdate"
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('addData.vipPrice')}"
-                        class="vipPrice"
-                        v-model="addData.vipPrice"
-                        ></el-input>
-                    </div>
-                    <div class="bgcolor ">
-                        <label>零售价</label>
-                        <el-input 
-                        
-                        @change="isUpdate"
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('addData.retailPrice')}"
-                        class="retailPrice"
-                        v-model="addData.retailPrice"
-                        ></el-input>
-                    </div>
-                    <div class="bgcolor ">
-                        <label>折扣率</label>
-                        <el-input 
-                        
-                        @change="isUpdate"
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('addData.discount')}"
-                        class="discount"
-                        v-model="addData.discount"
-                        ></el-input>
-                    </div>
+                    <el-col :span="24" v-if="!addData.multiUnitEnabled">
+                        <div class="bgcolor ">
+                            <label>进货价</label>
+                            <el-input 
+                            
+                            
+                            @focus="showErrprTips"
+                            :class="{redBorder : validation.hasError('addData.purchasePrice')}"
+                            class="purchasePrice"
+                            v-model="addData.purchasePrice"
+                            ></el-input>
+                        </div>
+                        <div class="bgcolor ">
+                            <label>批发价</label>
+                            <el-input 
+                            
+                            
+                            @focus="showErrprTips"
+                            :class="{redBorder : validation.hasError('addData.wholePrice')}"
+                            class="wholePrice"
+                            v-model="addData.wholePrice"
+                            ></el-input>
+                        </div>
+                        <div class="bgcolor ">
+                            <label>会员价</label>
+                            <el-input 
+                            
+                            
+                            @focus="showErrprTips"
+                            :class="{redBorder : validation.hasError('addData.vipPrice')}"
+                            class="vipPrice"
+                            v-model="addData.vipPrice"
+                            ></el-input>
+                        </div>
+                        <div class="bgcolor ">
+                            <label>零售价</label>
+                            <el-input 
+                            
+                            
+                            @focus="showErrprTips"
+                            :class="{redBorder : validation.hasError('addData.retailPrice')}"
+                            class="retailPrice"
+                            v-model="addData.retailPrice"
+                            ></el-input>
+                        </div>
+                        <div class="bgcolor ">
+                            <label>折扣率</label>
+                            <el-input 
+                            
+                            
+                            @focus="showErrprTips"
+                            :class="{redBorder : validation.hasError('addData.discount')}"
+                            class="discount"
+                            v-model="addData.discount"
+                            ></el-input>
+                        </div>
+                    </el-col>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 多单位 - - - - - - - - - - - - - - - - - - - - -  -->                    
+                    <el-col :span="24" v-if="addData.multiUnitEnabled">
+                         <el-table :data="goodsSize_data" border style="width: 100%" stripe>
+                            <el-table-column type="selection"></el-table-column>
+
+                            <el-table-column prop="groupId" label="单位类型" >
+                                <template slot-scope="scope">
+                                    <img class="abimg" src="../../../../static/image/content/redremind.png"/>
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.groupId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column prop="specId" label="单位" >
+                                <template slot-scope="scope">
+                                    <el-select  
+                                    v-model="scope.row.transportMethodId" 
+                                    :class="[scope.$index%2==0?'bgw':'bgp']"
+                                    placeholder=""
+                                    >
+                                        <!-- <el-option  v-for="item in transAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                        </el-option> -->
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+
+                            
+                            <el-table-column prop="basSpecgroupId" label="系数">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.basSpecgroupId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="productId" label="进货价">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                             <el-table-column prop="productId" label="零售价">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                             <el-table-column prop="productId" label="批发价">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                             <el-table-column prop="productId" label="会员价">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                             <el-table-column prop="productId" label="折扣率">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                             <el-table-column prop="productId" label="默认采购单位">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="productId" label="默认批发单位">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="productId" label="默认零售单位">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.productId" 
+                                            type="text"/>
+                                </template>
+                            </el-table-column>
+
+                        </el-table>     
+                    </el-col>
                 </el-tab-pane>
             </el-tabs>
         </el-col>
@@ -439,8 +560,8 @@
                     <div class="bgcolor">
                         <label>品类</label>
                         <el-input class="productId"
-                        @change="isUpdate"
-                        @focus="showErrprTipsSelect"
+                        
+                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('goodsProperty.productId')}"
                         v-model="goodsProperty.productId" >
                         </el-input>
@@ -448,8 +569,8 @@
                     <div class="bgcolor">
                         <label>系列</label>
                         <el-input class="propertyId"
-                        @change="isUpdate"
-                        @focus="showErrprTipsSelect"
+                        
+                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('goodsProperty.propertyId')}"
                         v-model="goodsProperty.propertyId" >
                         </el-input>
@@ -458,8 +579,8 @@
                         <label>性别</label>
                         <el-select clearable class="brandId"
                         
-                        @change="isUpdate"
-                        @focus="showErrprTipsSelect"
+                        
+                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('goodsProperty.brandId')}"
                         placeholder=""
                         v-model="goodsProperty.brandId">
@@ -475,8 +596,8 @@
                         <label>季节</label>
                         <el-select clearable class="brandId"
                         
-                        @change="isUpdate"
-                        @focus="showErrprTipsSelect"
+                        
+                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('goodsProperty.brandId')}"
                         placeholder=""
                         v-model="goodsProperty.brandId">
@@ -491,7 +612,7 @@
                     <div class="bgcolor">
                         <label>年份</label>
                         <el-date-picker 
-                        @focus="showErrprTipsRangedate"
+                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('goodsProperty.propertyValueCode')}"
                         class="saleDate datepicker" 
                         format="yyyy"
@@ -503,8 +624,8 @@
                     <div class="bgcolor">
                         <label>其他属性</label>
                         <el-input class="propertyValueName"
-                        @change="isUpdate"
-                        @focus="showErrprTipsSelect"
+                        
+                        @focus="showErrprTips"
                         :class="{redBorder : validation.hasError('goodsProperty.propertyValueName')}"
                         v-model="goodsProperty.propertyValueName" >
                         </el-input>
@@ -512,7 +633,6 @@
                 </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="图片" name="picture">
-                   <ul>
                        <!-- <li>
                            <div>主图</div>
                            <el-upload
@@ -535,10 +655,9 @@
                             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
                             
                        </li> -->
-                       <li>
-                            <app-loadImg></app-loadImg>
-                       </li>
-                   </ul>
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="红色" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="白色" @fileChange="fileChange"></app-loadImg>
                 </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 使用组织 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="使用组织" name="specTeam">
@@ -592,6 +711,66 @@
         </div>                                  
     </el-col>
 </el-row>       
+<!-- dialog尺码选择 -->
+        <el-dialog :visible.sync="chooseSize" class="choose_size">
+            <el-dialog
+                width="30%"
+                title="内层 Dialog"
+                :visible.sync="innerVisible"
+                append-to-body>
+            </el-dialog>
+            <template slot="title">
+                <span>尺码选择</span>
+                <div class="search_input_group">
+                    <div class="search_input_wapper">
+                        <el-input
+                            placeholder="搜索..."
+                            class="search_input"
+                            >
+                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
+                    </div>
+                </div>
+            </template>
+            <el-col :span="24" class="_body">
+                <el-col :span="6" class="_body_left">
+                    <vue-scroll :ops="$store.state.option">
+                        <p>全部</p>
+                        <p>通用尺码</p>
+                        <p> 裤装尺码</p>
+                        <p>童装尺码</p>
+                    </vue-scroll>
+                </el-col>
+                <el-col :span="18" class="_body_right">
+                    <el-col :span="24" class="_right_body">
+                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>xs</span>
+                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>xs</span>
+                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>XXL</span>
+                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
+                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
+                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
+                        <span class="show_size addSize" @click="innerVisible = true">
+                            <span class="x"></span>
+                            <span class="y"></span>
+                        </span>
+                    </el-col>
+                    <el-col :span="24" class="_right_footer">
+                        <el-col :span="18" class="_footer_bt">
+                            <button class="transfer_footer_btn transfer_confirm">确 认</button>
+                            <button class="transfer_footer_btn">取 消</button>
+                        </el-col>
+                        <el-col :span="6" class="_footer_page">
+                            <span>1</span>
+                            <span>/</span>
+                            <span>3</span>
+                            <el-button class="_page_left" type="primary" icon="el-icon-arrow-left"></el-button>
+                            <el-button class="_page_right" type="primary" icon="el-icon-arrow-right"></el-button>
+                        </el-col>
+                    </el-col>
+                </el-col>
+            </el-col>
+        </el-dialog>
+        <!-- dialog -->  
 <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -754,6 +933,7 @@ export default {
 //----------名称全称联动----------
         isUpdateFlag:false,   
 //---------------商品规格------------------
+        innerVisible:false,//内层表格
         multipleSelection_size:[],//从表商品规格选中数据
         goodsSize_data:[],//从表商品规格数据
         goodsSize_newCol:[],//所有新行
@@ -764,6 +944,7 @@ export default {
                 "specId": 0
             },
         goodsSize_newCol_len:0,//新行数目
+        chooseSize:true,//dialog选择尺码
 //---------------SKU------------------
         multipleSelection_SKU:[],//从表商品规格选中数据
         SKU_data:[],//从表商品规格数据
@@ -794,7 +975,11 @@ export default {
             "propertyId": 0,
             "propertyValueCode": "",
             "propertyValueName": ""
-        }
+        },
+
+        files:{//传入图片上传组件数据
+            src:''
+        },
     }
 },
     validators: {
@@ -850,12 +1035,15 @@ export default {
       'addData.remark': function (value) {//备注
          return this.Validator.value(value)
       },
+      'addData.validDays': function (value) {//保质天数
+        if(typeof(value)!='undefined'){
+            return this.Validator.value(value).integer()
+        }else{
+            return this.Validator.value(value)
+        }
+         
+      },
 
-    },
-    computed:{
-        count () {
-            return this.ischeck;
-            }  
     },
     mounted () {
         // let _this=this;
@@ -882,6 +1070,11 @@ export default {
           }else{
               this.isCategoryIdEmpty=false
           }
+      },
+      'addData.validityMgt'(val){//有效期管理
+            if(!val){
+                delete this.addData.validDays;//保质天数
+            }
       }
     },
     methods:{
@@ -1063,7 +1256,7 @@ export default {
     })
     },
         back(){
-            this.$store.state.url='/OuManage/OuManageList/default'
+            this.$store.state.url='/goodsFiles/goodsFilesList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
         open(tittle,iconClass,className) {
@@ -1269,18 +1462,21 @@ export default {
                 + " " + date.getHours() + seperator2 + date.getMinutes()
                 + seperator2 + date.getSeconds();
             return currentdate;
-        }
-    }
+     }
+    
+        fileChange(data){
+            console.log(data)
+
+   }
 
 }   
     
   </script>
 
 <style>
-  .goodsFilesDetail{
-      font-family: 'microsoft yahei';
-  }
-
+.goodsFilesDetail{
+    font-family: 'microsoft yahei';
+}
 .goodsFilesDetail .bgcolor.longWidth{
     width: 505px;
     height:auto;
@@ -1302,11 +1498,11 @@ export default {
     margin-top: -10px;
 }
 
-  .goodsFilesDetail .el-row{
-     padding:15px 0;
-     border-bottom: 1px solid #e4e4e4;
-     background-color: #fff;
-  }
+.goodsFilesDetail .el-row{
+    padding:15px 0;
+    border-bottom: 1px solid #e4e4e4;
+    background-color: #fff;
+}
 .goodsFilesDetail .el-row:last-child{
       border-bottom:none;
   }
@@ -1324,10 +1520,81 @@ export default {
     padding-top: 0;
     padding-bottom: 0;
 }
-  </style>
-  <style>
-  .goodsFilesDetail .bgcolor .el-select .el-input input{
+.goodsFilesDetail .bgcolor .el-select .el-input input{
     height: 35px!important;
-    }
-  </style>
+}
+/* ---------dialog选择尺码---------- */
+.goodsFilesDetail .choose_size .el-dialog{
+    border-radius: 0;
+}
+.goodsFilesDetail .choose_size .el-dialog .el-dialog__body{
+    padding: 0 20px;
+}
+.goodsFilesDetail ._body_left{
+    border-right: 1px solid #e4e4e4;
+    height: 500px;
+}
+.goodsFilesDetail ._body_right{
+    height: 500px;
+}
+.goodsFilesDetail ._body_right ._right_body .show_size{
+    width: 38px;
+    height: 38px;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 38px;
+    font-size: 12px;
+    display: block;
+    float: left;
+    margin-left: 15px;
+    margin-top: 15px;
+    border: 1px solid #e4e4e4;
+    cursor: pointer;
+    position: relative;
+}
+.goodsFilesDetail ._body_right ._right_body .show_size.addSize{
+    background-color: #e4e4e4;
+}
+.goodsFilesDetail ._body_right ._right_body .show_size.addSize .x,
+.goodsFilesDetail ._body_right ._right_body .show_size.addSize .y{
+    display: block;
+    background: #999999;
+    position: absolute;
+    width: 1px;
+    height:23px;
+    left: 50%;
+    top: 8px;
+}
+.goodsFilesDetail ._body_right ._right_body .show_size .y{
+    transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg); 
+}
+.goodsFilesDetail ._body_right ._right_body .show_size.addSize{
+    font-size: 40px;
+}
+.goodsFilesDetail ._body_right ._right_body .show_size i.fa-check-square{
+    position: absolute;
+    color: #33cc66;
+    top: -1px;
+    left: -1px;
+}
+
+.goodsFilesDetail ._body_right ._right_body .show_size:hover{
+    border: 1px solid #33cc66;
+}
+.goodsFilesDetail ._body_right ._right_body{
+    height: 450px;
+}
+.goodsFilesDetail ._body_right ._right_footer{
+    line-height: 50px;
+    height: 50px;
+}
+.goodsFilesDetail ._body_right ._right_footer ._footer_bt{
+    padding-left: 15px;
+}
+.goodsFilesDetail ._body_right ._right_footer ._footer_page{
+    text-align: right;
+}
+</style>
   

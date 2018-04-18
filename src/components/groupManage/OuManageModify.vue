@@ -1938,16 +1938,16 @@ export default({
                     if (success) {
                         $('.tipsWrapper').css({display:'none'})
                         if(_this.Company){
-                            _this.basCompany.businessStart=_this.dateRange[0];
-                            _this.basCompany.businessEnd=_this.dateRange[1];
-                        //     _this.addData.basCompany=_this.basCompany;
+                        _this.basCompany.businessStart=_this.dateRange[0];
+                        _this.basCompany.businessEnd=_this.dateRange[1];
+                        _this.addData.basCompany=_this.basCompany;
                         }
-                        // if(_this.Business){
-                        //     _this.addData.basBusiness=_this.basBusiness;
-                        // }
-                        // if(_this.Finance){
-                        //     _this.addData.basFinance=_this.basFinance;
-                        // }
+                        if(_this.Finance){
+                            _this.addData.basBusiness=_this.basBusiness;
+                        }
+                        if(_this.Business){
+                            _this.addData.basFinance=_this.basFinance;
+                        }
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                              _this.auditInfo={
                                 createdBy:res.result.createdBy,
@@ -1978,9 +1978,15 @@ export default({
                     if (success) {
                         $('.tipsWrapper').css({display:'none'})
                         if(_this.Company){
-                            _this.basCompany.businessStart=_this.dateRange[0];
-                            _this.basCompany.businessEnd=_this.dateRange[1];
-                        //     _this.addData.basCompany=_this.basCompany;
+                        _this.basCompany.businessStart=_this.dateRange[0];
+                        _this.basCompany.businessEnd=_this.dateRange[1];
+                        _this.addData.basCompany=_this.basCompany;
+                        }
+                        if(_this.Finance){
+                            _this.addData.basBusiness=_this.basBusiness;
+                        }
+                        if(_this.Business){
+                            _this.addData.basFinance=_this.basFinance;
                         }
                              _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                             _this.open('保存成功','el-icon-circle-check','successERP');

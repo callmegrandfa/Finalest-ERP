@@ -182,6 +182,7 @@ export default {
                     {name:'商品规格组',address:'specification'},
                     {name:'类目属性规格(平台)列表',address:'classPropertyList'},
                     {name:'商品档案',address:'goodsFiles'},
+                    {name:'类目属性规格1',address:'attributeSpecificationDetail'},
                 ]
             },{
                 name:'基础资料',

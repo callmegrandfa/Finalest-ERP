@@ -833,6 +833,7 @@
                         _this.firstModify=false;
                         _this.secondModify=false;
                         _this.ifModify=false;
+                        
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
