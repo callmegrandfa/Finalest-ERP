@@ -351,7 +351,12 @@ export default {
         message: "",
         validationErrors: []
       },
-       auditInfo:{},//审计信息
+       auditInfo:{
+          createdBy:"",
+          createdTime:"",
+          modifiedBy:"",
+          modifiedTime:"",
+       },//审计信息
        expand:{
             expandId_addDataOu:[],//默认下拉树形展开id
             isHere_addDataOu:false,//是否存在id于树形
