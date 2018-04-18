@@ -16,12 +16,24 @@
                         <el-row>
                             <el-col :span="9">
                                 <div class="bgcolor smallBgcolor">
-                                <label >商品类目</label>
+                                <label >类目名称</label>
                             </div>
                             </el-col>
                             <el-col :span="12">
                                 <div class="bgcolor smallBgcolor">
                                 <el-input v-model="queryParams.CategoryName"></el-input>
+                                </div>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="9">
+                                <div class="bgcolor smallBgcolor">
+                                <label >类目编码</label>
+                            </div>
+                            </el-col>
+                            <el-col :span="12">
+                                <div class="bgcolor smallBgcolor">
+                                <el-input v-model="queryParams.CategoryCode"></el-input>
                                 </div>
                             </el-col>
                         </el-row>
@@ -87,17 +99,18 @@
                                 :props="defaultProps"
                                 default-expand-all
                                 ref="tree"
+                                node-key="id"
                                 :expand-on-click-node="false"
                                 @node-click="TreeNodeClick">
                             </el-tree>
                         </el-col>
-                        <el-col :span="19" class="pb10" style="background:#fff">
-                            <Table  :methodsUrl="httpUrl" :pluginSetting='pluginSetting' :queryParams="queryParams" :cols="column" :HttpParams='HttpParams' :tableName="tableModel"  :command="command"></Table>
-                    </el-col>
+                        <el-col :span="19">
+                            <Table  :methodsUrl="httpUrl" :pluginSetting='pluginSetting' :queryParams="queryParams" :cols="column" :tableName="tableModel"  :command="command"></Table>
+                        </el-col>
                 </el-row>
                 </el-col>
             </el-row>
-            <dialogBox :message="dialogMessage" :dialogVisible="dialogShow"  @confirm="delConfirm" @cancel="delCancel"></dialogBox>   
+            <dialogBox :errorTips='errorTips' :dialogSetting='dialogSetting' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick"></dialogBox>     
         </div>   
     </div>
 </template>
@@ -125,8 +138,17 @@ import dialogBox from '../../base/dialog/dialog'
                 "remark": "st54ring"
                 },
                 tableLoading:true,
-                dialogMessage:'',
-                dialogShow:false,
+                dialogVisible:false,
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
+                dialogCommand:[],
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
                 bottonbox:{
                     url: '/commodityleimu/CommodityCategoriesDetails',
                    botton:[{
@@ -156,13 +178,14 @@ import dialogBox from '../../base/dialog/dialog'
                     disabled:false
                 }]},
                 httpUrl:{
-                   Initial:'/api/services/app/CategoryManagement/GetAll',//数据初始化
+                   //Initial:'/api/services/app/CategoryManagement/GetAll',//数据初始化
                    view:'/commodityleimu/CommodityCategoriesDetails/',//查看详情
                    delete:'/api/services/app/CategoryManagement/Delete',//单条删除
-                   query:'/api/services/app/CategoryManagement/GetSearch',//条件查询
+                   query:'/api/services/app/CategoryManagement/GetListByCondition',//条件查询
                    treeQuery:'/api/services/app/CategoryManagement/GetCategoryList',//树节点查询
                 },
                 queryParams:{//查询条件参数
+                    CategoryCode:'',
                     CategoryName:'',
                     IsService:'',
                     Status:'',
@@ -175,37 +198,43 @@ import dialogBox from '../../base/dialog/dialog'
                     controls:'text',
                     isDisable:true,
                     sortable:false,
+                    isFix:"",
                     }, {
                     prop: 'categoryCode',
                     label: '类目编码',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
+                    isFix:"",
                     }, {
                     prop: 'categoryName',
                     label: '类目名称',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
+                    isFix:"",
                     }, {
                     prop: 'status',
                     label: '状态',
                     controls:'select',
                     isDisable:true,
                     sortable:false,
-                    dataSource:[]
+                    dataSource:[],
+                    isFix:"",
                     }, {
                     prop: 'mnemonic',
                     label: '助记码',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
+                    isFix:"",
                     }, {
                     prop: 'isService',
                     label: '服务类',
                     controls:'checkbox',
                     isDisable:true,
                     sortable:false,
+                    isFix:"",
                 }],
                 pluginSetting:{
                     hasPagination:true,
@@ -228,10 +257,10 @@ import dialogBox from '../../base/dialog/dialog'
                     }],
                 enableEdit:true,
                 tableModel:'commodityClassHeading',
-                HttpParams:{//数据初始化参数
-                    SkipCount:(this.$store.state.commodityClassHeadingCurrentPage-1)*this.$store.state.commodityClassHeadingEachPage,
-                    MaxResultCount:this.$store.state.commodityClassHeadingEachPage
-                },
+                // HttpParams:{//数据初始化参数
+                //     SkipCount:(this.$store.state.commodityClassHeadingCurrentPage-1)*this.$store.state.commodityClassHeadingEachPage,
+                //     MaxResultCount:this.$store.state.commodityClassHeadingEachPage
+                // },
                 SystemOptions: [{
                     value: null,
                     label: '全部'
@@ -249,6 +278,9 @@ import dialogBox from '../../base/dialog/dialog'
                 defaultProps: {
                     children:'childNodes',
                     label:'categoryName'
+                },
+                delAarry:{
+                    ids:[]
                 },
                 tableData: [],
                 currentPage:1,//分页的当前页码
@@ -292,7 +324,19 @@ import dialogBox from '../../base/dialog/dialog'
                 if(data=="启用"){
                    
                 }else if(data=="删除"){
-                    this.delData();
+                    this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                    if(this.SelectionChange.length==0){
+                        this.$message({
+                            type: 'info',
+                            message: '请勾选需要更改删除的记录！'
+                        });
+                    }else{
+                        this.dialogSetting.dialogName='delDialog'
+                        this.dialogSetting.message="确定删除？";
+                        this.dialogSetting.dialogType="confirm";
+                        this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                        this.dialogVisible=true;
+                    }        
                 }
                 let oleftBox=document.getElementById('left-box');
                 oleftBox.style.display="block";
@@ -334,6 +378,7 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.tableLoading=true;
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{Id:data.id,SkipCount:(_this.currentPage-1)*_this.$store.state.eachPage,MaxResultCount:_this.$store.state.eachPage}).then(function(res){                     
                         //_this.$store.state[_this.tableModel+'Table'] = res.result.items;
+                        _this.queryParams.CategoryCode="";
                         _this.queryParams.CategoryName="";
                         _this.queryParams.IsService="";
                         _this.queryParams.Status="";
@@ -359,7 +404,7 @@ import dialogBox from '../../base/dialog/dialog'
             },
             query(){//条件查询
                 let _this=this;
-                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetSearch',_this.queryParams).then(function(res){
+                _this.$axios.gets('/api/services/app/CategoryManagement/GetListByCondition',_this.queryParams).then(function(res){
                     _this.$store.commit('Init_ifQuery',true)
                     _this.$store.commit('Init_Table',res.result.items);
                     //_this.$store.state[_this.tableModel+'Table']=res.result.items;  
@@ -379,47 +424,36 @@ import dialogBox from '../../base/dialog/dialog'
                 customClass:className
                 });
             },
-            delConfirm(){
-                let _this=this;
-                let delAarry={
-                        "ids":[]
+            dialogClick(parmas){
+                if(parmas.dialogButton=="确定"){
+                    if(parmas.dialogName=="delDialog"){
+                        this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                        for(var i in this.SelectionChange){
+                            this.delAarry.ids.push(this.SelectionChange[i].id)
+                        }
+                        let _this=this;
+                       
+                       //批量删除
+                        _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/BatchDelete',_this.delAarry).then(function(res){
+                                _this.$store.dispatch('InitTable');
+                                _this.$store.commit('setTableSelection',[])
+                                _this.dialogVisible=false;
+                                _this.loadTree();
+                                _this.delAarry.ids=[];
+                                _this.open('删除成功','el-icon-circle-check','successERP');    
+                        }).catch(function(err){
+                            _this.dialogVisible=false;
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                        });
                     }
-                for(let i in _this.SelectionChange){
-                    delAarry.ids.push(_this.SelectionChange[i].id)
+                }else if(parmas.dialogButton=="取消"){
+                    this.dialogVisible=false;
                 }
-                if(delAarry.length==1){//单条删除
-                    _this.$axios.deletes('http://192.168.100.107:8082/api/services/app/CategoryManagement/Delete',{Id:delAarry.ids[0]}).then(function(res){
-                        _this.$store.dispatch('InitTable');
-                        _this.$store.commit('setTableSelection',[])
-                        _this.dialogShow=false;
-                        _this.delAarry.ids=[];
-                        _this.loadTree();
-                        _this.open('删除成功','el-icon-circle-check','successERP');    
-                    }).catch(function(err){
-                        _this.$message({
-                            type: 'warning',
-                            message: err.error.message
-                        });
-                    })
-                }else{//批量删除
-                        _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/BatchDelete',delAarry).then(function(res){
-                        _this.$store.dispatch('InitTable');
-                        _this.$store.commit('setTableSelection',[])
-                        _this.dialogShow=false;
-                        _this.loadTree();
-                        _this.delAarry.ids=[];
-                        _this.open('删除成功','el-icon-circle-check','successERP');    
-                    }).catch(function(err){
-                        _this.$message({
-                            type: 'warning',
-                            message: err.error.message
-                        });
-                    });
-                }  
+                      
                   
-            },
-            delCancel(){
-                this.dialogShow=false;
             },
             
         },
