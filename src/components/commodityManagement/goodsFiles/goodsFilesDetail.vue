@@ -1464,13 +1464,13 @@ export default {
             return currentdate;
      }
     
-        fileChange(data){
+        ,fileChange(data){
             console.log(data)
 
    }
 
 }   
-    
+}  
   </script>
 
 <style>
