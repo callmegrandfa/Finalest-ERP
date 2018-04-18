@@ -87,97 +87,26 @@
                                     <span class='open-search'>+</span>
                                 </div>
                             </el-col>
-                            <el-col :span="ifWidth?24:22" class="pt5">         
-                            <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
+                            <el-col :span="ifWidth?24:22" class="pt5"> 
+                            <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
+                            <!-- <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
                             <button :disabled="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
                             <button class="erp_bt bt_save" @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-                            <button class="erp_bt bt_del" @click="delBatch"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                            <button class="erp_bt bt_del" @click="delBatch"><i class="iconfont icon-shanchu"></i><span>删除</span></button>
                             <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>                    
                             <button class="erp_bt bt_version" @click="handleStatus(1)"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
                             <button class="erp_bt bt_auxiliary" @click="handleStatus(0)"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button>
+                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button> -->
                             </el-col>                   
                     </el-row>
                      <el-row class="">
                         <el-col :span="24" class="">
-                            <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams" :HttpParams="HttpParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
-                             <!-- <el-table @row-click="rowClick" :data="tableData" border style="width: 100%" class="text-center" @selection-change="handleSelectionChange">
-                                <el-table-column
-                                    type="selection"
-                                    width="55">
-                                </el-table-column>
-                                <el-table-column prop="brandCode" label="品牌编码">
-                                    <template slot-scope="scope">   
-                                         <img :id=scope.row.id  :if=updateArray.indexOf(scope.row.id)  v-show='updateArray.indexOf(scope.row.id)>=0||scope.row.brandCode==""' class="update-icon" src="../../../static/image/content/redremind.png"/>                                   
-                                        <input class="input-need" :class="{errorclass:scope.row.brandCode==''&&isSave==true}"
-                                                v-model="scope.row.brandCode" 
-                                                type="text"/>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="brandName" label="品牌名称">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" :class="{errorclass:scope.row.brandName==''&&isSave==true}" 
-                                                v-model="scope.row.brandName" 
-                                                type="text"/>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="brandEname" label="英文名称" width="">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" :class="{errorclass:scope.row.brandEname==''&&isSave==true}" 
-                                                v-model="scope.row.brandEname" 
-                                                type="text"/>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="remark" label="备注">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                                v-model="scope.row.remark"                                                
-                                                type="text"/>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="status" label="状态">
-                                    <template slot-scope="scope">
-                                        <el-select  v-model="scope.row.status" :un="scope.row.status" >
-                                            <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="createdBy" label="创建人" width="">
-                                    <template slot-scope="scope">
-                                        <input class="input-need" 
-                                                v-model="scope.row.createdBy" 
-                                                type="text"/>
-                                    </template>                                   
-                                </el-table-column>
-                                <el-table-column prop="createdTime" label="创建时间">
-                                    <template slot-scope="scope">
-                                        <el-date-picker
-                                            v-model="scope.row.createdTime"
-                                            readonly
-                                            type="date">
-                                        </el-date-picker>
-                                    </template>
-                                </el-table-column> 
-                                <el-table-column prop="" label="操作" width="">
-                                    <template slot-scope="scope">
-                                        <el-button v-on:click="handleDel(scope.row,scope.$index)" type="text" size="small">删除</el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table> -->
-                        <!-- <el-pagination
-                         style="margin-top:20px;" 
-                         class="text-right pageActive"
-                         :current-page.sync="currentPage"
-                         background layout="total, prev, pager, next" 
-                         @current-change="handleCurrentChange"
-                         :page-count="totalPage" >
-                         </el-pagination>    -->
+                            <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                         </el-col> 
                     </el-row>
                 </el-col>
             </el-row>
-            <dialogBox :message="dialogMessage" :dialogVisible="dialogShow"  @confirm="delConfirm" @cancel="delCancel"></dialogBox>   
+            <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick"></dialogBox>     
         </div>
     </div>
 </template>
@@ -185,7 +114,7 @@
 <script>
 import Table from '../../base/Table/Table'
 import Query from '../../base/query/query'
-import Btm from '../../base/btm/btm'
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
 import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'customerInfor',
@@ -203,13 +132,13 @@ import dialogBox from '../../base/dialog/dialog'
                 "isDefault": true,
                 "remark": "st54ring"
                 },
-                dialogMessage:'',
-                dialogShow:false,
                 queryParams:{
                     BrandCode:'',//品牌编码
                     BrandName:'',//品牌名称
                     BrandEname:'',//品牌名称(英文)
                     Status:'',//状态
+                    SkipCount:(this.$store.state.commodityBrandCurrentPage-1)*this.$store.state.commodityBrandEachPage,
+                    MaxResultCount:this.$store.state.commodityBrandEachPage
                 }, 
                 isUpdate:false,//是否进行修改
                 isAdd:false,//是否新增
@@ -260,20 +189,30 @@ import dialogBox from '../../base/dialog/dialog'
                 cancelClick:false,//是否点击取消按钮
                 turnPage:-1,//是否允许翻页
                 pageFlag:true,
+                //dialogModel:'',//对话框具体名称
+                //dialogType:'',//对话框表现形态
+                dialogCommand:[],//底部按钮组控制组
+                //dialogMessage:'',//对话框提示信息
+                dialogVisible:false,//对话框是否显示
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
                 pluginSetting:{
                     hasPagination:true,
                     mutiSelect:true,//多选栏
                     isDisable:false,
                 },
                 httpUrl:{
-                    Initial:'/api/services/app/BrandManagement/GetAll',//数据初始化
+                    //Initial:'/api/services/app/BrandManagement/GetAll',//数据初始化
                     delete:'/api/services/app/BrandManagement/Delete',//行内删除
-                    query:'/api/services/app/BrandManagement/GetData',//条件查询
+                    query:'/api/services/app/BrandManagement/GetListByCondition',//条件查询
                     treeQuery:'',//树节点查询
-                },
-                HttpParams:{
-                    SkipCount:(this.$store.state.commodityBrandCurrentPage-1)*this.$store.state.commodityBrandEachPage,
-                    MaxResultCount:this.$store.state.commodityBrandEachPage
                 },
                 column: [{
                     prop: 'brandCode',
@@ -338,11 +277,43 @@ import dialogBox from '../../base/dialog/dialog'
                     text:'删除',
                     class:'blue'
                 }],
-                // hasControl:{//操作列控制
-                //     control:true,//操作栏是否显示
-                //     modify:false,//查看按钮是否显示
-                //     del:true,//删除按钮是否显示
-                // },
+                buttonGroup:[{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:false,
+                },{
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:false,
+                },{
+                    text:'保存',
+                    class:'bt_save',
+                    icon:'icon-baocun',
+                    disabled:false,
+                },{
+                    text:'取消',
+                    class:'bt_cancel',
+                    icon:'icon-quxiao',
+                    disabled:true,
+                },{
+                    text:'启用',
+                    class:'bt_version',
+                    icon:'icon-qiyong',
+                    disabled:false,
+                },{
+                    text:'停用',
+                    class:'bt_auxiliary',
+                    icon:'icon-tingyong',
+                    disabled:false,
+                },{
+                    text:'导出',
+                    class:'bt_out',
+                    icon:'icon-daochu1',
+                    disabled:false,
+                }],//按钮组
+                cancelDisable:true,
                 commodityBrandNewCol:{
                     groupId:0,
                     brandCode:"" ,
@@ -382,7 +353,7 @@ import dialogBox from '../../base/dialog/dialog'
                 
             },
             isCancel(){
-                if(this.$store.state[this.tableModel+'NewColArray'].length>0||this.$store.state[this.tableModel+'UpdateColArray'].length>0||!this.$store.state[this.tableModel+'IfDel']){
+                if(this.$store.state[this.tableModel+'NewColArray'].length>0||this.$store.state[this.tableModel+'UpdateColArray'].length>0){
                     return false
                 }else{
                     return true
@@ -395,31 +366,12 @@ import dialogBox from '../../base/dialog/dialog'
                     this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
                 }
             },
-            newColArray:{
-                handler: function (val, oldVal) {
-                },
-                deep:true
-            },
-            tableData:{
-                handler: function (val, oldVal) {
-                        if(oldVal.length>0){
-                            if(this.updateArray.length==0&&this.updateId==""){
-                                this.isUpdate=false
-                            }else{
-                                this.isUpdate=true;
-                            }
-                            if(this.updateArray.length==0&&!this.$store.state[this.tableModel+'IfDel']){//判断是否为第一行修改的数据
-                                this.updateArray.push(this.updateId)
-                            }else{
-                                if(this.updateArray.indexOf(this.updateId)==-1&&!this.$store.state[this.tableModel+'IfDel']){
-                                    this.updateArray.push(this.updateId)
-                                }else{
-                                    return
-                                } 
-                            }                           
-                        }  
-                    },
-                deep: true
+            isCancel:function(val,oldVal){
+                if(!val){
+                    this.buttonGroup[3].disabled=false
+                }else{
+                    this.buttonGroup[3].disabled=true
+                }
             }
         },
         methods:{
@@ -462,20 +414,10 @@ import dialogBox from '../../base/dialog/dialog'
                 this.addArray=[];
                 this.updateId="";
             },
-            InitStatus(){
+            InitStatus(){//获取状态枚举表
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
                     _this.column[4].dataSource=res.result;
-                })
-            },
-            loadTableData(){
-                let _this=this;
-                _this.tableLoading=true;
-                _this.$axios.gets('/api/services/app/BrandManagement/GetAll',{SkipCount:(_this.page-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
-                    _this.tableData=res.result.items;
-                    let countPage=res.result.totalCount;
-                    _this.Init();
-                    _this.totalPage = Math.ceil(countPage/_this.eachPage);
                 })
             },
             showErrprTips(e){
@@ -496,6 +438,21 @@ import dialogBox from '../../base/dialog/dialog'
                 duration: 3000,
                 customClass:className
                 });
+            },
+            btnClick(btn){//按钮组点击事件
+                if(btn=="新增"){//新增事件
+                    this.addCol();
+                }else if(btn=="删除"){//删除事件
+                    this.delBatch();
+                }else if(btn=="保存"){//保存事件
+                    this.save();
+                }else if(btn=="取消"){//取消事件
+                    this.cancel();
+                }else if(btn=="启用"){
+                    this.handleStatus(1);
+                }else if(btn=="停用"){
+                    this.handleStatus(0);
+                }
             },
             rowClick(row){//获取行id
                 this.updateId=row.id
@@ -539,18 +496,14 @@ import dialogBox from '../../base/dialog/dialog'
                         message: '请先编辑保存新增项'
                     });
                 }else{
-                    this.$store.commit('setIfDel',false)//重置修改参数
+                    //this.$store.commit('setIfDel',false)//重置修改参数
                     this.$store.dispatch('addCol',newcol);//表格行内新增
                 }                              
             },
             search(){//按条件查询
                 let _this=this;
-                _this.$axios.gets('/api/services/app/BrandManagement/GetData',_this.queryParams).then(function(res){
-                    //_this.tableData=res.result;
-                    _this.$store.commit('Init_ifQuery',true);
-                    
+                _this.$axios.gets('/api/services/app/BrandManagement/GetListByCondition',_this.queryParams).then(function(res){
                     _this.$store.commit('Init_Table',res.result.items);
-                    //_this.$store.state[_this.tableModel+'Table']=res.result.items; 
                     _this.$store.commit('get_RowId',"")//置空修改行id
                     let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityBrandEachPage);
                     _this.$store.commit('Init_pagination',totalPage);
@@ -561,13 +514,8 @@ import dialogBox from '../../base/dialog/dialog'
             cancel(){//数据恢复到初始化状态 取消
                 this.isSave=false;
                 this.$store.dispatch('InitTable');
-                this.$store.commit('setIfDel',true)
-                this.$store.commit('get_RowId',"")//置空修改行id
                 this.$store.commit('setAddColArray',[])//置空新增集合
                 this.$store.commit('setUpdateColArray',[])//置空修改增集合
-            },
-            handleSelectionChange(val){//多选操作
-                this.SelectionChange=val;
             },
             handleStatus(statu){//批量启用/禁用
                 let handleArray=[];
@@ -575,12 +523,12 @@ import dialogBox from '../../base/dialog/dialog'
                 let tableData=this.$store.state[this.tableModel+'Table'];
                 if(this.SelectionChange.length>0){
                     for(let o in this.SelectionChange){
-                        this.$store.commit('Add_UpdateArray',this.SelectionChange[o].id)
-                        handleArray.push(this.SelectionChange[o].id)
+                        this.$store.commit('Add_UpdateArray',this.SelectionChange[o])
+                        handleArray.push(this.SelectionChange[o])
                     }
                     for(let i in handleArray){
                         for(let j in tableData){
-                            if (handleArray[i]==tableData[j].id){
+                            if (handleArray[i].id==tableData[j].id){
                                tableData[j].status=statu;
                             }
                         }
@@ -601,41 +549,49 @@ import dialogBox from '../../base/dialog/dialog'
                         message: '请勾选需要更改删除的记录！'
                     });
                 }else{
-                    this.dialogMessage="确认删除";
-                    this.dialogShow=true;
+                    this.dialogSetting.dialogName='delDialog'
+                    this.dialogSetting.message="确定删除？";
+                    this.dialogSetting.dialogType="confirm";
+                    this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                    this.dialogVisible=true;
                 }                
             },
-            delConfirm(){
-                this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
-                for(var i in this.SelectionChange){
-                    this.idArray.ids.push(this.SelectionChange[i].id)
+            dialogClick(parmas){
+                if(parmas.dialogButton=="确定"){
+                    if(parmas.dialogName=="delDialog"){
+                        this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                        for(var i in this.SelectionChange){
+                            this.idArray.ids.push(this.SelectionChange[i].id)
+                        }
+                        let _this=this;
+                        if(_this.idArray.ids.indexOf(undefined)!=-1){
+                                _this.$message({
+                                    type: 'warning',
+                                    message: '新增数据请在行内删除'
+                                });
+                                _this.dialogVisible=false;
+                                this.idArray.ids=[];
+                                return;
+                        }
+                        if(_this.idArray.ids.length>0){
+                            _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
+                                _this.$store.dispatch('InitTable');
+                                _this.$store.commit('setTableSelection',[])
+                                _this.idArray.ids=[];
+                                _this.dialogVisible=false;
+                                _this.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }
+                    }else if(parmas.dialogName=="saveDialog"){
+                        this.dialogVisible=false;
+                    }
+                }else if(parmas.dialogButton=="取消"){
+                    this.dialogVisible=false;
                 }
-                let _this=this;
-                if(_this.idArray.ids.indexOf(undefined)!=-1){
-                        _this.$message({
-                            type: 'warning',
-                            message: '新增数据请在行内删除'
-                        });
-                        _this.dialogShow=false;
-                        this.idArray.ids=[];
-                        return;
-                }
-                if(_this.idArray.ids.length>0){
-                    _this.$axios.posts('/api/services/app/BrandManagement/BatchDelete',_this.idArray).then(function(res){
-                        _this.$store.dispatch('InitTable');
-                        _this.$store.commit('setTableSelection',[])
-                        _this.idArray.ids=[];
-                        _this.dialogShow=false;
-                        _this.open('删除成功','el-icon-circle-check','successERP');    
-                    })
-                }
-            },
-            delCancel(){
-                this.dialogShow=false;
+
             },
             save(){
                 let _this=this;
-                _this.isSave=true;
                 let newArray=_this.$store.state[_this.tableModel+'NewColArray'];
                 let newArrayLength=_this.$store.state[_this.tableModel+'NewColArray'].length;
                 let updateArray=_this.$store.state[_this.tableModel+'UpdateColArray'];
@@ -643,6 +599,7 @@ import dialogBox from '../../base/dialog/dialog'
                 let tableData=_this.$store.state[_this.tableModel+'Table'];
                 // 新增保存
                 if(newArrayLength>0){//新增保存
+                    _this.isSave=true;
                     for(let i in newArray){
                         if(newArray[i].brandCode==""||newArray[i].brandName==""||newArray[i].brandEname==""){
                             this.$message({
@@ -654,74 +611,25 @@ import dialogBox from '../../base/dialog/dialog'
                     }
                 }
                 if(newArrayLength>0||updateArrayLength>0){
-                      _this.$axios.posts('http://192.168.100.107:8082/api/services/app/BrandManagement/CUDAggregate',{createList:newArray,updateList:updateArray,}).then(function(res){
+                      _this.$axios.posts('/api/services/app/BrandManagement/CUDAggregate',{createList:newArray,updateList:updateArray,}).then(function(res){
                             _this.$store.commit('setAddColArray',[])//置空新增集合
                             _this.$store.commit('get_RowId',"")//置空修改行id
                             _this.$store.commit('setUpdateColArray',[])//置空修改集合
                             _this.$store.dispatch('InitTable');
-                            _this.$store.commit('setIfDel',true)
+                            //_this.$store.commit('setIfDel',true)
                             _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                         }).catch(function(err){
-                            _this.$message({
-                                type: 'warning',
-                                message: err.error.message
-                            });
+                            _this.dialogSetting.dialogType="submit";
+                            _this.dialogSetting.dialogName='saveDialog'
+                            _this.dialogSetting.message="信息提报有误";
+                            _this.errorTips.message=err.error.message;
+                            _this.errorTips.details='';
+                            _this.dialogCommand=[{text:'确定',class:'btn-confirm'}];
+                            _this.dialogVisible=true;
                             _this.isSave=false;
                         })   
-                }
-                // if(newArrayLength>0){
-                //     if(newArrayLength==1){//单条新增
-                //         _this.$axios.posts('/api/services/app/BrandManagement/Create',newArray[0]).then(function(res){
-                //             _this.$store.commit('setAddColArray',[])//置空新增集合
-                //             _this.$store.dispatch('InitTable');
-                //             _this.$store.commit('setIfDel',true)
-                //             _this.isSave=false;
-                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
-                //         }).catch(function(err){
-                //             _this.$message({
-                //                 type: 'warning',
-                //                 message: err.error.message
-                //             });
-                //             _this.isSave=false;
-                //         })   
-                //     }else{//批量新增                      
-                //         _this.$axios.posts('/api/services/app/BrandManagement/BatchCreate',newArray).then(function(res){
-                //             _this.$store.commit('setAddColArray',[])//置空新增集合
-                //             _this.$store.dispatch('InitTable');
-                //             _this.$store.commit('setIfDel',true)
-                //             _this.isSave=false;
-                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
-                //         }); 
-                //     }    
-                // }
-                // if(updateArrayLength>0){
-                //     if(updateArrayLength==1){//单条修改
-                //         let updataIndex=-1;
-                //         for(let i in tableData){
-                //             if(updateArray[0]==tableData[i].id){
-                //                 updataIndex=i;
-                //             }
-                //         }
-                //         _this.$axios.puts('/api/services/app/BrandManagement/Update',tableData[updataIndex]).then(function(res){
-                //             _this.$store.commit('get_RowId',"")//置空修改行id
-                //             _this.$store.commit('setUpdateColArray',[])//置空修改集合
-                //             _this.$store.commit('setIfDel',true)
-                //             _this.$store.dispatch('InitTable');
-                //             _this.isSave=false;
-                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
-                //         });
-                //     }else{//批量修改
-                //         _this.$axios.posts('/api/services/app/BrandManagement/BatchUpdate',tableData).then(function(res){
-                //             _this.$store.commit('get_RowId',"")//置空修改行id
-                //             _this.$store.commit('setUpdateColArray',[])//置空修改集合
-                //             _this.$store.commit('setIfDel',true)
-                //             _this.$store.dispatch('InitTable');
-                //             _this.isSave=false;
-                //             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');    
-                //         }); 
-                //     }
-                // }                                           
+                }                                           
             },                          
             packUp(){
                 let oleftBox=document.getElementById('left-box');
@@ -742,7 +650,8 @@ import dialogBox from '../../base/dialog/dialog'
         },
         components:{
             Table,
-            dialogBox
+            dialogBox,
+            buttonGroup
         }
     }
 </script>
@@ -846,6 +755,7 @@ import dialogBox from '../../base/dialog/dialog'
 </style>
 
 <style>
+@import url('//at.alicdn.com/t/font_561828_9n5ekuys0aw9izfr.css');
 .el-checkbox__inner{
     width: 18px;
     height: 18px;
@@ -854,9 +764,6 @@ import dialogBox from '../../base/dialog/dialog'
 .el-checkbox__inner::after{
     left: 4px;
     top: -2px;
-}
-.el-table--enable-row-hover .el-table__body tr:hover>td{
-    background:#ecf5ff;
 }
 .text-left{
     text-align: left;
@@ -896,46 +803,6 @@ import dialogBox from '../../base/dialog/dialog'
     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
     -webkit-transform-origin: center;
     transform-origin: center;
-}
-
-/* 重写el-table样式 */
-.group-management-wrapper .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.group-management-wrapper .el-table td{
-    padding: 3px 0;
-}
-.group-management-wrapper .el-table__body{
-    text-align: center;
-}
-/* 日期控件 */
-table .el-date-editor.el-input{
-    width:100%;
-}
-table .el-input--prefix .el-input__inner{
-    border:none;
-    background-color:transparent;
-    padding-left:0;
-    padding-right:0;
-}
-table .el-input__icon{
-    display:none;
-}
-/* 表格内编辑下拉框样式重构 */
-table .el-input__inner{
-    height: 28px;
-    text-align:center;
-    border:none;
-}
-/* 验证为空 */
-.errorclass{
-    border:1px solid #f98b8b!important;
 }
 button.erp_bt[disabled] {
     cursor: not-allowed;
